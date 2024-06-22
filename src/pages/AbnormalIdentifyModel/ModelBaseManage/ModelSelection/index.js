@@ -20,6 +20,7 @@ import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import styles from "../../styles.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import ModelMatch from '@/pages/AbnormalIdentifyModel/ModelMatch';
 const { Option } = Select;
 
 const namespace = 'ModelBaseManage'
@@ -27,7 +28,7 @@ const namespace = 'ModelBaseManage'
 
 const dvaPropsData = ({ loading, ModelBaseManage, global, }) => ({
     pointListLoading: loading.effects['common/getPointByEntCode'],
-    tableDatas: ModelBaseManage.dataAccessDatas,
+    tableDatas: ModelBaseManage.modelSelectionData,
     tableLoading: loading.effects[`${namespace}/ExportCarList`],
     configInfo: global.configInfo,
 
@@ -45,7 +46,7 @@ const Index = (props) => {
 
 
 
-    const { tableDatas, tableLoading, } = props;
+    const {pointListLoading, tableDatas, tableLoading, } = props;
 
 
 
@@ -56,56 +57,16 @@ const Index = (props) => {
 
     let columns = [
         {
-            title: '项目名称',
+            title: '企业',
             dataIndex: 'CarNum',
             key: 'CarNum',
             align: 'center',
             ellipsis: true,
         },
         {
-            title: '任务名称',
+            title: '排口',
             dataIndex: 'VehicleType',
             key: 'VehicleType',
-            align: 'center',
-            ellipsis: true,
-        },
-        {
-            title: '接入方式',
-            dataIndex: 'BuyDate',
-            key: 'BuyDate',
-            align: 'center',
-            ellipsis: true,
-        },
-        {
-            title: '执行方式',
-            dataIndex: 'Status',
-            key: 'Status',
-            align: 'center',
-            ellipsis: true,
-            width: 140,
-            render: (text, record, index) => {
-                return <Row justify='center' align='middle' style={{ cursor: 'pointer' }} onClick={() => executionMethod(record)}><div style={{ width: '60px' }}>每周一次</div> <CaretDownOutlined /></Row>
-            }
-        },
-        {
-            title: '执行状态',
-            dataIndex: 'CarClass',
-            key: 'CarClass',
-            align: 'center',
-            ellipsis: true,
-            render: (text, record, index) => {
-                const colorObj = {
-                    1: '#52c41a',
-                    2: '#fa8c16',
-                    3: '#f5222d',
-                }
-                return <Badge color="#f50" text={text} />
-            }
-        },
-        {
-            title: '最近接入时间',
-            dataIndex: 'AssetStatus',
-            key: 'AssetStatus',
             align: 'center',
             ellipsis: true,
         },
@@ -116,12 +77,8 @@ const Index = (props) => {
             width: 100,
             ellipsis: true,
             render: (text, record) => {
-                return (record ?
-                    <a onClick={() => { setStartExecuVisible(true); setStartExecuTitle(`开始执行（接入小时数据）`) }}>开始执行</a>
-                    :
-                    <Popconfirm placement="left" title={'确定要开始执行？'} onConfirm={() => startExecuConfirm(1)} okText="开始执行" >
-                        <a>开始执行</a>
-                    </Popconfirm>
+                return (
+              <a onClick={() => {edit(record) }}>编辑</a>
                 );
 
             }
@@ -131,7 +88,7 @@ const Index = (props) => {
     // 根据企业获取排口
     const [pointList, setPointList] = useState([]);
     const getPointList = (EntCode, callback) => {
-        dispatch({
+        props.dispatch({
             type: 'common/getPointByEntCode',
             payload: {
                 EntCode,
@@ -143,14 +100,16 @@ const Index = (props) => {
         });
     };
 
-    const [executionMethodVisible, setExecutionMethodVisible] = useState(false)
-    const [executionMethodTitle, setExecutionMethodTitle] = useState()
+
+    const [editVisible, setEditVisible] = useState(true)
+    const [editTitle, setEditTitle] = useState('编辑')
 
     const [row, setRow] = useState({})
 
-    const executionMethod = (record) => {
-        setExecutionMethodVisible(true)
-        setExecutionMethodTitle('1111')
+    
+    const edit = (record) => {
+        setEditVisible(true)
+        setEditTitle('编辑')
     }
 
     const [startExecuVisible, setStartExecuVisible] = useState(false)
@@ -168,7 +127,9 @@ const Index = (props) => {
         });
     }
 
-
+    const saveCallBack = (text) =>{
+        setEditVisible(false)
+    }
 
     const searchComponents = () => {
         return <Form
@@ -192,6 +153,7 @@ const Index = (props) => {
                         },
                     ]}
                 />
+             </Form.Item>
                 <Form.Item label="企业" name="entCode">
                     <EntAtmoList
                         style={{ width: 200 }}
@@ -205,15 +167,17 @@ const Index = (props) => {
                         }}
                     />
                 </Form.Item>
-                <Spin spinning={!!pointListLoading} size="small">
-                    <Form.Item label="监测点名称" name="dgimn">
-                        <Select
+                    <Form.Item label="监测点名称" name="dgimn">  
+                        {!!pointListLoading?
+                        <Spin size="small"><Select  placeholder="请选择"   style={{ width: 150 }}/></Spin>
+                        :
+                         <Select
                             placeholder="请选择"
                             showSearch
                             allowClear
                             optionFilterProp="children"
                             style={{ width: 150 }}
-                        >
+                         >
                             {pointList.map(item => {
                                 return (
                                     <Option key={item.DGIMN} value={item.DGIMN}>
@@ -221,14 +185,12 @@ const Index = (props) => {
                                     </Option>
                                 );
                             })}
-                        </Select>
+                        </Select>}
                     </Form.Item>
-                </Spin>
-            </Form.Item>
         </Form>
     }
     return (
-        <div className={`${styles.dataAccessSty} queryCriterTitleSty`}>
+        <div className={`${styles.modelSelectionSty}`}>
             <BreadcrumbWrapper >
                 <Card title={searchComponents()}>
                     <SdlTable
@@ -244,13 +206,15 @@ const Index = (props) => {
                     />
                 </Card>
                 <Modal
-                    visible={executionMethodVisible}
-                    title={executionMethodTitle}
-                    onCancel={() => { setExecutionMethodVisible(false); form.resetFields() }}
+                    visible={editVisible}
+                    title={<div style={{marginLeft:320}}>{editTitle}</div>}
+                    onCancel={() => { setEditVisible(false)}}
                     wrapClassName="spreadOverModal"
+                    mask={false}
                     destroyOnClose
+                    footer={null}
                 >
-
+                  <ModelMatch hideBreadcrumb isModal saveCallBack={saveCallBack} zIndex={1002}/>
                 </Modal>
             </BreadcrumbWrapper>
         </div >

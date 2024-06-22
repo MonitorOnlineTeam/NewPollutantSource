@@ -373,17 +373,20 @@ class BasicLayout extends Component {
 
 
     const logoRender = Item => {
-      // if (configInfo && configInfo.IsShowLogo === 'true') {
-      //   return settings.layout === 'topmenu' ? (
-      //     <img style={{ height: 60 }} src={configInfo.Logo ? `/${configInfo.Logo}` : logo} alt="logo" />
-      //   ) : (
-      //       <img src={`/${configInfo.Logo}`} alt="logo" />
-      //     );
-      // }
-
-      return <div></div>
+      if (configInfo && configInfo.IsShowLogo === 'true') {
+        return settings.layout === 'topmenu' ? (
+          <img
+            style={{ height: 60 }}
+            src={configInfo.Logo ? `${configInfo.Logo}` : logo}
+            alt="logo"
+          />
+        ) : (
+          <img src={`${configInfo.Logo}`} alt="logo" />
+        );
+      } else {
+        return <div></div>;
+      }
     };
-
     const menu = (
       <Menu onClick={this.onClickHover}>
         <Menu.Item key="1">关闭当前标签页</Menu.Item>
@@ -415,7 +418,7 @@ class BasicLayout extends Component {
     return (
       <>
         <ProLayout
-          // logo={logoRender}
+          logo={logoRender}
           onCollapse={handleMenuCollapse}
           menuItemRender={(menuItemProps, defaultDom) => {
             if (menuItemProps.replace && userCookie !== 'null') {
@@ -445,8 +448,8 @@ class BasicLayout extends Component {
           rightContentRender={rightProps => <RightContent {...rightProps} />}
           {...this.props}
           {...settings}
-          title={configInfo && configInfo.SystemName}
-          menuHeaderRender={() => <a href={currentMenu?.[0]?.path}> <h1>{configInfo && configInfo.SystemName}</h1></a>}
+          // title={configInfo && configInfo.SystemName}
+          // menuHeaderRender={() => <a href={currentMenu?.[0]?.path}> <h1>{configInfo && configInfo.SystemName}</h1></a>}
         >
           {
             config.isShowTabs && defaultSettings.layout === 'sidemenu' ? <div id="sideMenuTabsLayout" style={{ margin: '-24px -24px 0px', padding: '10px', paddingTop: 4 }}><Tabs

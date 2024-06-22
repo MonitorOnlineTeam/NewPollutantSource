@@ -3401,11 +3401,11 @@ export default {
                       component: './AbnormalIdentifyModel/ModelBaseManage/CharacteristicLearning',
                     },
                     // 模型选配
-                    // {
-                    //   name: 'ModelSelection',
-                    //   path: '/AbnormalIdentifyModel/ModelBaseManage/ModelSelection',
-                    //   component: './AbnormalIdentifyModel/ModelBaseManage/ModelSelection',
-                    // },
+                    {
+                      name: 'ModelSelection',
+                      path: '/AbnormalIdentifyModel/ModelBaseManage/ModelSelection',
+                      component: './AbnormalIdentifyModel/ModelBaseManage/ModelSelection',
+                    },
                   ],
                 },
               ],

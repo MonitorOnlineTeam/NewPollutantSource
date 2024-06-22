@@ -49,16 +49,20 @@ const Index = (props) => {
     const [tableDatas6, setTableDatas6] = useState([])
     const [tableLoading6, setTableLoading6] = useState(true)
 
-
+    const sumData = (array,key) =>{
+        return array?.[0]? array.reduce((accumulator, currentValue) => {
+            return accumulator + currentValue[key];
+        }, 0) : 0
+       }
     const obj1 = {
         '企业信息清洗': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗企业数量', value: 198 || 0 }, { label: '入库数量', value: 198 || 0  }], data: tableDatas,loading:tableLoading, logTitle:'企业日志',logUrl: 'GetProjectLogsInfoList' },
-        '备案参数': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗企业数量', value: 198 || 0  }, { label: '入库备案参数', value: 198 || 0  }, { label: '清洗失败', value: 98 }], data: tableDatas3,loading:tableLoading3,logTitle:'排放口/备案参数日志',logUrl: 'GetProjectLogsInfoList'  },
+        '备案参数': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗企业数量', value: 198 || 0  }, { label: '入库备案参数', value: 198 || 0  }, { label: '清洗失败', value: 98 }], data: tableDatas3,loading:tableLoading3,logTitle:'备案参数日志',logUrl: 'GetProjectLogsInfoList'  },
         '监测数据': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗数据', value: 198 || 0  }, { label: '非法', value: 198 || 0  }], data: tableDatas6,loading:tableLoading6, },
     }
     const obj2 = {
-        '排放口信息清洗': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗排放口数量', value: 198 || 0  }, { label: '入库排放口数量', value: 198 || 0  }], data: tableDatas2,loading:tableLoading2,logTitle:'排放口/备案参数日志',logUrl: 'GetProjectLogsInfoList' },
-        '污染物': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗排放口数量', value: 198 || 0  }, { label: '入库污染物数量', value: 198 || 0  }, { label: '清洗失败', value: 98 }], data: tableDatas4,loading:tableLoading4,logTitle:'污染物缺失/排放标准缺失',logUrl: 'GetMonitorPollutantLogsInfoList' },
-        '排放标准': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗排放标准数量', value: 198 || 0  }, { label: '入库排放标准', value: 198 || 0  }, { label: '清洗失败', value: 98 }], data: tableDatas4,loading:tableLoading5,logTitle:'污染物缺失/排放标准缺失',logUrl: 'GetMonitorAlarmLogsInfoList'  },
+        '排放口信息清洗': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗排放口数量', value: 198 || 0  }, { label: '入库排放口数量', value: 198 || 0  }], data: tableDatas2,loading:tableLoading2,logTitle:'排放口',logUrl: 'GetProjectLogsInfoList' },
+        '污染物': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗排放口数量', value: 198 || 0  }, { label: '入库污染物数量', value: 198 || 0  }, { label: '清洗失败', value: sumData(tableDatas4,'falseCount') }], data: tableDatas4,loading:tableLoading4,logTitle:'污染物缺失',logUrl: 'GetMonitorPollutantLogsInfoList' },
+        '排放标准': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗排放标准数量', value: 198 || 0  }, { label: '入库排放标准', value: 198 || 0  }, { label: '清洗失败', value: 98 }], data: tableDatas4,loading:tableLoading5,logTitle:'排放标准缺失',logUrl: 'GetMonitorAlarmLogsInfoList'  },
     }
     useEffect(() => {
         handleChange(1);
@@ -122,6 +126,9 @@ const Index = (props) => {
 
 
     }
+
+
+
     let columns = (title) => [
         {
             title: '参数类型',
@@ -258,18 +265,20 @@ const Index = (props) => {
 
     const logQuery = (type, record, title) => {
         setLogVisible(true)
-        setLogTitle(title)
         const objRequest = {
             ...obj1,...obj2
         }
-        setLogLoading({...logLoading,[title]:true})
+        const logTitle = objRequest[title]?.logTitle
+        setLogTitle(logTitle)
+        setLogLoading({...logLoading,[logTitle]:true})
         props.dispatch({
             type: `${namespace}/${objRequest[title]?.logUrl}`,
-            payload: { },
+            payload: {projectType: 1 },
             callback:(result)=>{
-                setLogLoading({...logLoading,[title]:false})
+                console.log(result,{...logLoading,[logTitle]:false},{...logData,[logTitle]:[result.Datas]})
+                setLogLoading({...logLoading,[logTitle]:false})
                 if(result.isSuccess){
-                    setLogLoading({...logData,[title]:result.Datas})
+                    setLogLoading({...logData,[logTitle]:[result.Datas]})
                 }
             }
         });
@@ -322,10 +331,12 @@ const Index = (props) => {
         { label: '废气排放口', value: 80 || 0 }, { label: '废气非排放口', value: 80  || 0   }, { label: '废水排放口', value: 80 || 0  },
         { label: '废水非排放口', value: 80  || 0 }, { label: '常规焚烧炉CEMS排放口', value: 80 || 0  }, { label: '关联排放口', value: 80 || 0  },
     ]
-    const logObj = {
-        '企业日志': { columns:logCommonCol.filter(item=>item.title!='排放口'),data:[] },
-        '排放口/备案参数日志': { columns:logCommonCol, data:[] },
-        '污染物缺失/排放标准缺失': {  columns:logCommonCol.filter(item=>item.title=='企业' || item.title=='排放口'),data:[] },
+    const logColObj = {
+        '企业日志': logCommonCol.filter(item=>item.title!='排放口') ,
+        '排放口': logCommonCol.filter(item=>item.title!='排放口'),data:[] ,
+        '备案参数日志': logCommonCol ,
+        '污染物缺失': logCommonCol.filter(item=>item.title=='企业' || item.title=='排放口'),
+        '排放标准缺失': logCommonCol.filter(item=>item.title=='企业' || item.title=='排放口')
     }
 
     return (
@@ -393,10 +404,10 @@ const Index = (props) => {
                     width={700}
                 >
                     <SdlTable
-                        loading={logObj[logTitle]?.loading}
+                        loading={logLoading[logTitle]}
                         bordered
-                        dataSource={logObj[logTitle]?.data}
-                        columns={logObj[logTitle]?.columns}
+                        dataSource={logData[logTitle]}
+                        columns={logColObj[logTitle]}
                         scroll={{ y: 'hidden' }}
                         rowClassName={null}
                         pagination={false}

@@ -11,6 +11,7 @@ export default Model.extend({
   namespace: 'ModelBaseManage',
   state: {
     dataAccessDatas: [],
+    modelSelectionData:[]
   },
   effects: {
     //模型训练
