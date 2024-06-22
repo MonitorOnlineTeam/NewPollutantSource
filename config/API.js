@@ -837,8 +837,8 @@ export const API = {
      GetProjectLogsInfoList: before + '/ProjectMonitorDataApi/GetProjectLogsInfoList', //企业信息、排放口信息、备案参数日志详情信息
      GetMonitorPollutantLogsList: before + '/ProjectMonitorDataApi/GetMonitorPollutantLogsList', //污染物日志信息
      GetMonitorPollutantLogsInfoList: before + '/ProjectMonitorDataApi/GetMonitorPollutantLogsInfoList', //污染物日志详情信息
-     GetMonitorAlarmLogsList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsList', //排放口日志信息
-     GetMonitorAlarmLogsInfoList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsInfoList', //排放口日志详情信息
+     GetMonitorAlarmLogsList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsList', //排放标准日志信息
+     GetMonitorAlarmLogsInfoList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsInfoList', //排放标准日志详情信息
      GetHourDataLogsList: before + '/ProjectMonitorDataApi/GetHourDataLogsList', //查看监测数据日志信息
     },
   /*监督核查 Api */

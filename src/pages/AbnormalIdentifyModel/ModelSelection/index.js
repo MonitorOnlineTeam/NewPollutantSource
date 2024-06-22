@@ -15,6 +15,7 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
 import RegionList from '@/components/RegionList'
+import EntAtmoList from '@/components/EntAtmoList';
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import styles from "../../styles.less"
 import Cookie from 'js-cookie';
@@ -25,10 +26,11 @@ const namespace = 'ModelBaseManage'
 
 
 const dvaPropsData = ({ loading, ModelBaseManage, global, }) => ({
+    pointListLoading: loading.effects['common/getPointByEntCode'],
     tableDatas: ModelBaseManage.dataAccessDatas,
     tableLoading: loading.effects[`${namespace}/ExportCarList`],
     configInfo: global.configInfo,
-    exportLoading: loading.effects[`${namespace}/ExportCarList`],
+
 })
 
 
@@ -80,9 +82,9 @@ const Index = (props) => {
             key: 'Status',
             align: 'center',
             ellipsis: true,
-            width:140,
+            width: 140,
             render: (text, record, index) => {
-                return <Row justify='center' align='middle' style={{cursor:'pointer'}} onClick={()=>executionMethod(record)}><div style={{width:'60px'}}>每周一次</div> <CaretDownOutlined /></Row>
+                return <Row justify='center' align='middle' style={{ cursor: 'pointer' }} onClick={() => executionMethod(record)}><div style={{ width: '60px' }}>每周一次</div> <CaretDownOutlined /></Row>
             }
         },
         {
@@ -125,6 +127,22 @@ const Index = (props) => {
             }
         },
     ];
+
+    // 根据企业获取排口
+    const [pointList, setPointList] = useState([]);
+    const getPointList = (EntCode, callback) => {
+        dispatch({
+            type: 'common/getPointByEntCode',
+            payload: {
+                EntCode,
+            },
+            callback: res => {
+                setPointList(res);
+                callback && callback();
+            },
+        });
+    };
+
     const [executionMethodVisible, setExecutionMethodVisible] = useState(false)
     const [executionMethodTitle, setExecutionMethodTitle] = useState()
 
@@ -158,25 +176,54 @@ const Index = (props) => {
             name="advanced_search"
             className={'ant-advanced-search-form'}
             layout='inline'
+            initialValues={{
+                projectType : '1'
+            }}
         >
-            <Form.Item label='选择项目'>
+            <Form.Item label='选择项目' name='projectType'>
                 <Select
-                    defaultValue="lucy"
                     style={{ width: 200 }}
                     onChange={handleChange}
                     placeholder='内蒙数据同步'
-                    allowClear
                     options={[
                         {
                             value: '1',
-                            label: 'Not Identified',
-                        },
-                        {
-                            value: '2',
-                            label: 'Closed',
+                            label: '内蒙数据',
                         },
                     ]}
                 />
+                <Form.Item label="企业" name="entCode">
+                    <EntAtmoList
+                        style={{ width: 200 }}
+                        onChange={value => {
+                            if (!value) {
+                                form.setFieldsValue({ dgimn: undefined });
+                            } else {
+                                form.setFieldsValue({ dgimn: undefined });
+                                getPointList(value);
+                            }
+                        }}
+                    />
+                </Form.Item>
+                <Spin spinning={!!pointListLoading} size="small">
+                    <Form.Item label="监测点名称" name="dgimn">
+                        <Select
+                            placeholder="请选择"
+                            showSearch
+                            allowClear
+                            optionFilterProp="children"
+                            style={{ width: 150 }}
+                        >
+                            {pointList.map(item => {
+                                return (
+                                    <Option key={item.DGIMN} value={item.DGIMN}>
+                                        {item.PointName}
+                                    </Option>
+                                );
+                            })}
+                        </Select>
+                    </Form.Item>
+                </Spin>
             </Form.Item>
         </Form>
     }
@@ -199,10 +246,11 @@ const Index = (props) => {
                 <Modal
                     visible={executionMethodVisible}
                     title={executionMethodTitle}
-                    onCancel={() => { setExecutionMethodVisible(false);form.resetFields() }}
+                    onCancel={() => { setExecutionMethodVisible(false); form.resetFields() }}
+                    wrapClassName="spreadOverModal"
                     destroyOnClose
                 >
-            
+
                 </Modal>
             </BreadcrumbWrapper>
         </div >

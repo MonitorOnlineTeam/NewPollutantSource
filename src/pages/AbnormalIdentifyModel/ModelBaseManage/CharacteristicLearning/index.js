@@ -27,9 +27,7 @@ const namespace = 'ModelBaseManage'
 
 
 const dvaPropsData = ({ loading, ModelBaseManage, global, }) => ({
-    tableDatas: ModelBaseManage.dataAccessDatas,
-    tableTotal: ModelBaseManage.dataAccessTotal,
-    tableLoading: loading.effects[`${namespace}/ExportCarList`],
+    tableLoading: loading.effects[`${namespace}/GetProjectLogsInfoList`],
     configInfo: global.configInfo,
     exportLoading: loading.effects[`${namespace}/ExportCarList`],
 })
