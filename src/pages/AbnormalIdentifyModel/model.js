@@ -2,12 +2,13 @@ import * as services from './services';
 import Model from '@/utils/model';
 import { message } from 'antd';
 import moment from 'moment';
-import { downloadFile } from '@/utils/utils';
+import { downloadFile, requestPost } from '@/utils/utils';
 import { ModelNumberIdsDatas } from './CONST';
 import { getListPager } from '@/services/autoformapi';
 import { useSelector } from 'umi';
 import { cookieName, uploadPrefix } from '@/config';
 import Cookie from 'js-cookie';
+import { API } from '@config/API';
 
 function initWarningForm() {
   let warningForm = {};
@@ -781,6 +782,42 @@ export default Model.extend({
     // 波动范围重新运行状态
     *GetModelRunStatus({ payload, callback }, { call, select, update }) {
       const result = yield call(services.GetModelRunStatus, payload);
+      callback && callback(result);
+    },
+    // 排放源数据缺失分析(行政区/企业/排放口)
+    *GetDataMissAnalysis({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.AbnormalIdentifyModel.GetDataMissAnalysis}`,
+        payload,
+      );
+      callback && callback(result);
+    },
+    // 排放源工况分析(行政区/企业/排放口)
+    *GetDataGkAnalysis({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.AbnormalIdentifyModel.GetDataGkAnalysis}`,
+        payload,
+      );
+      callback && callback(result);
+    },
+    //  异常数据分级分析(行政区/企业/排放口)
+    *GetWarningLevelAnalysis({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.AbnormalIdentifyModel.GetWarningLevelAnalysis}`,
+        payload,
+      );
+      callback && callback(result);
+    },
+    // 异常诊断分析
+    *GetDiagnoAnalysis({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.AbnormalIdentifyModel.GetDiagnoAnalysis}`,
+        payload,
+      );
       callback && callback(result);
     },
   },

@@ -1,8 +1,8 @@
 /*
  * @Author:jab
  * @Date: 2021.12.30
- * @Last Modified by: 
- * @Last Modified time: 
+ * @Last Modified by:
+ * @Last Modified time:
  * @Description: 计划巡检完成率弹框 计划校准完成率弹框
  */
 import React, { PureComponent } from 'react';
@@ -31,11 +31,11 @@ class Index extends PureComponent {
   }
 
   render() {
-    const { visible,type,time,modalType } = this.props
+    const { visible,type,time,modalType,wrapClassName } = this.props
     return (
       <Modal
         title= {modalType=='planCalibration'?"计划校准完成率":modalType=='planInspection'? "计划巡检完成率" :"实际校准完成率" }
-        wrapClassName='spreadOverModal'
+        wrapClassName={wrapClassName||'spreadOverModal'}
         visible={visible}
         footer={false}
         onCancel={this.onCancel}
@@ -43,8 +43,8 @@ class Index extends PureComponent {
       >
         <PlanWorkOrderStatistics time={time}  pollutantTypes={Number(type)}
           isPlanCalibrationModal={modalType=='planCalibration'}
-          isPlanInspectionModal={modalType=='planInspection'} 
-          isActualCalibrationModal={modalType=='actualCalibration'} 
+          isPlanInspectionModal={modalType=='planInspection'}
+          isActualCalibrationModal={modalType=='actualCalibration'}
           hideBreadcrumb/>
       </Modal>
     );

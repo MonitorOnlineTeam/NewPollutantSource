@@ -46,7 +46,8 @@ class AvatarDropdown extends React.Component {
   };
 
   render() {
-    const { currentUser = {}, menu, changePwdVisible } = this.props;
+    const {  menu, changePwdVisible } = this.props;
+    const currentUser = Cookie.get('currentUser') ? JSON.parse(Cookie.get('currentUser')) : {};
     if (!menu) {
       return (
         <span className={`${styles.action} ${styles.account}`}>
@@ -98,14 +99,14 @@ class AvatarDropdown extends React.Component {
         </span>
       </HeaderDropdown>
     ) : (
-        <Spin
-          size="small"
-          style={{
-            marginLeft: 8,
-            marginRight: 8,
-          }}
-        />
-      );
+      <Spin
+        size="small"
+        style={{
+          marginLeft: 8,
+          marginRight: 8,
+        }}
+      />
+    );
   }
 }
 

@@ -453,9 +453,11 @@ export const API = {
     GetExceptionModel: before + '/ExceptionDataApi/GetExceptionModel', //获取异常记录汇总信息
     GetExceptionData: before + '/ExceptionDataApi/GetExceptionData', //获取异常记录详情信息
     GetVideoList: before + '/VideoApi/GetVideoList', //视频管理获取视频信息
-    GetOperationTaskStatisticsInfoByDay: before + '/VisualDashBoardApi/GetOperationTaskStatisticsInfoByDay', //近期运维工单 固定到天
+    GetOperationTaskStatisticsInfoByDay:
+      before + '/VisualDashBoardApi/GetOperationTaskStatisticsInfoByDay', //近期运维工单 固定到天
     GetOperationPlanTaskListByDay: before + '/VisualDashBoardApi/GetOperationPlanTaskListByDay', //近期运维工单详情 固定到天
-    GetPlanOperationTaskCompleteRateByDay: before + '/VisualDashBoardApi/GetPlanOperationTaskCompleteRateByDay', //获取看板计划内完成巡检校准任务 固定到天
+    GetPlanOperationTaskCompleteRateByDay:
+      before + '/VisualDashBoardApi/GetPlanOperationTaskCompleteRateByDay', //获取看板计划内完成巡检校准任务 固定到天
     GetWorkOrderAnalysisListDay: before + '/VisualDashBoardApi/GetWorkOrderAnalysisList', //运维工单分析详情 固定到天
     ExportWorkOrderAnalysisListDay: before + '/VisualDashBoardApi/ExportWorkOrderAnalysisList', //运维工单分析详情 固定到天  导出
   },
@@ -689,7 +691,7 @@ export const API = {
     GetExceptionStandValue: before + '/MonitorPointApi/GetExceptionStandValue', //获取异常标准记录
     ExportExceptionStandValue: before + '/MonitorPointApi/ExportExceptionStandValue', //导出异常标准记录
   },
-  //异常数据模型分析 Api
+  //异常数据模型分析 1.0 Api
   AbnormalModelAnalysisApi: {
     /**设备参数管理**/
     GetEquipmentParametersInfo: before + '/EquipmentApi/GetEquipmentParametersInfo', //获取量程设定信息
@@ -724,7 +726,7 @@ export const API = {
     ExportModelWarningCheckedRectificationForEnt:
       before + '/Warning/ExportModelWarningCheckedRectificationForEnt', //企业 导出
   },
-  // 异常数据识别模型Api
+  // 异常数据识别模型2.0 Api
   AbnormalIdentifyModel: {
     // 获取线索列表
     GetWarningList: before + '/WarningV2/GetWarningList',
@@ -804,6 +806,14 @@ export const API = {
     AutoOpeModel: before + '/WarningV2/AutoOpeModel',
     // 获取模型运行状态
     GetModelRunStatus: before + '/MoldV2/GetModelRunStatus',
+    // 排放源数据缺失分析(行政区/企业/排放口)
+    GetDataMissAnalysis: before + '/WarningV2/GetDataMissAnalysis',
+    // 排放源工况分析(行政区/企业/排放口)
+    GetDataGkAnalysis: before + '/WarningV2/GetDataGkAnalysis',
+    // 异常数据分级分析(行政区/企业/排放口)
+    GetWarningLevelAnalysis: before + '/WarningV2/GetWarningLevelAnalysis',
+    // 异常诊断分析
+    GetDiagnoAnalysis: before + '/WarningV2/GetDiagnoAnalysis',
 
     /*实时数据异常识别及管理*/
     //异常线索清单
@@ -957,6 +967,17 @@ export const API = {
     GetParamKPIList: before + '/KeyParameter/GetParamKPIList', //获取运维督查KPI
     ExportParamKPIList: before + '/KeyParameter/ExportParamKPIList', //导出运维督查KPI
   },
+
+  // 系统驾驶舱Api
+  SystemDashboardApi: {
+    //设备运维总览
+    GetOperationEquipmentOverview: before + '/VisualDashBoardApi/GetOperationEquipmentOverview',
+    // 异常响应分析
+    GetExceptionResponseRate: before + '/VisualDashBoardApi/GetExceptionResponseRate',
+    // 运维驾驶舱地图
+    GetMapOperationEquipmentOverview: before + '/VisualDashBoardApi/GetMapOperationEquipmentOverview',
+  },
+
   /*资产管理 Api */
   AssetManagementApi: {
     /*** 设备台账 ***/

@@ -283,6 +283,7 @@ const Index = (props, ref) => {
     {
       title: '序号',
       align: 'center',
+      width: 40,
       render: (text, record, index) => {
         return index + 1;
       }
@@ -292,6 +293,7 @@ const Index = (props, ref) => {
       dataIndex: 'regionName',
       key: 'regionName',
       align: 'center',
+      width: 180,
       render: (text, record, index) => {
         return <Button type="link"
           onClick={() => {
