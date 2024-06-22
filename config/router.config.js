@@ -1421,6 +1421,11 @@ const routes = [
                 component: './operations/operationRecordList',
               },
               {
+                path: '/operations/operationLedger', //运维台账
+                name: 'ledger',
+                component: './operations/operationLedger',
+              },
+              {
                 path: '/operations/operationRecordnalysis', //运维记录分析
                 name: 'operationRecordnalysis',
                 component: './operations/operationRecordnalysis',
@@ -1586,6 +1591,11 @@ const routes = [
                 component: './EmergencyTodoList/EmergencyDetailInfoLayout',
               },
               {
+                path: '/operations/supervisionWorkbench', //督查核查软件 60 工作台
+                name: 'remoteSupervision',
+                component: './operations/supervisionWorkbench',
+              },
+              {
                 path: '/operations/remoteSupervision', //远程督查
                 name: 'remoteSupervision',
                 component: './operations/remoteSupervision',
@@ -1735,6 +1745,26 @@ const routes = [
                 ],
               },
             ],
+          },
+          { //设备运维过程管理
+            path: '/operaProcess',
+            name: 'operaProcess',
+            routes: [
+              {
+                path: '/operaProcess',
+                redirect: '/operaProcess/taskRecord?tasktype=1,7',
+              },
+              {
+                path: '/operaProcess/routine/taskRecord/:type',
+                name: 'routine',
+                component: './operations/TaskRecord',
+              },
+              {
+                path: '/operaProcess/emergency/taskRecord/:type',
+                name: 'emergency',
+                component: './operations/TaskRecord',
+              },
+            ]
           },
           {
             path: '/rolesmanager',
@@ -2043,6 +2073,11 @@ const routes = [
                 component: './Video/videoView',
               },
               {
+                name: 'videopreview',
+                path: '/monitoring/videopreview/:key',
+                component: './Video/videoView',
+              },
+              {
                 path: '/monitoring/videoMonitor',
                 redirect: '/monitoring/videoMonitor/ent',
               },
@@ -2073,6 +2108,16 @@ const routes = [
                 name: 'entExceptionReported',
                 path: '/monitoring/entExceptionReported',
                 component: './monitoring/entExceptionReported',
+              },
+              {
+                name: 'dynamicControlData', //动态管控数据查询
+                path: '/monitoring/dynamicControlData',
+                component: './monitoring/dynamicControlData',
+              },
+              {
+                name: 'workCondiData', //工况数据查询
+                path: '/monitoring/workCondiData',
+                component: './monitoring/workCondiData',
               },
               {
                 name: 'alarmInfo',
@@ -3958,6 +4003,13 @@ const routes = [
                       './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
                   },
                   {
+                    // 核查结果跟踪
+                    name: 'verifiedTaskTracking',
+                    path: '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskTracking',
+                    component:
+                      './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
+                  },
+                  {
                     // 核查详情
                     name: 'AlreadyVerifiedTask',
                     path: '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail',
@@ -4013,6 +4065,13 @@ const routes = [
                     path: '/AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis',
                     component:
                       './AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis/index.js',
+                  },
+                  {
+                    // 超标时长分析
+                    name: 'AnalysisExceedTimeLimit',
+                    path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AnalysisExceedTimeLimit',
+                    component:
+                      './AbnormalIdentifyModel/HistoryDataAnalysis/AnalysisExceedTimeLimit',
                   },
                 ],
               },

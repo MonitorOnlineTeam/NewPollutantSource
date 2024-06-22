@@ -15,6 +15,7 @@ class VideoView extends PureComponent {
   }
   render() {
     const { DGIMN, entName, pointName } = this.state;
+    const parKey = this.props.match?.params?.key?.split('=')?.[1]
     return (
       <>
         <NavigationTree
@@ -41,9 +42,10 @@ class VideoView extends PureComponent {
             {DGIMN && (
               <VideoContent
                 DGIMN={DGIMN}
-                defaultActiveKey={this.props.location.query.key}
+                defaultActiveKey={ parKey}
                 entName={entName}
                 pointName={pointName}
+                {...this.props}
               />
             )}
           </BreadcrumbWrapper>

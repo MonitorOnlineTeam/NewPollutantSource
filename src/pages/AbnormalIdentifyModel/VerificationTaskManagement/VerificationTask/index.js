@@ -47,9 +47,10 @@ const Index = props => {
     pointListLoading,
     entListLoading,
     verificationTaskData,
-    verificationTaskData: { pageIndex, pageSize, scrollTop,rowKey, type },
+    verificationTaskData: { pageIndex, pageSize, scrollTop, rowKey, type },
     location: { pathname },
   } = props;
+  const isAll = pathname === '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskTracking'
   const routerType = pathname === '/AbnormalIdentifyModel/VerificationTaskManagement/TobeVerifiedTask' ? 1 : 2
   const [pointList, setPointList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
@@ -76,7 +77,7 @@ const Index = props => {
       if (path !== detailPath && path !== currentPath) {
         dispatch({
           type: 'AbnormalIdentifyModel/updateState',
-          payload: { verificationTaskData: { pageIndex: 1, pageSize: 20,  scrollTop:0,rowKey:undefined, type: 1 } },
+          payload: { verificationTaskData: { pageIndex: 1, pageSize: 20, scrollTop: 0, rowKey: undefined, type: 1 } },
         })
       }
     };
@@ -179,7 +180,7 @@ const Index = props => {
                       verificationTaskData: {
                         ...verificationTaskData,
                         scrollTop: scrollTop,
-                        rowKey:record.ID 
+                        rowKey: record.ID
                       },
                     },
                   });
@@ -217,10 +218,10 @@ const Index = props => {
         setDataSource(data);
         setTotal(res.Total);
         // 设置滚动条高度，定位到点击详情的行号
-        let el = rowKey&&document.querySelector(`[data-row-key='${rowKey}']`);
+        let el = rowKey && document.querySelector(`[data-row-key='${rowKey}']`);
         let tableBody = document.querySelector('.ant-table-body');
         if (tableBody) {
-          el && type==2 ? (tableBody.scrollTop = scrollTop) : (tableBody.scrollTop = 0);
+          el && type == 2 ? (tableBody.scrollTop = scrollTop) : (tableBody.scrollTop = 0);
         }
       },
     });
@@ -237,7 +238,7 @@ const Index = props => {
           pageSize: pageSize,
           pageIndex: current,
           scrollTop: 0,
-          rowKey:undefined,
+          rowKey: undefined,
         },
       },
     });
@@ -268,7 +269,7 @@ const Index = props => {
           layout="inline"
           initialValues={{
             date: [moment().add(-1, 'months'), moment()],
-            CheckStatus:routerType==2? 3 : undefined,
+            CheckStatus: routerType == 2 && !isAll ? 3 : undefined,
           }}
         >
           <Form.Item label="日期" name="date">
@@ -279,21 +280,21 @@ const Index = props => {
               style={{ width: 250 }}
             />
           </Form.Item>
-          <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}>
-            <Form.Item label="企业" name="entCode">
-              <EntAtmoList
-                style={{ width: 200 }}
-                onChange={value => {
-                  if (!value) {
-                    form.setFieldsValue({ dgimn: undefined });
-                  } else {
-                    form.setFieldsValue({ dgimn: undefined });
-                    getPointList(value);
-                  }
-                }}
-              />
-            </Form.Item>
-          </Spin>
+          {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
+          <Form.Item label="企业" name="entCode">
+            <EntAtmoList
+              style={{ width: 200 }}
+              onChange={value => {
+                if (!value) {
+                  form.setFieldsValue({ dgimn: undefined });
+                } else {
+                  form.setFieldsValue({ dgimn: undefined });
+                  getPointList(value);
+                }
+              }}
+            />
+          </Form.Item>
+          {/* </Spin> */}
           <Spin spinning={!!pointListLoading} size="small">
             <Form.Item label="监测点名称" name="dgimn">
               <Select
@@ -313,17 +314,25 @@ const Index = props => {
               </Select>
             </Form.Item>
           </Spin>
-          <Form.Item label="核查状态" name="CheckStatus" hidden={routerType == 2}>
-            {routerType == 2 ?
-               <Select>
-               <Option key={3} value={3}>已完成</Option>
-             </Select>
-              :
-              <Select placeholder='请选择' style={{ width: 100 }} allowClear>
-              <Option key={1} value={1}>待核查</Option>
-              <Option key={2} value={2}>待确认</Option>
-            </Select>
-             }
+          <Form.Item label="核查状态" name="CheckStatus" hidden={routerType == 2 && !isAll}>
+            {
+              isAll ?
+                <Select placeholder='请选择' style={{width:90}} allowClear>
+                  <Option key={1} value={1}>待核查</Option>
+                  <Option key={2} value={2}>待确认</Option>
+                  <Option key={3} value={3}>已完成</Option>
+                </Select>
+                :
+                routerType == 2 ?
+                  <Select>
+                    <Option key={3} value={3}>已完成</Option>
+                  </Select>
+                  :
+                  <Select placeholder='请选择' style={{ width: 90 }} allowClear>
+                    <Option key={1} value={1}>待核查</Option>
+                    <Option key={2} value={2}>待确认</Option>
+                  </Select>
+            }
           </Form.Item>
           <Form.Item>
             <Space>
@@ -350,7 +359,7 @@ const Index = props => {
       </Card>
 
       <Card
-        title={<span style={{ fontWeight: 'bold' }}>{`${routerType == 1 ? '待核查' : '已核查'}任务单`}</span>}
+        title={!isAll && <span style={{ fontWeight: 'bold' }}>{`${routerType == 1 ? '待核查' : '已核查'}任务单`}</span>}
         style={{ marginTop: 12 }}
       >
         <SdlTable
@@ -359,7 +368,7 @@ const Index = props => {
           columns={getColumns()}
           dataSource={dataSource}
           loading={queryLoading}
-          scroll={{ y: 'calc(100vh - 410px)' }}
+          scroll={{ y: isAll? 'calc(100vh - 326px)' : 'calc(100vh - 410px)' }}
           pagination={{
             showSizeChanger: true,
             showQuickJumper: true,

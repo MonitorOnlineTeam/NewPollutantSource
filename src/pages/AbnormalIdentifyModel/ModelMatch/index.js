@@ -45,6 +45,7 @@ const Index = props => {
             setDGIMN(value[0].key);
           }
         }}
+        zIndex={props.zIndex}
       />
       <div id="ModelMatch">
         <BreadcrumbWrapper>{DGIMN && <PageContent DGIMN={DGIMN} />}</BreadcrumbWrapper>

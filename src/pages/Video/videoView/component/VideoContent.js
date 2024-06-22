@@ -171,9 +171,9 @@ class VideoContent extends PureComponent {
     } else {
       AccessModuleJson = `【${entName}企业】-【${pointName}排口】-【${
         currentVideo.VedioCamera_Name
-      }摄像头】在${moment(startDate).format('YYYY-MM-DD HH:mm:ss')}到${moment(endDate).format(
-        'YYYY-MM-DD HH:mm:ss',
-      )}视频被访问。`;
+        }摄像头】在${moment(startDate).format('YYYY-MM-DD HH:mm:ss')}到${moment(endDate).format(
+          'YYYY-MM-DD HH:mm:ss',
+        )}视频被访问。`;
     }
 
     let body = {
@@ -191,7 +191,95 @@ class VideoContent extends PureComponent {
       payload: body,
     });
   };
+  realTimeComponents = () => {
+    const { currentVideo,startDate,endDate } = this.state;
+    const { DGIMN,videoList } = this.props;
+    return <TabPane tab="实时" key="1">
+      <Row>
+        <label htmlFor="" style={{ lineHeight: '32px', marginRight: 10 }}>
+          选择摄像头：
+      </label>
+        <Select
+          style={{ width: '200px' }}
+          value={currentVideo.VedioCamera_ID}
+          onChange={(value, option) => {
+            this.setState({ currentVideo: option['data-item'] });
+          }}
+        >
+          {videoList.map(item => {
+            return (
+              <Option value={item.VedioCamera_ID} data-item={item}>
+                {item.VedioCamera_Name}
+              </Option>
+            );
+          })}
+        </Select>
+      </Row>
+      {/* <Divider style={{ marginBottom: 0 }} /> */}
+      <PTZControl videoInfo={currentVideo} />
+      <RealVideoData isShowControl={currentVideo.IsShowControl} dgimn={DGIMN} />
+    </TabPane>
+  }
 
+  historyComponents = () => {
+    const { currentVideo,startDate,endDate } = this.state;
+    const { DGIMN,videoList } = this.props;
+    return <TabPane tab="历史" key="2">
+      <Row>
+        <label htmlFor="" style={{ lineHeight: '32px', marginRight: 10 }}>
+          选择摄像头：
+                  </label>
+        <Select
+          style={{ width: '260px' }}
+          value={currentVideo.VedioCamera_ID}
+          onChange={(value, option) => {
+            this.setState({ currentVideo: option['data-item'] });
+          }}
+        >
+          {videoList.map(item => {
+            return (
+              <Option value={item.VedioCamera_ID} data-item={item}>
+                {item.VedioCamera_Name}
+              </Option>
+            );
+          })}
+        </Select>
+      </Row>
+      <Row style={{ marginTop: 10 }}>
+        <label htmlFor="" style={{ lineHeight: '32px', marginRight: 10 }}>
+          选择时间段：
+                  </label>
+        <RangePicker
+          style={{ width: '260px', marginRight: 10 }}
+          showTime={{ format: 'HH:mm:ss' }}
+          format="YYYY-MM-DD HH:mm:ss"
+          placeholder={['开始时间', '结束时间']}
+          onChange={this.onDateChange}
+        />
+      </Row>
+      {/* <Row style={{ marginTop: 10 }}>
+                <label htmlFor="" style={{ lineHeight: '32px', marginRight: 10 }}>
+                  请选择时间：
+                </label>
+                <DatePicker
+                  onChange={this.onDateChange2}
+                  style={{ width: '260px', marginRight: 10 }}
+                />
+              </Row> */}
+      <Divider orientation="right">
+        <Button type="primary" onClick={this.onPlaybackClick}>
+          播放
+                  </Button>
+      </Divider>
+      <HistoryVideoData
+        onRef={this.onRef1}
+        // {...this.props}
+        dgimn={DGIMN}
+        beginDate={moment(startDate, 'YYYY-MM-DD 00:00:00')}
+        endDate={moment(endDate, 'YYYY-MM-DD 23:59:59')}
+      />
+    </TabPane>
+  }
   render() {
     const { currentVideo, endDate, startDate, currentKey, showTabsKeys } = this.state;
     const { DGIMN, videoList, loading, defaultActiveKey } = this.props;
@@ -221,112 +309,51 @@ class VideoContent extends PureComponent {
             currentKey === '1' ? (
               <LiveVideo videoInfo={currentVideo} />
             ) : (
-              <PlaybackVideo
-                onRef={ref => (this.playbackVideo = ref)}
-                startDate={startDate}
-                endDate={endDate}
-                videoInfo={currentVideo}
-              />
-            )
+                <PlaybackVideo
+                  onRef={ref => (this.playbackVideo = ref)}
+                  startDate={startDate}
+                  endDate={endDate}
+                  videoInfo={currentVideo}
+                />
+              )
           ) : (
-            ''
-          )}
+              ''
+            )}
         </div>
-        <div className={styles.rightContent}>
-          <Tabs
-            // defaultActiveKey={defaultActiveKey}
-            activeKey={currentKey}
-            onChange={key => {
-              // let el = document.querySelector(`#ysyPlaybackWrapper-wrap`);
-              // if (el) el.innerHTML = '';
-              this.setState({ currentKey: key });
-            }}
-          >
-            {showTabsKeys.includes('1') && (
-              <TabPane tab="实时" key="1">
-                <Row>
-                  <label htmlFor="" style={{ lineHeight: '32px', marginRight: 10 }}>
-                    选择摄像头：
-                  </label>
-                  <Select
-                    style={{ width: '200px' }}
-                    value={currentVideo.VedioCamera_ID}
-                    onChange={(value, option) => {
-                      this.setState({ currentVideo: option['data-item'] });
-                    }}
-                  >
-                    {videoList.map(item => {
-                      return (
-                        <Option value={item.VedioCamera_ID} data-item={item}>
-                          {item.VedioCamera_Name}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Row>
-                {/* <Divider style={{ marginBottom: 0 }} /> */}
-                <PTZControl videoInfo={currentVideo} />
-                <RealVideoData isShowControl={currentVideo.IsShowControl} dgimn={DGIMN} />
-              </TabPane>
-            )}
-            {showTabsKeys.includes('2') && (
-              <TabPane tab="历史" key="2">
-                <Row>
-                  <label htmlFor="" style={{ lineHeight: '32px', marginRight: 10 }}>
-                    选择摄像头：
-                  </label>
-                  <Select
-                    style={{ width: '260px' }}
-                    value={currentVideo.VedioCamera_ID}
-                    onChange={(value, option) => {
-                      this.setState({ currentVideo: option['data-item'] });
-                    }}
-                  >
-                    {videoList.map(item => {
-                      return (
-                        <Option value={item.VedioCamera_ID} data-item={item}>
-                          {item.VedioCamera_Name}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Row>
-                <Row style={{ marginTop: 10 }}>
-                  <label htmlFor="" style={{ lineHeight: '32px', marginRight: 10 }}>
-                    选择时间段：
-                  </label>
-                  <RangePicker
-                    style={{ width: '260px', marginRight: 10 }}
-                    showTime={{ format: 'HH:mm:ss' }}
-                    format="YYYY-MM-DD HH:mm:ss"
-                    placeholder={['开始时间', '结束时间']}
-                    onChange={this.onDateChange}
-                  />
-                </Row>
-                {/* <Row style={{ marginTop: 10 }}>
-                <label htmlFor="" style={{ lineHeight: '32px', marginRight: 10 }}>
-                  请选择时间：
-                </label>
-                <DatePicker
-                  onChange={this.onDateChange2}
-                  style={{ width: '260px', marginRight: 10 }}
-                />
-              </Row> */}
-                <Divider orientation="right">
-                  <Button type="primary" onClick={this.onPlaybackClick}>
-                    播放
-                  </Button>
-                </Divider>
-                <HistoryVideoData
-                  onRef={this.onRef1}
-                  // {...this.props}
-                  dgimn={DGIMN}
-                  beginDate={moment(startDate, 'YYYY-MM-DD 00:00:00')}
-                  endDate={moment(endDate, 'YYYY-MM-DD 23:59:59')}
-                />
-              </TabPane>
-            )}
-          </Tabs>
+        <div className={styles.rightContent}> {/*params传参 tab无法选中处理*/}
+          {
+           this.props.match?.params?.key ?
+            <>
+            {
+              <>
+              {showTabsKeys.includes('1') && <Tabs>
+                {this.realTimeComponents()}
+              </Tabs>}
+               {showTabsKeys.includes('2') && <Tabs>
+                {this.historyComponents()}
+              </Tabs>}
+              </>
+            }
+             </>
+            :
+
+            <Tabs
+              // defaultActiveKey={defaultActiveKey}
+              activeKey={currentKey}
+              onChange={key => {
+                // let el = document.querySelector(`#ysyPlaybackWrapper-wrap`);
+                // if (el) el.innerHTML = '';
+                this.setState({ currentKey: key });
+              }}
+            >
+              {showTabsKeys.includes('1') && (
+                this.realTimeComponents()
+              )}
+              {showTabsKeys.includes('2') && (
+                this.historyComponents()
+              )}
+            </Tabs>
+          }
         </div>
       </Card>
     );

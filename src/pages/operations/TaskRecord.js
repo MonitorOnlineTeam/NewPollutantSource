@@ -47,12 +47,12 @@ import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatist
 import UserList from '@/components/UserList'
 import styles from './index.less'
 import { permissionButton } from '@/utils/utils';
-
+import { useParams } from 'umi';
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
-@connect(({ loading, operations, task, global,abnormalWorkStatistics, }) => ({
+@connect(({ loading, operations, task, global, abnormalWorkStatistics, }) => ({
   operationsUserList: operations.operationsUserList,
   loading: loading.effects['operations/addTask'],
   recordType: operations.recordType,
@@ -86,8 +86,8 @@ class TaskRecord extends Component {
       forwardToFromUserId: null,
       forwardToUserId: null,
       forwardRemark: null,
-      rejectPermis:false,
-      forwardPermis:false,
+      rejectPermis: false,
+      forwardPermis: false,
     };
     this._SELF_ = {
       configId: 'TaskRecord',
@@ -109,16 +109,44 @@ class TaskRecord extends Component {
     //   },
     // })
     // const buttonList = permissionButton(this.props.match.path)
-    const buttonList =  permissionButton('/operations/taskRecord')
-    buttonList.map(item=>{
-      switch (item){
-        case 'reject': this.setState({rejectPermis: true }); break;
-        case 'forward': this.setState({forwardPermis: true }); break;
+    const buttonList = permissionButton('/operations/taskRecord')
+    buttonList.map(item => {
+      switch (item) {
+        case 'reject': this.setState({ rejectPermis: true }); break;
+        case 'forward': this.setState({ forwardPermis: true }); break;
       }
     })
-    setTimeout(()=>{
-      this.LoadData();
-    })
+    if (this.props.match?.params?.type) {
+      this.getPar()
+    } else {
+      setTimeout(() => {
+        this.LoadData();
+      })
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.match?.params?.type !== prevProps.match?.params?.type) {
+      this.getPar()
+    }
+
+    if (this.props.DGIMN !== prevProps.DGIMN) {
+      this.getVideoList();
+    }
+  }
+
+  getPar = () =>{
+    const par = this.props.match?.params?.type.split('=')
+      this.setState({
+        expand: true
+      }, () => {
+        if(par[0] && par[1]){
+         if (par[0] === 'taskform') {
+          this.LoadData({ TaskFrom: par[1] });
+         }else{
+          this.LoadData({ TaskType: par[1].split(',') });
+        }
+      }
+      })
   }
 
   /** 时间控件回调 */
@@ -193,7 +221,7 @@ class TaskRecord extends Component {
           TaskFrom: baseReportSearchForm.TaskFrom != undefined ? baseReportSearchForm.TaskFrom : '',
           TaskStatusList: baseReportSearchForm.TaskStatusList != undefined ? baseReportSearchForm.TaskStatusList : '',
           OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
-          TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
+          TaskType: baseReportSearchForm.TaskType != undefined ? (this.props.match?.params?.type? baseReportSearchForm.TaskType.toString() : baseReportSearchForm.TaskType ): '',
           ApproveStatus: baseReportSearchForm.ApproveStatus != undefined ? baseReportSearchForm.ApproveStatus : '',//审批状态
           CompleteTime: baseReportSearchForm.CompleteTime,
           CreateTime: baseReportSearchForm.CreateTime,
@@ -232,7 +260,7 @@ class TaskRecord extends Component {
           OperationsUserId: '',
           TaskType: operaTaskType,
           CompleteTime: completeTime,
-          CreateTime:isWorkExecue?'': [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+          CreateTime: isWorkExecue ? '' : [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
           pageIndex: 1,
           pageSize: 20,
           total: 0,
@@ -242,8 +270,10 @@ class TaskRecord extends Component {
       },
     })
     this.props.form.setFieldsValue({
-      CompleteTime: completeTime, 
-      CreateTime:isWorkExecue?'': [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+      CompleteTime: completeTime,
+      CreateTime: isWorkExecue ? '' : [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+      TaskFrom: par?.TaskFrom || undefined,
+      TaskType: par?.TaskType || undefined,
     })
     dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: false, }, })
 
@@ -274,7 +304,7 @@ class TaskRecord extends Component {
           TaskFrom: baseReportSearchForm.TaskFrom != undefined ? baseReportSearchForm.TaskFrom : '',
           TaskStatusList: baseReportSearchForm.TaskStatusList != undefined ? baseReportSearchForm.TaskStatusList : '',
           OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
-          TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
+          TaskType: baseReportSearchForm.TaskType != undefined ? (this.props.match?.params?.type? baseReportSearchForm.TaskType.toString() : baseReportSearchForm.TaskType ): '',
           CompleteTime: baseReportSearchForm.CompleteTime,
           CreateTime: baseReportSearchForm.CreateTime,
           pageIndex,
@@ -304,7 +334,7 @@ class TaskRecord extends Component {
           TaskFrom: baseReportSearchForm.TaskFrom != undefined ? baseReportSearchForm.TaskFrom : '',
           TaskStatusList: baseReportSearchForm.TaskStatusList != undefined ? baseReportSearchForm.TaskStatusList : '',
           OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
-          TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
+          TaskType: baseReportSearchForm.TaskType != undefined ? (this.props.match?.params?.type? baseReportSearchForm.TaskType.toString() : baseReportSearchForm.TaskType ): '',
           CompleteTime: baseReportSearchForm.CompleteTime,
           CreateTime: baseReportSearchForm.CreateTime,
           EntCode: baseReportSearchForm.EntCode,
@@ -483,20 +513,20 @@ class TaskRecord extends Component {
   exceptionDetail = (row) => { //打卡异常详情
     this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: true, }, })
     this.setState({ abnormalTitle: `${row.EntName} - ${row.PointName}` })
-      const baseReportSearchForm = this.props.form.getFieldsValue();
-      const beginTime = baseReportSearchForm.CreateTime && moment(baseReportSearchForm.CreateTime[0]).format("YYYY-MM-DD HH:mm:ss");
-      const endTime = baseReportSearchForm.CreateTime && moment(baseReportSearchForm.CreateTime[1]).format("YYYY-MM-DD HH:mm:ss");
-      this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { queryPar: { ...this.props.queryPar, beginTime: beginTime, endTime: endTime, } } })
-      this.props.dispatch({
-        type: `abnormalWorkStatistics/getPointExceptionSignList`,
-        payload: {
-          beginTime: beginTime,
-          endTime: endTime,
-          DGIMN: row.DGIMN,
-          taskID: row.ID,
-        },
-      }
-      )
+    const baseReportSearchForm = this.props.form.getFieldsValue();
+    const beginTime = baseReportSearchForm.CreateTime && moment(baseReportSearchForm.CreateTime[0]).format("YYYY-MM-DD HH:mm:ss");
+    const endTime = baseReportSearchForm.CreateTime && moment(baseReportSearchForm.CreateTime[1]).format("YYYY-MM-DD HH:mm:ss");
+    this.props.dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { queryPar: { ...this.props.queryPar, beginTime: beginTime, endTime: endTime, } } })
+    this.props.dispatch({
+      type: `abnormalWorkStatistics/getPointExceptionSignList`,
+      payload: {
+        beginTime: beginTime,
+        endTime: endTime,
+        DGIMN: row.DGIMN,
+        taskID: row.ID,
+      },
+    }
+    )
   }
   taskForward = (record) => {
     if (record.IsForward == '1') {
@@ -694,7 +724,7 @@ class TaskRecord extends Component {
         align: 'center',
         ellipsis: true,
         render: (text, record, index) => {
-          const {forwardPermis,rejectPermis,} = this.state;
+          const { forwardPermis, rejectPermis, } = this.state;
           {
             const nowTime = record.nowDate;
             const completeTime = record.CompleteTime;
@@ -704,18 +734,18 @@ class TaskRecord extends Component {
             reslist.push(<>
               <Tooltip title="详情">
                 <a><ProfileOutlined
-                    style={{ fontSize: 16 }} 
-                   // onClick={() =>isHomeModal?this.taskRecordDetails(TaskID,DGIMN) : this.props.dispatch(routerRedux.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`))}
-                   onClick={() => this.taskRecordDetails(TaskID, DGIMN)}
+                  style={{ fontSize: 16 }}
+                  // onClick={() =>isHomeModal?this.taskRecordDetails(TaskID,DGIMN) : this.props.dispatch(routerRedux.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`))}
+                  onClick={() => this.taskRecordDetails(TaskID, DGIMN)}
                 /></a>
               </Tooltip>
-             
-              {forwardPermis&&<><Divider type="vertical" /><Tooltip title="任务转发">
+
+              {forwardPermis && <><Divider type="vertical" /><Tooltip title="任务转发">
                 <a style={{ cursor: record.IsForward != '1' && 'not-allowed', color: record.IsForward != '1' && 'rgba(0, 0, 0, 0.25) ', }}>
-                  <SendOutlined  style={{ cursor: record.IsForward != '1' && 'not-allowed', }} onClick={() => this.taskForward(record)} /></a>
+                  <SendOutlined style={{ cursor: record.IsForward != '1' && 'not-allowed', }} onClick={() => this.taskForward(record)} /></a>
               </Tooltip></>}
             </>)
-            if (completeTime&&rejectPermis) {
+            if (completeTime && rejectPermis) {
               // console.log('timetimetimetimetimetime', moment().diff(time, 'days'));
               // 当前时间 > 完成时间显示驳回
               if (moment(nowTime).diff(completeTime, 'days') <= 30) {
@@ -726,9 +756,9 @@ class TaskRecord extends Component {
                       <Popconfirm
                         placement="left"
                         title={
-                        <div>
-                           <Row>确认是否驳回?</Row>
-                           <Row className='red'>驳回后，请通知运维人员在3日内修改工单内容。</Row>
+                          <div>
+                            <Row>确认是否驳回?</Row>
+                            <Row className='red'>驳回后，请通知运维人员在3日内修改工单内容。</Row>
                           </div>}
                         onConfirm={() => {
                           this.rejectTask(TaskID);
@@ -771,7 +801,7 @@ class TaskRecord extends Component {
     const { pointList, pointLoading, } = this.state;
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
-        <Card className={`contentContainer ${styles.taskRecordSty}`} bordered={ !this.props.isWorkExecue}>
+        <Card className={`contentContainer ${styles.taskRecordSty}`} bordered={!this.props.isWorkExecue}>
           <Form layout="" className='searchForm' style={{ marginBottom: '10' }}>
             <Row>
               {!isHomeModal && <>
@@ -939,6 +969,7 @@ class TaskRecord extends Component {
                     initialValue: gettasklistqueryparams.TaskType ? gettasklistqueryparams.TaskType : undefined,
                   })(
                     <SearchSelect
+                      mode={this.props.match?.params?.type? 'multiple' : '-'}
                       style={{ width: '100%' }}
                       configId="RecordTypes"
                       itemName="dbo.T_Cod_RecordTypes.PollutantTypeName"
@@ -1130,7 +1161,7 @@ class TaskRecord extends Component {
           />
         </Modal>
         {/** 打卡异常  监测点 弹框 */}
-        {this.state.abnormalTitle&&<EntAbnormalMapModal abnormalTitle={this.state.abnormalTitle} onCancel={()=>{this.setState({abnormalTitle:undefined})}}/>}
+        {this.state.abnormalTitle && <EntAbnormalMapModal abnormalTitle={this.state.abnormalTitle} onCancel={() => { this.setState({ abnormalTitle: undefined }) }} />}
         <Modal
           title="任务转发"
           visible={this.state.taskForwardVisible}
