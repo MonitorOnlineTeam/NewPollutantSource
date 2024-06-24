@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
-import styles from '../styles.less';
+import styles from '@/pages/SystemDashboard/styles.less';
 import { Spin, Radio } from 'antd';
 import moment from 'moment';
 

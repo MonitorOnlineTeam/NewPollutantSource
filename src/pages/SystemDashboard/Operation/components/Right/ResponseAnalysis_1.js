@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal } from 'antd';
-import styles from '../../styles.less';
-import HomeCard from '../HomeCard';
+import styles from '@/pages/SystemDashboard/styles.less';
+import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import AbnormalAlarmRateModal from '@/pages/newestHome/components/springModal/abnormalAlarmRate';
 import MissingDataRateModal from '@/pages/newestHome/components/springModal/missingDataRate/MissingDataRateModel';
 
 let myChart;
-const dvaPropsData = ({ loading, OperationSysDashboard }) => ({
-  level: OperationSysDashboard.level,
-  regionCode: OperationSysDashboard.regionCode,
-  entCode: OperationSysDashboard.entCode,
-  time: OperationSysDashboard.time,
-  loading: loading.effects['OperationSysDashboard/GetExceptionResponseRate'],
+const dvaPropsData = ({ loading, sysDashboard }) => ({
+  level: sysDashboard.level,
+  regionCode: sysDashboard.regionCode,
+  entCode: sysDashboard.entCode,
+  time: sysDashboard.time,
+  loading: loading.effects['sysDashboard/GetExceptionResponseRate'],
 });
 
 const ResponseAnalysis = props => {
@@ -50,7 +50,7 @@ const ResponseAnalysis = props => {
 
   const getData = () => {
     dispatch({
-      type: 'OperationSysDashboard/GetExceptionResponseRate',
+      type: 'sysDashboard/GetExceptionResponseRate',
       payload: {
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
@@ -133,7 +133,7 @@ const ResponseAnalysis = props => {
         grid: [
           {
             show: false,
-            left: '60px',
+            left: '70px',
             top: '18%',
             bottom: '10',
             containLabel: true,
@@ -141,7 +141,7 @@ const ResponseAnalysis = props => {
           },
           {
             show: false,
-            left: '51%',
+            left: '52%',
             top: '18%',
             bottom: '10',
             width: '0%',

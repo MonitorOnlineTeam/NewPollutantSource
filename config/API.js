@@ -976,6 +976,8 @@ export const API = {
     GetExceptionResponseRate: before + '/VisualDashBoardApi/GetExceptionResponseRate',
     // 运维驾驶舱地图
     GetMapOperationEquipmentOverview: before + '/VisualDashBoardApi/GetMapOperationEquipmentOverview',
+    // 成套驾驶舱地图
+    GetInstallationDebuggingMap: before + '/CTStatisticsApi/GetInstallationDebuggingMap',
   },
 
   /*资产管理 Api */

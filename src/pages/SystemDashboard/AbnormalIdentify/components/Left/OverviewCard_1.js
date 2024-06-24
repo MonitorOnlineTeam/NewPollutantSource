@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import styles from '@/pages/SystemDashboard/styles.less';
-import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
+import HomeCard from '../HomeCard';
 import moment from 'moment';
 import OperatingInfo from '@/pages/newestHome/components/springModal/operatingInfo';
 
@@ -49,7 +49,7 @@ const DeviceInfoCount = props => {
   };
 
   return (
-    <HomeCard title="设备运维总览" bodyStyle={{}} loading={loading}>
+    <HomeCard title="异常识别总览" bodyStyle={{}} loading={loading}>
       <Row className={`${styles.DeviceInfoCountWrapper}`} onClick={onOpenModal}>
         <Col
           span={10}
@@ -75,7 +75,7 @@ const DeviceInfoCount = props => {
             </li>
             <li>
               <img src="/SystemDashboard/Operation/pointNum2.png" />
-              <span className={styles.text}>正常运维数量</span>
+              <span className={styles.text}>正常数量</span>
               <div style={{ position: 'absolute', right: 10 }}>
                 <span className={styles.num} style={{ color: '#2EEB9D' }}>
                   {nums.normalCount}
@@ -85,7 +85,7 @@ const DeviceInfoCount = props => {
             </li>
             <li>
               <img src="/SystemDashboard/Operation/pointNum3.png" />
-              <span className={styles.text}>异常运维数量</span>
+              <span className={styles.text}>异常数量</span>
               <div style={{ position: 'absolute', right: 10 }}>
                 <span className={styles.num} style={{ color: '#FFCC00' }}>
                   {nums.exceptionCount}
@@ -96,7 +96,7 @@ const DeviceInfoCount = props => {
           </ul>
         </Col>
       </Row>
-      {open && (
+      {/* {open && (
         <OperatingInfo //运维信息总览
           // wrapClassName="fullScreenModal"
           visible={open}
@@ -108,7 +108,7 @@ const DeviceInfoCount = props => {
           operatingStatus={undefined}
           outputType={0}
         />
-      )}
+      )} */}
     </HomeCard>
   );
 };

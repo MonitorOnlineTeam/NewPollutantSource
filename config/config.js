@@ -7,10 +7,10 @@ import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 import path from 'path';
-// const apiHost = 'http://172.16.12.39:49003/'; //运维测试
+const apiHost = 'http://172.16.12.39:49003/'; //运维测试
 // const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.134:61003/';//运维正式
-const apiHost = 'http://172.16.12.134:61005/';//运维正式
+// const apiHost = 'http://172.16.12.134:61005/';//运维正式
 // const apiHost = 'http://172.16.12.234:60061/';//模型
 // const API_HOST = 'http://172.16.12.60:6001/';  // 60
 // const apiHost = 'http://172.16.12.152:50089/';
@@ -186,6 +186,18 @@ export default {
               name: 'Operation',
               path: '/SystemDashboard/Operation',
               component: './SystemDashboard/Operation',
+            },
+            {
+              // 安装调试、成套
+              name: 'Operation',
+              path: '/SystemDashboard/CT',
+              component: './SystemDashboard/CT',
+            },
+            {
+              // 异常识别模型
+              name: 'Operation',
+              path: '/SystemDashboard/AbnormalIdentify',
+              component: './SystemDashboard/AbnormalIdentify',
             },
           ]
         },

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal } from 'antd';
-import styles from '../../styles.less';
-import HomeCard from '../HomeCard';
+import styles from '@/pages/SystemDashboard/styles.less';
+import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import { bar3DrenderItem } from '@/pages/ctDebuggAfterSaleServiceManage/utils/getBar3D';
@@ -11,12 +11,12 @@ import ConsumablesStatisticsModal from '@/pages/newestHome/components/springModa
 const COLOR = ['#3AE3FD', '#00AEFF', '#FFC75D'];
 const xData = ['标准气体更换数量', '易耗品更换数量', '备品备件更换数量'];
 let myChart;
-const dvaPropsData = ({ loading, OperationSysDashboard }) => ({
-  level: OperationSysDashboard.level,
-  regionCode: OperationSysDashboard.regionCode,
-  entCode: OperationSysDashboard.entCode,
-  time: OperationSysDashboard.time,
-  loading: loading.effects['OperationSysDashboard/GetVisualDashBoardConsumablesStatisticsInfo'],
+const dvaPropsData = ({ loading, sysDashboard }) => ({
+  level: sysDashboard.level,
+  regionCode: sysDashboard.regionCode,
+  entCode: sysDashboard.entCode,
+  time: sysDashboard.time,
+  loading: loading.effects['sysDashboard/GetVisualDashBoardConsumablesStatisticsInfo'],
 });
 
 const ReplacementAnalysis = props => {
@@ -37,7 +37,7 @@ const ReplacementAnalysis = props => {
 
   const getData = () => {
     dispatch({
-      type: 'OperationSysDashboard/GetVisualDashBoardConsumablesStatisticsInfo',
+      type: 'sysDashboard/GetVisualDashBoardConsumablesStatisticsInfo',
       payload: {
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,

@@ -1,5 +1,5 @@
 import Model from '@/utils/model';
-import * as services from '../services/common';
+import * as services from '../services/commonApi';
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';
@@ -11,7 +11,7 @@ export default Model.extend({
   effects: {
     //服务大区
     *GetLargeRegionList({ payload, callback }, { call, put, update, select }) {
-      const result = yield call(services.GetLargeRegionList, { ...payload });
+      const result = yield call(services.GetCtLargeRegionList, { ...payload });
       if (!result.IsSuccess) {
         message.error(result.Message)
       }

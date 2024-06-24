@@ -1,33 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal } from 'antd';
-import styles from '../../styles.less';
-import HomeCard from '../HomeCard';
+import styles from '@/pages/SystemDashboard/styles.less';
+import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import TimelyRate from '@/pages/ctDebuggAfterSaleServiceManage/reportsViews/timelyRate';
 import moment from 'moment';
 
-let myChart;
-const dvaPropsData = ({ loading, ctDataScreen }) => ({
+const dvaPropsData = ({ loading, sysDashboard }) => ({
+  time: sysDashboard.time,
   loading: loading.effects['ctDataScreen/GetTimelyRateAnalysis'],
 });
 
 const ServiceResponseRate = props => {
-  const { dispatch, loading } = props;
   const [open, setOpen] = useState(false);
   const [ServiceResponse, setServiceResponse] = useState({
     timelyCount: 0,
     nottimelyCount: 0,
     rate: '0.00',
   });
-  useEffect(() => {}, []);
+
+  const { dispatch, time, loading } = props;
+
+  useEffect(() => {
+    getData();
+  }, [time]);
 
   // 服务响应及时率
   const getData = value => {
     dispatch({
       type: 'ctDataScreen/GetTimelyRateAnalysis',
       payload: {
-        bTime: moment(value[0]).format('YYYY-MM-DD HH:mm:ss'),
-        eTime: moment(value[1]).format('YYYY-MM-DD HH:mm:ss'),
+        bTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
+        eTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
       },
       callback: res => {
         setServiceResponse(res.ServiceResponse);
@@ -41,18 +45,9 @@ const ServiceResponseRate = props => {
 
   return (
     <HomeCard
-      style={{ minHeight: 250 }}
-      title="服务响应及时率"
-      bodyStyle={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-      timeTypes={['上月', '本年']}
-      onChange={value => {
-        getData(value);
-      }}
-      onClick={onOpenModal}
+      title="服务响应及时分析"
+      style={{ minHeight: 260, flex: 3 }}
+      bodyStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       loading={loading}
     >
       <div className={styles.ServiceResponseRateWrapper} onClick={onOpenModal}>
@@ -72,7 +67,9 @@ const ServiceResponseRate = props => {
             backgroundImage: 'url(/ctHomeDataScreen/ServiceResponseRate_1.png)',
           }}
         >
-          <p className={styles.count}>{ServiceResponse.rate}%</p>
+          <p className={styles.count} style={{ color: '#F1A240' }}>
+            {ServiceResponse.rate}%
+          </p>
           <p className={styles.text}>响应及时率</p>
         </div>
         <div style={{ width: 30, height: 25, position: 'relative', top: -124 }}></div>
@@ -85,7 +82,7 @@ const ServiceResponseRate = props => {
         </div>
       </div>
       <Modal
-        title={`服务响应及时率`}
+        title={`服务响应及时分析`}
         wrapClassName="fullScreenModal"
         open={open}
         destroyOnClose

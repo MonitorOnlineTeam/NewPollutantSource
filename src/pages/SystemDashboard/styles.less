@@ -3,6 +3,11 @@
   src: url('/iconFont/pangmenzhengdao.TTF') format('truetype'); /* 根据你的字体文件格式调整format */
 }
 
+@font-face {
+  font-family: 'YouSheBiaoTiHei';
+  src: url('/iconFont/youshebiaotihei.ttf') format('truetype'); /* 根据你的字体文件格式调整format */
+}
+
 .dashboardPageWrapper {
   height: 100vh;
   width: 100vw;
@@ -11,7 +16,7 @@
   overflow: auto;
   color: #fff;
   position: relative;
-  background: url(/SystemDashboard/Operation/page_bg.png) no-repeat;
+  background: url(/SystemDashboard/page_bg.png) no-repeat;
   background-size: cover;
   td.bg_white {
     background-color: #fff;
@@ -74,9 +79,9 @@
   header {
     height: 60px;
     text-align: center;
-    background: url(/SystemDashboard/Operation/header_bg.png) no-repeat;
+    background: url(/SystemDashboard/header_bg.png) no-repeat;
     background-size: 100% 170%;
-    font-family: PangMenZhengDao;
+    font-family: YouSheBiaoTiHei;
     font-size: 30px;
     font-weight: bold;
     color: #4fd3ff;
@@ -124,6 +129,11 @@
           border-right: 5px solid transparent;
           border-top: 4px solid #1ac9ff;
           z-index: 10;
+        }
+
+        &:last-child {
+          width: 140px;
+          background-size: 100% 100%;
         }
       }
 
@@ -175,7 +185,7 @@
     height: 60px;
 
     .goSystem {
-      background: url(/SystemDashboard/Operation/goSystem.png) no-repeat;
+      background: url(/SystemDashboard/goSystem.png) no-repeat;
       color: #a4cee1;
       font-size: 15px;
       width: 120px;
@@ -219,8 +229,6 @@
       // flex: 1;
       display: flex;
       flex-direction: column;
-      background: url(/SystemDashboard/Operation/homeCard_bg.png);
-      background-size: 100% 100%;
       margin-bottom: 8px;
 
       &:last-child {
@@ -232,24 +240,33 @@
         height: 40px;
         line-height: 40px;
         font-size: 16px;
+        background: url(/SystemDashboard/Card_title_bg.png);
+        background-size: 100% 100%;
 
         .title {
           color: #fff;
           font-weight: 500;
           width: calc(100% - 140px);
+         
         }
       }
 
       .boxContent {
         padding: 0 16px;
         flex: 1;
+        background: url(/SystemDashboard/Card_content_bg.png);
+        background-size: 100% 100%;
       }
     }
 
+    // 图表标题
     .echartsTitle {
       text-align: center;
-      margin-top: -18px;
+      // margin-top: -40px;
       font-weight: bold;
+      position: absolute;
+      bottom: 20%;
+      width: 100%;
       // font-size: 15px;
     }
 
@@ -677,7 +694,164 @@
       }
     }
 
-    // 设备运维总览
+    // 切换按钮
+    .toggleRadio {
+      // position: absolute;
+      // right: 20px;
+      // top: 10px;
+      :global {
+        // .ant-radio-button-wrapper {
+        //   background: #021235;
+        //   color: #70a7ff;
+        //   border-color: #1a65e1;
+        //   font-weight: bold;
+        //   border-radius: 0;
+        //   height: 26px;
+        //   line-height: 24px;
+        //   padding: 0 10px;
+        // }
+        // .ant-radio-button-wrapper-checked {
+        //   background-color: #1d70f5;
+        //   font-weight: bold;
+        //   color: #fff;
+        // }
+        .ant-radio-button-wrapper:not(:first-child)::before {
+          // background: #1a65e1;
+        }
+      }
+      :global {
+        .ant-radio-button-wrapper {
+          height: 26px;
+          line-height: 24px;
+          padding: 0 14px;
+          border-radius: 0;
+          background-color: transparent;
+          font-size: 13px;
+          // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+          color: #c3f0ff;
+          border-color: #203e72;
+          font-weight: bold;
+        }
+        .ant-radio-button-wrapper-checked {
+          // background-color: #007bfd;
+          background: linear-gradient(0deg, #0c4390, rgba(10, 124, 255, 0.1));
+          border-color: #007bfd;
+          font-weight: bold;
+          color: #fff;
+        }
+      }
+    }
+
+    // 图表图例
+    .chartLegendWrapper {
+      // display: flex;
+      // // justify-content: space-between;
+      // height: 100%;
+      padding: 10px 0;
+
+      .lengendItem {
+        display: flex;
+        justify-content: space-around;
+        line-height: 30px;
+        height: 30px;
+        width: 100%;
+        padding: 2px 14px;
+        font-weight: bold;
+        .label {
+          width: 120px;
+          display: inline-block;
+          display: flex;
+          align-items: center;
+          i {
+            display: inline-block;
+            width: 20px;
+            height: 12px;
+            border-radius: 2px;
+            margin-right: 6px;
+          }
+          span {
+            color: #a2e0ff;
+            display: inline-block;
+            flex: 1;
+            // width: 100px;
+          }
+        }
+        .value {
+          width: 50px;
+          font-weight: bold;
+          font-size: 14px;
+          color: #a2e0ff;
+          display: inline-block;
+        }
+      }
+    }
+
+    //
+    .statisticsNum {
+      width: 100%;
+      background: url(/ctHomeDataScreen/customer.png);
+      background-size: 100% 100%;
+      line-height: 46px;
+      height: 46px;
+      padding: 0 20px;
+      margin-top: 10px;
+      .text {
+        margin-left: 40px;
+        font-weight: 500;
+      }
+
+      .number {
+        font-family: 'YouSheBiaoTiHei';
+        float: right;
+        background: linear-gradient(to top, #1ca1ff, #fff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 18px;
+      }
+    }
+
+    // 成套总览
+    .CTOverviewCard {
+      width: 100%;
+      height: 100%;
+      padding: 8px 2px;
+
+      .pointClassifyContent {
+        height: calc(100% - 80px);
+        width: 100%;
+        .pointClassifyItem {
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          height: 50%;
+
+          img {
+            width: 67px;
+            height: 61px;
+          }
+          .numberContent {
+            display: inline-block;
+
+            .num {
+              font-family: PangMenZhengDao;
+              font-weight: 500;
+              font-size: 22px;
+              color: #ffffff;
+              line-height: 28px;
+            }
+            .text {
+              font-family: Microsoft YaHei;
+              font-weight: 500;
+              font-size: 14px;
+              color: #eff0f1;
+              line-height: 27px;
+            }
+          }
+        }
+      }
+    }
+
+    // 运维、模型设备运维总览
     .DeviceInfoCountWrapper {
       height: 100%;
       cursor: pointer;
@@ -756,46 +930,96 @@
       }
     }
 
-    // 图表图例
-    .chartLegendWrapper {
-      // display: flex;
-      // // justify-content: space-between;
-      // height: 100%;
-      padding: 10px 0;
+    // 服务响应及时率
+    .ServiceResponseRateWrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: end;
+      position: relative;
+      .center {
+        flex-direction: column;
+      }
+      & > div {
+        background: url(/ctHomeDataScreen/ServiceResponseRate_2.png) no-repeat;
+        background-size: 100%;
+        text-align: center;
+        .count {
+          font-family: 'YouSheBiaoTiHei';
+          font-size: 24px;
+          margin-top: -6px;
 
-      .lengendItem {
-        display: flex;
-        justify-content: space-around;
-        line-height: 30px;
-        height: 30px;
-        width: 100%;
-        padding: 2px 14px;
-        font-weight: bold;
-        .label {
-          width: 120px;
-          display: inline-block;
-          display: flex;
-          align-items: center;
-          i {
-            display: inline-block;
-            width: 20px;
-            height: 12px;
-            border-radius: 2px;
-            margin-right: 6px;
-          }
           span {
-            color: #a2e0ff;
-            display: inline-block;
-            flex: 1;
-            // width: 100px;
+            font-size: 16px;
           }
         }
-        .value {
-          width: 50px;
-          font-weight: bold;
-          font-size: 14px;
-          color: #a2e0ff;
-          display: inline-block;
+
+        .text {
+          font-size: 13px;
+          margin-top: -6px;
+        }
+      }
+    }
+
+    // 客户满意度
+    .CustomerSatisfactionWrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    // 售后服务情况
+    .AfterSaleServiceWrapper {
+      padding: 10px 0;
+      height: 100%;
+      // display: flex;
+      .title {
+        background: url(/ctHomeDataScreen/title2_bg.png) no-repeat;
+        background-size: contain;
+        background-position: center;
+        width: 168px;
+        height: 24px;
+        margin: 10px 0;
+        padding-left: 25px;
+        font-size: 15px;
+      }
+
+      .listWrapper {
+        // padding: 0 20px;
+        // height: calc(100% - 24px - 20px);
+        width: 100%;
+        overflow: hidden;
+        margin-top: 10px;
+        .header {
+          background: rgba(16, 41, 81, 0.6);
+          color: #03aae2;
+          line-height: 38px;
+          text-align: center;
+          font-weight: 500;
+        }
+
+        .listContent {
+          height: calc(100% - 48px);
+          overflow: hidden;
+        }
+        .listItem {
+          line-height: 38px;
+          text-align: center;
+          font-weight: 500;
+          background-color: rgba(16, 41, 81, 0.3);
+          &:nth-child(2n) {
+            background-color: #010e33;
+          }
+
+          & > div {
+            &:first-child {
+              width: 32%;
+              // text-align: left;
+            }
+            width: 17%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
         }
       }
     }

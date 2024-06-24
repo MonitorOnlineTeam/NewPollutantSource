@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import styles from '@/pages/SystemDashboard/styles.less';
-import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
+import HomeCard from '../HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import PlanWorkOrderStatistics from '@/pages/newestHome/components/springModal/planWorkOrderStatistics/index.js';
 import moment from 'moment';
@@ -62,6 +62,7 @@ const Calibration = props => {
         {
           name: '校准质量分析',
           type: 'pie',
+          roseType: 'area',
           // radius: [50, 250],
           radius: ['50%', '70%'],
           center: ['50%', '50%'],
@@ -76,25 +77,6 @@ const Calibration = props => {
           // },
           // padAngle: 4,
           data: [
-            // {
-            //   value: 20.95,
-            //   name: '应完成数量',
-            //   itemStyle: {
-            //     normal: {
-            //       color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            //         {
-            //           offset: 0,
-            //           color: '#1EDF96',
-            //         },
-            //         {
-            //           offset: 1,
-            //           color: '#0D7759',
-            //         },
-            //       ]),
-            //       opacity: 1,
-            //     },
-            //   },
-            // },
             {
               value: InspectionAndCalibration.calibrationCompleteCount,
               name: '实际完成数量',
@@ -146,7 +128,7 @@ const Calibration = props => {
   };
 
   return (
-    <HomeCard title="校准质量分析" bodyStyle={{}} loading={loading}>
+    <HomeCard title="异常分类统计" bodyStyle={{}} loading={loading}>
       <Row style={{ height: '100%' }}>
         <Col span={13}>
           <ReactEcharts
@@ -165,14 +147,14 @@ const Calibration = props => {
             <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
                 <i style={{ backgroundColor: COLOR[0] }}></i>
-                <span className="textOverflow">应完成数量</span>
+                <span className="textOverflow">测量值异常</span>
               </div>
               <div className={styles.value}>{InspectionAndCalibration.calibrationCloseCount}</div>
             </Col>
             <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
                 <i style={{ backgroundColor: COLOR[1] }}></i>
-                <span className="textOverflow">实际完成数量</span>
+                <span className="textOverflow">样品气异常</span>
               </div>
               <div className={styles.value}>
                 {InspectionAndCalibration.calibrationCompleteCount}
@@ -181,7 +163,25 @@ const Calibration = props => {
             <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
                 <i style={{ backgroundColor: COLOR[2] }}></i>
-                <span className="textOverflow">待完成数量</span>
+                <span className="textOverflow">参数设置异常</span>
+              </div>
+              <div className={styles.value}>
+                {InspectionAndCalibration.calibrationIncompleteCount}
+              </div>
+            </Col>
+            <Col span={24} className={styles.lengendItem}>
+              <div className={styles.label}>
+                <i style={{ backgroundColor: COLOR[3] }}></i>
+                <span className="textOverflow">数据标记异常</span>
+              </div>
+              <div className={styles.value}>
+                {InspectionAndCalibration.calibrationIncompleteCount}
+              </div>
+            </Col>
+            <Col span={24} className={styles.lengendItem}>
+              <div className={styles.label}>
+                <i style={{ backgroundColor: COLOR[4] }}></i>
+                <span className="textOverflow">设备异常</span>
               </div>
               <div className={styles.value}>
                 {InspectionAndCalibration.calibrationIncompleteCount}

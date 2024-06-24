@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal } from 'antd';
-import styles from '../../styles.less';
-import HomeCard from '../HomeCard';
+import styles from '@/pages/SystemDashboard/styles.less';
+import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import EquipmentFailureRate from '@/pages/newestHome/components/springModal/equipmentFailureRate';
 import EquipmentFailurerePairRate from '@/pages/newestHome/components/springModal/equipmentFailurerePairRate';
 
 let myChart;
-const dvaPropsData = ({ loading, OperationSysDashboard }) => ({
-  level: OperationSysDashboard.level,
-  regionCode: OperationSysDashboard.regionCode,
-  entCode: OperationSysDashboard.entCode,
-  time: OperationSysDashboard.time,
-  loading: loading.effects['OperationSysDashboard/GetEquipmentExceptionsOverview'],
+const dvaPropsData = ({ loading, sysDashboard }) => ({
+  level: sysDashboard.level,
+  regionCode: sysDashboard.regionCode,
+  entCode: sysDashboard.entCode,
+  time: sysDashboard.time,
+  loading: loading.effects['sysDashboard/GetEquipmentExceptionsOverview'],
 });
 
 const DeviceDiagnostics = props => {
@@ -35,7 +35,7 @@ const DeviceDiagnostics = props => {
 
   const getData = () => {
     dispatch({
-      type: 'OperationSysDashboard/GetEquipmentExceptionsOverview',
+      type: 'sysDashboard/GetEquipmentExceptionsOverview',
       payload: {
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,

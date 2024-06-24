@@ -10,24 +10,29 @@ import SiteDetailsModal from '@/pages/newestHome/components/springModal/mapModal
 
 const legendList = [
   {
-    name: '运维正常',
+    name: '严重异常',
+    color: '#FFCC00',
+    value: '2',
+  },
+  {
+    name: '重点异常',
+    color: 'skyblue',
+    value: '0',
+  },
+  {
+    name: '一般异常',
     color: '#2EEB9D',
     value: '1',
   },
-  // {
-  //   name: '离线',
-  //   color: '#C9C9C9',
-  //   value: '0',
-  // },
-  // {
-  //   name: '停产',
-  //   color: '#FFCC00',
-  //   value: '4',
-  // },
   {
-    name: '运维异常',
-    color: '#FFCC00',
-    value: '2',
+    name: '轻微异常',
+    color: '#2EEB9D',
+    value: '1',
+  },
+  {
+    name: '轻微异常',
+    color: '#2EEB9D',
+    value: '1',
   },
 ];
 let aMap;
@@ -136,6 +141,18 @@ class MapContent extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    // if (this.state.level !== prevState.level) {
+    //   this.handleMarkerDatas();
+    // }
+    // level1MapData, level4MapData, levelOtherMapData;
+    // if (
+    //   this.props.level1MapData !== prevProps.level1MapData ||
+    //   this.props.level4MapData !== prevProps.level4MapData ||
+    //   this.props.levelOtherMapData !== prevProps.levelOtherMapData
+    // ) {
+    //   this.handleMarkerDatas();
+    // }
+
     if (this.props.time !== prevProps.time) {
       this.loadPageData();
     }
@@ -696,12 +713,6 @@ class MapContent extends PureComponent {
       return;
     }
     switch (text) {
-      case '放大':
-        map.zoomIn();
-        break;
-      case '缩小':
-        map.zoomOut();
-        break;
       case '展示企业': //行政区
         // this.setState({ backIconGo: true, mapBtnStatusIndex: -1 });
         // this.loadRegionMarkerData(regionMarkers);
@@ -768,8 +779,6 @@ class MapContent extends PureComponent {
             : '/SystemDashboard/map/toolPoint.png',
       },
       { text: '展示/隐藏名称', url: '/SystemDashboard/map/toolShowText.png' },
-      { text: '放大', url: '/SystemDashboard/map/zoomIn.png' },
-      { text: '缩小', url: '/SystemDashboard/map/zoomOut.png' },
     ];
     return (
       <div className={styles.mapOperationBtn}>

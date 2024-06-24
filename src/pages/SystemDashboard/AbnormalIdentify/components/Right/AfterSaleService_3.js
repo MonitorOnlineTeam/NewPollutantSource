@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Typography, Modal } from 'antd';
-import styles from '../../styles.less';
+import styles from '@/pages/SystemDashboard/styles.less';
 import HomeCard from '../HomeCard';
 import ReactSeamlessScroll from 'rc-seamless-scroll';
 import moment from 'moment';
@@ -9,27 +9,34 @@ import UnderWarrantyServices from '@/pages/ctDebuggAfterSaleServiceManage/afterS
 
 const { Paragraph, Text } = Typography;
 
-const dvaPropsData = ({ loading }) => ({
+const dvaPropsData = ({ loading, sysDashboard }) => ({
+  level: sysDashboard.level,
+  regionCode: sysDashboard.regionCode,
+  entCode: sysDashboard.entCode,
+  time: sysDashboard.time,
   loading: loading.effects['ctDataScreen/GetAfterSalesServiceAnalysis'],
 });
 
 const AfterSaleService = props => {
-  const { dispatch, loading } = props;
-
   const [open, setOpen] = useState(false);
   const [openType, setOpenType] = useState(1);
-
   const [ProductCategoryList, setProductCategoryList] = useState([]);
   const [ServiceReasonsList, setServiceReasonsList] = useState([]);
 
-  useEffect(() => {}, []);
+  const { dispatch, loading, time, level, regionCode, entCode } = props;
+
+  useEffect(() => {
+    getData();
+  }, [level, regionCode, entCode, time]);
 
   const getData = value => {
     dispatch({
       type: 'ctDataScreen/GetAfterSalesServiceAnalysis',
       payload: {
-        bTime: moment(value[0]).format('YYYY-MM-DD HH:mm:ss'),
-        eTime: moment(value[1]).format('YYYY-MM-DD HH:mm:ss'),
+        regionCode: level == 2 ? regionCode : undefined,
+        entCode: level == 3 ? entCode : undefined,
+        bTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
+        eTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
       },
       callback: res => {
         // 质保内服务产品类别
@@ -40,26 +47,20 @@ const AfterSaleService = props => {
     });
   };
 
-  const onOpenModal = (type) => {
+  const onOpenModal = type => {
     setOpen(true);
-    setOpenType(type)
+    setOpenType(type);
   };
 
   return (
     <HomeCard
-      style={{ flex: 1, minHeight: 320 }}
-      title="售后服务情况"
-      timeTypes={['本月', '本年']}
-      onChange={value => {
-        getData(value);
-      }}
-      bodyStyle={{
-        height: 'calc(100% - 41px)',
-      }}
+      title="售后服务分析"
+      style={{ minHeight: 440, flex: 5 }}
+      bodyStyle={{}}
       loading={loading}
     >
       <Row className={styles.AfterSaleServiceWrapper}>
-        <Col span={12} style={{ height: '100%',cursor:'pointer' }}  onClick={()=>onOpenModal(1)}>
+        <Col span={24} style={{ height: '100%', cursor: 'pointer' }} onClick={() => onOpenModal(1)}>
           <div className={styles.title}>质保内服务产品类别</div>
           <div className={styles.listWrapper}>
             <Row className={styles.header}>
@@ -93,7 +94,7 @@ const AfterSaleService = props => {
             </div>
           </div>
         </Col>
-        <Col span={12} style={{ height: '100%',cursor:'pointer' }}  onClick={()=>onOpenModal(2)}>
+        {/* <Col span={12} style={{ height: '100%',cursor:'pointer' }}  onClick={()=>onOpenModal(2)}>
           <div className={styles.title}>质保内服务原因</div>
           <div className={styles.listWrapper}>
             <Row className={styles.header}>
@@ -126,7 +127,7 @@ const AfterSaleService = props => {
               </ReactSeamlessScroll>
             </div>
           </div>
-        </Col>
+        </Col> */}
       </Row>
       <Modal
         title={`售后服务情况`}
@@ -139,7 +140,13 @@ const AfterSaleService = props => {
         }}
         bodyStyle={{ padding: 0 }}
       >
-        {open && <UnderWarrantyServices btnType={openType} hideBreadcrumb modalWrapClassName="fullScreenModal" />}
+        {open && (
+          <UnderWarrantyServices
+            btnType={openType}
+            hideBreadcrumb
+            modalWrapClassName="fullScreenModal"
+          />
+        )}
       </Modal>
     </HomeCard>
   );

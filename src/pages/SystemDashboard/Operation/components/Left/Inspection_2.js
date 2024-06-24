@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal } from 'antd';
-import styles from '../../styles.less';
-import HomeCard from '../HomeCard';
+import styles from '@/pages/SystemDashboard/styles.less';
+import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
 import PlanWorkOrderStatistics from '@/pages/newestHome/components/springModal/planWorkOrderStatistics/index.js';
 const COLOR = ['#2998FF', '#21ECBB', '#DFE06D'];
 
-const dvaPropsData = ({ OperationSysDashboard, loading }) => ({
-  level: OperationSysDashboard.level,
-  regionCode: OperationSysDashboard.regionCode,
-  entCode: OperationSysDashboard.entCode,
-  time: OperationSysDashboard.time,
-  InspectionAndCalibration: OperationSysDashboard.InspectionAndCalibration,
-  loading: loading.effects[`OperationSysDashboard/GetPlanOperationTaskCompleteRate`],
+const dvaPropsData = ({ sysDashboard, loading }) => ({
+  level: sysDashboard.level,
+  regionCode: sysDashboard.regionCode,
+  entCode: sysDashboard.entCode,
+  time: sysDashboard.time,
+  InspectionAndCalibration: sysDashboard.InspectionAndCalibration,
+  loading: loading.effects[`sysDashboard/GetPlanOperationTaskCompleteRate`],
 });
 
 const ProjectExecution = props => {
@@ -29,7 +29,7 @@ const ProjectExecution = props => {
 
   const getData = () => {
     dispatch({
-      type: 'OperationSysDashboard/GetPlanOperationTaskCompleteRate',
+      type: 'sysDashboard/GetPlanOperationTaskCompleteRate',
       payload: {
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,

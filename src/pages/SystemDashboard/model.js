@@ -7,28 +7,38 @@ import config from '@/config';
 import { downloadFile, requestPost } from '@/utils/utils';
 import { API } from '@config/API';
 
-export default Model.extend({
-  namespace: 'OperationSysDashboard1',
-  state: {
-    level: 1,
-    timeLabel: '本月',
-    time: [moment().startOf('month'), moment()],
-    regionCode: '',
-    entCode: '',
-    level1MapData: [],
-    level4MapData: [],
-    levelOtherMapData: [],
-    InspectionAndCalibration: {
-      inspectionCompleteCount: 0,
-      inspectionCloseCount: 0,
-      inspectionIncompleteCount: 0,
-      calibrationCompleteCount: 0,
-      calibrationCloseCount: 0,
-      calibrationIncompleteCount: 0,
-      inspectionRate: '0',
-      calibrationRate: '0',
-    },
+const initializeState = {
+  level: 1,
+  timeLabel: '本月',
+  time: [moment().startOf('month'), moment()],
+  regionCode: '',
+  entCode: '',
+  level1MapData: [],
+  level4MapData: [],
+  levelOtherMapData: [],
+  InspectionAndCalibration: {
+    inspectionCompleteCount: 0,
+    inspectionCloseCount: 0,
+    inspectionIncompleteCount: 0,
+    calibrationCompleteCount: 0,
+    calibrationCloseCount: 0,
+    calibrationIncompleteCount: 0,
+    inspectionRate: '0',
+    calibrationRate: '0',
   },
+  // 成套总览
+  CTCountAnalysis: {
+    EntCount: 0,
+    PointCount: 0,
+    GuideInstallationCount: 0,
+    DebuggingCount: 0,
+    CheckedCount: 0,
+  },
+};
+
+export default Model.extend({
+  namespace: 'sysDashboard',
+  state: initializeState,
   effects: {
     // 获取系统中间页
     *GetSysList({ payload, callback }, { call, put, update }) {
@@ -41,6 +51,13 @@ export default Model.extend({
         callback && callback(result.Datas);
       }
     },
+    // 获取系统中间页
+    *onResetState({ payload, callback }, { call, put, update }) {
+      yield update({
+        ...initializeState,
+      });
+    },
+
     // 获取设备运维总览
     *GetOperationEquipmentOverview({ payload, callback }, { call, put, update }) {
       const result = yield call(
@@ -125,6 +142,20 @@ export default Model.extend({
           });
         }
 
+        callback && callback(result.Datas);
+      }
+    },
+    // 获取成套地图数据
+    *GetInstallationDebuggingMap({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.SystemDashboardApi.GetInstallationDebuggingMap,
+        payload,
+      );
+      if (result.IsSuccess) {
+        // yield update({
+        //   CTCountAnalysis: result.Datas.CountAnalysis,
+        // });
         callback && callback(result.Datas);
       }
     },

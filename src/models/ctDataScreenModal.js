@@ -8,7 +8,7 @@ import { downloadFile, requestPost } from '@/utils/utils';
 import { API } from '@config/API';
 
 export default Model.extend({
-  namespace: 'ctDataScreen1',
+  namespace: 'ctDataScreen',
   state: {},
   effects: {
     // 获取地图数据
