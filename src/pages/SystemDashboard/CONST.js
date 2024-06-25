@@ -1,7 +1,16 @@
 export const sysList = [
   {
     key: '监控预警',
-    value: '',
+    value: '/systemDashboard/Monitoring',
+    title: '污染源监测监控',
+    data: {
+      ID: '179c308a-a895-4a7a-9c40-4f30dd5ff0bc',
+      Name: '污染源监测监控软件',
+      MenuImg: '监控',
+      TipsName: '污染源监测监控软件产品ReactShow',
+      CodeList: '',
+      Url: null,
+    },
   },
   {
     key: '异常数据识别',
@@ -134,7 +143,9 @@ export const dateRangeList = [
   {
     key: '下半年',
     value: [
-      moment().startOf('year').add(6, 'month'),
+      moment()
+        .startOf('year')
+        .add(6, 'month'),
       moment().endOf('year'),
     ],
   },

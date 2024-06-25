@@ -10,6 +10,7 @@ import _ from 'lodash';
 
 let myChart;
 const dvaPropsData = ({ loading, sysDashboard }) => ({
+  time: sysDashboard.time,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
   LevelList: sysDashboard.modalLevelList,
@@ -21,7 +22,7 @@ const LevelCard = props => {
   const [dataType, setDataType] = useState('Hours');
   const [open, setOpen] = useState(false);
 
-  const { dispatch, loading, LevelList, entCode, regionCode } = props;
+  const { dispatch, loading, LevelList, entCode, regionCode, time } = props;
 
   useEffect(() => {}, []);
 
@@ -223,6 +224,7 @@ const LevelCard = props => {
       >
         {open && (
           <AbnormalDataAnalysis
+            time={time}
             location={{
               pathname: '/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/level',
             }}

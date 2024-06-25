@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Typography, Modal } from 'antd';
+import { Row, Col, Typography, Modal, Tooltip } from 'antd';
 import styles from '@/pages/SystemDashboard/styles.less';
 import HomeCard from '../HomeCard';
 import ReactSeamlessScroll from 'rc-seamless-scroll';
@@ -67,37 +67,52 @@ const EmphasisEnt = props => {
           <div className={styles.listWrapper}>
             <Row className={styles.header} style={{ color: '#71CDF9' }}>
               <Col style={{ width: '37%' }}>监测点</Col>
-              <Col style={{ width: '26%' }}>异常小时数（H）</Col>
+              <Col style={{ width: '26%' }}>异常小时数 (H)</Col>
               <Col style={{ width: '37%' }}>原因分析</Col>
             </Row>
             <div className={styles.listContent} style={{ overflowY: 'auto' }}>
-              {/* <ReactSeamlessScroll
+              <ReactSeamlessScroll
                 list={dataSource}
                 style={{ width: '100%', height: '100%' }}
                 wrapperClassName={styles.RankingSeamlessScrollContent}
                 hover={true}
                 step={0.3}
-                // wheel={true}
+                wheel={true}
                 // copyNum={1}
-                // limitScrollNum={6}
-              > */}
-              {dataSource.map((item, index) => {
-                return (
-                  <Row
-                    key={time.index}
-                    className={styles.listItem}
-                    style={{ lineHeight: '48px', padding: '4px 0' }}
-                  >
-                    <Col style={{ width: '40%', lineHeight: '24px' }}>
-                      {item.entName} <br />
-                      {item.pointName}
-                    </Col>
-                    <Col style={{ width: '20%' }}>{item.NormalRate}</Col>
-                    <Col style={{ width: '40%' }}>{item.Reason || '-'}</Col>
-                  </Row>
-                );
-              })}
-              {/* </ReactSeamlessScroll> */}
+                limitScrollNum={6}
+              >
+                {dataSource.map((item, index) => {
+                  return (
+                    <Row
+                      key={time.index}
+                      className={styles.listItem}
+                      style={{ lineHeight: '48px', padding: '8px 0' }}
+                    >
+                      <Col style={{ width: '40%', lineHeight: '24px', padding: '0 4px' }}>
+                        <Tooltip
+                          color="#073783"
+                          title={
+                            <>
+                              {item.entName}
+                              <br />
+                              {item.pointName}
+                            </>
+                          }
+                        >
+                          {item.entName} <br />
+                          {item.pointName}
+                        </Tooltip>
+                      </Col>
+                      <Col style={{ width: '20%' }}>{item.NormalRate}</Col>
+                      <Col style={{ width: '40%', padding: '0 4px' }}>
+                        <Tooltip color="#073783" title={item.Reason || '-'}>
+                          {item.Reason || '-'}
+                        </Tooltip>
+                      </Col>
+                    </Row>
+                  );
+                })}
+              </ReactSeamlessScroll>
             </div>
           </div>
         </Col>

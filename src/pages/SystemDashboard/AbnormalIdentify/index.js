@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Tooltip, Row, Col, Modal, Space } from 'antd';
-import { router } from 'umi';
-import Cookie from 'js-cookie';
 import styles from '../styles.less';
 import MapContent from './components/Center/MapContent';
 import OverviewCard from './components/Left/OverviewCard_1';
@@ -11,11 +9,7 @@ import TypeCard from './components/Left/TypeCard_3';
 import BehaviorAnalysis from './components/Right/BehaviorAnalysis_1';
 import AnomalyRate from './components/Right/AnomalyRate_2';
 import EmphasisEnt from './components/Right/EmphasisEnt_3';
-import AvatarDropdown from '@/components/GlobalHeader/AvatarDropdown.jsx';
-import FullscreenToggle from './components/FullscreenToggle';
 import SystemDashboardPageWrapper from '@/pages/SystemDashboard/components/SystemDashboardPageWrapper.js';
-import moment from 'moment';
-import { sysList, dateRangeList } from '../CONST';
 
 const dvaPropsData = ({ loading, sysDashboard }) => ({
   timeLabel: sysDashboard.timeLabel,

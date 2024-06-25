@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import styles from '@/pages/SystemDashboard/styles.less';
 import config from '@/config';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
-import { Radio, Space, Spin, Select, Col, Row } from 'antd';
+import { Radio, Space, Spin, Tooltip, Col, Row, Descriptions } from 'antd';
 import moment from 'moment';
 import SiteDetailsModal from '@/pages/newestHome/components/springModal/mapModal/SiteDetailsModal';
 
@@ -13,26 +13,31 @@ const legendList = [
     name: '严重异常',
     color: 'red',
     value: '4',
+    description: '严重影响数据质量，动机定义明确，影响恶劣的'
   },
   {
     name: '重点异常',
     color: 'darkorange',
     value: '3',
+    description: '影响数据质量，无法判断明显动机，非正常运行的'
   },
   {
     name: '一般异常',
     color: 'gold',
     value: '2',
+    description: '对数据质量影响较小，但仍需要解决的'
   },
   {
     name: '轻微异常',
     color: 'skyblue',
     value: '1',
+    description: '不影响数据质量，属于管理不规范的'
   },
   {
     name: '无异常',
     color: '#2eeb9d',
     value: '',
+    description: '模型监测没有任何问题'
   },
 ];
 let aMap;
@@ -79,16 +84,6 @@ class MapContent extends PureComponent {
           NormalCount: 0,
           ExcepCount: 0,
         },
-        modalActionList: [],
-        modalLevelList: [],
-        modalTypeList: [],
-        modalRates: {
-          ExcepRate: 0,
-          RectRate: 0,
-          CheckRate: 0,
-        },
-      },
-      levelOtherCardsData: {
         modalActionList: [],
         modalLevelList: [],
         modalTypeList: [],
@@ -210,7 +205,6 @@ class MapContent extends PureComponent {
           });
           this.updateCardData(cardsData);
         } else if (level != 4) {
-          // setLevelOtherCardsData(cardsData);
           this.updateCardData(cardsData);
         }
 
@@ -638,7 +632,6 @@ class MapContent extends PureComponent {
               //   pointInfoWindowVisible: true,
               //   currentPointInfo: position,
               // });
-
               // this.props.dispatch({
               //   type: 'newestHome/updateState',
               //   payload: { siteDetailsVisible: true },
@@ -857,19 +850,21 @@ class MapContent extends PureComponent {
           <div className={styles.legend}>
             {legendList.map(item => {
               return (
-                <div
-                  className={`${styles.legendItem} ${
-                    selectedLegend === item.value ? styles.active : ''
-                  }`}
-                  style={{
-                    color: selectedLegend === item.value ? item.color : '',
-                    borderColor: selectedLegend === item.value ? item.color : '',
-                  }}
-                  onClick={() => this.onLegendClick(item.value)}
-                >
-                  <i style={{ background: item.color }}></i>
-                  <span>{item.name}</span>
-                </div>
+                <Tooltip color="#073783" placement="left" title={item.description}>
+                  <div
+                    className={`${styles.legendItem} ${
+                      selectedLegend === item.value ? styles.active : ''
+                    }`}
+                    style={{
+                      color: selectedLegend === item.value ? item.color : '',
+                      borderColor: selectedLegend === item.value ? item.color : '',
+                    }}
+                    onClick={() => this.onLegendClick(item.value)}
+                  >
+                    <i style={{ background: item.color }}></i>
+                    <span>{item.name}</span>
+                  </div>
+                </Tooltip>
               );
             })}
           </div>

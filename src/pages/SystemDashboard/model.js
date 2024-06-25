@@ -73,7 +73,17 @@ const initializeState = {
       importanProblemNum: 0,
       PrincipleProblemNum: 0
     }
-  }
+  },
+  // 监控总览
+  MonitoringCountAnalysis: {
+    entCount: 0,
+    pointCount: 0,
+    overCount: 0,
+    exceptionCount: 0,
+    normalCount: 0,
+    unLineCount: 0,
+    stopCount: 0,
+  },
 };
 
 export default Model.extend({
@@ -157,7 +167,7 @@ export default Model.extend({
         callback && callback(result.Datas);
       }
     },
-    // 地图数据
+    // 运维地图数据
     *GetMapOperationEquipmentOverview({ payload, callback }, { call, put, update }) {
       const result = yield call(
         requestPost,
@@ -283,5 +293,40 @@ export default Model.extend({
 
 
 
+    // 监控地图
+    *GetMapPointList({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.VisualKanbanApi.GetMapPointList, payload);
+      if (result.IsSuccess) {
+        if (payload.pointType === 1) {
+          // 行政区
+          yield update({
+            level1MapData: result.Datas.list,
+          });
+        } else if (payload.pointType === 3 && !payload.regionCode && !payload.entCode) {
+          // 全部监测点
+          yield update({
+            level4MapData: result.Datas.list,
+          });
+        } else {
+          // 行政区下企业、企业下监测点
+          yield update({
+            levelOtherMapData: result.Datas.list,
+          });
+        }
+
+        callback && callback(result.Datas);
+      }
+    },
+    // 联网率
+    *GetVisualDashBoardNetworkingRate({ callback, payload }, { call, put, update, select }) {
+      const result = yield call(
+        requestPost,
+        API.VisualKanbanApi.GetVisualDashBoardNetworkingRate,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback(result.Datas);
+      }
+    },
   },
 });

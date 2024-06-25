@@ -159,6 +159,7 @@ const TypeCard = props => {
           bodyStyle={{ padding: 0 }}
         >
           <AbnormalDataAnalysis
+            time={time}
             location={{
               pathname: '/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/type',
             }}

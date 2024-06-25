@@ -205,6 +205,12 @@ export default {
               path: '/SystemDashboard/SupervisionVerifica',
               component: './SystemDashboard/SupervisionVerifica',
             },
+            {
+              //监控
+              name: 'Monitoring',
+              path: '/SystemDashboard/Monitoring',
+              component: './SystemDashboard/Monitoring',
+            },
           ]
         },
         {

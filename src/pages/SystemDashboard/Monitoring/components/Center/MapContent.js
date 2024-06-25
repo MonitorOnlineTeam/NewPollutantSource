@@ -5,29 +5,33 @@ import styles from '@/pages/SystemDashboard/styles.less';
 import config from '@/config';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Radio, Space, Spin, Select, Col, Row } from 'antd';
-import moment from 'moment';
 import SiteDetailsModal from '@/pages/newestHome/components/springModal/mapModal/SiteDetailsModal';
 
 const legendList = [
   {
-    name: '运维正常',
+    name: '在线',
     color: '#2EEB9D',
     value: '1',
   },
-  // {
-  //   name: '离线',
-  //   color: '#C9C9C9',
-  //   value: '0',
-  // },
-  // {
-  //   name: '停产',
-  //   color: '#FFCC00',
-  //   value: '4',
-  // },
   {
-    name: '运维异常',
-    color: '#FFCC00',
+    name: '离线',
+    color: '#C9C9C9',
+    value: '0',
+  },
+  {
+    name: '停产',
+    color: '#836bfb',
+    value: '4',
+  },
+  {
+    name: '超标',
+    color: '#FF3737',
     value: '2',
+  },
+  {
+    name: '异常',
+    color: '#FFCC00',
+    value: '3',
   },
 ];
 let aMap;
@@ -37,7 +41,7 @@ let aMap;
   level1MapData: sysDashboard.level1MapData,
   level4MapData: sysDashboard.level4MapData,
   levelOtherMapData: sysDashboard.levelOtherMapData,
-  loading: loading.effects['sysDashboard/GetMapOperationEquipmentOverview'],
+  loading: loading.effects['sysDashboard/GetMapPointList'],
 }))
 class MapContent extends PureComponent {
   constructor(props) {
@@ -136,9 +140,9 @@ class MapContent extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.time !== prevProps.time) {
-      this.loadPageData();
-    }
+    // if (this.props.time !== prevProps.time) {
+    //   this.loadPageData();
+    // }
   }
 
   // 获取地图数据
@@ -146,16 +150,34 @@ class MapContent extends PureComponent {
     const { time } = this.props;
     const { level, regionCode, entCode } = this.state;
     this.props.dispatch({
-      type: 'sysDashboard/GetMapOperationEquipmentOverview',
+      type: 'sysDashboard/GetMapPointList',
       payload: {
         pointType: level === 4 ? 3 : level,
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
-        beginTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
-        endTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
+        // beginTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
+        // endTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
       },
       callback: res => {
-        this.handleMarkerDatas(res);
+        this.handleMarkerDatas(res.list);
+        if (level == 1) {
+          this.setState({
+            level1OverviewData: res.sum,
+          });
+          this.updateCardData(res.sum);
+        } else if (level != 4) {
+          this.updateCardData(res.sum);
+        }
+      },
+    });
+  };
+
+  // 更新总览数据
+  updateCardData = data => {
+    this.props.dispatch({
+      type: 'sysDashboard/updateState',
+      payload: {
+        MonitoringCountAnalysis: data,
       },
     });
   };
@@ -182,7 +204,7 @@ class MapContent extends PureComponent {
         // 根据选中图例显示排口
         let _mapData = [...mapData];
         if (selectedLegend) {
-          _mapData = _mapData.filter(item => item.Status === selectedLegend);
+          _mapData = _mapData.filter(item => item.Status == selectedLegend);
         }
         markersList = _mapData.map(item => {
           return {
@@ -211,22 +233,22 @@ class MapContent extends PureComponent {
   };
 
   getPointIcon = status => {
-    let color = '';
+    let color = legendList.find(item => item.value == status).color;
 
-    switch (status) {
-      // case '0': // 离线
-      //   color = legendList[1].color;
-      //   break;
-      case '1': // 在线
-        color = legendList[0].color;
-        break;
-      case '2': // 超标
-        color = legendList[1].color;
-        break;
-      // case '4': // 停运
-      //   color = legendList[2].color;
-      //   break;
-    }
+    // switch (status) {
+    //   case '0': // 离线
+    //     color = legendList[1].color;
+    //     break;
+    //   case '1': // 在线
+    //     color = legendList[0].color;
+    //     break;
+    //   case '2': // 超标
+    //     color = legendList[1].color;
+    //     break;
+    //   case '4': // 停运
+    //     color = legendList[2].color;
+    //     break;
+    // }
 
     return (
       <div
@@ -372,13 +394,14 @@ class MapContent extends PureComponent {
 
   // 返回按钮点击
   onGoback = () => {
-    const { level } = this.state;
+    const { level, level1OverviewData } = this.state;
     const { level1MapData } = this.props;
     // 企业返回、全部监测点返回
     if (level === 2 || level === 4) {
       aMap.clearMap();
       this.setState({ level: 1, pointInfoWindowVisible: false, selectedLegend: '' }, () => {
         this.handleMarkerDatas(level1MapData);
+        this.updateCardData(level1OverviewData);
       });
 
       this.props.dispatch({
@@ -432,8 +455,8 @@ class MapContent extends PureComponent {
     const { position } = extData;
     const { showType, entTitleShow, pointTitleShow, isMassive, level } = this.state;
 
-    if (level == 1) {
-      let title = position.regionName;
+    if (level == 1 || level == 2) {
+      let title = level == 1 ? position.regionName : position.entName;
       return (
         <div
           style={{
@@ -441,7 +464,7 @@ class MapContent extends PureComponent {
             transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
             padding: '0 10px',
             cursor: 'text',
-            width: 200,
+            width: 260,
             height: 170,
             background: `url(/SystemDashboard/regionTip.png)`,
             backgroundSize: '100% 100%',
@@ -464,125 +487,12 @@ class MapContent extends PureComponent {
                 cursor: 'pointer',
               }}
               title={title}
-              onClick={() => this.onClickRegion(extData)}
+              onClick={() => (level == 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
             >
               {title}
             </div>
             <RightOutlined
-              onClick={() => this.onClickRegion(extData)}
-              style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
-            />
-            <Row
-              style={{
-                height: 'calc(100% - 36px)',
-                display: 'flex',
-                fontWeight: 'bold',
-                padding: '0 10px',
-              }}
-            >
-              <Col
-                span={14}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.entCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>企业数量</p>
-              </Col>
-              <Col
-                span={10}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <p style={{ color: '#00a3ff', fontSize: 20 }}>{position.pointCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排放口数量</p>
-              </Col>
-              <Col
-                span={14}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.normarlCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维正常数量</p>
-              </Col>
-              <Col
-                span={10}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <p style={{ color: '#FFCC00', fontSize: 20 }}>{position.exceptionCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>异常数量</p>
-              </Col>
-            </Row>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <span
-              className={styles.circle}
-              style={{
-                display: 'inline-block',
-                marginTop: 16,
-                width: 10,
-                height: 10,
-                background: 'rgba(0, 141, 253, 1)',
-                boxShadow: ' 0 0 4px 4px rgba(0, 141, 253, .1)',
-                borderRadius: '50%',
-              }}
-            ></span>
-          </div>
-        </div>
-      );
-    } else if (level == 2) {
-      let title = position.entName;
-      return (
-        <div
-          style={{
-            position: 'relative',
-            transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
-            padding: '0 10px',
-            cursor: 'text',
-            width: 300,
-            height: 120,
-            background: `url(/SystemDashboard/regionTip.png)`,
-            backgroundSize: '100% 100%',
-          }}
-        >
-          <div
-            style={{
-              opacity: 1,
-              color: '#52F2FF',
-              height: 'calc(100% - 12px)',
-              paddingTop: 2,
-            }}
-          >
-            <div
-              className="textOverflow"
-              style={{
-                width: 'calc(100% + 17px)',
-                lineHeight: '22px',
-                fontWeight: 'bold',
-                background: ' #073783',
-                margin: '0 -9px',
-                padding: '0 10px',
-                cursor: 'pointer',
-              }}
-              title={title}
-              onClick={() => this.onClickEnt(extData)}
-            >
-              {title}
-            </div>
-            <RightOutlined
-              onClick={() => this.onClickEnt(extData)}
+              onClick={() => (level == 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
               style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
             />
             <Row
@@ -601,22 +511,44 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FF3737', fontSize: 20 }}>{position.pointCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排放口数量</p>
+                <p style={{ color: '#00a3ff', fontSize: 20 }}>{position.pointCount || 12}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>排口数量</p>
               </Col>
               <Col
-                span={10}
+                span={8}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.normarlCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维正常数量</p>
+                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.normalCount}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>在线数量</p>
               </Col>
               <Col
-                span={6}
+                span={8}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
+              >
+                <p style={{ color: '#C9C9C9', fontSize: 20 }}>{position.unLineCount || 22}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>离线数量</p>
+              </Col>
+              <Col
+                span={8}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
+              >
+                <p style={{ color: '#FF3737', fontSize: 20 }}>{position.overCount}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>超标数量</p>
+              </Col>
+              <Col
+                span={8}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -625,6 +557,17 @@ class MapContent extends PureComponent {
               >
                 <p style={{ color: '#FFCC00', fontSize: 20 }}>{position.exceptionCount}</p>
                 <p style={{ fontSize: 13, color: '#fff' }}>异常数量</p>
+              </Col>
+              <Col
+                span={8}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
+              >
+                <p style={{ color: '#836bfb', fontSize: 20 }}>{position.stopCount}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>停产数量</p>
               </Col>
             </Row>
           </div>

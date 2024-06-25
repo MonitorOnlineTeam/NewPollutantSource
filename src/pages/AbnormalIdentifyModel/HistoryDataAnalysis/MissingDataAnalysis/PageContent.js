@@ -29,9 +29,9 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
 const PageContent = props => {
   const [form] = Form.useForm();
 
-  const { dispatch, pageTitle, DGIMN, warningForm } = props;
+  const { dispatch, time, DGIMN, warningForm } = props;
 
-  const [date, setDate] = useState([moment().startOf('year'), moment()]); // 时间
+  const [date, setDate] = useState(time || [moment().startOf('year'), moment()]); // 时间
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState();
   const [regionCode, setRegionCode] = useState();
@@ -678,6 +678,9 @@ const PageContent = props => {
                 dataType="day"
                 format="YYYY-MM-DD"
                 style={{ width: 250 }}
+                onChange={value => {
+                  setDate(value);
+                }}
               />
             </Form.Item>
             <Form.Item>
@@ -856,7 +859,7 @@ const PageContent = props => {
           footer={false}
           onCancel={() => setIsModalOpen(false)}
         >
-          <MissingDataAnalysis regionCode={regionCode} entCode={entCode} />
+          <MissingDataAnalysis regionCode={regionCode} entCode={entCode} time={date} />
         </Modal>
       )}
     </div>

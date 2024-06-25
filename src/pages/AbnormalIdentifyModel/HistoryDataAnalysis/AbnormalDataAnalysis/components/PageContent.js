@@ -79,9 +79,9 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
 const PageContent = props => {
   const [form] = Form.useForm();
   console.log('match', props);
-  const { dispatch, pageTitle, DGIMN, excepType, location, wrapClassName } = props;
+  const { dispatch, pageTitle, DGIMN, excepType, location, time } = props;
 
-  const [date, setDate] = useState([moment().startOf('year'), moment()]); // 时间
+  const [date, setDate] = useState(time || [moment().startOf('year'), moment()]); // 时间
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState();
   const [regionCode, setRegionCode] = useState();
@@ -99,7 +99,7 @@ const PageContent = props => {
   }, []);
 
   //
-  const loadData = () => {
+  const loadData = (_dataType, _rtnType) => {
     let bTime = moment(date[0]).format('YYYY-MM-DD HH:mm:ss');
     let eTime = moment(date[1]).format('YYYY-MM-DD HH:mm:ss');
     setLoading(true);
@@ -110,9 +110,9 @@ const PageContent = props => {
         regionCode: props.regionCode,
         beginTime: bTime,
         endTime: eTime,
-        dataType: dataType2,
+        dataType: _dataType || dataType,
         ExcepType: excepType,
-        RtnType: rtnType2,
+        RtnType: _rtnType || rtnType,
       },
       callback: result => {
         if (result.IsSuccess) {
@@ -530,7 +530,7 @@ const PageContent = props => {
             }}
             autoComplete="off"
           >
-            <Form.Item label="分析维度" name="dataType">
+            {/* <Form.Item label="分析维度" name="dataType">
               <Select
                 placeholder="请选择监测点类型"
                 allowClear={false}
@@ -549,8 +549,8 @@ const PageContent = props => {
                   排放口
                 </Option>
               </Select>
-            </Form.Item>
-            <Form.Item label="分析方式" name="rtnType">
+            </Form.Item> */}
+            {/* <Form.Item label="分析方式" name="rtnType">
               <Select
                 style={{ width: 160 }}
                 placeholder="请选择监测点类型"
@@ -566,13 +566,16 @@ const PageContent = props => {
                   异常时长
                 </Option>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item label="时间" name="date">
               <RangePicker_
                 allowClear={false}
                 dataType="day"
                 format="YYYY-MM-DD"
                 style={{ width: 250 }}
+                onChange={value => {
+                  setDate(value);
+                }}
               />
             </Form.Item>
             <Form.Item>
@@ -580,13 +583,36 @@ const PageContent = props => {
                 type="primary"
                 loading={loading}
                 onClick={() => {
-                  setDataType(dataType2);
-                  setRtnType(rtnType2);
+                  // setDataType(dataType2);
+                  // setRtnType(rtnType2);
                   loadData();
                 }}
               >
                 查询
               </Button>
+            </Form.Item>
+            <Form.Item name="dataType" style={{ marginLeft: 10 }}>
+              <Radio.Group
+                onChange={e => {
+                  setDataType(e.target.value);
+                  loadData(e.target.value);
+                }}
+              >
+                <Radio.Button value="region">行政区</Radio.Button>
+                <Radio.Button value="ent">企业</Radio.Button>
+                <Radio.Button value="point">排放口</Radio.Button>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item name="rtnType" style={{ marginLeft: 0 }}>
+              <Radio.Group
+                onChange={e => {
+                  setRtnType(e.target.value);
+                  loadData(dataType, e.target.value);
+                }}
+              >
+                <Radio.Button value="nums">异常次数</Radio.Button>
+                <Radio.Button value="hours">异常时长</Radio.Button>
+              </Radio.Group>
             </Form.Item>
           </Form>
         </Card>
@@ -668,6 +694,7 @@ const PageContent = props => {
           onCancel={() => setIsModalOpen(false)}
         >
           <AbnormalDataAnalysis
+            time={date}
             regionCode={regionCode}
             entCode={entCode}
             rtnType={rtnType}

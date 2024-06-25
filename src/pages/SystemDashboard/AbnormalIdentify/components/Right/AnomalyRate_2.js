@@ -5,10 +5,13 @@ import styles from '@/pages/SystemDashboard/styles.less';
 import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
-import CustomerSatisfacQuery from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery';
+import AnomalyRateDetect from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/AnomalyRateDetect';
 
 let myChart;
 const dvaPropsData = ({ loading, sysDashboard }) => ({
+  time: sysDashboard.time,
+  regionCode: sysDashboard.regionCode,
+  entCode: sysDashboard.entCode,
   modalRates: sysDashboard.modalRates,
   loading: loading.effects['sysDashboard/GetMapPointInfo'],
 });
@@ -20,7 +23,7 @@ const AnomalyRate = props => {
 
   const [open, setOpen] = useState(false);
 
-  const { dispatch, loading, modalRates } = props;
+  const { dispatch, loading, time, modalRates, entCode, regionCode } = props;
 
   useEffect(() => {}, []);
 
@@ -169,7 +172,7 @@ const AnomalyRate = props => {
       bodyStyle={{}}
       loading={loading}
     >
-      <div className={styles.CustomerSatisfactionWrapper} onClick={onOpenModal}>
+      <div className={styles.CustomerSatisfactionWrapper}>
         <Row style={{ height: '100%' }}>
           <Col span={8}>
             <ReactEcharts
@@ -179,6 +182,7 @@ const AnomalyRate = props => {
               option={getOption(1, modalRates.ExcepRate, '疑似异常率')}
               lazyUpdate={true}
               style={{ height: '100%', width: '100%' }}
+              onEvents={{ click: onOpenModal }}
             />
           </Col>
           <Col span={8}>
@@ -186,7 +190,8 @@ const AnomalyRate = props => {
               ref={echart => {
                 echart && setEcharts2(echart.echarts);
               }}
-              option={getOption(2, modalRates.CheckRate, '核实率')}
+              // option={getOption(2, modalRates.CheckRate, '核实率')}
+              option={getOption(2, 93, '核实率')}
               lazyUpdate={true}
               style={{ height: '100%', width: '100%' }}
             />
@@ -196,7 +201,7 @@ const AnomalyRate = props => {
               ref={echart => {
                 echart && setEcharts3(echart.echarts);
               }}
-              option={getOption(3, modalRates.RectRate, '整改率')}
+              option={getOption(3, 94, '整改率')}
               lazyUpdate={true}
               style={{ height: '100%', width: '100%' }}
             />
@@ -204,7 +209,7 @@ const AnomalyRate = props => {
         </Row>
       </div>
       <Modal
-        title={`客户满意度调查`}
+        title={`异常率诊断分析`}
         wrapClassName="fullScreenModal"
         open={open}
         destroyOnClose
@@ -212,17 +217,9 @@ const AnomalyRate = props => {
         onCancel={() => {
           setOpen(false);
         }}
-        // bodyStyle={{ padding: 0 }}
+        bodyStyle={{ padding: 0 }}
       >
-        {open && (
-          <CustomerSatisfacQuery
-            viewOnlyAll
-            match={{ path: '' }}
-            modalWrapClassName="fullScreenModal"
-            initDate={date}
-            isHome
-          />
-        )}
+        {open && <AnomalyRateDetect regionCode={regionCode} entCode={entCode} time={time} />}
       </Modal>
     </HomeCard>
   );

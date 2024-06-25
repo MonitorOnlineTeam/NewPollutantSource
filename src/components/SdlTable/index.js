@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-27 09:17:13
+ * @Last Modified time: 2024-06-25 14:41:14
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -303,31 +303,31 @@ class SdlTable extends PureComponent {
         : '';
     // 没有分页高度 + 40
     const scrollY =
-      pagination === false && typeof scrollYHeight === 'number' ? scrollYHeight + 40 : scrollYHeight;
+      pagination === false && typeof scrollYHeight === 'number'
+        ? scrollYHeight + 40
+        : scrollYHeight;
     // 处理表格长度，防止错位
 
     const _columns = (columns || []).map((col, index) => ({
-      render: (text, record,index) =>
-        (
-          col.title=='序号' && !col.dataIndex && !col.key && !col.render?
-          (index + 1) + (this.state.pageIndex-1) * this.state.pageSize
-          :
-          text &&  <div
-            style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
-            className={col.ellipsis ? 'ant-table-cell-ellipsis' : null}
-          >
-            {text}
-          </div>
-        ),
+      render: (text, record, index) =>
+        col.title == '序号' && !col.dataIndex && !col.key && !col.render
+          ? index + 1 + (this.state.pageIndex - 1) * this.state.pageSize
+          : text && (
+              <div
+                style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}
+                className={col.ellipsis ? 'ant-table-cell-ellipsis' : null}
+              >
+                {text}
+              </div>
+            ),
       align: align,
       ...col,
-      width: col.width=='auto'? false : this.getInitialColWidth(col),
+      width: col.width == 'auto' ? false : this.getInitialColWidth(col),
       onHeaderCell: column => ({
         width: column.width,
         onResize: resizable ? this.handleResize(index) : undefined,
       }),
     }));
-
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
       <DndProvider backend={HTML5Backend}>
@@ -376,14 +376,14 @@ class SdlTable extends PureComponent {
               pageSizeOptions: ['10', '20', '30', '40', '100'],
             }}
             defaultWidth={80}
-            columns={_columns}
             onRow={(record, index) => ({
               //拖拽功能
               index,
               moveRow: this.moveRow,
-              onClick:this.props.onClick
+              onClick: this.props.onClick,
             })}
             {...this.props}
+            columns={_columns}
             dataSource={dragable ? this.state.dataSource : this.props.dataSource}
             {..._props}
             scroll={
@@ -393,7 +393,7 @@ class SdlTable extends PureComponent {
                     x:
                       (this.props.scroll && this.props.scroll.x && this.props.scroll.x) ||
                       scrollXWidth,
-                    y: this.props.scroll?.y==='hidden'? undefined : scrollY,
+                    y: this.props.scroll?.y === 'hidden' ? undefined : scrollY,
                   }
             }
           />

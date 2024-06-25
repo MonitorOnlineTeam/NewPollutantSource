@@ -30,9 +30,9 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
 const PageContent = props => {
   const [form] = Form.useForm();
 
-  const { dispatch, pageTitle, DGIMN, warningForm } = props;
+  const { dispatch, time, pageTitle, DGIMN, warningForm } = props;
 
-  const [date, setDate] = useState([moment().startOf('year'), moment()]); // 时间
+  const [date, setDate] = useState(time || [moment().startOf('year'), moment()]); // 时间
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [modalTitle, setModalTitle] = useState();
@@ -522,6 +522,8 @@ const PageContent = props => {
         dataIndex: 'Reason',
         key: 'Reason',
         ellipsis: true,
+        width: 400,
+        render: Reason => <Tooltip title={Reason}>{Reason}</Tooltip>,
       },
     ];
     return columns;
@@ -594,6 +596,9 @@ const PageContent = props => {
                 dataType="day"
                 format="YYYY-MM-DD"
                 style={{ width: 250 }}
+                onChange={value => {
+                  setDate(value);
+                }}
               />
             </Form.Item>
             <Form.Item>
@@ -723,13 +728,20 @@ const PageContent = props => {
       {isModalOpen && (
         <Modal
           title={modalTitle}
-          wrapClassName="spreadOverModal"
+          wrapClassName={
+            window.location.pathname === '/SystemDashboard/AbnormalIdentify'
+              ? 'fullScreenModal'
+              : 'spreadOverModal'
+          }
           destroyOnClose
           visible={isModalOpen}
           footer={false}
+          bodyStyle={
+            window.location.pathname === '/SystemDashboard/AbnormalIdentify' ? { padding: 0 } : {}
+          }
           onCancel={() => setIsModalOpen(false)}
         >
-          <WorkingAnalysis regionCode={regionCode} entCode={entCode} />
+          <WorkingAnalysis regionCode={regionCode} entCode={entCode} time={date} />
         </Modal>
       )}
       <CluesListModal
