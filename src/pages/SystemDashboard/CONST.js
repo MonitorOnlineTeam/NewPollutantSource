@@ -43,7 +43,8 @@ export const sysList = [
   },
   {
     key: '监督核查',
-    value: '',
+    value: '/SystemDashboard/SupervisionVerifica',
+    title: '污染源监督核查',
   },
 ];
 

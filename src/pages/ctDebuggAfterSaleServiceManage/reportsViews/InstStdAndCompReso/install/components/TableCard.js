@@ -37,7 +37,6 @@ const TableCard = props => {
 
   // 导出
   const onExport = () => {
-    alert('reportsAndViews')
     dispatch({
       type: 'reportsAndViews/ExportInstallationDebugRate',
       payload: {

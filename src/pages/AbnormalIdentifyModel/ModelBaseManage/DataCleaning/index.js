@@ -55,24 +55,23 @@ const Index = (props) => {
         }, 0) : 0
        }
     const obj1 = {
-        '企业信息清洗': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗企业数量', value: 198 || 0 }, { label: '入库数量', value: 198 || 0  }], data: tableDatas,loading:tableLoading, logTitle:'企业日志',logUrl: 'GetProjectLogsInfoList' },
-        '备案参数': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗企业数量', value: 198 || 0  }, { label: '入库备案参数', value: 198 || 0  }, { label: '清洗失败', value: 98 }], data: tableDatas3,loading:tableLoading3,logTitle:'备案参数日志',logUrl: 'GetProjectLogsInfoList'  },
-        '监测数据': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗数据', value: 198 || 0  }, { label: '非法', value: 198 || 0  }], data: tableDatas6,loading:tableLoading6, },
+        '企业信息清洗': { time: tableDatas?.[0]?.cleanTime, numData: [{ label: '清洗企业数量', value: sumData(tableDatas,'successCount') + sumData(tableDatas,'falseCount')  || 0 }, { label: '入库数量', value: sumData(tableDatas,'successCount')  || 0  }], data: tableDatas,loading:tableLoading,taskType:1, logTitle:'企业日志',logUrl: 'GetProjectLogsInfoList' },
+        '备案参数': { time: tableDatas3?.[0]?.cleanTime, numData: [{ label: '清洗企业数量', value: sumData(tableDatas3,'successCount') + sumData(tableDatas3,'falseCount') || 0  }, { label: '入库备案参数', value: sumData(tableDatas3,'successCount')  || 0  }, { label: '清洗失败', value: sumData(tableDatas3,'falseCount') }], data: tableDatas3,loading:tableLoading3,taskType:3,logTitle:'备案参数日志',logUrl: 'GetProjectLogsInfoList'  },
+        '监测数据': { time: tableDatas6?.[0]?.cleanTime, numData: [{ label: '清洗数据', value: tableDatas6?.successCount || 0  }, { label: '非法', value: tableDatas6?.falseCount || 0  }], data: tableDatas6?.dataList,loading:tableLoading6,taskType:6, },
     }
     const obj2 = {
-        '排放口信息清洗': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗排放口数量', value: 198 || 0  }, { label: '入库排放口数量', value: 198 || 0  }], data: tableDatas2,loading:tableLoading2,logTitle:'排放口',logUrl: 'GetProjectLogsInfoList' },
-        '污染物': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗排放口数量', value: 198 || 0  }, { label: '入库污染物数量', value: 198 || 0  }, { label: '清洗失败', value: sumData(tableDatas4,'falseCount') }], data: tableDatas4,loading:tableLoading4,logTitle:'污染物缺失',logUrl: 'GetMonitorPollutantLogsInfoList' },
-        '排放标准': { time: '2024-06-17 13:13:00', numData: [{ label: '清洗排放标准数量', value: 198 || 0  }, { label: '入库排放标准', value: 198 || 0  }, { label: '清洗失败', value: 98 }], data: tableDatas4,loading:tableLoading5,logTitle:'排放标准缺失',logUrl: 'GetMonitorAlarmLogsInfoList'  },
+        '排放口信息清洗': { time: tableDatas2?.cleanTime, numData: [{ label: '清洗排放口数量', value: sumData(tableDatas2,'successCount') + sumData(tableDatas2,'falseCount') || 0  }, { label: '入库排放口数量', value: sumData(tableDatas2,'successCount') || 0  }], data: tableDatas2,loading:tableLoading2,taskType:2,logTitle:'排放口',logUrl: 'GetProjectLogsInfoList' },
+        '污染物': { time: tableDatas4?.cleanTime, numData: [{ label: '清洗排放口数量', value: sumData(tableDatas4,'successCount') + sumData(tableDatas4,'falseCount') || 0  }, { label: '入库污染物数量', value: sumData(tableDatas4,'successCount')  || 0  }, { label: '清洗失败', value: sumData(tableDatas4,'falseCount') }], data: tableDatas4,loading:tableLoading4,taskType:4,logTitle:'污染物缺失',logUrl: 'GetMonitorPollutantLogsInfoList' },
+        '排放标准': { time: tableDatas5?.[0]?.cleanTime, numData: [{ label: '清洗排放标准数量', value: sumData(tableDatas5,'successCount') + sumData(tableDatas5,'falseCount') || 0  }, { label: '入库排放标准', value: sumData(tableDatas5,'successCount') || 0  }, { label: '清洗失败', value: sumData(tableDatas5,'falseCount') || 0 }], data: tableDatas5,loading:tableLoading5,logTitle:'排放标准缺失',taskType:5,logUrl: 'GetMonitorAlarmLogsInfoList'  },
     }
     useEffect(() => {
         handleChange(1);
 
     }, []);
     const handleChange = (values) => {  //查询
-      
         props.dispatch({
             type: `${namespace}/GetProjectLogsList`,
-            payload: { projectType: values },
+            payload: { projectType: values,taskType:1 },
             callback:(result)=>{
                 setTableLoading(false)
                 if(result.IsSuccess){ setTableDatas(result.Datas) }
@@ -81,7 +80,7 @@ const Index = (props) => {
 
         props.dispatch({
             type: `${namespace}/GetProjectLogsList`,
-            payload: { projectType: values },
+            payload: { projectType: values,taskType:2 },
             callback:(result)=>{
                 setTableLoading2(false)
                 if(result.IsSuccess){ setTableDatas2(result.Datas) }
@@ -90,7 +89,7 @@ const Index = (props) => {
 
         props.dispatch({
             type: `${namespace}/GetProjectLogsList`,
-            payload: { projectType: values },
+            payload: { projectType: values,taskType:3 },
             callback:(result)=>{
                 setTableLoading3(false)
                 if(result.IsSuccess){ setTableDatas3(result.Datas) }
@@ -99,30 +98,30 @@ const Index = (props) => {
 
         props.dispatch({
             type: `${namespace}/GetMonitorPollutantLogsList`,
-            payload: { projectType: values },
+            payload: { projectType: values,taskType:4 },
             callback:(result)=>{
                 setTableLoading4(false)
                 if(result.IsSuccess){ setTableDatas4([result.Datas]) }
             }
         });
 
-        // props.dispatch({
-        //     type: `${namespace}/GetMonitorAlarmLogsList`,
-        //     payload: { projectType: values },
-        //     callback:(result)=>{
-        //         setTableLoading5(false)
-        //         if(result.IsSuccess){ setTableDatas5(result.Datas) }
-        //     }
-        // });
+        props.dispatch({
+            type: `${namespace}/GetMonitorAlarmLogsList`,
+            payload: { projectType: values,taskType:5 },
+            callback:(result)=>{
+                setTableLoading5(false)
+                if(result.IsSuccess){ setTableDatas5([result.Datas]) }
+            }
+        });
 
-        // props.dispatch({
-        //     type: `${namespace}/GetHourDataLogsList`,
-        //     payload: { projectType: values },
-        //     callback:(result)=>{
-        //         setTableLoading6(false)
-        //         if(result.IsSuccess){ setTableDatas6(result.Datas) }
-        //     }
-        // });
+        props.dispatch({
+            type: `${namespace}/GetHourDataLogsList`,
+            payload: { projectType: values,taskType:6 },
+            callback:(result)=>{
+                setTableLoading6(false)
+                if(result.IsSuccess){ setTableDatas6(result.Datas) }
+            }
+        });
 
 
     }
@@ -138,7 +137,7 @@ const Index = (props) => {
             width: 140,
             ellipsis: true,
             render: (text, record) => {
-                return  <span style={{cursor:'pointer'}} onClick={() => logQuery(1,record, title)}>{text}</span>
+                return  <span style={{cursor:'pointer'}} onClick={() => logQuery(title,{param:text})}>{text}</span>
             }
         },
         {
@@ -149,7 +148,7 @@ const Index = (props) => {
             width: 120,
             ellipsis: true,
             render: (text, record) => {
-                return  <span style={{cursor:'pointer'}} onClick={() => logQuery(1,record, title)}>{text}</span>
+                return  text&&text>0? <span style={{cursor:'pointer'}} onClick={() => logQuery(title,{status:true})}>{text}</span> :text
             }
         },
         {
@@ -160,7 +159,7 @@ const Index = (props) => {
             width: 120,
             ellipsis: true,
             render: (text, record) => {
-                return text > 0 ? <span style={{cursor:'pointer'}} className='red' onClick={() => logQuery(1,record, title)}>{text}</span> : text
+                return text > 0 ? <span style={{cursor:'pointer'}} className='red' onClick={() => logQuery(title,{status:false})}>{text}</span> : text
             }
         },
         {
@@ -171,7 +170,7 @@ const Index = (props) => {
             ellipsis: true,
             render: (text, record) => {
                 const textArr = text?.split(',')
-                return textArr ? <>  {textArr[0]&&<Button  onClick={() => logQuery(2,record, title)} type='primary'>{textArr[0]}</Button>}    {textArr[1]&&<Button  onClick={() => logQuery(2,record, title)}  type='primary'>{textArr[1]}</Button>}</> : text
+                return textArr ? <>  {textArr[0]&&<Button  onClick={() => logQuery(title,{remark:textArr[0]})} type='primary'>{textArr[0]}</Button>}    {textArr[1]&&<Button  onClick={() => logQuery(title,{remark:textArr[1]})}  type='primary'>{textArr[1]}</Button>}</> : text
             }
         },
     ];
@@ -215,43 +214,43 @@ const Index = (props) => {
     const logCommonCol = [
         {
             title: '企业',
-            dataIndex: 'CarNum',
-            key: 'CarNum',
+            dataIndex: 'ParentName',
+            key: 'ParentName',
             align: 'center',
             ellipsis: true,
         },
         {
             title: '排放口',
-            dataIndex: 'VehicleType',
-            key: 'VehicleType',
+            dataIndex: 'PointName',
+            key: 'PointName',
             align: 'center',
             ellipsis: true,
         },
         {
             title: '参数',
-            dataIndex: 'VehicleType',
-            key: 'VehicleType',
+            dataIndex: 'DataType',
+            key: 'DataType',
             align: 'center',
             ellipsis: true,
         },
         {
             title: '原始数据',
-            dataIndex: 'CarNum',
-            key: 'CarNum',
+            dataIndex: 'OldValue',
+            key: 'OldValue',
             align: 'center',
             ellipsis: true,
         },
         {
             title: '清洗数据',
-            dataIndex: 'CarNum',
-            key: 'CarNum',
+            dataIndex: 'NewValue',
+            key: 'NewValue',
             align: 'center',
             ellipsis: true,
         },
         {
             title: '备注',
-            dataIndex: 'CarNum',
-            key: 'CarNum',
+            dataIndex: 'Remark',
+            key: 'Remark',
             align: 'center',
             ellipsis: true,
             
@@ -263,19 +262,20 @@ const Index = (props) => {
     const [logData, setLogData] = useState({})
     const [logLoading, setLogLoading] = useState({})
 
-    const logQuery = (type, record, title) => {
+    const logQuery = (title,par) => {
         setLogVisible(true)
         const objRequest = {
             ...obj1,...obj2
         }
         const logTitle = objRequest[title]?.logTitle
+        
         setLogTitle(logTitle)
         setLogLoading({...logLoading,[logTitle]:true})
+        const taskType = objRequest[title]?.taskType
         props.dispatch({
-            type: `${namespace}/${objRequest[title]?.logUrl}`,
-            payload: {projectType: 1 },
+            type: `${namespace}/${title=='污染物' || title=='排放标准'?(par.status? objRequest[title]?.logUrl : objRequest[title]?.logUrl) : objRequest[title]?.logUrl}`,
+            payload: {projectType: 1,taskType: taskType,...par},
             callback:(result)=>{
-                console.log(result,{...logLoading,[logTitle]:false},{...logData,[logTitle]:[result.Datas]})
                 setLogLoading({...logLoading,[logTitle]:false})
                 if(result.isSuccess){
                     setLogLoading({...logData,[logTitle]:[result.Datas]})
@@ -334,7 +334,7 @@ const Index = (props) => {
     const logColObj = {
         '企业日志': logCommonCol.filter(item=>item.title!='排放口') ,
         '排放口': logCommonCol.filter(item=>item.title!='排放口'),data:[] ,
-        '备案参数日志': logCommonCol ,
+        '备案参数日志': logCommonCol,
         '污染物缺失': logCommonCol.filter(item=>item.title=='企业' || item.title=='排放口'),
         '排放标准缺失': logCommonCol.filter(item=>item.title=='企业' || item.title=='排放口')
     }
