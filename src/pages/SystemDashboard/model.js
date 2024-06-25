@@ -49,6 +49,31 @@ const initializeState = {
     RectRate: 0,
     CheckRate: 0,
   },
+  //监督核查数据
+  supervisionUniformityAnalysisData: {  //关键参数核查、合规性
+    RemoteInspector: [
+      {
+        Name: "量程一致性",
+        YiNum: 0,
+        NoYiNum: 0
+      },
+      {
+        Name: "数据一致性",
+        YiNum: 0,
+        NoYiNum: 0
+      },
+      {
+        Name: "参数一致性",
+        YiNum: 0,
+        NoYiNum: 0
+      }
+    ],
+    InspectorOperationManage: {
+      CommonlyProblemNum: 0,
+      importanProblemNum: 0,
+      PrincipleProblemNum: 0
+    }
+  }
 };
 
 export default Model.extend({
@@ -201,5 +226,62 @@ export default Model.extend({
         callback && callback(result.Datas);
       }
     },
+    //督查总览
+    *GetSupervisionOverview({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.SystemDashboardApi.GetSupervisionOverview, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    //关键参数监督核查分析、合规性监督核查分析
+    *GetSupervisionUniformityAnalysis({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.SystemDashboardApi.GetSupervisionUniformityAnalysis, payload);
+      if (result.IsSuccess) {
+        // 行政区
+        yield update({
+          supervisionUniformityAnalysisData: result.Datas,
+        });
+
+        callback && callback(result.Datas);
+      }
+    },
+    //合格率分析
+    *GetSupervisionQualifiedAnalysis({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.SystemDashboardApi.GetSupervisionQualifiedAnalysis, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    //监督核查 地图部分
+    *GetSupervisionMap({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.SystemDashboardApi.GetSupervisionMap, payload);
+      if (result.IsSuccess) {
+        if (payload.pLeve === 1) {
+          // 行政区
+          yield update({
+            level1MapData: result.Datas.list,
+          });
+        } else if (payload.pLeve === 4) {
+          // 全部监测点
+          yield update({
+            level4MapData: result.Datas.list,
+          });
+        } else {
+          // 行政区下企业、企业下监测点
+          yield update({
+            levelOtherMapData: result.Datas.list,
+          });
+        }
+        callback && callback(result.Datas);
+      }
+
+    },
+
+
+
+
+
+
+
   },
 });

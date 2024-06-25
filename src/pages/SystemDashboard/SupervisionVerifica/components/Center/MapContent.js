@@ -10,25 +10,22 @@ import SiteDetailsModal from '@/pages/newestHome/components/springModal/mapModal
 
 const legendList = [
   {
-    name: '运维正常',
-    color: '#2EEB9D',
-    value: '1',
+    name: '核查正常',
+    color: '#2eeb9d',
+    value: 1,
   },
-  // {
-  //   name: '离线',
-  //   color: '#C9C9C9',
-  //   value: '0',
-  // },
-  // {
-  //   name: '停产',
-  //   color: '#FFCC00',
-  //   value: '4',
-  // },
   {
-    name: '运维异常',
-    color: '#FFCC00',
-    value: '2',
+    name: '整改中',
+    color: '#4699FF',
+    value: 2,
   },
+  {
+    name: '核查不规范',
+    color: '#FF7E00',
+    value: 3,
+  },
+
+
 ];
 let aMap;
 
@@ -37,7 +34,7 @@ let aMap;
   level1MapData: sysDashboard.level1MapData,
   level4MapData: sysDashboard.level4MapData,
   levelOtherMapData: sysDashboard.levelOtherMapData,
-  loading: loading.effects['sysDashboard/GetMapOperationEquipmentOverview'],
+  loading: loading.effects['sysDashboard/GetSupervisionMap'],
 }))
 class MapContent extends PureComponent {
   constructor(props) {
@@ -46,7 +43,7 @@ class MapContent extends PureComponent {
       regionCode: '',
       entCode: '',
       allEntList: [], // 所有企业
-      selectedLegend: '', // 选中的图例
+      selectedLegend: undefined, // 选中的图例
       markersList: [],
       currentPointList: [], // 排口列表
       entTitleShow: false, // 是否显示企业名称
@@ -74,7 +71,7 @@ class MapContent extends PureComponent {
           if (config.offlineMapUrl.domain) {
             var Layer = new window.aMap.TileLayer({
               zIndex: 2,
-              getTileUrl: function(x, y, z) {
+              getTileUrl: function (x, y, z) {
                 return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
               },
             });
@@ -110,8 +107,8 @@ class MapContent extends PureComponent {
             this.setState({
               hoverEntTitleShow: false,
               hoverTitleShow: true,
-              hoverEntTitle: position.ParentName,
-              hoverPointTitle: position.PointName,
+              hoverEntTitle: position.entName,
+              hoverPointTitle: position.pointName,
               hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude },
             });
           }
@@ -146,24 +143,31 @@ class MapContent extends PureComponent {
     const { time } = this.props;
     const { level, regionCode, entCode } = this.state;
     this.props.dispatch({
-      type: 'sysDashboard/GetMapOperationEquipmentOverview',
+      type: 'sysDashboard/GetSupervisionMap',
       payload: {
-        pointType: level === 4 ? 3 : level,
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
-        beginTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
-        endTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
+        pLeve: level,
+        btime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
+        etime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
       },
       callback: res => {
-        this.handleMarkerDatas(res);
+        this.handleMarkerDatas(res.list);
       },
+    });
+  };
+
+  // 更新页面数据
+  updateCardData = data => {
+    this.props.dispatch({
+      type: 'sysDashboard/updateState',
+      payload: { ...data },
     });
   };
 
   // 根据级别，返回地图数据
   handleMarkerDatas = mapData => {
-    // aMap.clearMap();
-    // const { level1MapData, level4MapData, levelOtherMapData } = this.props;
+    console.log('mapData', mapData,selectedLegend);
     const { level, selectedLegend, currentPointList } = this.state;
     let markersList = [];
     switch (level) {
@@ -181,15 +185,13 @@ class MapContent extends PureComponent {
       case 4: // 所有排口
         // 根据选中图例显示排口
         let _mapData = [...mapData];
-        if (selectedLegend) {
+        if (selectedLegend !== undefined) {
           _mapData = _mapData.filter(item => item.Status === selectedLegend);
         }
         markersList = _mapData.map(item => {
           return {
             position: {
               ...item,
-              latitude: item.Latitude,
-              longitude: item.Longitude,
             },
           };
         });
@@ -210,34 +212,36 @@ class MapContent extends PureComponent {
     );
   };
 
-  getPointIcon = status => {
+  getPointIcon = data => {
+    let status = data.Status;
     let color = '';
-
     switch (status) {
-      // case '0': // 离线
-      //   color = legendList[1].color;
-      //   break;
-      case '1': // 在线
+      case 1: // 核查正常
         color = legendList[0].color;
         break;
-      case '2': // 超标
+      case 2: // 整改中
         color = legendList[1].color;
         break;
-      // case '4': // 停运
-      //   color = legendList[2].color;
-      //   break;
+      case 3: // 核查不规范
+        color = legendList[2].color;
+        break;
+
     }
 
     return (
       <div
         style={{
-          width: 16,
-          height: 16,
+          width: 24,
+          height: 24,
+          lineHeight: '24px',
           background: color,
           boxShadow: '0px 0px 2px 0px #000000',
           borderRadius: '50%',
+          textAlign: 'center',
+          color: '#484020',
         }}
-      ></div>
+      >
+      </div>
     );
   };
 
@@ -250,7 +254,7 @@ class MapContent extends PureComponent {
         <>
           <div className={styles.header}>
             <h2>
-              {currentPointInfo.EntName} - {currentPointInfo.PointName}
+              {currentPointInfo.entName} - {currentPointInfo.pointName}
             </h2>
           </div>
           <div className={styles.desc}>
@@ -307,7 +311,7 @@ class MapContent extends PureComponent {
       });
       const regName = regionName == '新疆生产建设兵团' ? '新疆维吾尔自治区' : regionName;
       // 搜索所有省/直辖市信息
-      districtSearch.search(regName, function(status, result) {
+      districtSearch.search(regName, function (status, result) {
         // 查询成功时，result即为对应的行政区信息
         if (status === 'complete') {
           const bounds = result?.districtList[0]?.boundaries;
@@ -341,13 +345,7 @@ class MapContent extends PureComponent {
         this.renderRegionBoundary(extData.position.regionName);
       },
     );
-    this.props.dispatch({
-      type: 'sysDashboard/updateState',
-      payload: {
-        level: 2,
-        regionCode: extData.position.regionCode,
-      },
-    });
+    this.updateCardData({ level: 2, regionCode: extData.position.regionCode })
   };
 
   // 企业点击
@@ -361,13 +359,7 @@ class MapContent extends PureComponent {
         this.loadPageData();
       },
     );
-    this.props.dispatch({
-      type: 'sysDashboard/updateState',
-      payload: {
-        level: 3,
-        entCode: extData.position.entCode,
-      },
-    });
+    this.updateCardData({ level: 3, entCode: extData.position.entCode})
   };
 
   // 返回按钮点击
@@ -377,16 +369,10 @@ class MapContent extends PureComponent {
     // 企业返回、全部监测点返回
     if (level === 2 || level === 4) {
       aMap.clearMap();
-      this.setState({ level: 1, pointInfoWindowVisible: false, selectedLegend: '' }, () => {
+      this.setState({ level: 1, pointInfoWindowVisible: false, selectedLegend: undefined }, () => {
         this.handleMarkerDatas(level1MapData);
       });
-
-      this.props.dispatch({
-        type: 'sysDashboard/updateState',
-        payload: {
-          level: 1,
-        },
-      });
+      this.updateCardData({ level: 1})
     }
 
     // 企业下监测点返回企业
@@ -394,12 +380,7 @@ class MapContent extends PureComponent {
       this.setState({ level: 2, pointInfoWindowVisible: false }, () => {
         this.loadPageData();
       });
-      this.props.dispatch({
-        type: 'sysDashboard/updateState',
-        payload: {
-          level: 2,
-        },
-      });
+      this.updateCardData({ level: 2 })
     }
   };
 
@@ -410,7 +391,7 @@ class MapContent extends PureComponent {
 
     let selectedLegend_temp = value;
     if (value === selectedLegend) {
-      selectedLegend_temp = '';
+      selectedLegend_temp = undefined;
     }
     this.setState(
       {
@@ -432,8 +413,8 @@ class MapContent extends PureComponent {
     const { position } = extData;
     const { showType, entTitleShow, pointTitleShow, isMassive, level } = this.state;
 
-    if (level == 1) {
-      let title = position.regionName;
+    if (level == 1 || level == 2) {
+      let title = level == 1 ? position.regionName : position.entName;
       return (
         <div
           style={{
@@ -441,8 +422,8 @@ class MapContent extends PureComponent {
             transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
             padding: '0 10px',
             cursor: 'text',
-            width: 200,
-            height: 170,
+            width: 240,
+            height: 130,
             background: `url(/SystemDashboard/regionTip.png)`,
             backgroundSize: '100% 100%',
           }}
@@ -464,125 +445,12 @@ class MapContent extends PureComponent {
                 cursor: 'pointer',
               }}
               title={title}
-              onClick={() => this.onClickRegion(extData)}
+              onClick={() => (level === 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
             >
               {title}
             </div>
             <RightOutlined
-              onClick={() => this.onClickRegion(extData)}
-              style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
-            />
-            <Row
-              style={{
-                height: 'calc(100% - 36px)',
-                display: 'flex',
-                fontWeight: 'bold',
-                padding: '0 10px',
-              }}
-            >
-              <Col
-                span={14}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.entCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>企业数量</p>
-              </Col>
-              <Col
-                span={10}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <p style={{ color: '#FF3737', fontSize: 20 }}>{position.pointCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排放口数量</p>
-              </Col>
-              <Col
-                span={14}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.normarlCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维正常数量</p>
-              </Col>
-              <Col
-                span={10}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <p style={{ color: '#FFCC00', fontSize: 20 }}>{position.exceptionCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>异常数量</p>
-              </Col>
-            </Row>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <span
-              className={styles.circle}
-              style={{
-                display: 'inline-block',
-                marginTop: 16,
-                width: 10,
-                height: 10,
-                background: 'rgba(0, 141, 253, 1)',
-                boxShadow: ' 0 0 4px 4px rgba(0, 141, 253, .1)',
-                borderRadius: '50%',
-              }}
-            ></span>
-          </div>
-        </div>
-      );
-    } else if (level == 2) {
-      let title = position.entName;
-      return (
-        <div
-          style={{
-            position: 'relative',
-            transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
-            padding: '0 10px',
-            cursor: 'text',
-            width: 300,
-            height: 120,
-            background: `url(/SystemDashboard/regionTip.png)`,
-            backgroundSize: '100% 100%',
-          }}
-        >
-          <div
-            style={{
-              opacity: 1,
-              color: '#52F2FF',
-              height: 'calc(100% - 12px)',
-              paddingTop: 2,
-            }}
-          >
-            <div
-              className="textOverflow"
-              style={{
-                width: 'calc(100% + 17px)',
-                lineHeight: '22px',
-                fontWeight: 'bold',
-                background: ' #073783',
-                margin: '0 -9px',
-                padding: '0 10px',
-                cursor: 'pointer',
-              }}
-              title={title}
-              onClick={() => this.onClickEnt(extData)}
-            >
-              {title}
-            </div>
-            <RightOutlined
-              onClick={() => this.onClickEnt(extData)}
+              onClick={() => (level === 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
               style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
             />
             <Row
@@ -601,30 +469,30 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FF3737', fontSize: 20 }}>{position.pointCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排放口数量</p>
+                <p style={{ color: '#2eeb9d', fontSize: 20 }}>{position['qualifiedCount']}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>核查正常</p>
               </Col>
               <Col
-                span={10}
+                span={8}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.normarlCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维正常数量</p>
+                <p style={{ color: '#4699FF', fontSize: 20 }}>{position['rectificationCount']}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>整改中</p>
               </Col>
               <Col
-                span={6}
+                span={8}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FFCC00', fontSize: 20 }}>{position.exceptionCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>异常数量</p>
+                <p style={{ color: '#FF7E00', fontSize: 20 }}>{position['unqualifiedCount']}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>核查不规范</p>
               </Col>
             </Row>
           </div>
@@ -650,27 +518,15 @@ class MapContent extends PureComponent {
         <div style={{ position: 'relative', marginTop: 24 }}>
           <span
             onClick={() => {
-              let { position } = extData;
-              this.setState({
-                entTitleShow: false,
-                pointInfoWindowPosition: [position.longitude, position.latitude],
-                pointInfoWindowVisible: true,
-                currentPointInfo: position,
-              });
-
-              this.props.dispatch({
-                type: 'newestHome/updateState',
-                payload: { siteDetailsVisible: true },
-              });
             }}
           >
-            {this.getPointIcon(extData.position.Status)}
+            {this.getPointIcon(extData.position)}
           </span>
           {pointTitleShow ? (
             <div className={styles.pointTitlePopSty}>
               <div className={styles.titlePopSty}>
-                <div>{extData.position.ParentName}</div>
-                <div>{extData.position.PointName}</div>
+                <div>{extData.position?.entName}</div>
+                <div>{extData.position?.pointName}</div>
               </div>
             </div>
           ) : null}
@@ -703,12 +559,13 @@ class MapContent extends PureComponent {
         map.zoomOut();
         break;
       case '展示企业': //行政区
-        // this.setState({ backIconGo: true, mapBtnStatusIndex: -1 });
-        // this.loadRegionMarkerData(regionMarkers);
         aMap.clearMap();
-        this.setState({ level: 1, pointInfoWindowVisible: false, selectedLegend: '' }, () => {
-          this.handleMarkerDatas(level1MapData);
-        });
+        this.setState(
+          { level: 1, pointInfoWindowVisible: false, selectedLegend: undefined },
+          () => {
+            this.handleMarkerDatas(level1MapData);
+          },
+        );
         break;
       case '展示监测点':
         aMap.clearMap();
@@ -813,7 +670,7 @@ class MapContent extends PureComponent {
             events={this.mapEvents}
             mapStyle="amap://styles/6daa80e94c53325ff909a31f3d3d8809"
             amapkey={'1440c67033e5ede0f3a068605de5fb5f'}
-            // center={mapCenter}
+          // center={mapCenter}
           >
             {this.RightIconMapComponent()}
             <Markers
@@ -821,17 +678,7 @@ class MapContent extends PureComponent {
               render={this.renderMarkers}
               events={this.markersEvents}
               extData={markersList}
-              // useCluster
             />
-            {/* <InfoWindow //企业 hover
-              visible={hoverEntTitleShow}
-              position={hoverTitleLngLat}
-              autoMove
-              offset={false ? [10, -5] : [4, -10]}
-              className={styles.titleInfoWindow}
-            >
-              <div style={{ whiteSpace: 'nowrap' }}>企业名称：{hoverEntTitle}</div>
-            </InfoWindow> */}
             <InfoWindow //监测点 hover
               visible={hoverTitleShow}
               position={hoverTitleLngLat}
@@ -844,25 +691,6 @@ class MapContent extends PureComponent {
                 监测点名称：{hoverPointTitle}
               </div>
             </InfoWindow>
-            {/* <InfoWindow
-              className={styles.infoWindowContent}
-              position={pointInfoWindowPosition}
-              visible={pointInfoWindowVisible}
-              offset={false ? [10, -5] : [4, -10]}
-              autoMove
-              showShadow
-              closeWhenClickMap={false}
-            >
-              {this.infoWindowContent()}
-              <span
-                onClick={() => {
-                  this.setState({ pointInfoWindowVisible: false });
-                }}
-                style={{ position: 'absolute', cursor: 'pointer', top: 0, right: 8, fontSize: 18 }}
-              >
-                ×
-              </span>
-            </InfoWindow> */}
           </Map>
           {level !== 1 && (
             <div className={styles.goback} onClick={() => this.onGoback()}>
@@ -876,7 +704,7 @@ class MapContent extends PureComponent {
                 <div
                   className={`${styles.legendItem} ${
                     selectedLegend === item.value ? styles.active : ''
-                  }`}
+                    }`}
                   style={{
                     color: selectedLegend === item.value ? item.color : '',
                     borderColor: selectedLegend === item.value ? item.color : '',

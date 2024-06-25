@@ -833,25 +833,25 @@ export const API = {
     UpdatePlanItem: before + '/Clue/UpdatePlanItem', //核查保存或提交
     CheckConfirm: before + '/Clue/CheckConfirm', //核查确认
 
-     /*模型库管理*/
-     //模型训练 - 数据接入
-     GetProjectMonitorDataList: before + '/ProjectMonitorDataApi/GetProjectMonitorDataList', //查看项目信息
-     UpdProjectMonitorData: before + '/ProjectMonitorDataApi/UpdProjectMonitorData', //修改项目信息 修改执行方式
-     AccessEntInfoList: before + '/DataFormatBaseDataApi/AccessEntInfoList', //接入企业数据执行
-     AccessPointInfoList: before + '/DataFormatBaseDataApi/AccessPointInfoList', //接入站点数据执行
-     AccessParamInfoList: before + '/DataFormatBaseDataApi/AccessParamInfoList', //接入备案参数执行
-     AccessEmissionStandardList: before + '/DataFormatBaseDataApi/AccessEmissionStandardList', //接入站点污染物排放信息执行
-     AccessMonitorPollutantList: before + '/DataFormatBaseDataApi/AccessMonitorPollutantList', //接入站点污染物关联信息执行
-     AccessHourData: before + '/DataFormatBaseDataApi/AccessHourData', //接入小时数据执行
-     //清洗数据
-     GetProjectLogsList: before + '/ProjectMonitorDataApi/GetProjectLogsList', //企业信息、排放口信息、备案参数日志信息
-     GetProjectLogsInfoList: before + '/ProjectMonitorDataApi/GetProjectLogsInfoList', //企业信息、排放口信息、备案参数日志详情信息
-     GetMonitorPollutantLogsList: before + '/ProjectMonitorDataApi/GetMonitorPollutantLogsList', //污染物日志信息
-     GetMonitorPollutantLogsInfoList: before + '/ProjectMonitorDataApi/GetMonitorPollutantLogsInfoList', //污染物日志详情信息
-     GetMonitorAlarmLogsList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsList', //排放标准日志信息
-     GetMonitorAlarmLogsInfoList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsInfoList', //排放标准日志详情信息
-     GetHourDataLogsList: before + '/ProjectMonitorDataApi/GetHourDataLogsList', //查看监测数据日志信息
-    },
+    /*模型库管理*/
+    //模型训练 - 数据接入
+    GetProjectMonitorDataList: before + '/ProjectMonitorDataApi/GetProjectMonitorDataList', //查看项目信息
+    UpdProjectMonitorData: before + '/ProjectMonitorDataApi/UpdProjectMonitorData', //修改项目信息 修改执行方式
+    AccessEntInfoList: before + '/DataFormatBaseDataApi/AccessEntInfoList', //接入企业数据执行
+    AccessPointInfoList: before + '/DataFormatBaseDataApi/AccessPointInfoList', //接入站点数据执行
+    AccessParamInfoList: before + '/DataFormatBaseDataApi/AccessParamInfoList', //接入备案参数执行
+    AccessEmissionStandardList: before + '/DataFormatBaseDataApi/AccessEmissionStandardList', //接入站点污染物排放信息执行
+    AccessMonitorPollutantList: before + '/DataFormatBaseDataApi/AccessMonitorPollutantList', //接入站点污染物关联信息执行
+    AccessHourData: before + '/DataFormatBaseDataApi/AccessHourData', //接入小时数据执行
+    //清洗数据
+    GetProjectLogsList: before + '/ProjectMonitorDataApi/GetProjectLogsList', //企业信息、排放口信息、备案参数日志信息
+    GetProjectLogsInfoList: before + '/ProjectMonitorDataApi/GetProjectLogsInfoList', //企业信息、排放口信息、备案参数日志详情信息
+    GetMonitorPollutantLogsList: before + '/ProjectMonitorDataApi/GetMonitorPollutantLogsList', //污染物日志信息
+    GetMonitorPollutantLogsInfoList: before + '/ProjectMonitorDataApi/GetMonitorPollutantLogsInfoList', //污染物日志详情信息
+    GetMonitorAlarmLogsList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsList', //排放标准日志信息
+    GetMonitorAlarmLogsInfoList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsInfoList', //排放标准日志详情信息
+    GetHourDataLogsList: before + '/ProjectMonitorDataApi/GetHourDataLogsList', //查看监测数据日志信息
+  },
   /*监督核查 Api */
   SupervisionVerificaApi: {
     /*** 远程监督核查 ***/
@@ -981,6 +981,16 @@ export const API = {
     GetInstallationDebuggingMap: before + '/CTStatisticsApi/GetInstallationDebuggingMap',
     // 模型首页地图
     GetMapPointInfo: before + '/MoldHome/GetMapPointInfo',
+    //监督核查
+    //督查总览
+    GetSupervisionOverview: before + '/Supervision/GetSupervisionOverview',
+    //关键参数监督核查分析、合规性监督核查分析
+    GetSupervisionUniformityAnalysis: before + '/Supervision/GetSupervisionUniformityAnalysis',
+    //合格率分析
+    GetSupervisionQualifiedAnalysis: before + '/Supervision/GetSupervisionQualifiedAnalysis',
+    //督查地图部分
+    GetSupervisionMap: before + '/Supervision/GetSupervisionMap',
+    
   },
 
   /*资产管理 Api */

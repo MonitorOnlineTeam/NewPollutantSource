@@ -589,23 +589,24 @@ export async function requestPost(url, params) {
       return error;
     });
 }
-export  function fomatFloat(num, n) {
-  var f = parseFloat(num);
-  if (isNaN(f)) {
-      return (0).toFixed(n);
+export  function fomatFloat(num, decimalPlaces) {
+  if (isNaN(num)) {
+    return (0).toFixed(decimalPlaces);
+}
+  let numStr = num.toFixed(decimalPlaces); // 获取固定位数的字符串表示
+  let parts = numStr.split('.'); // 分割整数部分和小数部分
+  
+  // 如果小数位数不足，补零
+  if (parts.length === 1 && decimalPlaces > 0) {
+      parts.push(''); // 补充一个空的小数部分
   }
-  f = Math.round(num * Math.pow(10, n)) / Math.pow(10, n); // n 幂
-  var s = f.toString();
-  var rs = s.indexOf('.');
-  //判定如果是整数，增加小数点再补0
-  if (rs < 0) {
-      rs = s.length;
-      s += '.';
+  
+  // 手动补零
+  if (parts[1].length < decimalPlaces) {
+      parts[1] += '0'.repeat(decimalPlaces - parts[1].length); // 用 '0' 补充直到达到指定小数位数
   }
-  while (s.length <= rs + n) {
-      s += '0';
-  }
-  return s;
+  
+  return parts.join('.'); // 合并整数部分和小数部分
 }
 // 获取数据不可信信息
 export const getDataTruseMsg = record => {

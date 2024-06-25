@@ -5,7 +5,9 @@ import styles from '@/pages/SystemDashboard/styles.less';
 import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
-import PlanWorkOrderStatistics from '@/pages/newestHome/components/springModal/planWorkOrderStatistics/index.js';
+import SupervisionAnalySumm from '@/pages/operations/supervisionAnalySumm';
+import { fomatFloat } from '@/utils/utils';
+
 const COLOR = ['#2899F6', '#FF4F4F', '#E3AB15'];
 
 const dvaPropsData = ({ sysDashboard, loading }) => ({
@@ -13,54 +15,42 @@ const dvaPropsData = ({ sysDashboard, loading }) => ({
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
   time: sysDashboard.time,
-  InspectionAndCalibration: sysDashboard.InspectionAndCalibration,
-  loading: loading.effects[`sysDashboard/GetPlanOperationTaskCompleteRate`],
+  supervisionUniformityAnalysisData: sysDashboard.supervisionUniformityAnalysisData,
+  loading: loading.effects[`sysDashboard/GetSupervisionUniformityAnalysis`],
 });
 
 const ProjectExecution = props => {
   const [open, setOpen] = useState(false);
 
-  const { dispatch, time, loading, level, regionCode, entCode, InspectionAndCalibration } = props;
-  const [date, setDate] = useState();
+  const { dispatch, time, loading, level, regionCode, entCode,supervisionUniformityAnalysisData:{InspectorOperationManage} } = props;
+
+  const sum = Number(InspectorOperationManage.PrincipleProblemNum) + Number(InspectorOperationManage.importanProblemNum) + Number(InspectorOperationManage.CommonlyProblemNum)
 
   useEffect(() => {
-    getData();
-  }, [level, regionCode, entCode, time]);
+  }, []);
 
-  const getData = () => {
-    dispatch({
-      type: 'sysDashboard/GetPlanOperationTaskCompleteRate',
-      payload: {
-        regionCode: level == 2 ? regionCode : undefined,
-        entCode: level == 3 ? entCode : undefined,
-        beginTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
-        endTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
-      },
-      callback: res => {},
-    });
-  };
+
 
   const getOption = () => {
-    let rate = InspectionAndCalibration.inspectionRate;
     let seriesData = [
       {
-        value: InspectionAndCalibration.inspectionCompleteCount,
+        value: InspectorOperationManage.PrincipleProblemNum,
         name: '原则性问题',
       },
       {
-        value: InspectionAndCalibration.inspectionIncompleteCount,
+        value: InspectorOperationManage.importanProblemNum,
         name: '重点问题',
       },
       {
-        value: InspectionAndCalibration.inspectionCompleteCount,
+        value: InspectorOperationManage.CommonlyProblemNum,
         name: '一般问题',
       },
     ];
-
+   
     let option = {
       color: [COLOR[0],COLOR[1], COLOR[2]],
       title: {
-        text: '{val|' + rate + '}\n{name|核查结果}',
+        text: '{val|' + sum + '}\n{name|核查结果}',
         top: 'center',
         left: 'center',
         textStyle: {
@@ -96,6 +86,7 @@ const ProjectExecution = props => {
           itemStyle: {
             padding: 4,
           },
+          minAngle: 2,
           padAngle: 4,
           data: seriesData,
         },
@@ -129,39 +120,42 @@ const ProjectExecution = props => {
                 <i style={{ backgroundColor: COLOR[0],borderRadius:0  }}></i>
                 <span className="textOverflow" style={{...textSty}}>原则性问题</span>
               </div>
-              <div className={styles.value}  style={{...textSty}}>{InspectionAndCalibration.inspectionCloseCount}%</div>
+              <div className={styles.value}  style={{...textSty,textAlign:'right'}}>{fomatFloat(InspectorOperationManage.PrincipleProblemNum / sum  * 100 ,2)}%</div>
             </Col>
             <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
                 <i style={{ backgroundColor: COLOR[1],borderRadius:0 }}></i>
                 <span className="textOverflow" style={{...textSty}}>重点问题</span>
               </div>
-              <div className={styles.value}  style={{...textSty}}>{InspectionAndCalibration.inspectionCompleteCount}%</div>
+              <div className={styles.value}  style={{...textSty,textAlign:'right'}}>{fomatFloat(InspectorOperationManage.importanProblemNum / sum  * 100 ,2)}%</div>
             </Col>
             <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
                 <i style={{ backgroundColor: COLOR[2],borderRadius:0  }}></i>
                 <span className="textOverflow" style={{...textSty}}>一般问题</span>
               </div>
-              <div className={styles.value}  style={{...textSty}}>
-                {InspectionAndCalibration.inspectionIncompleteCount}%
+              <div className={styles.value}  style={{...textSty,textAlign:'right'}}>
+                {fomatFloat(InspectorOperationManage.CommonlyProblemNum / sum  * 100,2)}%
               </div>
             </Col>
           </Row>
         </Col>
       </Row>
-      {open && (
-        <PlanWorkOrderStatistics //计划巡检完成率弹框
-          // wrapClassName="fullScreenModal"
-          modalType="planInspection"
-          visible={open}
-          type={2}
-          onCancel={() => {
-            setOpen(false);
-          }}
-          time={[moment(time[0]), moment(time[1])]}
-        />
-      )}
+      <Modal
+      title='全系统督查汇总'
+      destroyOnClose
+      wrapClassName={'fullScreenModal'}
+      bodyStyle={{padding:0}}
+      visible={open}
+      mask={false}
+      onCancel={() => {
+        setOpen(false);
+      }}
+    >
+      <SupervisionAnalySumm
+        tabType={3}
+      />
+    </Modal>
     </HomeCard>
   );
 };

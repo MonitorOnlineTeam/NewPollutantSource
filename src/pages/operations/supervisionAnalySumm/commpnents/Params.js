@@ -58,7 +58,7 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const { tableDatas, tableTotal,tableLoading,exportLoading, } = props;
+  const { tableDatas, tableTotal,tableLoading,exportLoading,tabType } = props;
 
 
   useEffect(() => {
@@ -241,6 +241,7 @@ const Index = (props) => {
   return (
     <div className={styles.analysisSummarySty}>
       <Card
+        bordered={tabType && false}
         title={
           <Form
             form={form}
