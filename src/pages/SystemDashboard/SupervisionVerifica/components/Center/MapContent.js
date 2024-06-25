@@ -4,9 +4,10 @@ import { connect } from 'dva';
 import styles from '@/pages/SystemDashboard/styles.less';
 import config from '@/config';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
-import { Radio, Space, Spin, Select, Col, Row } from 'antd';
+import { Radio, Space, Spin, Select, Col, Row,Tabs,Modal } from 'antd';
 import moment from 'moment';
-import SiteDetailsModal from '@/pages/newestHome/components/springModal/mapModal/SiteDetailsModal';
+import RemoteSupervision from '@/pages/operations/remoteSupervision';
+import SupervisionManager from '@/pages/operations/supervisionManager';
 
 const legendList = [
   {
@@ -62,6 +63,9 @@ class MapContent extends PureComponent {
       hoverTitleLngLat: {},
       hoverEntTitle: '',
       hoverPointTitle: '',
+      open:false,
+      openData:{},
+
     };
     this.mapEvents = {
       created(m) {
@@ -92,7 +96,6 @@ class MapContent extends PureComponent {
       mouseover: (MapsOption, marker) => {
         //鼠标移入地图容器内时触发
         const { level, pointInfoWindowVisible } = this.state;
-        console.log('marker', marker);
         const position = marker && marker.De && marker.De.extData.position;
         if (position) {
           if (level == 2) {
@@ -120,6 +123,15 @@ class MapContent extends PureComponent {
         if ((level == 2 || level == 3 || level == 4) && pointInfoWindowVisible === false) {
           const position = marker.De.extData.position;
           this.setState({ hoverTitleShow: false, hoverEntTitleShow: false });
+        }
+      },
+      click: (MapsOption, marker) => {
+        //鼠标移出地图容器内时触发
+        const { level, pointInfoWindowVisible } = this.state;
+        if ((level == 3 || level == 4) && pointInfoWindowVisible === false) {
+          const position = marker.De.extData.position;
+          console.log(position)
+          this.setState({open:true,openData:{EntCode:position.entCode, DGIMN :position.dgimn ,time:this.props.time} })
         }
       },
     };
@@ -167,7 +179,6 @@ class MapContent extends PureComponent {
 
   // 根据级别，返回地图数据
   handleMarkerDatas = mapData => {
-    console.log('mapData', mapData,selectedLegend);
     const { level, selectedLegend, currentPointList } = this.state;
     let markersList = [];
     switch (level) {
@@ -301,7 +312,6 @@ class MapContent extends PureComponent {
 
   // 绘制行政区边界
   renderRegionBoundary = regionName => {
-    console.log('regionName', regionName);
     // aMap.clearMap();
     AMap.plugin('AMap.DistrictSearch', () => {
       const districtSearch = new AMap.DistrictSearch({
@@ -359,7 +369,7 @@ class MapContent extends PureComponent {
         this.loadPageData();
       },
     );
-    this.updateCardData({ level: 3, entCode: extData.position.entCode})
+    this.updateCardData({ level: 3, entCode: extData.position.entCode })
   };
 
   // 返回按钮点击
@@ -372,7 +382,7 @@ class MapContent extends PureComponent {
       this.setState({ level: 1, pointInfoWindowVisible: false, selectedLegend: undefined }, () => {
         this.handleMarkerDatas(level1MapData);
       });
-      this.updateCardData({ level: 1})
+      this.updateCardData({ level: 1 })
     }
 
     // 企业下监测点返回企业
@@ -646,6 +656,7 @@ class MapContent extends PureComponent {
     );
   };
 
+
   render() {
     const {
       markersList,
@@ -659,6 +670,7 @@ class MapContent extends PureComponent {
       level,
       selectedLegend,
       currentPointInfo,
+      openData,
     } = this.state;
     const { loading } = this.props;
 
@@ -718,11 +730,36 @@ class MapContent extends PureComponent {
             })}
           </div>
         </Spin>
-
-        <SiteDetailsModal
-          data={{ ...currentPointInfo, PollutantType: 1 }}
-          tabList={['', '运维记录', '运维日志', '', '', '', '', '', '']}
-        />
+        <Modal
+          title='监督核查记录'
+          destroyOnClose
+          wrapClassName={`fullScreenModal ${styles.SupervisionVerificaRecordModal}`}
+          bodyStyle={{ padding: 0 }}
+          visible={this.state.open}
+          mask={false}
+          onCancel={() => {
+            this.setState({
+              open:false
+            })
+          }}
+        >
+          <Tabs
+            defaultActiveKey="1"
+            tabPosition='left'
+            items={[
+              {
+                label: `关键参数核查`,
+                key: '1',
+                children: <RemoteSupervision hideBreadcrumb  par={openData}  match={{path:'/operations/remoteSupervisionRecord'}}/>,
+              },
+              {
+                label: `系统设施核查`,
+                key: '2',
+                children: <SupervisionManager hideBreadcrumb  par={openData} match={{path:'/operations/supervisionRecod'}}/>,
+              },
+            ]}
+          />
+        </Modal>
       </div>
     );
   }

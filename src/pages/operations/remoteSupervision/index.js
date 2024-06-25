@@ -27,7 +27,7 @@ import Lightbox from "react-image-lightbox-rotate";
 import "react-image-lightbox/style.css";
 import OperationInspectoUserList from '@/components/OperationInspectoUserList'
 import CheckUserEditDetail from "./checkUserEdit";
-import {  API } from '@config/API';
+import { API } from '@config/API';
 import config from '@/config';
 
 const { TextArea } = Input;
@@ -240,7 +240,7 @@ const Index = (props) => {
   const [commonForm] = Form.useForm();
 
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading, editLoading, tableInfo, exportLoading, forwardTableLoading, forwardTableData, forwardOkLoading, regQueryPar, getRemoteInspectorPointLoading, remoteInspectorPointList, addRemoteInspectorPointLoading, forwardTableTotal, importDataLoading, } = props;
+  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading, editLoading, tableInfo, exportLoading, forwardTableLoading, forwardTableData, forwardOkLoading, regQueryPar, getRemoteInspectorPointLoading, remoteInspectorPointList, addRemoteInspectorPointLoading, forwardTableTotal, importDataLoading,par } = props;
 
   const [tabType, setTabType] = useState('1')
 
@@ -295,7 +295,18 @@ const Index = (props) => {
         case 'delete': setDelPermis(true); break;
       }
     })
-    onFinish(pageIndex, pageSize)
+    if (par) {
+      form.setFieldsValue({ EntCode:par?.EntCode,time:par?.time })
+      setPointLoading(true)
+      props.getPointByEntCode({ EntCode: par?.EntCode }, (res) => {
+        setPointList(res)
+        setPointLoading(false)
+        form.setFieldsValue({ DGIMN:par?.DGIMN })
+        onFinish(pageIndex, pageSize)
+      })
+    } else {
+      onFinish(pageIndex, pageSize)
+    }
     props.getUserList()
 
 
@@ -498,7 +509,7 @@ const Index = (props) => {
       dataIndex: 'ManagerIssue',
       key: 'ManagerIssue',
       align: 'center',
-      width:140,
+      width: 140,
       ellipsis: true,
     },
     {
@@ -543,10 +554,10 @@ const Index = (props) => {
       width: 150,
       ellipsis: true,
       render: (_, record) => {
-        const updateflag = record.submitStatus == '系统关闭' || (record.isCheckUser == 0 &&  (record.issueTime || record.ManagerIssueTime) ) || (record.isCheckUser == 1 &&  record.issueTime);
+        const updateflag = record.submitStatus == '系统关闭' || (record.isCheckUser == 0 && (record.issueTime || record.ManagerIssueTime)) || (record.isCheckUser == 1 && record.issueTime);
         // const flag = record.flag;
-        const issue =  (record.isCheckUser == 1 && (record.SecondStatus=='合格' || record.SecondStatus=='不合格')) || (record.isCheckUser == 2 && (record.resultCheck=='合格' || record.resultCheck=='不合格'));
-        const isCheckUser = record.isCheckUser == 1 || record.isCheckUser == 2 ; //0运维人员  1省区经理 2核查人员
+        const issue = (record.isCheckUser == 1 && (record.SecondStatus == '合格' || record.SecondStatus == '不合格')) || (record.isCheckUser == 2 && (record.resultCheck == '合格' || record.resultCheck == '不合格'));
+        const isCheckUser = record.isCheckUser == 1 || record.isCheckUser == 2; //0运维人员  1省区经理 2核查人员
         let detail = <Tooltip title="详情">
           <a onClick={() => {
             details(record)
@@ -563,12 +574,12 @@ const Index = (props) => {
               <a onClick={() => {
                 if (updateflag) {
                   return;
-                }else{
+                } else {
                   edit(record)
                 }
-                
+
               }}  >
-                <EditOutlined style={{ cursor: updateflag ? 'not-allowed' : 'pointer', color: updateflag ?  'rgba(0, 0, 0, 0.25)' : '#1890ff',  fontSize: 16 }} />
+                <EditOutlined style={{ cursor: updateflag ? 'not-allowed' : 'pointer', color: updateflag ? 'rgba(0, 0, 0, 0.25)' : '#1890ff', fontSize: 16 }} />
                 {/* <EditOutlined style={{ fontSize: 16 }} /> */}
 
               </a>
@@ -745,9 +756,9 @@ const Index = (props) => {
       layout='inline'
     >
       {/* <Spin spinning={entLoading} size='small'> */}
-        <Form.Item label='企业' name='entCode' style={{ marginRight: 8 }}>
-          <EntAtmoList noFilter style={{ width: 300 }} />
-        </Form.Item>
+      <Form.Item label='企业' name='entCode' style={{ marginRight: 8 }}>
+        <EntAtmoList noFilter style={{ width: 300 }} />
+      </Form.Item>
       {/* </Spin> */}
       <Spin spinning={taskPointLoading} size='small'>
         <Form.Item label='监测点名称' name='DGIMN' >
@@ -799,13 +810,13 @@ const Index = (props) => {
       [`${code}DsUnit`]: val.DASUnit,
       [`${code}ScyUnit`]: val.DataUnit,
     })
-    !isImport&&form2.setFieldsValue({//实时数据一致性核查表单位 导入数据不用
+    !isImport && form2.setFieldsValue({//实时数据一致性核查表单位 导入数据不用
       [`${code}IndicaUnit`]: val.AnalyzerCouUnit,
       [`${code}DsDataUnit`]: val.DASCouUnit,
       [`${code}ScyDataUnit`]: val.DataCouUnit,
     })
   }
-  const echoForamtData = (code, val, item,isImport) => { //格式化 除单位外的所有数据 数据一致性核查表
+  const echoForamtData = (code, val, item, isImport) => { //格式化 除单位外的所有数据 数据一致性核查表
     form2.setFieldsValue({
       [`${code}AnalyzerRang1`]: val.AnalyzerMin,
       [`${code}AnalyzerRang2`]: val.AnalyzerMax,
@@ -814,28 +825,28 @@ const Index = (props) => {
       [`${code}ScyRang1`]: val.DataMin,
       [`${code}ScyRang2`]: val.DataMax,
       [`${code}RangUniformity`]: val.RangeAutoStatus,
-      [`${code}RangCheck`]:isImport? form2.getFieldValue(`${code}RangCheck`): val.RangeStatus ? [val.RangeStatus] : [],
-      [`${code}Remark`]:isImport? form2.getFieldValue(`${code}Remark`): val.RangeRemark,
+      [`${code}RangCheck`]: isImport ? form2.getFieldValue(`${code}RangCheck`) : val.RangeStatus ? [val.RangeStatus] : [],
+      [`${code}Remark`]: isImport ? form2.getFieldValue(`${code}Remark`) : val.RangeRemark,
       [`${code}OperationRangeRemark`]: val.OperationRangeRemark,
       [`${code}ManagerRangeRemark`]: val.ManagerRangeRemark,
       [`${code}AnalyzerFilePar`]: item.AnalyzerFileList?.[0] && item.AnalyzerFileList?.[0].FileUuid,
       [`${code}DasFilePar`]: item.DASFileList?.[0] && item.DASFileList?.[0].FileUuid,
       [`${code}RangeFilePar`]: item.RangeFileList?.[0] && item.RangeFileList?.[0].FileUuid,
-      }) 
-      !isImport&&form2.setFieldsValue({//实时数据一致性核查表 导入数据不用
-        [`${code}IndicaVal`]: val.AnalyzerCou,
-        [`${code}DsData`]: val.DASCou,
-        [`${code}ScyData`]: val.DataCou,
-        [`${code}DataUniformity`]: val.CouAutoStatus,
-        [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
-        [`${code}Remark2`]: val.CouRemrak,
-        [`${code}OperationDataRemark`]: val.OperationDataRemark,
-        [`${code}ManagerDataRemark`]: val.ManagerDataRemark,
-      })
-   
+    })
+    !isImport && form2.setFieldsValue({//实时数据一致性核查表 导入数据不用
+      [`${code}IndicaVal`]: val.AnalyzerCou,
+      [`${code}DsData`]: val.DASCou,
+      [`${code}ScyData`]: val.DataCou,
+      [`${code}DataUniformity`]: val.CouAutoStatus,
+      [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
+      [`${code}Remark2`]: val.CouRemrak,
+      [`${code}OperationDataRemark`]: val.OperationDataRemark,
+      [`${code}ManagerDataRemark`]: val.ManagerDataRemark,
+    })
+
   }
 
-  const echoForamt = (code, val, item,isImport) => { //格式化 编辑回显
+  const echoForamt = (code, val, item, isImport) => { //格式化 编辑回显
     // form2.setFieldsValue({
     //   [`${code}AnalyzerRang1`]: val.AnalyzerMin,
     //   [`${code}AnalyzerRang2`]: val.AnalyzerMax,
@@ -872,7 +883,7 @@ const Index = (props) => {
 
   const [echoLoading, setEchoLoading] = useState(false)
   const [isCheckUser, setIsCheckUser] = useState(false)
-  const [roleType, setRoleType ] = useState()
+  const [roleType, setRoleType] = useState()
   const [visible, setVisible] = useState(false)
   const [title, setTitle] = useState('添加')
   const [editId, setEditId] = useState()
@@ -891,7 +902,7 @@ const Index = (props) => {
     setEchoLoading(true)
     resetData();
     setTabType("1")
-    setIsCheckUser(record.isCheckUser==1||record.isCheckUser==2? true : false)
+    setIsCheckUser(record.isCheckUser == 1 || record.isCheckUser == 2 ? true : false)
     setRoleType(record.isCheckUser)
     // setIsCheckUser(true)
     props.getConsistencyCheckInfo({ ID: record.id }, (data) => {
@@ -922,49 +933,49 @@ const Index = (props) => {
       setIsDisPlayCheck2(false)
       setIsDisPlayCheck3(false)
       setIsDisPlayCheck4(false)
-      let codeArr = data.consistencyCheckList?.[0]&&data.consistencyCheckList.map(item=>item?.DataList?.PollutantCode)
-          codeArr = codeArr.filter((item, index) => codeArr.indexOf(item) === index);//去重
-      let i=0,j=0;
-      codeArr.map((item,index)=>{
-       if(item=='411'&&i==0){ //颗粒物
+      let codeArr = data.consistencyCheckList?.[0] && data.consistencyCheckList.map(item => item?.DataList?.PollutantCode)
+      codeArr = codeArr.filter((item, index) => codeArr.indexOf(item) === index);//去重
+      let i = 0, j = 0;
+      codeArr.map((item, index) => {
+        if (item == '411' && i == 0) { //颗粒物
           codeArr.push('411a')
           i++
-       }
-       if(item=='415'&&j==0){ //流速
+        }
+        if (item == '415' && j == 0) { //流速
           codeArr.push('415b')
           j++;
         }
-       
-     })
-     codeArr.map(code=>{ //初始化量程一致性 流速和颗粒物
-      form2.setFieldsValue({
-        [`${code}AnalyzerRang1`]: undefined,
-        [`${code}AnalyzerRang2`]: undefined,
-        [`${code}DsRang1`]: undefined,
-        [`${code}DsRang2`]: undefined,
-        [`${code}ScyRang1`]: undefined,
-        [`${code}ScyRang2`]: undefined,
-        [`${code}RangUniformity`]: undefined,
-        // [`${code}RangCheck`]: [],
-        // [`${code}Remark`]: undefined,
-        [`${code}OperationRangeRemark`]: undefined,
-        [`${code}ManagerRangeRemark`]: undefined,
-        [`${code}AnalyzerFilePar`]: undefined,
-        [`${code}DasFilePar`]: undefined,
-        [`${code}RangeFilePar`]: undefined,
-        [`${code}AnalyzerUnit`]: undefined,
-        [`${code}DsUnit`]: undefined,
-        [`${code}ScyUnit`]: undefined,
 
       })
-     })
-      echoUnit(addDataConsistencyData,'isImport') //初始化量程一致性单位
+      codeArr.map(code => { //初始化量程一致性 流速和颗粒物
+        form2.setFieldsValue({
+          [`${code}AnalyzerRang1`]: undefined,
+          [`${code}AnalyzerRang2`]: undefined,
+          [`${code}DsRang1`]: undefined,
+          [`${code}DsRang2`]: undefined,
+          [`${code}ScyRang1`]: undefined,
+          [`${code}ScyRang2`]: undefined,
+          [`${code}RangUniformity`]: undefined,
+          // [`${code}RangCheck`]: [],
+          // [`${code}Remark`]: undefined,
+          [`${code}OperationRangeRemark`]: undefined,
+          [`${code}ManagerRangeRemark`]: undefined,
+          [`${code}AnalyzerFilePar`]: undefined,
+          [`${code}DasFilePar`]: undefined,
+          [`${code}RangeFilePar`]: undefined,
+          [`${code}AnalyzerUnit`]: undefined,
+          [`${code}DsUnit`]: undefined,
+          [`${code}ScyUnit`]: undefined,
+
+        })
+      })
+      echoUnit(addDataConsistencyData, 'isImport') //初始化量程一致性单位
       // form3.resetFields();//初始化参数一致性核查表
-      form3.setFieldsValue({allSelect:false})
+      form3.setFieldsValue({ allSelect: false })
       //量程一致性和数据一致性 回显数据
       data.consistencyCheckList?.[0] && consistencyEchoData(data.consistencyCheckList, 'isImport')
       //参数一致性核查 回显数据
-      data.consistentParametersCheckList?.[0] && echoParFun(data.consistentParametersCheckList,'isImport')
+      data.consistentParametersCheckList?.[0] && echoParFun(data.consistentParametersCheckList, 'isImport')
     })
 
   }
@@ -1030,10 +1041,10 @@ const Index = (props) => {
 
     consistencyCheckList.map(item => { //一致性核查表 量程和数据
 
-      let val =  item.DataList;
+      let val = item.DataList;
       let code = item.DataList.PollutantCode;
 
-      if (item.PollutantName == '颗粒物') { 
+      if (item.PollutantName == '颗粒物') {
         if (val.Special) {
           if (val.Special == 1) { //有显示屏
             echoForamt(code, val, item)
@@ -1060,35 +1071,35 @@ const Index = (props) => {
 
         }
       } else if (item.PollutantName === '流速') {
-        if(!isImport){
-         form2.setFieldsValue({  //实时数据
-          [`${code}DsData`]: val.DASCou,
-          [`${code}DsDataUnit`]: val.DASCouUnit,
-          [`${code}ScyData`]: val.DataCou,
-          [`${code}ScyDataUnit`]: val.DataCouUnit,
-          [`${code}DataUniformity`]: val.CouAutoStatus,
-          [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
-          [`${code}Remark2`]: val.CouRemrak,
-          [`${code}OperationDataRemark`]: val.OperationDataRemark,
-          [`${code}ManagerDataRemark`]: val.ManagerDataRemark,
-         })
-        onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)
+        if (!isImport) {
+          form2.setFieldsValue({  //实时数据
+            [`${code}DsData`]: val.DASCou,
+            [`${code}DsDataUnit`]: val.DASCouUnit,
+            [`${code}ScyData`]: val.DataCou,
+            [`${code}ScyDataUnit`]: val.DataCouUnit,
+            [`${code}DataUniformity`]: val.CouAutoStatus,
+            [`${code}RangCheck2`]: val.CouStatus ? [val.CouStatus] : [],
+            [`${code}Remark2`]: val.CouRemrak,
+            [`${code}OperationDataRemark`]: val.OperationDataRemark,
+            [`${code}ManagerDataRemark`]: val.ManagerDataRemark,
+          })
+          onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)
         }
         if (val.Special == 1) { //差压法
-          echoForamt(code, val, item,isImport)
+          echoForamt(code, val, item, isImport)
           isDisplayChange2({ target: { checked: true } }, 'isDisplay3', 'firstDefault')
           onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1)
         } else if (val.Special == 2) { //直测流速法
-          echoForamt(`${code}b`, val, item,isImport)
+          echoForamt(`${code}b`, val, item, isImport)
           isDisplayChange2({ target: { checked: true } }, 'isDisplay4', 'firstDefault')
           onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}b` }, `${code}bRangCheck`, 1)
 
         }
 
       } else {
-        echoForamt(code, val, item,isImport)
+        echoForamt(code, val, item, isImport)
         onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1) //编辑 手工修正结果 量程一致性
-        !isImport&&onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)//编辑 手工修正结果 实时数据
+        !isImport && onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)//编辑 手工修正结果 实时数据
 
       }
       // setNumChecked(val.DataRangeStatus == 1 ? true : false)
@@ -1174,7 +1185,7 @@ const Index = (props) => {
     })
   }
   const issues = (record) => { //下发
-    props.issueRemoteInspector({ ID: record.id,isCheckUser:record.isCheckUser }, () => {
+    props.issueRemoteInspector({ ID: record.id, isCheckUser: record.isCheckUser }, () => {
       onFinish(pageIndex, pageSize)
     })
   }
@@ -1184,9 +1195,9 @@ const Index = (props) => {
       const values = await form.validateFields();
       props.getRemoteInspectorList({
         ...values,
-        month: undefined,
-        BeginTime: values.month ? moment(values.month[0]).format("YYYY-MM-DD 00:00:00") : undefined,
-        EndTime: values.month ? moment(values.month[1]).format("YYYY-MM-DD 23:59:59") : undefined,
+        time: undefined,
+        BeginTime: values.time ? moment(values.time[0]).format("YYYY-MM-DD 00:00:00") : undefined,
+        EndTime: values.time ? moment(values.time[1]).format("YYYY-MM-DD 23:59:59") : undefined,
         pageIndex: pageIndex,
         pageSize: pageSize,
       })
@@ -1456,29 +1467,29 @@ const Index = (props) => {
     }
   }
 
-  const unitDefault = (code, value,isImport) => {
+  const unitDefault = (code, value, isImport) => {
     form2.setFieldsValue({
       [`${code}AnalyzerUnit`]: value,
       [`${code}DsUnit`]: value,
       [`${code}ScyUnit`]: value,
     })
-    !isImport&&form2.setFieldsValue({ //导入数据 实时数据不需要格式化单位
+    !isImport && form2.setFieldsValue({ //导入数据 实时数据不需要格式化单位
       [`${code}IndicaUnit`]: value,
       [`${code}DsDataUnit`]: value,
       [`${code}ScyDataUnit`]: value,
     })
   }
-  const echoUnit = (data,isImport) => { //格式化
+  const echoUnit = (data, isImport) => { //格式化
     data.map(item => {
       const code = item.par;
       if (item.Name == '流速' && item.isDisplay == 4) {
         const value = item.Col1.split(',')[2];
-        unitDefault(code, value,isImport)
+        unitDefault(code, value, isImport)
       }
 
       if (item.Col1.search(",") == -1) { //单位只有一个的情况
         const value = item.Col1;
-        unitDefault(code, value,isImport)
+        unitDefault(code, value, isImport)
       }
 
     })
@@ -1539,7 +1550,7 @@ const Index = (props) => {
     setPageSize(PageSize)
     onFinish(PageIndex, PageSize)
   }
-  const echoFilePar = (code, item,isImport ) => {
+  const echoFilePar = (code, item, isImport) => {
     form3.setFieldsValue({
       [`${code}IsEnable`]: item.Status ? [item.Status] : [],
       [`${code}SetVal`]: item.SetValue,
@@ -1547,8 +1558,8 @@ const Index = (props) => {
       [`${code}TraceVal`]: item.TraceabilityValue,
       [`${code}DataVal`]: item.DataValue,
       [`${code}Uniform`]: item.AutoUniformity,
-      [`${code}RangCheck3`]: isImport? form3.getFieldValue(`${code}RangCheck3`): item.Uniformity ? [item.Uniformity] : [],//手工修正结果
-      [`${code}Remark3`]:  isImport? form3.getFieldValue(`${code}Remark3`): item.Remark,
+      [`${code}RangCheck3`]: isImport ? form3.getFieldValue(`${code}RangCheck3`) : item.Uniformity ? [item.Uniformity] : [],//手工修正结果
+      [`${code}Remark3`]: isImport ? form3.getFieldValue(`${code}Remark3`) : item.Remark,
       [`${code}OperationReamrk`]: item.OperationReramk,
       [`${code}ManagerRemark`]: item.ManagerRemark,
       [`${code}SettingFilePar`]: item.SetFileList?.[0] && item.SetFileList?.[0].FileUuid,
@@ -1560,7 +1571,7 @@ const Index = (props) => {
       [`${code}DataStatus`]: item.DataStatus ? [item.DataStatus] : [],
     })
   }
-  const echoParFun = (data,isImport) => { //格式化 编辑回显     参数一致性核查表
+  const echoParFun = (data, isImport) => { //格式化 编辑回显     参数一致性核查表
     /***参数一致性核查表***/
     let settingUploadList = {}, settingUploadFilesListObj = {};
     let instrumentUploadList = {}, instrumentUploadFilesListObj = {};
@@ -1568,7 +1579,7 @@ const Index = (props) => {
     let dataUploadList = {}, dataUploadFilesListObj = {};
     data.map(item => {
       const code = item.CheckItem ? item.CheckItem : item.ChildID;
-      echoFilePar(code, item,isImport)
+      echoFilePar(code, item, isImport)
       const echoFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => {
         let parFileList = [];
         uploadList?.length && uploadList.map(uploadItem => {
@@ -1653,7 +1664,7 @@ const Index = (props) => {
   }
   const uploadProps = { //附件上传 
     action: API.UploadApi.UploadPicture,
-    headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
+    headers: { Cookie: null, Authorization: "Bearer " + Cookie.get(config.cookieName) },
     accept: 'image/*',
     showUploadList: { showPreviewIcon: true, showRemoveIcon: !isCheckUser },
     data: {
@@ -1715,10 +1726,10 @@ const Index = (props) => {
           case 'dataFile': setDataFileList({ ...dataFileList, [dataFilePar]: fileList }); form3.setFieldsValue({ [dataFilePar]: filesCuidFun(dataFileCuidList, dataFilePar) }); break;
 
         }
-        if(info.file.status === 'done'){
-          if(info.file?.response?.IsSuccess){
+        if (info.file.status === 'done') {
+          if (info.file?.response?.IsSuccess) {
             message.success('上传成功！')
-          }else{
+          } else {
             message.error(info.file?.response?.Message)
           }
         }
@@ -2464,7 +2475,7 @@ const Index = (props) => {
                 disabledFlag = !isCheckUser;
                 break;
             }
-            return <Row justify='center' align='middle'  className='manualSty'>
+            return <Row justify='center' align='middle' className='manualSty'>
               <Form.Item name={[`${record.par}RangCheck`]}>
                 <Checkbox.Group disabled={disabledFlag} options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck`, 1) }} />
               </Form.Item>
@@ -2818,8 +2829,8 @@ const Index = (props) => {
           render: (text, record) => {
             const isCheck = roleType != 1;
             return <Form.Item name={`${record.par}ManagerDataRemark`}>
-            <TextArea disabled={isCheck} rows={1} placeholder='请输入' style={{ width: '100%' }} />
-          </Form.Item>
+              <TextArea disabled={isCheck} rows={1} placeholder='请输入' style={{ width: '100%' }} />
+            </Form.Item>
           }
         },
       ]
@@ -3069,8 +3080,8 @@ const Index = (props) => {
           render: (text, record) => {
             const isCheck = roleType != 1;
             return <Form.Item name={`${record.par}ManagerRemark`}>
-            <TextArea disabled={isCheck} rows={1} placeholder='请输入' style={{ width: '100%' }} />
-          </Form.Item>
+              <TextArea disabled={isCheck} rows={1} placeholder='请输入' style={{ width: '100%' }} />
+            </Form.Item>
           }
         },
         // {
@@ -3130,8 +3141,8 @@ const Index = (props) => {
   return (
     <div className={styles.remoteSupervisionSty}>
 
-      <BreadcrumbWrapper>
-        <Card title={
+      <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
+        <Card bordered={!props.hideBreadcrumb} title={
           <Form
             form={form}
             name="advanced_search"
@@ -3147,9 +3158,9 @@ const Index = (props) => {
                 <RegionList noFilter levelNum={2} style={{ width: 150 }} />
               </Form.Item>
               {/* <Spin spinning={entLoading} size='small' style={{ top: -4, left: 20 }}> */}
-                <Form.Item label='企业' name='EntCode'>
-                  <EntAtmoList noFilter style={{ width: 200 }} />
-                </Form.Item>
+              <Form.Item label='企业' name='EntCode'>
+                <EntAtmoList noFilter style={{ width: 200 }} />
+              </Form.Item>
               {/* </Spin> */}
               <Spin spinning={pointLoading} size='small' style={{ top: -4, left: 20 }}>
                 <Form.Item label='监测点名称' name='DGIMN' >
@@ -3166,7 +3177,7 @@ const Index = (props) => {
             </Row>
 
             <Row >
-              <Form.Item label='核查日期' name='month'>
+              <Form.Item label='核查日期' name='time'>
                 {/* <DatePicker allowClear={false} picker="day" /> */}
                 <RangePicker_ format='YYYY-MM-DD' allowClear={false} showTime={false} style={{ marginLeft: 0, width: 407 }} />
               </Form.Item>
@@ -3180,7 +3191,7 @@ const Index = (props) => {
                 <Button type="primary" loading={tableLoading} htmlType="submit">
                   查询
                </Button>
-                <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields();setPointList([]) }}  >
+                <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); setPointList([]) }}  >
                   重置
                 </Button>
                 {/* {!isRecord && <Button style={{ marginRight: 8 }} onClick={add}>
@@ -3252,9 +3263,9 @@ const Index = (props) => {
 
             <Row className={styles.queryPar} style={{ paddingTop: 12 }}>
               {/* <Spin spinning={entLoading} size='small' style={{ top: -2, left: '6%' }}> */}
-                <Form.Item label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称' }]}>
-                  <EntAtmoList noFilter disabled={title === '编辑'} allowClear={false} style={{ width: 200 }} />
-                </Form.Item>
+              <Form.Item label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称' }]}>
+                <EntAtmoList noFilter disabled={title === '编辑'} allowClear={false} style={{ width: 200 }} />
+              </Form.Item>
               {/* </Spin> */}
               <Spin spinning={pointLoading2} size='small' style={{ top: -2, left: '12.5%' }}>
                 <Form.Item label='监测点名称' name='DGIMN' style={{ margin: '0 8px' }} rules={[{ required: true, message: '请选择监测点名称!' }]} >
@@ -3284,7 +3295,7 @@ const Index = (props) => {
                   </Select>
                 </Form.Item>
               </Spin>
-              {!isCheckUser&&<Form.Item>
+              {!isCheckUser && <Form.Item>
                 <Button type='primary' icon={<UploadOutlined />} loading={importDataLoading || echoLoading} onClick={importData}>导入</Button>
               </Form.Item>}
 
@@ -3348,8 +3359,8 @@ const Index = (props) => {
                 className={styles.queryForm2}
               // onValuesChange={onValuesChange2}
               >
-               <Form.Item name="allSelect" valuePropName="checked">
-                <Checkbox  disabled={isCheckUser} onChange={onAllChange}>全选</Checkbox>
+                <Form.Item name="allSelect" valuePropName="checked">
+                  <Checkbox disabled={isCheckUser} onChange={onAllChange}>全选</Checkbox>
                 </Form.Item>
                 <SdlTable
                   loading={parLoading}
@@ -3523,8 +3534,8 @@ const Index = (props) => {
           </Spin>
         </Form>
 
-      </Modal> 
-      <CheckUserEditDetail  visible={checkEditvisible}  title={title} id={editId}   onCancel={() => { setCheckEditvisible(false); }} onFinish={()=>onFinish(pageIndex,pageSize)}/>
+      </Modal>
+      <CheckUserEditDetail visible={checkEditvisible} title={title} id={editId} onCancel={() => { setCheckEditvisible(false); }} onFinish={() => onFinish(pageIndex, pageSize)} />
     </div>
 
   );

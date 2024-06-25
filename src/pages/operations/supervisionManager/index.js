@@ -178,7 +178,7 @@ const Index = (props) => {
 
   const [manufacturerId, setManufacturerId] = useState(undefined)
 
-  const { tableDatas, tableTotal, tableLoading, pointParamesLoading, infoloading, exportLoading, userLoading, entLoading, systemModelList, operationInfoList, isDetailModal, regDetailPar, } = props;
+  const { tableDatas, tableTotal, tableLoading, pointParamesLoading, infoloading, exportLoading, userLoading, entLoading, systemModelList, operationInfoList, isDetailModal, regDetailPar,par } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -201,7 +201,19 @@ const Index = (props) => {
         case 'rectificationPush': setPushPermis(true); break;
       }
     })
-    isDetailModal ? onFinish() : initData()
+    if (par) {
+      form.setFieldsValue({ EntCode:par?.EntCode,time:par?.time })
+      setPointLoading(true)
+      props.getPointByEntCode({ EntCode: par?.EntCode }, (res) => {
+        setPointList(res)
+        setPointLoading(false)
+        form.setFieldsValue({ DGIMN:par?.DGIMN })
+        onFinish(pageIndex, pageSize)
+      })
+    } else {
+      isDetailModal ? onFinish() : initData()
+    }
+  
   }, []);
 
   const initData = () => {

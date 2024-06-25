@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef,useMemo } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import styles from '@/pages/SystemDashboard/styles.less';
@@ -73,14 +73,14 @@ const Calibration = props => {
       grid: {
         left: 78,
         right: 0,
-        bottom: 20,
+        bottom: 26,
       },
       xAxis: {
         type: "value",
         axisLine: {
           show: true,
           lineStyle: {
-            color: '#3B85B0'
+            color: '#202c55'
           }
 
         },
@@ -107,7 +107,7 @@ const Calibration = props => {
         axisLine: {//y轴线的配置
           show: true,//是否展示
           lineStyle: {
-            color: "#3B85B0",//y轴线的颜色（若只设置了y轴线的颜色，未设置y轴文字的颜色，则y轴文字会默认跟设置的y轴线颜色一致）
+            color: "#202c55",//y轴线的颜色（若只设置了y轴线的颜色，未设置y轴文字的颜色，则y轴文字会默认跟设置的y轴线颜色一致）
           },
         },
         axisTick: {
@@ -118,6 +118,7 @@ const Calibration = props => {
         {
           name: "一致",
           type: "bar",
+          barMinWidth: 16,
           barWidth: '34%',
           stack: "total",
           emphasis: {
@@ -149,9 +150,8 @@ const Calibration = props => {
   const onOpenModal = () => {
     setOpen(true);
   };
-
-  return (
-    <HomeCard title="关键参数监督核查分析" bodyStyle={{}} loading={loading} style={{ minHeight: props.homeCardMinHight }}>
+  const renderEcharts = useMemo(() => {
+    return (
       <ReactEcharts
         ref={echart => {
           echart && setEcharts(echart.echarts);
@@ -162,6 +162,11 @@ const Calibration = props => {
         theme="my_theme"
         onEvents={{ click: onOpenModal }}
       />
+    );
+  }, [RemoteInspector]);
+  return (
+    <HomeCard title="关键参数监督核查分析" bodyStyle={{}} loading={loading} style={{ minHeight: props.homeCardMinHight }}>
+      {renderEcharts}
       <span style={{ color: '#63BFFF', position: 'absolute', top: 'calc(40px + 16px)', right: 16 }}>单位：个</span>
       <Modal
       title='关键参数督查汇总'

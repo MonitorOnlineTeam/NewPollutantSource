@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal } from 'antd';
 import styles from '@/pages/SystemDashboard/styles.less';
@@ -21,8 +21,9 @@ const dvaPropsData = ({ sysDashboard, loading }) => ({
 
 const ProjectExecution = props => {
   const [open, setOpen] = useState(false);
+  const [echarts, setEcharts] = useState();
 
-  const { dispatch, time, loading, level, regionCode, entCode,supervisionUniformityAnalysisData:{InspectorOperationManage} } = props;
+  const { dispatch, time, loading, level, regionCode, entCode, supervisionUniformityAnalysisData: { InspectorOperationManage } } = props;
 
   const sum = Number(InspectorOperationManage.PrincipleProblemNum) + Number(InspectorOperationManage.importanProblemNum) + Number(InspectorOperationManage.CommonlyProblemNum)
 
@@ -32,6 +33,9 @@ const ProjectExecution = props => {
 
 
   const getOption = () => {
+    if (!echarts) {
+      return {};
+    }
     let seriesData = [
       {
         value: InspectorOperationManage.PrincipleProblemNum,
@@ -46,9 +50,9 @@ const ProjectExecution = props => {
         name: '一般问题',
       },
     ];
-   
+
     let option = {
-      color: [COLOR[0],COLOR[1], COLOR[2]],
+      color: [COLOR[0], COLOR[1], COLOR[2]],
       title: {
         text: '{val|' + sum + '}\n{name|核查结果}',
         top: 'center',
@@ -99,63 +103,70 @@ const ProjectExecution = props => {
   const onOpenModal = () => {
     setOpen(true);
   };
-
-  const textSty = {color:'#FEFEFF',fontWeight:400}
+  const renderEcharts = useMemo(() => {
+    return (
+      <ReactEcharts
+        ref={echart => {
+         echart && setEcharts(echart.echarts);
+        }}
+        option={getOption()}
+        style={{ height: '100%' }}
+        className="echarts-for-echarts"
+        theme="my_theme"
+        onEvents={{ click: onOpenModal }}
+      />
+    );
+  }, [InspectorOperationManage]);
+  const textSty = { color: '#FEFEFF', fontWeight: 400 }
   return (
-    <HomeCard title="合规性监督核查分析" bodyStyle={{}} loading={loading} style={{minHeight:props.homeCardMinHight}}>
+    <HomeCard title="合规性监督核查分析" bodyStyle={{}} loading={loading} style={{ minHeight: props.homeCardMinHight }}>
       <Row style={{ height: '100%' }}>
         <Col span={13}>
-          <ReactEcharts
-            option={getOption()}
-            style={{ height: '100%' }}
-            className="echarts-for-echarts"
-            theme="my_theme"
-            onEvents={{ click: onOpenModal }}
-          />
+          {renderEcharts}
         </Col>
         <Col span={11} className={styles.center}>
           <Row className={styles.chartLegendWrapper}>
             <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
-                <i style={{ backgroundColor: COLOR[0],borderRadius:0  }}></i>
-                <span className="textOverflow" style={{...textSty}}>原则性问题</span>
+                <i style={{ backgroundColor: COLOR[0], borderRadius: 0 }}></i>
+                <span className="textOverflow" style={{ ...textSty }}>原则性问题</span>
               </div>
-              <div className={styles.value}  style={{...textSty,textAlign:'right'}}>{fomatFloat(InspectorOperationManage.PrincipleProblemNum / sum  * 100 ,2)}%</div>
+              <div className={styles.value} style={{ ...textSty, textAlign: 'right' }}>{fomatFloat(InspectorOperationManage.PrincipleProblemNum / sum * 100, 2)}%</div>
             </Col>
             <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
-                <i style={{ backgroundColor: COLOR[1],borderRadius:0 }}></i>
-                <span className="textOverflow" style={{...textSty}}>重点问题</span>
+                <i style={{ backgroundColor: COLOR[1], borderRadius: 0 }}></i>
+                <span className="textOverflow" style={{ ...textSty }}>重点问题</span>
               </div>
-              <div className={styles.value}  style={{...textSty,textAlign:'right'}}>{fomatFloat(InspectorOperationManage.importanProblemNum / sum  * 100 ,2)}%</div>
+              <div className={styles.value} style={{ ...textSty, textAlign: 'right' }}>{fomatFloat(InspectorOperationManage.importanProblemNum / sum * 100, 2)}%</div>
             </Col>
             <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
-                <i style={{ backgroundColor: COLOR[2],borderRadius:0  }}></i>
-                <span className="textOverflow" style={{...textSty}}>一般问题</span>
+                <i style={{ backgroundColor: COLOR[2], borderRadius: 0 }}></i>
+                <span className="textOverflow" style={{ ...textSty }}>一般问题</span>
               </div>
-              <div className={styles.value}  style={{...textSty,textAlign:'right'}}>
-                {fomatFloat(InspectorOperationManage.CommonlyProblemNum / sum  * 100,2)}%
+              <div className={styles.value} style={{ ...textSty, textAlign: 'right' }}>
+                {fomatFloat(InspectorOperationManage.CommonlyProblemNum / sum * 100, 2)}%
               </div>
             </Col>
           </Row>
         </Col>
       </Row>
       <Modal
-      title='全系统督查汇总'
-      destroyOnClose
-      wrapClassName={'fullScreenModal'}
-      bodyStyle={{padding:0}}
-      visible={open}
-      mask={false}
-      onCancel={() => {
-        setOpen(false);
-      }}
-    >
-      <SupervisionAnalySumm
-        tabType={3}
-      />
-    </Modal>
+        title='全系统督查汇总'
+        destroyOnClose
+        wrapClassName={'fullScreenModal'}
+        bodyStyle={{ padding: 0 }}
+        visible={open}
+        mask={false}
+        onCancel={() => {
+          setOpen(false);
+        }}
+      >
+        <SupervisionAnalySumm
+          tabType={3}
+        />
+      </Modal>
     </HomeCard>
   );
 };
