@@ -18,7 +18,7 @@ const HomeDataScreen = props => {
 
   const pageInfo = sysList.find(item => item.key === pageName);
 
-  useEffect(() => { 
+  useEffect(() => {
     dispatch({
       //获取运维基础配置
       type: 'global/getOperationSetting',

@@ -6,6 +6,7 @@ export const sysList = [
   {
     key: '异常数据识别',
     value: '/SystemDashboard/AbnormalIdentify',
+    title: '污染源异常数据识别',
     data: {
       ID: 'f6eb76ab-ce0b-4cfb-8626-2e0ec4435ec3',
       Name: '污染源异常数据识别软件',
@@ -128,21 +129,12 @@ export const dateRangeList = [
   },
   {
     key: '上半年',
-    value: [
-      moment()
-        .startOf('year')
-        .subtract(6, 'months'),
-      moment()
-        .startOf('year')
-        .subtract(1, 'days'),
-    ],
+    value: [moment(`${currentYear}-01-01`).startOf('year'), moment(`${currentYear}-06-30`)],
   },
   {
     key: '下半年',
     value: [
-      moment()
-        .startOf('year')
-        .add(6, 'month'),
+      moment().startOf('year').add(6, 'month'),
       moment().endOf('year'),
     ],
   },

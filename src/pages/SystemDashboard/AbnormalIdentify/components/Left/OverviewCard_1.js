@@ -8,41 +8,16 @@ import OperatingInfo from '@/pages/newestHome/components/springModal/operatingIn
 
 let myChart;
 const dvaPropsData = ({ sysDashboard, loading }) => ({
-  level: sysDashboard.level,
-  regionCode: sysDashboard.regionCode,
-  entCode: sysDashboard.entCode,
-  time: sysDashboard.time,
-  loading: loading.effects[`sysDashboard/GetOperationEquipmentOverview`],
+  modalCountAnalysis: sysDashboard.modalCountAnalysis,
+  loading: loading.effects['sysDashboard/GetMapPointInfo'],
 });
 
 const DeviceInfoCount = props => {
   const [open, setOpen] = useState(false);
-  const [nums, setNums] = useState({
-    pointCount: 0,
-    normalCount: 0,
-    exceptionCount: 0,
-  });
 
-  const { dispatch, time, loading, level, regionCode, entCode } = props;
+  const { dispatch, modalCountAnalysis, loading } = props;
 
-  useEffect(() => {
-    getData();
-  }, [level, regionCode, entCode, time]);
-
-  const getData = () => {
-    dispatch({
-      type: 'sysDashboard/GetOperationEquipmentOverview',
-      payload: {
-        regionCode: level == 2 ? regionCode : undefined,
-        entCode: level == 3 ? entCode : undefined,
-        beginTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
-        endTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
-      },
-      callback: res => {
-        setNums(res);
-      },
-    });
-  };
+  useEffect(() => {}, []);
 
   const onOpenModal = () => {
     setOpen(true);
@@ -56,7 +31,7 @@ const DeviceInfoCount = props => {
           className={`${styles.center} ${styles.pointCount}`}
           style={{ flexDirection: 'column' }}
         >
-          <p className={styles.pointNum}>{nums.entCount}</p>
+          <p className={styles.pointNum}>{modalCountAnalysis.EntCount}</p>
           <p className={styles.unit}>（家）</p>
           <img src="/SystemDashboard/Operation/pointNum_bg.png" />
           <p className={styles.text}>排污单位数量</p>
@@ -68,7 +43,7 @@ const DeviceInfoCount = props => {
               <span className={styles.text}>排放口数量</span>
               <div style={{ position: 'absolute', right: 10 }}>
                 <span className={styles.num} style={{ color: '#00A3FF' }}>
-                  {nums.pointCount}
+                  {modalCountAnalysis.PointCount}
                 </span>
                 <span className={styles.unit}>个</span>
               </div>
@@ -78,7 +53,7 @@ const DeviceInfoCount = props => {
               <span className={styles.text}>正常数量</span>
               <div style={{ position: 'absolute', right: 10 }}>
                 <span className={styles.num} style={{ color: '#2EEB9D' }}>
-                  {nums.normalCount}
+                  {modalCountAnalysis.NormalCount}
                 </span>
                 <span className={styles.unit}>个</span>
               </div>
@@ -88,7 +63,7 @@ const DeviceInfoCount = props => {
               <span className={styles.text}>异常数量</span>
               <div style={{ position: 'absolute', right: 10 }}>
                 <span className={styles.num} style={{ color: '#FFCC00' }}>
-                  {nums.exceptionCount}
+                  {modalCountAnalysis.ExcepCount}
                 </span>
                 <span className={styles.unit}>个</span>
               </div>

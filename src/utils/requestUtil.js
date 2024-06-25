@@ -3,7 +3,7 @@
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
 import { extend } from 'umi-request';
-import { notification } from 'antd';
+import { message, notification } from 'antd';
 import Cookie from 'js-cookie';
 import router from 'umi/router';
 import { async } from 'q';
@@ -45,6 +45,7 @@ const errorHandler = error => {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
     if (status === 401) {
+      // message.error('登录超时，请重新登录！');
       Cookie.set(configToken.cookieName, null);
       Cookie.set('currentUser', null);
       Cookie.set('newToken', null);
@@ -52,7 +53,7 @@ const errorHandler = error => {
       return {
         IsSuccess: false,
         Datas: {},
-        Message: '登录超时，请重新登录！',
+        Message: '',
       };
     }
     if (status === 403) {

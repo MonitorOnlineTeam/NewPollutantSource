@@ -14,14 +14,13 @@ const dvaPropsData = ({ loading, sysDashboard }) => ({
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
   time: sysDashboard.time,
-  loading: loading.effects['ctDataScreen/GetAfterSalesServiceAnalysis'],
+  loading: loading.effects['sysDashboard/GetPointTopWarning'],
 });
 
-const AfterSaleService = props => {
+const EmphasisEnt = props => {
   const [open, setOpen] = useState(false);
   const [openType, setOpenType] = useState(1);
-  const [ProductCategoryList, setProductCategoryList] = useState([]);
-  const [ServiceReasonsList, setServiceReasonsList] = useState([]);
+  const [dataSource, setDataSource] = useState([]);
 
   const { dispatch, loading, time, level, regionCode, entCode } = props;
 
@@ -31,18 +30,23 @@ const AfterSaleService = props => {
 
   const getData = value => {
     dispatch({
-      type: 'ctDataScreen/GetAfterSalesServiceAnalysis',
+      type: 'sysDashboard/GetPointTopWarning',
       payload: {
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
+        pLeve: level,
         bTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
         eTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
       },
       callback: res => {
-        // 质保内服务产品类别
-        setProductCategoryList(res.ProductCategoryList);
-        // 质保内服务原因
-        setServiceReasonsList(res.ServiceReasonsList);
+        let data = res.map(item => {
+          return {
+            ...item,
+            entName: item.Name.split('-')[0],
+            pointName: item.Name.split('-')[1],
+          };
+        });
+        setDataSource([...data, ...data]);
       },
     });
   };
@@ -51,46 +55,49 @@ const AfterSaleService = props => {
     setOpen(true);
     setOpenType(type);
   };
-
   return (
     <HomeCard
-      title="售后服务分析"
-      style={{ minHeight: 440, flex: 5 }}
-      bodyStyle={{}}
+      title="重点关注企业"
+      style={{ minHeight: 400, flex: 5 }}
+      bodyStyle={{ height: 'calc(100% - 60px)' }}
       loading={loading}
     >
       <Row className={styles.AfterSaleServiceWrapper}>
         <Col span={24} style={{ height: '100%', cursor: 'pointer' }} onClick={() => onOpenModal(1)}>
-          <div className={styles.title}>质保内服务产品类别</div>
           <div className={styles.listWrapper}>
-            <Row className={styles.header}>
-              <Col flex={2}>设备类别</Col>
-              <Col flex={1}>次数</Col>
-              <Col flex={1}>占比</Col>
-              <Col flex={1}>工时</Col>
-              <Col flex={1}>占比</Col>
+            <Row className={styles.header} style={{ color: '#71CDF9' }}>
+              <Col style={{ width: '37%' }}>监测点</Col>
+              <Col style={{ width: '26%' }}>异常小时数（H）</Col>
+              <Col style={{ width: '37%' }}>原因分析</Col>
             </Row>
-            <div className={styles.listContent}>
-              <ReactSeamlessScroll
-                list={ProductCategoryList}
+            <div className={styles.listContent} style={{ overflowY: 'auto' }}>
+              {/* <ReactSeamlessScroll
+                list={dataSource}
                 style={{ width: '100%', height: '100%' }}
                 wrapperClassName={styles.RankingSeamlessScrollContent}
                 hover={true}
                 step={0.3}
-                limitScrollNum={6}
-              >
-                {ProductCategoryList.map(item => {
-                  return (
-                    <Row className={styles.listItem}>
-                      <Col flex={2}>{item.Name}</Col>
-                      <Col flex={1}>{item.Num}</Col>
-                      <Col flex={1}>{item.NumRate}%</Col>
-                      <Col flex={1}>{item.Times}</Col>
-                      <Col flex={1}>{item.TimeRate}</Col>
-                    </Row>
-                  );
-                })}
-              </ReactSeamlessScroll>
+                // wheel={true}
+                // copyNum={1}
+                // limitScrollNum={6}
+              > */}
+              {dataSource.map((item, index) => {
+                return (
+                  <Row
+                    key={time.index}
+                    className={styles.listItem}
+                    style={{ lineHeight: '48px', padding: '4px 0' }}
+                  >
+                    <Col style={{ width: '40%', lineHeight: '24px' }}>
+                      {item.entName} <br />
+                      {item.pointName}
+                    </Col>
+                    <Col style={{ width: '20%' }}>{item.NormalRate}</Col>
+                    <Col style={{ width: '40%' }}>{item.Reason || '-'}</Col>
+                  </Row>
+                );
+              })}
+              {/* </ReactSeamlessScroll> */}
             </div>
           </div>
         </Col>
@@ -152,4 +159,4 @@ const AfterSaleService = props => {
   );
 };
 
-export default connect(dvaPropsData)(AfterSaleService);
+export default connect(dvaPropsData)(EmphasisEnt);

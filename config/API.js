@@ -814,7 +814,8 @@ export const API = {
     GetWarningLevelAnalysis: before + '/WarningV2/GetWarningLevelAnalysis',
     // 异常诊断分析
     GetDiagnoAnalysis: before + '/WarningV2/GetDiagnoAnalysis',
-
+    // 重点关注企业排行
+    GetPointTopWarning: before + '/MoldHome/GetPointTopWarning',
     /*实时数据异常识别及管理*/
     //异常线索清单
     //线索分析
@@ -978,6 +979,8 @@ export const API = {
     GetMapOperationEquipmentOverview: before + '/VisualDashBoardApi/GetMapOperationEquipmentOverview',
     // 成套驾驶舱地图
     GetInstallationDebuggingMap: before + '/CTStatisticsApi/GetInstallationDebuggingMap',
+    // 模型首页地图
+    GetMapPointInfo: before + '/MoldHome/GetMapPointInfo',
   },
 
   /*资产管理 Api */

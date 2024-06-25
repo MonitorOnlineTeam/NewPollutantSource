@@ -18,7 +18,7 @@ import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import ReactEcharts from 'echarts-for-react';
-import WorkingAnalysis from '../index';
+import AbnormalDataAnalysis from '../index';
 import { MoreOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
@@ -79,7 +79,7 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
 const PageContent = props => {
   const [form] = Form.useForm();
   console.log('match', props);
-  const { dispatch, pageTitle, DGIMN, excepType } = props;
+  const { dispatch, pageTitle, DGIMN, excepType, location, wrapClassName } = props;
 
   const [date, setDate] = useState([moment().startOf('year'), moment()]); // 时间
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -526,7 +526,7 @@ const PageContent = props => {
             initialValues={{
               date: date,
               dataType: dataType,
-              rtnType: 'nums',
+              rtnType: rtnType,
             }}
             autoComplete="off"
           >
@@ -650,16 +650,29 @@ const PageContent = props => {
           pagination={true}
         />
       </Card>
+      {console.log(' window.location', window.location)}
       {isModalOpen && (
         <Modal
           title={modalTitle}
-          wrapClassName="spreadOverModal"
+          wrapClassName={
+            window.location.pathname === '/SystemDashboard/AbnormalIdentify'
+              ? 'fullScreenModal'
+              : 'spreadOverModal'
+          }
           destroyOnClose
           visible={isModalOpen}
           footer={false}
+          bodyStyle={
+            window.location.pathname === '/SystemDashboard/AbnormalIdentify' ? { padding: 0 } : {}
+          }
           onCancel={() => setIsModalOpen(false)}
         >
-          <WorkingAnalysis regionCode={regionCode} entCode={entCode} rtnType={rtnType} />
+          <AbnormalDataAnalysis
+            regionCode={regionCode}
+            entCode={entCode}
+            rtnType={rtnType}
+            location={location}
+          />
         </Modal>
       )}
     </div>

@@ -8,8 +8,8 @@ const ToggleRadio = props => {
   const { onChange, timeTypes, style } = props;
 
   const radioList = props.radioList || [
-    { name: '时长', value: 'time' },
-    { name: '线索', value: 'clue' },
+    { name: '时长', value: 'Hours' },
+    { name: '线索', value: 'Count' },
   ];
 
   useEffect(() => {}, []);

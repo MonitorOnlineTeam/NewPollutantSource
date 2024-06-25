@@ -34,6 +34,21 @@ const initializeState = {
     DebuggingCount: 0,
     CheckedCount: 0,
   },
+  // 模型驾驶舱数据
+  modalCountAnalysis: {
+    EntCount: 0,
+    PointCount: 0,
+    NormalCount: 0,
+    ExcepCount: 0,
+  },
+  modalActionList: [],
+  modalLevelList: [],
+  modalTypeList: [],
+  modalRates: {
+    ExcepRate: 0,
+    RectRate: 0,
+    CheckRate: 0,
+  },
 };
 
 export default Model.extend({
@@ -153,9 +168,36 @@ export default Model.extend({
         payload,
       );
       if (result.IsSuccess) {
-        // yield update({
-        //   CTCountAnalysis: result.Datas.CountAnalysis,
-        // });
+        callback && callback(result.Datas);
+      }
+    },
+    // 获取模型地图数据
+    *GetMapPointInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.SystemDashboardApi.GetMapPointInfo, payload);
+      if (result.IsSuccess) {
+        if (payload.pLeve === 1) {
+          // 行政区
+          yield update({
+            level1MapData: result.Datas.list,
+          });
+        } else if (payload.pLeve === 4) {
+          // 全部监测点
+          yield update({
+            level4MapData: result.Datas.list,
+          });
+        } else {
+          // 行政区下企业、企业下监测点
+          yield update({
+            levelOtherMapData: result.Datas.list,
+          });
+        }
+        callback && callback(result.Datas);
+      }
+    },
+    // 重点关注企业排行
+    *GetPointTopWarning({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetPointTopWarning, payload);
+      if (result.IsSuccess) {
         callback && callback(result.Datas);
       }
     },

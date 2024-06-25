@@ -110,10 +110,11 @@
 
       .selectedName {
         text-align: center;
-        width: 130px;
+        width: 150px;
         height: 30px;
         line-height: 30px;
         background: url(/SystemDashboard/headerButton.png) no-repeat;
+        background-size: 100% 100%;
         color: #a4cee1;
         font-weight: bold;
         font-size: 15px;
@@ -247,7 +248,6 @@
           color: #fff;
           font-weight: 500;
           width: calc(100% - 140px);
-         
         }
       }
 
@@ -782,6 +782,7 @@
           font-size: 14px;
           color: #a2e0ff;
           display: inline-block;
+          text-align: right;
         }
       }
     }
@@ -987,6 +988,7 @@
         // padding: 0 20px;
         // height: calc(100% - 24px - 20px);
         width: 100%;
+        height: 100%;
         overflow: hidden;
         margin-top: 10px;
         .header {
@@ -1007,7 +1009,7 @@
           font-weight: 500;
           background-color: rgba(16, 41, 81, 0.3);
           &:nth-child(2n) {
-            background-color: #010e33;
+            background-color: #0e214d;
           }
 
           & > div {
@@ -1019,6 +1021,42 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+          }
+        }
+      }
+    }
+
+    // 异常行为分析
+    .BehaviorAnalysisWrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      height: 100%;
+      padding: 0 10px;
+      padding-top: 20px;
+      position: relative;
+
+      .legendInfo {
+        color: #fff;
+        font-weight: 500;
+        font-size: 14px;
+        margin-bottom: 6px;
+
+        .content {
+          position: relative;
+          :global {
+            .ant-progress-steps-item {
+              width: calc((100% - 260px) / 50) !important;
+              margin-right: 4px;
+            }
+          }
+
+          .num {
+            position: absolute;
+            top: -3px;
+            right: 0;
+            color: #fff;
+            font-size: 15px;
           }
         }
       }

@@ -12,7 +12,6 @@ import CluesList from '@/pages/AbnormalIdentifyModel/CluesList';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel, AbnormalIdentifyModelHome }) => ({
   // todoList: wordSupervision.todoList,
-  requestParams: AbnormalIdentifyModelHome.requestParams,
   loading: !!loading.effects['AbnormalIdentifyModelHome/GetClueDrillDownData'],
 });
 

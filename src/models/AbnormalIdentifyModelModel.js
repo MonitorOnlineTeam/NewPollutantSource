@@ -1,13 +1,10 @@
-import * as services from './services';
+import * as services from '@/pages/AbnormalIdentifyModel/services.js';
 import Model from '@/utils/model';
 import { message } from 'antd';
 import moment from 'moment';
 import { downloadFile, requestPost } from '@/utils/utils';
-import { ModelNumberIdsDatas } from './CONST';
+import { ModelNumberIdsDatas } from '@/pages/AbnormalIdentifyModel/CONST.js';
 import { getListPager } from '@/services/autoformapi';
-import { useSelector } from 'umi';
-import { cookieName, uploadPrefix } from '@/config';
-import Cookie from 'js-cookie';
 import { API } from '@config/API';
 
 function initWarningForm() {

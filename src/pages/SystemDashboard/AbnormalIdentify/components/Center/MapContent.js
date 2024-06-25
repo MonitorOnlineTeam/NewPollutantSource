@@ -11,28 +11,28 @@ import SiteDetailsModal from '@/pages/newestHome/components/springModal/mapModal
 const legendList = [
   {
     name: '严重异常',
-    color: '#FFCC00',
-    value: '2',
+    color: 'red',
+    value: '4',
   },
   {
     name: '重点异常',
-    color: 'skyblue',
-    value: '0',
+    color: 'darkorange',
+    value: '3',
   },
   {
     name: '一般异常',
-    color: '#2EEB9D',
-    value: '1',
+    color: 'gold',
+    value: '2',
   },
   {
     name: '轻微异常',
-    color: '#2EEB9D',
+    color: 'skyblue',
     value: '1',
   },
   {
-    name: '轻微异常',
-    color: '#2EEB9D',
-    value: '1',
+    name: '无异常',
+    color: '#2eeb9d',
+    value: '',
   },
 ];
 let aMap;
@@ -42,7 +42,7 @@ let aMap;
   level1MapData: sysDashboard.level1MapData,
   level4MapData: sysDashboard.level4MapData,
   levelOtherMapData: sysDashboard.levelOtherMapData,
-  loading: loading.effects['sysDashboard/GetMapOperationEquipmentOverview'],
+  loading: loading.effects['sysDashboard/GetMapPointInfo'],
 }))
 class MapContent extends PureComponent {
   constructor(props) {
@@ -51,7 +51,7 @@ class MapContent extends PureComponent {
       regionCode: '',
       entCode: '',
       allEntList: [], // 所有企业
-      selectedLegend: '', // 选中的图例
+      selectedLegend: undefined, // 选中的图例
       markersList: [],
       currentPointList: [], // 排口列表
       entTitleShow: false, // 是否显示企业名称
@@ -70,6 +70,34 @@ class MapContent extends PureComponent {
       hoverTitleLngLat: {},
       hoverEntTitle: '',
       hoverPointTitle: '',
+
+      // 模型卡片数据
+      level1CardsData: {
+        modalCountAnalysis: {
+          EntCount: 0,
+          PointCount: 0,
+          NormalCount: 0,
+          ExcepCount: 0,
+        },
+        modalActionList: [],
+        modalLevelList: [],
+        modalTypeList: [],
+        modalRates: {
+          ExcepRate: 0,
+          RectRate: 0,
+          CheckRate: 0,
+        },
+      },
+      levelOtherCardsData: {
+        modalActionList: [],
+        modalLevelList: [],
+        modalTypeList: [],
+        modalRates: {
+          ExcepRate: 0,
+          RectRate: 0,
+          CheckRate: 0,
+        },
+      },
     };
     this.mapEvents = {
       created(m) {
@@ -115,7 +143,7 @@ class MapContent extends PureComponent {
             this.setState({
               hoverEntTitleShow: false,
               hoverTitleShow: true,
-              hoverEntTitle: position.ParentName,
+              hoverEntTitle: position.EntName,
               hoverPointTitle: position.PointName,
               hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude },
             });
@@ -141,18 +169,6 @@ class MapContent extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // if (this.state.level !== prevState.level) {
-    //   this.handleMarkerDatas();
-    // }
-    // level1MapData, level4MapData, levelOtherMapData;
-    // if (
-    //   this.props.level1MapData !== prevProps.level1MapData ||
-    //   this.props.level4MapData !== prevProps.level4MapData ||
-    //   this.props.levelOtherMapData !== prevProps.levelOtherMapData
-    // ) {
-    //   this.handleMarkerDatas();
-    // }
-
     if (this.props.time !== prevProps.time) {
       this.loadPageData();
     }
@@ -163,17 +179,51 @@ class MapContent extends PureComponent {
     const { time } = this.props;
     const { level, regionCode, entCode } = this.state;
     this.props.dispatch({
-      type: 'sysDashboard/GetMapOperationEquipmentOverview',
+      type: 'sysDashboard/GetMapPointInfo',
       payload: {
-        pointType: level === 4 ? 3 : level,
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
-        beginTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
-        endTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
+        pLeve: level,
+        btime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
+        etime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
       },
       callback: res => {
-        this.handleMarkerDatas(res);
+        let cardsData = {
+          modalCountAnalysis: {
+            EntCount: res.EntCount,
+            PointCount: res.PointCount,
+            NormalCount: res.NormalCount,
+            ExcepCount: res.ExcepCount,
+          },
+          modalActionList: res.ActionList,
+          modalLevelList: res.LevelList,
+          modalTypeList: res.TypeList,
+          modalRates: {
+            ExcepRate: res.ExcepRate,
+            RectRate: res.RectRate,
+            CheckRate: res.CheckRate,
+          },
+        };
+        if (level == 1) {
+          this.setState({
+            level1CardsData: cardsData,
+          });
+          this.updateCardData(cardsData);
+        } else if (level != 4) {
+          // setLevelOtherCardsData(cardsData);
+          this.updateCardData(cardsData);
+        }
+
+        this.handleMarkerDatas(res.list);
       },
+    });
+  };
+
+  // 更新页面数据
+  updateCardData = data => {
+    this.props.dispatch({
+      type: 'sysDashboard/updateState',
+      payload: { ...data },
     });
   };
 
@@ -181,6 +231,7 @@ class MapContent extends PureComponent {
   handleMarkerDatas = mapData => {
     // aMap.clearMap();
     // const { level1MapData, level4MapData, levelOtherMapData } = this.props;
+    console.log('mapData', mapData);
     const { level, selectedLegend, currentPointList } = this.state;
     let markersList = [];
     switch (level) {
@@ -198,14 +249,14 @@ class MapContent extends PureComponent {
       case 4: // 所有排口
         // 根据选中图例显示排口
         let _mapData = [...mapData];
-        if (selectedLegend) {
-          _mapData = _mapData.filter(item => item.Status === selectedLegend);
+        if (selectedLegend !== undefined) {
+          _mapData = _mapData.filter(item => item.Level === selectedLegend);
         }
         markersList = _mapData.map(item => {
           return {
             position: {
               ...item,
-              latitude: item.Latitude,
+              latitude: item.PoinLatitudetName,
               longitude: item.Longitude,
             },
           };
@@ -227,34 +278,49 @@ class MapContent extends PureComponent {
     );
   };
 
-  getPointIcon = status => {
+  getPointIcon = data => {
+    let status = data.Level;
+    let count = 0;
     let color = '';
 
     switch (status) {
-      // case '0': // 离线
-      //   color = legendList[1].color;
-      //   break;
-      case '1': // 在线
+      case '4': // 严重异常
         color = legendList[0].color;
+        count = data['严重异常'];
         break;
-      case '2': // 超标
+      case '3': // 重点异常
         color = legendList[1].color;
+        count = data['重点异常'];
         break;
-      // case '4': // 停运
-      //   color = legendList[2].color;
-      //   break;
+      case '2': // 一般异常
+        color = legendList[2].color;
+        count = data['一般异常'];
+        break;
+      case '1': // 轻微异常
+        color = legendList[3].color;
+        count = data['轻微异常'];
+        break;
+      case '': // 无异常
+        color = legendList[4].color;
+        break;
     }
 
     return (
       <div
         style={{
-          width: 16,
-          height: 16,
+          width: 24,
+          height: 24,
+          lineHeight: '24px',
           background: color,
           boxShadow: '0px 0px 2px 0px #000000',
           borderRadius: '50%',
+          textAlign: 'center',
+          color: '#484020',
         }}
-      ></div>
+      >
+        {/* 无异常不显示数量 */}
+        {status !== '' ? count : ''}
+      </div>
     );
   };
 
@@ -389,15 +455,15 @@ class MapContent extends PureComponent {
 
   // 返回按钮点击
   onGoback = () => {
-    const { level } = this.state;
+    const { level, level1CardsData } = this.state;
     const { level1MapData } = this.props;
     // 企业返回、全部监测点返回
     if (level === 2 || level === 4) {
       aMap.clearMap();
-      this.setState({ level: 1, pointInfoWindowVisible: false, selectedLegend: '' }, () => {
+      this.setState({ level: 1, pointInfoWindowVisible: false, selectedLegend: undefined }, () => {
         this.handleMarkerDatas(level1MapData);
+        this.updateCardData(level1CardsData);
       });
-
       this.props.dispatch({
         type: 'sysDashboard/updateState',
         payload: {
@@ -427,7 +493,7 @@ class MapContent extends PureComponent {
 
     let selectedLegend_temp = value;
     if (value === selectedLegend) {
-      selectedLegend_temp = '';
+      selectedLegend_temp = undefined;
     }
     this.setState(
       {
@@ -449,8 +515,8 @@ class MapContent extends PureComponent {
     const { position } = extData;
     const { showType, entTitleShow, pointTitleShow, isMassive, level } = this.state;
 
-    if (level == 1) {
-      let title = position.regionName;
+    if (level == 1 || level == 2) {
+      let title = level == 1 ? position.regionName : position.entName;
       return (
         <div
           style={{
@@ -481,12 +547,12 @@ class MapContent extends PureComponent {
                 cursor: 'pointer',
               }}
               title={title}
-              onClick={() => this.onClickRegion(extData)}
+              onClick={() => (level === 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
             >
               {title}
             </div>
             <RightOutlined
-              onClick={() => this.onClickRegion(extData)}
+              onClick={() => (level === 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
               style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
             />
             <Row
@@ -505,8 +571,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.entCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>企业数量</p>
+                <p style={{ color: 'red', fontSize: 20 }}>{position['严重异常']}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>严重异常</p>
               </Col>
               <Col
                 span={10}
@@ -516,8 +582,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FF3737', fontSize: 20 }}>{position.pointCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排放口数量</p>
+                <p style={{ color: 'darkorange', fontSize: 20 }}>{position['重点异常']}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>重点异常</p>
               </Col>
               <Col
                 span={14}
@@ -527,8 +593,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.normarlCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维正常数量</p>
+                <p style={{ color: 'gold', fontSize: 20 }}>{position['一般异常']}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>一般异常</p>
               </Col>
               <Col
                 span={10}
@@ -538,110 +604,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FFCC00', fontSize: 20 }}>{position.exceptionCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>异常数量</p>
-              </Col>
-            </Row>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <span
-              className={styles.circle}
-              style={{
-                display: 'inline-block',
-                marginTop: 16,
-                width: 10,
-                height: 10,
-                background: 'rgba(0, 141, 253, 1)',
-                boxShadow: ' 0 0 4px 4px rgba(0, 141, 253, .1)',
-                borderRadius: '50%',
-              }}
-            ></span>
-          </div>
-        </div>
-      );
-    } else if (level == 2) {
-      let title = position.entName;
-      return (
-        <div
-          style={{
-            position: 'relative',
-            transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
-            padding: '0 10px',
-            cursor: 'text',
-            width: 300,
-            height: 120,
-            background: `url(/SystemDashboard/regionTip.png)`,
-            backgroundSize: '100% 100%',
-          }}
-        >
-          <div
-            style={{
-              opacity: 1,
-              color: '#52F2FF',
-              height: 'calc(100% - 12px)',
-              paddingTop: 2,
-            }}
-          >
-            <div
-              className="textOverflow"
-              style={{
-                width: 'calc(100% + 17px)',
-                lineHeight: '22px',
-                fontWeight: 'bold',
-                background: ' #073783',
-                margin: '0 -9px',
-                padding: '0 10px',
-                cursor: 'pointer',
-              }}
-              title={title}
-              onClick={() => this.onClickEnt(extData)}
-            >
-              {title}
-            </div>
-            <RightOutlined
-              onClick={() => this.onClickEnt(extData)}
-              style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
-            />
-            <Row
-              style={{
-                height: 'calc(100% - 36px)',
-                display: 'flex',
-                fontWeight: 'bold',
-                padding: '0 10px',
-              }}
-            >
-              <Col
-                span={8}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <p style={{ color: '#FF3737', fontSize: 20 }}>{position.pointCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排放口数量</p>
-              </Col>
-              <Col
-                span={10}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.normarlCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维正常数量</p>
-              </Col>
-              <Col
-                span={6}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <p style={{ color: '#FFCC00', fontSize: 20 }}>{position.exceptionCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>异常数量</p>
+                <p style={{ color: 'skyblue', fontSize: 20 }}>{position['轻微异常']}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>轻微异常</p>
               </Col>
             </Row>
           </div>
@@ -667,21 +631,21 @@ class MapContent extends PureComponent {
         <div style={{ position: 'relative', marginTop: 24 }}>
           <span
             onClick={() => {
-              let { position } = extData;
-              this.setState({
-                entTitleShow: false,
-                pointInfoWindowPosition: [position.longitude, position.latitude],
-                pointInfoWindowVisible: true,
-                currentPointInfo: position,
-              });
+              // let { position } = extData;
+              // this.setState({
+              //   entTitleShow: false,
+              //   pointInfoWindowPosition: [position.longitude, position.latitude],
+              //   pointInfoWindowVisible: true,
+              //   currentPointInfo: position,
+              // });
 
-              this.props.dispatch({
-                type: 'newestHome/updateState',
-                payload: { siteDetailsVisible: true },
-              });
+              // this.props.dispatch({
+              //   type: 'newestHome/updateState',
+              //   payload: { siteDetailsVisible: true },
+              // });
             }}
           >
-            {this.getPointIcon(extData.position.Status)}
+            {this.getPointIcon(extData.position)}
           </span>
           {pointTitleShow ? (
             <div className={styles.pointTitlePopSty}>
@@ -713,13 +677,22 @@ class MapContent extends PureComponent {
       return;
     }
     switch (text) {
+      case '放大':
+        map.zoomIn();
+        break;
+      case '缩小':
+        map.zoomOut();
+        break;
       case '展示企业': //行政区
         // this.setState({ backIconGo: true, mapBtnStatusIndex: -1 });
         // this.loadRegionMarkerData(regionMarkers);
         aMap.clearMap();
-        this.setState({ level: 1, pointInfoWindowVisible: false, selectedLegend: '' }, () => {
-          this.handleMarkerDatas(level1MapData);
-        });
+        this.setState(
+          { level: 1, pointInfoWindowVisible: false, selectedLegend: undefined },
+          () => {
+            this.handleMarkerDatas(level1MapData);
+          },
+        );
         break;
       case '展示监测点':
         aMap.clearMap();
@@ -779,6 +752,8 @@ class MapContent extends PureComponent {
             : '/SystemDashboard/map/toolPoint.png',
       },
       { text: '展示/隐藏名称', url: '/SystemDashboard/map/toolShowText.png' },
+      { text: '放大', url: '/SystemDashboard/map/zoomIn.png' },
+      { text: '缩小', url: '/SystemDashboard/map/zoomOut.png' },
     ];
     return (
       <div className={styles.mapOperationBtn}>
