@@ -1,5 +1,5 @@
 import Model from '@/utils/model';
-import * as services from './service';
+import * as services from '@/pages/dataSearch/abnormalData/service.js';
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';

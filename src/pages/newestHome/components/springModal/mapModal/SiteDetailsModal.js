@@ -294,7 +294,7 @@ class SiteDetailsModal extends PureComponent {
     );
   };
   render() {
-    const { data, infoWindowData } = this.props;
+    const { data, infoWindowData, wrapClassName } = this.props;
     const { currentKey } = this.state;
     if (data.PollutantType === '5') {
       tabList = ['历史数据', '运维记录', '视频预览', '', '异常数据', '', '基本信息'];
@@ -327,7 +327,7 @@ class SiteDetailsModal extends PureComponent {
             payload: { siteDetailsVisible: false },
           });
         }}
-        wrapClassName="spreadOverModal"
+        wrapClassName={ wrapClassName || "spreadOverModal" }
       >
         <Tabs
           defaultActiveKey={1}

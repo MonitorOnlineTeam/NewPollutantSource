@@ -6,43 +6,44 @@ import config from '@/config';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Radio, Space, Spin, Tooltip, Col, Row, Descriptions } from 'antd';
 import moment from 'moment';
-import SiteDetailsModal from '@/pages/newestHome/components/springModal/mapModal/SiteDetailsModal';
+import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
 
 const legendList = [
   {
     name: '严重异常',
-    color: 'red',
+    color: '#FF3737',
     value: '4',
-    description: '严重影响数据质量，动机定义明确，影响恶劣的'
+    description: '严重影响数据质量，动机定义明确，影响恶劣的',
   },
   {
     name: '重点异常',
     color: 'darkorange',
     value: '3',
-    description: '影响数据质量，无法判断明显动机，非正常运行的'
+    description: '影响数据质量，无法判断明显动机，非正常运行的',
   },
   {
     name: '一般异常',
     color: 'gold',
     value: '2',
-    description: '对数据质量影响较小，但仍需要解决的'
+    description: '对数据质量影响较小，但仍需要解决的',
   },
   {
     name: '轻微异常',
     color: 'skyblue',
     value: '1',
-    description: '不影响数据质量，属于管理不规范的'
+    description: '不影响数据质量，属于管理不规范的',
   },
   {
     name: '无异常',
     color: '#2eeb9d',
     value: '',
-    description: '模型监测没有任何问题'
+    description: '模型监测没有任何问题',
   },
 ];
 let aMap;
 
-@connect(({ loading, sysDashboard }) => ({
+@connect(({ loading, sysDashboard, AbnormalIdentifyModel }) => ({
+  warningForm: AbnormalIdentifyModel.warningForm,
   time: sysDashboard.time,
   level1MapData: sysDashboard.level1MapData,
   level4MapData: sysDashboard.level4MapData,
@@ -447,6 +448,45 @@ class MapContent extends PureComponent {
     });
   };
 
+  // 排口点击
+  onClickPoint = extData => {
+    const { time } = this.props;
+
+    // 进入线索列表，传入时间、场景类型、企业、污染物
+    this.updateCluesListFormState({
+      date: [],
+      date1: time,
+      EntCode: extData.position.EntCode,
+      DGIMN: extData.position.DGIMN,
+      pageSize: 20,
+      pageIndex: 1,
+    });
+  };
+
+  // 更新异常线索清单model状态
+  updateCluesListFormState = params => {
+    const { warningForm, dispatch } = this.props;
+    dispatch({
+      type: 'AbnormalIdentifyModel/updateState',
+      payload: {
+        warningForm: {
+          ...warningForm,
+          all: {
+            ...warningForm['all'],
+            rowKey: undefined,
+            scrollTop: 0,
+            ...params,
+          },
+        },
+      },
+    });
+    setTimeout(() => {
+      this.setState({
+        isModalOpen: true,
+      });
+    }, 0);
+  };
+
   // 返回按钮点击
   onGoback = () => {
     const { level, level1CardsData } = this.state;
@@ -565,7 +605,7 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: 'red', fontSize: 20 }}>{position['严重异常']}</p>
+                <p style={{ color: '#FF3737', fontSize: 20 }}>{position['严重异常']}</p>
                 <p style={{ fontSize: 13, color: '#fff' }}>严重异常</p>
               </Col>
               <Col
@@ -625,17 +665,7 @@ class MapContent extends PureComponent {
         <div style={{ position: 'relative', marginTop: 24 }}>
           <span
             onClick={() => {
-              // let { position } = extData;
-              // this.setState({
-              //   entTitleShow: false,
-              //   pointInfoWindowPosition: [position.longitude, position.latitude],
-              //   pointInfoWindowVisible: true,
-              //   currentPointInfo: position,
-              // });
-              // this.props.dispatch({
-              //   type: 'newestHome/updateState',
-              //   payload: { siteDetailsVisible: true },
-              // });
+              this.onClickPoint(extData);
             }}
           >
             {this.getPointIcon(extData.position)}
@@ -870,9 +900,9 @@ class MapContent extends PureComponent {
           </div>
         </Spin>
 
-        <SiteDetailsModal
-          data={{ ...currentPointInfo, PollutantType: 1 }}
-          tabList={['', '运维记录', '运维日志', '', '', '', '', '', '']}
+        <CluesListModal
+          open={this.state.isModalOpen}
+          onCancel={() => this.setState({ isModalOpen: false })}
         />
       </div>
     );

@@ -80,6 +80,7 @@ export default Model.extend({
     // 实时数据一览
     realtimeColumns: [],
     realTimeDataView: [],
+    realTimeTotal: 0,
     dataType: 'HourData',
     entListByRegion: [],
   },
@@ -542,6 +543,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           realTimeDataView: result.Datas,
+          realTimeTotal: result.Total,
         })
       } else {
         message.error(result.Message)

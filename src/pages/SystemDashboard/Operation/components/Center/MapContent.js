@@ -241,59 +241,6 @@ class MapContent extends PureComponent {
     );
   };
 
-  infoWindowContent = () => {
-    const { currentPointInfo } = this.state;
-    let imgName = '/gasInfoWindow.png';
-
-    return (
-      <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 248 }}>
-        <>
-          <div className={styles.header}>
-            <h2>
-              {currentPointInfo.EntName} - {currentPointInfo.PointName}
-            </h2>
-          </div>
-          <div className={styles.desc}>
-            <div className={styles['desc-l']}>
-              <h3>站点信息</h3>
-              <p className="textOverflow" style={{ width: 160 }} title={currentPointInfo.CityName}>
-                <span>
-                  <i></i>区域：
-                </span>
-                {currentPointInfo.CityName}
-              </p>
-              <p>
-                <span>
-                  <i></i>经度：
-                </span>
-                {currentPointInfo.PointLongitude}
-              </p>
-              <p>
-                <span>
-                  <i></i>纬度：
-                </span>
-                {currentPointInfo.PointLatitude}
-              </p>
-            </div>
-            <div className={styles['desc-r']}>
-              <img src={imgName} alt="" width="100%" height="100%" />
-            </div>
-          </div>
-          <div className={styles.tableList}>
-            <h3>设备型号</h3>
-            <ul className={styles.title}>
-              <li>型号</li>
-              <li>完成安装调试日期</li>
-            </ul>
-            <ul>
-              <li>{currentPointInfo.SystemModelName}</li>
-              <li>{currentPointInfo.LeaveDate}</li>
-            </ul>
-          </div>
-        </>
-      </div>
-    );
-  };
 
   // 绘制行政区边界
   renderRegionBoundary = regionName => {
@@ -652,9 +599,9 @@ class MapContent extends PureComponent {
             onClick={() => {
               let { position } = extData;
               this.setState({
-                entTitleShow: false,
-                pointInfoWindowPosition: [position.longitude, position.latitude],
-                pointInfoWindowVisible: true,
+                // entTitleShow: false,
+                // pointInfoWindowPosition: [position.longitude, position.latitude],
+                // pointInfoWindowVisible: true,
                 currentPointInfo: position,
               });
 
@@ -844,25 +791,6 @@ class MapContent extends PureComponent {
                 监测点名称：{hoverPointTitle}
               </div>
             </InfoWindow>
-            {/* <InfoWindow
-              className={styles.infoWindowContent}
-              position={pointInfoWindowPosition}
-              visible={pointInfoWindowVisible}
-              offset={false ? [10, -5] : [4, -10]}
-              autoMove
-              showShadow
-              closeWhenClickMap={false}
-            >
-              {this.infoWindowContent()}
-              <span
-                onClick={() => {
-                  this.setState({ pointInfoWindowVisible: false });
-                }}
-                style={{ position: 'absolute', cursor: 'pointer', top: 0, right: 8, fontSize: 18 }}
-              >
-                ×
-              </span>
-            </InfoWindow> */}
           </Map>
           {level !== 1 && (
             <div className={styles.goback} onClick={() => this.onGoback()}>

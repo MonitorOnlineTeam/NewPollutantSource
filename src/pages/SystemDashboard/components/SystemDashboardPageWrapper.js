@@ -87,7 +87,8 @@ const HomeDataScreen = props => {
                   className={pageInfo.key === item.key ? styles.active : ''}
                   key={item.key}
                   onClick={() => {
-                    window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item.data)}`);
+                    // window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item.data)}`);
+                    router.push(`/sessionMiddlePage?sysInfo=${JSON.stringify(item.data)}`);
                   }}
                 >
                   {item.key}

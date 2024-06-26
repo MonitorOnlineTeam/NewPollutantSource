@@ -595,9 +595,9 @@ class MapContent extends PureComponent {
             onClick={() => {
               let { position } = extData;
               this.setState({
-                entTitleShow: false,
-                pointInfoWindowPosition: [position.longitude, position.latitude],
-                pointInfoWindowVisible: true,
+                // entTitleShow: false,
+                // pointInfoWindowPosition: [position.longitude, position.latitude],
+                // pointInfoWindowVisible: true,
                 currentPointInfo: position,
               });
 
@@ -766,15 +766,6 @@ class MapContent extends PureComponent {
               extData={markersList}
               // useCluster
             />
-            {/* <InfoWindow //企业 hover
-              visible={hoverEntTitleShow}
-              position={hoverTitleLngLat}
-              autoMove
-              offset={false ? [10, -5] : [4, -10]}
-              className={styles.titleInfoWindow}
-            >
-              <div style={{ whiteSpace: 'nowrap' }}>企业名称：{hoverEntTitle}</div>
-            </InfoWindow> */}
             <InfoWindow //监测点 hover
               visible={hoverTitleShow}
               position={hoverTitleLngLat}
@@ -787,25 +778,6 @@ class MapContent extends PureComponent {
                 监测点名称：{hoverPointTitle}
               </div>
             </InfoWindow>
-            {/* <InfoWindow
-              className={styles.infoWindowContent}
-              position={pointInfoWindowPosition}
-              visible={pointInfoWindowVisible}
-              offset={false ? [10, -5] : [4, -10]}
-              autoMove
-              showShadow
-              closeWhenClickMap={false}
-            >
-              {this.infoWindowContent()}
-              <span
-                onClick={() => {
-                  this.setState({ pointInfoWindowVisible: false });
-                }}
-                style={{ position: 'absolute', cursor: 'pointer', top: 0, right: 8, fontSize: 18 }}
-              >
-                ×
-              </span>
-            </InfoWindow> */}
           </Map>
           {level !== 1 && (
             <div className={styles.goback} onClick={() => this.onGoback()}>
@@ -835,8 +807,9 @@ class MapContent extends PureComponent {
         </Spin>
 
         <SiteDetailsModal
-          data={{ ...currentPointInfo, PollutantType: 1 }}
-          tabList={['', '运维记录', '运维日志', '', '', '', '', '', '']}
+          wrapClassName="fullScreenModal"
+          data={{ ...currentPointInfo, PollutantType: 2 }}
+          tabList={['监控数据', '', '', '', '视频预览', '超标数据', '异常数据', '', '']}
         />
       </div>
     );
