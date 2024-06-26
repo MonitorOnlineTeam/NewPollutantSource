@@ -169,8 +169,8 @@ const Index = (props) => {
             align: 'center',
             ellipsis: true,
             render: (text, record) => {
-                const textArr = text?.split(',')
-                return textArr ? <>  {textArr[0]&&<Button  onClick={() => logQuery(title,{remark:textArr[0]})} type='primary'>{textArr[0]}</Button>}    {textArr[1]&&<Button  onClick={() => logQuery(title,{remark:textArr[1]})}  type='primary'>{textArr[1]}</Button>}</> : text
+                const textArr = text?.split('，')
+                return textArr ? <>  {textArr[0]&&<Button  onClick={() => logQuery(title,{remark:textArr[0]})} size='small' type='primary'>{textArr[0]}</Button>}    {textArr[1]&&<Button  onClick={() => logQuery(title,{remark:textArr[1]})} size='small' type='primary'>{textArr[1]}</Button>}</> : text
             }
         },
     ];
@@ -272,8 +272,11 @@ const Index = (props) => {
         setLogTitle(logTitle)
         setLogLoading({...logLoading,[logTitle]:true})
         const taskType = objRequest[title]?.taskType
+         
+        console.log(title,objRequest, objRequest[title]?.logUrl)
+        const url = `${namespace}/${title=='污染物' || title=='排放标准'?(par.status? objRequest[title]?.logUrl : objRequest[title]?.logUrl) : objRequest[title]?.logUrl}`
         props.dispatch({
-            type: `${namespace}/${title=='污染物' || title=='排放标准'?(par.status? objRequest[title]?.logUrl : objRequest[title]?.logUrl) : objRequest[title]?.logUrl}`,
+            type: url ,
             payload: {projectType: 1,taskType: taskType,...par},
             callback:(result)=>{
                 setLogLoading({...logLoading,[logTitle]:false})
@@ -354,7 +357,7 @@ const Index = (props) => {
                                         loading={obj1[item].loading}
                                         bordered
                                         dataSource={obj1[item].data}
-                                        columns={item == '监测数据' ? columns2 : columns(obj1[item].logTitle)}
+                                        columns={item == '监测数据' ? columns2 : columns(item)}
                                         scroll={{ y: 'hidden' }}
                                         rowClassName={null}
                                         pagination={false}

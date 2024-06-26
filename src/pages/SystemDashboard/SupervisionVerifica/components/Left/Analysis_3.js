@@ -109,6 +109,7 @@ const DeviceInfoCount = props => {
     >
       <SupervisionAnalySumm
         tabType={1}
+        time={time}
       />
     </Modal>
     </HomeCard>

@@ -165,6 +165,7 @@ const ProjectExecution = props => {
       >
         <SupervisionAnalySumm
           tabType={3}
+          time={time}
         />
       </Modal>
     </HomeCard>

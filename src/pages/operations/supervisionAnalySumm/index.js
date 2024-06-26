@@ -50,7 +50,7 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
-  const { tabType } = props;
+  const { tabType,time } = props;
   useEffect(() => {
   }, []);
 
@@ -59,7 +59,7 @@ const Index = (props) => {
     <div className={styles.supervisionAnalySummSty}>
       {tabType ?
         <>
-        {tabType == 1?  <Summary tabType/> : tabType == 2? <Params tabType/> :  <TotalSystem tabType/>}
+        {tabType == 1?  <Summary tabType time={time}/> : tabType == 2? <Params tabType time={time}/> :  <TotalSystem tabType time={time}/>}
         </>
         :
         <BreadcrumbWrapper>

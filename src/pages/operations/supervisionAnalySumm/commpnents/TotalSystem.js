@@ -59,10 +59,11 @@ const Index = (props) => {
 
     const [form] = Form.useForm();
 
-    const { tableDatas, tableTotal, tableLoading, exportLoading, } = props;
+    const { tableDatas, tableTotal, tableLoading, exportLoading,tabType, time } = props;
 
 
     useEffect(() => {
+        time&&form.setFieldsValue({time:time})
         onFinish(pageIndex, pageSize);
     }, []);
 
@@ -508,7 +509,7 @@ const Index = (props) => {
     }
 
 
-    const [type, setType] = useState(2)
+    const [type, setType] = useState(tabType? 3 : 2)
     const onValuesChange = (hangedValues, allValues) => {
         if (Object.keys(hangedValues).join() == 'DateType') {
             setType(hangedValues.DateType)
@@ -534,6 +535,7 @@ const Index = (props) => {
     return (
         <div className={styles.analysisSummarySty}>
             <Card
+                bordered={!tabType}
                 title={
                     <Form
                         form={form}
@@ -541,7 +543,7 @@ const Index = (props) => {
                         onFinish={() => {setPageIndex(1);onFinish(1, pageSize) }}
                         layout='inline'
                         initialValues={{
-                            DateType: 2,
+                            DateType: tabType? 3 : 2,
                             time: moment(),
                             InspectorType: 1,
                         }}
@@ -607,7 +609,7 @@ const Index = (props) => {
                         onChange: handleTableChange,
                     }}
                     rowClassName={null}
-                    scroll={{ x: '100%', y: 'calc(100vh - 392px)' }}
+                    scroll={{ x: '100%', y: tabType? 'calc(100vh - 288px)' : 'calc(100vh - 392px)' }}
                 />
                <Row style={{marginTop:16}} justify='end'>
                  {isPointStatistics1&&tableTotal>0&&<Pagination 

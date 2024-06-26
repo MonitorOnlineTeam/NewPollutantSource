@@ -16,13 +16,13 @@ const  homeCardMinHight = 226
 const HomeDataScreen = props => {
   return (
     <SystemDashboardPageWrapper pageName="监督核查">
-      <Col style={{ width: '25.8%', minWidth: 480 }} className={styles.leftWrapper}>
+      <Col style={{  width:486,}} className={styles.leftWrapper}>
         <Overview homeCardMinHight={homeCardMinHight}/>
         <KeyAnalysis homeCardMinHight={homeCardMinHight}/>
         <ComplianceAnalysis homeCardMinHight={homeCardMinHight}/>
         <PassRateAnalysis homeCardMinHight={homeCardMinHight}/>
       </Col>
-      <Col style={{ maxWidth: '74.2%' }} flex={'auto'} className={styles.centerWrapper}>
+      <Col style={{ width: 'calc(100% - 486px)',}} flex={'auto'} className={styles.centerWrapper}>
         {/* 地图 */}
         <MapContent />
       </Col>

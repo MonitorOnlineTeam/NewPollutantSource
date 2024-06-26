@@ -531,11 +531,13 @@ const Index = (props) => {
                             recordType={recordType}
                             entCode={form.getFieldValue('entID')}
                             isEdit
-                            delPlanCallback={() => {
+                            queryPlanCallback={(type,parFlag) => {
                                 setCheckAll(false)
                                 setIndeterminate(false)
                                 const data = form.getFieldsValue();
-                                getOperationPlanPointListRequest(data?.entID, data?.pollutantType)
+                                if(type==='del'){
+                                    getOperationPlanPointListRequest(data?.entID, data?.pollutantType) //所剩监测点
+                                }
                                 props.dispatch({
                                     type: `${namespace}/GetOperationPlanInfo`,
                                     payload: {

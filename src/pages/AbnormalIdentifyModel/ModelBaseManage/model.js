@@ -1,3 +1,4 @@
+//模型训练
 import moment from 'moment';
 import Cookie from 'js-cookie';
 import Model from '@/utils/model';
@@ -14,7 +15,6 @@ export default Model.extend({
     modelSelectionData:[]
   },
   effects: {
-    //模型训练
     // 数据接入
     // 数据接入信息
     *GetProjectMonitorDataList({ payload, callback }, { call, put, update }) {
@@ -123,7 +123,12 @@ export default Model.extend({
 
     },
 
-
+    // 排放特征学习
+    //企业信息、排放口信息、备案参数日志信息
+    *GetProjectLogsList({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetProjectLogsList, payload);
+      callback && callback(result);
+    },
 
 
 

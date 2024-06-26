@@ -83,7 +83,7 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const { tableDatas, tableLoading, exportLoading, inspectorCodeList, tableLoading2, exportLoading2,} = props;
+  const { tableDatas, tableLoading, exportLoading, inspectorCodeList, tableLoading2, exportLoading2, tabType, time } = props;
 
 
   useEffect(() => {
@@ -374,7 +374,7 @@ const Index = (props) => {
 
   
 
-  const [type, setType] = useState(2)
+  const [type, setType] =  useState(tabType? 3 : 2)
   const onValuesChange = (hangedValues, allValues) => {
     if (Object.keys(hangedValues).join() == 'DateType') {
       setType(hangedValues.DateType)
@@ -391,12 +391,14 @@ const Index = (props) => {
     setRadioType(e.target.value);
   }
   useEffect(()=>{
+    time&&form.setFieldsValue({time:time})
     onFinish()
   },[radioType])
 
   return (
     <div className={styles.analysisSummarySty}>
       <Card
+        bordered={!tabType}
         title={
           <Form
             form={form}
@@ -404,7 +406,7 @@ const Index = (props) => {
             onFinish={() => { onFinish() }}
             layout='inline'
             initialValues={{
-              DateType: 2,
+              DateType: tabType? 3 : 2,
               time: moment(new Date()).add(-1, 'month').startOf('month'),
             }}
             className={styles.queryForm}
@@ -473,7 +475,7 @@ const Index = (props) => {
           rowClassName={null}
           dataSource={tableDatas}
           columns={radioType == 1 ?  columns : columns2}
-          scroll={{y:'calc(100vh - 357px)' }}
+          scroll={{y:tabType? 'calc(100vh - 262px)' : 'calc(100vh - 357px)' }}
           pagination={false}
         />
       </Card>

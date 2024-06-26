@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import styles from '@/pages/SystemDashboard/styles.less';
 import config from '@/config';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
-import { Radio, Space, Spin, Select, Col, Row,Tabs,Modal } from 'antd';
+import { Radio, Space, Spin, Select, Col, Row, Tabs, Modal } from 'antd';
 import moment from 'moment';
 import RemoteSupervision from '@/pages/operations/remoteSupervision';
 import SupervisionManager from '@/pages/operations/supervisionManager';
@@ -13,17 +13,17 @@ const legendList = [
   {
     name: '核查正常',
     color: '#2eeb9d',
-    value: 1,
+    value: '3',
   },
   {
     name: '整改中',
     color: '#4699FF',
-    value: 2,
+    value: '2',
   },
   {
     name: '核查不规范',
     color: '#FF7E00',
-    value: 3,
+    value: '1',
   },
 
 
@@ -63,8 +63,8 @@ class MapContent extends PureComponent {
       hoverTitleLngLat: {},
       hoverEntTitle: '',
       hoverPointTitle: '',
-      open:false,
-      openData:{},
+      open: false,
+      openData: {},
 
     };
     this.mapEvents = {
@@ -131,7 +131,7 @@ class MapContent extends PureComponent {
         if ((level == 3 || level == 4) && pointInfoWindowVisible === false) {
           const position = marker.De.extData.position;
           console.log(position)
-          this.setState({open:true,openData:{EntCode:position.entCode, DGIMN :position.dgimn ,time:this.props.time} })
+          this.setState({ open: true, openData: { EntCode: position.entCode, DGIMN: position.dgimn, time: position.BTime && position.ETime ? [moment(position.BTime), moment(position.ETime)] : [] } })
         }
       },
     };
@@ -227,14 +227,14 @@ class MapContent extends PureComponent {
     let status = data.Status;
     let color = '';
     switch (status) {
-      case 1: // 核查正常
+      case '3': // 核查正常
         color = legendList[0].color;
         break;
-      case 2: // 整改中
-        color = legendList[1].color;
-        break;
-      case 3: // 核查不规范
+      case '2': // 核查不规范
         color = legendList[2].color;
+        break;
+      case '1': // 整改中
+        color = legendList[1].color;
         break;
 
     }
@@ -739,7 +739,7 @@ class MapContent extends PureComponent {
           mask={false}
           onCancel={() => {
             this.setState({
-              open:false
+              open: false
             })
           }}
         >
@@ -750,12 +750,12 @@ class MapContent extends PureComponent {
               {
                 label: `关键参数核查`,
                 key: '1',
-                children: <RemoteSupervision hideBreadcrumb  par={openData}  match={{path:'/operations/remoteSupervisionRecord'}}/>,
+                children: <RemoteSupervision hideBreadcrumb par={openData} match={{ path: '/operations/remoteSupervisionRecord' }} />,
               },
               {
                 label: `系统设施核查`,
                 key: '2',
-                children: <SupervisionManager hideBreadcrumb  par={openData} match={{path:'/operations/supervisionRecod'}}/>,
+                children: <SupervisionManager hideBreadcrumb par={openData} match={{ path: '/operations/siteSupervisionRecod' }} />,
               },
             ]}
           />

@@ -90,19 +90,6 @@ const DeviceInfoCount = props => {
           </div>
         </Row>
       </div>
-      {open && (
-        <OperatingInfo //运维信息总览
-          // wrapClassName="fullScreenModal"
-          visible={open}
-          type={'point'}
-          onCancel={() => {
-            setOpen(false);
-          }}
-          pollutantType={undefined}
-          operatingStatus={undefined}
-          outputType={0}
-        />
-      )}
     </HomeCard>
   );
 };

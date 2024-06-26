@@ -851,6 +851,9 @@ export const API = {
     GetMonitorAlarmLogsList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsList', //排放标准日志信息
     GetMonitorAlarmLogsInfoList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsInfoList', //排放标准日志详情信息
     GetHourDataLogsList: before + '/ProjectMonitorDataApi/GetHourDataLogsList', //查看监测数据日志信息
+    //排放特征学习
+    GetTrainingResult: before + '/DataFormatBaseDataApi/GetTrainingResult', //获取训练结果
+    GetTrainingRecords: before + '/DataFormatBaseDataApi/GetTrainingRecords', //获取训练日志
   },
   /*监督核查 Api */
   SupervisionVerificaApi: {

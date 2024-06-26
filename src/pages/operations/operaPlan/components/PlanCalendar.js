@@ -201,7 +201,7 @@ const Index = (props) => {
             layout='inline'
             onFinish={() => { setPageIndex(1); setPageSize(20); onFinish(1, 20) }}
             initialValues={{
-                time:  [moment().subtract(2, 'months').startOf('month'), moment()],
+                time:  [moment(), moment().add(90, 'days')],
             }}
         >
             {commonSearchComponents && commonSearchComponents(type)}

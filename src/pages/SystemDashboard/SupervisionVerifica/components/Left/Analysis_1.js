@@ -181,6 +181,7 @@ const Calibration = props => {
     >
       <SupervisionAnalySumm
         tabType={2}
+        time={time}
       />
     </Modal>
     </HomeCard>
