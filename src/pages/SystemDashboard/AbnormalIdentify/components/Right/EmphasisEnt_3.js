@@ -63,7 +63,7 @@ const EmphasisEnt = props => {
       loading={loading}
     >
       <Row className={styles.AfterSaleServiceWrapper}>
-        <Col span={24} style={{ height: '100%', cursor: 'pointer' }} onClick={() => onOpenModal(1)}>
+        <Col span={24} style={{ height: '100%', cursor: 'pointer' }}>
           <div className={styles.listWrapper}>
             <Row className={styles.header} style={{ color: '#71CDF9' }}>
               <Col style={{ width: '37%' }}>监测点</Col>
