@@ -415,6 +415,11 @@ class BasicLayout extends Component {
         RoleIds: userData?.RoleIds?.split(','),
       };
     }
+
+    let _settings = settings;
+    if (sessionStorage.getItem('sysName')) {
+      _settings.title = sessionStorage.getItem('sysName');
+    }
     return (
       <>
         <ProLayout
@@ -447,7 +452,7 @@ class BasicLayout extends Component {
           // formatMessage={formatMessage}
           rightContentRender={rightProps => <RightContent {...rightProps} />}
           {...this.props}
-          {...settings}
+          {..._settings}
           // title={configInfo && configInfo.SystemName}
           // menuHeaderRender={() => <a href={currentMenu?.[0]?.path}> <h1>{configInfo && configInfo.SystemName}</h1></a>}
         >
