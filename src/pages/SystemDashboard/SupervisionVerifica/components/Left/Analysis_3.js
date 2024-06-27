@@ -53,7 +53,7 @@ const DeviceInfoCount = props => {
   const boxSty = {
     width:100,
     height:99,
-    background: 'url(/SystemDashboard/SupervisionVerifica/hgl_box1.png) no-repeat',
+    background: 'url(/SystemDashboard/supervision/hgl_box1.png) no-repeat',
     backgroundSize:'100% 100%',
     nameColr:'#C3E3FF',
     cursor: 'pointer',
@@ -61,7 +61,7 @@ const DeviceInfoCount = props => {
   const boxSty2 = {
     width:136,
     height:139,
-    background: 'url(/SystemDashboard/SupervisionVerifica/hgl_box2.png) no-repeat',
+    background: 'url(/SystemDashboard/supervision/hgl_box2.png) no-repeat',
     backgroundSize:'100% 100%',
     nameColr:'#C3F0FF',
     cursor: 'pointer',

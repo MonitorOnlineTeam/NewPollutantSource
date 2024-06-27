@@ -5,23 +5,47 @@ import { router } from 'umi';
 import styles from '../styles.less';
 import AvatarDropdown from '@/components/GlobalHeader/AvatarDropdown.jsx';
 import FullscreenToggle from './FullscreenToggle';
-import { sysList, dateRangeList } from '../CONST';
+import { allSysList, dateRangeList } from '../CONST';
 
-const dvaPropsData = ({ loading, sysDashboard }) => ({
+const dvaPropsData = ({ loading, sysDashboard, user }) => ({
   timeLabel: sysDashboard.timeLabel,
+  currentMenu: user.currentMenu,
 });
 
 const HomeDataScreen = props => {
   const containerRef = useRef(null);
 
-  const { dispatch, timeLabel, children, pageName } = props;
+  const [sysList, setSysList] = useState([]);
+  const [pageInfo, setPageInfo] = useState({});
+  const [current, setCurrent] = useState({});
 
-  const pageInfo = sysList.find(item => item.key === pageName);
+  const { dispatch, timeLabel, children, pageName, currentMenu } = props;
 
+  console.log('currentMenu', currentMenu);
   useEffect(() => {
+    pageName === '智慧运维' &&
+      dispatch({
+        //获取运维基础配置
+        type: 'global/getOperationSetting',
+        payload: {},
+      });
+      
+    // 获取中间页
     dispatch({
-      //获取运维基础配置
-      type: 'global/getOperationSetting',
+      type: 'sysDashboard/GetSysList',
+      payload: {},
+      callback: res => {
+        let sysList = mergeData(allSysList, res);
+        setSysList(sysList);
+        const pageInfo = sysList.find(item => item.key === pageName);
+        setPageInfo(pageInfo);
+        setCurrent(pageInfo.key);
+      },
+    });
+
+    // 获取菜单
+    dispatch({
+      type: 'user/fetchCurrent',
       payload: {},
     });
 
@@ -33,12 +57,51 @@ const HomeDataScreen = props => {
     };
   }, []);
 
+  // 匹配中间页数据
+  const mergeData = (arrAll, sysList) => {
+    let mergedList = [];
+
+    sysList.forEach(sysItem => {
+      const matchingAllItem = arrAll.find(allItem => allItem.ID === sysItem.ID);
+      if (matchingAllItem) {
+        mergedList.push({
+          ...matchingAllItem,
+          data: { ...sysItem },
+        });
+      }
+    });
+
+    return mergedList;
+  };
+
+  function getFirstChildDeepestPath(item) {
+    // 递归函数，用于获取最深层的path
+    if (item.children && item.children.length > 0) {
+      return getFirstChildDeepestPath(item.children[0]);
+    } else {
+      return item.path;
+    }
+  }
+
+  // 获取第一个子节点的最深层的路由
+  function getPathFromData(data) {
+    // 确保数据在索引 1 的位置存在
+    if (data[1]) {
+      if (data[1].children && data[1].children.length > 0) {
+        // 如果有子节点，获取第一个子节点的最深层 path
+        return getFirstChildDeepestPath(data[1].children[0]);
+      } else {
+        // 如果没有子节点，直接返回当前节点的 path
+        return data[1].path;
+      }
+    }
+    return null; // 如果不存在可返回 null 或其他默认值
+  }
+
   // 返回系统
   const gobackSys = () => {
-    let meunList = sessionStorage.getItem('menuDatas')
-      ? JSON.parse(sessionStorage.getItem('menuDatas'))
-      : [];
-    router.push(meunList?.[1] ? meunList?.[1] : '/user/login');
+    const deepestPath = getPathFromData(currentMenu);
+    router.push(deepestPath);
   };
 
   // 改变时间
@@ -79,23 +142,32 @@ const HomeDataScreen = props => {
           </ul>
         </div>
         <div className={styles.menuSelectContent}>
-          <div className={styles.selectedName}>{pageInfo.key}</div>
-          <ul>
-            {sysList.map(item => {
-              return (
-                <li
-                  className={pageInfo.key === item.key ? styles.active : ''}
-                  key={item.key}
-                  onClick={() => {
-                    // window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item.data)}`);
-                    router.push(`/sessionMiddlePage?sysInfo=${JSON.stringify(item.data)}`);
-                  }}
-                >
-                  {item.key}
-                </li>
-              );
-            })}
-          </ul>
+          <div className={`${styles.selectedName} ${sysList.length > 1 ? styles.showList : ''}`}>
+            {pageInfo.key}
+          </div>
+          {sysList.length > 1 ? (
+            <ul>
+              {sysList.map(item => {
+                return (
+                  <li
+                    className={pageInfo.key === item.key ? styles.active : ''}
+                    key={item.key}
+                    onClick={() => {
+                      // window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item.data)}`);
+                      if (current !== item.key) {
+                        setCurrent(item.key);
+                        router.push(`/sessionMiddlePage?sysInfo=${JSON.stringify(item.data)}`);
+                      }
+                    }}
+                  >
+                    {item.key}
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            ''
+          )}
         </div>
       </div>
       <div className={styles.rightContent}>

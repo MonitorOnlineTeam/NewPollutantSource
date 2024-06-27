@@ -640,6 +640,7 @@ const PageContent = props => {
         title: '缺失率',
         dataIndex: 'Rate',
         key: 'Rate',
+        sorter: (a, b) => a['Rate'] - b['Rate'],
         render: text => {
           return text + '%';
         },
@@ -648,11 +649,13 @@ const PageContent = props => {
         title: '缺失小时数',
         dataIndex: 'MissHour',
         key: 'MissHour',
+        sorter: (a, b) => a['MissHour'] - b['MissHour'],
       },
       {
         title: '应传小时数',
         dataIndex: 'ShouldHour',
         key: 'ShouldHour',
+        sorter: (a, b) => a['ShouldHour'] - b['ShouldHour'],
       },
     ];
     return columns;
@@ -846,7 +849,7 @@ const PageContent = props => {
           align="center"
           columns={getColumns()}
           dataSource={dataSource}
-          pagination={true}
+          pagination={false}
         />
       </Card>
 

@@ -455,7 +455,8 @@ class BasicLayout extends Component {
           {..._settings}
           // title={configInfo && configInfo.SystemName}
           // menuHeaderRender={() => <a href={currentMenu?.[0]?.path}> <h1>{configInfo && configInfo.SystemName}</h1></a>} //运维
-         
+
+
         >
           {
             config.isShowTabs && defaultSettings.layout === 'sidemenu' ? <div id="sideMenuTabsLayout" style={{ margin: '-24px -24px 0px', padding: '10px', paddingTop: 4 }}><Tabs

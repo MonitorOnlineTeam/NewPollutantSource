@@ -5,7 +5,8 @@ import styles from '@/pages/SystemDashboard/styles.less';
 import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import OverViewRealtime from '@/pages/monitoring/overView/realtime';
 
-let myChart;
+const colors = ['#00a3ff', '#2EEB9D', '#FF3737', '#FFCC00', '#836bfb', '#C9C9C9'];
+
 const dvaPropsData = ({ sysDashboard, loading }) => ({
   time: sysDashboard.time,
   MonitoringCountAnalysis: sysDashboard.MonitoringCountAnalysis,
@@ -35,44 +36,56 @@ const OverviewCard = props => {
         </div>
         <Row className={styles.pointClassifyContent}>
           <Col span={12} className={styles.pointClassifyItem}>
-            <img src="/SystemDashboard/CT/pointNum1.png" />
+            <img src="/SystemDashboard/installAndDebugger/pointNum1.png" />
             <div className={styles.numberContent}>
-              <p className={styles.num}>{MonitoringCountAnalysis.pointCount}</p>
+              <p className={styles.num} style={{ color: colors[0] }}>
+                {MonitoringCountAnalysis.pointCount}
+              </p>
               <p className={styles.text}>排放口数量</p>
             </div>
           </Col>
           <Col span={12} className={styles.pointClassifyItem}>
             <img src="/SystemDashboard/Overview/online.png" />
             <div className={styles.numberContent}>
-              <p className={styles.num}>{MonitoringCountAnalysis.normalCount}</p>
+              <p className={styles.num} style={{ color: colors[1] }}>
+                {MonitoringCountAnalysis.normalCount}
+              </p>
               <p className={styles.text}>在线数量</p>
             </div>
           </Col>
           <Col span={12} className={styles.pointClassifyItem}>
             <img src="/SystemDashboard/Overview/over.png" />
             <div className={styles.numberContent}>
-              <p className={styles.num}>{MonitoringCountAnalysis.overCount}</p>
+              <p className={styles.num} style={{ color: colors[2] }}>
+                {MonitoringCountAnalysis.overCount}
+              </p>
               <p className={styles.text}>超标数量</p>
             </div>
           </Col>
           <Col span={12} className={styles.pointClassifyItem} style={{ height: '33.3333%' }}>
-            <img src="/SystemDashboard/CT/pointNum4.png" />
+            <img src="/SystemDashboard/installAndDebugger/pointNum4.png" />
             <div className={styles.numberContent}>
-              <p className={styles.num}>{MonitoringCountAnalysis.exceptionCount}</p>
+              <p className={styles.num} style={{ color: colors[3] }}>
+                {MonitoringCountAnalysis.exceptionCount}
+              </p>
               <p className={styles.text}>异常数量</p>
             </div>
           </Col>
           <Col span={12} className={styles.pointClassifyItem} style={{ height: '33.3333%' }}>
             <img src="/SystemDashboard/Overview/stop.png" />
             <div className={styles.numberContent}>
-              <p className={styles.num}>{MonitoringCountAnalysis.stopCount}</p>
+              <p className={styles.num} style={{ color: colors[4] }}>
+                {MonitoringCountAnalysis.stopCount}
+              </p>
               <p className={styles.text}>停运数量</p>
             </div>
           </Col>
           <Col span={12} className={styles.pointClassifyItem} style={{ height: '33.3333%' }}>
             <img src="/SystemDashboard/Overview/offline.png" />
             <div className={styles.numberContent}>
-              <p className={styles.num}>{MonitoringCountAnalysis.unLineCount}</p>
+              <p className={styles.num} style={{ color: colors[5] }}>
+                {MonitoringCountAnalysis.unLineCount}
+              </p>
               <p className={styles.text}>离线数量</p>
             </div>
           </Col>
@@ -87,7 +100,7 @@ const OverviewCard = props => {
         onCancel={() => {
           setOpen(false);
         }}
-        bodyStyle={{padding: 0}}
+        bodyStyle={{ padding: 0 }}
       >
         <OverViewRealtime hideBreadcrumb={true} location={{ query: {} }} />
       </Modal>

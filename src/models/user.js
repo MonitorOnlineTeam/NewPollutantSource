@@ -8,16 +8,19 @@ import {
   getSystemConfigInfo,
   vertifyOldPwd,
   changePwd,
-  getAlarmPushAuthor, insertAlarmPushAuthor, getAlarmState, getEnterpriseList, GetAndroidOrIosSettings,
+  getAlarmPushAuthor,
+  insertAlarmPushAuthor,
+  getAlarmState,
+  getEnterpriseList,
+  GetAndroidOrIosSettings,
   RecoveryUser,
 } from '@/services/user';
-import { postAutoFromDataUpdate } from '@/services/autoformapi'
+import { postAutoFromDataUpdate } from '@/services/autoformapi';
 import Cookie from 'js-cookie';
 import { message } from 'antd';
 import { isUrl, sdlMessage } from '@/utils/utils';
 import Model from '@/utils/model';
-import configToken from '@/config'
-
+import configToken from '@/config';
 
 function formatter(data, parentPath = '') {
   if (data && data.length > 0) {
@@ -99,28 +102,32 @@ export default Model.extend({
         if (response.IsSuccess) {
           const cMenu = yield call(formatter, response.Datas);
           if (window.location.pathname === '/') {
-            router.push(Cookie.get('defaultNavigateUrl'))
+            router.push(Cookie.get('defaultNavigateUrl'));
           }
           const menuList = getMenuList(cMenu);
-          let filterDescList = (menuList && menuList.length) ?
-            menuList.filter(item => { if (item.desc) return item.desc.indexOf("ReactPD") > -1 }) : []
+          let filterDescList =
+            menuList && menuList.length
+              ? menuList.filter(item => {
+                  if (item.desc) return item.desc.indexOf('ReactPD') > -1;
+                })
+              : [];
           yield put({
             type: 'saveCurrentUser',
             payload: {
               // currentUser,
               currentMenu: cMenu,
               unfoldMenuList: [...menuList],
-              menuDescList: filterDescList.map(item => item.desc.replace("ReactPD", ""))
+              menuDescList: filterDescList.map(item => item.desc.replace('ReactPD', '')),
             },
           });
-          sessionStorage.setItem(currentUser.UserName, JSON.stringify(menuList))
-          _&&_.callback&& _.callback(cMenu)
+          sessionStorage.setItem(currentUser.UserName, JSON.stringify(menuList));
+          _ && _.callback && _.callback(cMenu);
         } else {
           // message.info('菜单获取失败，请联系系统管理员！');
         }
       }
     },
-    * editUserInfo({ payload }, { call, update, put }) {
+    *editUserInfo({ payload }, { call, update, put }) {
       console.log(payload);
       const payloaduser = {
         configId: payload.configId,
@@ -244,50 +251,45 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           showAlarmState: result.Datas,
-        })
+        });
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
-    * getEnterpriseList({
-      payload,
-    }, { call, update }) {
+    *getEnterpriseList({ payload }, { call, update }) {
       const result = yield call(getEnterpriseList, payload);
       const arr = [];
       if (result.IsSuccess) {
         if (result.Datas.length) {
           result.Datas.map(item => {
             arr.push(item.ParentCode);
-          })
+          });
         }
-        payload.callback && payload.callback(arr.toString())
+        payload.callback && payload.callback(arr.toString());
       }
     },
     //获取手机端配置信息
-    * GetAndroidOrIosSettings({
-      payload,
-    }, { call, update }) {
+    *GetAndroidOrIosSettings({ payload }, { call, update }) {
       const result = yield call(GetAndroidOrIosSettings, payload);
       if (result.IsSuccess) {
         if (result.Datas) {
           yield update({
             settingList: result.Datas,
-          })
+          });
         }
       }
     },
     // 用户恢复
-    *recoveryUser({ payload ,callback}, { put, call, update, select }) {
+    *recoveryUser({ payload, callback }, { put, call, update, select }) {
       const result = yield call(RecoveryUser, payload);
       if (result.IsSuccess) {
-      message.success(result.Message)
-      callback()
+        message.success(result.Message);
+        callback();
       } else {
-        message.error(result.Message)
+        message.error(result.Message);
       }
     },
   },
-
 
   reducers: {
     saveCurrentUser(state, action) {

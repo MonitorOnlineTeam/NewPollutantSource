@@ -817,5 +817,16 @@ export default Model.extend({
       );
       callback && callback(result);
     },
+    // 超标时长分析
+    *GetOverDataAnalysis({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.AbnormalIdentifyModel.GetOverDataAnalysis}`,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
   },
 });

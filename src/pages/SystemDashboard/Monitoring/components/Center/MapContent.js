@@ -207,13 +207,17 @@ class MapContent extends PureComponent {
           _mapData = _mapData.filter(item => item.Status == selectedLegend);
         }
         markersList = _mapData.map(item => {
-          return {
-            position: {
-              ...item,
-              latitude: item.Latitude,
-              longitude: item.Longitude,
-            },
-          };
+          if (item.Latitude && item.Longitude) {
+            return {
+              position: {
+                ...item,
+                latitude: item.Latitude,
+                longitude: item.Longitude,
+              },
+            };
+          } else {
+            console.log('item', item);
+          }
         });
         break;
     }

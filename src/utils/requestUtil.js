@@ -64,7 +64,12 @@ const errorHandler = error => {
       // router.push('/exception/404');
       notification.error({
         message: `请求错误 ${status}:`,
-        description: <><div style={{wordWrap:'break-word'}}>{url}</div>{errorText}</>,
+        description: (
+          <>
+            <div style={{ wordWrap: 'break-word' }}>{url}</div>
+            {errorText}
+          </>
+        ),
       });
     }
     return data;
@@ -103,14 +108,15 @@ request.interceptors.request.use(async (url, options) => {
     options.method === 'get'
   ) {
     let token = Cookie.get(configToken.cookieName);
-
     //
     const urls = url.split('/');
     if (urls[1] === 'newApi') {
       token = Cookie.get('newToken');
+      if (!token) console.log('无token：', url);
     }
     if (urls[1] === 'api') {
       token = ''; //调试服务pdf导出
+      console.log('调试服务无token：', url);
     }
     const headers = {
       'Content-Type': options.headers['Content-Type'] || 'application/json',

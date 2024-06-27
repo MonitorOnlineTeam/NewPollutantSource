@@ -89,7 +89,7 @@ const EffectiveRate_2 = props => {
       series: [
         {
           type: 'gauge',
-          radius: '120%',
+          radius: '100%',
           center: ['50%', '60%'],
           startAngle: '180',
           endAngle: '0',
@@ -142,7 +142,7 @@ const EffectiveRate_2 = props => {
         {
           name: '刻度文字',
           type: 'gauge',
-          radius: '120%',
+          radius: '100%',
           center: ['50%', '60%'],
           startAngle: '200',
           endAngle: '-20',

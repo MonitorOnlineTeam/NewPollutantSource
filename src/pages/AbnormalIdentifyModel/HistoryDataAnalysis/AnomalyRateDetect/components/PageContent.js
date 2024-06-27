@@ -721,7 +721,7 @@ const PageContent = props => {
           align="center"
           columns={getColumns()}
           dataSource={dataSource}
-          pagination={true}
+          pagination={false}
           scroll={{ y: '400px' }}
         />
       </Card>

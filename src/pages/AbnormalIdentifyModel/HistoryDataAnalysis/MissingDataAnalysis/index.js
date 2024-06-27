@@ -14,7 +14,6 @@ const PointStatisticalAnalysis = props => {
   const { dispatch, pageTitle, entCode, DGIMN, time, regionCode } = props;
 
   useEffect(() => {}, []);
-  console.log('entCode || regionCode', entCode || regionCode);
   return (
     <BreadcrumbWrapper hideBreadcrumb={entCode || regionCode}>
       <PageContent

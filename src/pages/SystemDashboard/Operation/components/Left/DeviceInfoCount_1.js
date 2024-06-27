@@ -58,13 +58,13 @@ const DeviceInfoCount = props => {
         >
           <p className={styles.pointNum}>{nums.entCount}</p>
           <p className={styles.unit}>（家）</p>
-          <img src="/SystemDashboard/Operation/pointNum_bg.png" />
+          <img src="/SystemDashboard/opera/pointNum_bg.png" />
           <p className={styles.text}>排污单位数量</p>
         </Col>
         <Col span={14} className={`${styles.center} ${styles.pointClassify}`}>
           <ul>
             <li>
-              <img src="/SystemDashboard/Operation/pointNum1.png" />
+              <img src="/SystemDashboard/opera/pointNum1.png" />
               <span className={styles.text}>排放口数量</span>
               <div style={{ position: 'absolute', right: 10 }}>
                 <span className={styles.num} style={{ color: '#00A3FF' }}>
@@ -74,7 +74,7 @@ const DeviceInfoCount = props => {
               </div>
             </li>
             <li>
-              <img src="/SystemDashboard/Operation/pointNum2.png" />
+              <img src="/SystemDashboard/opera/pointNum2.png" />
               <span className={styles.text}>正常运维数量</span>
               <div style={{ position: 'absolute', right: 10 }}>
                 <span className={styles.num} style={{ color: '#2EEB9D' }}>
@@ -84,7 +84,7 @@ const DeviceInfoCount = props => {
               </div>
             </li>
             <li>
-              <img src="/SystemDashboard/Operation/pointNum3.png" />
+              <img src="/SystemDashboard/opera/pointNum3.png" />
               <span className={styles.text}>异常运维数量</span>
               <div style={{ position: 'absolute', right: 10 }}>
                 <span className={styles.num} style={{ color: '#FFCC00' }}>

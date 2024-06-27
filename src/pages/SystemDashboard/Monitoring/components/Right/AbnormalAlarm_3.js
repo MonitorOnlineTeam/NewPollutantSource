@@ -68,7 +68,7 @@ const AbnormalAlarm_3 = props => {
     <HomeCard title="异常数据分析" bodyStyle={{}} loading={loading}>
       <div className={styles.AbnormalAlarmWrapper} onClick={onOpenModal}>
         <div className={styles.legendInfo}>
-          <p class={styles.title}>异常报警零值</p>
+          <p class={styles.title}>零值数量</p>
           <div className={styles.content}>
             <Progress
               style={{ width: '100%' }}
