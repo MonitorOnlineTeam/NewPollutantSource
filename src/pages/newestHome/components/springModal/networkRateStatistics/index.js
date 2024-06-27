@@ -485,12 +485,13 @@ export default class EntTransmissionEfficiency extends Component {
       pointList,
       networkRateVisible,
       networkRateCancel,
+      wrapClassName
     } = this.props;
     const { detailVisible, passParame } = this.state;
     return (
       <Modal
         title={`实时联网率 ${passParame.ProviceName ? `-${passParame.ProviceName}` : ''}`}
-        wrapClassName='spreadOverModal'
+        wrapClassName={wrapClassName || 'spreadOverModal'}
         visible={networkRateVisible}
         onCancel={networkRateCancel}
         footer={null}

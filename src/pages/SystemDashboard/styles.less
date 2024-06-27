@@ -285,7 +285,7 @@
       display: flex;
       flex-direction: column;
       height: calc(100%);
-      min-height: 936px;
+      min-height: 996px;
       .mapWrapper {
         min-height: 640px;
         flex: 2;
@@ -757,6 +757,11 @@
         width: 100%;
         padding: 2px 14px;
         font-weight: bold;
+        margin-bottom: 4%;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
         .label {
           width: 120px;
           display: inline-block;
@@ -777,7 +782,7 @@
           }
         }
         .value {
-          width: 50px;
+          width: 60px;
           font-weight: bold;
           font-size: 14px;
           color: #a2e0ff;
@@ -811,7 +816,6 @@
       }
     }
 
-
     // 监控总览
     .MonitoringOverview {
       padding: 0 !important;
@@ -821,6 +825,70 @@
         img {
           width: 60px !important;
           height: 52px !important;
+        }
+      }
+    }
+
+    // 有效传输率
+    .EffectiveRateWrapper {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      .rateContent {
+        height: 90px;
+        background: url(/SystemDashboard/EffectiveRate_bg.png);
+        background-size: 100% 100%;
+        padding: 20px;
+        font-weight: bold;
+        margin-top: 10px;
+
+        .title {
+          font-size: 15px;
+        }
+      }
+    }
+
+    // 监控 - 异常报警分析
+    .AbnormalAlarmWrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      height: 100%;
+      padding: 20px 0;
+      .legendInfo {
+        color: #fff;
+        font-weight: 500;
+        font-size: 14px;
+        margin-bottom: 6px;
+        position: relative;
+
+        .title {
+          font-weight: bold;
+          margin-bottom: 1px;
+          font-size: 15px;
+          color: #75d1ff;
+          margin-bottom: 6px;
+        }
+
+        .content {
+          border: 1px solid #0069ac;
+          box-shadow: 0 0 10px #0069ac inset;
+          padding: 4px;
+          display: flex;
+          :global {
+            .ant-progress-steps-item {
+              width: calc((100% - 80px) / 40) !important;
+              // margin-right: 4px;
+            }
+          }
+        }
+        .num {
+          position: absolute;
+          top: -3px;
+          right: 0;
+          color: #18FDFE;
+          font-size: 15px;
         }
       }
     }
@@ -1096,19 +1164,20 @@
     background-size: 100% 100%;
   }
 }
- .SupervisionVerificaRecordModal{
+.SupervisionVerificaRecordModal {
   :global {
-  .ant-tabs > .ant-tabs-nav, .ant-tabs > div > .ant-tabs-nav{
-   padding-top:16px ;
-   }
-   .ant-tabs-tabpane{
-     padding-left: 0 !important;
-   }
-   .ant-pro-page-header-wrap-children-content{
-     margin:8px 0 0 0;
-   }
+    .ant-tabs > .ant-tabs-nav,
+    .ant-tabs > div > .ant-tabs-nav {
+      padding-top: 16px;
+    }
+    .ant-tabs-tabpane {
+      padding-left: 0 !important;
+    }
+    .ant-pro-page-header-wrap-children-content {
+      margin: 8px 0 0 0;
+    }
   }
- }
+}
 
 .popupStyle {
   // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));

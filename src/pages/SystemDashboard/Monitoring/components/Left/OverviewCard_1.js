@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
-import { Row, Col } from 'antd';
+import { Row, Col, Modal } from 'antd';
 import styles from '@/pages/SystemDashboard/styles.less';
 import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
-import DeviceInfoCountModal from '@/pages/ctDebuggAfterSaleServiceManage/HomeDataScreen/components/Modals/DeviceInfoCountModal.js';
+import OverViewRealtime from '@/pages/monitoring/overView/realtime';
 
 let myChart;
 const dvaPropsData = ({ sysDashboard, loading }) => ({
   time: sysDashboard.time,
   MonitoringCountAnalysis: sysDashboard.MonitoringCountAnalysis,
-  loading: loading.effects[`sysDashboard/GetInstallationDebuggingMap`],
+  loading: loading.effects[`sysDashboard/GetMapPointList`],
 });
 
 const OverviewCard = props => {
@@ -25,7 +25,10 @@ const OverviewCard = props => {
 
   return (
     <HomeCard title="在线监控总览" style={{ minHeight: 360 }} loading={loading}>
-      <Row className={`${styles.CTOverviewCard} ${styles.MonitoringOverview}`} onClick={onOpenModal}>
+      <Row
+        className={`${styles.CTOverviewCard} ${styles.MonitoringOverview}`}
+        onClick={onOpenModal}
+      >
         <div className={styles.statisticsNum}>
           <span className={styles.text}>排污单位数量</span>
           <span className={styles.number}>{MonitoringCountAnalysis.entCount}家</span>
@@ -75,15 +78,19 @@ const OverviewCard = props => {
           </Col>
         </Row>
       </Row>
-      {open && (
-        <DeviceInfoCountModal
-          open={open}
-          time={time}
-          onCancel={() => {
-            setOpen(false);
-          }}
-        />
-      )}
+      <Modal
+        title="监控总览"
+        wrapClassName="fullScreenModal"
+        open={open}
+        destroyOnClose
+        footer={false}
+        onCancel={() => {
+          setOpen(false);
+        }}
+        bodyStyle={{padding: 0}}
+      >
+        <OverViewRealtime hideBreadcrumb={true} location={{ query: {} }} />
+      </Modal>
     </HomeCard>
   );
 };

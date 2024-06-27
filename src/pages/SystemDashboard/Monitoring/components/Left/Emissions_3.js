@@ -6,26 +6,25 @@ import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import { bar3DrenderItem } from '@/pages/ctDebuggAfterSaleServiceManage/utils/getBar3D';
-import ConsumablesStatisticsModal from '@/pages/newestHome/components/springModal/consumablesStatistics';
+import EmissionStatistical from '@/pages/IntelligentAnalysis/emissionStatistical/EmissionStatistical';
 
 const COLOR = ['#3AE3FD', '#00AEFF', '#FFC75D'];
-const xData = ['标准气体更换数量', '易耗品更换数量', '备品备件更换数量'];
+const xData = ['烟尘', 'SO₂', 'NOx'];
 let myChart;
 const dvaPropsData = ({ loading, sysDashboard }) => ({
   level: sysDashboard.level,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
   time: sysDashboard.time,
-  loading: loading.effects['sysDashboard/GetVisualDashBoardConsumablesStatisticsInfo'],
+  loading: loading.effects['sysDashboard/GetEmissionsAnalysis'],
 });
 
-const ReplacementAnalysis = props => {
+const Emissions = props => {
   const [echarts, setEcharts] = useState();
   const [counts, setCounts] = useState({
-    consumablesReplaceCount: 0,
-    sparePartReplaceRecordCount: 0,
-    standardGasRepalceCoun: 0,
-    standardLiquidRepalceCount: 0,
+    p01: 0,
+    p02: 0,
+    p03: 0,
   });
   const [open, setOpen] = useState(false);
 
@@ -37,7 +36,7 @@ const ReplacementAnalysis = props => {
 
   const getData = () => {
     dispatch({
-      type: 'sysDashboard/GetVisualDashBoardConsumablesStatisticsInfo',
+      type: 'sysDashboard/GetEmissionsAnalysis',
       payload: {
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
@@ -81,16 +80,12 @@ const ReplacementAnalysis = props => {
       return {};
     }
 
-    let serviceNum = [
-      counts.standardGasRepalceCoun,
-      counts.consumablesReplaceCount,
-      counts.sparePartReplaceRecordCount,
-    ];
+    let serviceNum = [counts.p01, counts.p02, counts.p03];
 
     return {
       color: ['#3AE3FD', '#00AEFF', '#FFC75D'],
       grid: {
-        left: 50,
+        left: 100,
         right: 20,
         bottom: 30,
         top: 50,
@@ -124,6 +119,11 @@ const ReplacementAnalysis = props => {
       yAxis: [
         {
           type: 'value',
+          name: '（kg）',
+          nameTextStyle: {
+            color: '#63BFFF',
+            fontWeight: 'bold',
+          },
           min: 0,
           minInterval: 1,
           axisLabel: {
@@ -149,7 +149,7 @@ const ReplacementAnalysis = props => {
       ],
       series: [
         {
-          name: '备件更换分析',
+          name: '排放量综合分析',
           type: 'custom',
           barWidth: 60,
           renderItem: (params, api) => {
@@ -160,15 +160,15 @@ const ReplacementAnalysis = props => {
         {
           type: 'bar',
           barWidth: 0,
-          label: {
-            normal: {
-              show: true,
-              position: 'top',
-              color: '#3AE3FD',
-              fontWeight: 'bold',
-              offset: [4, -20], //左右 上下
-            },
-          },
+          // label: {
+          //   normal: {
+          //     show: true,
+          //     position: 'top',
+          //     color: '#3AE3FD',
+          //     fontWeight: 'bold',
+          //     offset: [4, -20], //左右 上下
+          //   },
+          // },
           itemStyle: {
             color: 'transparent',
           },
@@ -200,11 +200,11 @@ const ReplacementAnalysis = props => {
   };
 
   return (
-    <HomeCard title="备件更换分析" bodyStyle={{}} loading={loading}>
-      <Row style={{ marginTop: 16, padding: '0 20px' }}>
+    <HomeCard title="排放量综合分析" style={{ minHeight: 310 }} loading={loading}>
+      <Row style={{ marginTop: 16, padding: '0 20px' }} className={styles.center}>
         {xData.map((item, index) => {
           return (
-            <Col span={8} className={styles.center}>
+            <Col span={5} className={styles.center}>
               <i
                 style={{
                   display: 'inline-block',
@@ -229,18 +229,21 @@ const ReplacementAnalysis = props => {
         onEvents={{ click: onOpenModal }}
       />
 
-      {open && (
-        <ConsumablesStatisticsModal //耗材统计弹框
-          visible={open}
-          type={2}
-          onCancel={() => {
-            setOpen(false);
-          }}
-          time={[moment(time[0]), moment(time[1])]}
-        />
-      )}
+      <Modal
+        title="排放量综合分析"
+        wrapClassName="fullScreenModal"
+        open={open}
+        destroyOnClose
+        footer={false}
+        onCancel={() => {
+          setOpen(false);
+        }}
+        bodyStyle={{ padding: 0 }}
+      >
+        <EmissionStatistical time={time} location={{ query: {} }} />
+      </Modal>
     </HomeCard>
   );
 };
 
-export default connect(dvaPropsData)(ReplacementAnalysis);
+export default connect(dvaPropsData)(Emissions);

@@ -55,6 +55,14 @@ export const sysList = [
     key: '监督核查',
     value: '/SystemDashboard/SupervisionVerifica',
     title: '污染源监督核查',
+    data: {
+      ID: 'f4da6d42-4282-48de-88c4-c7c8434ebdb4',
+      Name: '污染源监督核查软件',
+      MenuImg: '质控',
+      TipsName: '污染源监督核查软件产品ReactShow',
+      CodeList: '',
+      Url: null,
+    },
   },
 ];
 

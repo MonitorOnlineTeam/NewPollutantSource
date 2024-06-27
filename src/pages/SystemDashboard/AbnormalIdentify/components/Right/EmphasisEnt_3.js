@@ -35,6 +35,7 @@ const EmphasisEnt = props => {
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
         pLeve: level,
+        TopNum: 10,
         bTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
         eTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
       },
@@ -66,11 +67,12 @@ const EmphasisEnt = props => {
         <Col span={24} style={{ height: '100%', cursor: 'pointer' }}>
           <div className={styles.listWrapper}>
             <Row className={styles.header} style={{ color: '#71CDF9' }}>
-              <Col style={{ width: '37%' }}>监测点</Col>
-              <Col style={{ width: '26%' }}>异常小时数 (H)</Col>
-              <Col style={{ width: '37%' }}>原因分析</Col>
+              <Col style={{ width: '10%' }}>序号</Col>
+              <Col style={{ width: '34%' }}>监测点</Col>
+              <Col style={{ width: '22%' }}>异常小时数(H)</Col>
+              <Col style={{ width: '34%' }}>原因分析</Col>
             </Row>
-            <div className={styles.listContent} style={{ overflowY: 'auto' }}>
+            <div className={styles.listContent}>
               <ReactSeamlessScroll
                 list={dataSource}
                 style={{ width: '100%', height: '100%' }}
@@ -88,7 +90,8 @@ const EmphasisEnt = props => {
                       className={styles.listItem}
                       style={{ lineHeight: '48px', padding: '8px 0' }}
                     >
-                      <Col style={{ width: '40%', lineHeight: '24px', padding: '0 4px' }}>
+                      <Col style={{ width: '10%' }}>{index + 1}</Col>
+                      <Col style={{ width: '34%', lineHeight: '24px', padding: '0 4px' }}>
                         <Tooltip
                           color="#073783"
                           title={
@@ -103,8 +106,8 @@ const EmphasisEnt = props => {
                           {item.pointName}
                         </Tooltip>
                       </Col>
-                      <Col style={{ width: '20%' }}>{item.NormalRate}</Col>
-                      <Col style={{ width: '40%', padding: '0 4px' }}>
+                      <Col style={{ width: '22%' }}>{item.NormalRate}</Col>
+                      <Col style={{ width: '34%', padding: '0 4px' }}>
                         <Tooltip color="#073783" title={item.Reason || '-'}>
                           {item.Reason || '-'}
                         </Tooltip>

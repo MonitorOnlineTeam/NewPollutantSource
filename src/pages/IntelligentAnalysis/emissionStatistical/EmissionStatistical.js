@@ -46,7 +46,7 @@ const ImportantTypeList = [
 @Form.create()
 class Gas extends PureComponent {
   state = {
-    time: [
+    time: this.props.time || [
       moment()
         .subtract(1, 'days')
         .startOf('day'),

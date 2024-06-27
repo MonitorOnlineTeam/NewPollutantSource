@@ -562,7 +562,7 @@ export default class EntIndexModal extends Component {
   render() {
     // console.log("props.pollutantType=",this.props.pollutantType)
     // console.log("state.pollutantType=",this.state.PollutantType)
-  const {TVisible,TCancle,TTVisible} = this.props
+  const {TVisible,TCancle,TTVisible, wrapClassName} = this.props
   return (
       <div>
            <Modal
@@ -570,7 +570,7 @@ export default class EntIndexModal extends Component {
           title='有效传输率'
           visible={TVisible}
           footer={null}
-          wrapClassName='spreadOverModal'
+          wrapClassName={wrapClassName ||'spreadOverModal'}
           onCancel={TCancle}>
            {
               !this.state.showDetails && this.showModal()

@@ -100,14 +100,14 @@ const Calibration = props => {
               name: '实际完成数量',
               itemStyle: {
                 normal: {
-                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  color: new echarts.graphic.LinearGradient(0, 1, 1, 1, [
                     {
                       offset: 0,
-                      color: '#1EDF96',
+                      color: '#0D7759',
                     },
                     {
                       offset: 1,
-                      color: '#0D7759',
+                      color: '#1EDF96',
                     },
                   ]),
                   opacity: 1,
@@ -119,14 +119,14 @@ const Calibration = props => {
               name: '待完成数量',
               itemStyle: {
                 normal: {
-                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  color: new echarts.graphic.LinearGradient(0, 1, 1, 1, [
                     {
                       offset: 0,
-                      color: '#FFBA36',
+                      color: '#AA7829',
                     },
                     {
                       offset: 1,
-                      color: '#AA7829',
+                      color: '#FFBA36',
                     },
                   ]),
                   opacity: 1,

@@ -997,6 +997,14 @@ export const API = {
     GetSupervisionQualifiedAnalysis: before + '/Supervision/GetSupervisionQualifiedAnalysis',
     //督查地图部分
     GetSupervisionMap: before + '/Supervision/GetSupervisionMap',
+    // 排放量综合分析
+    GetEmissionsAnalysis: before + '/VisualDashBoardApi/GetEmissionsAnalysis',
+    // 超标数据分析
+    GetOverDataAnalysis: before + '/VisualDashBoardApi/GetOverDataAnalysis',
+    // 有效传输率
+    GetEffectiveTransmissionRate: before + '/VisualDashBoardApi/GetEffectiveTransmissionRate',
+    // 异常数据分析
+    GetExceptionDataAnalysis: before + '/VisualDashBoardApi/GetExceptionDataAnalysis',
     
   },
 

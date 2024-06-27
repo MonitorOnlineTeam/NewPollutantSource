@@ -328,5 +328,49 @@ export default Model.extend({
         callback(result.Datas);
       }
     },
+    // 排放量综合分析
+    *GetEmissionsAnalysis({ callback, payload }, { call, put, update, select }) {
+      const result = yield call(
+        requestPost,
+        API.SystemDashboardApi.GetEmissionsAnalysis,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback(result.Datas);
+      }
+    },
+    // 超标数据分析
+    *GetOverDataAnalysis({ callback, payload }, { call, put, update, select }) {
+      const result = yield call(
+        requestPost,
+        API.SystemDashboardApi.GetOverDataAnalysis,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback(result.Datas);
+      }
+    },
+    // 有效传输
+    *GetEffectiveTransmissionRate({ callback, payload }, { call, put, update, select }) {
+      const result = yield call(
+        requestPost,
+        API.SystemDashboardApi.GetEffectiveTransmissionRate,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback(result.Datas);
+      }
+    },
+    // 异常数据分析
+    *GetExceptionDataAnalysis({ callback, payload }, { call, put, update, select }) {
+      const result = yield call(
+        requestPost,
+        API.SystemDashboardApi.GetExceptionDataAnalysis,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback(result.Datas);
+      }
+    },
   },
 });

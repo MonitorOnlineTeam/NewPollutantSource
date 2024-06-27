@@ -5,7 +5,7 @@ import styles from '@/pages/SystemDashboard/styles.less';
 import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
-import PlanWorkOrderStatistics from '@/pages/newestHome/components/springModal/planWorkOrderStatistics/index.js';
+import NetworkRateStatisticsModal from '@/pages/newestHome/components/springModal/networkRateStatistics';
 const COLOR = ['#2998FF', '#21ECBB', '#DFE06D'];
 
 const dvaPropsData = ({ sysDashboard, loading }) => ({
@@ -125,7 +125,7 @@ const ConnectionRate = props => {
           },
           {
             type: 'pie',
-            z: 4,
+            z: 4, 
             // coordinateSystem: 'polar',
             radius: ['90%', '88%'],
             name: '警告事件1',
@@ -183,18 +183,14 @@ const ConnectionRate = props => {
           </Row>
         </Col>
       </Row>
-      {open && (
-        <PlanWorkOrderStatistics //计划巡检完成率弹框
-          // wrapClassName="fullScreenModal"
-          modalType="planInspection"
-          visible={open}
-          type={2}
-          onCancel={() => {
-            setOpen(false);
-          }}
-          time={[moment(time[0]), moment(time[1])]}
-        />
-      )}
+      <NetworkRateStatisticsModal //实时联网率
+        wrapClassName={'fullScreenModal'}
+        networkRateVisible={open}
+        networkType={''}
+        networkRateCancel={() => {
+          setOpen(false);
+        }}
+      />
     </HomeCard>
   );
 };
