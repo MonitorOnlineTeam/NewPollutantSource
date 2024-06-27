@@ -96,7 +96,7 @@ const Index = (props) => {
             ellipsis: true,
             render: (text, record, index) => {
                 const colorObj = {
-                    1: {color:'#52c41a',text:`执行成功，${record.SuccessCount? `接入数据${record.SuccessCount}条`: ''  }`},
+                    1: {color:'#52c41a',text:`执行成功${record.SuccessCount? `，接入数据${record.SuccessCount}条`: ''  }`},
                     2: {color:'#fa8c16',text:`执行中`},
                     3: {color:'#f5222d',text:`执行失败，查看日志`},
                     
@@ -117,16 +117,16 @@ const Index = (props) => {
             fixed: 'right',
             width: 100,
             ellipsis: true,
-            render: (text, record) => {
+            render: (text, record,index) => {
                 return (record.TaskCode == 6 ?
                     <a onClick={() => { setStartExecuVisible(true); setStartExecuTitle(`${record.ProjectName} - 开始执行（接入小时数据）`) }}>开始执行</a>
                     :
-                    <Popconfirm placement="left" title={'确定要开始执行？'}   
+                    <Popconfirm visible={startConfirmVisible && index == startConfirmIndex} placement="left" title={'确定要开始执行？'}   
                       okButtonProps={{
                         loading: startExecuLoading[record.TaskCode],
                       }} 
                       onConfirm={() => startExecuConfirm(1,record)} okText="开始执行" >
-                        <a>开始执行</a>
+                        <a onClick={() => { setStartConfirmVisible(true);setStartConfirmIndex(index)}}>开始执行</a>
                     </Popconfirm>
                 );
 
@@ -145,6 +145,8 @@ const Index = (props) => {
 
     const [startExecuVisible, setStartExecuVisible] = useState(false)
     const [startExecuTitle, setStartExecuTitle] = useState('')
+    const [startConfirmVisible, setStartConfirmVisible] = useState(false)
+    const [startConfirmIndex, setStartConfirmIndex] = useState(-1)
 
     const startExecuConfirm = async (type, record) => {
        
@@ -178,6 +180,7 @@ const Index = (props) => {
                 setStartExecuLoading({...startExecuLoading,code:false})
                 if(isSuccess){
                     handleChange(1);
+                    setStartConfirmVisible(false)
                 }
             }
         });

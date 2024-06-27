@@ -423,7 +423,7 @@ class BasicLayout extends Component {
     return (
       <>
         <ProLayout
-          logo={logoRender}//运维不需要
+          logo={logoRender}
           onCollapse={handleMenuCollapse}
           menuItemRender={(menuItemProps, defaultDom) => {
             if (menuItemProps.replace && userCookie !== 'null') {
@@ -453,8 +453,8 @@ class BasicLayout extends Component {
           rightContentRender={rightProps => <RightContent {...rightProps} />}
           {...this.props}
           {..._settings}
-          // menuHeaderRender={() => <a href={currentMenu?.[0]?.path}> <h1>{configInfo && configInfo.SystemName}</h1></a>} //运维
           // title={configInfo && configInfo.SystemName}
+          // menuHeaderRender={() => <a href={currentMenu?.[0]?.path}> <h1>{configInfo && configInfo.SystemName}</h1></a>} //运维
          
         >
           {

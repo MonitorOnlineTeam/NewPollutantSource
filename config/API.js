@@ -851,9 +851,13 @@ export const API = {
     GetMonitorAlarmLogsList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsList', //排放标准日志信息
     GetMonitorAlarmLogsInfoList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsInfoList', //排放标准日志详情信息
     GetHourDataLogsList: before + '/ProjectMonitorDataApi/GetHourDataLogsList', //查看监测数据日志信息
+    GetPointRelevantCount: before + '/ProjectMonitorDataApi/GetPointRelevantCount', //排口表头信息
     //排放特征学习
-    GetTrainingResult: before + '/DataFormatBaseDataApi/GetTrainingResult', //获取训练结果
-    GetTrainingRecords: before + '/DataFormatBaseDataApi/GetTrainingRecords', //获取训练日志
+    GetTrainingResult: before + '/ProjectMonitorDataApi/GetTrainingResult', //获取训练结果
+    GetTrainingRecords: before + '/ProjectMonitorDataApi/GetTrainingRecords', //获取训练日志
+    StatisNormalRange: before + '/ProjectMonitorDataApi/StatisNormalRange', //波动范围和振幅范围
+    //模型选配
+    GetModelApolegamyList: before + '/ProjectMonitorDataApi/GetModelApolegamyList', //获取模型选配信息
   },
   /*监督核查 Api */
   SupervisionVerificaApi: {

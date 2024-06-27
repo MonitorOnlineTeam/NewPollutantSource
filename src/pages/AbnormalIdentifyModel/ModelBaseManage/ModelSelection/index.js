@@ -6,7 +6,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Badge, Spin, Form, Radio, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, CaretDownOutlined, } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, CaretDownOutlined, CheckCircleTwoTone ,CloseCircleTwoTone, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -29,7 +29,9 @@ const namespace = 'ModelBaseManage'
 const dvaPropsData = ({ loading, ModelBaseManage, global, }) => ({
     pointListLoading: loading.effects['common/getPointByEntCode'],
     tableDatas: ModelBaseManage.modelSelectionData,
-    tableLoading: loading.effects[`${namespace}/ExportCarList`],
+    tableCol: ModelBaseManage.modelSelectionCol,
+    tableTotal: ModelBaseManage.modelSelectionTotal,
+    tableLoading: loading.effects[`${namespace}/GetModelApolegamyList`],
     configInfo: global.configInfo,
 
 })
@@ -40,50 +42,59 @@ const Index = (props) => {
 
 
     const [form] = Form.useForm();
-    const [form2] = Form.useForm();
 
 
 
 
 
-    const {pointListLoading, tableDatas, tableLoading, } = props;
+    const {pointListLoading, tableDatas,tableCol,tableTotal, tableLoading, } = props;
 
-
+    const [pageIndex, setPageIndex] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     useEffect(() => {
-        handleChange();
-
+        onValuesChange({pageIndex:pageIndex,pageSize:pageSize});
+        return ()=>{
+            props.dispatch({
+                type: 'common/updateState',
+                payload: {
+                    modelSelectionCol:{},
+                },
+            });   
+        }
     }, []);
 
-    let columns = [
+    let [ columns,setColumns ] = useState([
         {
             title: '企业',
-            dataIndex: 'CarNum',
-            key: 'CarNum',
+            dataIndex: 'entName',
+            key: 'entName',
             align: 'center',
+            width: 180,
             ellipsis: true,
         },
         {
             title: '排口',
-            dataIndex: 'VehicleType',
-            key: 'VehicleType',
+            dataIndex: 'pointName',
+            key: 'pointName',
             align: 'center',
+            width: 120,
             ellipsis: true,
         },
         {
             title: '操作',
             align: 'center',
             fixed: 'right',
-            width: 100,
+            width: 80,
             ellipsis: true,
             render: (text, record) => {
                 return (
-              <a onClick={() => {edit(record) }}>编辑</a>
+                 <a onClick={() => {edit(record) }}>编辑</a>
                 );
 
             }
         },
-    ];
+    ])
 
     // 根据企业获取排口
     const [pointList, setPointList] = useState([]);
@@ -101,42 +112,61 @@ const Index = (props) => {
     };
 
 
-    const [editVisible, setEditVisible] = useState(true)
+    const [editVisible, setEditVisible] = useState(false)
     const [editTitle, setEditTitle] = useState('编辑')
 
-    const [row, setRow] = useState({})
+    const [DGIMN, setDGIMN] = useState()
 
     
     const edit = (record) => {
         setEditVisible(true)
-        setEditTitle('编辑')
+        setDGIMN(record.DGIMN)
+        setEditTitle(`${record.entName}-${record.pointName}`)
     }
 
-    const [startExecuVisible, setStartExecuVisible] = useState(false)
-    const [startExecuTitle, setStartExecuTitle] = useState('')
-
-    const startExecuConfirm = (type, record) => {
-        console.log('开始执行')
-    }
-
-    const handleChange = (values) => {  //查询
-
-        props.dispatch({
-            type: `${namespace}/GetAuditPhoto`,
-            payload: { values },
-        });
-    }
 
     const saveCallBack = (text) =>{
         setEditVisible(false)
+        const values = form.getFieldsValue()
+        onValuesChange({...values, pageIndex:pageIndex, pageSize:pageSize},'page')
     }
-
+    const onValuesChange = (allValues,isPage) => {
+        props.dispatch({
+            type: `${namespace}/GetModelApolegamyList`,
+            payload: {projectType:1, ...allValues }, // projectType:1,
+            callback:(col)=>{
+                let trendsCol = []
+                if(col && !isPage){ //防止分页事件刷新列头
+                    trendsCol= col.map(item=>({
+                            title:  item.ModelName,
+                            dataIndex: `model_${item.ModelNumber}`,
+                            dataIndex: `model_${item.ModelNumber}`,
+                            align: 'center',
+                            ellipsis:true,
+                            width:item.ModelName?.length<=3?   item.ModelName?.length * 30 : item.ModelName?.length * 18,
+                            render: (text, record) => {
+                                return text?  <CheckCircleTwoTone style={{fontSize:16}} twoToneColor="#52c41a" /> : <CloseCircleTwoTone style={{fontSize:16}}  twoToneColor="#f5222d"/>;
+                
+                            }
+                    }))
+                }
+                columns.splice(2,0,...trendsCol) 
+            }
+        });
+    }
+    const onTableChange = (PageIndex, PageSize) => {
+        setPageIndex(PageIndex);
+        setPageSize(PageSize);
+        const values = form.getFieldsValue()
+        onValuesChange({...values, pageIndex:PageIndex, pageSize:PageSize},'page')
+      };
     const searchComponents = () => {
         return <Form
             form={form}
             name="advanced_search"
             className={'ant-advanced-search-form'}
             layout='inline'
+            onValuesChange={ (changedValues, allValues)=>onValuesChange(allValues)}
             initialValues={{
                 projectType : '1'
             }}
@@ -144,7 +174,6 @@ const Index = (props) => {
             <Form.Item label='选择项目' name='projectType'>
                 <Select
                     style={{ width: 200 }}
-                    onChange={handleChange}
                     placeholder='内蒙数据同步'
                     options={[
                         {
@@ -194,15 +223,18 @@ const Index = (props) => {
             <BreadcrumbWrapper >
                 <Card title={searchComponents()}>
                     <SdlTable
-                        onRow={record => ({
-                            onClick: event => { setRow(record) },
-                        })
-                        }
                         loading={tableLoading}
                         bordered
                         dataSource={tableDatas}
                         columns={columns}
-                        pagination={false}
+                        pagination={{
+                            showSizeChanger: true,
+                            showQuickJumper: true,
+                            pageSize: pageSize,
+                            current: pageIndex,
+                            onChange: onTableChange,
+                            total: tableTotal,
+                          }}
                     />
                 </Card>
                 <Modal
@@ -214,7 +246,7 @@ const Index = (props) => {
                     destroyOnClose
                     footer={null}
                 >
-                  <ModelMatch hideBreadcrumb isModal saveCallBack={saveCallBack} zIndex={1002}/>
+                  <ModelMatch  DGIMN={DGIMN} saveCallBack={saveCallBack} zIndex={1002}/>
                 </Modal>
             </BreadcrumbWrapper>
         </div >

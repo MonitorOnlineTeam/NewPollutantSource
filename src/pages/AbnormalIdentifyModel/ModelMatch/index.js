@@ -28,29 +28,32 @@ const Index = props => {
   };
 
   return (
-    <>
-      <NavigationTree
-        showIndustry
-        propsParams={{
-          // ModelFlag: 'ModelFlag',
-          // industryTypeCode: '1',
-          outputType: 0,
-          // StopPointFlag: true,
-        }}
-        // checkpPol="2"
-        polShow
-        domId="#ModelMatch"
-        onItemClick={value => {
-          if (value[0].IsEnt === false) {
-            setDGIMN(value[0].key);
-          }
-        }}
-        zIndex={props.zIndex}
-      />
-      <div id="ModelMatch">
-        <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>{DGIMN && <PageContent saveCallBack={props.saveCallBack} DGIMN={DGIMN} />}</BreadcrumbWrapper>
-      </div>
-    </>
+    props.DGIMN ?
+      <PageContent saveCallBack={props.saveCallBack} DGIMN={props.DGIMN} />
+      :
+      <>
+        <NavigationTree
+          showIndustry
+          propsParams={{
+            // ModelFlag: 'ModelFlag',
+            // industryTypeCode: '1',
+            outputType: 0,
+            // StopPointFlag: true,
+          }}
+          // checkpPol="2"
+          polShow
+          domId="#ModelMatch"
+          onItemClick={value => {
+            if (value[0].IsEnt === false) {
+              setDGIMN(value[0].key);
+            }
+          }}
+          zIndex={props.zIndex}
+        />
+        <div id="ModelMatch">
+          <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>{DGIMN && <PageContent DGIMN={DGIMN} />}</BreadcrumbWrapper>
+        </div>
+      </>
   );
 };
 
