@@ -828,5 +828,16 @@ export default Model.extend({
         callback && callback(result.Datas);
       }
     },
+    // 排放源综合分析：行业、区域、重点企业
+    *GetExcepDataAnalysis({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.AbnormalIdentifyModel.GetExcepDataAnalysis}`,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
   },
 });

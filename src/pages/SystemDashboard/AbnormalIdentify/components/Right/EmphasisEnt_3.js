@@ -5,7 +5,7 @@ import styles from '@/pages/SystemDashboard/styles.less';
 import HomeCard from '../HomeCard';
 import ReactSeamlessScroll from 'rc-seamless-scroll';
 import moment from 'moment';
-import UnderWarrantyServices from '@/pages/ctDebuggAfterSaleServiceManage/afterSalesServiceManage/underWarrantyServices';
+import IndustryRegionEntStatistics from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/IndustryRegionEntStatistics';
 
 const { Paragraph, Text } = Typography;
 
@@ -54,7 +54,6 @@ const EmphasisEnt = props => {
 
   const onOpenModal = type => {
     setOpen(true);
-    setOpenType(type);
   };
   return (
     <HomeCard
@@ -63,7 +62,7 @@ const EmphasisEnt = props => {
       bodyStyle={{ height: 'calc(100% - 60px)' }}
       loading={loading}
     >
-      <Row className={styles.AfterSaleServiceWrapper}>
+      <Row className={styles.AfterSaleServiceWrapper} onClick={onOpenModal}>
         <Col span={24} style={{ height: '100%', cursor: 'pointer' }}>
           <div className={styles.listWrapper}>
             <Row className={styles.header} style={{ color: '#71CDF9' }}>
@@ -155,7 +154,7 @@ const EmphasisEnt = props => {
         </Col> */}
       </Row>
       <Modal
-        title={`售后服务情况`}
+        title={`重点关注企业`}
         wrapClassName="fullScreenModal"
         open={open}
         destroyOnClose
@@ -165,13 +164,7 @@ const EmphasisEnt = props => {
         }}
         bodyStyle={{ padding: 0 }}
       >
-        {open && (
-          <UnderWarrantyServices
-            btnType={openType}
-            hideBreadcrumb
-            modalWrapClassName="fullScreenModal"
-          />
-        )}
+        {open && <IndustryRegionEntStatistics time={time} match={{ params: { dataType: 'point' } }} />}
       </Modal>
     </HomeCard>
   );
