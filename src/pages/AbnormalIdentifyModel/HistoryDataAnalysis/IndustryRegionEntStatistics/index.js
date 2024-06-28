@@ -10,12 +10,13 @@ const IndustryRegionEntStatistics = props => {
     match: {
       params: { dataType },
     },
+    time,
   } = props;
 
   useEffect(() => {}, []);
   return (
     <BreadcrumbWrapper>
-      <PageContent dataType={dataType} />
+      <PageContent time={time} dataType={dataType} />
     </BreadcrumbWrapper>
   );
 };

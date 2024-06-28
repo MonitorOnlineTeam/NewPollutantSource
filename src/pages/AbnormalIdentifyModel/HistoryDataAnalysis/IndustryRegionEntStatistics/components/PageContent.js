@@ -14,9 +14,9 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
 const PageContent = props => {
   const [form] = Form.useForm();
 
-  const { dispatch, loading, dataType } = props;
+  const { dispatch, loading, dataType, time } = props;
 
-  const [date, setDate] = useState([moment().startOf('year'), moment()]); // 时间
+  const [date, setDate] = useState(time || [moment().startOf('year'), moment()]); // 时间
   const [dataSource, setDataSource] = useState([]);
   const [rank, setRank] = useState(10);
 
