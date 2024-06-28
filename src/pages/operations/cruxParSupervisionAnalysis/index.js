@@ -74,10 +74,15 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, tableTotal, tableLoading, exportLoading,regQueryPar, tableDatas2, tableTotal2, tableLoading2, exportLoading2, regDetailQueryPar, } = props;
-  const { route :{name } } = props;
+  const { tableDatas, tableTotal, tableLoading, exportLoading,regQueryPar, tableDatas2, tableTotal2, tableLoading2, exportLoading2, regDetailQueryPar,par } = props;
+  // const { route :{name } } = props;
   useEffect(() => {
-    onFinish()
+    if (par) {
+      form.setFieldsValue({time:par?.time })
+      onFinish()
+    } else {
+      onFinish()
+    }
   }, []);
   
   const commonCol = (type)=>[
@@ -494,8 +499,8 @@ const Index = (props) => {
 
   return (
     <div className={styles.cruxParSupervisionAnalysisSty}>
-      <BreadcrumbWrapper>
-        <Card title={searchComponents()}>
+      <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
+        <Card bordered={!props.hideBreadcrumb} title={searchComponents()}>
           <SdlTable
             loading={tableLoading}
             bordered

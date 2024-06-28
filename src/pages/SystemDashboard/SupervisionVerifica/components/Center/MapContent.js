@@ -8,7 +8,7 @@ import { Radio, Space, Spin, Select, Col, Row, Tabs, Modal } from 'antd';
 import moment from 'moment';
 import RemoteSupervision from '@/pages/operations/remoteSupervision';
 import SupervisionManager from '@/pages/operations/supervisionManager';
-import CruxParSupervisionRectifica from '@/pages/operations/cruxParSupervisionRectifica';
+import CruxParSupervisionRectifica from '@/pages/operations/cruxParSupervisionRectifica3.0';
 import SuperviseRectification from '@/pages/operations/superviseRectification';
 
 

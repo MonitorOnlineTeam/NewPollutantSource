@@ -331,11 +331,11 @@ const Index = (props) => {
         <Form.Item label='行政区' name='RegionCode' >
           <RegionList levelNum={3} style={{ width: 150 }}/>
         </Form.Item>
-        <Spin spinning={props.entLoading} size='small' style={{top:5, }}>
+        {/* <Spin spinning={props.entLoading} size='small' style={{top:5, }}> */}
         <Form.Item label='企业' name='EntCode' style={{ marginLeft:8,marginRight:8 }}>
           <EntAtmoList  style={{ width: 200}} />
         </Form.Item>
-        </Spin>
+        {/* </Spin> */}
         <Spin spinning={pointLoading} size='small' style={{top:5,left:20 }}>
           <Form.Item label='监测点名称' name='DGIMN' >
 

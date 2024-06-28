@@ -32,19 +32,19 @@ import Lightbox from "react-image-lightbox-rotate";
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'cruxParSupervisionRectifica'
+const namespace = 'cruxParSupervisionRectifica3'
 
 
 
 
-const dvaPropsData = ({ loading, cruxParSupervisionRectifica, global, common, point, autoForm }) => ({
+const dvaPropsData = ({ loading, cruxParSupervisionRectifica3, global, common, point, autoForm }) => ({
   clientHeight: global.clientHeight,
   entLoading: common.noFilterEntLoading,
-  tableDatas: cruxParSupervisionRectifica.tableDatas,
+  tableDatas: cruxParSupervisionRectifica3.tableDatas,
   tableLoading: loading.effects[`${namespace}/getZGCheckList`],
-  tableTotal: cruxParSupervisionRectifica.tableTotal,
+  tableTotal: cruxParSupervisionRectifica3.tableTotal,
   exportLoading: loading.effects[`${namespace}/exportZGCheckList`],
-  queryPar: cruxParSupervisionRectifica.queryPar,
+  queryPar: cruxParSupervisionRectifica3.queryPar,
 
 })
 
@@ -87,12 +87,12 @@ const dvaDispatch = (dispatch) => {
 }
 const Index = (props) => {
 
-  const { match: { path } } = props;
+  // const { match: { path } } = props;
 
   const [form] = Form.useForm();
 
 
-  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading, queryPar, } = props;
+  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading, queryPar,par } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -100,7 +100,18 @@ const Index = (props) => {
 
 
   useEffect(() => {
-    onFinish(pageIndex, pageSize)
+    if (par) {
+      form.setFieldsValue({ entCode:par?.EntCode,time:par?.time })
+      setPointLoading(true)
+      props.getPointByEntCode({ entCode: par?.EntCode }, (res) => {
+        setPointList(res)
+        setPointLoading(false)
+        form.setFieldsValue({ DGIMN:par?.DGIMN })
+        onFinish(pageIndex, pageSize)
+      })
+    } else {
+      onFinish(pageIndex, pageSize)
+    }
   }, []);
 
 
@@ -363,8 +374,8 @@ const Index = (props) => {
 
   return (
     <div className={styles.supervisionManagerSty}>
-      <BreadcrumbWrapper >
-        <Card title={searchComponents()}>
+      <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
+        <Card bordered={!props.hideBreadcrumb} title={searchComponents()}>
           <SdlTable
             resizable
             loading={tableLoading}
