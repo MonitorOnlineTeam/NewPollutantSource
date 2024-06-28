@@ -395,7 +395,7 @@ const PageContent = props => {
   return (
     <div className={styles.PageWrapper}>
       {!props.dataType && (
-        <Card>
+        <Card bodyStyle={{ padding: '12px 24px' }}>
           <Form
             form={form}
             layout="inline"

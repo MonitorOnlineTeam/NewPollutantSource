@@ -816,6 +816,10 @@ export const API = {
     GetDiagnoAnalysis: before + '/WarningV2/GetDiagnoAnalysis',
     // 重点关注企业排行
     GetPointTopWarning: before + '/MoldHome/GetPointTopWarning',
+    // 超标时长分析
+    GetOverDataAnalysis: before + '/WarningV2/GetOverDataAnalysis',
+    // 排放源综合分析：行业、区域、重点企业
+    GetExcepDataAnalysis: before + '/WarningV2/GetExcepDataAnalysis',
     /*实时数据异常识别及管理*/
     //异常线索清单
     //线索分析

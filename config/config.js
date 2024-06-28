@@ -7,10 +7,10 @@ import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 import path from 'path';
-const apiHost = 'http://172.16.12.39:49003/'; //运维测试
+// const apiHost = 'http://172.16.12.39:49003/'; //运维测试
 // const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.134:61003/';//运维正式
-// const apiHost = 'http://172.16.12.134:61005/';//运维正式
+const apiHost = 'http://172.16.12.134:61005/'; //运维正式
 // const apiHost = 'http://172.16.12.234:60061/';//模型
 // const API_HOST = 'http://172.16.12.60:6001/';  // 60
 // const apiHost = 'http://172.16.12.152:50089/';
@@ -54,11 +54,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false,
       // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
@@ -211,7 +211,7 @@ export default {
               path: '/SystemDashboard/Monitoring',
               component: './SystemDashboard/Monitoring',
             },
-          ]
+          ],
         },
         {
           path: '/appoperation',
@@ -1559,7 +1559,8 @@ export default {
                 },
               ],
             },
-            { //设备运维过程管理
+            {
+              //设备运维过程管理
               path: '/operaProcess',
               name: 'operaProcess',
               routes: [
@@ -1577,7 +1578,7 @@ export default {
                   name: 'emergency',
                   component: './operations/TaskRecord',
                 },
-              ]
+              ],
             },
             {
               path: '/rolesmanager',
@@ -1892,7 +1893,8 @@ export default {
                   path: '/monitoring/realtimedata/air',
                   component: './monitoring/overView/realtime/Air',
                 },
-                {  // 数据一览 - 实时
+                {
+                  // 数据一览 - 实时
                   name: 'realtimeDataView',
                   path: '/monitoring/mapview/realtimeDataView',
                   component: './monitoring/overView/realtime',
@@ -1945,7 +1947,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                    }`,
+                  }`,
                 },
                 {
                   //视频监控 企业
@@ -2997,8 +2999,7 @@ export default {
                       // 纪律检查
                       name: 'disciplineCheck',
                       path: '/workSupervision/dailyManagement/disciplineCheck/:systemType',
-                      component:
-                        './workSupervision/dailyManagement/disciplineCheck',
+                      component: './workSupervision/dailyManagement/disciplineCheck',
                     },
                   ],
                 },
@@ -3032,7 +3033,6 @@ export default {
                       path: '/completeSetManage/expert/view',
                       component: './completeSetManage/expert/View',
                     },
-
                   ],
                 },
               ],
@@ -3284,7 +3284,8 @@ export default {
                     {
                       // 核查结果跟踪
                       name: 'verifiedTaskTracking',
-                      path: '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskTracking',
+                      path:
+                        '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskTracking',
                       component:
                         './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask',
                     },
@@ -3385,8 +3386,7 @@ export default {
                     {
                       // 异常率诊断分析
                       name: 'AnomalyDetect',
-                      path:
-                        '/AbnormalIdentifyModel/HistoryDataAnalysis/AnomalyRateDetect',
+                      path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AnomalyRateDetect',
                       component:
                         './AbnormalIdentifyModel/HistoryDataAnalysis/AnomalyRateDetect/index.js',
                     },
@@ -3397,6 +3397,14 @@ export default {
                       path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AnalysisExceedTimeLimit',
                       component:
                         './AbnormalIdentifyModel/HistoryDataAnalysis/AnalysisExceedTimeLimit',
+                    },
+                    {
+                      // 排放源综合分析：行业、区域、重点企业
+                      name: 'IndustryRegionEntStatistics',
+                      path:
+                        '/AbnormalIdentifyModel/HistoryDataAnalysis/IndustryRegionEntStatistics/:dataType',
+                      component:
+                        './AbnormalIdentifyModel/HistoryDataAnalysis/IndustryRegionEntStatistics',
                     },
                   ],
                 },
@@ -3830,8 +3838,7 @@ export default {
                     {
                       path: '/ctManage/generalManager/resourceOverview', //资源一览
                       name: 'ResourceOverview',
-                      component:
-                        './ctDebuggAfterSaleServiceManage/generalManager/resourceOverview',
+                      component: './ctDebuggAfterSaleServiceManage/generalManager/resourceOverview',
                     },
                     {
                       // 车辆管理
@@ -3873,7 +3880,6 @@ export default {
                 },
               ],
             },
-
 
             /* 任务详情 */
             {

@@ -435,7 +435,7 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.entCount}</p>
+                <p style={{ color: '#00a3ff', fontSize: 20 }}>{position.entCount}</p>
                 <p style={{ fontSize: 13, color: '#fff' }}>企业数量</p>
               </Col>
               <Col
@@ -458,7 +458,7 @@ class MapContent extends PureComponent {
                 }}
               >
                 <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.normarlCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维正常数量</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>运维正常</p>
               </Col>
               <Col
                 span={10}
@@ -469,7 +469,7 @@ class MapContent extends PureComponent {
                 }}
               >
                 <p style={{ color: '#FFCC00', fontSize: 20 }}>{position.exceptionCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>异常数量</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>运维异常</p>
               </Col>
             </Row>
           </div>
@@ -498,7 +498,7 @@ class MapContent extends PureComponent {
             transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
             padding: '0 10px',
             cursor: 'text',
-            width: 300,
+            width: 280,
             height: 120,
             background: `url(/SystemDashboard/regionTip.png)`,
             backgroundSize: '100% 100%',
@@ -541,6 +541,17 @@ class MapContent extends PureComponent {
               }}
             >
               <Col
+                span={9}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
+              >
+                <p style={{ color: '#00a3ff', fontSize: 20 }}>{position.pointCount}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>排放口数量</p>
+              </Col>
+              <Col
                 span={8}
                 style={{
                   display: 'flex',
@@ -548,22 +559,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FF3737', fontSize: 20 }}>{position.pointCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排放口数量</p>
-              </Col>
-              <Col
-                span={10}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
                 <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.normarlCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维正常数量</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>运维正常</p>
               </Col>
               <Col
-                span={6}
+                span={7}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -571,7 +571,7 @@ class MapContent extends PureComponent {
                 }}
               >
                 <p style={{ color: '#FFCC00', fontSize: 20 }}>{position.exceptionCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>异常数量</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>运维异常</p>
               </Col>
             </Row>
           </div>

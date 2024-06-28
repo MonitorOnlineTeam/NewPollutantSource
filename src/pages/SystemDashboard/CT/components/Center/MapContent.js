@@ -541,7 +541,7 @@ class MapContent extends PureComponent {
                   padding: '0 4px',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.PointCount}</p>
+                <p style={{ color: '#00a3ff', fontSize: 20 }}>{position.PointCount}</p>
                 <p style={{ fontSize: 13, color: '#fff' }}>排放口数量</p>
               </Col>
               <Col
