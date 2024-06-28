@@ -8,6 +8,9 @@ import { Radio, Space, Spin, Select, Col, Row, Tabs, Modal } from 'antd';
 import moment from 'moment';
 import RemoteSupervision from '@/pages/operations/remoteSupervision';
 import SupervisionManager from '@/pages/operations/supervisionManager';
+import CruxParSupervisionRectifica from '@/pages/operations/cruxParSupervisionRectifica';
+import SuperviseRectification from '@/pages/operations/superviseRectification';
+
 
 const legendList = [
   {
@@ -18,12 +21,12 @@ const legendList = [
   {
     name: '整改中',
     color: '#4699FF',
-    value: '2',
+    value: '1',
   },
   {
     name: '核查不规范',
     color: '#FF7E00',
-    value: '1',
+    value: '2',
   },
 
 
@@ -63,6 +66,7 @@ class MapContent extends PureComponent {
       hoverTitleLngLat: {},
       hoverEntTitle: '',
       hoverPointTitle: '',
+      rectificationing:false,
       open: false,
       openData: {},
 
@@ -130,8 +134,7 @@ class MapContent extends PureComponent {
         const { level, pointInfoWindowVisible } = this.state;
         if ((level == 3 || level == 4) && pointInfoWindowVisible === false) {
           const position = marker.De.extData.position;
-          console.log(position)
-          this.setState({ open: true, openData: { EntCode: position.entCode, DGIMN: position.dgimn, time: position.BTime && position.ETime ? [moment(position.BTime), moment(position.ETime)] : [] } })
+          this.setState({ open: true, rectificationing:position.Status==1, openData: { EntCode: position.entCode, DGIMN: position.dgimn, time: position.BTime && position.ETime ? [moment(position.BTime), moment(position.ETime)] : [] } })
         }
       },
     };
@@ -750,12 +753,12 @@ class MapContent extends PureComponent {
               {
                 label: `关键参数核查`,
                 key: '1',
-                children: <RemoteSupervision hideBreadcrumb par={openData} match={{ path: '/operations/remoteSupervisionRecord' }} />,
+                children: this.state.rectificationing? <CruxParSupervisionRectifica hideBreadcrumb par={openData}  /> :  <RemoteSupervision hideBreadcrumb par={openData} match={{ path: '/operations/remoteSupervisionRecord' }} />,
               },
               {
                 label: `系统设施核查`,
                 key: '2',
-                children: <SupervisionManager hideBreadcrumb par={openData} match={{ path: '/operations/siteSupervisionRecod' }} />,
+                children: this.state.rectificationing? <SuperviseRectification hideBreadcrumb par={openData} match={{ path: '/operations/superviseRectification' }}  /> : <SupervisionManager hideBreadcrumb par={openData} match={{ path: '/operations/siteSupervisionRecod' }} />,
               },
             ]}
           />

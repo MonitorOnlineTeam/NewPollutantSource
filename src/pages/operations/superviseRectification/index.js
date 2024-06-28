@@ -117,7 +117,7 @@ const Index = (props) => {
 
 
 
-  const { tableDatas, tableTotal, tableLoading, pointParamesLoading, exportLoading, userLoading, entLoading, } = props;
+  const { tableDatas, tableTotal, tableLoading, pointParamesLoading, exportLoading, userLoading, entLoading,par } = props;
 
 
 
@@ -125,6 +125,18 @@ const Index = (props) => {
 
 
   useEffect(() => {
+    if (par) {
+      form.setFieldsValue({ EntCode:par?.EntCode,time:par?.time })
+      setPointLoading(true)
+      props.getPointByEntCode({ EntCode: par?.EntCode }, (res) => {
+        setPointList(res)
+        setPointLoading(false)
+        form.setFieldsValue({ DGIMN:par?.DGIMN })
+        initData()
+      })
+    } else {
+      initData()
+    }
     initData()
   }, []);
   
@@ -403,7 +415,7 @@ const Index = (props) => {
   return (
     <div className={styles.superviseRectificationSty}>
       <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
-        <Card title={searchComponents()}>
+        <Card bordered={!props.hideBreadcrumb} title={searchComponents()}>
           <SdlTable
             resizable
             loading={tableLoading}

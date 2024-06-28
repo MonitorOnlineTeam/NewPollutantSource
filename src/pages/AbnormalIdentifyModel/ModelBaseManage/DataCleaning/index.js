@@ -323,16 +323,16 @@ const Index = (props) => {
     }
 
     const debounceSearch = debounce((value) => { //防抖 防止多次请求
-        setDischargePortLoading(true)
         getHourDataLogsListRequest(value)
-    }, 1000); 
+    }, 700); 
 
     const [dischargePort, setDischargePort] = useState(0)
     const [dischargePortLoading, setDischargePortLoading] = useState(true)
     const missingDataChange = (value) => {
-        if (!value) {
+        if (!value && value!=0) {
             return
         }
+        setDischargePortLoading(true)
         debounceSearch(value)
 
     }

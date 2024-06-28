@@ -94,12 +94,12 @@ const dvaDispatch = (dispatch) => {
 }
 const Index = (props) => {
 
-  const { match: { path } } = props;
+  // const { match: { path } } = props;
 
   const [form] = Form.useForm();
 
 
-  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading,regQueryPar, } = props;
+  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading,regQueryPar,par } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -107,7 +107,18 @@ const Index = (props) => {
 
 
   useEffect(() => {
-    onFinish(pageIndex,pageSize)
+    if (par) {
+      form.setFieldsValue({ entCode:par?.EntCode,time:par?.time })
+      setPointLoading(true)
+      props.getPointByEntCode({ entCode: par?.EntCode }, (res) => {
+        setPointList(res)
+        setPointLoading(false)
+        form.setFieldsValue({ DGIMN:par?.DGIMN })
+        onFinish(pageIndex, pageSize)
+      })
+    } else {
+      onFinish(pageIndex, pageSize)
+    }
   }, []);
 
 
@@ -362,8 +373,8 @@ const Index = (props) => {
 
   return (
     <div className={styles.supervisionManagerSty}>
-      <BreadcrumbWrapper >
-        <Card title={searchComponents()}>
+      <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
+        <Card bordered={!props.hideBreadcrumb} title={searchComponents()}>
           <SdlTable
             resizable
             loading={tableLoading}

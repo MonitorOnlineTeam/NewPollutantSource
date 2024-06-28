@@ -84,8 +84,8 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
     false,
   workAlarmPushList: wordSupervision.workAlarmPushList,
   workAlarmTotal: wordSupervision.workAlarmTotal,
-  contractLoading: wordSupervision.contractLoading  || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false, //旧
-  // contractLoading: wordSupervision.contractLoading,
+  // contractLoading: wordSupervision.contractLoading  || loading.effects['wordSupervision/DelAllWorkbenchMsg'] || false, //旧
+  contractLoading: wordSupervision.contractLoading,
   contractList: wordSupervision.contractList,
   standgaswaringList: wordSupervision.standgaswaringList,
   standgaswaringLoading: wordSupervision.standgaswaringLoading,

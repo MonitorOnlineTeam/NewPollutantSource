@@ -239,14 +239,14 @@ const Index = (props) => {
                 </Card>
                 <Modal
                     visible={editVisible}
-                    title={<div style={{marginLeft:320}}>{editTitle}</div>}
+                    title={editTitle}
                     onCancel={() => { setEditVisible(false)}}
                     wrapClassName="spreadOverModal"
                     mask={false}
                     destroyOnClose
                     footer={null}
                 >
-                  <ModelMatch  DGIMN={DGIMN} saveCallBack={saveCallBack} zIndex={1002}/>
+                  <ModelMatch isModal DGIMN={DGIMN} saveCallBack={saveCallBack} zIndex={1002}/>
                 </Modal>
             </BreadcrumbWrapper>
         </div >

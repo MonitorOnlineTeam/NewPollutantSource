@@ -1380,12 +1380,12 @@ export const API = {
 
   /*** 工作台 ***/
   CtWorkStageApi: {
-    GetWorkbenchMsg: before + '/OperationWorkbenchApi/GetProjectRemindList',//旧 合同到期
-    DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//旧 删除工作台合同到期
-    DelAllWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//旧 删除所有合同到期
-    // GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg', //获取工作台项目执行、合同到期等
-    // DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg', //删除工作台合同到期等
-    // DelAllWorkbenchMsg: before + '/CTBaseDataApi/DelAllWorkbenchMsg', //删除所有工作台合同到期等
+    // GetWorkbenchMsg: before + '/OperationWorkbenchApi/GetProjectRemindList',//旧 合同到期
+    // DelWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateProjectPushStatus',//旧 删除工作台合同到期
+    // DelAllWorkbenchMsg: before + '/OperationWorkbenchApi/UpdateAllProjectPushStatus',//旧 删除所有合同到期
+    GetWorkbenchMsg: before + '/CTBaseDataApi/GetWorkbenchMsg', //获取工作台项目执行、合同到期等
+    DelWorkbenchMsg: before + '/CTBaseDataApi/DelWorkbenchMsg', //删除工作台合同到期等
+    DelAllWorkbenchMsg: before + '/CTBaseDataApi/DelAllWorkbenchMsg', //删除所有工作台合同到期等
     UpdateImplementationStatus: before + '/CTBaseDataApi/UpdateImplementationStatus', //解决项目执行遗留问题
   },
 

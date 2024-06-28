@@ -5,6 +5,8 @@ import styles from '@/pages/SystemDashboard/styles.less';
 import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import SupervisionAnalySumm from '@/pages/operations/supervisionAnalySumm';
+import RemoteSupervision from '@/pages/operations/remoteSupervision';
+
 import moment from 'moment';
 import Modal from 'antd/lib/modal/Modal';
 
@@ -179,9 +181,10 @@ const Calibration = props => {
         setOpen(false);
       }}
     >
-      <SupervisionAnalySumm
-        tabType={2}
-        time={time}
+      <RemoteSupervision
+       hideBreadcrumb 
+       par={{time:time,RegionCode:regionCode || undefined, EntCode:entCode || undefined,}} 
+       match={{ path: '/operations/remoteSupervisionRecord' }}
       />
     </Modal>
     </HomeCard>

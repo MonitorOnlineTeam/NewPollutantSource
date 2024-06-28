@@ -28,8 +28,8 @@ const Index = props => {
   };
 
   return (
-    props.DGIMN ?
-      <PageContent saveCallBack={props.saveCallBack} DGIMN={props.DGIMN} />
+    props.isModal ?
+      <PageContent saveCallBack={props.saveCallBack} isModal={props.isModal} DGIMN={props.DGIMN} />
       :
       <>
         <NavigationTree
@@ -51,7 +51,7 @@ const Index = props => {
           zIndex={props.zIndex}
         />
         <div id="ModelMatch">
-          <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>{DGIMN && <PageContent DGIMN={DGIMN} />}</BreadcrumbWrapper>
+          <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>{DGIMN && <PageContent  DGIMN={DGIMN} />}</BreadcrumbWrapper>
         </div>
       </>
   );

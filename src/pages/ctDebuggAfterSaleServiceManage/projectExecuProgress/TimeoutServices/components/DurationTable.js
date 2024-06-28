@@ -18,6 +18,7 @@ import styles from '../index.less';
 import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const dvaPropsData = ({ loading, timeoutServices }) => ({
   timeoutServicesData: timeoutServices.timeoutServicesData,
@@ -75,7 +76,7 @@ const DurationTable = props => {
     dispatch({
       type: 'timeoutServices/getLargeRegion',
       payload: {},
-      callback: res => {},
+      callback: res => { },
     });
   };
 
@@ -84,7 +85,7 @@ const DurationTable = props => {
     dispatch({
       type: 'timeoutServices/GetReasonList',
       payload: {},
-      callback: res => {},
+      callback: res => { },
     });
   };
 
@@ -117,6 +118,16 @@ const DurationTable = props => {
     setIsModalOpen(false);
   };
 
+  const OverTimeComponents = ({ text }) => {
+    return <a
+      onClick={() => {
+        handleTableChange(1, 20);
+        getLargeRegion();
+        GetReasonList();
+        setIsModalOpen(true);
+      }}>{text}</a>
+  }
+
   //
   const getColumns = () => {
     let columnList = ColumnList.map(item => {
@@ -129,6 +140,9 @@ const DurationTable = props => {
             key: `Times${item.ID}`,
             width: 120,
             align: 'center',
+            render: (text) => {
+              return <OverTimeComponents text={text} />
+            }
           },
           {
             title: '占比',
@@ -190,6 +204,9 @@ const DurationTable = props => {
             width: 120,
             align: 'center',
             fixed: 'left',
+            render: (text) => {
+              return <OverTimeComponents text={text} />
+            }
           },
           {
             title: '占比',
@@ -286,7 +303,7 @@ const DurationTable = props => {
           >
             导出
           </Button>
-          <Button
+          {/* <Button
             type="primary"
             onClick={() => {
               handleTableChange(1, 20);
@@ -296,7 +313,7 @@ const DurationTable = props => {
             }}
           >
             查看基础数据
-          </Button>
+          </Button> */}
         </Space>
       }
       size="small"
@@ -327,18 +344,31 @@ const DurationTable = props => {
         <Form
           id="searchForm"
           form={form}
-          layout="inline"
           initialValues={{}}
           autoComplete="off"
           style={{ marginTop: 10, marginBottom: 10 }}
+          labelCol={{flex:'97px'}}
         >
+          <Row>
+          <Space>
+          <Form.Item name="projectCode" label="项目编号">
+              <Input placeholder="请输入" allowClear  style={{ width: 200 }} />
+            </Form.Item>
+            <Form.Item name="projectName" label="项目名称">
+              <Input placeholder="请输入" allowClear  style={{ width: 200 }}/>
+            </Form.Item>
+            <Form.Item name="CustomEnt" label="最终用户">
+              <Input placeholder="请输入" allowClear  style={{ width: 200 }}/>
+            </Form.Item>
+            </Space>
+          </Row>
           <Space>
             <Form.Item name="serviceAreaCode" label="所属大区">
               <Select
                 showSearch
                 allowClear
                 placeholder="请选择所属大区"
-                style={{ width: 160 }}
+                style={{ width: 200 }}
                 filterOption={(input, option) =>
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
@@ -352,17 +382,12 @@ const DurationTable = props => {
                 })}
               </Select>
             </Form.Item>
-            <Form.Item name="projectCode" label="项目编号">
-              <Input placeholder="请输入" allowClear />
-            </Form.Item>
-            <Form.Item name="projectName" label="项目名称">
-              <Input placeholder="请输入" allowClear />
-            </Form.Item>
+
             <Form.Item name="questionID" label="超时服务原因">
               <Select
                 allowClear
                 placeholder="请选择超时服务原因"
-                style={{ width: 180 }}
+                style={{ width: 200 }}
                 showSearch
                 filterOption={(input, option) =>
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -376,6 +401,9 @@ const DurationTable = props => {
                   );
                 })}
               </Select>
+            </Form.Item>
+            <Form.Item name="time" label="离开现场时间">
+              <RangePicker_  style={{ width: 200 }} format="YYYY-MM-DD" />
             </Form.Item>
             <Form.Item>
               <Space>
@@ -406,7 +434,7 @@ const DurationTable = props => {
           loading={basicsLoading}
           dataSource={basicsDataSource}
           columns={getBasicsColumns()}
-          scroll={{x:710}}
+          scroll={{ x: 710 }}
           align="center"
           onChange={onTableChange}
           pagination={{
