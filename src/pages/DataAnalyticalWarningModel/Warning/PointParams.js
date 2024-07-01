@@ -163,6 +163,7 @@ const PointParams = props => {
         propsParams={{
           // ModelFlag: 'ModelFlag',
           // industryTypeCode: '1',
+          IsRela: 1, // 只查询模型关联的排口
           outputType: 0,
           StopPointFlag: true,
         }}

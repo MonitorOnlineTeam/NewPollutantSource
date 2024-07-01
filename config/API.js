@@ -820,6 +820,17 @@ export const API = {
     GetOverDataAnalysis: before + '/WarningV2/GetOverDataAnalysis',
     // 排放源综合分析：行业、区域、重点企业
     GetExcepDataAnalysis: before + '/WarningV2/GetExcepDataAnalysis',
+    // 获取报告列表
+    GetRegionReportList: before + '/WarningV2/GetRegionReportList',
+    // 区域报告导出
+    ExportModelRegionReport: before + '/WarningV2/ExportModelRegionReport',
+    // 删除报告
+    DeleteModelReport: before + '/WarningV2/DeleteModelReport',
+    // 上传报告
+    UploadModelReport: before + '/WarningV2/UploadModelReport',
+
+
+
     /*实时数据异常识别及管理*/
     //异常线索清单
     //线索分析
