@@ -69,7 +69,7 @@ const dvaPropsData = ({ loading, dataModel }) => ({
 
 const PointParams = props => {
   const [form] = Form.useForm();
-  const { dispatch, loadLoading, saveLoading } = props;
+  const { dispatch, loadLoading, saveLoading, location } = props;
   const [DGIMN, setDGIMN] = useState();
   const [visible, setVisible] = useState(false);
   const [images, setImages] = useState([]);
@@ -87,6 +87,7 @@ const PointParams = props => {
         type: 'dataModel/GetPointParamsRange',
         payload: {
           DGIMN,
+          version: location.query.v,
         },
         callback: res => {
           let range = {};
@@ -144,6 +145,7 @@ const PointParams = props => {
       dgimn: DGIMN,
       range,
       paramsObj,
+      version: location.query.v,
     };
     console.log('body', body);
     // return;
@@ -155,7 +157,6 @@ const PointParams = props => {
       },
     });
   };
-
   return (
     <>
       <NavigationTree
@@ -387,13 +388,16 @@ const PointParams = props => {
             </Form>
           </div>
         </BreadcrumbWrapper>
-        <PollutantImages
-          title={currentPoint}
-          visible={visible}
-          onCancel={() => setVisible(false)}
-          // images={images}
-          DGIMN={DGIMN}
-        />
+        {visible && (
+          <PollutantImages
+            title={currentPoint}
+            visible={visible}
+            onCancel={() => setVisible(false)}
+            // images={images}
+            DGIMN={DGIMN}
+            location={location}
+          />
+        )}
       </div>
     </>
   );

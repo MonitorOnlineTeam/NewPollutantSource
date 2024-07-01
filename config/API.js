@@ -828,6 +828,10 @@ export const API = {
     DeleteModelReport: before + '/WarningV2/DeleteModelReport',
     // 上传报告
     UploadModelReport: before + '/WarningV2/UploadModelReport',
+    // 保存点位参数配置
+    SavePointParamsRange: before + '/WarningV2/SavePointParamsRange',
+    // 获取点位参数配置
+    GetPointParamsRange: before + '/WarningV2/GetPointParamsRange',
 
 
 

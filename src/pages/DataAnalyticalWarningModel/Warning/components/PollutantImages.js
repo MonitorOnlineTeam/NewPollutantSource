@@ -40,7 +40,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 });
 
 const Index = props => {
-  const { dispatch, title, DGIMN, visible, onCancel, height, loading, reloadLoading } = props;
+  const { dispatch, title, DGIMN, visible, onCancel, height, loading, reloadLoading, location } = props;
   const [topImages, setTopImages] = useState([]);
   const [leftImages, setLeftImages] = useState([]);
   const [rightImages, setRightImages] = useState([]);
@@ -114,6 +114,7 @@ const Index = props => {
         type: 'dataModel/GetPointParamsRange',
         payload: {
           DGIMN,
+          version: location.query.v,
         },
         callback: res => {
           setImages(res.image);
