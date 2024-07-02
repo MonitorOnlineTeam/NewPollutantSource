@@ -703,6 +703,7 @@ const Index = (props) => {
           <Button onClick={() => { form.resetFields(); getData() }} >
             重置
          </Button>
+         <span className='red'>注：服务次数等于服务派工次数</span>
         </Space>
       </Form.Item>
     </Form>
@@ -731,7 +732,7 @@ const Index = (props) => {
           <Col span={9}>
             <Card title={`各大区${title[path]}服务次数、工作时长`}>
               {tableLoading[path] ?
-                <Skeleton active paragraph={{ rows: 8 }} />
+                <Skeleton active paragraph={{ rows: 9 }} />
                 :
                 echartsComponents
               }
@@ -740,7 +741,7 @@ const Index = (props) => {
           <Col span={8} style={{ padding: '0 12px' }}>
             <Card title={`服务次数占比`}>
               {tableLoading[path] ?
-                <Skeleton active paragraph={{ rows: 8 }} />
+                <Skeleton active paragraph={{ rows: 9 }} />
                 : <ReactEcharts
                   option={serviceFrequencyRatio()}
                   style={{ height: 'calc(50vh - 170px)' }}
@@ -752,7 +753,7 @@ const Index = (props) => {
           <Col span={7}>
             <Card title={`工作时长占比`}>
               {tableLoading[path] ?
-                <Skeleton active paragraph={{ rows: 8 }} />
+                <Skeleton active paragraph={{ rows: 9 }} />
                 : workHourDataRatio?.[0]?
                 <Row>
                   <Col span={14}>

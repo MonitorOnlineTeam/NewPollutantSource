@@ -119,20 +119,22 @@ const Index = (props) => {
             ellipsis: true,
             render: (text, record,index) => {
                 return (record.TaskCode == 6 ?
-                    <a onClick={() => { setStartExecuVisible(true); setStartExecuTitle(`${record.ProjectName} - 开始执行（接入小时数据）`) }}>开始执行</a>
+                    <a onClick={() => { setStartExecuVisible(true); setStartExecuTitle(`${record.ProjectName}`); /*setStartExecuTitle(`${record.ProjectName} - 开始执行（接入小时数据）`)*/setStartConfirmVisible(false) }}>开始执行</a>
                     :
                     <Popconfirm visible={startConfirmVisible && index == startConfirmIndex} placement="left" title={'确定要开始执行？'}   
                       okButtonProps={{
                         loading: startExecuLoading[record.TaskCode],
                       }} 
+                      onCancel={()=>{setStartConfirmVisible(false)}}
                       onConfirm={() => startExecuConfirm(1,record)} okText="开始执行" >
-                        <a onClick={() => { setStartConfirmVisible(true);setStartConfirmIndex(index)}}>开始执行</a>
+                        <a onClick={() => { setStartConfirmVisible(true); setStartConfirmIndex(index);}}>开始执行</a>
                     </Popconfirm>
                 );
 
             }
         },
     ];
+  
 
 
     const [row, setRow] = useState({})
@@ -141,6 +143,7 @@ const Index = (props) => {
         setExecutionMethodVisible(true)
         setExecutionMethodTitle(record.ProjectName)
         form.setFieldsValue({ ImplementType: record.ImplementType })
+        setStartConfirmVisible(false)
     }
 
     const [startExecuVisible, setStartExecuVisible] = useState(false)
@@ -285,9 +288,9 @@ const Index = (props) => {
                                 style={{ width: '100%' }}
                             />
                         </Form.Item>
-                        <Form.Item label="首次执行时间段" name="time">
+                        {row.TaskCode == 6 && <Form.Item label="首次执行时间段" name="time">
                             <RangePicker_ format="YYYY-MM-DD" style={{ width: '100%' }} />
-                        </Form.Item>
+                        </Form.Item>}
                     </Form>
                 </Modal>
                 <Modal

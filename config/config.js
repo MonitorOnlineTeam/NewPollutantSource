@@ -7,7 +7,7 @@ import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 import path from 'path';
-const apiHost = 'http://172.16.12.39:49003/'; //运维测试
+// const apiHost = 'http://172.16.12.39:49003/'; //运维测试
 // const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.134:61003/';//运维正式
 // const apiHost = 'http://172.16.12.134:61005/';//运维正式
@@ -18,7 +18,7 @@ const apiHost = 'http://172.16.12.39:49003/'; //运维测试
 // const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.9.33:8800/'//运维 py 本地
 // const apiHost = 'http://172.16.12.234:61010/' //宝武集团 测试
-// const apiHost = 'http://172.16.12.91:61007/' //宝武集团 正式
+const apiHost = 'http://172.16.12.91:61007/' //宝武集团 正式
 // const apiHost = 'http://172.16.12.36:63003/';
 // const apiHost = 'http://172.16.12.135:50210/';
 // const apiHost = 'http://172.16.12.57:61000/';

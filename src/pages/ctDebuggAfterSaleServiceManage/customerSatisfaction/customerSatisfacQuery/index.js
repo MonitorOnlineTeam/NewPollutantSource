@@ -160,6 +160,20 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '合同类型',
+      dataIndex: 'ProjectType',
+      key: 'ProjectType',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '最终用户',
+      dataIndex: 'CustomEnt',
+      key: 'CustomEnt',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '大区名称',
       dataIndex: 'ServiceAreaName',
       key: 'ServiceAreaName',
@@ -590,6 +604,11 @@ const Index = (props) => {
         <Col span={8} >
           <Form.Item name='projectCode' label='项目编号' >
             <Input placeholder="合同编号、立项号" allowClear />
+          </Form.Item>
+        </Col>
+        <Col span={8} >
+          <Form.Item name='customEnt' label='最终用户' >
+            <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
         <Col span={8} >

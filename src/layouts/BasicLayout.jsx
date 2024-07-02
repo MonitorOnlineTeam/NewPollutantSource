@@ -453,7 +453,7 @@ class BasicLayout extends Component {
           rightContentRender={rightProps => <RightContent {...rightProps} />}
           {...this.props}
           {..._settings}
-          // title={configInfo && configInfo.SystemName}
+          title={configInfo && configInfo.SystemName}
           // menuHeaderRender={() => <a href={currentMenu?.[0]?.path}> <h1>{configInfo && configInfo.SystemName}</h1></a>} //运维
 
 

@@ -203,6 +203,9 @@ const Index = (props) => {
                 callback: (isSuccess, id) => {
                     setGenerateSubmitPlanLoading(false)
                     if (isSuccess) {
+                        if(type == 1){
+                            setIsSave(true)
+                        }
                         form2.resetFields()
                         setCheckAll(false)
                         setIndeterminate(false)

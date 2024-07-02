@@ -311,7 +311,6 @@ const Index = props => {
 
   const onFinish = async (PageIndex, PageSize, queryPar) => {
     //查询
-    console.log('defaultStatus', defaultStatus);
     try {
       const values = await form.validateFields();
       const par = queryPar
@@ -377,9 +376,10 @@ const Index = props => {
           setPageSize(20);
           onFinish(1, 20);
         }}
-        // initialValues={{
-        //   time: props.defaultTime || [moment().startOf('month'), moment()],
-        // }}
+        initialValues={{
+          // time: props.defaultTime || [moment().startOf('month'), moment()],
+          ...props.queryData
+        }}
       >
         <Row align="middle">
           <Col span={8}>
@@ -461,6 +461,7 @@ const Index = props => {
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item name='systemModelId' hidden></Form.Item>
       </Form>
     );
   };
@@ -474,7 +475,8 @@ const Index = props => {
     setExamineTitle(`审核安装照片（${row.EntName} - ${row.PointName} - ${row.SystemModelName} ）`);
     setExamineData(row);
   };
-
+  
+  const { modalWrapClassName } = props;
   return (
     <div className={styles.installEquipmentSty}>
       <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
@@ -486,6 +488,7 @@ const Index = props => {
             bordered
             dataSource={tableDatas}
             columns={columns}
+            scroll={{y: modalWrapClassName && 'calc(100vh - 282px)'  }}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,
