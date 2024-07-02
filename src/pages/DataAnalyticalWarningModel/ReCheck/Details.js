@@ -242,7 +242,7 @@ const ReCheckDetails = props => {
             case '2':
               return <Badge status="warning" text="有异常" />;
             case '1':
-              return <Badge status="error" text="系统误报" />;
+              return <Badge status="error" text="优化算法" />;
           }
         },
       },
@@ -315,7 +315,7 @@ const ReCheckDetails = props => {
               </Tag>
             </Descriptions.Item>
             <Descriptions.Item label="核实结果">
-              {warningInfo.CheckedResult === '1' && <Tag color="error">系统误报</Tag>}
+              {warningInfo.CheckedResult === '1' && <Tag color="error">优化算法</Tag>}
               {warningInfo.CheckedResult === '2' && <Tag color="warning">有异常</Tag>}
               {warningInfo.CheckedResult === '3' && <Tag>未核实</Tag>}
             </Descriptions.Item>

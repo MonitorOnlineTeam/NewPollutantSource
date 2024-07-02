@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-06-04 16:37:34
+ * @Last Modified time: 2024-07-02 12:22:50
  * @Description：报警核实详情
  */
 
@@ -659,7 +659,7 @@ const WarningVerify = props => {
               </Tag>
             </Descriptions.Item>
             <Descriptions.Item label="核实结果">
-              {warningInfo.CheckedResultCode === '1' && <Tag color="error">系统误报</Tag>}
+              {warningInfo.CheckedResultCode === '1' && <Tag color="error">优化算法</Tag>}
               {warningInfo.CheckedResultCode === '2' && <Tag color="warning">有异常</Tag>}
               {warningInfo.CheckedResultCode === '3' && <Tag>未核实</Tag>}
             </Descriptions.Item>

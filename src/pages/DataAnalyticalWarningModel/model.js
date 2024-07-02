@@ -2,9 +2,10 @@ import * as services from './services';
 import Model from '@/utils/model';
 import { message } from 'antd';
 import moment from 'moment';
-import { downloadFile } from '@/utils/utils';
+import { downloadFile, requestPost } from '@/utils/utils';
 import { ModelNumberIdsDatas } from './CONST';
 import { getListPager } from '@/services/autoformapi';
+import { API } from '@config/API';
 
 function initWarningForm() {
   let warningForm = {};
@@ -539,16 +540,26 @@ export default Model.extend({
     },
     // 获取点位参数配置
     *GetPointParamsRange({ payload, callback }, { call, select, update }) {
-      const result = yield call(services.GetPointParamsRange, payload);
+      debugger
+      let url =
+        payload.version === '2'
+          ? API.AbnormalIdentifyModel.GetPointParamsRange
+          : '/newApi/rest/PollutantSourceApi/Warning/GetPointParamsRange';
+
+      // const result = yield call(services.GetPointParamsRange, payload);
+
+      const result = yield call(requestPost, url, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
-      } else {
-        // message.error(result.Message);
       }
     },
     // 保存点位参数配置
     *SavePointParamsRange({ payload, callback }, { call, select, update }) {
-      const result = yield call(services.SavePointParamsRange, payload);
+      let url =
+        payload.version === '2'
+          ? API.AbnormalIdentifyModel.SavePointParamsRange
+          : '/newApi/rest/PollutantSourceApi/Warning/SavePointParamsRange';
+      const result = yield call(requestPost, url, payload);
       if (result.IsSuccess) {
         message.success('操作成功！');
         callback && callback();

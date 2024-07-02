@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-21 09:06:17
+ * @Last Modified time: 2024-07-02 12:22:54
  * @Description：报警记录
  */
 
@@ -232,7 +232,7 @@ const WarningRecord = props => {
             case '2':
               return <Badge status="warning" text="有异常" />;
             case '1':
-              return <Badge status="error" text="系统误报" />;
+              return <Badge status="error" text="优化算法" />;
           }
         },
       },
@@ -495,7 +495,7 @@ const WarningRecord = props => {
           <Form.Item label="核实结果" name="checkedResultCode">
             <Select allowClear style={{ width: 120 }} placeholder="请选择核实结果">
               <Option value="2">有异常</Option>
-              <Option value="1">系统误报</Option>
+              <Option value="1">优化算法</Option>
               <Option value="3">未核实</Option>
             </Select>
           </Form.Item>

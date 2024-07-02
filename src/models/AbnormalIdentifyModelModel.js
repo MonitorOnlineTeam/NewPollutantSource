@@ -839,5 +839,49 @@ export default Model.extend({
         callback && callback(result.Datas);
       }
     },
+    // 获取报告列表
+    *GetRegionReportList({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.AbnormalIdentifyModel.GetRegionReportList}`,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 生成报告
+    *createReport({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.AbnormalIdentifyModel.ExportModelRegionReport}`,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 上传报告
+    *uploadReport({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.AbnormalIdentifyModel.UploadModelReport}`,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 删除报告
+    *DeleteModelReport({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.AbnormalIdentifyModel.DeleteModelReport}?ReportGuid=${payload.ReportGuid}`,
+        {},
+      );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
   },
 });

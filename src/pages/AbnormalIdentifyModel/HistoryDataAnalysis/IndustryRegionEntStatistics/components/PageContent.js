@@ -208,9 +208,9 @@ const PageContent = props => {
         key: 'ExcepNums',
         align: 'center',
         sorter: (a, b) => a.ExcepNums - b.ExcepNums,
-        render: text => {
-          return text + '%';
-        },
+        // render: text => {
+        //   return text + '次'
+        // },
       },
       {
         title: '异常小时数',
