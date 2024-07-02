@@ -13,6 +13,7 @@ import {
   Row,
   Modal,
   Input,
+  Tag,
 } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import { formatPollutantPopover } from '@/utils/utils';
@@ -23,6 +24,8 @@ import { RightOutlined } from '@ant-design/icons';
 import { getColorByName, ModalTypeNameConversion } from '../../CONST';
 import TableText from '@/components/TableText';
 import moment from 'moment';
+
+const { CheckableTag } = Tag;
 
 const COLOR = '#e6b8b7';
 const ModelWCFlagEnum = {
@@ -67,9 +70,38 @@ const WarningDataAndChart = props => {
   const [updateLoading, setUpdateLoading] = useState(false);
   const [dataZoomPosition, setDataZoomPosition] = useState([]);
   const [echartRef, setEchartRef] = useState();
+  const [currentLegend, setCurrentLegend] = useState([]);
 
   const RWGYText = ModalTypeNameConversion('人为干预');
   const GZText = ModalTypeNameConversion('故障原因');
+
+  const legendList = [
+    {
+      text: RWGYText,
+      value: 'ren',
+      color: '#722ed1',
+    },
+    {
+      text: '故障',
+      value: 'gu',
+      color: '#ff4d4f',
+    },
+    {
+      text: '运行管理异常',
+      value: 'run',
+      color: '#faad14',
+    },
+    {
+      text: '数据现象异常',
+      value: 'xian',
+      color: '#797979',
+    },
+    {
+      text: '数据上传标记',
+      value: 'upload',
+      color: '#1890ff',
+    },
+  ];
 
   const {
     dispatch,
@@ -549,7 +581,6 @@ const WarningDataAndChart = props => {
           color: getColorByName[selectedNames[index]],
         },
         symbol: (value, params) => {
-          console.log('params', params);
           // 污染物flag非正常，显示三角
           let { dataIndex, seriesId } = params;
           let currentData = allTypeDataList[dataIndex];
@@ -801,6 +832,7 @@ const WarningDataAndChart = props => {
               xAxis: item.MonitorTime,
               symbol: 'circle',
               symbolSize: 6,
+              type: 'run',
               itemStyle: {
                 color: '#faad14',
               },
@@ -821,6 +853,7 @@ const WarningDataAndChart = props => {
               xAxis: item.MonitorTime,
               symbol: 'circle',
               symbolSize: 6,
+              type: 'gu',
               itemStyle: {
                 color: '#ff4d4f',
               },
@@ -841,6 +874,7 @@ const WarningDataAndChart = props => {
               xAxis: item.MonitorTime,
               symbol: 'circle',
               symbolSize: 6,
+              type: 'ren',
               itemStyle: {
                 color: '#722ed1',
               },
@@ -861,6 +895,7 @@ const WarningDataAndChart = props => {
               xAxis: item.MonitorTime,
               symbol: 'circle',
               symbolSize: 6,
+              type: 'xian',
               itemStyle: {
                 // color: '#eb2f96',
                 color: '#797979',
@@ -882,6 +917,7 @@ const WarningDataAndChart = props => {
               xAxis: item.MonitorTime,
               symbol: 'circle',
               symbolSize: 6,
+              type: 'upload',
               itemStyle: {
                 color: '#1890ff',
               },
@@ -1151,6 +1187,7 @@ const WarningDataAndChart = props => {
         xAxisIndex: 0,
       };
     }
+    console.log('option', option);
     return option;
   };
 
@@ -1226,7 +1263,6 @@ const WarningDataAndChart = props => {
   };
 
   const onBrushEnd = params => {
-    // console.log('params', params);
     let { areas } = params;
     if (areas.length) {
       let range = areas[0].coordRange;
@@ -1355,6 +1391,31 @@ const WarningDataAndChart = props => {
     );
   }, [allTypeDataList, legendSelected]);
   console.log('legendSelected', legendSelected);
+
+  // 图例点击
+  const onClickLegend = (data, checked) => {
+    let tag = data.value;
+    let selectedTags = [...currentLegend];
+    const nextSelectedTags = checked ? [...selectedTags, tag] : selectedTags.filter(t => t !== tag);
+
+    let echarts_instance = echartRef.getEchartsInstance();
+    let option = echarts_instance.getOption();
+    let markIndex = option.series.findIndex(item => item.markPoint);
+
+    option.series[markIndex].markPoint.data.forEach(item => {
+      if (!nextSelectedTags.length || nextSelectedTags.includes(item.type)) {
+        item.itemStyle.opacity = 1;
+      } else {
+        item.itemStyle.opacity = 0;
+      }
+    });
+
+    setCurrentLegend(nextSelectedTags);
+    echarts_instance.setOption({
+      ...option,
+    });
+  };
+
   return (
     <>
       {describe && (
@@ -1512,32 +1573,34 @@ const WarningDataAndChart = props => {
 
           <Row justify="center" style={{ width: '100%', marginTop: -10 }}>
             <Space size={20}>
-              <Badge
-                // status="processing"
-                color="#722ed1"
-                text={RWGYText}
-              />
-              <Badge
-                // status="processing"
-                color="#ff4d4f"
-                text="故障"
-              />
-              <Badge
-                // status="processing"
-                color="#faad14"
-                text="运行管理异常"
-              />
-              <Badge
-                // status="processing"
-                // color="#eb2f96"
-                color="#797979"
-                text="数据现象异常"
-              />
-              <Badge
-                // status="processing"
-                color="#1890ff"
-                text="数据上传标记"
-              />
+              {legendList.map(item => {
+                return (
+                  <CheckableTag
+                    style={{
+                      backgroundColor: 'transparent',
+                      padding: '2px 10px',
+                      cursor: 'pointer',
+                      borderRadius: 0,
+                      marginRight: 0,
+                      border: currentLegend.includes(item.value) ? `1px solid ${item.color}` : '',
+                    }}
+                    key={item.value}
+                    checked={currentLegend.indexOf(item.value) > -1}
+                    onChange={checked => onClickLegend(item, checked)}
+                  >
+                    <Badge
+                      color={item.color}
+                      text={
+                        <span
+                          style={{ color: currentLegend.includes(item.value) ? item.color : '' }}
+                        >
+                          {item.text}
+                        </span>
+                      }
+                    />
+                  </CheckableTag>
+                );
+              })}
             </Space>
           </Row>
         </>
