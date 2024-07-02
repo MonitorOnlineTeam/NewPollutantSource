@@ -136,7 +136,7 @@ const TimelyPassRate = props => {
             barWidth: 40,
             data: [data],
             itemStyle: {
-              color: '#rgba(66, 66, 66, .3)',
+              color: 'rgba(66, 66, 66, .3)',
             },
           },
           {

@@ -15,6 +15,7 @@ export default Model.extend({
     tableTotal:0,
     queryPar:{},
     serviceDispatchTypeAndRecordData:[],
+    commitDate:'',
   },
   effects: {
     *getServiceDispatch({ payload,callback }, { call, put, update }) { //派单信息
@@ -24,6 +25,7 @@ export default Model.extend({
           queryPar:payload,
           tableDatas:result.Datas,
           tableTotal:result.Total,
+          commitDate:result?.Datas?.[0]?.CommitDate
         })
         callback&&callback(result.Datas)
       }else{

@@ -126,7 +126,6 @@ const Index = (props) => {
       const itemStatusData = data.map(item => item.ItemStatus)
       const itemStatusFlag = itemStatusData?.toString()?.includes('1') ? true : false; //判断是否全部为空
       const showData = data.filter(item => item.ItemStatus == 1)
-      console.log(props.tabKey,11111111)
       setTabKey(itemStatusFlag ? props.tabKey? props.tabKey : showData?.[0]?.ItemId : '')
       setFillContentTab(itemStatusFlag ? showData : [])
 

@@ -52,6 +52,7 @@ const TimelinessQualityReport = props => {
           let tableList = res.map((item, index) => {
             let dataItem = {
               LargeRegion: item.LargeRegion,
+              LargeRegionCode: item.LargeRegionCode,
             };
             for (const key in item) {
               dataItem[key + 'ReportQualifiedRate'] = item[key]['ReportQualifiedRate'];
