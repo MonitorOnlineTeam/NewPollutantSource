@@ -23,6 +23,7 @@
   min-width: 1500px;
   background: url(/dataModal/statistics/BG.png) no-repeat;
   background-size: cover;
+  overflow: auto;
 
   /*滚动条轨道颜色*/
   @scrollbar-track-color: #021e39;
@@ -126,6 +127,7 @@
     font-weight: bold;
     color: #ffffff;
     line-height: 60px;
+    position: relative;
   }
 
   main {
@@ -334,8 +336,22 @@
 
     // 核实信息
     .checkInfoWrapper {
+      .tableWrapper {
+        height: calc(100% - 42px);
+        & > div {
+          height: 100%;
+        }
+      }
+
       :global {
+        .ant-table-wrapper {
+          height: 100%;
+        }
+        .ant-table-container {
+          height: 100%;
+        }
         .ant-table {
+          height: 100%;
           background: rgba(29, 123, 158, 0.1);
         }
 

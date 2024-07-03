@@ -577,7 +577,51 @@ const Index = props => {
   // console.log('_SELF.queryDate2',  moment(_SELF.queryDate[1]).format('YYYY-MM-DD 23:59:59'))
   return (
     <div className={styles.ScreenWrapper}>
-      <header className={styles.header}>异常数据智能精准识别系统</header>
+      <header className={styles.header}>
+        异常数据智能精准识别系统
+        <div className={styles.SelectWrapper} style={{ top: 26 }}>
+          <Select
+            value={queryDateLabel}
+            placeholder="请选择时间"
+            style={{
+              width: 160,
+            }}
+            onChange={(value, option) => {
+              let date = option['data-date'];
+              setQueryDate(date);
+              setQueryDateLabel(value);
+            }}
+            popupClassName={styles.popupStyle}
+          >
+            {DateOptions.map((item, index) => {
+              return (
+                <Option key={index} value={item.label} data-date={item.value}>
+                  {item.label}
+                </Option>
+              );
+            })}
+          </Select>
+        </div>
+        <Tooltip title="返回">
+          <RollbackOutlined
+            style={{
+              position: 'absolute',
+              zIndex: 1,
+              border: '2px solid rgb(49 97 141)',
+              fontSize: 16,
+              padding: 4,
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              right: 22,
+              top: 34,
+              color: 'rgb(101, 217, 255)',
+            }}
+            onClick={() => {
+              router.push('/DataAnalyticalWarningModel/Statistics/FluctuateRange');
+            }}
+          />
+        </Tooltip>
+      </header>
       {/* <Button
         type="primary"
         size="small"
@@ -588,25 +632,7 @@ const Index = props => {
       >
         返回
       </Button> */}
-      <Tooltip title="返回">
-        <RollbackOutlined
-          style={{
-            position: 'absolute',
-            zIndex: 1,
-            border: '2px solid rgb(49 97 141)',
-            fontSize: 16,
-            padding: 4,
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            right: 22,
-            top: 34,
-            color: 'rgb(101, 217, 255)',
-          }}
-          onClick={() => {
-            router.push('/DataAnalyticalWarningModel/Statistics/FluctuateRange');
-          }}
-        />
-      </Tooltip>
+
       {/* <Tooltip title="看板时间选择">
         <CalendarOutlined
           style={{
@@ -625,29 +651,7 @@ const Index = props => {
           // onClick={() => setVisible(true)}
         />
       </Tooltip> */}
-      <div className={styles.SelectWrapper}>
-        <Select
-          value={queryDateLabel}
-          placeholder="请选择时间"
-          style={{
-            width: 160,
-          }}
-          onChange={(value, option) => {
-            let date = option['data-date'];
-            setQueryDate(date);
-            setQueryDateLabel(value);
-          }}
-          popupClassName={styles.popupStyle}
-        >
-          {DateOptions.map((item, index) => {
-            return (
-              <Option key={index} value={item.label} data-date={item.value}>
-                {item.label}
-              </Option>
-            );
-          })}
-        </Select>
-      </div>
+
       <main>
         <div className={styles.boxWrapper}>
           <BoxItem title={<>异常线索统计分析</>} style={{ flex: 1, marginRight: 14 }}>
@@ -850,31 +854,34 @@ const Index = props => {
             </Spin>
           </BoxItem> */}
         </div>
-        <div className={styles.boxWrapper} style={{}}>
-          <BoxItem title="核实信息" style={{ flex: 1, height: 'calc(100vh - 440px)' }}>
-            <div className={styles.checkInfoWrapper}>
-              <Spin spinning={alertLoading}>
-                <Alert
-                  banner
-                  message={
-                    <div style={{ color: '#65D9FF', fontWeight: 500, fontSize: 16 }}>
-                      已选择{selectedRowKeys.length}项&nbsp;&nbsp;&nbsp;&nbsp;
-                      {/* {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，
+        <div className={styles.boxWrapper} style={{ marginBottom: 0 }}>
+          <BoxItem
+            title="核实信息"
+            style={{ flex: 1, height: 'calc(100vh - 440px)', minHeight: 400 }}
+            bodyStyle={{ height: 'calc(100% - 44px)' }}
+          >
+            <div className={styles.checkInfoWrapper} style={{ height: '100%' }}>
+              {/* <Spin spinning={alertLoading}> */}
+              <Alert
+                banner
+                message={
+                  <div style={{ color: '#65D9FF', fontWeight: 500, fontSize: 16 }}>
+                    已选择{selectedRowKeys.length}项&nbsp;&nbsp;&nbsp;&nbsp;
+                    {/* {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，
                       核实为异常${tableSelectedCount.CheckedResult2Count}个，
                       核实率${tableSelectedCount.VerifiedRate}%；
                     涉及企业${tableSelectedCount.UniqueParentCodeCount}家，排放口${tableSelectedCount.DGIMNCount}个`} */}
-                      {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，
+                    {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，
                       核实无异常${tableSelectedCount.CheckedResult2Count}个，
                       核实率${tableSelectedCount.VerifiedRate}%；
                     涉及企业${tableSelectedCount.UniqueParentCodeCount}家，排放口${tableSelectedCount.DGIMNCount}个`}
-                    </div>
-                  }
-                  type="info"
-                  showIcon
-                  style={{ marginTop: 0, background: 'rgba(20,55,120,.6)' }}
-                />
-              </Spin>
-              <Spin spinning={tableLoading}>
+                  </div>
+                }
+                type="info"
+                showIcon
+                style={{ marginTop: 0, background: 'rgba(20,55,120,.6)' }}
+              />
+              <div className={styles.tableWrapper}>
                 <SdlTable
                   rowKey="ModelGuid"
                   rowSelection={rowSelection}
@@ -882,14 +889,15 @@ const Index = props => {
                   dataSource={dataSource}
                   style={{ padding: 10, paddingTop: 0 }}
                   bordered={false}
-                  // loading={tableLoading}
+                  loading={tableLoading}
                   align="center"
                   pagination={false}
                   scroll={{
-                    y: 'calc(100vh - 590px)',
+                    y: 'calc(100% - 50px)',
                   }}
                 />
-              </Spin>
+              </div>
+              {/* </Spin> */}
             </div>
           </BoxItem>
         </div>

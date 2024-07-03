@@ -8,7 +8,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 });
 
 const Index = props => {
-  const { children, style, title } = props;
+  const { children, style, title, bodyStyle } = props;
   // const [visible, setVisible] = useState([]);
 
   useEffect(() => {}, []);
@@ -22,7 +22,9 @@ const Index = props => {
   return (
     <div className={styles.boxItem} style={style}>
       <div className={styles.title}>{title}</div>
-      <div className={styles.boxItemContent}>{children}</div>
+      <div className={styles.boxItemContent} style={bodyStyle}>
+        {children}
+      </div>
     </div>
   );
 };
