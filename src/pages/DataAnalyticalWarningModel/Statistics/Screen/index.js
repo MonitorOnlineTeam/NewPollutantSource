@@ -857,7 +857,7 @@ const Index = props => {
         <div className={styles.boxWrapper} style={{ marginBottom: 0 }}>
           <BoxItem
             title="核实信息"
-            style={{ flex: 1, height: 'calc(100vh - 440px)', minHeight: 400 }}
+            style={{ flex: 1, height: 'calc(100vh - 440px)', minHeight: 400, width: '100%' }}
             bodyStyle={{ height: 'calc(100% - 44px)' }}
           >
             <div className={styles.checkInfoWrapper} style={{ height: '100%' }}>
@@ -893,6 +893,7 @@ const Index = props => {
                   align="center"
                   pagination={false}
                   scroll={{
+                    x: 'max-content',
                     y: 'calc(100% - 50px)',
                   }}
                 />

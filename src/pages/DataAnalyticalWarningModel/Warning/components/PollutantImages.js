@@ -114,7 +114,7 @@ const Index = props => {
         type: 'dataModel/GetPointParamsRange',
         payload: {
           DGIMN,
-          version: location.query.v,
+          version: location?.query?.v,
         },
         callback: res => {
           setImages(res.image);
@@ -126,7 +126,6 @@ const Index = props => {
               moment(res.rangeTime[key].EndTime),
             ];
           }
-          console.log('tempUpdateDate', tempUpdateDate);
           setUpdateDate(tempUpdateDate);
         },
       });
