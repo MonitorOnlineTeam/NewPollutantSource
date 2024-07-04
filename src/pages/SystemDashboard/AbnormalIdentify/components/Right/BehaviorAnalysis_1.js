@@ -65,7 +65,7 @@ const BehaviorAnalysis = props => {
         })}
       </div>
       <Modal
-        title={'异常分级统计'}
+        title={'异常行为分析'}
         wrapClassName="fullScreenModal"
         destroyOnClose
         open={open}

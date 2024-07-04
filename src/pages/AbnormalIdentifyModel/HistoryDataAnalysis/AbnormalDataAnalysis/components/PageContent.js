@@ -256,7 +256,11 @@ const PageContent = props => {
       }
 
       AllCount.push(item.AllCount);
-      xData.push(item.Name);
+      if (dataType === 'point') {
+        xData.push(item.ParentName + '-' + item.Name);
+      } else {
+        xData.push(item.Name);
+      }
     });
 
     let seriesData = [series0, series1, series2, series3, series4, series5];
@@ -479,9 +483,10 @@ const PageContent = props => {
     }
 
     let listText = pageInfoData[excepType].list;
+    let unit = rtnType === 'nums' ? '次' : '小时'
     let column2 = listText.map(item => {
       return {
-        title: item,
+        title: `${item} （${unit}）`,
         dataIndex: item,
         key: item,
         sorter: (a, b) => a[item] - b[item],
@@ -492,7 +497,7 @@ const PageContent = props => {
       ...column,
       ...column2,
       {
-        title: '异常总次数',
+        title: `合计（${unit}）`,
         dataIndex: 'AllCount',
         key: 'AllCount',
         sorter: (a, b) => a.AllCount - b.AllCount,

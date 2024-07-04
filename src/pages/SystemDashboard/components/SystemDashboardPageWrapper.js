@@ -29,7 +29,7 @@ const HomeDataScreen = props => {
         type: 'global/getOperationSetting',
         payload: {},
       });
-      
+
     // 获取中间页
     dispatch({
       type: 'sysDashboard/GetSysList',
@@ -141,11 +141,11 @@ const HomeDataScreen = props => {
             })}
           </ul>
         </div>
-        <div className={styles.menuSelectContent}>
-          <div className={`${styles.selectedName} ${sysList.length > 1 ? styles.showList : ''}`}>
-            {pageInfo.key}
-          </div>
-          {sysList.length > 1 ? (
+        {sysList.length > 1 ? (
+          <div className={styles.menuSelectContent}>
+            <div className={`${styles.selectedName} ${styles.showList}`}>
+              {pageInfo.key}
+            </div>
             <ul>
               {sysList.map(item => {
                 return (
@@ -165,10 +165,10 @@ const HomeDataScreen = props => {
                 );
               })}
             </ul>
-          ) : (
-            ''
-          )}
-        </div>
+          </div>
+        ) : (
+          ''
+        )}
       </div>
       <div className={styles.rightContent}>
         <FullscreenToggle containerRef={containerRef} style={{ marginRight: 14, marginTop: 4 }} />
