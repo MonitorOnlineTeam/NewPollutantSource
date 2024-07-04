@@ -215,6 +215,20 @@ const Index = props => {
       ellipsis: true,
     },
     {
+      title: '成套经理审核人',
+      dataIndex: 'ManagerName',
+      key: 'ManagerName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '专工审核人',
+      dataIndex: 'ExpertName',
+      key: 'ExpertName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: type == 1 ? '审核状态' : '审核结果',
       dataIndex: type == 1 ? 'StatusName' : 'AuditResultsName',
       key: type == 1 ? 'StatusName' : 'AuditResultsName',
@@ -323,7 +337,8 @@ const Index = props => {
               ? '1,2,3,4'
               : defaultStatus !== undefined
               ? defaultStatus
-              : '3',
+              : '5',
+            isAll:type==1? undefined : '1',
             bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
             eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
             time: undefined,

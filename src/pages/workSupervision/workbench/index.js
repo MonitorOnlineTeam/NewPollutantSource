@@ -1054,14 +1054,10 @@ const Workbench = props => {
                                                 //安装照片审核
                                                 if (item.Col1 == 2) {
                                                   setInstallEquipmentVisible(true);
-                                                  const dataArr = item.MsgID?.split(',');
+                                                  const dataArr = item.MsgID && JSON.parse(item.MsgID);
                                                   //Col1代表systemModelId
                                                   setInstallEquipmentData({
-                                                    DispatchId: dataArr?.[0],
-                                                    PointId: dataArr?.[1],
-                                                    EquipmentAuditId: dataArr?.[2],
-                                                    Col1: `${dataArr?.[3]}${dataArr?.[4]?`,${dataArr?.[4]}`:''}`,
-
+                                                    ...dataArr
                                                   });
                                                 }
                                               } else if (item.Type == 7) {

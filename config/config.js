@@ -54,11 +54,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false,
       // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
@@ -1947,7 +1947,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                  }`,
+                    }`,
                 },
                 {
                   //视频监控 企业

@@ -342,6 +342,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       className: 'bg_white',
+      width:'auto',
       render: (text, record, index) => {
         return {
           children: text,
@@ -355,6 +356,7 @@ const Index = (props) => {
       key: 'RegionName',
       align: 'center',
       ellipsis: true,
+      width:'auto',
     },
     {
       title: '服务次数',
@@ -362,6 +364,7 @@ const Index = (props) => {
       key: 'ServiceNum',
       align: 'center',
       ellipsis: true,
+      width:'auto',
       render: (text, record) => {
         return <a onClick={() => ServiceNumDetail(record)}>{text}</a>
       }
@@ -372,6 +375,7 @@ const Index = (props) => {
       key: 'ServiceRate',
       align: 'center',
       ellipsis: true,
+      width:'auto',
       render: (text, record, index) => {
         return `${text}%`
       },
@@ -382,6 +386,7 @@ const Index = (props) => {
       key: 'WorkHour',
       align: 'center',
       ellipsis: true,
+      width:'auto',
     },
     {
       title: '时长占比',
@@ -389,6 +394,7 @@ const Index = (props) => {
       key: 'WorkRate',
       align: 'center',
       ellipsis: true,
+      width:'auto',
       render: (text, record, index) => {
         return `${text}%`
       },
@@ -793,7 +799,6 @@ const Index = (props) => {
             </Card>
           </Col>
         </Row>
-        <Row>
           <Card
             title={<><span>各省区{title[path]}服务次数及工作时长</span>
               <Button icon={<ExportOutlined />} loading={exportLoading[path]} style={{ marginLeft: 12 }} onClick={() => { exportData() }}>
@@ -807,12 +812,12 @@ const Index = (props) => {
               bordered
               size='small'
               scroll={{ x: 800 }}
+              // scroll={{ x: 800,y:230 }}
               dataSource={tableDatas}
               columns={columns}
               pagination={false}
             />
           </Card>
-        </Row>
         <Modal
           visible={serviceHourVisible}
           title={`${title[path]}服务明细`}

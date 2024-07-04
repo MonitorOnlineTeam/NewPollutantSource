@@ -107,7 +107,7 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    updateMonitorCategorySystemStatus: (payload, callback) => { //更新关联关系设备类别状态
+    updateMonitorCategorySystemStatus: (payload, callback) => { //更新关联关系统计使用系统型号状态
       dispatch({
         type: `${namespace}/updateMonitorCategorySystemStatus`,
         payload: payload,
@@ -244,26 +244,26 @@ const Index = (props) => {
       width: 80,
     },
     {
-      title: '设备类别',
+      title: '统计使用系统型号',
       dataIndex: 'CategoryName',
       key: 'CategoryName',
       align: 'center',
       width: 'auto',
     },
     {
-      title: '设备类别状态',
+      title: '状态',
       dataIndex: 'Status',
       key: 'Status',
       align: 'center',
       width: 'auto',
       render: (text, record) => {
           if (text === 1) {
-            return <Popconfirm title="确定要停用此设备类别吗？" style={{ paddingRight: 5 }} onConfirm={() => { setDeviceCategory(record) }} okText="是" cancelText="否">
+            return <Popconfirm title="确定要停用此统计使用系统型号吗？" style={{ paddingRight: 5 }} onConfirm={() => { setDeviceCategory(record) }} okText="是" cancelText="否">
               <Tag style={{cursor:'pointer'}} color="blue">启用</Tag>
             </Popconfirm>;
           }
           if (text === 2) {
-            return <Popconfirm title="确定要启用此设备类别吗？" style={{ paddingRight: 5 }} onConfirm={() => { setDeviceCategory(record) }} okText="是" cancelText="否">
+            return <Popconfirm title="确定要启用此统计使用系统型号吗？" style={{ paddingRight: 5 }} onConfirm={() => { setDeviceCategory(record) }} okText="是" cancelText="否">
               <Tag style={{cursor:'pointer'}} color="red">停用</Tag>
             </Popconfirm>;
           }
@@ -448,7 +448,7 @@ const Index = (props) => {
             添加
      </Button>
          {equipmentModelStatisticsPermis && <Button type="primary" style={{ marginRight: 8 }} onClick={() => { setEquipmentModelVisible(true); props.getMonitorCategorySystemList({}) }}>
-            设备型号统计清单
+            系统型号统计清单
      </Button>}
         </Form.Item>
       </Row>
@@ -473,7 +473,7 @@ const Index = (props) => {
       props.getMonitorCategorySystemList({});
     })
   }
-  const setDeviceCategory = (record) => { //停用或启用设备类别 更细状态
+  const setDeviceCategory = (record) => { //停用或启用统计使用系统型号 更细状态
     props.updateMonitorCategorySystemStatus({ id: record.ID, status: record.Status==1? 2 : 1 }, () => {
       props.getMonitorCategorySystemList({})
     })
@@ -593,7 +593,7 @@ const Index = (props) => {
         </Form>
       </Modal>
       <Modal
-        title={'设备型号统计清单关联关系'}
+        title={'系统型号统计清单关联关系'}
         visible={equipmentModelVisible}
         onCancel={() => { setEquipmentModelVisible(false); setPopVisible(false) }}
         footer={null}
@@ -613,7 +613,7 @@ const Index = (props) => {
               <Form.Item label="编号" name="categoryNum" rules={[{ required: true, message: '请输入编号' }]} >
                 <InputNumber placeholder='请输入' allowClear />
               </Form.Item>
-              <Form.Item label="设备类别" name="categoryId" rules={[{ required: true, message: '请输入设备类别' }]} >
+              <Form.Item label="统计使用系统型号" name="categoryId" rules={[{ required: true, message: '请输入统计使用系统型号' }]} >
                 {monitorCategorySystemLoading ? <Spin size='small' /> : <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
                   {
                     associatedCategoryList[0] && associatedCategoryList.map(item => {

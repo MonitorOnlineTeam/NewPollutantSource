@@ -75,7 +75,7 @@ const Setting = props => {
         </Form.Item>
         <Form.Item
           name="OperationNum"
-          label="（现场检查）覆盖运维人员数量（人/月）"
+          label="（现场检查）覆盖人员数量（人/月）"
           rules={[
             {
               required: true,
