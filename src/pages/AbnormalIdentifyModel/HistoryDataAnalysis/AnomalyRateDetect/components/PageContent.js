@@ -376,7 +376,8 @@ const PageContent = props => {
           label: {
             show: true,
             position: 'inside',
-            color: '#fff',
+            // color: '#fff',
+            formatter: '{c}%',
           },
           data: seriesData0,
         },
@@ -387,7 +388,8 @@ const PageContent = props => {
           label: {
             show: true,
             position: 'inside',
-            color: '#fff',
+            // color: '#fff',
+            formatter: '{c}%',
           },
           data: seriesData1,
         },

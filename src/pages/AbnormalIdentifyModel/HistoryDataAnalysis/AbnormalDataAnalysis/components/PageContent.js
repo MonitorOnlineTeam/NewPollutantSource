@@ -78,7 +78,6 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
 
 const PageContent = props => {
   const [form] = Form.useForm();
-  console.log('match', props);
   const { dispatch, pageTitle, DGIMN, excepType, location, time } = props;
 
   const [date, setDate] = useState(time || [moment().startOf('year'), moment()]); // 时间
