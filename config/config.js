@@ -3323,6 +3323,12 @@ export default {
                   component: './AbnormalIdentifyModel/ModelMatch',
                 },
                 {
+                  // 异常数据分析报告
+                  name: 'modelMatch',
+                  path: '/AbnormalIdentifyModel/AnalysisReport',
+                  component: './AbnormalIdentifyModel/AnalysisReport',
+                },
+                {
                   // 历史数据综合评价
                   name: 'HistoryDataAnalysis',
                   path: '/AbnormalIdentifyModel/HistoryDataAnalysis',

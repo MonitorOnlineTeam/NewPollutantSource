@@ -110,6 +110,28 @@ export const dateRangeList = [
     value: [moment().startOf('year'), moment()],
   },
   {
+    key: '去年',
+    value: [
+      moment()
+        .startOf('year')
+        .subtract(1, 'year'),
+      moment()
+        .subtract(1, 'year')
+        .endOf('year'),
+    ],
+  },
+  {
+    key: '前年',
+    value: [
+      moment()
+        .startOf('year')
+        .subtract(2, 'year'),
+      moment()
+        .subtract(2, 'year')
+        .endOf('year'),
+    ],
+  },
+  {
     key: '上半年',
     value: [moment(`${currentYear}-01-01`).startOf('year'), moment(`${currentYear}-06-30`)],
   },

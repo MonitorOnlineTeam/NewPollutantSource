@@ -8,7 +8,7 @@ _roadhog-api-doc
 
 # production
 /dist
-dist.*
+/dist.*
 /.vscode
 
 # misc
@@ -18,6 +18,8 @@ yarn-error.log
 
 /coverage
 .idea
+dist.zip
+dist.*
 yarn.lock
 package-lock.json
 *bak

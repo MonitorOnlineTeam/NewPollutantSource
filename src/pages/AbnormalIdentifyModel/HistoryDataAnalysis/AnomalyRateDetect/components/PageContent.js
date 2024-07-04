@@ -21,6 +21,7 @@ import ReactEcharts from 'echarts-for-react';
 import WorkingAnalysis from '../index';
 import { MoreOutlined } from '@ant-design/icons';
 import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
+import QuestionTooltip from '@/components/QuestionTooltip';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   warningForm: AbnormalIdentifyModel.warningForm,
@@ -278,7 +279,11 @@ const PageContent = props => {
         seriesData0.push(item.InvHours);
         seriesData1.push(item.ExcepHours);
       }
-      xData.push(item.Name);
+      if (dataType === 'point') {
+        xData.push(item.ParentName + '-' + item.Name);
+      } else {
+        xData.push(item.Name);
+      }
     });
 
     let option = {
@@ -371,7 +376,8 @@ const PageContent = props => {
           label: {
             show: true,
             position: 'inside',
-            color: '#fff',
+            // color: '#fff',
+            formatter: '{c}%',
           },
           data: seriesData0,
         },
@@ -382,7 +388,8 @@ const PageContent = props => {
           label: {
             show: true,
             position: 'inside',
-            color: '#fff',
+            // color: '#fff',
+            formatter: '{c}%',
           },
           data: seriesData1,
         },
@@ -467,30 +474,48 @@ const PageContent = props => {
         title: '传输有效率',
         children: [
           {
-            title: '传输有效率',
+            title: (
+              <span>
+                传输有效率
+                <QuestionTooltip content="传输率 * 有效率" />
+              </span>
+            ),
             dataIndex: 'TranEffRate',
             key: 'TranEffRate',
             align: 'center',
+            showSorterTooltip: false,
             sorter: (a, b) => a.TranEffRate - b.TranEffRate,
             render: text => {
               return text + '%';
             },
           },
           {
-            title: '无效占比',
+            title: (
+              <span>
+                无效占比
+                <QuestionTooltip content="100% - 传输有效率" />
+              </span>
+            ),
             dataIndex: 'TranInvRate',
             key: 'TranInvRate',
             align: 'center',
+            showSorterTooltip: false,
             sorter: (a, b) => a.TranInvRate - b.TranInvRate,
             render: text => {
               return text + '%';
             },
           },
           {
-            title: '无效数据个数',
+            title: (
+              <span>
+                无效数据个数
+                <QuestionTooltip content="传输个数 - 有效个数" />
+              </span>
+            ),
             dataIndex: 'InvHours',
             key: 'InvHours',
             align: 'center',
+            showSorterTooltip: false,
             sorter: (a, b) => a.InvHours - b.InvHours,
           },
         ],
@@ -499,20 +524,32 @@ const PageContent = props => {
         title: '模型识别异常',
         children: [
           {
-            title: '疑似异常率',
+            title: (
+              <span>
+                疑似异常率
+                <QuestionTooltip content="异常时长 / 运行时长 * 100%" />
+              </span>
+            ),
             dataIndex: 'ExcepRate',
             key: 'ExcepRate',
             align: 'center',
+            showSorterTooltip: false,
             sorter: (a, b) => a.ExcepRate - b.ExcepRate,
             render: text => {
               return text + '%';
             },
           },
           {
-            title: '异常数据个数',
+            title: (
+              <span>
+                异常数据个数
+                <QuestionTooltip content="运行个数 - 正常个数" />
+              </span>
+            ),
             dataIndex: 'ExcepHours',
             key: 'ExcepHours',
             align: 'center',
+            showSorterTooltip: false,
             sorter: (a, b) => a.ExcepHours - b.ExcepHours,
           },
         ],
@@ -523,6 +560,7 @@ const PageContent = props => {
         key: 'Reason',
         ellipsis: true,
         width: 400,
+        showSorterTooltip: false,
         render: Reason => <Tooltip title={Reason}>{Reason}</Tooltip>,
       },
     ];
