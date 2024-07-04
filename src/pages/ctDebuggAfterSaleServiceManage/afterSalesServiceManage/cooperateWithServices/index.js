@@ -19,7 +19,7 @@ import ReactEcharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import 'echarts-gl';
 const { Option } = Select;
-import { getPie3D,chartMouseover,chartMouseout } from '../../utils/getPie3D';
+import { getPie3D, chartMouseover, chartMouseout } from '../../utils/getPie3D';
 import { bar3DrenderItem } from '../../utils/getBar3D';
 import { fomatFloat } from '@/utils/utils';
 import ServiceDetails from '../components/ServiceDetails';
@@ -198,23 +198,34 @@ const Index = (props) => {
     getData()
   }, []);
 
+  
   useEffect(() => {
-    if (workHourDataRatio?.[0] && echartsRef2?.current){
-        let myChart = echartsRef2?.current?.getEchartsInstance();
-        let echartsOption = echartsRef2?.current?.props;
-        myChart.on('mouseover', function (params) {
-          chartMouseover(myChart, echartsOption, params)
-        });
-        myChart.on('globalout', function (params) {
-          chartMouseout(myChart, echartsOption, params)  // 修正取消高亮失败的 bug
-        });
-        //  myChart.on('click', function(params) {
-        //  chartClick(myChart,echartsOption,params) 
-        //  });
+    if (workHourDataRatio?.[0] && echartsRef2?.current) {
+      let myChart = echartsRef2?.current?.getEchartsInstance();
+      let echartsOption = echartsRef2?.current?.props;
+      myChart.on('mouseover', function (params) {
+        chartMouseover(myChart, echartsOption, params)
+      });
+      myChart.on('globalout', function (params) {
+        chartMouseout(myChart, echartsOption, params)  // 修正取消高亮失败的 bug
+      });
+      //  myChart.on('click', function(params) {
+      //  chartClick(myChart,echartsOption,params) 
+      //  });
     }
   }, [workHourDataRatio]);
 
-
+  const minWidth = 1690
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const handleResize = () => {
+    setWindowWidth(window.innerWidth);
+  };
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const getData = () => {
     const processingData = (res) => {
@@ -329,7 +340,6 @@ const Index = (props) => {
       dataIndex: 'ServiceArea',
       key: 'ServiceArea',
       align: 'center',
-      width: 'auto',
       ellipsis: true,
       className: 'bg_white',
       render: (text, record, index) => {
@@ -344,7 +354,6 @@ const Index = (props) => {
       dataIndex: 'RegionName',
       key: 'RegionName',
       align: 'center',
-      width: 'auto',
       ellipsis: true,
     },
     {
@@ -352,7 +361,6 @@ const Index = (props) => {
       dataIndex: 'ServiceNum',
       key: 'ServiceNum',
       align: 'center',
-      width: 'auto',
       ellipsis: true,
       render: (text, record) => {
         return <a onClick={() => ServiceNumDetail(record)}>{text}</a>
@@ -363,7 +371,6 @@ const Index = (props) => {
       dataIndex: 'ServiceRate',
       key: 'ServiceRate',
       align: 'center',
-      width: 'auto',
       ellipsis: true,
       render: (text, record, index) => {
         return `${text}%`
@@ -374,7 +381,6 @@ const Index = (props) => {
       dataIndex: 'WorkHour',
       key: 'WorkHour',
       align: 'center',
-      width: 'auto',
       ellipsis: true,
     },
     {
@@ -382,7 +388,6 @@ const Index = (props) => {
       dataIndex: 'WorkRate',
       key: 'WorkRate',
       align: 'center',
-      width: 'auto',
       ellipsis: true,
       render: (text, record, index) => {
         return `${text}%`
@@ -403,14 +408,15 @@ const Index = (props) => {
       color2 = params.dataIndex == e.dataIndex && e.name != selectedData ? '#fd9b3b' : '#64B0FD'
       color3 = params.dataIndex == e.dataIndex && e.name != selectedData ? '#ffcb72' : '#08BDFF'//顶部
     }
-    return bar3DrenderItem(params, api, type, e,color1,color2,color3)
+    return bar3DrenderItem(params, api, type, e, color1, color2, color3)
   }
+  const windowWidthFlag = windowWidth<=minWidth&&windowWidth>=930
   const serviceFrequencyDuration = () => { //各大区赠送服务次数、工作时长
     return {
       grid: {
         left: 50,
         right: 70,
-        bottom: 70,
+        bottom: windowWidthFlag ? 28 :  62,
         top: 50,
       },
       legend: {
@@ -446,7 +452,8 @@ const Index = (props) => {
           }
         },
         axisLabel: {
-          rotate: 30, // 或者其他角度
+          interval: 0,
+          rotate:  windowWidthFlag ? 0 :  30, // 或者其他角度
           textStyle: {
             color: '#333'  // 修改 x 轴刻度文字的颜色
           }
@@ -462,7 +469,7 @@ const Index = (props) => {
       yAxis: [{
         type: "value",
         min: 0,
-        minInterval:1,
+        minInterval: 1,
         axisLabel: {
           formatter: '{value}次'
         },
@@ -505,7 +512,7 @@ const Index = (props) => {
               show: true,
               position: "top",
               color: "#08BDFF",
-              offset: [22, -10],//左右 上下
+              offset: [28, -10],//左右 上下
             },
           },
           itemStyle: {
@@ -522,6 +529,7 @@ const Index = (props) => {
           barGap: '800%', // Make series be ove
           silent: true, //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
           barMinHeight: 1000,
+          barMaxWidth:54,
           z: -3
         },
         {
@@ -545,7 +553,7 @@ const Index = (props) => {
       tooltip: {
         trigger: 'axis',
         formatter: (params) => {
-          return params&&(
+          return params && (
             `${params[0].name}<br />
             <span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background:linear-gradient(to bottom,#28CBFA, #64B0FD);\"></span> ${params[0].seriesName}：${params[0].value}<br />` +
             `${params[3].marker} ${params[3].seriesName}：${params[3].value}`
@@ -636,7 +644,7 @@ const Index = (props) => {
   const proportionWorkHours = () => {
     var total = 0; //总数量
     workHour.forEach(function (value) { total += value });
-    const option = getPie3D(workHourDataRatio, {internalDiameterRatio:0.6, customVal: customHourVal, legendOption:{ show: false}} )
+    const option = getPie3D(workHourDataRatio, { internalDiameterRatio: 0.6, customVal: customHourVal, legendOption: { show: false } })
     option.title = {
       text: `${total}小时`,
       textStyle: {
@@ -703,7 +711,7 @@ const Index = (props) => {
           <Button onClick={() => { form.resetFields(); getData() }} >
             重置
          </Button>
-         <span className='red'>注：服务次数等于服务派工次数</span>
+          <span className='red'>注：服务次数等于服务派工次数</span>
         </Space>
       </Form.Item>
     </Form>
@@ -719,17 +727,19 @@ const Index = (props) => {
         'click': onChartClick,
       }}
     />
-  }, [tableLoading[path]])
+  }, [tableLoading[path],windowWidth])
+
+
   return (
     <div className={styles.ctAfterSalesServiceManagementSty}>
       <BreadcrumbWrapper>
         <div className='serchContent'>
-          <Card bodyStyle={{padding:'0 24px'}}>
+          <Card bodyStyle={{ padding: '0 24px' }}>
             {searchComponents()}
           </Card>
         </div>
         <Row style={{ margin: '8px 0' }} className='echartsContentSty'>
-          <Col span={9}>
+          <Col span={windowWidth>=minWidth? 9 : 24}>
             <Card title={`各大区${title[path]}服务次数、工作时长`}>
               {tableLoading[path] ?
                 <Skeleton active paragraph={{ rows: 9 }} />
@@ -738,7 +748,7 @@ const Index = (props) => {
               }
             </Card>
           </Col>
-          <Col span={8} style={{ padding: '0 12px' }}>
+          <Col  span={windowWidth>=minWidth? 8 : 13}  style={{ padding: windowWidth>=minWidth? '0 12px' : '12px 12px 0 12px'}}>
             <Card title={`服务次数占比`}>
               {tableLoading[path] ?
                 <Skeleton active paragraph={{ rows: 9 }} />
@@ -750,36 +760,36 @@ const Index = (props) => {
                 />}
             </Card>
           </Col>
-          <Col span={7}>
+          <Col  span={windowWidth>=minWidth? 7 : 11} style={{ paddingTop: windowWidth>=minWidth? 0 : 12}}>
             <Card title={`工作时长占比`}>
               {tableLoading[path] ?
                 <Skeleton active paragraph={{ rows: 9 }} />
-                : workHourDataRatio?.[0]?
-                <Row>
-                  <Col span={14}>
-                    <ReactEcharts
-                      option={proportionWorkHours()}
-                      style={{ width: "100%", height: 'calc(50vh - 170px)' }}
-                      ref={echartsRef2}
-                      className="echarts-for-echarts"
-                      theme="my_theme"
-                    />
-                  </Col>
-                  <Col span={10} style={{ paddingLeft: 4, display: 'flex', flexDirection: 'column', alignItems: 'end', justifyContent: 'center', justifyItems: 'center' }} >{workHourDataRatio.map((item, index) => {
-                    return <Row align='middle' style={{ width: '100%', paddingBottom: index == workHourDataRatio.length ? 0 : 8 }}>
-                      <Row align='middle' wrap={false} style={{ width: 'calc(100% - 54px)' }}>
-                        <div style={{ display: 'inline-block', width: 14, height: 14, borderRadius: 2, backgroundColor: item.itemStyle.color, marginRight: 8 }}></div>
-                        <div className='textOverflow' style={{ width: 'calc(100% - 24px)' }}>{item.name}</div>
-                      </Row>
-                      <div style={{ minWidth: 50, textAlign: 'right', color: '#2189FC', fontWeight: 'bold', marginLeft: 4 }}>{item.rate}%</div></Row>
-                  })
-                  }
-                  </Col>
-                </Row>
-                : 
-                <Empty  style={{   minHeight: 308, height: 'calc(50vh - 170px)' }}/>
-              }            
-                
+                : workHourDataRatio?.[0] ?
+                  <Row>
+                    <Col span={14}>
+                      <ReactEcharts
+                        option={proportionWorkHours()}
+                        style={{ width: "100%", height: 'calc(50vh - 170px)' }}
+                        ref={echartsRef2}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                      />
+                    </Col>
+                    <Col span={10} style={{ paddingLeft: 4, display: 'flex', flexDirection: 'column', alignItems: 'end', justifyContent: 'center', justifyItems: 'center' }} >{workHourDataRatio.map((item, index) => {
+                      return <Row align='middle' style={{ width: '100%', paddingBottom: index == workHourDataRatio.length ? 0 : 8 }}>
+                        <Row align='middle' wrap={false} style={{ width: 'calc(100% - 54px)' }}>
+                          <div style={{ display: 'inline-block', width: 14, height: 14, borderRadius: 2, backgroundColor: item.itemStyle.color, marginRight: 8 }}></div>
+                          <div className='textOverflow' style={{ width: 'calc(100% - 24px)' }}>{item.name}</div>
+                        </Row>
+                        <div style={{ minWidth: 50, textAlign: 'right', color: '#2189FC', fontWeight: 'bold', marginLeft: 4 }}>{item.rate}%</div></Row>
+                    })
+                    }
+                    </Col>
+                  </Row>
+                  :
+                  <Empty style={{ minHeight: 308, height: 'calc(50vh - 170px)' }} />
+              }
+
             </Card>
           </Col>
         </Row>
@@ -796,7 +806,7 @@ const Index = (props) => {
               loading={tableLoading[path]}
               bordered
               size='small'
-              scroll={{ x: 800, y: 'auto' }}
+              scroll={{ x: 800 }}
               dataSource={tableDatas}
               columns={columns}
               pagination={false}

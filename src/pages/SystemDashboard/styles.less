@@ -697,53 +697,6 @@
       }
     }
 
-    // 切换按钮
-    .toggleRadio {
-      // position: absolute;
-      // right: 20px;
-      // top: 10px;
-      :global {
-        // .ant-radio-button-wrapper {
-        //   background: #021235;
-        //   color: #70a7ff;
-        //   border-color: #1a65e1;
-        //   font-weight: bold;
-        //   border-radius: 0;
-        //   height: 26px;
-        //   line-height: 24px;
-        //   padding: 0 10px;
-        // }
-        // .ant-radio-button-wrapper-checked {
-        //   background-color: #1d70f5;
-        //   font-weight: bold;
-        //   color: #fff;
-        // }
-        .ant-radio-button-wrapper:not(:first-child)::before {
-          // background: #1a65e1;
-        }
-      }
-      :global {
-        .ant-radio-button-wrapper {
-          height: 26px;
-          line-height: 24px;
-          padding: 0 14px;
-          border-radius: 0;
-          background-color: transparent;
-          font-size: 13px;
-          // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
-          color: #c3f0ff;
-          border-color: #203e72;
-          font-weight: bold;
-        }
-        .ant-radio-button-wrapper-checked {
-          // background-color: #007bfd;
-          background: linear-gradient(0deg, #0c4390, rgba(10, 124, 255, 0.1));
-          border-color: #007bfd;
-          font-weight: bold;
-          color: #fff;
-        }
-      }
-    }
 
     // 图表图例
     .chartLegendWrapper {
@@ -1240,3 +1193,51 @@
     }
   }
 }
+
+    // 切换按钮
+    .toggleRadio {
+      // position: absolute;
+      // right: 20px;
+      // top: 10px;
+      :global {
+        // .ant-radio-button-wrapper {
+        //   background: #021235;
+        //   color: #70a7ff;
+        //   border-color: #1a65e1;
+        //   font-weight: bold;
+        //   border-radius: 0;
+        //   height: 26px;
+        //   line-height: 24px;
+        //   padding: 0 10px;
+        // }
+        // .ant-radio-button-wrapper-checked {
+        //   background-color: #1d70f5;
+        //   font-weight: bold;
+        //   color: #fff;
+        // }
+        .ant-radio-button-wrapper:not(:first-child)::before {
+          // background: #1a65e1;
+        }
+      }
+      :global {
+        .ant-radio-button-wrapper {
+          height: 26px;
+          line-height: 24px;
+          padding: 0 14px;
+          border-radius: 0;
+          background-color: transparent;
+          font-size: 13px;
+          // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+          color: #c3f0ff;
+          border-color: #203e72;
+          font-weight: bold;
+        }
+        .ant-radio-button-wrapper-checked {
+          // background-color: #007bfd;
+          background: linear-gradient(0deg, #0c4390, rgba(10, 124, 255, 0.1));
+          border-color: #007bfd;
+          font-weight: bold;
+          color: #fff;
+        }
+      }
+    }

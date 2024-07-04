@@ -49,7 +49,8 @@ const DisciplineCheck = props => {
   const [modalQueryParams, setModalQueryParams] = useState({});
   const [mode, setMode] = useState(); // 1: 管理 空：记录
 
-  const buttonList = permissionButton(props.match.path);
+
+ 
   const {
     queryLoading,
     dispatch,
@@ -59,6 +60,10 @@ const DisciplineCheck = props => {
     },
   } = props;
 
+  let buttonList = [];
+  if(systemType==1){
+    buttonList = permissionButton('/workSupervision/dailyManagement/disciplineCheck/1');
+  }
   useEffect(() => {
     getTableDataSource();
   }, []);

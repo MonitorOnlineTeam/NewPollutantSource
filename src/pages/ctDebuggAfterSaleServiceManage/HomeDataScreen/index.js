@@ -70,7 +70,7 @@ const HomeDataScreen = props => {
             {/* 地图 */}
             <MapContent />
             {/* 售后服务情况 */}
-            <AfterSaleService />
+            {/* <AfterSaleService /> */}
           </Col>
           <Col style={{ width: '27%', minWidth: 400 }} className={styles.rightWrapper}>
             {/* 客户满意度 */}
@@ -78,7 +78,8 @@ const HomeDataScreen = props => {
             {/* 安装调试达标率 */}
             <InstallDebugRate />
             {/* 设备运行完好率 */}
-            <EquipUptimeRate />
+            {/* <EquipUptimeRate /> */}
+            <AfterSaleService />
           </Col>
         </Row>
       </main>

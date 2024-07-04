@@ -188,11 +188,13 @@ const Index = (props) => {
           dispatchId: data.DispatchId,
           pointId: data.PointId,
           equipmentAuditId: data.EquipmentAuditId,
-          workerID:data.WorkerID,
+          workerID: data.WorkerID,
           projectCode: data.ProjectCode,
           itemCode:  data.ItemCode,
           entName:  data.EntName,
           pointName:  data.PointName,
+          status: data.Status,
+          managerId: data.ManagerId,
       }
       props.dispatch({
         type: `${namespace}/AddAuditInfo`,

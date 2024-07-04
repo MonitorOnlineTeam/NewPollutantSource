@@ -163,7 +163,7 @@ class TaskRecord extends Component {
       expand: !this.state.expand,
     }, () => {
       // 展开、收起重新计算table高度
-      if (!this.props.tableHeight) {
+      if (!this.props.tableHeight && !this.props.isWorkExecue) {
         const tableElement = document.getElementsByClassName('ant-table-wrapper');
         if (tableElement.length) {
           const tableOffsetTop = this.getOffsetTop(tableElement[0]) + 110;
@@ -1053,7 +1053,7 @@ class TaskRecord extends Component {
             }}
             columns={columns}
             // scroll={{ y: isHomeModal? this.props.clientHeight - 480 :null }}
-            scroll={{ y: this.state.expand ? "calc(100vh - 434px)" : this.props.tableHeight || undefined }}
+            scroll={this.props.isWorkExecue? {y: this.state.expand ? "calc(100vh - 408px)" : "calc(100vh - 312px)"  } : { y: this.state.expand ? "calc(100vh - 434px)" : this.props.tableHeight || undefined }}
           />
         </Card>
         <Modal

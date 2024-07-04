@@ -415,9 +415,11 @@ const Index = (props) => {
                     type: 'value'
                 },
                 series: [
-                    {
+                    {   
+                        name:'振幅范围',
+                        type: 'bar',
                         data: yAxisData,
-                        type: 'bar'
+                       
                     }
                 ]
             };

@@ -535,7 +535,7 @@ const Index = (props) => {
   
   const operaOrderOptionDayClick = (type) => {  //工单执行情况 固定到天 详情 
     setTaskRecordVisible(true)
-    setTaskStatus(workOrderExecuTimeVal==1&&(type=='未完成'||type=='超时未完成')? ['1','2','10','11'] : ['3'])
+    setTaskStatus(workOrderExecuTimeVal==1&&(type=='未完成'||type=='超时未完成')? ['1','2','11'] : ['3'])
     setOperaStatus((workOrderExecuTimeVal==1&&(type=='完成'||type=='未完成')) || type=='完成'? undefined : '3'  )
     if(type=='完成'|| type=='超时完成'){
       setCompleteTime(workOrderExecuTimeObj[workOrderExecuTimeVal]&&[moment(workOrderExecuTimeObj[workOrderExecuTimeVal].beginTime), moment(workOrderExecuTimeObj[workOrderExecuTimeVal].endTime)])
@@ -804,6 +804,7 @@ const [operaTaskType,setOperaTaskType] = useState()
         visible={taskRecordVisible}
         onCancel={()=>{setTaskRecordVisible(false)}}
         footer={null}
+        mask={false}
         bodyStyle={{padding:0}}
       >
          <TaskRecord

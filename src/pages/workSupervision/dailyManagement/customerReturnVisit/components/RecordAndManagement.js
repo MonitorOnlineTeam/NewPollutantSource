@@ -13,6 +13,7 @@ import {
   Tooltip,
   Popconfirm,
   Divider,
+  message,
 } from 'antd';
 import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
@@ -41,7 +42,7 @@ const RecordAndManagement = props => {
   const [largeRegionList, setLargeRegionList] = useState([]);
   const [provinceAllList, setProvinceAllList] = useState([]);
 
-  const { dispatch, loading, exportLoading, open, onCancel, mode, taskInfo, type } = props;
+  const { dispatch, loading, exportLoading, open, onCancel, mode, taskInfo, type,taskData } = props;
 
   useEffect(() => {
     getPageData();
@@ -53,7 +54,7 @@ const RecordAndManagement = props => {
     return {
       ...values,
       time: undefined,
-      dailyTaskID: taskInfo.ID,
+      dailyTaskID: taskInfo.ID || taskData.ID,
       systemType: type, // 1：运维 2：成套
       isFlag: mode === 'management' ? true : false, // 区分管理
       beginTime: values.time
@@ -379,6 +380,22 @@ const RecordAndManagement = props => {
               添加
             </Button>
           )}
+          {taskData && (
+            <Button
+              type="primary"
+              style={{ margin: '10px 0' }}
+              onClick={() => {
+                if(taskData.ID){
+                setEditData({});
+                setEditOpen(true);
+               }else{
+                 message.error('本月没有派工单，不允许添加！')
+               }
+              }}
+            >
+              添加
+            </Button>
+          )}
           <SdlTable
             loading={loading}
             align="center"
@@ -409,7 +426,7 @@ const RecordAndManagement = props => {
         >
           <CustomerInterview
             type={type === 'ct' ? 1 : ''}
-            taskInfo={taskInfo}
+            taskInfo={taskInfo || taskData }
             editData={editData}
             onCancel={() => {
               setEditOpen(false);
@@ -434,6 +451,7 @@ const RecordAndManagement = props => {
       open={open}
       destroyOnClose
       footer={null}
+      mask={false}
       onCancel={() => {
         onCancel();
       }}

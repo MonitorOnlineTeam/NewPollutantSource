@@ -246,7 +246,7 @@ const Index = props => {
       render: (text, record, index) => {
         const disabledFlag = !record.SystemModelName;
         return type == 1 ? (
-          record.StatusName == '待审核' && (
+          record.IsFlag && (
             <Tooltip
               placement={disabledFlag ? 'left' : 'top'}
               title={disabledFlag ? '无设备型号，暂不支持审核' : '审核'}
@@ -320,7 +320,7 @@ const Index = props => {
             status: values.status
               ? values.status
               : type == 1
-              ? '1,2'
+              ? '1,2,3,4'
               : defaultStatus !== undefined
               ? defaultStatus
               : '3',
@@ -406,8 +406,8 @@ const Index = props => {
             {type == 1 ? (
               <Form.Item name="status" label="审核状态">
                 <Select placeholder="请选择" allowClear>
-                  <Option value={1}>待审核</Option>
-                  <Option value={2}>审核未通过</Option>
+                  <Option value={'1,3'}>待审核</Option>
+                  <Option value={'2,4'}>审核未通过</Option>
                 </Select>
               </Form.Item>
             ) : (
@@ -457,7 +457,7 @@ const Index = props => {
               >
                 导出
               </Button>
-              {/* {reviewersListBtn && <SetUserListBtn type={4} text="审核人员清单" />} */}
+              {reviewersListBtn && <SetUserListBtn type={4} text="审核人员清单" />}
             </Form.Item>
           </Col>
         </Row>

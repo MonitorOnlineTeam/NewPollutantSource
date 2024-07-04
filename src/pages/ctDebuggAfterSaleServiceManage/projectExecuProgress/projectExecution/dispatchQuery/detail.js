@@ -1953,6 +1953,11 @@ const Index = (props) => {
             {data.RealityHour}
           </Form.Item>
         </Col>
+        <Col span={24}>
+          <Form.Item label="服务内容" >
+            {data.Remark}
+          </Form.Item>
+        </Col>
       </Row>
       <TitleComponents text='服务结果处理-工程助理填写' />
       <Row>
