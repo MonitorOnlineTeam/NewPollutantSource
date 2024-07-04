@@ -1,5 +1,5 @@
 import moment from 'moment';
-import * as services from './service';
+import * as services from '../services/cruxParSupervisionRectifica3.0';
 import Cookie from 'js-cookie';
 import Model from '@/utils/model';
 import { message } from 'antd';
@@ -8,7 +8,7 @@ import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
-  namespace: 'cruxParSupervisionRectifica',
+  namespace: 'cruxParSupervisionRectifica3',
   state: {
     tableDatas: [],
     parametersList: [],

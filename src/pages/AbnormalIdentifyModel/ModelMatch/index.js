@@ -28,6 +28,9 @@ const Index = props => {
   };
 
   return (
+    props.isModal ?
+    <PageContent saveCallBack={props.saveCallBack}  isModal={props.isModal} DGIMN={props.DGIMN} />
+    :
     <>
       <NavigationTree
         showIndustry
