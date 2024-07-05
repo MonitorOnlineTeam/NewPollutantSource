@@ -132,6 +132,9 @@ const Index = (props) => {
     option.series.push({
       name: "pie2d",
       type: "pie",
+      tooltip : {
+        show: false,
+      },
       label: {
         // position: 'inside',
         color: 'inherit', //继承饼图颜色

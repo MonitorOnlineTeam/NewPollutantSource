@@ -389,7 +389,7 @@ const Workbench = props => {
   const GetUserMenuList = callback => {
     props.dispatch({
       type: 'wordSupervision/GetUserMenuList',
-      payload: { systemMenuID: sessionStorage.getItem('sysMenuId') }, //只展示运维平台相关菜单
+      payload: { systemMenuID: Cookie.get('sysMenuId') },
       callback: callback && callback(),
     });
   };
@@ -1054,14 +1054,10 @@ const Workbench = props => {
                                                 //安装照片审核
                                                 if (item.Col1 == 2) {
                                                   setInstallEquipmentVisible(true);
-                                                  const dataArr = item.MsgID?.split(',');
+                                                  const dataArr = item.MsgID && JSON.parse(item.MsgID);
                                                   //Col1代表systemModelId
                                                   setInstallEquipmentData({
-                                                    DispatchId: dataArr?.[0],
-                                                    PointId: dataArr?.[1],
-                                                    EquipmentAuditId: dataArr?.[2],
-                                                    Col1: `${dataArr?.[3]}${dataArr?.[4]?`,${dataArr?.[4]}`:''}`,
-
+                                                    ...dataArr
                                                   });
                                                 }
                                               } else if (item.Type == 7) {

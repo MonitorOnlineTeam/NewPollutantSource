@@ -114,7 +114,7 @@ const Model = {
             // Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
             Cookie.set('systemNavigateUrl', systemNavigateUrl);
             //进入系统，运维系统不跳转中间页
-            if (configInfo.IsShowSysPage === '1' && !configInfo.IsOpera) {
+            if (configInfo.IsShowSysPage === '1') {
               router.push('/sysTypeMiddlePage');
             } else {
               sessionStorage.setItem('sysMenuId', sysList.id);

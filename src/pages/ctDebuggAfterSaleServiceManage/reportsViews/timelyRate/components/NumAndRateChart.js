@@ -196,7 +196,7 @@ const NumAndRateChart = props => {
           z: 3,
         },
         {
-          name: '达标率',
+          name: '响应及时率',
           type: 'line',
           data: rate,
           yAxisIndex: 1,

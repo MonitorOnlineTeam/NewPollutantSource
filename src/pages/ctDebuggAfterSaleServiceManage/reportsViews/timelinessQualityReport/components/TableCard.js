@@ -33,7 +33,7 @@ const TableCard = props => {
     modalWrapClassName,
   } = props;
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   // 导出
   const onExport = () => {
@@ -49,8 +49,24 @@ const TableCard = props => {
   const onCancel = () => {
     setIsModalOpen(false);
   };
-
+  const [queryData, setQueryData] = useState({})
+  const typeClick = (type, data) => {
+    setIsModalOpen(true);
+    setLevel(type);
+    setBasicTitle(type === '2' ? '验收服务报告及时率基础数据' : '验收服务报告合格率基础数据');
+    // console.log
+    setQueryData(data)
+  }
+  const TypeRenderComponents = ({ type, data }) => {
+    return <a onClick={() => typeClick(type, data)}>{data?.text || data?.text == 0 ? data.text + '%' : ''}</a>
+  }
   //
+  const getColDate = (name) => {
+    const year = date.format('YYYY')
+    const btime = year && name && moment(name.replace('月', '')).startOf('M').format(`${year}-MM-DD`)
+    const etime = year && name && moment(name.replace('月', '')).endOf('M').format(`${year}-MM-DD`)
+    return [moment(btime), moment(etime)]
+  }
   const getColumns = () => {
     let column = columnList.map(item => {
       return {
@@ -63,9 +79,10 @@ const TableCard = props => {
             width: 140,
             align: 'center',
             sorter: (a, b) => a[`${item.key}ReportTimelyRate`] - b[`${item.key}ReportTimelyRate`],
-            render: (text, row) => {
-              return text + '%';
-            },
+            render: (text, record) => {
+              const time = getColDate(item.name)
+              return <TypeRenderComponents type='2' data={{ region: record.LargeRegionCode,  text: text, time: time }} />
+            }
           },
           {
             title: '报告合格率',
@@ -73,19 +90,18 @@ const TableCard = props => {
             key: `${item.key}ReportQualifiedRate`,
             width: 140,
             align: 'center',
-            sorter: (a, b) =>
-              a[`${item.key}ReportQualifiedRate`] - b[`${item.key}ReportQualifiedRate`],
-            render: (text, row) => {
-              return text + '%';
-            },
+            sorter: (a, b) => a[`${item.key}ReportQualifiedRate`] - b[`${item.key}ReportQualifiedRate`],
+            render: (text, record) => {
+              const time = getColDate(item.name)
+              return <TypeRenderComponents type='3' data={{ region: record.LargeRegionCode, passStatus: 1, text: text, time: time }} />
+            }
           },
           {
             title: '报告及时合格率',
             dataIndex: `${item.key}ReportTimelyQualifiedRate`,
             key: `${item.key}ReportTimelyQualifiedRate`,
             width: 140,
-            sorter: (a, b) =>
-              a[`${item.key}ReportTimelyQualifiedRate`] - b[`${item.key}ReportTimelyQualifiedRate`],
+            sorter: (a, b) =>a[`${item.key}ReportTimelyQualifiedRate`] - b[`${item.key}ReportTimelyQualifiedRate`],
             align: 'center',
             render: (text, row) => {
               return text + '%';
@@ -117,9 +133,9 @@ const TableCard = props => {
             fixed: 'left',
             align: 'center',
             sorter: (a, b) => a[`YearReportTimelyRate`] - b[`YearReportTimelyRate`],
-            render: (text, row) => {
-              return text + '%';
-            },
+            render: (text, record) => {
+              return <TypeRenderComponents type='2' data={{ region: record.LargeRegionCode,  text: text }} />
+            }
           },
           {
             title: '报告合格率',
@@ -129,9 +145,9 @@ const TableCard = props => {
             fixed: 'left',
             align: 'center',
             sorter: (a, b) => a[`YearReportQualifiedRate`] - b[`YearReportQualifiedRate`],
-            render: (text, row) => {
-              return text + '%';
-            },
+            render: (text, record) => {
+              return <TypeRenderComponents type='3' data={{ region: record.LargeRegionCode, passStatus: 1, text: text }} />
+            }
           },
           {
             title: '报告及时合格率',
@@ -183,7 +199,7 @@ const TableCard = props => {
           >
             导出
           </Button>
-          <Button
+          {/* <Button
             type="primary"
             onClick={() => {
               setIsModalOpen(true);
@@ -202,7 +218,7 @@ const TableCard = props => {
             }}
           >
             合格率基础数据
-          </Button>
+          </Button> */}
         </Space>
       }
       size="small"
@@ -226,6 +242,7 @@ const TableCard = props => {
           isModalOpen={isModalOpen}
           title={basicTitle}
           defaultTime={computeStartAndEnd()}
+          queryData={queryData}
           onCancel={() => {
             setIsModalOpen(false);
           }}

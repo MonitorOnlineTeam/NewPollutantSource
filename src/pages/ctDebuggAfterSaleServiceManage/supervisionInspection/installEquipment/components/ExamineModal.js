@@ -154,7 +154,7 @@ const Index = (props) => {
           <Radio value={5}>/</Radio>
         </Radio.Group>
       </Form.Item>
-      <Form.Item name='opinion' label='审核意见' rules={[{ required: true, message: '请输入审核意见！' }]}>
+      <Form.Item name='opinion' label='审核意见' rules={[{ required: false, message: '请输入审核意见！' }]}>
         <Input.TextArea rows={2} placeholder="请输入" allowClear />
       </Form.Item>
       <Form.Item name='auditFiles' label='附件'>
@@ -188,11 +188,13 @@ const Index = (props) => {
           dispatchId: data.DispatchId,
           pointId: data.PointId,
           equipmentAuditId: data.EquipmentAuditId,
-          workerID:data.WorkerID,
+          workerID: data.WorkerID,
           projectCode: data.ProjectCode,
           itemCode:  data.ItemCode,
           entName:  data.EntName,
           pointName:  data.PointName,
+          status: data.Status,
+          managerId: data.ManagerId,
       }
       props.dispatch({
         type: `${namespace}/AddAuditInfo`,

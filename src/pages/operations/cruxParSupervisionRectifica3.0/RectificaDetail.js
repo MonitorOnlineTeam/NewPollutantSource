@@ -29,13 +29,13 @@ import config from '@/config';
 import { uploadPrefix } from '@/config'
 
 
-const namespace = 'cruxParSupervisionRectifica'
+const namespace = 'cruxParSupervisionRectifica3'
 
 
 
 
-const dvaPropsData = ({ loading, cruxParSupervisionRectifica, global, common }) => ({
-  detailList: cruxParSupervisionRectifica.detailList,
+const dvaPropsData = ({ loading, cruxParSupervisionRectifica3, global, common }) => ({
+  detailList: cruxParSupervisionRectifica3.detailList,
   tableLoading: loading.effects[`${namespace}/getZGCheckInfoList`],
   updZGRangeCheckLoading: loading.effects[`${namespace}/updZGRangeCheck`],
   updZGCouCheckLoading: loading.effects[`${namespace}/updZGCouCheck`],

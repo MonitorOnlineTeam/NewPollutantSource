@@ -150,6 +150,21 @@ const BasicData = props => {
         width: 260,
       },
       {
+        title: '合同类型',
+        dataIndex: 'ProjectType',
+        key: 'ProjectType',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '最终用户',
+        dataIndex: 'customEnt',
+        key: 'customEnt',
+        align: 'center',
+        width:150,
+        ellipsis: true,
+      },
+      {
         title: '服务大区',
         dataIndex: 'serviceAreaName',
         key: 'serviceAreaName',
@@ -170,13 +185,13 @@ const BasicData = props => {
         align: 'center',
         ellipsis: true,
       },
-      {
-        title: '企业名称',
-        dataIndex: 'customEnt',
-        key: 'customEnt',
-        align: 'center',
-        ellipsis: true,
-      },
+      // {
+      //   title: '企业名称',
+      //   dataIndex: 'customEnt',
+      //   key: 'customEnt',
+      //   align: 'center',
+      //   ellipsis: true,
+      // },
       {
         title: '离开现场时间',
         dataIndex: 'leaveDate',
@@ -264,6 +279,7 @@ const BasicData = props => {
         form={form}
         initialValues={{
           time: defaultTime || [moment().startOf('month'), moment()],
+          ...props.queryData,
         }}
         autoComplete="off"
         style={{ marginTop: 10, marginBottom: 10 }}
@@ -287,6 +303,11 @@ const BasicData = props => {
           </Col>
           <Col span={8}>
             <Form.Item name="projectName" label="项目名称">
+              <Input placeholder="请输入" allowClear />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item name="customEnt" label="最终用户">
               <Input placeholder="请输入" allowClear />
             </Form.Item>
           </Col>
@@ -397,6 +418,7 @@ const BasicData = props => {
         onCancel={() => {
           setIsDetailsModalOpen(false);
         }}
+        zIndex={1001}
       >
         <Descriptions
           className={styles.detailsWrapper}

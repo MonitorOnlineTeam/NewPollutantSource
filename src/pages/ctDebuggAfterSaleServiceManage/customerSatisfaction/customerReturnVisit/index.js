@@ -267,7 +267,7 @@ const ReturnVisit = props => {
                 >
                   导出
                 </Button>
-                {/* {buttonList.includes('officeManagement') && ( */}
+                {buttonList.includes('customerSitefollowManagement') && (
                   <Button
                     type="primary"
                     onClick={() => {
@@ -277,7 +277,7 @@ const ReturnVisit = props => {
                   >
                     客户现场回访管理
                   </Button>
-                {/* )} */}
+                )} 
                 <Button
                   type="primary"
                   onClick={() => {

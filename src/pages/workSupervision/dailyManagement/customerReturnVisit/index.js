@@ -48,6 +48,7 @@ const ReturnVisit = props => {
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [modalQueryParams, setModalQueryParams] = useState({});
   const [mode, setMode] = useState(); // 1: 管理 空：记录
+  const [taskData, setTaskData] = useState({}); 
 
   const buttonList = permissionButton(props.match.path);
   const {
@@ -61,6 +62,19 @@ const ReturnVisit = props => {
 
   useEffect(() => {
     getTableDataSource();
+    props.dispatch({
+      type: 'wordSupervision/GetToDoDailyWorks',
+      payload: {
+        type: 1,
+      },
+      callback:(data)=>{
+         data = data.filter(item=>item.TaskType == 4)?.[0]
+         if(data){
+          setTaskData(data)
+         }
+        
+      }
+    });
   }, []);
 
   // 获取表格数据
@@ -256,7 +270,7 @@ const ReturnVisit = props => {
                 >
                   导出
                 </Button>
-                {/* {buttonList.includes('officeManagement') && ( */}
+                {buttonList.includes('customerSitefollowManagement') && (
                 <Button
                   type="primary"
                   onClick={() => {
@@ -266,7 +280,7 @@ const ReturnVisit = props => {
                 >
                   客户现场回访管理
                 </Button>
-                {/* )} */}
+                 )} 
                 <Button
                   type="primary"
                   onClick={() => {
@@ -314,6 +328,7 @@ const ReturnVisit = props => {
           type={systemType}
           mode={mode}
           open={isModalOpen2}
+          taskData = {taskData}
           onCancel={() => {
             setIsModalOpen2(false);
           }}

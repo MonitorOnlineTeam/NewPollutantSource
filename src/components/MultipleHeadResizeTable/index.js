@@ -75,7 +75,7 @@ const  Index = (props) => {
         return col.width || 150;
       }
       if (title.indexOf('序号') != -1) {
-        return col.width || 60;
+        return col.width || 54;
       }
       if (
         title.indexOf('类型') != -1 ||

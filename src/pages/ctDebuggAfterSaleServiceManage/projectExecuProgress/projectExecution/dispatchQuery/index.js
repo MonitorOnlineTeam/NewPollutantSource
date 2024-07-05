@@ -72,12 +72,17 @@ const Index = (props) => {
 
   const { tableDatas, tableTotal,  tableLoading, exportLoading,  } = props;
 
-
+ 
+  const parId = props.match?.params?.id
 
   useEffect(() => {
+    if (parId) {
+      const id = parId.split('=')
+      form.setFieldsValue({TypeId:id?.[1]})
+    }
     onFinish(pageIndex, pageSize);
 
-  }, []);
+  }, [parId]);
 
   let columns = [
     {
@@ -263,7 +268,7 @@ const Index = (props) => {
   const onFinish = async (PageIndex, PageSize,queryPar) => {  //查询
 
     try {
-      const values =   await form.validateFields();
+      const values =  await form.validateFields();
       props.getServiceDispatch(queryPar?{...queryPar, PageIndex: PageIndex, PageSize: PageSize,} : {
         ...values,
         beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
@@ -316,6 +321,7 @@ const Index = (props) => {
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
+        <Form.Item name='TypeId' hidden></Form.Item>
         {expand && <>
         <Col span={8}>
           <Form.Item name='serviceUserName' label='服务工程师' >
@@ -412,7 +418,7 @@ const Index = (props) => {
         mask={false}
         bodyStyle={{overflow:'hidden'}}
       >
-        <Detail serviceApplicaData={detailData ? detailData : {}} id={detailId} />
+        <Detail serviceApplicaData={detailData ? detailData : {}} id={detailId} tabKey={parId?.split('=')?.[1]}/>
       </Modal>
       </BreadcrumbWrapper>
     </div>

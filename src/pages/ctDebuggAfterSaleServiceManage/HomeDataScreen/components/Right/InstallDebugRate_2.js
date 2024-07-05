@@ -61,7 +61,7 @@ const InstallDebugRate = props => {
       { value: InstallationDebuggingRate.Qualified, name: '合格' },
       { value: InstallationDebuggingRate.Unqualified, name: '不合格' },
       { value: InstallationDebuggingRate.NoPhotos, name: '无照片' },
-      { value: InstallationDebuggingRate.NoNeed, name: '/' },
+      // { value: InstallationDebuggingRate.NoNeed, name: '/' },
     ];
     let rate = InstallationDebuggingRate.Rate;
 

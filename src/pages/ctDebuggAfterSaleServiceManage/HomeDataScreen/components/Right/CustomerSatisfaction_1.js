@@ -18,12 +18,13 @@ const CustomerSatisfaction = props => {
   const [SatisfactionSurveyRate, setSatisfactionSurveyRate] = useState({
     ServiceAttitudeRate: 0,
     TechnicalLevelRate: 0,
+    SatisfactionSurveyCount : 0,
   });
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { dispatch } = props;
-
+  const [date, setDate] = useState();
   useEffect(() => {}, []);
 
   const getData = value => {
@@ -38,7 +39,9 @@ const CustomerSatisfaction = props => {
         if (res.IsSuccess) {
           setSatisfactionSurveyRate(res.Datas.SatisfactionSurveyRate);
         }
+        setDate(value?.[0]&&value?.[1]&&[moment(value[0]),moment(value[1])])
         setLoading(false);
+        
       },
     });
   };
@@ -219,7 +222,7 @@ const CustomerSatisfaction = props => {
       <div className={styles.CustomerSatisfactionWrapper} onClick={onOpenModal}>
         <div className={styles.statisticsNum}>
           <span className={styles.text}>调查次数</span>
-          <span className={styles.number}>{100}次</span>
+          <span className={styles.number}>{SatisfactionSurveyRate.SatisfactionSurveyCount}次</span>
         </div>
         <Row className={`${styles.echartsContent}`}>
           <Col span={12}>
@@ -266,6 +269,8 @@ const CustomerSatisfaction = props => {
             viewOnlyAll
             match={{ path: '' }}
             modalWrapClassName="fullScreenModal"
+            initDate={date}
+            isHome
           />
         )}
       </Modal>

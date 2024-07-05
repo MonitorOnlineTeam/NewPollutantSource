@@ -93,7 +93,7 @@ const reportAudit = props => {
   const onExport = () => {
     const body = getParams();
     dispatch({
-      type: 'reportQuery/GetAlreadyCheckServices',
+      type: 'reportQuery/ExportGetAlreadyCheckServices',
       payload: {
         ...body,
         pageIndex: 0,

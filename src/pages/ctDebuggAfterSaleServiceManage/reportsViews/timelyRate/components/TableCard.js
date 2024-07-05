@@ -48,6 +48,15 @@ const TableCard = props => {
     setIsModalOpen(false);
   };
 
+
+  const [queryData,setQueryData]=useState({})
+  const typeClick = (data) =>{
+    setIsModalOpen(true);
+    setQueryData(data)
+  }
+  const TypeRenderComponents = ({data}) =>{
+    return <a onClick={()=>typeClick(data)}>{data?.text || data?.text==0?  data.text : ''}</a>
+    }
   //
   const getColumns = () => {
     let column = columnList.map(item => {
@@ -61,6 +70,9 @@ const TableCard = props => {
             width: 140,
             align: 'center',
             sorter: (a, b) => a[`${item.key}allCount`] - b[`${item.key}allCount`],
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{serviceAreaCode:record.largeRegionCode,text:text, time:[moment(record[`${item.key}btime`]),moment(record[`${item.key}etime`]) ] }}  />
+            }
           },
           {
             title: '响应及时',
@@ -69,6 +81,9 @@ const TableCard = props => {
             width: 140,
             align: 'center',
             sorter: (a, b) => a[`${item.key}timelyCount`] - b[`${item.key}timelyCount`],
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{responseStatus:1, serviceAreaCode:record.largeRegionCode,text:text, time:[moment(record[`${item.key}btime`]),moment(record[`${item.key}etime`]) ]  }}  />
+            }
           },
           {
             title: '响应不及时',
@@ -77,6 +92,9 @@ const TableCard = props => {
             width: 140,
             sorter: (a, b) => a[`${item.key}nottimelyCount`] - b[`${item.key}nottimelyCount`],
             align: 'center',
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{responseStatus:2, serviceAreaCode:record.largeRegionCode,text:text, time:[moment(record[`${item.key}btime`]),moment(record[`${item.key}etime`]) ]  }}  />
+            }
           },
           {
             title: '响应及时率',
@@ -113,6 +131,9 @@ const TableCard = props => {
             fixed: 'left',
             align: 'center',
             sorter: (a, b) => a[`allCount`] - b[`allCount`],
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{serviceAreaCode:record.largeRegionCode,text:text, time:[moment(record.btime),moment(record.etime) ] }}  />
+            }
           },
           {
             title: '响应及时',
@@ -122,6 +143,9 @@ const TableCard = props => {
             fixed: 'left',
             align: 'center',
             sorter: (a, b) => a[`timelyCount`] - b[`timelyCount`],
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{responseStatus:1, serviceAreaCode:record.largeRegionCode,text:text, time:[moment(record.btime),moment(record.etime) ] }}  />
+            }
           },
           {
             title: '响应不及时',
@@ -131,6 +155,9 @@ const TableCard = props => {
             sorter: (a, b) => a[`nottimelyCount`] - b[`nottimelyCount`],
             fixed: 'left',
             align: 'center',
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{responseStatus:2, serviceAreaCode:record.largeRegionCode,text:text, time:[moment(record.btime),moment(record.etime) ] }}  />
+            }
           },
           {
             title: '响应及时率',
@@ -147,7 +174,7 @@ const TableCard = props => {
     ];
   };
 
-  const computeStartAndEnd = () => {
+  const computeStartAndEnd = (date) => {
     let _date = moment(date);
     var now = moment();
     var currentYear = now.format('YYYY');
@@ -177,14 +204,14 @@ const TableCard = props => {
           >
             导出
           </Button>
-          <Button
+          {/* <Button
             type="primary"
             onClick={() => {
               setIsModalOpen(true);
             }}
           >
             查看基础数据
-          </Button>
+          </Button> */}
         </Space>
       }
       size="small"
@@ -205,7 +232,8 @@ const TableCard = props => {
           wrapClassName={modalWrapClassName}
           isModalOpen={isModalOpen}
           title="服务响应基础数据"
-          defaultTime={computeStartAndEnd()}
+          defaultTime={computeStartAndEnd(date)}
+          queryData={queryData}
           onCancel={() => {
             setIsModalOpen(false);
           }}

@@ -89,7 +89,18 @@ const UserStatistics = props => {
       },
     });
   };
-
+  const [queryData,setQueryData]=useState({})
+  const typeClick = (record,data) =>{
+    setIsModalOpen(true);
+    setCurrentUserInfo({
+      userName: record.userName,
+      userID: record.userID,
+    });
+    setQueryData({...data,time:form.getFieldValue('time')})
+  }
+  const TypeRenderComponents = ({record, data}) =>{
+    return <a onClick={()=>typeClick(record,data)}>{data?.text || data?.text==0?  data.text : ''}</a>
+    }
   //
   const getColumns = () => {
     return [
@@ -123,6 +134,9 @@ const UserStatistics = props => {
         align: 'center',
         ellipsis: true,
         sorter: (a, b) => a.allCount - b.allCount,
+        render:(text,record)=>{
+          return <TypeRenderComponents record={record} data={{ text:text }}  />
+        }
       },
       {
         title: '及时响应',
@@ -131,6 +145,9 @@ const UserStatistics = props => {
         align: 'center',
         ellipsis: true,
         sorter: (a, b) => a.timelyCount - b.timelyCount,
+        render:(text,record)=>{
+          return <TypeRenderComponents record={record} data={{responseStatus:1,text:text }}  />
+        }
       },
       {
         title: '不及时响应',
@@ -139,6 +156,9 @@ const UserStatistics = props => {
         align: 'center',
         ellipsis: true,
         sorter: (a, b) => a.nottimelyCount - b.nottimelyCount,
+        render:(text,record)=>{
+          return <TypeRenderComponents record={record} data={{responseStatus:2,text:text }}  />
+        }
       },
       {
         title: '服务响应及时率',
@@ -151,30 +171,30 @@ const UserStatistics = props => {
           return text !== undefined ? text + '%' : text;
         },
       },
-      {
-        title: <span>操作</span>,
-        align: 'center',
-        fixed: 'right',
-        width: 60,
-        ellipsis: true,
-        render: (text, record) => {
-          return (
-            <Tooltip title="明细">
-              <a
-                onClick={() => {
-                  setCurrentUserInfo({
-                    userName: record.userName,
-                    userID: record.userID,
-                  });
-                  setIsModalOpen(true);
-                }}
-              >
-                <FileSearchOutlined style={{ fontSize: 16 }} />
-              </a>
-            </Tooltip>
-          );
-        },
-      },
+      // {
+      //   title: <span>操作</span>,
+      //   align: 'center',
+      //   fixed: 'right',
+      //   width: 60,
+      //   ellipsis: true,
+      //   render: (text, record) => {
+      //     return (
+      //       <Tooltip title="明细">
+      //         <a
+      //           onClick={() => {
+      //             setCurrentUserInfo({
+      //               userName: record.userName,
+      //               userID: record.userID,
+      //             });
+      //             setIsModalOpen(true);
+      //           }}
+      //         >
+      //           <FileSearchOutlined style={{ fontSize: 16 }} />
+      //         </a>
+      //       </Tooltip>
+      //     );
+      //   },
+      // },
     ];
   };
 
@@ -191,7 +211,7 @@ const UserStatistics = props => {
         // id="searchForm"
         form={form}
         initialValues={{
-          time: [moment().startOf('month'), moment()],
+          time: [moment().startOf('year'), moment()],
         }}
         autoComplete="off"
         style={{ marginTop: 10, marginBottom: 10 }}
@@ -274,6 +294,7 @@ const UserStatistics = props => {
           }}
           type="user"
           defaultTime={form.getFieldValue('time')}
+          queryData={queryData}
           userID={currentUserInfo.userID}
         />
       )}

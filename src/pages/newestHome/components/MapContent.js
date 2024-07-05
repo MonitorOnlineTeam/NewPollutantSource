@@ -1041,15 +1041,10 @@ class Index extends PureComponent {
       <PageLoading />
       :
       <Map
-
-        // amapkey={config.amapkey}
-        // amapkey={'1440c67033e5ede0f3a068605de5fb5f'}
-        // mapStyle='amap://styles/6daa80e94c53325ff909a31f3d3d8809'
-        amapkey={'5e60171b820065e7e9a1d6ea45abaee9'}
-        mapStyle='amap://styles/32ae1bcea26191a8dd684f71c172af1f'
+        amapkey={config.amapkey}
+        mapStyle={config.mapStyle}
         events={this.amapEvents}
         version='1.4.19'
-
       >
 
         <Markers

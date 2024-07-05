@@ -16,8 +16,9 @@ import {
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import styles from '../index.less';
 import moment from 'moment';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const dvaPropsData = ({ loading, timeoutServices }) => ({
   timeoutServicesData: timeoutServices.timeoutServicesData,
@@ -60,8 +61,11 @@ const DurationTable = props => {
         pageIndex: _pageIndex || pageIndex,
         pageSize: _pageSize || pageSize,
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values?.time?.[0]&& values.time[0].format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values?.time?.[1]&& values.time[1].format('YYYY-MM-DD HH:mm:ss'),
         sort: _sort || sort,
         ...values,
+        time:undefined,
       },
       callback: res => {
         setBasicsDataSource(res.Datas);
@@ -75,16 +79,16 @@ const DurationTable = props => {
     dispatch({
       type: 'timeoutServices/getLargeRegion',
       payload: {},
-      callback: res => {},
+      callback: res => { },
     });
   };
 
   // 获取超时服务原因与重复服务原因
-  const GetReasonList = () => {
+  const GetReasonList = (par) => {
     dispatch({
       type: 'timeoutServices/GetReasonList',
       payload: {},
-      callback: res => {},
+      callback: res => { },
     });
   };
 
@@ -116,6 +120,27 @@ const DurationTable = props => {
   const onCancel = () => {
     setIsModalOpen(false);
   };
+  
+  const OverTimeComponents = ({ text,record }) => {
+    return <a
+      onClick={() => {
+        setIsModalOpen(true);
+        const par = {
+          serviceAreaCode:record.ServiceAreaCode,
+          questionID:record.QuestionID,
+          time:[moment(moment(date).startOf('year')),moment(moment(date).endOf('year'))],
+        }
+        form.setFieldsValue({
+          ...par
+        })
+        setTimeout(()=>{
+          handleTableChange(1, 20);
+          getLargeRegion();
+          GetReasonList();
+        })
+
+      }}>{text}</a>
+  }
 
   //
   const getColumns = () => {
@@ -129,6 +154,9 @@ const DurationTable = props => {
             key: `Times${item.ID}`,
             width: 120,
             align: 'center',
+            render: (text,record) => {
+              return <OverTimeComponents text={text} record={record}/>
+            }
           },
           {
             title: '占比',
@@ -190,6 +218,9 @@ const DurationTable = props => {
             width: 120,
             align: 'center',
             fixed: 'left',
+            render: (text,record) => {
+              return <OverTimeComponents text={text} record={record} />
+            }
           },
           {
             title: '占比',
@@ -217,7 +248,7 @@ const DurationTable = props => {
         },
       },
       {
-        title: '所属大区',
+        title: '派单工号',
         dataIndex: 'ServiceAreaName',
         key: 'ServiceAreaName',
         ellipsis: true,
@@ -236,6 +267,18 @@ const DurationTable = props => {
         width: 'auto',
       },
       {
+        title: '最终用户',
+        dataIndex: 'CustomEnt',
+        key: 'CustomEnt',
+        ellipsis: true,
+      },
+      {
+        title: '服务大区',
+        dataIndex: 'ServiceAreaName',
+        key: 'ServiceAreaName',
+        ellipsis: true,
+      },
+      {
         title: '超时服务原因',
         dataIndex: 'QuestionName',
         key: 'QuestionName',
@@ -243,13 +286,37 @@ const DurationTable = props => {
         width: 'auto',
       },
       {
-        title: '超时时长（小时）',
+        title: '超时时长（H）',
         dataIndex: 'OverTime',
         key: 'OverTime',
         ellipsis: true,
         sorter: true,
         width: 180,
         // sorter: (a, b) => a.OverTime - b.OverTime,
+      },
+      {
+        title: '离开现场时间',
+        dataIndex: 'LeaveDate',
+        key: 'LeaveDate',
+        ellipsis: true,
+        sorter: true,
+        width: 120,
+      },
+      {
+        title: '填报人',
+        dataIndex: 'CreateUserName',
+        key: 'CreateUserName',
+        ellipsis: true,
+        sorter: true,
+        width: 120,
+      },
+      {
+        title: '填报时间',
+        dataIndex: 'CreateTime',
+        key: 'CreateTime',
+        ellipsis: true,
+        sorter: true,
+        width: 120,
       },
     ];
 
@@ -286,7 +353,7 @@ const DurationTable = props => {
           >
             导出
           </Button>
-          <Button
+          {/* <Button
             type="primary"
             onClick={() => {
               handleTableChange(1, 20);
@@ -296,7 +363,7 @@ const DurationTable = props => {
             }}
           >
             查看基础数据
-          </Button>
+          </Button> */}
         </Space>
       }
       size="small"
@@ -327,18 +394,32 @@ const DurationTable = props => {
         <Form
           id="searchForm"
           form={form}
-          layout="inline"
-          initialValues={{}}
+          initialValues={{
+            time: [moment().startOf('year'), moment()]
+          }}
           autoComplete="off"
           style={{ marginTop: 10, marginBottom: 10 }}
         >
+          <Row>
+            <Space>
+              <Form.Item name="projectCode" label="项目编号">
+                <Input placeholder="请输入" allowClear style={{ width: 260 }} />
+              </Form.Item>
+              <Form.Item name="projectName" label="项目名称" className='form_label_width_97'>
+                <Input placeholder="请输入" allowClear style={{ width: 260 }} />
+              </Form.Item>
+              <Form.Item name="CustomEnt" label="最终用户" className='form_label_width_97'>
+                <Input placeholder="请输入" allowClear style={{ width: 260 }} />
+              </Form.Item>
+            </Space>
+          </Row>
           <Space>
             <Form.Item name="serviceAreaCode" label="所属大区">
               <Select
                 showSearch
                 allowClear
                 placeholder="请选择所属大区"
-                style={{ width: 160 }}
+                style={{ width: 260 }}
                 filterOption={(input, option) =>
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
@@ -352,17 +433,12 @@ const DurationTable = props => {
                 })}
               </Select>
             </Form.Item>
-            <Form.Item name="projectCode" label="项目编号">
-              <Input placeholder="请输入" allowClear />
-            </Form.Item>
-            <Form.Item name="projectName" label="项目名称">
-              <Input placeholder="请输入" allowClear />
-            </Form.Item>
+
             <Form.Item name="questionID" label="超时服务原因">
               <Select
                 allowClear
                 placeholder="请选择超时服务原因"
-                style={{ width: 180 }}
+                style={{ width: 260 }}
                 showSearch
                 filterOption={(input, option) =>
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -376,6 +452,9 @@ const DurationTable = props => {
                   );
                 })}
               </Select>
+            </Form.Item>
+            <Form.Item name="time" label="离开现场时间">
+              <RangePicker_ style={{ width: 260 }} format="YYYY-MM-DD" />
             </Form.Item>
             <Form.Item>
               <Space>
@@ -406,7 +485,7 @@ const DurationTable = props => {
           loading={basicsLoading}
           dataSource={basicsDataSource}
           columns={getBasicsColumns()}
-          scroll={{x:710}}
+          scroll={{ x: 1200 }}
           align="center"
           onChange={onTableChange}
           pagination={{

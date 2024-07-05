@@ -65,7 +65,7 @@ const ProductProportionCard4 = props => {
       Times: 0,
       TimeRate: '0%',
       Num: 0,
-      NumRate: topFourTotal === 0 ? 0 : (100 - topFourTotal).toFixed(2),
+      NumRate: topFourTotal === 0 ? 0 : (100 - topFourTotal),
     };
 
     // 添加到结果数组
@@ -80,10 +80,9 @@ const ProductProportionCard4 = props => {
         TimeRate: item.TimeRate.replace('%', '') * 1,
       };
     });
-
     // 创建一个副本，避免改变原数组
     let copyData = tempData.slice();
-
+        copyData.sort((a, b) => b.TimeRate - a.TimeRate);
     // 根据 TimeRate 进行降序排序
     // 获取前四个元素
     let topFour = copyData.splice(0, 4);
@@ -99,13 +98,14 @@ const ProductProportionCard4 = props => {
     let other = {
       ReasonName: '其他',
       Times: otherTotalData,
-      TimeRate: topFourTotal === 0 ? 0 : (100 - topFourTotal).toFixed(2),
+      TimeRate: topFourTotal === 0 ? 0 : (100 - topFourTotal),
       Num: 0,
       NumRate: 0,
     };
 
     // 添加到结果数组
     topFour.push(other);
+    console.log(topFour)
     return topFour;
   }
 
@@ -217,7 +217,7 @@ const ProductProportionCard4 = props => {
       internalDiameterRatio: 0.8,
       customVal: customVal,
       legendOption: { show: false },
-      positiveSequence : true
+      // positiveSequence : true
     });
 
     let pie2dData = [];

@@ -17,9 +17,7 @@ import InstallEquipment from '@/pages/ctDebuggAfterSaleServiceManage/supervision
 const dvaPropsData = ({ loading, reportsAndViews }) => ({
   installPageData: reportsAndViews.installPageData,
   loading: loading.effects[`reportsAndViews/GetInstallationDebugRate`],
-  basicsLoading: loading.effects[`ctAfterSalesServiceManagement/GetWarrantyServiceInfo`],
-  exportLoading: loading.effects['ctAfterSalesServiceManagement/ExportWarrantyServiceAnalysis'],
-  basicsExportLoading: loading.effects['ctAfterSalesServiceManagement/ExportWarrantyServiceInfo'],
+  exportLoading: loading.effects['reportsAndViews/ExportWarrantyServiceAnalysis'],
 });
 
 const TableCard = props => {
@@ -40,17 +38,24 @@ const TableCard = props => {
   // 导出
   const onExport = () => {
     dispatch({
-      type: 'ctAfterSalesServiceManagement/ExportInstallationDebugRate',
+      type: 'reportsAndViews/ExportInstallationDebugRate',
       payload: {
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
       },
     });
   };
-
+  
   const onCancel = () => {
     setIsModalOpen(false);
   };
-
+  const [queryData,setQueryData]=useState({})
+  const typeClick = (data) =>{
+    setIsModalOpen(true);
+    setQueryData(data)
+  }
+  const TypeRenderComponents = ({data}) =>{
+  return <a onClick={()=>typeClick(data)}>{data?.text || data?.text==0?  data.text : ''}</a>
+  }
   //
   const getColumns = () => {
     let columnList = ColumnList.map(item => {
@@ -63,6 +68,9 @@ const TableCard = props => {
             key: `Excellent${item.ID}`,
             width: 100,
             align: 'center',
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{auditResults:1,serviceAreaCode:item.ID,text:text, time:[moment(record.btime),moment(record.etime) ],systemModelId:record.SystemModelId }}  />
+            }
           },
           {
             title: '合格',
@@ -70,6 +78,9 @@ const TableCard = props => {
             key: `Qualified${item.ID}`,
             width: 100,
             align: 'center',
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{auditResults:2,serviceAreaCode:item.ID,text:text,time:[moment(record.btime),moment(record.etime) ],systemModelId:record.SystemModelId  }}  />
+            }
           },
           {
             title: '不合格',
@@ -77,6 +88,9 @@ const TableCard = props => {
             key: `Unqualified${item.ID}`,
             width: 100,
             align: 'center',
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{auditResults:3,serviceAreaCode:item.ID,text:text,time:[moment(record.btime),moment(record.etime) ],systemModelId:record.SystemModelId  }}  />
+            }
           },
           {
             title: '无照片',
@@ -84,6 +98,9 @@ const TableCard = props => {
             key: `NoPhotos${item.ID}`,
             width: 100,
             align: 'center',
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{auditResults:4,serviceAreaCode:item.ID,text:text,time:[moment(record.btime),moment(record.etime) ],systemModelId:record.SystemModelId  }}  />
+            }
           },
           {
             title: '/',
@@ -91,6 +108,9 @@ const TableCard = props => {
             key: `NoNeed${item.ID}`,
             width: 100,
             align: 'center',
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{auditResults:5,serviceAreaCode:item.ID,text:text,time:[moment(record.btime),moment(record.etime) ],systemModelId:record.SystemModelId  }}  />
+            }
           },
           {
             title: '达标率',
@@ -152,6 +172,9 @@ const TableCard = props => {
             width: 100,
             align: 'center',
             fixed: 'left',
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{auditResults:1,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
+            }
           },
           {
             title: '合格',
@@ -160,6 +183,9 @@ const TableCard = props => {
             width: 100,
             align: 'center',
             fixed: 'left',
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{auditResults:2,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
+            }
           },
           {
             title: '不合格',
@@ -168,6 +194,9 @@ const TableCard = props => {
             width: 100,
             align: 'center',
             fixed: 'left',
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{auditResults:3,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
+            }
           },
           {
             title: '无照片',
@@ -176,6 +205,9 @@ const TableCard = props => {
             width: 100,
             align: 'center',
             fixed: 'left',
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{auditResults:4,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
+            }
           },
           {
             title: '/',
@@ -184,6 +216,9 @@ const TableCard = props => {
             width: 100,
             align: 'center',
             fixed: 'left',
+            render:(text,record)=>{
+              return <TypeRenderComponents data={{auditResults:5,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
+            }
           },
           {
             title: '达标率',
@@ -229,14 +264,14 @@ const TableCard = props => {
           >
             导出
           </Button>
-          <Button
+          {/* <Button
             type="primary"
             onClick={() => {
               setIsModalOpen(true);
             }}
           >
             查看基础数据
-          </Button>
+          </Button> */}
         </Space>
       }
       size="small"
@@ -259,13 +294,16 @@ const TableCard = props => {
           open={isModalOpen}
           destroyOnClose
           footer={null}
+          bodyStyle={{padding:0}}
           onCancel={() => {
             onCancel();
           }}
         >
           <InstallEquipment
             hideBreadcrumb
+            modalWrapClassName = {modalWrapClassName}
             defaultTime={computeStartAndEnd(date)}
+            queryData = {queryData}
             defaultStatus=""
             auditResultList={[1, 2, 3, 4, 5]}
             location={props.location}

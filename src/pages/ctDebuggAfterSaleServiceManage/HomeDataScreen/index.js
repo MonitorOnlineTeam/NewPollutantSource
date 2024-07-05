@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Tooltip, Row, Col, Modal, Space } from 'antd';
 import { RollbackOutlined } from '@ant-design/icons';
 import { router } from 'umi';
+import Cookie from 'js-cookie';
 import styles from './styles.less';
 import DeviceInfoCount from './components/Left/DeviceInfoCount_1';
 import ProjectExecution from './components/Left/ProjectExecution_2';
@@ -39,11 +40,9 @@ const HomeDataScreen = props => {
             color: 'rgb(101, 217, 255)',
           }}
           onClick={() => {
-            let meunList = sessionStorage.getItem('menuDatas')
-              ? JSON.parse(sessionStorage.getItem('menuDatas'))
-              : [];
-            if (meunList?.length >= 1) {
-              router.push(meunList[1]);
+            let meunList =  Cookie.get("systemNavigateUrl")
+            if (meunList) {
+              router.push(meunList);
             } else {
               router.push('/ctManage/workbench')
             }
@@ -70,7 +69,7 @@ const HomeDataScreen = props => {
             {/* 地图 */}
             <MapContent />
             {/* 售后服务情况 */}
-            <AfterSaleService />
+            {/* <AfterSaleService /> */}
           </Col>
           <Col style={{ width: '27%', minWidth: 400 }} className={styles.rightWrapper}>
             {/* 客户满意度 */}
@@ -78,7 +77,8 @@ const HomeDataScreen = props => {
             {/* 安装调试达标率 */}
             <InstallDebugRate />
             {/* 设备运行完好率 */}
-            <EquipUptimeRate />
+            {/* <EquipUptimeRate /> */}
+            <AfterSaleService />
           </Col>
         </Row>
       </main>

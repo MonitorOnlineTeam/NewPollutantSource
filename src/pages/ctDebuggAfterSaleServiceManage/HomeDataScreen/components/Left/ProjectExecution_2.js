@@ -44,7 +44,7 @@ const ProjectExecution = props => {
     <HomeCard
       style={{ minHeight: 260 }}
       title="项目执行情况"
-      timeTypes={['本月', '去年']}
+      timeTypes={['本月', '本年']}
       onChange={value => {
         getData(value);
       }}

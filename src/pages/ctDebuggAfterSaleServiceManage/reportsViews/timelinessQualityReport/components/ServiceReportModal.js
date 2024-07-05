@@ -4,7 +4,9 @@ import { Divider, Modal, Descriptions } from 'antd';
 import ServiceReport from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/projectExecution/dispatchQuery/detail.js';
 import HandlingSugges from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment/components/HandlingSugges.js';
 
-const dvaPropsData = ({ loading }) => ({});
+const dvaPropsData = ({ loading, dispatchQuery}) => ({
+  commitDate:dispatchQuery.commitDate
+});
 
 const ServiceReportModal = props => {
   const {
@@ -15,6 +17,7 @@ const ServiceReportModal = props => {
     isModalOpen,
     onCancel,
     wrapClassName,
+    level
   } = props;
 
   useEffect(() => {
@@ -48,6 +51,7 @@ const ServiceReportModal = props => {
             {descriptionList.map(item => {
               return <Descriptions.Item label={item.name}>{item.value}</Descriptions.Item>;
             })}
+            {level==2 && <Descriptions.Item label={'验收服务报告首次上传时间'}>{props.commitDate}</Descriptions.Item>}
           </Descriptions>
           <ServiceReport id={ID} shouldOnlyRecordId="9" />
           <Divider />

@@ -215,6 +215,20 @@ const Index = props => {
       ellipsis: true,
     },
     {
+      title: '成套经理审核人',
+      dataIndex: 'ManagerName',
+      key: 'ManagerName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '专工审核人',
+      dataIndex: 'ExpertName',
+      key: 'ExpertName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: type == 1 ? '审核状态' : '审核结果',
       dataIndex: type == 1 ? 'StatusName' : 'AuditResultsName',
       key: type == 1 ? 'StatusName' : 'AuditResultsName',
@@ -246,7 +260,7 @@ const Index = props => {
       render: (text, record, index) => {
         const disabledFlag = !record.SystemModelName;
         return type == 1 ? (
-          record.StatusName == '待审核' && (
+          record.IsFlag && (
             <Tooltip
               placement={disabledFlag ? 'left' : 'top'}
               title={disabledFlag ? '无设备型号，暂不支持审核' : '审核'}
@@ -311,7 +325,6 @@ const Index = props => {
 
   const onFinish = async (PageIndex, PageSize, queryPar) => {
     //查询
-    console.log('defaultStatus', defaultStatus);
     try {
       const values = await form.validateFields();
       const par = queryPar
@@ -321,10 +334,11 @@ const Index = props => {
             status: values.status
               ? values.status
               : type == 1
-              ? '1,2'
+              ? '1,2,3,4'
               : defaultStatus !== undefined
               ? defaultStatus
-              : '3',
+              : '5',
+            isAll:type==1? undefined : '1',
             bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
             eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
             time: undefined,
@@ -377,9 +391,10 @@ const Index = props => {
           setPageSize(20);
           onFinish(1, 20);
         }}
-        // initialValues={{
-        //   time: props.defaultTime || [moment().startOf('month'), moment()],
-        // }}
+        initialValues={{
+          // time: props.defaultTime || [moment().startOf('month'), moment()],
+          ...props.queryData
+        }}
       >
         <Row align="middle">
           <Col span={8}>
@@ -406,8 +421,8 @@ const Index = props => {
             {type == 1 ? (
               <Form.Item name="status" label="审核状态">
                 <Select placeholder="请选择" allowClear>
-                  <Option value={1}>待审核</Option>
-                  <Option value={2}>审核未通过</Option>
+                  <Option value={'1,3'}>待审核</Option>
+                  <Option value={'2,4'}>审核未通过</Option>
                 </Select>
               </Form.Item>
             ) : (
@@ -457,10 +472,11 @@ const Index = props => {
               >
                 导出
               </Button>
-              {/* {reviewersListBtn && <SetUserListBtn type={4} text="审核人员清单" />} */}
+              {reviewersListBtn && <SetUserListBtn type={4} text="审核人员清单" />}
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item name='systemModelId' hidden></Form.Item>
       </Form>
     );
   };
@@ -474,7 +490,8 @@ const Index = props => {
     setExamineTitle(`审核安装照片（${row.EntName} - ${row.PointName} - ${row.SystemModelName} ）`);
     setExamineData(row);
   };
-
+  
+  const { modalWrapClassName } = props;
   return (
     <div className={styles.installEquipmentSty}>
       <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
@@ -486,6 +503,7 @@ const Index = props => {
             bordered
             dataSource={tableDatas}
             columns={columns}
+            scroll={{y: modalWrapClassName && 'calc(100vh - 282px)'  }}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,

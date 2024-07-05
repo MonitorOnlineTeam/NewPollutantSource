@@ -126,7 +126,7 @@ const Index = (props) => {
       const itemStatusData = data.map(item => item.ItemStatus)
       const itemStatusFlag = itemStatusData?.toString()?.includes('1') ? true : false; //判断是否全部为空
       const showData = data.filter(item => item.ItemStatus == 1)
-      setTabKey(itemStatusFlag ? showData?.[0]?.ItemId : '')
+      setTabKey(itemStatusFlag ? props.tabKey? props.tabKey : showData?.[0]?.ItemId : '')
       setFillContentTab(itemStatusFlag ? showData : [])
 
     })
@@ -1951,6 +1951,11 @@ const Index = (props) => {
         <Col span={8}>
           <Form.Item label="实际工时（小时）" >
             {data.RealityHour}
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item label="服务内容" >
+            {data.Remark}
           </Form.Item>
         </Col>
       </Row>

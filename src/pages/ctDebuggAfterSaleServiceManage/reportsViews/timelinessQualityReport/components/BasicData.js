@@ -24,7 +24,7 @@ import ServiceReportModal from './ServiceReportModal';
 
 const { Text, Link } = Typography;
 
-const dvaPropsData = ({ loading, reportsAndViews, common }) => ({
+const dvaPropsData = ({ loading, dispatchQuery, common }) => ({
   largeRegionList: common.CtLargeRegionList,
   basicsLoading:
     loading.effects['reportsAndViews/GetTimelyPassRateListByArea'] ||
@@ -257,7 +257,6 @@ const BasicData = props => {
                     descriptionList = [
                       { name: '离开现场时间', value: record.LeaveDate },
                       { name: '及时状态', value: record.TimelyTip },
-                      { name: '验收服务报告首次上传时间', value: record.CommitDate },
                     ];
                   } else {
                     descriptionList = [
@@ -337,9 +336,10 @@ const BasicData = props => {
         form={form}
         initialValues={{
           time: defaultTime || [moment().startOf('month'), moment()],
+          timelyStatus:null,
+          ...props.queryData
         }}
         autoComplete="off"
-        style={{ marginTop: 10, marginBottom: 10 }}
         labelCol={{
           flex: '120px',
         }}
@@ -360,6 +360,11 @@ const BasicData = props => {
           </Col>
           <Col span={8}>
             <Form.Item name="projectName" label="项目名称">
+              <Input placeholder="请输入" allowClear />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item name="customEnt" label="最终用户">
               <Input placeholder="请输入" allowClear />
             </Form.Item>
           </Col>
@@ -475,6 +480,7 @@ const BasicData = props => {
         descriptionList={descriptionList}
         isModalOpen={serviceReportOpen}
         data={currentRow}
+        level={level}
         onCancel={() => {
           setServiceReportOpen(false);
         }}

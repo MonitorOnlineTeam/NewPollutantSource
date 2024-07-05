@@ -164,6 +164,11 @@ const Index = props => {
           type: 'bar',
           stack: 'one',//数据堆叠，同个类目轴上系列配置相同的stack值后，后一个系列的值会在前一个系列的值上相加。
           data: data1,
+          showBackground: true,
+          backgroundStyle: {
+            color: 'rgba(86, 182, 252, 0.05)',
+          },
+          barMaxWidth: 40,
           barWidth: '58%',
           label: {
             show: true,
@@ -191,7 +196,6 @@ const Index = props => {
           type: 'bar',
           stack: 'one',
           data: data2,
-          barWidth: '58%',
           label: {
             show: true,
             textStyle: {
@@ -232,20 +236,21 @@ const Index = props => {
           symbol: 'circle',
           z: 3
         },
-        {
-          type: 'bar', //显示背景图 
-          data: data1,
-          itemStyle: { color: 'rgba(86,182,252,0.05)' },
-          // itemStyle: { color: 'red' },
-          barWidth: '84%',  // 柱形的宽度
-          barGap: '-120.8%', // Make series be ove
-          silent: true, //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
-          barMinHeight: 1000,
-          z: -3,
-          tooltip:{
-            show:false
-          }
-        },
+        // {
+        //   type: 'bar', //显示背景图 
+        //   data: data1,
+        //   itemStyle: { color: 'rgba(86,182,252,0.05)' },
+        //   // itemStyle: { color: 'red' },
+        //   barMaxWidth: 60,
+        //   barWidth: '84%',  // 柱形的宽度
+        //   barGap: '-124%', // Make series be ove
+        //   silent: true, //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
+        //   barMinHeight: 1000,
+        //   z: -3,
+        //   tooltip:{
+        //     show:false
+        //   }
+        // },
       ],
       tooltip: {
         trigger: 'axis',

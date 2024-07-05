@@ -75,12 +75,12 @@ const OfficeCheck = props => {
     let columns = [
       {
         title: '序号',
-        width: 40,
       },
       {
         title: '大区',
         dataIndex: 'LargeRegion',
         key: 'LargeRegion',
+        width:'auto',
         ellipsis: true,
         render: (text, record, index) => {
           return {
@@ -94,7 +94,7 @@ const OfficeCheck = props => {
         dataIndex: 'RegionName',
         key: 'RegionName',
         ellipsis: true,
-        width: 200,
+        width:'auto',
         render: (text, record, index) => {
           return {
             children: text,
@@ -106,6 +106,7 @@ const OfficeCheck = props => {
         title: '应完成任务数量',
         dataIndex: 'CompletedCount',
         key: 'CompletedCount',
+        width:'auto',
         ellipsis: true,
         render: (text, record, index) => {
           return (
@@ -125,14 +126,14 @@ const OfficeCheck = props => {
         dataIndex: 'CompletedCountYes',
         key: 'CompletedCountYes',
         ellipsis: true,
-        width: 200,
+        width:'auto',
       },
       {
         title: '任务完成率',
         dataIndex: 'CompletedRate',
         key: 'CompletedRate',
         ellipsis: true,
-        width: 200,
+        width: 'auto',
         sorter: (a, b) => {
           if (a.RegionCode !== 'All' && b.RegionCode !== 'All') {
             return a.CheckRate - b.CheckRate;
@@ -233,6 +234,7 @@ const OfficeCheck = props => {
         <SdlTable
           loading={queryLoading}
           align="center"
+          scroll={{x:780}}
           dataSource={dataSource}
           columns={getColumns()}
           pagination={false}

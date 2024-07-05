@@ -258,7 +258,7 @@ const Training = props => {
                 >
                   导出
                 </Button>
-                {/* {buttonList.includes('officeManagement') && ( */}
+                {buttonList.includes('persontraManagement') && (
                 <Button
                   type="primary"
                   onClick={() => {
@@ -268,7 +268,7 @@ const Training = props => {
                 >
                   人员培训管理
                 </Button>
-                {/* )} */}
+                )}
                 <Button
                   type="primary"
                   onClick={() => {

@@ -8,11 +8,8 @@ import { downloadFile, requestPost } from '@/utils/utils';
 import { API } from '@config/API';
 
 export default Model.extend({
-  namespace: 'ctDataScreen',
-  state: {
-
-
-  },
+  namespace: 'ctDataScreen1',
+  state: {},
   effects: {
     // 获取地图数据
     *GetDeviceInformationMap({ payload, callback }, { call, put, update }) {
