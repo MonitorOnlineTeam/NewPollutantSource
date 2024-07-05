@@ -470,7 +470,7 @@ export default class Index extends Component {
             columns={columns}
             bordered={true}
             dataSource={tableDatas}
-            scroll={{ y: column.length > 0 && 'calc(100vh - 400px)' }}
+            scroll={{ y: column.length > 0 && 'calc(100vh - 420px)' }}
             pagination={{
               showSizeChanger: true,
               showQuickJumper: true,

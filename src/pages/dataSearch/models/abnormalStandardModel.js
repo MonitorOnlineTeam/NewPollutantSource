@@ -17,7 +17,7 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportExceptionStandValue,
-} from './service';
+} from '@/pages/dataSearch/abnormalStandard/service.js';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({

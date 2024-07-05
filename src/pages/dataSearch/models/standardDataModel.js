@@ -10,7 +10,7 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportDischargeStandValue,
-} from './service';
+} from '@/pages/dataSearch/dischargeStandard/service.js';
 import moment from 'moment';                                                                                                                                                                                                                  
 import { message } from 'antd';
 export default Model.extend({
