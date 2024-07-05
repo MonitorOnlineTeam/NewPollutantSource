@@ -10,7 +10,7 @@ import path from 'path';
 const apiHost = 'http://172.16.12.39:49003/'; //运维测试
 // const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.134:61003/';//运维正式
-// const apiHost = 'http://172.16.12.134:61005/';//运维正式
+// const apiHost = 'http://172.16.12.134:61005/';//运维正式 合并演示
 // const apiHost = 'http://172.16.12.234:60061/';//模型
 // const API_HOST = 'http://172.16.12.60:6001/';  // 60
 // const apiHost = 'http://172.16.12.152:50089/';
