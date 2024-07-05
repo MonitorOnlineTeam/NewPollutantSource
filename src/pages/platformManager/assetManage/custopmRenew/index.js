@@ -133,7 +133,7 @@ const Index = (props) => {
   
   const [ manufacturerId, setManufacturerId] = useState(undefined)
 
-  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal,tableDetailLoading, customerOrderUserList,loadingAddConfirm,customerOrderPointEntListLoading,userListLoading,} = props; 
+  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal,tableDetailLoading, customerOrderUserList,loadingAddConfirm,customerOrderPointEntListLoading,userListLoading,hideBreadcrumb} = props; 
 
 
 //  const userId = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserId
@@ -496,7 +496,7 @@ const detailCol = [{
 
    return (
     <div  className={styles.custopmRenewSty} >
-    <BreadcrumbWrapper>
+    <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
     <Card title={searchComponents()}>
       <SdlTable
         rowSelection={rowSelection} 

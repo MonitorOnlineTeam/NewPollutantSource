@@ -7,10 +7,10 @@ import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 import path from 'path';
-const apiHost = 'http://172.16.12.39:49003/'; //运维测试
+// const apiHost = 'http://172.16.12.39:49003/'; //运维测试
 // const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.134:61003/';//运维正式
-// const apiHost = 'http://172.16.12.134:61005/';//运维正式 合并演示
+const apiHost = 'http://172.16.12.134:61005/';//运维正式
 // const apiHost = 'http://172.16.12.234:60061/';//模型
 // const API_HOST = 'http://172.16.12.60:6001/';  // 60
 // const apiHost = 'http://172.16.12.152:50089/';
@@ -24,8 +24,6 @@ const apiHost = 'http://172.16.12.39:49003/'; //运维测试
 // const apiHost = 'http://172.16.12.57:61000/';
 // const apiHost = 'http://172.16.12.57:61002/';
 const apiHost2 = 'http://172.16.12.109:61001/'; //调试服务导出PDF api
-
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 
 const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
@@ -707,6 +705,12 @@ export default {
                   // 续费日志
                   name: 'custopmRenew',
                   path: '/assetManage/customOrder/renewalLog',
+                  component: './platformManager/assetManage/renewalLog',
+                },
+                {
+                  // 续费管理
+                  name: 'renewManage',
+                  path: '/assetManage/customOrder/renewManage',
                   component: './platformManager/assetManage/renewalLog',
                 },
               ],
@@ -2641,6 +2645,12 @@ export default {
                   //排放标准
                   path: '/dataSearch/dischargeStandard',
                   component: './dataSearch/dischargeStandard',
+                },
+                 {
+                  //排污单位管理
+                  name: 'dischargeUnits',
+                  path: '/dataSearch/dischargeUnits',
+                  component: './dataSearch/dischargeUnits',
                 },
                 {
                   name: 'abnormalData',
