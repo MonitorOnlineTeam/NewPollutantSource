@@ -96,12 +96,18 @@ class AutoFormTable extends PureComponent {
   }
 
   loadDataSource(params) {
+
+    //调试检测/污染源管理监测点  没有条件不让请求,防止请求多次
+    if (this.props.isSearchParams && !this.props.searchParams) {
+      return;
+    }
     this.props.dispatch({
       type: 'autoForm/getAutoFormData',
       payload: {
         configId: this.props.configId,
         searchParams: this.props.searchParams,
-        otherParams: params || this.state.otherParams,
+        // otherParams: params || this.state.otherParams,
+        otherParams: (params && Object.keys(params).length !== 0 ? params : null) || (this.state.otherParams && Object.keys(this.state.otherParams).length !== 0 ? this.state.otherParams : '') || (this.props.otherParams && Object.keys(this.props.otherParams).length !== 0 ? this.props.otherParams : ''),
       },
     });
   }
@@ -293,110 +299,110 @@ class AutoFormTable extends PureComponent {
     const { btnEl, moreBtns } = this._SELF_;
     return opreationButtons[configId]
       ? opreationButtons[configId].map(btn => {
-          switch (btn.DISPLAYBUTTON) {
-            case 'add':
-              // if (btnsAuthority.includes('add')) {
+        switch (btn.DISPLAYBUTTON) {
+          case 'add':
+            // if (btnsAuthority.includes('add')) {
+            return (
+              <Button
+                style={{ marginRight: 8 }}
+                key={btn.DISPLAYBUTTON}
+                icon={<PlusOutlined />}
+                type="primary"
+                onClick={this.onHandleAdd}
+              >
+                添加
+              </Button>
+            );
+            // }
+            break;
+          case 'alldel':
+            return (
+              <Button
+                disabled={this.state.selectedRowKeys.length <= 0}
+                style={{ marginRight: 8 }}
+                icon={<DeleteOutlined />}
+                key={btn.DISPLAYBUTTON}
+                type="primary"
+                onClick={() => {
+                  this.batchDel();
+                }}
+              >
+                批量删除
+              </Button>
+            );
+            break;
+          case 'print':
+            moreBtns.push({ type: 'printer', text: '打印' });
+            break;
+          // return <Button icon="printer" key={btn.DISPLAYBUTTON} type="primary">打印</Button>;
+          case 'exp':
+            if (opreationButtons[configId].length === 1) {
               return (
                 <Button
                   style={{ marginRight: 8 }}
-                  key={btn.DISPLAYBUTTON}
-                  icon={<PlusOutlined />}
-                  type="primary"
-                  onClick={this.onHandleAdd}
-                >
-                  添加
-                </Button>
-              );
-              // }
-              break;
-            case 'alldel':
-              return (
-                <Button
-                  disabled={this.state.selectedRowKeys.length <= 0}
-                  style={{ marginRight: 8 }}
-                  icon={<DeleteOutlined />}
+                  icon={<ExportOutlined />}
                   key={btn.DISPLAYBUTTON}
                   type="primary"
                   onClick={() => {
-                    this.batchDel();
+                    this.export();
                   }}
                 >
-                  批量删除
+                  导出
                 </Button>
               );
-              break;
-            case 'print':
-              moreBtns.push({ type: 'printer', text: '打印' });
-              break;
-            // return <Button icon="printer" key={btn.DISPLAYBUTTON} type="primary">打印</Button>;
-            case 'exp':
-              if (opreationButtons[configId].length === 1) {
-                return (
-                  <Button
-                    style={{ marginRight: 8 }}
-                    icon={<ExportOutlined />}
-                    key={btn.DISPLAYBUTTON}
-                    type="primary"
-                    onClick={() => {
-                      this.export();
-                    }}
-                  >
-                    导出
-                  </Button>
-                );
-              } else {
-                moreBtns.push({ type: 'export', text: '导出' });
-              }
-              break;
-            //   return <Button
-            //     icon="export"
-            //     key={btn.DISPLAYBUTTON}
-            //     type="primary"
-            //     onClick={() => {
-            //       dispatch({
-            //         type: 'autoForm/exportDataExcel',
-            //         payload: {
-            //           configId
-            //         }
-            //       })
-            //     }}
-            //   >
-            //     导出
-            // </Button>;
-            case 'imp':
-              moreBtns.push({ type: 'import', text: '导入' });
-              break;
-            //   return <Button
-            //     icon="import"
-            //     key={btn.DISPLAYBUTTON}
-            //     type="primary"
-            //     onClick={() => {
-            //       this.setState({
-            //         visible: true,
-            //       })
-            //     }}
-            //   >
-            //     导入
-            // </Button>;
-            case 'edit':
-              btnEl.push({
-                type: 'edit',
-              });
-              break;
-            case 'view':
-              btnEl.push({
-                type: 'view',
-              });
-              break;
-            case 'del':
-              btnEl.push({
-                type: 'del',
-              });
-              break;
-            default:
-              break;
-          }
-        })
+            } else {
+              moreBtns.push({ type: 'export', text: '导出' });
+            }
+            break;
+          //   return <Button
+          //     icon="export"
+          //     key={btn.DISPLAYBUTTON}
+          //     type="primary"
+          //     onClick={() => {
+          //       dispatch({
+          //         type: 'autoForm/exportDataExcel',
+          //         payload: {
+          //           configId
+          //         }
+          //       })
+          //     }}
+          //   >
+          //     导出
+          // </Button>;
+          case 'imp':
+            moreBtns.push({ type: 'import', text: '导入' });
+            break;
+          //   return <Button
+          //     icon="import"
+          //     key={btn.DISPLAYBUTTON}
+          //     type="primary"
+          //     onClick={() => {
+          //       this.setState({
+          //         visible: true,
+          //       })
+          //     }}
+          //   >
+          //     导入
+          // </Button>;
+          case 'edit':
+            btnEl.push({
+              type: 'edit',
+            });
+            break;
+          case 'view':
+            btnEl.push({
+              type: 'view',
+            });
+            break;
+          case 'del':
+            btnEl.push({
+              type: 'del',
+            });
+            break;
+          default:
+            break;
+        }
+      })
       : null;
   }
 
@@ -562,7 +568,7 @@ class AutoFormTable extends PureComponent {
               <div
                 title={!type && text}
                 className={styles.ellipsisText}
-                // style={{ display: isCenter ? 'inline-block' : '' }}
+              // style={{ display: isCenter ? 'inline-block' : '' }}
               >
                 {type == '小圆点' && <Badge status="warning" text={text} />}
                 {type === '进度条' && <Progress percent={text} />}
@@ -625,7 +631,7 @@ class AutoFormTable extends PureComponent {
                           </a>
                         </Tooltip>
                         {// this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('view') && <Divider type="vertical" />
-                        this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />}
+                          this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />}
                       </Fragment>
                     );
                   }
@@ -645,19 +651,19 @@ class AutoFormTable extends PureComponent {
                               this.props.onView
                                 ? this.props.onView(record, returnKey)
                                 : dispatch(
-                                    routerRedux.push(
-                                      `/${parentCode}/AutoFormManager/${configId}/AutoFormView/${JSON.stringify(
-                                        postData,
-                                      )}`,
-                                    ),
-                                  );
+                                  routerRedux.push(
+                                    `/${parentCode}/AutoFormManager/${configId}/AutoFormView/${JSON.stringify(
+                                      postData,
+                                    )}`,
+                                  ),
+                                );
                             }}
                           >
                             <DetailIcon />
                           </a>
                         </Tooltip>
                         {// this._SELF_.btnEl.length - 1 !== index && btnsAuthority.includes('del') && <Divider type="vertical" />
-                        this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />}
+                          this._SELF_.btnEl.length - 1 !== index && <Divider type="vertical" />}
                       </Fragment>
                     );
                   }
@@ -702,11 +708,11 @@ class AutoFormTable extends PureComponent {
 
     const rowSelection = checkboxOrRadio
       ? {
-          type: checkboxOrRadio == 1 ? 'radio' : 'checkbox',
-          selections: true,
-          selectedRowKeys,
-          onChange: this.onSelectChange,
-        }
+        type: checkboxOrRadio == 1 ? 'radio' : 'checkbox',
+        selections: true,
+        selectedRowKeys,
+        onChange: this.onSelectChange,
+      }
       : false;
     const dataSource = tableInfo[configId] ? tableInfo[configId].dataSource : [];
     // const dataSource = _tabelInfo.dataSource
@@ -753,26 +759,26 @@ class AutoFormTable extends PureComponent {
           {this.props.appendHandleButtons &&
             this.props.appendHandleButtons(this.state.selectedRowKeys, this.state.selectedRows)}
           {// 更多操作
-          this._SELF_.moreBtns.length ? (
-            <Dropdown
-              overlay={() => (
-                <Menu onClick={this.moreClick}>
-                  {this._SELF_.moreBtns.map(item => {
-                    return (
-                      <Menu.Item key={item.type}>
-                        <LegacyIcon type={item.type} style={{ marginRight: 10 }} />
-                        {item.text}
-                      </Menu.Item>
-                    );
-                  })}
-                </Menu>
-              )}
-            >
-              <Button>
-                更多操作 <DownOutlined />
-              </Button>
-            </Dropdown>
-          ) : null}
+            this._SELF_.moreBtns.length ? (
+              <Dropdown
+                overlay={() => (
+                  <Menu onClick={this.moreClick}>
+                    {this._SELF_.moreBtns.map(item => {
+                      return (
+                        <Menu.Item key={item.type}>
+                          <LegacyIcon type={item.type} style={{ marginRight: 10 }} />
+                          {item.text}
+                        </Menu.Item>
+                      );
+                    })}
+                  </Menu>
+                )}
+              >
+                <Button>
+                  更多操作 <DownOutlined />
+                </Button>
+              </Dropdown>
+            ) : null}
           {/* {
             React.Children.map(this.props.children, (child, i) => {
               // if (child.props["data-position"] === "top") {
@@ -844,15 +850,15 @@ class AutoFormTable extends PureComponent {
             noPaging
               ? false
               : {
-                  showSizeChanger: true,
-                  showQuickJumper: true,
-                  pageSize,
-                  current,
-                  // onShowSizeChange: this.onTableChange,
-                  onShowSizeChange: this.onTableChange,
-                  pageSizeOptions: ['10', '20', '30', '40'],
-                  total,
-                }
+                showSizeChanger: true,
+                showQuickJumper: true,
+                pageSize,
+                current,
+                // onShowSizeChange: this.onTableChange,
+                onShowSizeChange: this.onTableChange,
+                pageSizeOptions: ['10', '20', '30', '40'],
+                total,
+              }
           }
           {...this.props}
           // scroll={{ x: this.props.scroll.x || scrollXWidth, y: this.props.scroll.y || 'calc(100vh - 390px)' }}

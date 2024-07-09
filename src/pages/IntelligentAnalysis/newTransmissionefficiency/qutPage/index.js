@@ -56,7 +56,8 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   endTime: newtransmissionefficiency.endTime,
   pollutantType: newtransmissionefficiency.pollutantType,
   assessment: newtransmissionefficiency.assessment,
-  operationpersonnel: newtransmissionefficiency.operationpersonnel,
+  operationpersonnel:newtransmissionefficiency.operationpersonnel,
+
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -90,7 +91,7 @@ export default class EntTransmissionEfficiency extends Component {
       PageSize: 20,
       EntCode: '',
       PollutantType: this.props._pollutantType || this.props.pollutantType,
-      Assessment: this.props.assessment,
+      Assessment: this.props.assessment
     });
 
     dispatch({
@@ -116,11 +117,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: {
-        ...queryPar,
-        PollutantType: this.props._pollutantType || this.props.pollutantType,
-        regionLevel: 3,
-      },
+      payload: { ...queryPar,  PollutantType: this.props._pollutantType || this.props.pollutantType,regionLevel:3 },
     });
   };
 
@@ -162,6 +159,7 @@ export default class EntTransmissionEfficiency extends Component {
   typeChange = value => {
     this.updateQueryState({
       PollutantType: value,
+
     });
   };
 
@@ -170,11 +168,11 @@ export default class EntTransmissionEfficiency extends Component {
       EntCode: value,
     });
   };
-  changePperation = value => {
+  changePperation=(value)=>{
     this.updateQueryState({
       OperationPersonnel: value,
     });
-  };
+  }
   //创建并获取模板   导出
   template = () => {
     const { dispatch, queryPar } = this.props;
@@ -184,7 +182,7 @@ export default class EntTransmissionEfficiency extends Component {
     });
     dispatch({
       type: 'newtransmissionefficiency/exportTransmissionEfficiencyForEnt',
-      payload: { ...queryPar, regionLevel: 3 },
+      payload: { ...queryPar,regionLevel:3 },
       callback: data => {
         downloadFile(data);
       },
@@ -206,15 +204,7 @@ export default class EntTransmissionEfficiency extends Component {
     //企业下  排口有效传输效率
     const {
       dispatch,
-      queryPar: {
-        RegionCode,
-        PollutantType,
-        beginTime,
-        endTime,
-        EntCode,
-        Assessment,
-        OperationPersonnel,
-      },
+      queryPar: { RegionCode, PollutantType, beginTime, endTime, EntCode, Assessment,OperationPersonnel },
       entName,
     } = this.props;
 
@@ -225,7 +215,7 @@ export default class EntTransmissionEfficiency extends Component {
       RegionCode: RegionCode,
       EntCode: row.EntCode,
       Assessment: Assessment,
-      OperationPersonnel: OperationPersonnel,
+      OperationPersonnel:OperationPersonnel
       // PageIndex: 4,
       // PageSize: 5
     };
@@ -241,17 +231,17 @@ export default class EntTransmissionEfficiency extends Component {
       });
       dispatch({
         type: 'newtransmissionefficiency/getTransmissionEfficiencyForPoint',
-        payload: { ...priseQueryPar, regionLevel: 4 },
+        payload: { ...priseQueryPar,regionLevel:4 },
       });
     });
   };
-  interceptTwo = value => {
+  interceptTwo = (value) => {
     const data = value.toString();
-    const result = data.substring(0, data.indexOf('.') + 3);
+    const result = data.substring(0, data.indexOf(".") + 3)
     return result;
-  };
+  }
   render() {
-    console.log('_pollutantType=', this.props._pollutantType);
+    console.log("_pollutantType=", this.props._pollutantType)
     const { eName } = this.state;
     const {
       exEntloading,
@@ -278,13 +268,12 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'EntName',
         align: 'center',
         render: (text, record) => {
-          return (
-            <div style={{ width: '100%' }}>
-              <a href="javascript:;" onClick={this.priseClick.bind(this, text, record)}>
-                {text}
-              </a>
-            </div>
-          );
+          return <div style={{ textAlign: 'left', width: '100%' }}>
+            <a href="javascript:;" onClick={this.priseClick.bind(this, text, record)}>
+              {text}
+            </a>
+          </div>
+
         },
       },
       {
@@ -295,7 +284,8 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-          return <span>{text}</span>;
+          return <span>{text}</span>
+
         },
       },
       {
@@ -436,7 +426,7 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="企业列表"
                     onChange={this.changeRegion}
                     value={EntCode ? EntCode : undefined}
-                    style={{ width: 200 }}
+                    style={{ width: 200, }}
                   >
                     {this.children()}
                   </Select>
@@ -469,7 +459,8 @@ export default class EntTransmissionEfficiency extends Component {
                   </Button>
                   <Button
                     onClick={() => {
-                      this.props.onBack ? this.props.onBack() : this.props.history.go(-1);
+                      this.props.onBack ? this.props.onBack() :
+                        this.props.history.go(-1);
                     }}
                   >
                     <RollbackOutlined />
@@ -507,7 +498,7 @@ export default class EntTransmissionEfficiency extends Component {
                 />
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
                   {' '}
-                  {`<90%未达标`}
+                   {`<90%未达标`}
                 </span>
               </div>
             </>

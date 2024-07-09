@@ -110,7 +110,7 @@ class SearchWrapper extends Component {
   }
 
   componentDidMount() {
-    this.onSubmitForm();
+    !this.props.noLoad && this.onSubmitForm();
   }
 
   componentWillReceiveProps(nextProps) {

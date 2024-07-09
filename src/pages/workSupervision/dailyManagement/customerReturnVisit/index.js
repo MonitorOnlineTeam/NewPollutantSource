@@ -50,7 +50,7 @@ const ReturnVisit = props => {
   const [mode, setMode] = useState(); // 1: 管理 空：记录
   const [taskData, setTaskData] = useState({}); 
 
-  const buttonList = permissionButton(props.match.path);
+
   const {
     queryLoading,
     dispatch,
@@ -59,6 +59,7 @@ const ReturnVisit = props => {
       params: { systemType },
     },
   } = props;
+  const buttonList = permissionButton(`/workSupervision/dailyManagement/customerReturnVisit/${systemType}`);
 
   useEffect(() => {
     getTableDataSource();

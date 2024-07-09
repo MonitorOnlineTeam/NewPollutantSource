@@ -143,7 +143,7 @@ const Index = (props) => {
         size="large"
       />);
     }
-    return <div style={{ width: '100%', height: 'calc(100vh - 112px)' }}>
+    return <div style={{ width: '100%', height: 'calc(100vh - 64px - 24px)' }}>
       <Map
         amapkey={config.amapKey}
         //  mapStyle="amap://styles/macaron"
@@ -191,7 +191,7 @@ const Index = (props) => {
         onCancel={() => { props.updateState({ entAbnormalNumVisible: false, entAbnormalList: [], taskList: [] }); props.onCancel(); }}
         footer={null}
         destroyOnClose
-        wrapClassName="spreadOverModal"
+        wrapClassName="spreadOverModal noTitleSty"
         mask={false}
       >
         {entAbnormalNumVisible && entMap()}

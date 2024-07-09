@@ -251,8 +251,13 @@ class SdlForm extends PureComponent {
       switch (item.type) {
         case '文本框':
           validator = `${inputPlaceholder}`;
-          placeholder = placeholder || inputPlaceholder;
-          element = <Input placeholder={'请输入' + item.labelText} allowClear />;
+          if (item.labelText === '登录名' && configId === 'UserInfoAdd') {
+            //用户管理 基本信息
+            placeholder = `${inputPlaceholder}员工编号，例子：SDL0000`;
+          } else {
+            placeholder = placeholder || inputPlaceholder;
+          }
+          element = <Input disabled={item.labelText === '设备编号(MN)' && isEdit ? true : false} placeholder={'请输入' + item.labelText} allowClear />;
           break;
         case '数字':
           validator = `${inputPlaceholder}`;
@@ -324,8 +329,8 @@ class SdlForm extends PureComponent {
           break;
         case '经度':
           validator = `${inputPlaceholder}`;
-          placeholder = placeholder || inputPlaceholder;
-
+          // placeholder = placeholder || inputPlaceholder;
+          placeholder = `${inputPlaceholder} 例如：112.236514`;
           // element = <Input
           //   suffix={<Icon
           //     onClick={() => {
@@ -347,13 +352,14 @@ class SdlForm extends PureComponent {
               latitude={getFieldValue('Latitude') || formData.Latitude}
               path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
               handleMarker
+              placeholder={placeholder}
             />
           );
           break;
         case '纬度':
           validator = `${inputPlaceholder}`;
-          placeholder = placeholder || inputPlaceholder;
-
+          // placeholder = placeholder || inputPlaceholder;
+          placeholder = `${inputPlaceholder} 例如：85.236589`;
           element = (
             <SdlMap
               onOk={map => {
@@ -363,6 +369,7 @@ class SdlForm extends PureComponent {
               latitude={getFieldValue('Latitude') || formData.Latitude}
               path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
               handleMarker
+              placeholder={placeholder}
             />
           );
           break;

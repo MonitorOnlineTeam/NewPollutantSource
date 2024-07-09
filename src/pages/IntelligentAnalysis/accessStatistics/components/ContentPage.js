@@ -544,7 +544,7 @@ export default class EntTransmissionEfficiency extends Component {
             columns={this.columns(queryPar)}
             dataSource={tableDatas}
             pagination={false}
-            scroll={{ y: clientHeight - 640}}
+            scroll={{ y: clientHeight - 600}}
           />
         </div>
 

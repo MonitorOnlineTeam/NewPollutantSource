@@ -43,7 +43,6 @@ const Training = props => {
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [mode, setMode] = useState(); // 1: 办事处检查管理 空：办事处检查纪律
 
-  const buttonList = permissionButton(props.match.path);
   const {
     dispatch,
     queryLoading,
@@ -52,6 +51,7 @@ const Training = props => {
       params: { type }, // 区分成套还是运维 ct: 成套 、operation: 运维
     },
   } = props;
+  const buttonList = permissionButton(`/workSupervision/dailyManagement/training/${type}`);
 
   useEffect(() => {
     getPageData();

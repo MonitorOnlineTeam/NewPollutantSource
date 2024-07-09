@@ -1211,8 +1211,8 @@ class NavigationTree extends Component {
             <TreeNode
               style={{ width: '100%' }}
               title={
-                <div style={{ width: '240px', position: 'relative' }}>
-                  <div className={styles.titleStyle} title={item.title}>
+                <div style={{ width: '254px', position: 'relative' }}>
+                  <div className={styles.titleStyle} title={item.title} style={{width:210}}>
                     {this.getPollutantIcon(item.PollutantType, 16)}
                     {title}
                     {item.outPutFlag == 1 ? (
@@ -1228,7 +1228,7 @@ class NavigationTree extends Component {
                       style={{
                         color: this.getColor(item.Status),
                         fontSize: '20px',
-                        height: 10,
+                        // height: 10,
                         float: 'right',
                         marginTop: 2,
                         marginRight: 10,

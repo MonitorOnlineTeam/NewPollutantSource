@@ -163,7 +163,7 @@ class TaskRecord extends Component {
       expand: !this.state.expand,
     }, () => {
       // 展开、收起重新计算table高度
-      if (!this.props.tableHeight) {
+      if (!this.props.tableHeight && !this.props.hideBreadcrumb) {
         const tableElement = document.getElementsByClassName('ant-table-wrapper');
         if (tableElement.length) {
           const tableOffsetTop = this.getOffsetTop(tableElement[0]) + 110;
@@ -799,9 +799,10 @@ class TaskRecord extends Component {
     // }
 
     const { pointList, pointLoading, } = this.state;
+    const { isWorkExecue } = this.props;
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
-        <Card className={`contentContainer ${styles.taskRecordSty}`} bordered={!this.props.isWorkExecue}>
+        <Card className={`contentContainer ${styles.taskRecordSty}`} bordered={!isWorkExecue} bodyStyle={isWorkExecue&&{marginTop:-2}}>
           <Form layout="" className='searchForm' style={{ marginBottom: '10' }}>
             <Row>
               {!isHomeModal && <>
@@ -1050,7 +1051,7 @@ class TaskRecord extends Component {
             }}
             columns={columns}
             // scroll={{ y: isHomeModal? this.props.clientHeight - 480 :null }}
-            scroll={{ y: this.state.expand ? "calc(100vh - 434px)" : this.props.tableHeight || undefined }}
+            scroll={{ y: this.state.expand ? "calc(100vh - 434px)" :  isWorkExecue?  "calc(100vh - 338px)" : this.props.tableHeight || undefined }}
           />
         </Card>
         <Modal

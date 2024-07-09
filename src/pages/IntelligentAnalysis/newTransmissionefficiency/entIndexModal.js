@@ -1,10 +1,10 @@
 /**
  * 功  能：有效传输率
- * 创建人：吴建伟
- * 创建时间：2019.08.12
+ * 创建人：jab
+ * 创建时间：2020
  */
 import React, { Component } from 'react';
-import { ExportOutlined, QuestionCircleTwoTone } from '@ant-design/icons';
+import { ExportOutlined, QuestionCircleTwoTone, RollbackOutlined} from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -32,12 +32,13 @@ import styles from './style.less';
 import { downloadFile,interceptTwo } from '@/utils/utils';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import IndexModal from './qutPage/IndexModal';
+// import IndexModal from './IndexModal';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const monthFormat = 'YYYY-MM';
 import QutPage from "@/pages/IntelligentAnalysis/newTransmissionefficiency/qutPage"
+import RegionList from '@/components/RegionList'
 
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
@@ -57,6 +58,7 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   // pollutantType: newtransmissionefficiency.pollutantType,
   assessment: newtransmissionefficiency.assessment,
   RegionCode: newtransmissionefficiency.RegionCode,
+  operationpersonnel:newtransmissionefficiency.operationpersonnel,
 }))
 @Form.create()
 export default class EntIndexModal extends Component {
@@ -69,29 +71,36 @@ export default class EntIndexModal extends Component {
       visible: false,
       eName: '',
       regions: '',
+      operationpersonnel:'',
       effectiveVisible: false,
       effectiveLoading: false,
       TTVisible:false,
       PollutantType: props.pollutantType,
       beginTime:props.beginTime,
       endTime:props.endTime,
+      level:1
     };
   }
 
   componentWillMount() {
-    this.updateState({
-      pollutantType:this.state.PollutantType,
-    });
-    this.getTableData();
-    this.props.dispatch({
-      type: 'autoForm/getRegions',
-      payload: {
-        RegionCode: '',
-        PointMark: '2',
-      },
-    });
+    // this.updateState({
+    //   pollutantType:this.state.PollutantType,
+    //   RegionCode:'',
+    // });
+    // this.getTableData();
   }
-
+  componentDidUpdate(props){
+    if(props.TVisible!==this.props.TVisible&&this.props.TVisible){
+      this.updateState({
+        pollutantType:this.state.PollutantType,
+        RegionCode:'',
+      });
+      this.setState({
+          PollutantType: props.pollutantType, beginTime:props.beginTime,endTime:props.endTime},()=>{
+          this.getTableData();
+        })
+    }
+  }
   updateState = payload => {
     this.props.dispatch({
       type: pageUrl.updateState,
@@ -99,13 +108,15 @@ export default class EntIndexModal extends Component {
     });
   };
 
-  getTableData = () => {
+  getTableData = (regionCode) => {
     this.props.dispatch({
       type: pageUrl.getData,
       payload: {
-        PollutantType: this.state.PollutantType,
+        PollutantType: this.state.PollutantType?this.state.PollutantType:'',
         beginTime:this.state.beginTime,
         endTime:this.state.endTime,
+        RegionCode:this.state.level==2? regionCode: this.props.RegionCode,
+        regionLevel:this.state.level
       }
     });
   };
@@ -168,7 +179,7 @@ export default class EntIndexModal extends Component {
   typeChange = value => {
     this.setState({PollutantType: value})
     this.updateState({
-      pollutantType: value,
+      pollutantType: value?value:"",
     });
   };
 
@@ -180,12 +191,18 @@ export default class EntIndexModal extends Component {
 
   changeRegion = value => {
     this.updateState({
-      RegionCode: value,
+      RegionCode: value? value : '',
+    });
+  };
+  
+  changeOperation = value => {
+    this.updateState({
+      operationpersonnel: value,
     });
   };
 
   //创建并获取模板   导出
-  template = () => {
+  template = (level) => {
     this.updateState({
       exRegionloading: true,
     });
@@ -193,6 +210,8 @@ export default class EntIndexModal extends Component {
     dispatch({
       type: 'newtransmissionefficiency/exportTransmissionEfficiencyForRegion',
       payload: {
+        RegionCode:level==2? this.state.regionCode: this.props.RegionCode,
+        regionLevel:level,
         callback: data => {
           downloadFile(data);
         },
@@ -247,21 +266,32 @@ export default class EntIndexModal extends Component {
   }
   showModal=()=>{
     
-    const { eName } = this.state;
-    const { regionList, exRegionloading, RegionCode } = this.props;
+    const { eName,level } = this.state;
+    const { regionList, exRegionloading, RegionCode,operationpersonnel } = this.props;
     const columns = [
       {
-        title: <span style={{ fontWeight: 'bold' }}>行政区</span>,
+        title: <span style={{ fontWeight: 'normal' }}>行政区</span>,
         dataIndex: 'RegionName',
         key: 'RegionName',
         align: 'center',
         render: (text, record) => { 
           let RegionCode = record.RegionCode;
           return <a onClick={()=>{
-            this.setState({
-              showDetails: true,
-              RegionCode: RegionCode
-            })
+            if(this.state.level==2){
+              this.setState({
+                showDetails: true,
+                RegionCode: RegionCode,
+                OperationPersonnel:operationpersonnel
+              })
+            }else{
+              this.setState({
+                level: 2,
+                regionCode:RegionCode,
+              },()=>{
+                this.getTableData(RegionCode);
+              })
+            }
+
           }}>
             {text}
           </a>
@@ -275,7 +305,7 @@ export default class EntIndexModal extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>考核企业数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>考核企业数</span>,
         dataIndex: 'CountEnt',
         key: 'CountEnt',
         sorter: (a, b) => a.CountEnt - b.CountEnt,
@@ -287,7 +317,7 @@ export default class EntIndexModal extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>考核监测点数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>考核监测点数</span>,
         dataIndex: 'CountPoint',
         key: 'CountPoint',
         sorter: (a, b) => a.CountPoint - b.CountEnt,
@@ -299,7 +329,7 @@ export default class EntIndexModal extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效率</span>,
         dataIndex: 'EffectiveRate',
         key: 'EffectiveRate',
         // width: '10%',
@@ -328,7 +358,7 @@ export default class EntIndexModal extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>传输率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>传输率</span>,
         dataIndex: 'TransmissionRate',
         key: 'TransmissionRate',
         sorter: (a, b) => a.TransmissionRate - b.TransmissionRate,
@@ -351,7 +381,7 @@ export default class EntIndexModal extends Component {
       },
       ,
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效传输率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效传输率</span>,
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
         align: 'center',
@@ -390,7 +420,7 @@ export default class EntIndexModal extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>低于90%的监测点个数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>低于90%的监测点个数</span>,
         dataIndex: 'LowerTransmissionEffectiveRateCount',
         key: 'LowerTransmissionEffectiveRateCount',
         width: 145,
@@ -404,15 +434,15 @@ export default class EntIndexModal extends Component {
         },
       },
     ];
-    return <>{
-        <Card
+    return(
+     <Card
           bordered={false}
           title={
             <>
-              <Form layout="inline">
-                <Form.Item>
+              {level == 1 && <Form layout="inline">
+
+               <Form.Item>
                   查询时间：
-                  {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
                   <RangePicker_
                     dateValue={[moment(this.state.beginTime), moment(this.state.endTime)]}
                     format="YYYY-MM-DD"
@@ -422,14 +452,15 @@ export default class EntIndexModal extends Component {
                 </Form.Item>
                 <Form.Item>
                   <Select
+                    allowClear
                     placeholder="请选择企业类型"
                     onChange={this.typeChange}
                     value={this.state.PollutantType}
                     style={{ width: 200, marginLeft: 10 }}
                   >
-                    <Option value="">全部</Option>
-                    <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
+                    <Option value="1">废水</Option>
+                  
                   </Select>
                 </Form.Item>
                 <Form.Item>
@@ -439,40 +470,30 @@ export default class EntIndexModal extends Component {
                     value={this.props.assessment}
                     style={{ width: 200, marginLeft: 10 }}
                   >
+                    {/* <Option value="1">国家考核</Option>
+                    <Option value="2">兵团考核</Option> */}
+                    <Option value="2">全部考核</Option>
                     <Option value="1">国家考核</Option>
-                    <Option value="2">辖区考核</Option>
                   </Select>
                 </Form.Item>
                 <Form.Item>
-                  <Select
-                    allowClear
-                    placeholder="请选择行政区"
-                    onChange={this.changeRegion}
-                    value={this.props.RegionCode ? this.props.RegionCode : undefined}
-                    style={{ width: 200, marginLeft: 10 }}
-                  >
-                    {this.children()}
-                  </Select>
+                   <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
                 </Form.Item>
                 <Form.Item>
-                  <Button type="primary" onClick={this.getTableData}>
+                <Button type="primary" onClick={this.getTableData}>
                     查询
                   </Button>
                   <Button
                     style={{ margin: '0 5px' }}
                     icon={<ExportOutlined />}
-                    onClick={this.template}
+                    onClick={()=>this.template(level)}
                     loading={exRegionloading}
                   >
-                    {/* <Icon type="export" /> */}
                     导出
                   </Button>
-                  {/* <Button type="primary" onClick={this.manualData}>
-                    手工生成有效传输效率数据
-                  </Button> */}
                 </Form.Item>
-              </Form>
-              <div style={{ paddingTop: 10 }}>
+              </Form>}
+              {level==1&&  <div style={{ paddingTop: 10 }}>
                 <div
                   style={{
                     width: 20,
@@ -503,42 +524,56 @@ export default class EntIndexModal extends Component {
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
                    {`<90%未达标`}
                 </span>
-              </div>
+                <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算昨日的有效传输率，每月4号和10号重新计算上个月的有效传输率</span>
+              </div>}
+              {level==2&&<><Button
+                    style={{ margin: '0 5px' }}
+                    icon={<ExportOutlined />}
+                    onClick={()=>this.template(level)}
+                    loading={exRegionloading}
+                  >
+                    导出
+                  </Button><Button
+                    onClick={() => {
+                      this.setState({
+                        level:1,
+                      },()=>{
+                        this.getTableData();
+                      })
+                    }}
+                  >
+                    <RollbackOutlined />
+                    返回
+                  </Button></>}
             </>
           }
         >
           <SdlTable
-            rowKey={(record, index) => `complete${index}`}
-            loading={this.props.loading}
-            columns={columns}
-            bordered={false}
-            // onChange={this.handleTableChange}
-            dataSource={this.props.tableDatas}
-            scroll={{ y: 'calc(100vh - 450px)'}}
-            // scroll={{ y: 550 }}
-            pagination={false}
-          />
+             rowKey={(record, index) => `complete${index}`}
+             loading={this.props.loading}
+             columns={columns}
+             dataSource={this.props.tableDatas}
+            //  scroll={{ y: 'calc(100vh - 450px)'}}
+             pagination={false}
+           /> 
         </Card>
-        
-    }
-    </>;
+    )
   }
   render() {
-    console.log("props.pollutantType=",this.props.pollutantType)
-    console.log("state.pollutantType=",this.state.PollutantType)
-  const {TVisible,TCancle,TTVisible} = this.props
+    // console.log("props.pollutantType=",this.props.pollutantType)
+    // console.log("state.pollutantType=",this.state.PollutantType)
+  const {TVisible,TCancle,TTVisible, wrapClassName} = this.props
   return (
-    <>
       <div>
-          <Modal
+           <Modal
           centered
           title='有效传输率'
           visible={TVisible}
           footer={null}
-          width={'95%'}
-          destroyOnClose
+          mask={false}
+          wrapClassName={wrapClassName ||'spreadOverModal'}
           onCancel={TCancle}>
-            {
+           {
               !this.state.showDetails && this.showModal()
             }
             {
@@ -549,9 +584,8 @@ export default class EntIndexModal extends Component {
                 })
               }} />
             }
-          </Modal>
+          </Modal> 
       </div>
-    </>
   );
 }
 }

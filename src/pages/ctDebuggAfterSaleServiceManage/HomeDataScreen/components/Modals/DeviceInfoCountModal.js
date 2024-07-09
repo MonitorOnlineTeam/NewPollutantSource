@@ -207,7 +207,7 @@ const DeviceInfoCountModal = props => {
               </Form.Item>
             </Col>
             <Col span={16}>
-              <Form.Item>
+              <Form.Item style={{marginBottom:0}}>
                 <Space style={{ marginLeft: 10 }}>
                   <Button
                     type="primary"
@@ -267,7 +267,7 @@ const DeviceInfoCountModal = props => {
           dataSource={dataSource}
           columns={getColumns()}
           scroll={{
-            y: 'calc(100vh - 360px)',
+            y: 'calc(100vh - 338px)',
           }}
           pagination={{
             total: tableTotal,

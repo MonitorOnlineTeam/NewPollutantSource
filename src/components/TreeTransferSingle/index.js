@@ -141,7 +141,7 @@ const Index = (props) => {
         {...restProps}
         targetKeys={targetKeys}
         className={styles["tree-transfer"]}
-        render={item => item.title}
+        render={item => props.fieldNames?.title? item[props.fieldNames.title] : item.title}
         dataSource={transferDataSource}
         titles={titles ? titles : ['待分配点位', '已分配点位']}
       >

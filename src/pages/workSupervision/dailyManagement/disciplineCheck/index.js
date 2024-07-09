@@ -49,7 +49,8 @@ const DisciplineCheck = props => {
   const [modalQueryParams, setModalQueryParams] = useState({});
   const [mode, setMode] = useState(); // 1: 管理 空：记录
 
-  const buttonList = permissionButton(props.match.path);
+
+ 
   const {
     queryLoading,
     dispatch,
@@ -58,6 +59,10 @@ const DisciplineCheck = props => {
       params: { systemType },
     },
   } = props;
+
+  let buttonList = [];
+
+   buttonList = permissionButton(`/workSupervision/dailyManagement/disciplineCheck/${systemType}`);
 
   useEffect(() => {
     getTableDataSource();
@@ -109,13 +114,14 @@ const DisciplineCheck = props => {
       {
         title: '序号',
         align: 'center',
+        width: 40,
       },
       {
         title: '大区',
         dataIndex: 'RegionName',
         key: 'RegionName',
         ellipsis: true,
-        width:'auto',
+        width: 200,
         render: (text, record, index) => {
           if (systemType !== '1') {
             return text;
@@ -131,7 +137,7 @@ const DisciplineCheck = props => {
         dataIndex: 'CityName',
         key: 'CityName',
         ellipsis: true,
-        width:'auto',
+        width: 200,
         render: (text, record, index) => {
           return {
             children: text,
@@ -144,7 +150,6 @@ const DisciplineCheck = props => {
         dataIndex: 'ShouldCheckCount',
         key: 'ShouldCheckCount',
         ellipsis: true,
-        width:'auto',
         render: (text, record) => {
           return (
             <a
@@ -167,14 +172,13 @@ const DisciplineCheck = props => {
         dataIndex: 'AlreadyCheckCount',
         key: 'AlreadyCheckCount',
         ellipsis: true,
-        width:'auto',
       },
       {
         title: '任务完成率',
         dataIndex: 'CheckRate',
         key: 'CheckRate',
         ellipsis: true,
-        width: 'auto',
+        width: 200,
         sorter: (a, b) => {
           if (a.RegionCode !== 'All' && b.RegionCode !== 'All') {
             return a.CheckRate - b.CheckRate;
@@ -296,7 +300,6 @@ const DisciplineCheck = props => {
           loading={queryLoading}
           align="center"
           dataSource={dataSource}
-          scroll={{x:780}}
           columns={getColumns()}
           pagination={false}
         />

@@ -33,7 +33,7 @@ const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
-  getData: 'newtransmissionefficiency/getTransmissionEfficiencyForEnt',
+  getData: 'newtransmissionefficiency/getTransmissionEfficiencyForPoint',
 };
 @Form.create()
 @connect(({ loading, newtransmissionefficiency }) => ({
@@ -43,7 +43,7 @@ const pageUrl = {
   entName: newtransmissionefficiency.entName,
   queryPar: newtransmissionefficiency.priseQueryPar,
 }))
-export default class enterpriseEfficiency extends Component {
+export default class EnterpriseEfficiency extends Component {
   constructor(props) {
     super(props);
 
@@ -88,39 +88,39 @@ export default class enterpriseEfficiency extends Component {
   //     }
   //     this.getTableData(pagination.current);
   // }
-  interceptTwo = value => {
+  interceptTwo=(value)=>{
     const data = value.toString();
-    const result = data.substring(0, data.indexOf('.') + 3);
+    const result = data.substring(0,data.indexOf(".")+3)
     return result;
-  };
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     const columns = [
       {
-        title: <span style={{ fontWeight: 'bold' }}>排口类型</span>,
+        title: <span style={{ fontWeight: 'normal' }}>排口类型</span>,
         dataIndex: 'PollutantTypeName',
         key: 'PollutantTypeName',
         align: 'center',
         render: (text, record) => {
-          return <span>{text}</span>;
+          return <span>{text}</span>
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>排口名称</span>,
+        title: <span style={{ fontWeight: 'normal' }}>排口名称</span>,
         dataIndex: 'PointName',
         key: 'PointName',
         align: 'center',
         render: (text, record) => {
-          return <span>{text}</span>;
+          return <span>{text}</span>
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>应传个数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>应传个数</span>,
         dataIndex: 'ShouldNumber',
         key: 'ShouldNumber',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber == 0) {
+          if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;
           }
 
@@ -128,12 +128,12 @@ export default class enterpriseEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>实传个数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>实传个数</span>,
         dataIndex: 'TransmissionNumber',
         key: 'TransmissionNumber',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber == 0) {
+          if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           if (record.AvgTransmissionNumber <= text) {
@@ -158,12 +158,12 @@ export default class enterpriseEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效个数</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效个数</span>,
         dataIndex: 'TransmissionNumber',
         key: 'TransmissionNumber',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber == 0) {
+          if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           if (record.AvgEffectiveNumber <= text) {
@@ -187,12 +187,12 @@ export default class enterpriseEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>传输率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>传输率</span>,
         dataIndex: 'TransmissionRate',
         key: 'TransmissionRate',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber == 0) {
+          if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           if (record.AvgTransmissionRate <= text) {
@@ -218,13 +218,13 @@ export default class enterpriseEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效率</span>,
         dataIndex: 'EffectiveRate',
         key: 'EffectiveRate',
         align: 'center',
         sorter: (a, b) => a.EffectiveRate - b.EffectiveRate,
         render: (text, record) => {
-          if (record.ShouldNumber == 0) {
+          if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           if (record.AvgEffectiveRate <= text) {
@@ -250,13 +250,13 @@ export default class enterpriseEfficiency extends Component {
         },
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效传输率</span>,
+        title: <span style={{ fontWeight: 'normal' }}>有效传输率</span>,
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
         align: 'center',
         sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
-          if (record.ShouldNumber == 0) {
+          if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;
           }
           // 红色：#f5222d 绿色：#52c41a
@@ -268,7 +268,7 @@ export default class enterpriseEfficiency extends Component {
                   successPercent={percent}
                   percent={percent}
                   size="small"
-                  style={{ width: '80%' }}
+                  style={{width:'80%'}}
                   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
                 />
               </div>
@@ -281,7 +281,7 @@ export default class enterpriseEfficiency extends Component {
                 percent={percent}
                 status="exception"
                 size="small"
-                style={{ width: '80%' }}
+                style={{width:'80%'}}
                 format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
               />
             </div>
@@ -330,16 +330,15 @@ export default class enterpriseEfficiency extends Component {
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={columns}
-              bordered={false}
               // onChange={this.handleTableChange}
-              scroll={{ x: null }}
+              scroll={{ y: 'calc(100vh - 450px)' }}
               size="small" // small middle
               dataSource={this.props.tableDatas}
-              pagination={{
-                showSizeChanger: false,
-                showQuickJumper: false,
-                // defaultPageSize:20
-              }}
+              // pagination={{
+              //   showSizeChanger: false,
+              //   showQuickJumper: false,
+                // //defaultPageSize:20
+              // }}
             />
           </Card>
         </Row>

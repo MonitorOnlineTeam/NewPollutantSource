@@ -477,7 +477,8 @@ a:hover {
 
 .mapInput {
   & > .ant-input:not(:last-child) {
-    padding-right: 50px;
+    padding-right: 0;
+    // padding-right: 50px;
   }
 }
 
@@ -1115,6 +1116,12 @@ a:hover {
   //有底部提交按钮的弹框
   .ant-modal-body {
     max-height: calc(100% - 39px - 52px);
+  }
+}
+.noTitleSty :global {
+   //没有标题栏的弹框
+  .ant-modal-body {
+    max-height: calc(100vh - 64px);
     overflow-y: auto;
   }
 }

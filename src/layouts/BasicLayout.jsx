@@ -126,12 +126,13 @@ class BasicLayout extends Component {
       router.push('/user/login');
     }
     let _settings = settings;
-    if (sessionStorage.getItem('sysName')) {
-      _settings.title = sessionStorage.getItem('sysName');
+    const sysName = sessionStorage.getItem('sysName')
+    if (sysName) {
+      _settings.title = sysName;
     }
     return (
       <>
-        <SdlMenu title={_settings.title} match={this.props.match} location={this.props.location} />
+        <SdlMenu  match={this.props.match} location={this.props.location} />
         <ProLayout
           logo={logoRender}
           onCollapse={handleMenuCollapse}
@@ -164,6 +165,7 @@ class BasicLayout extends Component {
           rightContentRender={rightProps => <RightContent {...rightProps} />}
           {...this.props}
           {..._settings}
+          //  title={sysName? <span title={sysName} style={{display:'block'}} className='textOverflow'>{sysName}</span> : ''}
         >
           {webConfig.isShowBreadcrumb ? (
             <div id="basicLayout">{children}</div>

@@ -415,12 +415,13 @@ class SdlTable extends PureComponent {
               pageSizeOptions: ['10', '20', '30', '40', '100'],
             }}
             defaultWidth={80}
+            {...this.props}
             onRow={(record, index) => ({
               //拖拽功能
               index,
+              onClick: this.props.onRow?.()?.onClick && this.props.onRow(record, index).onClick,
               moveRow: this.moveRow,
             })}
-            {...this.props}
             columns={_columns}
             dataSource={dragable ? this.state.dataSource : this.props.dataSource}
             {..._props}
