@@ -61,9 +61,9 @@ const DisciplineCheck = props => {
   } = props;
 
   let buttonList = [];
-  if(systemType==1){
-    buttonList = permissionButton('/workSupervision/dailyManagement/disciplineCheck/1');
-  }
+
+   buttonList = permissionButton(`/workSupervision/dailyManagement/disciplineCheck/${systemType}`);
+
   useEffect(() => {
     getTableDataSource();
   }, []);

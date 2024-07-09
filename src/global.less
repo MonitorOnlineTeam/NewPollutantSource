@@ -736,6 +736,13 @@ a:hover {
     overflow-y: auto;
   }
 }
+.noTitleSty :global {
+  //没有标题栏的弹框
+  .ant-modal-body {
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+}
 // .ant-modal-header :global{
 //   padding: 8px 16px;
 // }

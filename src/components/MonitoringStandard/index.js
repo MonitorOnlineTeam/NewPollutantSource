@@ -31,7 +31,7 @@ import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { EditIcon } from '@/utils/icon'
 
-@connect(({ loading, standardLibrary, autoForm }) => ({
+@connect(({ loading, standardLibrary, autoForm,global }) => ({
     ...loading,
     list: standardLibrary.uselist,
     total: standardLibrary.total,
@@ -39,6 +39,7 @@ import { EditIcon } from '@/utils/icon'
     pageIndex: standardLibrary.pageIndex,
     requstresult: standardLibrary.requstresult,
     standardTableDatas: standardLibrary.PollutantListByDGIMN,
+    clientHeight: global.clientHeight,
 }))
 class MonitoringStandard extends Component {
     constructor(props) {
@@ -443,6 +444,7 @@ class MonitoringStandard extends Component {
                 bordered={false}
                 style={{ width: '100%' }}
                 bodyStyle={{ paddingBottom: 0 }}
+                className={styles.standardlibrarySty}
                 extra={
                     <Button
                         onClick={() => {
@@ -461,7 +463,7 @@ class MonitoringStandard extends Component {
                     loading={this.props.effects['standardLibrary/getpollutantbydgimn']}
                     columns={columns}
                     dataSource={standardTableDatas}
-                    scroll={{ x:800 }}
+                    scroll={{ x:800, y: this.props.isPoint && this.props.clientHeight - 430}}
                 //  pagination={{ pageSize: 20 }}
                 />
                 <Modal

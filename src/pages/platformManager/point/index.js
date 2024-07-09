@@ -610,6 +610,7 @@ export default class MonitorPoint extends Component {
     if (FormData)
       return (
         <MonitoringStandard
+          isPoint
           noload
           DGIMN={FormData['dbo.T_Cod_MonitorPointBase.DGIMN'] || FormData['DGIMN']}
           pollutantType={
@@ -1396,7 +1397,11 @@ export default class MonitorPoint extends Component {
             width={'80%'}
             destroyOnClose
             bodyStyle={{ paddingBottom: 0 }}
-            footer={[
+            footer={
+              tabKey == 2? //污染物信息
+              null
+              :
+              [
               !this.state.isView
                 ? ((
                     <Button key="back" onClick={this.handleCancel}>

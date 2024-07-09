@@ -202,7 +202,7 @@ const TaskCompletionRecord = props => {
         // width: 200,
         width:'auto',
         render: text => {
-          return moment(text).format('YYYY-MM-DD');
+          return text && moment(text).format('YYYY-MM-DD');
         },
       },
     ];
@@ -294,6 +294,7 @@ const TaskCompletionRecord = props => {
       open={open}
       destroyOnClose
       footer={null}
+      mask={false}
       onCancel={() => {
         onCancel();
       }}
