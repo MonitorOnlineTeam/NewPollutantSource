@@ -248,9 +248,10 @@ const Index = (props) => {
             <BreadcrumbWrapper >
                 <Card title={searchComponents()}>
                     <SdlTable
-                        onClick={record => {
-                            setRow(record)
-                        }}
+                        onRow={record => ({
+                            onClick: event => { setRow(record) },
+                        })
+                        }
                         loading={tableLoading}
                         bordered
                         dataSource={tableDatas}

@@ -293,7 +293,6 @@ class SdlTable extends PureComponent {
   render() {
     const { defaultWidth, resizable, clientHeight, pagination, align, dragable } = this.props;
     const { _props, columns, headAndFooterHeight } = this.state;
-
     const fixedHeight = this.state.computeHeight;
     const scrollYHeight =
       this.props.scroll && this.props.scroll.y
@@ -380,8 +379,8 @@ class SdlTable extends PureComponent {
             onRow={(record, index) => ({
               //拖拽功能
               index,
+              onClick: this.props.onRow?.()?.onClick && this.props.onRow(record, index).onClick,
               moveRow: this.moveRow,
-              onClick: ()=>this.props.onClick(record, index),
             })}
             columns={_columns}
             dataSource={dragable ? this.state.dataSource : this.props.dataSource}
