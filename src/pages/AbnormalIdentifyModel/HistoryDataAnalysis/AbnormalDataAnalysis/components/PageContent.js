@@ -20,6 +20,8 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import ReactEcharts from 'echarts-for-react';
 import AbnormalDataAnalysis from '../index';
 import { MoreOutlined } from '@ant-design/icons';
+import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
+import WarningDataAndChart from '@/pages/AbnormalIdentifyModel/AssistDataAnalysis/components/WarningDataAndChart.js';
 
 const { Option } = Select;
 
@@ -58,7 +60,7 @@ const pageInfoData = {
   },
   type: {
     color: defaultColor,
-    list: ['样品气异常', '测量值异常', '数据标记异常', '设备异常', '参数设置异常'],
+    list: ['样品气异常', '测量值异常', '设备异常', '数据标记异常', '参数设置异常'],
   },
   action: {
     color: [
@@ -68,34 +70,67 @@ const pageInfoData = {
       '#ff4d4f', // 严重
     ],
     list: ['疑似人为干预', '疑似设备故障', 'CEMS运行管理异常', '数据缺失'],
+    types: ['疑似不规范运行', '疑似设备故障', '运行管理异常', '数据缺失'],
+    durationTypes: ['RenweiHour', 'FaultHour', 'CEMSException', 'NormalMissHour'],
   },
 };
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
+  modelList: AbnormalIdentifyModel.modelList,
   warningForm: AbnormalIdentifyModel.warningForm,
   // loading: loading.effects['AbnormalIdentifyModel/GetDataMissAnalysis'],
 });
 
 const PageContent = props => {
   const [form] = Form.useForm();
-  const { dispatch, pageTitle, DGIMN, excepType, location, time } = props;
+  const { dispatch, pageTitle, DGIMN, excepType, location, time, modelList, warningForm } = props;
 
   const [date, setDate] = useState(time || [moment().startOf('year'), moment()]); // 时间
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
+  const [isModalOpen3, setIsModalOpen3] = useState(false);
+  const [durationModalTitle, setDurationModalTitle] = useState();
+  const [currentPointList, setCurrentPointList] = useState([]);
+  const [currentPointDGIMN, setCurrentPointDGIMN] = useState();
+  const [quotaType, setQuotaType] = useState();
   const [modalTitle, setModalTitle] = useState();
   const [regionCode, setRegionCode] = useState();
   const [entCode, setEntCode] = useState();
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [dataType, setDataType] = useState(props.dataType || 'region'); //region/ent/point
-  const [dataType2, setDataType2] = useState(props.dataType || 'region'); //region/ent/point
   const [rtnType, setRtnType] = useState(props.rtnType || 'nums');
-  const [rtnType2, setRtnType2] = useState(props.rtnType || 'nums');
   const [pieData, setPieData] = useState([{}, {}, {}, {}]);
+  const [levelList, setLevelList] = useState([]);
+  const [typeList, setTypeList] = useState([]);
 
   useEffect(() => {
+    GetModelList();
+    GetMoldTypeLevelList();
     loadData();
   }, []);
+
+  // 获取模型列表
+  const GetModelList = () => {
+    dispatch({
+      type: 'AbnormalIdentifyModel/GetModelList',
+      payload: {},
+    });
+  };
+
+  // 获取级别和分类
+  const GetMoldTypeLevelList = () => {
+    dispatch({
+      type: 'AbnormalIdentifyModel/GetMoldTypeLevelList',
+      payload: {
+        type: 1, // 过滤掉打标记和数据现象
+      },
+      callback: res => {
+        setLevelList(res.level);
+        setTypeList(res.type);
+      },
+    });
+  };
 
   //
   const loadData = (_dataType, _rtnType) => {
@@ -129,6 +164,111 @@ const PageContent = props => {
       },
     });
   };
+
+  // 数字点击
+  const onNumClick = (record, index) => {
+    let types = pageInfoData[excepType].types;
+    let list = pageInfoData[excepType].list;
+
+    let params = {};
+    // 次数
+    if (rtnType === 'nums') {
+      switch (excepType) {
+        case 'action': // 行为
+          params.warningTypeCode = findModelGuidsByName(modelList, types[index]);
+          break;
+        case 'level': // 级别
+          params.level = findModelGuidsByName(levelList, list[index]);
+          break;
+        case 'type':
+          params.types = findModelGuidsByName(typeList, list[index]);
+          break;
+      }
+      updateCluesListFormState({
+        EntCode: props.entCode,
+        regionCode: props.regionCode || record.Key,
+        DGIMN: record.ParentKey ? record.Key : undefined,
+        ...params,
+      });
+    } else {
+      // 时长
+      let durationTypes = '';
+      switch (excepType) {
+        case 'action': // 行为
+          durationTypes = pageInfoData[excepType].durationTypes;
+          break;
+        case 'level': // 级别
+          durationTypes = 'level-' + index;
+          break;
+        case 'type': // 分类
+          durationTypes = 'type-' + index;
+          break;
+      }
+
+      setDurationModalTitle(`${record.Name} - 异常时长数据详情`);
+      setCurrentPointList(record.List);
+      setIsModalOpen3(true);
+      setCurrentPointDGIMN(record.List[0]?.DGIMN);
+      setQuotaType(durationTypes);
+    }
+  };
+
+  // 更新异常线索清单model状态
+  const updateCluesListFormState = params => {
+    setIsModalOpen2(true);
+    let body = {
+      date: [],
+      date1: [date[0], date[1]],
+      pageSize: 20,
+      pageIndex: 1,
+      rowKey: undefined,
+      scrollTop: 0,
+      ...params,
+    };
+
+    // 进入线索列表，传入时间、场景类型、企业、污染物
+    dispatch({
+      type: 'AbnormalIdentifyModel/updateState',
+      payload: {
+        warningForm: {
+          ...warningForm,
+          all: {
+            ...warningForm['all'],
+            ...body,
+          },
+        },
+      },
+    });
+  };
+
+  function findModelGuidsByName(data, name) {
+    // 声明一个空数组用于存放结果
+    const result = [];
+
+    // 遍历数据的每一个项
+    data.forEach(baseType => {
+      // 检查当前对象的ModelBaseTypeName是否包含指定的name
+      if (baseType.ModelBaseTypeName && baseType.ModelBaseTypeName.includes(name)) {
+        // 遍历ModelBaseList中的每一个项
+        baseType.ModelBaseList.forEach(modelType => {
+          // 遍历ModelList中的每一个项，将其ModelGuid添加到结果数组中
+          modelType.ModelList.forEach(model => {
+            result.push(model.ModelGuid);
+          });
+        });
+      }
+
+      if (baseType.ModelTypeName && baseType.ModelTypeName.includes(name)) {
+        // 遍历ModelBaseList中的每一个项
+        baseType.ModelList.forEach(model => {
+          result.push(model.ModelGuid);
+        });
+      }
+    });
+
+    // 返回结果数组
+    return result;
+  }
 
   // 区分页面类型文字
   let excepTypeName = '分级';
@@ -482,13 +622,16 @@ const PageContent = props => {
     }
 
     let listText = pageInfoData[excepType].list;
-    let unit = rtnType === 'nums' ? '次' : '小时'
-    let column2 = listText.map(item => {
+    let unit = rtnType === 'nums' ? '次' : '小时';
+    let column2 = listText.map((item, idx) => {
       return {
         title: `${item} （${unit}）`,
         dataIndex: item,
         key: item,
         sorter: (a, b) => a[item] - b[item],
+        render: (text, record, index) => {
+          return <a onClick={() => onNumClick(record, idx)}>{text}</a>;
+        },
       };
     });
 
@@ -680,7 +823,6 @@ const PageContent = props => {
           pagination={false}
         />
       </Card>
-      {console.log(' window.location', window.location)}
       {isModalOpen && (
         <Modal
           title={modalTitle}
@@ -706,6 +848,53 @@ const PageContent = props => {
           />
         </Modal>
       )}
+
+      <Modal
+        title={
+          <>
+            {durationModalTitle}
+            <Select
+              placeholder="请选择监测点"
+              allowClear={false}
+              style={{ width: 300, marginLeft: 20 }}
+              defaultValue={currentPointDGIMN}
+              onChange={value => {
+                setCurrentPointDGIMN(value);
+              }}
+            >
+              {currentPointList.map(item => {
+                return (
+                  <Option key={item.DGIMN} value={item.DGIMN}>
+                    {`${item.ParentName} - ${item.PointName}`}
+                  </Option>
+                );
+              })}
+            </Select>
+          </>
+        }
+        wrapClassName={
+          window.location.pathname === '/SystemDashboard/AbnormalIdentify'
+            ? 'fullScreenModal'
+            : 'spreadOverModal'
+        }
+        destroyOnClose
+        open={isModalOpen3}
+        footer={false}
+        bodyStyle={
+          window.location.pathname === '/SystemDashboard/AbnormalIdentify' ? { padding: 0 } : {}
+        }
+        onCancel={() => setIsModalOpen3(false)}
+      >
+        <WarningDataAndChart
+          defaultShowType="data"
+          quotaType={quotaType}
+          DGIMN={currentPointDGIMN}
+          date={date}
+          tableHeight="calc(100vh - 260px)"
+          displayType="modal"
+        />
+      </Modal>
+      <CluesListModal open={isModalOpen2} onCancel={() => setIsModalOpen2(false)} />
     </div>
   );
 };

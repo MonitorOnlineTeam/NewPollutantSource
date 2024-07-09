@@ -20,6 +20,8 @@ function initWarningForm() {
       date1: [],
       PollutantCode: '',
       warningTypeCode: [],
+      level: [],
+      types: [],
       pageSize: 20,
       pageIndex: 1,
     };
@@ -77,7 +79,6 @@ export default Model.extend({
         // console.log('unfoldModelList', unfoldModelList);
         let modelList = result.Datas.sort((a, b) => a.ModelTypeCode - b.ModelTypeCode);
         // { label: label, value: value, children: children }
-        console.log('modelList', modelList);
         callback && callback(modelList, unfoldModelList);
         yield update({
           modelList: modelList,
@@ -289,6 +290,8 @@ export default Model.extend({
             date1: [],
             PollutantCode: '',
             warningTypeCode: [],
+            level: [],
+            types: [],
             pageSize: 20,
             pageIndex: 1,
           },
@@ -879,6 +882,13 @@ export default Model.extend({
         `${API.AbnormalIdentifyModel.DeleteModelReport}?ReportGuid=${payload.ReportGuid}`,
         {},
       );
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 获取级别和分类
+    *GetMoldTypeLevelList({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetMoldTypeLevelList, {});
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       }

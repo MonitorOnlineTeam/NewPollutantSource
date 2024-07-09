@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-27 09:00:53
+ * @Last Modified time: 2024-07-09 15:35:23
  * @Description：报警记录
  */
 
@@ -70,6 +70,8 @@ const CluesList = props => {
   // const modelNumber = props.match.params.modelNumber;
   const modelNumber = 'all';
   const [modelList, setModelList] = useState([]);
+  const [levelList, setLevelList] = useState([]);
+  const [typeList, setTypeList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [warningTypeCounts, setWarningTypeCounts] = useState([]);
   const [pointList, setPointList] = useState([]);
@@ -109,6 +111,7 @@ const CluesList = props => {
   //   });
   // }, [modelNumber]);
   useEffect(() => {
+    GetMoldTypeLevelList();
     GetModelList();
     onFinish();
   }, [modelNumber]);
@@ -171,6 +174,35 @@ const CluesList = props => {
         let modelList = transformData(res);
         console.log('modelList', modelList);
         setModelList(modelList);
+      },
+    });
+  };
+
+  // 获取级别和分类
+  const GetMoldTypeLevelList = () => {
+    dispatch({
+      type: 'AbnormalIdentifyModel/GetMoldTypeLevelList',
+      payload: {
+        type: 1, // 过滤掉打标记和数据现象
+      },
+      callback: res => {
+        let levelList = res.level.map(item => {
+          return {
+            ...item,
+            ModelGuid: item.ModelTypeCode,
+            ModelName: item.ModelTypeName,
+          };
+        });
+        setLevelList(levelList);
+
+        let typeList = res.type.map(item => {
+          return {
+            ...item,
+            ModelGuid: item.ModelTypeCode,
+            ModelName: item.ModelTypeName,
+          };
+        });
+        setTypeList(typeList);
       },
     });
   };
@@ -323,11 +355,12 @@ const CluesList = props => {
   // 查询数据
   const onFinish = () => {
     const values = form.getFieldsValue();
-    let warningTypeCode = values.warningTypeCode ? values.warningTypeCode.toString() : undefined;
+    const { level = [], types = [], warningTypeCode = [] } = values;
+    let codes = [...warningTypeCode, ...level, ...types];
 
-    if (modelNumber && !warningTypeCode && modelNumber !== 'all') {
-      warningTypeCode = ModelNumberIdsDatas[modelNumber].toString();
-    }
+    // if (modelNumber && !warningTypeCode && modelNumber !== 'all') {
+    //   warningTypeCode = ModelNumberIdsDatas[modelNumber].toString();
+    // }
     if (!values.date.length && !values.date1.length) {
       message.error('请选择日期后查询！');
       return;
@@ -338,7 +371,9 @@ const CluesList = props => {
       payload: {
         ...values,
         Dgimn: values.DGIMN,
-        warningTypeCode: warningTypeCode,
+        warningTypeCode: codes.toString(),
+        types: undefined,
+        level: undefined,
         date: undefined,
         beginTime: values.date[0]?.format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.date[1]?.format('YYYY-MM-DD HH:mm:ss'),
@@ -430,12 +465,11 @@ const CluesList = props => {
     });
   };
 
-  const getPageContent = () => {
-    let cardProps = showMode === 'modal' ? { bordered: false, bodyStyle: { padding: 0 } } : {};
+  const getTreePorps = data => {
     const tProps = {
-      treeData: modelList,
+      treeData: data,
       treeCheckable: true,
-      // showCheckedStrategy: SHOW_PARENT,
+      showCheckedStrategy: SHOW_PARENT,
       maxTagCount: 3,
       maxTagTextLength: 5,
       maxTagPlaceholder: '...',
@@ -445,6 +479,15 @@ const CluesList = props => {
       },
       treeDefaultExpandAll: true,
     };
+
+    return tProps;
+  };
+
+  const getPageContent = () => {
+    let cardProps = showMode === 'modal' ? { bordered: false, bodyStyle: { padding: 0 } } : {};
+    let actionTreeProps = getTreePorps(modelList);
+    let levelTreeProps = getTreePorps(levelList);
+    let typeTreeProps = getTreePorps(typeList);
     return (
       <Card className={styles.warningWrapper} {...cardProps}>
         <Form
@@ -521,7 +564,7 @@ const CluesList = props => {
           </Form.Item>
           <Form.Item label="行政区" name="regionCode">
             <RegionList
-            noFilter
+              noFilter
               style={{ width: 140 }}
               onChange={value => {
                 form.setFieldsValue({ EntCode: undefined, DGIMN: undefined });
@@ -546,21 +589,21 @@ const CluesList = props => {
           {
             <>
               {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
-                <Form.Item label="企业" name="EntCode">
-                  <EntAtmoList
-                    regionCode={form.getFieldValue('regionCode')}
-                    style={{ width: 200 }}
-                    onChange={value => {
-                      if (!value) {
-                        form.setFieldsValue({ DGIMN: undefined });
-                        setPointList([]);
-                      } else {
-                        form.setFieldsValue({ DGIMN: undefined });
-                        getPointList(value);
-                      }
-                    }}
-                  />
-                </Form.Item>
+              <Form.Item label="企业" name="EntCode">
+                <EntAtmoList
+                  regionCode={form.getFieldValue('regionCode')}
+                  style={{ width: 200 }}
+                  onChange={value => {
+                    if (!value) {
+                      form.setFieldsValue({ DGIMN: undefined });
+                      setPointList([]);
+                    } else {
+                      form.setFieldsValue({ DGIMN: undefined });
+                      getPointList(value);
+                    }
+                  }}
+                />
+              </Form.Item>
               {/* </Spin> */}
 
               {/* // 在首页点击查询是会出现loading  */}
@@ -597,9 +640,27 @@ const CluesList = props => {
           </Form.Item>
           <Spin spinning={modelListLoading} size="small">
             <Form.Item label="场景类别" name="warningTypeCode">
-              <TreeSelect {...tProps} allowClear showSearch treeNodeFilterProp="label" />
+              <TreeSelect {...actionTreeProps} allowClear showSearch treeNodeFilterProp="label" />
             </Form.Item>
           </Spin>
+          <Form.Item label="异常级别" name="level">
+            <TreeSelect
+              {...levelTreeProps}
+              fieldNames={{ label: 'ModelName', value: 'ModelGuid', children: 'ModelList' }}
+              allowClear
+              showSearch
+              treeNodeFilterProp="label"
+            />
+          </Form.Item>
+          <Form.Item label="异常分类" name="types">
+            <TreeSelect
+              {...typeTreeProps}
+              fieldNames={{ label: 'ModelName', value: 'ModelGuid', children: 'ModelList' }}
+              allowClear
+              showSearch
+              treeNodeFilterProp="label"
+            />
+          </Form.Item>
           <Form.Item label="线索内容" name="WarningContent">
             <Input placeholder="线索内容" style={{ width: 240 }} />
           </Form.Item>

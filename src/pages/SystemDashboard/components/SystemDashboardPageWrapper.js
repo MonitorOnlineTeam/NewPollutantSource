@@ -124,7 +124,7 @@ const HomeDataScreen = props => {
       <div className={styles.leftContent}>
         <div className={styles.menuSelectContent}>
           {/* <div className={styles.selectedName}>统计周期</div> */}
-          <div className={styles.selectedName}>{timeLabel}</div>
+          <div className={`${styles.selectedName} ${styles.showList}`}>{timeLabel}</div>
           <ul>
             {dateRangeList.map(item => {
               return (

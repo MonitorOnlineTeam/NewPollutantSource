@@ -732,6 +732,8 @@ export const API = {
     GetWarningList: before + '/WarningV2/GetWarningList',
     // 获取模型列表
     GetMoldList: before + '/MoldV2/GetMoldList',
+    // 获取级别和分类
+    GetMoldTypeLevelList: before + '/MoldV2/GetMoldTypeLevelList',
     // 模型开启、关闭
     SetMoldStatus: before + '/MoldV2/SetMoldStatus',
     // 获取模型配置
