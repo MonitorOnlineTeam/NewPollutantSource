@@ -14,7 +14,7 @@ let tempSelectedNames = [];
 
 const dvaPropsData = ({ loading, dataModel, common }) => ({
   pollutantListByDgimn: common.pollutantListByDgimn,
-  allTypeDataList: dataModel.allTypeDataList,
+  // allTypeDataList: dataModel.allTypeDataList,
   pollutantLoading: loading.effects['common/getPollutantListByDgimn'],
   tableLoading: loading.effects['dataModel/GetAllTypeDataListForModel'],
   exportLoading: loading.effects['dataModel/ExportHourDataForModel'],
@@ -23,6 +23,7 @@ const dvaPropsData = ({ loading, dataModel, common }) => ({
 const WarningDataAndChart = props => {
   const [form] = Form.useForm();
 
+  const [allTypeDataList, setAllTypeDataList] = useState([]);
   const [columns, setColumns] = useState([]);
   const [selectedNames, setSelectedNames] = useState([]);
   const [legendSelected, setLegendSelected] = useState({});
@@ -34,13 +35,14 @@ const WarningDataAndChart = props => {
     DGIMN,
     pollutantListByDgimn,
     date,
-    allTypeDataList,
+    // allTypeDataList,
     pollutantLoading,
     tableLoading,
     exportLoading,
     describe,
     warningDate,
     defaultChartSelected,
+    chartPollutantList,
   } = props;
   // const [visible, setVisible] = useState([]);
 
@@ -52,30 +54,40 @@ const WarningDataAndChart = props => {
 
   // 根据mn获取污染物
   const getPollutantListByDgimn = () => {
-    dispatch({
-      type: 'common/getPollutantListByDgimn',
-      payload: {
-        DGIMNs: DGIMN,
-      },
-      callback: res => {
-        let pollutantCodes = [],
-          pollutantNames = [];
-        let units = {};
+    if (chartPollutantList) {
+      // 数据快照：使用报警的污染物
+      initData(chartPollutantList);
+    } else {
+      // 辅助数据分析：获取所有污染物
+      dispatch({
+        type: 'common/getPollutantListByDgimn',
+        payload: {
+          DGIMNs: DGIMN,
+        },
+        callback: res => {
+          initData(res);
+        },
+      }).then(() => {});
+    }
+  };
 
-        res.map(item => {
-          pollutantCodes.push(item.PollutantCode);
-          pollutantNames.push(item.PollutantName);
-          units[item.PollutantName] = item.Unit;
-        });
-        setUnits(units);
-        form.setFieldsValue({ pollutantCodes: pollutantCodes });
-        setSelectedNames(pollutantNames);
-        tempSelectedNames = pollutantNames;
-        GetAllTypeDataList();
-        getColumns(res);
-        // handleLegendSelected();
-      },
-    }).then(() => {});
+  const initData = res => {
+    let pollutantCodes = [],
+      pollutantNames = [];
+    let units = {};
+
+    res.map(item => {
+      pollutantCodes.push(item.PollutantCode);
+      pollutantNames.push(item.PollutantName);
+      units[item.PollutantName] = item.Unit;
+    });
+    setUnits(units);
+    form.setFieldsValue({ pollutantCodes: pollutantCodes });
+    setSelectedNames(pollutantNames);
+    tempSelectedNames = pollutantNames;
+    GetAllTypeDataList();
+    getColumns(res);
+    // handleLegendSelected();
   };
 
   useEffect(() => {
@@ -130,7 +142,9 @@ const WarningDataAndChart = props => {
         isAsc: true,
         IsSupplyData: false,
       },
-      callback: () => {},
+      callback: res => {
+        setAllTypeDataList(res);
+      },
     }).then(res => {});
   };
 
@@ -561,7 +575,6 @@ const WarningDataAndChart = props => {
   // const onCancel = () => {
   //   setVisible(false);
   // };
-  console.log('legendSelected', legendSelected);
   return (
     <>
       {describe && (
@@ -580,6 +593,7 @@ const WarningDataAndChart = props => {
           pollutantCodes: [],
         }}
         autoComplete="off"
+        style={{ display: chartPollutantList ? 'none' : '' }}
       >
         <Form.Item name="pollutantCodes">
           <Select
@@ -616,7 +630,7 @@ const WarningDataAndChart = props => {
           <Button
             type="primary"
             onClick={() => {
-              if(!tempSelectedNames.length) {
+              if (!tempSelectedNames.length) {
                 message.error('请选择污染物！');
                 return;
               }
@@ -656,7 +670,7 @@ const WarningDataAndChart = props => {
           align="center"
           loading={tableLoading}
         />
-      ) : tableLoading == false && pollutantLoading === false ? (
+      ) : tableLoading == false && !pollutantLoading ? (
         // false ? (
         <ReactEcharts
           theme="light"
@@ -665,7 +679,11 @@ const WarningDataAndChart = props => {
           notMerge
           id="rightLine"
           onEvents={onEvents}
-          style={{ marginTop: 34, width: '100%', height: 'calc(100vh - 304px)' }}
+          style={{
+            marginTop: 34,
+            width: '100%',
+            height: props.chartHeight || 'calc(100vh - 304px)',
+          }}
         />
       ) : (
         <div className="example">

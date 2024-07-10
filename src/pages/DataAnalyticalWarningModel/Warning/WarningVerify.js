@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 15:07:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-03 09:07:53
+ * @Last Modified time: 2024-07-10 16:42:39
  * @Description：报警核实详情
  */
 
@@ -32,6 +32,7 @@ import ModelChartMultiple from './components/ModelChart-multiple';
 import ModelChartLinear from './components/ModelChart-Linear';
 import ModelTable from './components/ModelTable';
 import WarningDataModal from './WarningDataModal';
+import WarningDataAndChart from '@/pages/DataAnalyticalWarningModel/Warning/components/WarningDataAndChart.js';
 import moment from 'moment';
 import {
   ChartDefaultSelected,
@@ -60,6 +61,9 @@ const WarningVerify = props => {
   const [fileList, setFileList] = useState([]);
   const [rectFileList, setRectFileList] = useState([]);
   const [modelChartDatas, setModelChartDatas] = useState([]);
+  const [generalChartData, setGeneralChartData] = useState({
+    PollutantList: [],
+  });
   const [linearDatas, setLinearDatas] = useState([]);
   const [modelTableDatas, setModelTableDatas] = useState([]);
   const [modelDescribe, setModelDescribe] = useState('');
@@ -122,7 +126,9 @@ const WarningVerify = props => {
         ID: warningId,
       },
       callback: res => {
-        if (res.chartData) {
+        if (res.PollutantList) {
+          setGeneralChartData(res);
+        } else if (res.chartData) {
           setModelChartDatas(res.chartData);
           handleLinearDatas(res.chartData, WarningTypeCode);
         } else {
@@ -148,7 +154,6 @@ const WarningVerify = props => {
               });
             });
           }
-          console.log('newTimeList', newTimeList);
           setTimeList(newTimeList);
         }
       },
@@ -419,6 +424,24 @@ const WarningVerify = props => {
         setWarningDate(warningDate);
         handleDefaultLegendSelected();
         setDataModalVisible(true);
+      } else if (generalChartData.PollutantList.length) {
+        let warningDate = [
+          {
+            name: '开始',
+            date: moment(generalChartData.BeginTime).format('YYYY-MM-DD HH:mm'),
+          },
+          {
+            name: '结束',
+            date: moment(generalChartData.EndTime).format('YYYY-MM-DD HH:mm'),
+          },
+        ];
+        setWarningDate(warningDate);
+        setWarningDataDate([
+          moment(generalChartData.BeginTime).subtract(2, 'day'),
+          moment(generalChartData.EndTime).add(6, 'day'),
+        ]);
+        setDefaultChartSelected(generalChartData.PollutantList.map(item => item.PollutantName));
+        setDataModalVisible(true);
       } else {
         message.error('异常特征无数据，无法查看线索数据！');
       }
@@ -565,6 +588,34 @@ const WarningVerify = props => {
             {modelDescribe ? (
               <>
                 <p>{modelDescribe}</p>
+                {/* 通用模型 */}
+                {generalChartData.PollutantList.length ? (
+                  <WarningDataAndChart
+                    chartHeight="500px"
+                    DGIMN={warningInfo.Dgimn}
+                    date={[
+                      moment(generalChartData.BeginTime).subtract(2, 'day'),
+                      moment(generalChartData.EndTime).add(6, 'day'),
+                    ]}
+                    // describe={generalChartData.describe}
+                    warningDate={[
+                      {
+                        name: '开始',
+                        date: moment(generalChartData.BeginTime).format('YYYY-MM-DD HH:mm'),
+                      },
+                      {
+                        name: '结束',
+                        date: moment(generalChartData.EndTime).format('YYYY-MM-DD HH:mm'),
+                      },
+                    ]}
+                    defaultChartSelected={generalChartData.PollutantList.map(
+                      item => item.PollutantName,
+                    )}
+                    chartPollutantList={generalChartData.PollutantList}
+                  />
+                ) : (
+                  ''
+                )}
 
                 {/* 图表模型 */}
                 {modelChartDatas.length ? (
