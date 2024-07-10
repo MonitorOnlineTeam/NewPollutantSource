@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-06-12 10:19:14
+ * @Last Modified time: 2024-07-10 15:08:21
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -270,7 +270,7 @@ class SdlTable extends PureComponent {
       // console.log('tableTheadHeight', tableTheadHeight);
       // console.log('tableFooterHeight', tableFooterHeight);
       this.setState({
-        // computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
         // headAndFooterHeight: count > 110 ? count : 110,
         columns: this.props.columns,
       });
@@ -333,12 +333,15 @@ class SdlTable extends PureComponent {
     }
 
     const fixedHeight = this.state.computeHeight;
+    console.log('fixedHeight', fixedHeight)
     const scrollYHeight =
       this.props.scroll && this.props.scroll.y
         ? this.props.scroll.y
         : fixedHeight
         ? clientHeight - fixedHeight - headAndFooterHeight
         : '';
+
+        console.log('scrollYHeight', scrollYHeight)
     // 没有分页高度 + 40
     const scrollY =
       pagination === false && (this.props.scroll && !this.props.scroll.y)
