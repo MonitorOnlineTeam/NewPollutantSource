@@ -185,9 +185,9 @@ const PageContent = props => {
           break;
       }
       updateCluesListFormState({
-        EntCode: props.entCode,
-        regionCode: props.regionCode || record.Key,
-        DGIMN: record.ParentKey ? record.Key : undefined,
+        EntCode: dataType === 'ent' ? record.Key : dataType === 'point' ? record.ParentKey : undefined,
+        regionCode: dataType === 'region' ? record.Key : undefined,
+        DGIMN: dataType === 'point' ? record.Key : undefined,
         ...params,
       });
     } else {
@@ -208,7 +208,7 @@ const PageContent = props => {
       setDurationModalTitle(`${record.Name} - 异常时长数据详情`);
       setCurrentPointList(record.List);
       setIsModalOpen3(true);
-      setCurrentPointDGIMN(record.List[0]?.DGIMN);
+      setCurrentPointDGIMN(record?.List[0]?.DGIMN);
       setQuotaType(durationTypes);
     }
   };
@@ -865,7 +865,7 @@ const PageContent = props => {
               {currentPointList.map(item => {
                 return (
                   <Option key={item.DGIMN} value={item.DGIMN}>
-                    {`${item.ParentName} - ${item.PointName}`}
+                    {`${item.ParentName ? item.ParentName + '-' : ''}${item.PointName}`}
                   </Option>
                 );
               })}
