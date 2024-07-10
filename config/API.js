@@ -119,6 +119,8 @@ export const API = {
     UploadFiles: before + '/UploadApi/UploadFiles',
     // 根据企业Code获取监测点信息
     GetPointByEntCode: before + '/MonitorPointApi/GetPointByEntCode',
+    // 根据企业id获取监测点
+    GetNoFilterPointByEntCode: before + '/EnterpriseApi/GetNoFilterPointByEntCode',
     // 根据行政区查询企业
     GetEntByRegion: before + '/EnterpriseApi/GetEntByRegion',
     GetPollutantTypeMonitoringCategoryInfo:
@@ -179,8 +181,6 @@ export const API = {
   },
   // BaseDataApi
   BaseDataApi: {
-    // 根据企业id获取监测点
-    GetNoFilterPointByEntCode: before + '/EnterpriseApi/GetNoFilterPointByEntCode',
     // 年度考核列表
     GetAnnualAssessmentEntList: before + '/EnterpriseApi/GetAnnualAssessmentEntList',
     // 企业排放量列表
@@ -976,7 +976,8 @@ export const API = {
     /*设备故障反馈*/
     GetEquipmentFaultFeedbackList: before + '/EquipmentFailure/GetEquipmentFaultFeedbackList', //获取设备故障反馈信息
     ExportEquipmentFaultFeedbackList: before + '/EquipmentFailure/ExportEquipmentFaultFeedbackList', //导出设备故障反馈信息
-    UpdateEquipmentFaultFeedbackStatus: before + '/EquipmentFailure/UpdateEquipmentFaultFeedbackStatus', //更新设备故障反馈信息
+    UpdateEquipmentFaultFeedbackStatus:
+      before + '/EquipmentFailure/UpdateEquipmentFaultFeedbackStatus', //更新设备故障反馈信息
   },
   // 电力Api
   ElectricEnergyApi: {
@@ -1477,8 +1478,6 @@ export const API = {
     RestartTransmit: '/DataTransmit/api/DataTransmitSet/RestartTransmit',
   },
 
-
-
   /*************************************************************** 运维 ********************************************************************** */
   // 可视化看板Api
   VisualKanbanApi: {
@@ -1529,9 +1528,11 @@ export const API = {
     GetExceptionModel: before + '/ExceptionDataApi/GetExceptionModel', //获取异常记录汇总信息
     GetExceptionData: before + '/ExceptionDataApi/GetExceptionData', //获取异常记录详情信息
     GetVideoList: before + '/VideoApi/GetVideoList', //视频管理获取视频信息
-    GetOperationTaskStatisticsInfoByDay: before + '/VisualDashBoardApi/GetOperationTaskStatisticsInfoByDay', //近期运维工单 固定到天
+    GetOperationTaskStatisticsInfoByDay:
+      before + '/VisualDashBoardApi/GetOperationTaskStatisticsInfoByDay', //近期运维工单 固定到天
     GetOperationPlanTaskListByDay: before + '/VisualDashBoardApi/GetOperationPlanTaskListByDay', //近期运维工单详情 固定到天
-    GetPlanOperationTaskCompleteRateByDay: before + '/VisualDashBoardApi/GetPlanOperationTaskCompleteRateByDay', //获取看板计划内完成巡检校准任务 固定到天
+    GetPlanOperationTaskCompleteRateByDay:
+      before + '/VisualDashBoardApi/GetPlanOperationTaskCompleteRateByDay', //获取看板计划内完成巡检校准任务 固定到天
     GetWorkOrderAnalysisListDay: before + '/VisualDashBoardApi/GetWorkOrderAnalysisList', //运维工单分析详情 固定到天
     ExportWorkOrderAnalysisListDay: before + '/VisualDashBoardApi/ExportWorkOrderAnalysisList', //运维工单分析详情 固定到天  导出
   },
@@ -2132,12 +2133,12 @@ export const API = {
     /*用户恢复*/
     RecoveryUserInfo: before + '/UserApi/RecoveryUserInfo', //恢复用户信息
     /*短信发送*/
-    GetUserMessageList: before + '/AuthorizeApi/GetUserMessageList',//获取短信推送设置信息
-    ExportUserMessageList: before + '/AuthorizeApi/ExportUserMessageList',//获取短信推送设置 导出
-    AddOrUpdUserMessage: before + '/AuthorizeApi/AddOrUpdUserMessage',//添加短信推送人员
-    DelUserMessage: before + '/AuthorizeApi/DelUserMessage',//删除短信推送人员
-    InsertPointUserMessage: before + '/AuthorizeApi/InsertPointUserMessage',//添加人员短信报警排口
-    GetPointUserMessageList: before + '/AuthorizeApi/GetPointUserMessageList',//获取人员短信报警排口
+    GetUserMessageList: before + '/AuthorizeApi/GetUserMessageList', //获取短信推送设置信息
+    ExportUserMessageList: before + '/AuthorizeApi/ExportUserMessageList', //获取短信推送设置 导出
+    AddOrUpdUserMessage: before + '/AuthorizeApi/AddOrUpdUserMessage', //添加短信推送人员
+    DelUserMessage: before + '/AuthorizeApi/DelUserMessage', //删除短信推送人员
+    InsertPointUserMessage: before + '/AuthorizeApi/InsertPointUserMessage', //添加人员短信报警排口
+    GetPointUserMessageList: before + '/AuthorizeApi/GetPointUserMessageList', //获取人员短信报警排口
     /*** 基础设置 ***/
     /*合同变更设置*/
     GetOperationUserList: before + '/UserApi/GetOperationUserList', //获取合同变更运维人信息
@@ -2275,7 +2276,6 @@ export const API = {
     GetSpareReplacementRecordList: before + '/CTBaseDataApi/GetSpareReplacementRecordList', //获取部件更换信息
     ExportpareReplacementRecordList: before + '/CTBaseDataApi/ExportpareReplacementRecordList', //部件更换信息 导出
     GetCisPartsList: before + '/CTBaseDataApi/GetCisPartsList', //获取故障原因
-
   },
 
   /*** 工作台 ***/
@@ -2790,11 +2790,6 @@ export const API = {
         before + '/CTProjectExecutionApi/ExportTimelyPassRateListByUser',
     },
   },
-
-
-
-
 };
-
 
 export const UPLOAD = {};

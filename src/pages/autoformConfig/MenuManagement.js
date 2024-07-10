@@ -205,7 +205,6 @@ class MenuManagement extends Component {
   };
   // //排序
   handleSort = data => {
-    // debugger
     if (data.length > 0) {
       data.forEach(item => {
         data.sort((a, b) => a.SortCode - b.SortCode);
@@ -217,7 +216,6 @@ class MenuManagement extends Component {
   };
 
   handleSearch = searchText => {
-    console.log('searchText', searchText);
     const { TableData } = this.props;
     if (searchText.trim() == '') {
       this.setState({

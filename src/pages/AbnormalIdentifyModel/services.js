@@ -142,7 +142,7 @@ export async function GetWarningList(params) {
 
 // 根据企业获取排口
 export async function GetNoFilterPointByEntCode(params) {
-  const result = await post(API.BaseDataApi.GetNoFilterPointByEntCode, params);
+  const result = await post(API.CommonApi.GetNoFilterPointByEntCode, params);
   return result;
 }
 
@@ -154,7 +154,7 @@ export async function GetSingleWarning(params) {
 
 // // 根据企业获取排口
 // export async function getPointByEntCode(params) {
-//   const result = await post(API.BaseDataApi.GetNoFilterPointByEntCode, params);
+//   const result = await post(API.CommonApi.GetNoFilterPointByEntCode, params);
 //   return result;
 // }
 

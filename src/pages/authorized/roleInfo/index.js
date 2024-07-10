@@ -809,6 +809,7 @@ class RoleIndex extends Component {
     // }
     const rowMenuSelection = {
       selectedRowKeys: this.state.selectButton,
+      checkStrictly: false,
       onSelect: (record, selected, selectedRows, nativeEvent) => {
         selectedRows = selectedRows.filter(
           value => value !== undefined && value !== null && value !== '',
@@ -1128,7 +1129,7 @@ class RoleIndex extends Component {
                     key="key"
                     titles={['待设置角色', '已设置角色']}
                     treeData={this.props.RoleInfoTree}
-                    fieldNames={{ title: 'Roles_Name'}}
+                    fieldNames={{ title: 'Roles_Name' }}
                     checkedKeys={this.props.setRegOrAppRoleId}
                     targetKeysChange={(key, type, callback) => {
                       this.settingRoleOk(key, type == 1 ? 1 : 2, callback);
