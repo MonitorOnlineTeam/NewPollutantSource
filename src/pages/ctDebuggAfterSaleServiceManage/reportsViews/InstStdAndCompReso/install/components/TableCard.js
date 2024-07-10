@@ -294,6 +294,7 @@ const TableCard = props => {
           open={isModalOpen}
           destroyOnClose
           footer={null}
+          mask={false}
           bodyStyle={{padding:0}}
           onCancel={() => {
             onCancel();

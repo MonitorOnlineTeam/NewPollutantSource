@@ -293,6 +293,8 @@ class AutoFormTable extends PureComponent {
       match,
       parentcode,
       configId,
+      notOperate,
+      onlyAppendHandleRows
     } = this.props;
     this._SELF_.btnEl = [];
     this._SELF_.moreBtns = [];
@@ -302,7 +304,7 @@ class AutoFormTable extends PureComponent {
         switch (btn.DISPLAYBUTTON) {
           case 'add':
             // if (btnsAuthority.includes('add')) {
-            return (
+            return  !notOperate && !onlyAppendHandleRows && (
               <Button
                 style={{ marginRight: 8 }}
                 key={btn.DISPLAYBUTTON}
@@ -594,7 +596,40 @@ class AutoFormTable extends PureComponent {
     if (this._SELF_.btnEl.length || this.props.appendHandleRows) {
       let leftMenuWidth = config.isShowTabs && defaultSettings.layout === 'sidemenu' ? 255 : 0;
       const isFixed = scrollXWidth > window.innerWidth - 64 - 48 - leftMenuWidth ? 'right' : '';
-      _columns.length &&
+       _columns.length && this.props.notOperate?
+       this._SELF_.btnEl.filter(item=>item.type === 'view')[0]&&_columns.push({
+        align: 'center',
+        title: '操作',
+        width: 90,
+        fixed: isFixed,
+        render: (text, record) => {
+          const returnKey = keys[configId] && record[keys[configId][0]];
+          return this._SELF_.btnEl.map((item, index) => {
+          if (item.type === 'view') {
+            return <div>
+              <Fragment key={item.type}>
+                <Tooltip title="详情">
+                  <a
+                    onClick={() => {
+                      const postData = {};
+                      keys[configId].map(item => {
+                        if (record[item]) {
+                          postData[item] = record[item];
+                        }
+                      });
+                      this.onHandleView(record, returnKey, postData,parentCode,configId);
+                    }}
+                  >
+                    <DetailIcon />
+                  </a>
+                </Tooltip>
+              </Fragment>
+            </div>
+          }
+        })
+        }
+        })
+      :
         _columns.push({
           align: 'center',
           title: '操作',
@@ -602,7 +637,7 @@ class AutoFormTable extends PureComponent {
           fixed: isFixed,
           render: (text, record) => {
             const returnKey = keys[configId] && record[keys[configId][0]];
-            return (
+            return this.props.onlyAppendHandleRows?  <div>{this.props.appendHandleRows && this.props.appendHandleRows(record, returnKey)} </div> :(
               <div>
                 {this._SELF_.btnEl.map((item, index) => {
                   // if (item.type === 'edit' && btnsAuthority.includes('edit')) {

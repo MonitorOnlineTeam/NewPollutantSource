@@ -82,6 +82,7 @@ const ViewModal = props => {
       width={1300}
       destroyOnClose
       footer={null}
+      mask={false}
       onCancel={onCancel}
       // bodyStyle={{ padding: '0 24px' }}
     >

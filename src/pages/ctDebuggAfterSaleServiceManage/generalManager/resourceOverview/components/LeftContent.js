@@ -459,7 +459,7 @@ const Index = (props) => {
         destroyOnClose
         wrapClassName={`spreadOverModal`}
         mask={false}
-        bodyStyle={{padding:0,marginTop:-1}}
+        bodyStyle={{padding:0}}
       >
         {modalTitle=='人员统计'? <PersonnelFiles isModal/> : modalTitle=='车辆统计'? <VehicleManager isModal/> : <Standby isModal notOperate/>}
       </Modal>

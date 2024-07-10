@@ -710,7 +710,7 @@ const Index = (props) => {
           title={'调查'}
           onCancel={() => { setDetailVisible(false) }}
           destroyOnClose
-          wrapClassName={`fullScreenModal ${styles.modalSty} ${styles.detailModalSty}`}
+          wrapClassName={`fullScreenModal ${styles.modalSty} ${styles.detailModalSty} ${styles.detailModalSty2}`}
           mask={false}
           footer={null}
         >

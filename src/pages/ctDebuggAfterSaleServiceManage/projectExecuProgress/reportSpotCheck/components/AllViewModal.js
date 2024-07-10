@@ -34,6 +34,7 @@ const AllViewModal = props => {
       visible={isModalOpen}
       destroyOnClose
       footer={[]}
+      mask={false}
       onCancel={() => {
         onCancel();
       }}

@@ -118,6 +118,7 @@ const Model = {
               router.push('/sysTypeMiddlePage');
             } else {
               sessionStorage.setItem('sysMenuId', sysList.id);
+              sessionStorage.setItem("sysName", sysList.name);
               // 找到系统默认污染物
               let matches = desc.match(/\(([^)]+)\)/);
               if (matches) {

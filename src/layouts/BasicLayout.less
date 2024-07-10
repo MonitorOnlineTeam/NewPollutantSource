@@ -1,20 +1,54 @@
 :global {
+  .ant-pro-top-nav-header-logo{
+    display: flex;
+    align-items: center;
+  }
   .ant-pro-top-nav-header-logo h1 {
     color: #fff;
     display: inline-block;
-    vertical-align: top;
+    vertical-align: middle;
     font-size: 18px;
     margin: 0 0 0 12px;
     font-weight: bold;
     width: 200px;
-    // overflow: hidden;
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: center;
   }
 
-  .ant-pro-top-nav-header-logo a {
-    display: flex;
-    align-items: center;
+  // .ant-pro-top-nav-header-logo a {
+  //   display: flex;
+  //   align-items: center;
+  // }
+}
+.layoutSty{
+  overflow: hidden;
+  width: 280px;
+  h1{
+  animation: scroll-left 12s linear infinite;
+  }
+}
+.layoutSty2{
+  overflow: hidden;
+  width: 230px;
+  h1{
+  animation: scroll-left2 12s linear infinite;
+  }
+}
+@keyframes scroll-left {
+  0%{
+    transform: translateX(280px);
+  }
+  100%{
+    transform: translatex(-100%);
+  }
+}
+@keyframes scroll-left2 {
+  0%{
+    transform: translateX(230px);
+  }
+  100%{
+    transform: translatex(-100%);
   }
 }

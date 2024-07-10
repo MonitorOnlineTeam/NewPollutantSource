@@ -106,20 +106,16 @@ class BasicLayout extends Component {
     };
 
     const logoRender = Item => {
-      if (configInfo && configInfo.IsShowLogo === 'true') {
-        return settings.layout === 'topmenu' ? (
-          <img
-            style={{ height: 60 }}
-            src={configInfo.Logo ? `${configInfo.Logo}` : logo}
-            alt="logo"
-          />
-        ) : (
+      return settings.layout === 'topmenu' ? (
+        <img
+          style={{ height: 60 }}
+          src={configInfo.Logo ? `${configInfo.Logo}` : logo}
+          alt="logo"
+        />
+      ) : (
           <img src={`${configInfo.Logo}`} alt="logo" />
         );
-      } else {
-        return <div></div>;
-      }
-    };
+    }
 
     let userCookie = Cookie.get('currentUser');
     if (!userCookie) {
@@ -130,9 +126,13 @@ class BasicLayout extends Component {
     if (sysName) {
       _settings.title = sysName;
     }
+    const isShowLogo = configInfo && configInfo.IsShowLogo === 'true'
+    const isScroll = !isShowLogo && _settings.title?.length > 14
+    // const isLogoScroll = isShowLogo && _settings.title?.length > 11
+
     return (
       <>
-        <SdlMenu  match={this.props.match} location={this.props.location} />
+        <SdlMenu match={this.props.match} location={this.props.location} />
         <ProLayout
           logo={logoRender}
           onCollapse={handleMenuCollapse}
@@ -165,13 +165,19 @@ class BasicLayout extends Component {
           rightContentRender={rightProps => <RightContent {...rightProps} />}
           {...this.props}
           {..._settings}
-          //  title={sysName? <span title={sysName} style={{display:'block'}} className='textOverflow'>{sysName}</span> : ''}
+          menuHeaderRender={(logo, title, props) => {
+            return <>
+              {isShowLogo && logoRender()} {/*  || (isLogoScroll && styles.layoutSty2) 带logo的*/}
+              <a className={(isScroll && styles.layoutSty)} href={currentMenu?.[0]?.path}> <h1 style={{width: isScroll && _settings.title?.length * 19}} title={_settings.title}>{_settings.title}</h1></a>
+            </>
+           }
+          } //宝武 系统名称太长 添加滚动效果
         >
           {webConfig.isShowBreadcrumb ? (
             <div id="basicLayout">{children}</div>
           ) : (
-            <div id="notBreadcrumbLayout"> {children} </div>
-          )}
+              <div id="notBreadcrumbLayout"> {children} </div>
+            )}
         </ProLayout>
         {process.env.NODE_ENV === 'development' && (
           <SettingDrawer

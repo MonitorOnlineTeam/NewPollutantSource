@@ -87,6 +87,7 @@ export const API = {
     ImportDataExcel: before + '/AutoFormDataApi/ImportDataExcel',
     // 校验数据重复
     VerificationData: before + '/AutoFormDataApi/VerificationData',
+    GetAutoFromUpdateView: before + '/AutoFormDataApi/GetAutoFromUpdateView', //获取编辑页面表单元素
   },
   // 通用Api
   CommonApi: {
@@ -120,9 +121,17 @@ export const API = {
     GetPointByEntCode: before + '/MonitorPointApi/GetPointByEntCode',
     // 根据行政区查询企业
     GetEntByRegion: before + '/EnterpriseApi/GetEntByRegion',
-    GetNoFilterEntList: before + '/EnterpriseApi/GetNoFilterEntList', //获取无权限过滤的企业信息
     GetPollutantTypeMonitoringCategoryInfo:
       before + '/EquipmentApi/GetPollutantTypeMonitoringCategoryInfo', //获取设备信息监测参数类型
+    GetNoFilterRegionList: before + '/RegionApi/GetNoFilterRegionList', //获取无权限过滤的行政区信息
+    GetXuRegions: before + '/RegionApi/GetXuRegions', //获取省份及省份下的市县
+    GetRegions: before + '/RegionApi/GetRegions', //获取行政区
+    GetNoFilterEntList: before + '/EnterpriseApi/GetNoFilterEntList', //获取无权限过滤的企业信息
+    GetNoFilterPointByEntCode: before + '/EnterpriseApi/GetNoFilterPointByEntCode', //通过企业获取无权限过滤的监测点信息
+    GetEntByRegionAndAtt: before + '/EnterpriseApi/GetEntByRegionAndAtt', //获取行政区和关注程度查询企业
+    AddSetUser: before + '/UserApi/AddSetUser', //设置人员信息 3 整改人员清单 4 照片审核人员清单
+    GetSetUser: before + '/UserApi/GetSetUser', //获取设置人员信息 3 整改人员清单 4 照片审核人员清单
+    GetLargeRegion: before + '/DailyWorkBaseApi/GetLargeRegion',  // 获取运维大区和省区
   },
   UploadApi: {
     GetAttachmentList: before + '/UploadApi/GetAttachmentList', //获取附件ID获取所有附件

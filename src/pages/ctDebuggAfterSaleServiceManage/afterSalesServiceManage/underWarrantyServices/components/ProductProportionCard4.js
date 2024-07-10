@@ -57,15 +57,14 @@ const ProductProportionCard4 = props => {
     let topFour = copyData.splice(0, 4);
 
     // 计算前四个元素的 NumRate 总和
-    let topFourTotal = topFour.reduce((sum, current) => sum + current.NumRate, 0);
-
+    let topFourTotal = topFour.reduce((sum, current) => sum + current.NumRate, 0).toFixed(2);
     // 创建 '其他' 元素, 如果所有数据都为0，'其他' 选项的 NumRate 也应为0
     let other = {
       ReasonName: '其他',
       Times: 0,
       TimeRate: '0%',
       Num: 0,
-      NumRate: topFourTotal === 0 ? 0 : (100 - topFourTotal),
+      NumRate: topFourTotal == 0 ? '0.00' : (100 - topFourTotal).toFixed(2),
     };
 
     // 添加到结果数组
@@ -88,24 +87,24 @@ const ProductProportionCard4 = props => {
     let topFour = copyData.splice(0, 4);
 
     // 计算前四个元素的 TimeRate 总和
-    let topFourTotal = topFour.reduce((sum, current) => sum + current.TimeRate, 0);
+    let topFourTotal = topFour.reduce((sum, current) => sum + current.TimeRate, 0).toFixed(2);
 
       // 获取其他元素
       let otherData = copyData;
       // 计算前其他元素的 TimeRate 总和
       let otherTotalData = otherData.reduce((sum, current) => sum + current.Times, 0);
+
     // 创建 '其他' 元素, 如果所有数据都为0，'其他' 选项的 TimeRate 也应为0
     let other = {
       ReasonName: '其他',
       Times: otherTotalData,
-      TimeRate: topFourTotal === 0 ? 0 : (100 - topFourTotal),
+      TimeRate: topFourTotal == 0 ?  '0.00' : (100 - topFourTotal).toFixed(2),
       Num: 0,
       NumRate: 0,
     };
 
     // 添加到结果数组
     topFour.push(other);
-    console.log(topFour)
     return topFour;
   }
 

@@ -35,6 +35,7 @@ const AuditModalPage = props => {
       open={isModalOpen}
       destroyOnClose
       footer={false}
+      mask={false}
       onCancel={() => {
         onCancel();
       }}

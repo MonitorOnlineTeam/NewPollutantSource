@@ -811,7 +811,8 @@ const Index = (props) => {
               loading={tableLoading[path]}
               bordered
               size='small'
-              scroll={{ x: 800,y:280 }}
+              // scroll={{ x: 800,y:280 }}
+              scroll={{ x: 800 }}
               dataSource={tableDatas}
               columns={columns}
               pagination={false}

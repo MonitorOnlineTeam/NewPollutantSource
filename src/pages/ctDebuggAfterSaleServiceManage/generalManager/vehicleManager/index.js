@@ -264,7 +264,7 @@ const Index = (props) => {
   return (
     <div className={`${styles.vehicleManagerSty} queryCriterTitleSty`}>
       <BreadcrumbWrapper  hideBreadcrumb={isModal}>
-        <Card title={searchComponents()}  style={isModal&&{paddingTop:8}}>
+        <Card title={searchComponents()} bordered={isModal && false}  style={isModal&&{paddingTop:8}}>
           <SdlTable
             resizable
             loading={tableLoading}
