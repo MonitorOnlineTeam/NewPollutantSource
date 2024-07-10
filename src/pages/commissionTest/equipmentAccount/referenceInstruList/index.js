@@ -423,6 +423,8 @@ const Index = (props) => {
           total:tableTotal,
           pageSize: pageSize,
           current: pageIndex,
+          showSizeChanger: true,
+          showQuickJumper: true,
           onChange: handleTableChange,
         }}
       />

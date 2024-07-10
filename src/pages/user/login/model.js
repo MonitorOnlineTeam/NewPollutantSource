@@ -1,7 +1,4 @@
-/**
- * 
- * 废弃model
- */
+
 // import { routerRedux } from 'dva/router';
 import router from 'umi/router';
 import Cookie from 'js-cookie';
@@ -78,6 +75,7 @@ const Model = {
                 router.push('/sysTypeMiddlePage');
               } else {
                 sessionStorage.setItem('sysMenuId', sysList.id);
+                sessionStorage.setItem("sysName", sysList.name);
                 router.push(defaultNavigateUrl);
               }
               //  router.push(defaultNavigateUrl);

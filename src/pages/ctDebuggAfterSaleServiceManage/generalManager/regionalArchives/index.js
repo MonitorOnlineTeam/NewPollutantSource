@@ -386,7 +386,7 @@ const Index = props => {
     );
   };
   return (
-    <div className={`${styles.regionalArchivesSty}`}>
+    <div className={`${styles.regionalArchivesSty} queryCriterTitleSty`}>
       <BreadcrumbWrapper>
         <Card title={searchComponents()}>
           <SdlTable

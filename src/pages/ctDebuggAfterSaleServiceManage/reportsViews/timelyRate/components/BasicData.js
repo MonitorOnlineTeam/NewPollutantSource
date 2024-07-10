@@ -270,6 +270,7 @@ const BasicData = props => {
       visible={isModalOpen}
       destroyOnClose
       footer={null}
+      mask={false}
       onCancel={() => {
         onCancel();
       }}
@@ -415,6 +416,7 @@ const BasicData = props => {
         visible={isDetailsModalOpen}
         destroyOnClose
         footer={null}
+        mask={false}
         onCancel={() => {
           setIsDetailsModalOpen(false);
         }}

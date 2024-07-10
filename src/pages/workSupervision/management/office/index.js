@@ -212,7 +212,7 @@ const Office = props => {
   ];
   return (
     <BreadcrumbWrapper hideBreadcrumb={isModal}>
-      <Card>
+      <Card bordered={false}>
         <SearchWrapper configId={CONFIGID} />
         <AutoFormTable
           noload

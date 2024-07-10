@@ -327,6 +327,7 @@ const BasicData = props => {
       open={isModalOpen}
       destroyOnClose
       footer={null}
+      mask={false}
       onCancel={() => {
         onCancel();
       }}

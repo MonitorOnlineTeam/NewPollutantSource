@@ -283,7 +283,7 @@ const Index = (props) => {
         destroyOnClose
         wrapClassName={`spreadOverModal`}
         mask={false}
-        bodyStyle={{ padding: 0, marginTop: -1 }}
+        bodyStyle={{ padding: 0 }}
       >
         {modalTitle == '便携仪器统计' ? <Portable isModal notOperate /> : modalTitle == '办事处统计' ? <Office isModal onlyAppendHandleRows /> : <StorehouseManager isModal notOperate match={{ params: { configId: 'Storehouse' } }} />}
       </Modal>

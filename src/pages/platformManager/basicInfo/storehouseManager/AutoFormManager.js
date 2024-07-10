@@ -95,7 +95,7 @@ export default class AutoFormIndex extends Component {
     return (
       <BreadcrumbWrapper hideBreadcrumb={isModal}>
         <div>
-          <Card>
+          <Card bordered={false}>
             <SearchWrapper
               onSubmitForm={(form) => this.loadReportList(form)}
               configId={configId}
