@@ -41,6 +41,7 @@ const ServiceReportModal = props => {
       open={isModalOpen}
       destroyOnClose
       footer={false}
+      mask={false}
       onCancel={() => {
         onCancel();
       }}

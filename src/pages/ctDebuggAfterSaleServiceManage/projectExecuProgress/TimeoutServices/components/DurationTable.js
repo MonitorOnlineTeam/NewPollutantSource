@@ -386,6 +386,7 @@ const DurationTable = props => {
         visible={isModalOpen}
         destroyOnClose
         footer={null}
+        mask={false}
         onCancel={() => {
           form.resetFields();
           onCancel();

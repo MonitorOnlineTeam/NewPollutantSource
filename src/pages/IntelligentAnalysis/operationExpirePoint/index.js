@@ -230,6 +230,7 @@ const Index = (props) => {
             name: '监测点个数',
             type: 'bar',
             barWidth: '60%',
+            barMaxWidth:48,
             data: [totalDatas.overdue30, totalDatas.overdue14, totalDatas.overdue7, totalDatas.notExpired7, totalDatas.notExpired14, totalDatas.notExpired30, totalDatas.notExpired60],
             label: {
               show: true,

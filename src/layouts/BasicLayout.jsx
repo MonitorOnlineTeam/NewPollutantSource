@@ -373,7 +373,6 @@ class BasicLayout extends Component {
 
 
     const logoRender = Item => {
-      if (configInfo && configInfo.IsShowLogo === 'true') {
         return settings.layout === 'topmenu' ? (
           <img
             style={{ height: 60 }}
@@ -383,9 +382,6 @@ class BasicLayout extends Component {
         ) : (
           <img src={`${configInfo.Logo}`} alt="logo" />
         );
-      } else {
-        return <div></div>;
-      }
     };
     const menu = (
       <Menu onClick={this.onClickHover}>
@@ -420,10 +416,11 @@ class BasicLayout extends Component {
     if (sessionStorage.getItem('sysName')) {
       _settings.title = sessionStorage.getItem('sysName');
     }
+    const isShowLogo = configInfo && configInfo.IsShowLogo === 'true'
     return (
       <>
         <ProLayout
-          logo={logoRender}
+          logo={ isShowLogo && logoRender}
           onCollapse={handleMenuCollapse}
           menuItemRender={(menuItemProps, defaultDom) => {
             if (menuItemProps.replace && userCookie !== 'null') {
@@ -453,10 +450,13 @@ class BasicLayout extends Component {
           rightContentRender={rightProps => <RightContent {...rightProps} />}
           {...this.props}
           {..._settings}
-          title={configInfo && configInfo.SystemName}
-          // menuHeaderRender={() => <a href={currentMenu?.[0]?.path}> <h1>{configInfo && configInfo.SystemName}</h1></a>} //运维
-
-
+          menuHeaderRender={(logo, title, props) => {
+            return <>
+               {isShowLogo && logoRender()}
+              <a className={!isShowLogo && _settings.title?.length > 14 && styles.layoutSty} href={currentMenu?.[0]?.path}> <h1 style={{width: _settings.title?.length * 19}}>{_settings.title}</h1></a>
+            </>
+          }
+          } //宝武 系统名称太长 添加滚动效果
         >
           {
             config.isShowTabs && defaultSettings.layout === 'sidemenu' ? <div id="sideMenuTabsLayout" style={{ margin: '-24px -24px 0px', padding: '10px', paddingTop: 4 }}><Tabs

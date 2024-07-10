@@ -530,6 +530,7 @@ const SpotCheckPage = props => {
       visible={isModalOpen}
       destroyOnClose
       footer={false}
+      mask={false}
       // footer={
       //   stepCurrent !== 0 ? (
       //     <div className="steps-action">

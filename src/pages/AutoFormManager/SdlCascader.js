@@ -171,6 +171,7 @@ class SdlCascader extends Component {
     let onSelect = selectType && selectType.split(",")[1] || '是';
     return (
       <Cascader
+        placeholder='请选择'
         {...this.props}
         fieldNames={{ label: "label", value: "value", children: 'children' }}
         options={options}

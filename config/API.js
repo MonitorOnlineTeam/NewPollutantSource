@@ -131,8 +131,7 @@ export const API = {
     GetIndustryTree: before + '/AutoFormDataApi/GetIndustryTree', //获取行业树信息
     AddSetUser: before + '/UserApi/AddSetUser', //设置人员信息 3 整改人员清单 4 照片审核人员清单
     GetSetUser: before + '/UserApi/GetSetUser', //获取设置人员信息 3 整改人员清单 4 照片审核人员清单
-    // 获取运维大区和省区
-    GetLargeRegion: before + '/DailyWorkBaseApi/GetLargeRegion',
+    GetLargeRegion: before + '/DailyWorkBaseApi/GetLargeRegion', // 获取运维大区和省区
   },
   // 导出Api
   ExportApi: {

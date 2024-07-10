@@ -295,6 +295,7 @@ const StatisticsModal = props => {
       open={isModalOpen}
       destroyOnClose
       footer={false}
+      mask={false}
       onCancel={() => {
         onCancel();
       }}
