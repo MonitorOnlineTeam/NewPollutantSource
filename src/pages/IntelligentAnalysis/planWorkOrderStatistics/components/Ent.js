@@ -1191,6 +1191,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         visible={operaPointVisible}
         onCancel={()=>{setOperaPointVisible(false)}}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`${styles.pointModalSty} spreadOverModal`}
       >
@@ -1221,9 +1222,9 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         visible={insideWorkOrderVisible}
         onCancel={()=>{setInsideWorkOrderVisible(false)}}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
-        mask={false}
       >
      <Card title={  searchWorkComponents()}>
      <MultipleHeadResizeTable
@@ -1248,8 +1249,8 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
           visible={taskRecordDetailVisible}
           destroyOnClose
           wrapClassName='spreadOverModal'
-          mask={false}
           footer={null}
+          mask={false}
           onCancel={() => {
             setTaskRecordDetailVisible(false)
             setPopVisible(true)

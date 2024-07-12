@@ -71,7 +71,7 @@ const UserLayout = props => {
     >
       <Fragment>
         <div
-          className={`${styles.container} ${bgImageType ? styles.container_bg : ''}`}
+          className={`${styles.container} ${bgImageType ? styles.container_bg : ''} ${IsOpera&&styles.operaSty}`}
           style={{
             backgroundImage: `url(${bgImageUrl})`,
             height: '100vh',

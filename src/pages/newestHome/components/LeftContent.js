@@ -259,7 +259,8 @@ const Index = (props) => {
     yAxis: {
       type: 'category',
       // data: [ '配合比对', '配合检查','参数核对','校验测试','维护','维修','校准','巡检', ],
-      data: ['配合比对', '配合检查', '校验测试', '异常处理', '维护', '维修', '校准', '巡检',],
+      // data: ['配合比对', '配合检查', '校验测试', '异常处理', '维护', '维修', '校准', '巡检',],
+      data: [ '配合检查',  '异常处理', '维护', '维修', '校准', '巡检',],
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: {
@@ -744,7 +745,7 @@ const [operaTaskType,setOperaTaskType] = useState()
           </Spin>
         }
         <Spin spinning={TaskPlanType == 1 ? operationPlanTaskLoading : operationTaskCompleteRateByDayLoading}> {/**近30日运维情况 */}
-          <div className={styles.planOpera} style={{height:TaskPlanType==1? 269 : 292}}>
+          <div className={styles.planOpera} style={{height:TaskPlanType==1? 292 : 269}}>
             <CardHeader title='近30日运维情况' isPopover />
             {planOperaEcharts}
           </div>

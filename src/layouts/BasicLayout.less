@@ -1,6 +1,5 @@
 :global {
-  .ant-pro-top-nav-header-logo {
-    max-width: 300px;
+  .ant-pro-top-nav-header-logo{
     display: flex;
     align-items: center;
   }
@@ -11,35 +10,39 @@
     font-size: 18px;
     margin: 0 0 0 12px;
     font-weight: bold;
-    width: 100%;
-    overflow: hidden;
+    width: 200px;
+    // overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: center;
   }
 
-  // .ant-pro-top-nav-header-logo a {
-  //   display: flex;
-  //   align-items: center;
-  // }
+  .ant-pro-top-nav-header-logo a {
+    display: flex;
+    align-items: center;
+  }
 }
 .layoutSty{
   overflow: hidden;
-  width: 280px;
+  width: 212px;
+    .ant-pro-top-nav-header-logo a {
+    display: flex;
+    align-items: center;
+  }
   h1{
-  animation: scroll-left 12s linear infinite;
+  animation: scroll-left 24s linear infinite;
   }
 }
 .layoutSty2{
   overflow: hidden;
-  width: 230px;
+  width: 162px;
   h1{
-  animation: scroll-left2 12s linear infinite;
+  animation: scroll-left2 24s linear infinite;
   }
 }
 @keyframes scroll-left {
   0%{
-    transform: translateX(280px);
+    transform: translateX(212px);
   }
   100%{
     transform: translatex(-100%);
@@ -47,7 +50,7 @@
 }
 @keyframes scroll-left2 {
   0%{
-    transform: translateX(230px);
+    transform: translateX(162px);
   }
   100%{
     transform: translatex(-100%);

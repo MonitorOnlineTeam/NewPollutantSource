@@ -311,19 +311,19 @@ export default class OverVerifyLstModal extends Component {
               </a>
             },
           },
-          {
-            title: <span>{'数据超标报警企业数'}</span>,
-            dataIndex: 'entCount',
-            key: 'entCount',
-            align: 'center',
-          },
-          {
-            title: <span>数据超标报警监测点数</span>,
-            dataIndex: 'pointCount',
-            key: 'pointCount',
-            width: 210,
-            align: 'center',
-          },
+          // {
+          //   title: <span>{'数据超标报警企业数'}</span>,
+          //   dataIndex: 'entCount',
+          //   key: 'entCount',
+          //   align: 'center',
+          // },
+          // {
+          //   title: <span>数据超标报警监测点数</span>,
+          //   dataIndex: 'pointCount',
+          //   key: 'pointCount',
+          //   width: 210,
+          //   align: 'center',
+          // },
         ];
         res = [{PollutantName:'全部合计',PollutantCode:'全部合计'},...res]
         res.map(item => {
@@ -627,19 +627,19 @@ export default class OverVerifyLstModal extends Component {
           </a>
         },
       },
-      {
-        title: <span>{'数据超标报警企业数'}</span>,
-        dataIndex: 'entCount',
-        key: 'entCount',
-        align: 'center',
-      },
-      {
-        title: <span>数据超标报警监测点数</span>,
-        dataIndex: 'pointCount',
-        key: 'pointCount',
-        width: 210,
-        align: 'center',
-      },
+      // {
+      //   title: <span>{'数据超标报警企业数'}</span>,
+      //   dataIndex: 'entCount',
+      //   key: 'entCount',
+      //   align: 'center',
+      // },
+      // {
+      //   title: <span>数据超标报警监测点数</span>,
+      //   dataIndex: 'pointCount',
+      //   key: 'pointCount',
+      //   width: 210,
+      //   align: 'center',
+      // },
     ];
     if (checkedValues.length < 1) {
       message.warning('最少勾选一个监测因子！');

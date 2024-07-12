@@ -21,8 +21,9 @@ import Cookie from 'js-cookie';
 import cuid from 'cuid';
 import ImageView from '@/components/ImageView';
 import OperationCompanyList from '@/components/OperationCompanyList';
+import EditModal from './EditModal';
 import { permissionButton } from '@/utils/utils';
-import {  API } from '@config/API';
+import { API } from '@config/API';
 import config from '@/config';
 
 const { Option } = Select;
@@ -39,7 +40,7 @@ const dvaPropsData = ({ loading, handoverReport, global, }) => ({
   queryPar: handoverReport.queryPar,
   loadingConfirm: loading.effects[`${namespace}/addOrUpdProjectReportInfo`],
   exportLoading: loading.effects[`${namespace}/exportProjectReportList`],
-  permisBtnTip:global.permisBtnTip,
+  permisBtnTip: global.permisBtnTip,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -111,11 +112,11 @@ const Index = (props) => {
 
   const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, } = props;
 
-  const [editPermis,setPermisEdit] = useState(false)
+  const [editPermis, setPermisEdit] = useState(false)
   useEffect(() => {
     const buttonList = permissionButton(props.match.path)
-    buttonList.map(item=>{
-      switch (item){
+    buttonList.map(item => {
+      switch (item) {
         case 'editAuthority': setPermisEdit(true); break;
       }
     })
@@ -171,7 +172,7 @@ const Index = (props) => {
       dataIndex: 'ReceiveFile',
       key: 'ReceiveFile',
       align: 'center',
-      width:150,
+      width: 150,
       ellipsis: true,
       render: (text, record, index) => {
         return text == '待上传' ?
@@ -193,7 +194,7 @@ const Index = (props) => {
       dataIndex: 'TransferFile',
       key: 'TransferFile',
       align: 'center',
-      width:150,
+      width: 150,
       ellipsis: true,
       render: (text, record, index) => {
         return text == '待上传' ?
@@ -208,7 +209,7 @@ const Index = (props) => {
       dataIndex: 'PerformanceFile',
       key: 'PerformanceFile',
       align: 'center',
-      width:150,
+      width: 150,
       ellipsis: true,
       render: (text, record, index) => {
         return text == '待上传' ?
@@ -228,15 +229,15 @@ const Index = (props) => {
     {
       title: '操作人',
       dataIndex: 'OperationUser',
-      key:'OperationUser',
-      align:'center',
+      key: 'OperationUser',
+      align: 'center',
       ellipsis: true,
     },
     {
       title: '操作时间',
       dataIndex: 'OperationTime',
-      key:'OperationTime',
-      align:'center',
+      key: 'OperationTime',
+      align: 'center',
       ellipsis: true,
     },
     {
@@ -282,7 +283,7 @@ const Index = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState();
   const [imageList, setImageList] = useState([]);
-  const onPreviewImg = (file,filesList) => {
+  const onPreviewImg = (file, filesList) => {
     setIsOpen(true)
     const imageList = filesList
     let imageListIndex = 0;
@@ -303,73 +304,75 @@ const Index = (props) => {
   }
   const [formVisible, setFormVisible] = useState(false)
   const [title, setTitle] = useState()
+  const [row, setRow] = useState({})
 
-  const edit = async (record) => {
+  const edit =  (record) => {
     setFormVisible(true)
     setTitle(`${record.ProjectCode}-编辑`)
-    form2.resetFields();
-    setFilesList1([])
-    if(record.ReceiveFile&&record.ReceiveFile[0]&&record.ReceiveFile!='待上传'){ //运维接收-运维交接单 照片
-      const fileList =[]
-      record.ReceiveFile.map(item=>{
-        if(!item.IsDelete){
-          fileList.push({
-            uid: item.GUID,
-            name: item.FileName,
-            status: 'done',
-            url: `${config.uploadPrefix}/${item.FileName}`,
-          })
-        }
-      })
-      setFilesList1(fileList)
-    }
-    setFilesList2([])
-    if(record.TransferFile&&record.TransferFile[0]&&record.TransferFile!='待上传'){ //运维移交-运维交接单 照片
-      const fileList =[]
-      record.TransferFile.map(item=>{
-        if(!item.IsDelete){
-          fileList.push({
-            uid: item.GUID,
-            name: item.FileName,
-            status: 'done',
-            url: `${config.uploadPrefix}/${item.FileName}`,
-          })
-        }
-      })
-      setFilesList2(fileList)
-    }
-    setFilesList3([])
-    if(record.PerformanceFile&&record.PerformanceFile[0]&&record.PerformanceFile!='待上传'){ //运维合同履约完成报告 照片
-      const fileList =[]
-      record.PerformanceFile.map(item=>{
-        if(!item.IsDelete){
-          fileList.push({
-            uid: item.GUID,
-            name: item.FileName,
-            status: 'done',
-            url: `${config.uploadPrefix}/${item.FileName}`,
-          })
-        }
-      })
-      setFilesList3(fileList)
-    }
-    try {
-      form2.setFieldsValue({
-        remark:record.Remark,
-        status:record.Status,
-        id: record.ID,
-        projectID: record.ProjectID,
-        performanceFile: record.PerformanceFile == '待上传' || !record.PerformanceFile ? cuid() : record.PerformanceFile?.[0]?.FileUuid,
-        receiveFile: record.ReceiveFile == '待上传' || !record.ReceiveFile ? cuid() : record.ReceiveFile?.[0]?.FileUuid,
-        transferFile: record.TransferFile == '待上传' || !record.TransferFile ? cuid() : record.TransferFile?.[0]?.FileUuid,
-        EndStatus:record.EndStatus,
-      })
+    setRow(record)
+    // form2.resetFields();
+    // setFilesList1([])
+    // if (record.ReceiveFile && record.ReceiveFile[0] && record.ReceiveFile != '待上传') { //运维接收-运维交接单 照片
+    //   const fileList = []
+    //   record.ReceiveFile.map(item => {
+    //     if (!item.IsDelete) {
+    //       fileList.push({
+    //         uid: item.GUID,
+    //         name: item.FileName,
+    //         status: 'done',
+    //         url: `${config.uploadPrefix}/${item.FileName}`,
+    //       })
+    //     }
+    //   })
+    //   setFilesList1(fileList)
+    // }
+    // setFilesList2([])
+    // if (record.TransferFile && record.TransferFile[0] && record.TransferFile != '待上传') { //运维移交-运维交接单 照片
+    //   const fileList = []
+    //   record.TransferFile.map(item => {
+    //     if (!item.IsDelete) {
+    //       fileList.push({
+    //         uid: item.GUID,
+    //         name: item.FileName,
+    //         status: 'done',
+    //         url: `${config.uploadPrefix}/${item.FileName}`,
+    //       })
+    //     }
+    //   })
+    //   setFilesList2(fileList)
+    // }
+    // setFilesList3([])
+    // if (record.PerformanceFile && record.PerformanceFile[0] && record.PerformanceFile != '待上传') { //运维合同履约完成报告 照片
+    //   const fileList = []
+    //   record.PerformanceFile.map(item => {
+    //     if (!item.IsDelete) {
+    //       fileList.push({
+    //         uid: item.GUID,
+    //         name: item.FileName,
+    //         status: 'done',
+    //         url: `${config.uploadPrefix}/${item.FileName}`,
+    //       })
+    //     }
+    //   })
+    //   setFilesList3(fileList)
+    // }
+    // try {
+    //   form2.setFieldsValue({
+    //     remark: record.Remark,
+    //     status: record.Status,
+    //     id: record.ID,
+    //     projectID: record.ProjectID,
+    //     performanceFile: record.PerformanceFile == '待上传' || !record.PerformanceFile ? cuid() : record.PerformanceFile?.[0]?.FileUuid,
+    //     receiveFile: record.ReceiveFile == '待上传' || !record.ReceiveFile ? cuid() : record.ReceiveFile?.[0]?.FileUuid,
+    //     transferFile: record.TransferFile == '待上传' || !record.TransferFile ? cuid() : record.TransferFile?.[0]?.FileUuid,
+    //     EndStatus: record.EndStatus,
+    //   })
 
 
 
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
+    // } catch (errInfo) {
+    //   console.log('Validate Failed:', errInfo);
+    // }
   };
 
   const exports = async () => {
@@ -385,6 +388,7 @@ const Index = (props) => {
 
     try {
       const values = await form.validateFields();
+      console.log(values)
       props.getProjectReportList(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
         ...values,
         status: values.status ? 1 : '',
@@ -395,86 +399,87 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
-  const onModalOk = async () => { //添加 or 编辑弹框
-
-    try {
-      const values = await form2.validateFields();//触发校验
-      props.addOrUpdProjectReportInfo({
-        ...values,
-      }, () => {
-        setFormVisible(false)
-        onFinish(pageIndex, pageSize)
-      })
-
-
-    } catch (errInfo) {
-      console.log('错误信息:', errInfo);
-    }
-  }
   const handleTableChange = (PageIndex, PageSize) => { //分页
     setPageSize(PageSize)
     setPageIndex(PageIndex)
     onFinish(PageIndex, PageSize, queryPar)
   }
 
-  const [filesList1, setFilesList1] = useState([])
-  const [filesList2, setFilesList2] = useState([])
-  const [filesList3, setFilesList3] = useState([])
+  // const onModalOk = async () => { //添加 or 编辑弹框
 
-  const uploadProps2 = (fileName) => {
-    const filesCuid = form2.getFieldValue([fileName])
-    return { //照片附件 上传
-      action: API.UploadApi.UploadPicture,
-      headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(config.cookieName)},
-      accept: 'image/*',
-      data: {
-        FileUuid: filesCuid,
-        FileActualType: '0',
-      },
-      beforeUpload: (file) => {
-        const fileType = file?.type; //获取文件类型 type  image/*
-        if (!(/^image/g.test(fileType))) {
-          message.error(`请上传图片格式文件!`);
-          return false;
-        }
-      },
-      onChange(info) {
-        const fileList = [];
-        info.fileList.map(item => {
-          if (item.response && item.response.IsSuccess) { //刚上传的
-            fileList.push({ ...item, url: `/${item.response.Datas}`, })
-          } else if (!item.response) {
-            fileList.push({ ...item })
-          }
-        })
-        if (info.file.status == 'uploading' || info.file.status === 'done') {
-          form2.setFieldsValue({ [fileName]: filesCuid })
-          fileName == 'receiveFile' ? setFilesList1(fileList) : fileName == 'transferFile' ? setFilesList2(fileList) : setFilesList3(fileList)
-        }
-        if (info.file.status === 'done') {
-          message.success(`${info.file.name} 上传成功`);
-        } else if (info.file.status === 'removed' || info.file.status === 'error' ) {
-          form2.setFieldsValue({ [fileName]: fileList && fileList[0] ? filesCuid : undefined }) //有上传成功的取前面的uid 没有则表示没有上传成功的图片
-          fileName == 'receiveFile' ? setFilesList1(fileList) : fileName == 'transferFile' ? setFilesList2(fileList) : setFilesList3(fileList)
-        } else if (info.file.status === 'error') { 
-          message.error(`${info.file.name}${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
+  //   try {
+  //     const values = await form2.validateFields();//触发校验
+  //     props.addOrUpdProjectReportInfo({
+  //       ...values,
+  //     }, () => {
+  //       setFormVisible(false)
+  //       onFinish(pageIndex, pageSize)
+  //     })
 
-        }
-      },
-      onRemove: (file) => {
-        if (!file.error) {
-          props.deleteAttach(file)
-        }
 
-      },
-      onPreview: file => { //预览
-        const fileList =  fileName == 'receiveFile' ? filesList1 : fileName == 'transferFile' ? filesList2 : filesList3
-        onPreviewImg(file, fileList)
-      },
-      fileList: fileName == 'receiveFile' ? filesList1 : fileName == 'transferFile' ? filesList2 : filesList3
+  //   } catch (errInfo) {
+  //     console.log('错误信息:', errInfo);
+  //   }
+  // }
 
-    }
-  }
+  // const [filesList1, setFilesList1] = useState([])
+  // const [filesList2, setFilesList2] = useState([])
+  // const [filesList3, setFilesList3] = useState([])
+
+  // const uploadProps2 = (fileName) => {
+  //   const filesCuid = form2.getFieldValue([fileName])
+  //   return { //照片附件 上传
+  //     action: API.UploadApi.UploadPicture,
+  //     headers: { Cookie: null, Authorization: "Bearer " + Cookie.get(config.cookieName) },
+  //     accept: 'image/*',
+  //     data: {
+  //       FileUuid: filesCuid,
+  //       FileActualType: '0',
+  //     },
+  //     beforeUpload: (file) => {
+  //       const fileType = file?.type; //获取文件类型 type  image/*
+  //       if (!(/^image/g.test(fileType))) {
+  //         message.error(`请上传图片格式文件!`);
+  //         return false;
+  //       }
+  //     },
+  //     onChange(info) {
+  //       const fileList = [];
+  //       info.fileList.map(item => {
+  //         if (item.response && item.response.IsSuccess) { //刚上传的
+  //           fileList.push({ ...item, url: `/${item.response.Datas}`, })
+  //         } else if (!item.response) {
+  //           fileList.push({ ...item })
+  //         }
+  //       })
+  //       if (info.file.status == 'uploading' || info.file.status === 'done') {
+  //         form2.setFieldsValue({ [fileName]: filesCuid })
+  //         fileName == 'receiveFile' ? setFilesList1(fileList) : fileName == 'transferFile' ? setFilesList2(fileList) : setFilesList3(fileList)
+  //       }
+  //       if (info.file.status === 'done') {
+  //         message.success(`${info.file.name} 上传成功`);
+  //       } else if (info.file.status === 'removed' || info.file.status === 'error') {
+  //         form2.setFieldsValue({ [fileName]: fileList && fileList[0] ? filesCuid : undefined }) //有上传成功的取前面的uid 没有则表示没有上传成功的图片
+  //         fileName == 'receiveFile' ? setFilesList1(fileList) : fileName == 'transferFile' ? setFilesList2(fileList) : setFilesList3(fileList)
+  //       } else if (info.file.status === 'error') {
+  //         message.error(`${info.file.name}${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
+
+  //       }
+  //     },
+  //     onRemove: (file) => {
+  //       if (!file.error) {
+  //         props.deleteAttach(file)
+  //       }
+
+  //     },
+  //     onPreview: file => { //预览
+  //       const fileList = fileName == 'receiveFile' ? filesList1 : fileName == 'transferFile' ? filesList2 : filesList3
+  //       onPreviewImg(file, fileList)
+  //     },
+  //     fileList: fileName == 'receiveFile' ? filesList1 : fileName == 'transferFile' ? filesList2 : filesList3
+
+  //   }
+  // }
   const searchComponents = () => {
     return <Form
       form={form}
@@ -516,8 +521,8 @@ const Index = (props) => {
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
-            columns={editPermis? columns : columns.filter(item=>item.title!='操作')  }
-            scroll={{ y:'calc(100vh - 288px)' }}
+            columns={editPermis ? columns : columns.filter(item => item.title != '操作')}
+            scroll={{ y: 'calc(100vh - 304px)' }}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,
@@ -529,8 +534,14 @@ const Index = (props) => {
           />
         </Card>
       </BreadcrumbWrapper>
-
-      <Modal
+      <EditModal
+        title={title}
+        visible={formVisible}
+        record={row}
+        onCancel={() => { setFormVisible(false) }}
+        onFinish = {()=>{onFinish(pageIndex, pageSize)}}
+      />
+      {/* <Modal
         title={title}
         visible={formVisible}
         onOk={onModalOk}
@@ -543,7 +554,7 @@ const Index = (props) => {
           name="basic"
           form={form2}
         >
-         <Form.Item label="项目接收状态" name="status" rules={[{ required: true, message: '请选择项目接收状态！' }]}>
+          <Form.Item label="项目接收状态" name="status" rules={[{ required: true, message: '请选择项目接收状态！' }]}>
             <Radio.Group>
               <Radio value="1">续签</Radio>
               <Radio value="2">新签</Radio>
@@ -580,17 +591,17 @@ const Index = (props) => {
             <Input />
           </Form.Item>
           <Form.Item>
-          <Row style={{ color: '#f5222d' }}>
-            <span style={{ paddingRight: 12 }}>注：</span>
-            <ol type="1" style={{ listStyle: 'auto'}}>
-              <li>在合同执行开始日期的前后7天内上传运维接收-运维交接单；如果项目接收状态是续签则无需上传；</li>
-              <li>在合同执行结束日期的前后7天内上传运维移交-运维交接单，如果项目被续签则无需上传；</li>
-              <li>在合同执行结束日期的前后15天内上传运维合同履约完成报告；</li>
-            </ol>
-          </Row>
+            <Row style={{ color: '#f5222d' }}>
+              <span style={{ paddingRight: 12 }}>注：</span>
+              <ol type="1" style={{ listStyle: 'auto' }}>
+                <li>在合同执行开始日期的前后7天内上传运维接收-运维交接单；如果项目接收状态是续签则无需上传；</li>
+                <li>在合同执行结束日期的前后7天内上传运维移交-运维交接单，如果项目被续签则无需上传；</li>
+                <li>在合同执行结束日期的前后15天内上传运维合同履约完成报告；</li>
+              </ol>
+            </Row>
           </Form.Item>
         </Form>
-      </Modal>
+      </Modal> */}
       <Modal
         title={fileTitle}
         visible={fileVisible}

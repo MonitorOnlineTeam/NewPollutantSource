@@ -71,12 +71,12 @@ export default class EntTransmissionEfficiency extends Component {
       regLevel:1,
     };
     this.commonCol = [
-      {
-        title: <span>{this.props.types === 'ent' ? '缺失数据报警监测点数' : '缺失数据报警空气监测点数'}</span>,
-        dataIndex: 'pointCount',
-        key: 'pointCount',
-        align: 'center',
-      },
+      // {
+      //   title: <span>{this.props.types === 'ent' ? '缺失数据报警监测点数' : '缺失数据报警空气监测点数'}</span>,
+      //   dataIndex: 'pointCount',
+      //   key: 'pointCount',
+      //   align: 'center',
+      // },
       {
         title: <span>缺失数据报警次数</span>,
         dataIndex: 'exceptionCount',
@@ -197,9 +197,9 @@ export default class EntTransmissionEfficiency extends Component {
   initData = () => {
     const { dispatch, query, Atmosphere, types, location, queryPar, } = this.props;
 
-    let entObj = { title: <span>缺失数据报警企业数</span>, dataIndex: 'entCount', key: 'entCount', align: 'center', }
+    // let entObj = { title: <span>缺失数据报警企业数</span>, dataIndex: 'entCount', key: 'entCount', align: 'center', }
 
-    types === 'ent' ? this.columns.splice(1, 0, entObj) : null;
+    // types === 'ent' ? this.columns.splice(1, 0, entObj) : null;
     const isReg = location && (location.pathname == '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent' || location.pathname == '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/air');
     this.updateQueryState(isReg ? {
       // BeginTime: moment()

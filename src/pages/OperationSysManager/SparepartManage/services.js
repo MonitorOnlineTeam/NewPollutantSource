@@ -4,7 +4,7 @@
  * 创建时间：2020.05.21
  */
 import { post, get } from '@/utils/request';
-import { API } from '@config/API'
+import { API} from '@config/API';
 
 
 /**
@@ -12,7 +12,7 @@ import { API } from '@config/API'
  * @params {"DGIMN":"","pollutantCode":"","beginTime":"","endTime":"","pageIndex":"","pageSize":""}
  */
 export async function GetSparepartManageList(params) {
-  const result = await get('/api/rest/PollutantSourceApi/SparepartManageApi/GetSparepartManageList', params, null);
+  const result = await post(API.AssetManagementApi.GetSparepartList, params, null);
   return result;
 }
 /**
@@ -28,7 +28,7 @@ export async function GetSparePartsStation(params) {
  * @params {"PollutantType":""}
  */
 export async function getUploadTemplate(params) {
-  const result =await post('/api/rest/PollutantSourceApi/SparepartManageApi/UploadTemplateSpareParts', params, null);
+  const result =await post(API.AssetManagementApi.DownLoadSparePartsTemplateInfo, params, null);
   return result;
 }
 /**
@@ -36,7 +36,7 @@ export async function getUploadTemplate(params) {
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":""}
  */
 export async function DeleteSpareParts(params) {
-  const result =await post('/api/rest/PollutantSourceApi/SparepartManageApi/DeleteSpareParts', params, null);
+  const result =await post(API.AssetManagementApi.DeleteSparePartsInfo, params, null);
   return result;
 }
 /**
@@ -44,9 +44,25 @@ export async function DeleteSpareParts(params) {
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":"","avgValue":""}
  */
 export async function UpdateSpareParts(params) {
-  const result =await post('/api/rest/PollutantSourceApi/SparepartManageApi/UpdateSpareParts', params, null);
+  const result =await post(API.AssetManagementApi.UpdateSparePartsInfo, params, null);
   return result;
 }
 
+/**
+ * 仓库管理
+ * 
+ */
+export async function GetStorehouse(params) {
+  const result = await post(API.AutoFormApi.GetListPager, {"configId":"Storehouse","ConditionWhere":"{\"rel\":\"$and\",\"group\":[{\"rel\":\"$and\",\"group\":[{\"Key\":\"dbo__T_Bas_Storehouse__StorehouseStatus\",\"Value\":\"1\",\"Where\":\"$=\"}]}]}"}, null);
+  return result;
+}
 
+/**
+ * 设备监测类型
+ * 
+ */
+// export async function GetMonitoringTypeList(params) {
+//   const result =await post(API.AssetManagementApi.GetMonitoringCategoryList, params, null);
+//   return result;
+// }
 

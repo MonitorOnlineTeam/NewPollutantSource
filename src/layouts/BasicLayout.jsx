@@ -122,7 +122,7 @@ class BasicLayout extends Component {
       router.push('/user/login');
     }
     let _settings = settings;
-    const sysName = sessionStorage.getItem('sysName')
+    const sysName = sessionStorage.getItem("sysName") || Cookie.get("sysName")
     if (sysName) {
       _settings.title = sysName;
     }

@@ -24,6 +24,9 @@ const RadioGroup = Radio.Group;
 const { TextArea } = Input;
 @connect(({ SparepartManage, loading }) => ({
     sparePartsStationList: SparepartManage.sparePartsStationList,
+    storehouseList:SparepartManage.storehouseList,
+    monitoringTypeList:SparepartManage.monitoringTypeList
+
 }))
 
 @connect()
@@ -46,17 +49,22 @@ export default class UpdateSparepartManage extends Component {
     }
     componentWillMount() {
         const { dispatch, item } = this.props;
+        // dispatch({
+        //     type: 'SparepartManage/GetSparePartsStation',
+        //     payload: {
+        //     }
+        // });
         dispatch({
-            type: 'SparepartManage/GetSparePartsStation',
+            type: 'SparepartManage/GetMonitoringTypeList',
             payload: {
             }
         });
-
+        
     }
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { item, sparePartsStationList } = this.props;
+        const { item, sparePartsStationList,storehouseList,monitoringTypeList } = this.props;
         let isExists = false;
         if (item.ID) {
             //有值是修改,状态改为true
@@ -81,7 +89,7 @@ export default class UpdateSparepartManage extends Component {
         return (
             <div>
                 <Form onSubmit={this.handleSubmit}>
-                    <Row gutter={24}>
+                    <Row gutter={24} align='middle'>
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
@@ -95,13 +103,13 @@ export default class UpdateSparepartManage extends Component {
                                         },
                                     ],
                                 })(
-                                    <Input style={{ width: '90%' }} placeholder="请输入" />
+                                    <Input style={{ width: '100%' }} placeholder="请输入" />
 
                                 )}
                                 <Popover
                                     content={DepartInfo}
                                 >
-                                    <QuestionCircleTwoTone style={{ width: '10%' }} />
+                                    <QuestionCircleTwoTone style={{ width: '10%',position:'absolute',top:0 }} />
                                 </Popover>
                             </FormItem>
                         </Col>
@@ -122,18 +130,18 @@ export default class UpdateSparepartManage extends Component {
                                 )}
                             </FormItem>
                         </Col>
-                    </Row>
-                    <Row gutter={24}>
+                    {/* </Row> */}
+                    {/* <Row gutter={24}> */}
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
-                                label={'备品备件型号'}>
+                                label={'规格型号'}>
                                 {getFieldDecorator('Code', {
                                     initialValue: isExists ? item.Code : null,
                                     rules: [
                                         {
                                             required: true,
-                                            message: '请输入设备型号!',
+                                            message: '请输入规格型号!',
                                         },
                                     ],
                                 })(
@@ -142,7 +150,7 @@ export default class UpdateSparepartManage extends Component {
                                 )}
                             </FormItem>
                         </Col>
-                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                        {/* <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
                                 label={'库存数量'}>
@@ -155,12 +163,12 @@ export default class UpdateSparepartManage extends Component {
                                         },
                                     ],
                                 })(
-                                    <InputNumber min={0} />
+                                    <InputNumber style={{width:'100%'}} min={0}  placeholder='请输入'/>
                                 )}
                             </FormItem>
-                        </Col>
-                    </Row>
-                    <Row gutter={24}>
+                        </Col> */}
+                    {/* </Row> */}
+                    {/* <Row gutter={24}> */}
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
@@ -188,14 +196,14 @@ export default class UpdateSparepartManage extends Component {
                                 })(
                                     <Radio.Group>
                                         <Radio key={1} value={1}>启用</Radio>
-                                        <Radio key={0} value={0}>禁用</Radio>
+                                        <Radio key={0} value={0}>停用</Radio>
                                     </Radio.Group>
                                 )}
                             </FormItem>
                         </Col>
-                    </Row>
-                    <Row gutter={24}>
-                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                    {/* </Row>
+                    <Row gutter={24}> */}
+                        {/* <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
                                 label={'设备类型'}>
@@ -203,7 +211,7 @@ export default class UpdateSparepartManage extends Component {
                                     initialValue: isExists ? item.EquipmentType : null,
                                     rules: [
                                         {
-                                            required: true,
+                                            required: false,
                                             message: '请选择设备类型!',
                                         },
                                     ],
@@ -211,14 +219,16 @@ export default class UpdateSparepartManage extends Component {
                                     <Select
                                         placeholder="请选择"
                                     >
-                                        <Option key='1'>废水</Option>
-                                        <Option key='2'>废气</Option>
-                                        <Option key='5'>环境质量</Option>
+                                      {
+                                      monitoringTypeList[0]&&monitoringTypeList.map(item => {
+                                       return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+                                          })
+                                           }  
                                     </Select>
                                 )}
-                            </FormItem>
-                        </Col>
-                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                            </FormItem> 
+                        </Col>*/}
+                        {/* <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
                                 label={'服务站'}>
@@ -235,15 +245,44 @@ export default class UpdateSparepartManage extends Component {
                                         placeholder="请选择"
                                     // onChange={this.pollutantChange}
                                     >
-                                        {
+                                         {
                                             sparePartsStationList.length !== 0 ? sparePartsStationList.map(item => <Option key={item.SparePartsStationCode}>{item.Name}</Option>) : null
-                                        }
+                                        } 
+                                        
+                                    </Select>
+                                )}
+                            </FormItem>
+                        </Col> */}
+                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                            <FormItem
+                                {...formItemLayout}
+                                label={'仓库名称'}>
+                                {getFieldDecorator('SparePartsStationCode', {
+                                    initialValue: isExists ? item.SparePartsStationCode : undefined,
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: '请选择仓库名称!',
+                                        },
+                                    ],
+                                })(
+                                    <Select
+                                        placeholder="请选择"
+                                        allowClear
+                                        showSearch
+                                        filterOption={(input, option) =>
+                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                          }
+                                    >
+                                         {
+                                            storehouseList[0]&&storehouseList.map(item => <Option key={item['dbo.T_Bas_Storehouse.ID']} value={item['dbo.T_Bas_Storehouse.ID']}>{item['dbo.T_Bas_Storehouse.StorehouseName']}</Option>)
+                                        } 
                                     </Select>
                                 )}
                             </FormItem>
                         </Col>
-                    </Row>
-                    <Row gutter={16} style={{ marginTop: 8 }}>
+                    {/* </Row> */}
+                    {/* <Row gutter={16} style={{ marginTop: 8 }}> */}
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12} style={{ display: 'none' }}>
                             <FormItem
                                 {...formItemLayout}

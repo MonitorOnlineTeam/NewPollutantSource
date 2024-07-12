@@ -10,6 +10,8 @@ import {
     UpdateSpareParts,
     DeleteSpareParts,
     getUploadTemplate,
+    GetStorehouse,
+    GetMonitoringTypeList
 } from './services';
 import config from '@/config';
 import {
@@ -37,6 +39,8 @@ export default Model.extend({
         },
         pageCount: ["20", "40", "60", "80"],
         sparePartsStationList: [],
+        storehouseList:[],
+        monitoringTypeList:[]
     },
     effects: {
         //获取数据列表
@@ -119,5 +123,24 @@ export default Model.extend({
                 message.error(result.Message);
             }
         },
+        //修改数据
+        * GetStorehouse({  payload }, {call, update, }) {
+            const result = yield call(GetStorehouse, payload);
+            if (result.IsSuccess) {
+                yield update({
+                    storehouseList: result.Datas?.DataSource,
+                });
+            }else {
+                message.error(result.Message);
+            }
+        },
+        // *GetMonitoringTypeList({ payload, callback }, { call, put, update }) { //获取设备类型
+        //     const result = yield call(GetMonitoringTypeList, payload);
+        //     if (result.IsSuccess) {
+        //       yield update({ monitoringTypeList: result.Datas })
+        //     } else {
+        //       message.error(result.Message)
+        //     }
+        //   },   
     },
 });

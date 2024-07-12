@@ -32,6 +32,7 @@ import Cookie from 'js-cookie';
 import UpdateSparepartManage from './UpdateSparepartManage';
 import { EditIcon, DelIcon } from '@/utils/icon';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
+import { API} from '@config/API';
 const confirm = Modal.confirm;
 const Option = Select.Option;
 const { Search } = Input;
@@ -41,6 +42,9 @@ const { Search } = Input;
     total: SparepartManage.total,
     sparepartManageParameters: SparepartManage.sparepartManageParameters,
     pageCount: SparepartManage.pageCount,
+    storehouseList: SparepartManage.storehouseList,
+    monitoringTypeList: SparepartManage.monitoringTypeList,
+    confirmLoading: loading.effects['SparepartManage/UpdateSpareParts'],
 }))
 @Form.create()
 
@@ -65,6 +69,8 @@ export default class Index extends Component {
 
     componentDidMount() {
         this.GetSparepartManageList();
+        this.GetStorehouse();
+        // this.GetMonitoringTypeList();
     }
     //创建并获取模板
     Template = () => {
@@ -123,6 +129,22 @@ export default class Index extends Component {
             }
         });
     }
+    GetStorehouse = () => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'SparepartManage/GetStorehouse',
+            payload: {
+            }
+        });
+    }
+    GetMonitoringTypeList = () => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'SparepartManage/GetMonitoringTypeList',
+            payload: {
+            }
+        });
+    }
 
     //上传文件
     upload = () => {
@@ -130,7 +152,7 @@ export default class Index extends Component {
         const { uid } = this.state;
         const { sparepartManageParameters } = this.props;
         const props = {
-            action: '/api/rest/PollutantSourceApi/SparepartManageApi/UploadFileSpareParts',
+            action: API.AssetManagementApi.ImportSparePartsList,
             onChange(info) {
                 that.setState({
                     uploadLoading: true,
@@ -192,8 +214,7 @@ export default class Index extends Component {
                 width: 1000,
                 data: record,
             });
-        }
-        else {
+        } else {
             this.setState({
                 visible: true,
                 title: '添加信息',
@@ -331,7 +352,7 @@ export default class Index extends Component {
         });
     }
     //设备类型回调
-    EquipmentTypeChange = (e) => {
+    EquipmentTypeChange = (val) => {
         const { dispatch } = this.props;
         dispatch({
             type: 'SparepartManage/updateState',
@@ -339,14 +360,29 @@ export default class Index extends Component {
                 sparepartManageParameters: {
                     ...this.props.sparepartManageParameters,
                     ...{
-                        EquipmentType: e
+                        EquipmentType: val ? val : ''
+                    }
+                }
+            }
+        });
+    }
+    //仓库管理回调
+    storehouseChange = (value) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'SparepartManage/updateState',
+            payload: {
+                sparepartManageParameters: {
+                    ...this.props.sparepartManageParameters,
+                    ...{
+                        SparePartsStationCode: value ? value : ''
                     }
                 }
             }
         });
     }
     //状态回调
-    IsUsedChange = (e) => {
+    IsUsedChange = (value) => {
         const { dispatch } = this.props;
         dispatch({
             type: 'SparepartManage/updateState',
@@ -354,7 +390,7 @@ export default class Index extends Component {
                 sparepartManageParameters: {
                     ...this.props.sparepartManageParameters,
                     ...{
-                        IsUsed: e.target.value,
+                        IsUsed: value ? value : '',
                     }
                 }
             }
@@ -405,11 +441,11 @@ export default class Index extends Component {
         }
     }
     render() {
-        const { sparepartManageDatalist, sparepartManageParameters, pageCount } = this.props;
+        const { sparepartManageDatalist, sparepartManageParameters, pageCount, storehouseList, monitoringTypeList } = this.props;
         const { visible } = this.state;
         const columns = [
             {
-                title: '编码',
+                title: '存货编码',
                 dataIndex: 'PartCode',
                 key: 'PartCode',
                 width: 100,
@@ -423,19 +459,19 @@ export default class Index extends Component {
                 align: 'center',
             },
             {
-                title: '备品备件型号',
+                title: '规格型号',
                 dataIndex: 'Code',
                 key: 'Code',
                 width: 100,
                 align: 'center',
             },
-            {
-                title: '库存数量',
-                dataIndex: 'Quantity',
-                key: 'Quantity',
-                width: 100,
-                align: 'center',
-            },
+            // {
+            //     title: '库存数量',
+            //     dataIndex: 'Quantity',
+            //     key: 'Quantity',
+            //     width: 100,
+            //     align: 'center',
+            // },
             {
                 title: '单位',
                 dataIndex: 'Unit',
@@ -444,8 +480,58 @@ export default class Index extends Component {
                 align: 'center',
             },
 
+            // {Code: "266", Name: "污染源(气)"}
+            // 1: {Code: "267", Name: "大气环境"}
+            // 2: {Code: "268", Name: "水环境"}
+            // {
+            //     title: '设备类型',
+            //     dataIndex: 'EquipmentType',
+            //     key: 'EquipmentType',
+            //     width: 100,
+            //     align: 'center',
+            //     render: (text, row, index) => {
+            // switch (text) {
+            //     case '1':
+            //         text = "废水";
+            //         break;
+            //     case '2':
+            //         text = "废气";
+            //         break;
+            //     case '5':
+            //         text = "环境质量";
+            //         break;
+            //     case '10':
+            //         text = "VOC";
+            //         break;
+            //     case '12':
+            //         text = "扬尘";
+            //         break;
+            // }
+            // return text;
+            //    return monitoringTypeList.map(item=>{
+            //         if(item.Code === text){
+            //            return item.Name
+            //         }
+            //     })
+            // },
+            // },
+            // {
+            //     title: '服务站',
+            //     dataIndex: 'SparePartsStationName',
+            //     key: 'SparePartsStationName',
+            //     width: 100,
+            //     align: 'center',
+            //     sorter: (a, b) => a.SparePartsStationName.length - b.SparePartsStationName.length,
+            // },
             {
-                title: '状态',
+                title: '仓库名称',
+                dataIndex: 'SparePartsStationName',
+                key: 'SparePartsStationName',
+                width: 100,
+                align: 'center',
+            },
+            {
+                title: '使用状态',
                 dataIndex: 'IsUsed',
                 key: 'IsUsed',
                 width: 100,
@@ -453,55 +539,45 @@ export default class Index extends Component {
                 render: (text, row, index) => {
                     switch (text) {
                         case 0:
-                            text = "禁用";
+                            text = <Tag color="error">停用</Tag>
                             break;
                         case 1:
-                            text = "启用";
+                            text = <Tag color="processing">启用</Tag>
                             break;
                     }
                     return text;
                 },
             },
             {
-                title: '设备类型',
-                dataIndex: 'EquipmentType',
-                key: 'EquipmentType',
-                width: 100,
+                title: '创建人',
+                dataIndex: 'CreateUserName',
+                key: 'CreateUserName',
                 align: 'center',
-                render: (text, row, index) => {
-                    switch (text) {
-                        case '1':
-                            text = "废水";
-                            break;
-                        case '2':
-                            text = "废气";
-                            break;
-                        case '5':
-                            text = "环境质量";
-                            break;
-                        case '10':
-                            text = "VOC";
-                            break;
-                        case '12':
-                            text = "扬尘";
-                            break;
-                    }
-                    return text;
-                },
             },
             {
-                title: '服务站',
-                dataIndex: 'SparePartsStationName',
-                key: 'SparePartsStationName',
-                width: 100,
+                title: '创建时间',
+                dataIndex: 'CreateTime',
+                key: 'CreateTime',
                 align: 'center',
-                sorter: (a, b) => a.SparePartsStationName.length - b.SparePartsStationName.length,
+            },
+            {
+                title: '更新人',
+                dataIndex: 'UpdUserName',
+                key: 'UpdUserName',
+                align: 'center',
+            },
+            {
+                title: '更新时间',
+                dataIndex: 'UpdTime',
+                key: 'UpdTime',
+                align: 'center',
             },
             {
                 title: '操作',
                 key: 'action',
                 width: 100,
                 align: 'center',
+                fixed:'right',
                 render: (text, record, index) => (
                     <span>
                         <Fragment type='edit'>
@@ -538,44 +614,62 @@ export default class Index extends Component {
                     bordered={false}>
                     <div>
                         <Form layout="inline">
-                            <Form.Item>
-                                <Input placeholder="编码" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartCode} onChange={this.PartCodeChange} />
-                            </Form.Item>
+                            <Row style={{ paddingBottom: 8 }}>
+                                <Form.Item>
+                                    <div style={{ minWidth: 70, display: 'inline-block', textAlign: 'right' }}> 编码 ：</div>
+                                    <Input placeholder="编码" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartCode} onChange={this.PartCodeChange} />
+                                </Form.Item>
 
-                            <Form.Item>
-                                <Input placeholder="备品备件名称" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartName} onChange={this.PartNameChange} />
-                            </Form.Item>
+                                <Form.Item label='备品备件名称'>
+                                    <Input placeholder="备品备件名称" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartName} onChange={this.PartNameChange} />
+                                </Form.Item>
 
-                            <Form.Item>
-                                <Input placeholder="备品备件型号" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.Code} onChange={this.Codechange} />
-                            </Form.Item>
+                                <Form.Item label='规格型号'>
+                                    <Input placeholder="规格型号" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.Code} onChange={this.Codechange} />
+                                </Form.Item>
 
-                            <Form.Item>
+                                {/* <Form.Item>
                                 <Input placeholder="服务站名称" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.SparePartsStationCode} onChange={this.SparePartsStationNameChange} />
+                            </Form.Item> */}
+
+                            </Row>
+                            {/* <Form.Item>
+                                设备类型：
+                            <Select placeholder="设备类型" allowClear style={{ width: 150 }} value={sparepartManageParameters.EquipmentType? sparepartManageParameters.EquipmentType : undefined} onChange={this.EquipmentTypeChange}>
+ 
+                                                                        {
+                                      monitoringTypeList[0]&&monitoringTypeList.map(item => {
+                                       return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+                                          })
+                                           }  
+                                </Select>
+                            </Form.Item> */}
+                            <Form.Item>
+                                仓库名称：
+                                <Select placeholder="仓库名称"
+                                    showSearch
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                    value={sparepartManageParameters.SparePartsStationCode? sparepartManageParameters.SparePartsStationCode : undefined} 
+                                    allowClear style={{ width: 150 }} onChange={this.storehouseChange}>
+                                    {
+                                        storehouseList[0] && storehouseList.map(item => {
+                                            return <Option key={item['dbo.T_Bas_Storehouse.ID']} value={item['dbo.T_Bas_Storehouse.ID']}>{item['dbo.T_Bas_Storehouse.StorehouseName']}</Option>
+                                        })
+                                    }
+                                </Select>
                             </Form.Item>
                             <Form.Item>
-                                设备类型：
-                            <Select placeholder="设备类型" style={{ width: 120 }} value={sparepartManageParameters.EquipmentType || undefined} onChange={this.EquipmentTypeChange}>
-                                    <Option value="1">废水</Option>
-                                    <Option value="2">废气</Option>
-                                    <Option value="5">环境质量</Option>
+                                <div style={{ minWidth: 98, display: 'inline-block', textAlign: 'right' }}> 状态 ：</div>
+                                <Select placeholder="状态" style={{ width: 150 }} allowClear value={sparepartManageParameters.IsUsed && sparepartManageParameters.IsUsed.toString() ? sparepartManageParameters.IsUsed.toString() : undefined} onChange={this.IsUsedChange}>
+                                    <Option value="1">启用</Option>
+                                    <Option value="0">停用</Option>
                                 </Select>
                             </Form.Item>
 
                             <Form.Item>
-                                状态 ：
-                            {/* onChange={this.onChange} value={this.state.value} */}
-                                <Radio.Group placeholder="状态" value={sparepartManageParameters.IsUsed} onChange={this.IsUsedChange}>
-                                    <Radio value={1}>启用</Radio>
-                                    <Radio value={0}>禁用</Radio>
-                                </Radio.Group>
-                            </Form.Item>
-
-                            <Form.Item>
-                                <Button onClick={this.changes}
-                                    type="primary"
-                                >查询
-                            </Button>
+                                <Button onClick={this.changes} type="primary" >查询 </Button>
                             </Form.Item>
 
                             <Form.Item>
@@ -644,6 +738,7 @@ export default class Index extends Component {
                         width={this.state.width}
                         onCancel={this.onCancel}
                         onOk={this.handleSubmit}
+                        confirmLoading={this.props.confirmLoading}
                     >
                         {
                             <UpdateSparepartManage

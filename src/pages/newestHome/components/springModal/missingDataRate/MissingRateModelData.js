@@ -79,12 +79,12 @@ export default class Index extends PureComponent {
       status: '',
     };
     this.commonCol = [
-      {
-        title: <span>{this.props.types === 'ent' ? '缺失数据报警监测点数' : '缺失数据报警空气检测点数'}</span>,
-        dataIndex: 'pointCount',
-        key: 'pointCount',
-        align: 'center'
-      },
+      // {
+      //   title: <span>{this.props.types === 'ent' ? '缺失数据报警监测点数' : '缺失数据报警空气检测点数'}</span>,
+      //   dataIndex: 'pointCount',
+      //   key: 'pointCount',
+      //   align: 'center'
+      // },
       {
         title: <span>缺失数据报警次数</span>,
         dataIndex: 'exceptionCount',
@@ -203,9 +203,9 @@ export default class Index extends PureComponent {
       PollutantType: defaultPollutantType,
       // OperationPersonnel:'',
     });
-    let entObj = { title: <span>缺失数据报警企业数</span>, dataIndex: 'entCount', key: 'entCount', align: 'center', }
+    // let entObj = { title: <span>缺失数据报警企业数</span>, dataIndex: 'entCount', key: 'entCount', align: 'center', }
 
-    types === 'ent' ? this.columns.splice(1, 0, entObj) : null;
+    // types === 'ent' ? this.columns.splice(1, 0, entObj) : null;
 
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
