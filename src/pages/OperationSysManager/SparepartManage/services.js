@@ -53,7 +53,7 @@ export async function UpdateSpareParts(params) {
  * 
  */
 export async function GetStorehouse(params) {
-  const result =await post(API.AutoFormApi.GetListPager, {configId:'Storehouse'}, null);
+  const result = await post(API.AutoFormApi.GetListPager, {"configId":"Storehouse","ConditionWhere":"{\"rel\":\"$and\",\"group\":[{\"rel\":\"$and\",\"group\":[{\"Key\":\"dbo__T_Bas_Storehouse__StorehouseStatus\",\"Value\":\"1\",\"Where\":\"$=\"}]}]}"}, null);
   return result;
 }
 

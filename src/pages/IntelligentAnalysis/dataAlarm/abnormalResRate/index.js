@@ -135,18 +135,18 @@ class Index extends PureComponent {
           }}>{text}</a>
         }
       },
-      {
-        title: '数据异常报警企业数',
-        dataIndex: 'CountEnt',
-        key: 'CountEnt',
-        width: 200,
-      },
-      {
-        title: '数据异常报警监测点数',
-        dataIndex: 'CountPoint',
-        key: 'CountPoint',
-        width: 200,
-      },
+      // {
+      //   title: '数据异常报警企业数',
+      //   dataIndex: 'CountEnt',
+      //   key: 'CountEnt',
+      //   width: 200,
+      // },
+      // {
+      //   title: '数据异常报警监测点数',
+      //   dataIndex: 'CountPoint',
+      //   key: 'CountPoint',
+      //   width: 200,
+      // },
       {
         title: '数据类型',
         dataIndex: 'DataType',

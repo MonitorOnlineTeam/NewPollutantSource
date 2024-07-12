@@ -72,10 +72,13 @@ export default Model.extend({
       const result = yield call(services.GetOperationTaskList, payload);
       if (result.IsSuccess) {
         let item = result.Datas;
-        let data = [item.coordinationComparisonCount, item.cooperationInspectionCount,
-        item.calibrationTestCount, item.dealExceptionCount, item.maintainCount, item.repairCount,
-        item.calibrationCount, item.inspectionCount,
-        ]
+        let data = [
+          // item.coordinationComparisonCount, 
+             item.cooperationInspectionCount,
+           // item.calibrationTestCount,
+            item.dealExceptionCount, item.maintainCount, item.repairCount,
+           item.calibrationCount, item.inspectionCount,
+           ]
         yield update({ operaOrderData: data });
       } else {
         message.error(result.Message)

@@ -307,18 +307,18 @@ export default class OverVerifyLst extends Component {
               // );
             },
           },
-          {
-            title: <span>{'数据超标报警企业数'}</span>,
-            dataIndex: 'entCount',
-            key: 'entCount',
-            align: 'center',
-          },
-          {
-            title: <span>数据超标报警监测点数</span>,
-            dataIndex: 'pointCount',
-            key: 'pointCount',
-            align: 'center',
-          },
+          // {
+          //   title: <span>{'数据超标报警企业数'}</span>,
+          //   dataIndex: 'entCount',
+          //   key: 'entCount',
+          //   align: 'center',
+          // },
+          // {
+          //   title: <span>数据超标报警监测点数</span>,
+          //   dataIndex: 'pointCount',
+          //   key: 'pointCount',
+          //   align: 'center',
+          // },
         ];
         this.props.level==2&&newCloum.splice(0,1,{
           title: '省',
@@ -587,19 +587,19 @@ export default class OverVerifyLst extends Component {
         },
       },
       
-      {
-        title: <span>{'数据超标报警企业数'}</span>,
-        dataIndex: 'entCount',
-        key: 'entCount',
-        align: 'center',
-      },
-      {
-        title: <span>数据超标报警监测点数</span>,
-        dataIndex: 'pointCount',
-        key: 'pointCount',
-        width: 210,
-        align: 'center',
-      },
+      // {
+      //   title: <span>{'数据超标报警企业数'}</span>,
+      //   dataIndex: 'entCount',
+      //   key: 'entCount',
+      //   align: 'center',
+      // },
+      // {
+      //   title: <span>数据超标报警监测点数</span>,
+      //   dataIndex: 'pointCount',
+      //   key: 'pointCount',
+      //   width: 210,
+      //   align: 'center',
+      // },
     ];
     if (checkedValues.length < 1) {
       message.warning('最少勾选一个监测因子！');

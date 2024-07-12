@@ -16,7 +16,8 @@ class SaveSessionPage extends PureComponent {
     // sessionStorage.setItem("sysMenuId", sysInfo.ID);
     Cookie.set('sysMenuId', sysInfo.ID);
     sessionStorage.setItem("sysPollutantCodes", sysInfo.CodeList);
-    sessionStorage.setItem("sysName", sysInfo.Name);
+    // sessionStorage.setItem("sysName", sysInfo.Name);
+    Cookie.set("sysName", sysInfo.Name);
     this.getMenuList(sysInfo.ID);
     // if(){
     //   dispatch({

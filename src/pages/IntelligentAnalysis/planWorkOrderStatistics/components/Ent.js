@@ -1191,6 +1191,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         visible={operaPointVisible}
         onCancel={()=>{setOperaPointVisible(false)}}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`${styles.pointModalSty} spreadOverModal`}
       >
@@ -1221,6 +1222,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         visible={insideWorkOrderVisible}
         onCancel={()=>{setInsideWorkOrderVisible(false)}}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
       >
@@ -1248,6 +1250,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
           destroyOnClose
           wrapClassName='spreadOverModal'
           footer={null}
+          mask={false}
           onCancel={() => {
             setTaskRecordDetailVisible(false)
             setPopVisible(true)

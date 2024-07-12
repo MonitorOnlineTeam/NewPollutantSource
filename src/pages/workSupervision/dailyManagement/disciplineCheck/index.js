@@ -33,6 +33,10 @@ import { permissionButton } from '@/utils/utils';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const { RangePicker } = DatePicker;
+// 设置 Moment.js 的默认语言为英语，并且周的第一天是周一
+moment.locale('en', {
+  week: { dow: 1 } // Monday is the first day of the week
+});
 
 const dvaPropsData = ({ loading }) => ({
   queryLoading: loading.effects[`wordSupervision/GetDisciplineCheckList`],
@@ -230,11 +234,11 @@ const DisciplineCheck = props => {
           initialValues={{
             time: [
               moment()
-                .subtract(1, 'month')
-                .startOf('months'),
+                .subtract(1, 'weeks')
+                .startOf('week'),
               moment()
-                .subtract(1, 'month')
-                .endOf('months'),
+                .subtract(1, 'weeks')
+                .endOf('week'),
             ],
           }}
           autoComplete="off"

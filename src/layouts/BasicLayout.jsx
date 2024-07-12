@@ -413,8 +413,8 @@ class BasicLayout extends Component {
     }
 
     let _settings = settings;
-    if (sessionStorage.getItem('sysName')) {
-      _settings.title = sessionStorage.getItem('sysName');
+    if (Cookie.get("sysName")) {
+      _settings.title = Cookie.get("sysName");
     }
     const isShowLogo = configInfo && configInfo.IsShowLogo === 'true'
     return (
@@ -453,7 +453,7 @@ class BasicLayout extends Component {
           menuHeaderRender={(logo, title, props) => {
             return <>
                {isShowLogo && logoRender()}
-              <a className={!isShowLogo && _settings.title?.length > 14 && styles.layoutSty} href={currentMenu?.[0]?.path}> <h1 style={{width: _settings.title?.length * 19}}>{_settings.title}</h1></a>
+              <a className={!isShowLogo && _settings.title?.length > 14 && styles.layoutSty} href={currentMenu?.[0]?.path}> <h1 style={{width: _settings.title?.length * 19}} title={_settings.title}>{_settings.title}</h1></a>
             </>
           }
           } //宝武 系统名称太长 添加滚动效果

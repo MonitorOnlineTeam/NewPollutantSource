@@ -14,6 +14,7 @@ import { message } from 'antd';
 import router from 'umi/router';
 import webConfig from '../../public/webConfig'
 import { GetOperationSetting } from '@/pages/systemManger/operationBasConfig/service'
+import { registerUpdateLifecycle } from 'echarts';
 
 /**
  * 功  能：报警消息和推送相关model
@@ -115,6 +116,8 @@ export default Model.extend({
         //   console.log('WebSocketAddress获取失败');
         // }
        window.configInfo = response.Datas;
+       console.log(window.configInfo )
+       sessionStorage.setItem('isBW',response.Datas?.IsShowProjectRegion)
         yield put({
           type: 'setConfigInfo',
           payload: {

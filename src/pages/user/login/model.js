@@ -75,7 +75,8 @@ const Model = {
                 router.push('/sysTypeMiddlePage');
               } else {
                 sessionStorage.setItem('sysMenuId', sysList.id);
-                sessionStorage.setItem("sysName", sysList.name);
+                // sessionStorage.setItem("sysName", sysList.name);
+                Cookie.set("sysName", sysList.name);
                 router.push(defaultNavigateUrl);
               }
               //  router.push(defaultNavigateUrl);

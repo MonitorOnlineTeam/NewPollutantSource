@@ -365,22 +365,22 @@ const Index = (props, ref) => {
         >{text}</Button>
       }
     },
-    {
-      title: '运维企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-      width: 100,
-      sorter: (a, b) => a.entCount - b.entCount,
-    },
-    {
-      title: '运维监测点数',
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-      width: 130,
-      sorter: (a, b) => a.pointCount - b.pointCount,
-    },
+    // {
+    //   title: '运维企业数',
+    //   dataIndex: 'entCount',
+    //   key: 'entCount',
+    //   align: 'center',
+    //   width: 100,
+    //   sorter: (a, b) => a.entCount - b.entCount,
+    // },
+    // {
+    //   title: '运维监测点数',
+    //   dataIndex: 'pointCount',
+    //   key: 'pointCount',
+    //   align: 'center',
+    //   width: 130,
+    //   sorter: (a, b) => a.pointCount - b.pointCount,
+    // },
     ...commonCol(type)
 
   ];
@@ -416,22 +416,22 @@ const Index = (props, ref) => {
         return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: text, };
       }
     },
-    {
-      title: '运维企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-      width: 100,
-      sorter: (a, b) => a.entCount - b.entCount,
-    },
-    {
-      title: '运维监测点数',
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-      width: 100,
-      sorter: (a, b) => a.pointCount - b.pointCount,
-    },
+    // {
+    //   title: '运维企业数',
+    //   dataIndex: 'entCount',
+    //   key: 'entCount',
+    //   align: 'center',
+    //   width: 100,
+    //   sorter: (a, b) => a.entCount - b.entCount,
+    // },
+    // {
+    //   title: '运维监测点数',
+    //   dataIndex: 'pointCount',
+    //   key: 'pointCount',
+    //   align: 'center',
+    //   width: 100,
+    //   sorter: (a, b) => a.pointCount - b.pointCount,
+    // },
     ...commonCol(tabType)
   ]
   const insideWorkOrderColumns = ()=>[
@@ -612,22 +612,22 @@ const Index = (props, ref) => {
         >{text}</Button>
       }
     },
-    {
-      title: '运维企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-      fixed:'left',
-      width: 100,
-    },
-    {
-      title: '运维监测点数',
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-      fixed:'left',
-      width: 100,
-    },
+    // {
+    //   title: '运维企业数',
+    //   dataIndex: 'entCount',
+    //   key: 'entCount',
+    //   align: 'center',
+    //   fixed:'left',
+    //   width: 100,
+    // },
+    // {
+    //   title: '运维监测点数',
+    //   dataIndex: 'pointCount',
+    //   key: 'pointCount',
+    //   align: 'center',
+    //   fixed:'left',
+    //   width: 100,
+    // },
     ...planOutRegCompleteCommonCol(),
 
   ];
@@ -665,22 +665,22 @@ const Index = (props, ref) => {
         return text;
       },
     },
-    {
-      title: '运维企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-      fixed: 'left',
-      width: 100,
-    },
-    {
-      title: '运维监测点数',
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-      fixed: 'left',
-      width: 100,
-    },
+    // {
+    //   title: '运维企业数',
+    //   dataIndex: 'entCount',
+    //   key: 'entCount',
+    //   align: 'center',
+    //   fixed: 'left',
+    //   width: 100,
+    // },
+    // {
+    //   title: '运维监测点数',
+    //   dataIndex: 'pointCount',
+    //   key: 'pointCount',
+    //   align: 'center',
+    //   fixed: 'left',
+    //   width: 100,
+    // },
     ...planOutRegCompleteCommonCol(),
 
   ];
@@ -1224,6 +1224,7 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
         visible={cityVisible}
         onCancel={() => { setCityVisible(false) }}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
         bodyStyle={{ padding: 0 }}
@@ -1252,6 +1253,7 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
         visible={insideWorkOrderVisible}
         onCancel={() => { setInsideWorkOrderVisible(false) }}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
         bodyStyle={{ padding: 0 }}
@@ -1289,6 +1291,7 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
         visible={outWorkOrderVisible}
         onCancel={() => { setOutWorkOrderVisible(false) }}
         footer={null}
+        mask={false}
         destroyOnClose
         centered
         wrapClassName={`spreadOverModal`}
@@ -1323,6 +1326,7 @@ const outStatusLegend =   <Row align='middle' style={{paddingRight:16}}>
         destroyOnClose
         wrapClassName='spreadOverModal'
         footer={null}
+        mask={false}
         onCancel={() => {
           setTaskRecordDetailVisible(false)
           setPopVisible(true)

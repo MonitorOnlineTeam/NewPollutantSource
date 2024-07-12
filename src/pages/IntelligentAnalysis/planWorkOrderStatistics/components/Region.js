@@ -302,33 +302,33 @@ const Index = (props, ref) => {
         >{text}</Button>
       }
     },
-    {
-      title: '运维企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-      width: 100,
-    },
-    {
-      // title: <span>运维监测点数{!isActualCalibrationModal && !isPlanCalibrationModal && <Tooltip title={`点击运维监测点数，可以查看运维监测点在条件日期内完成的计划巡检工单、计划校准工单情况。`}><QuestionCircleOutlined style={{ paddingLeft: 5 }} /></Tooltip>}</span>,
-      title: <span>运维监测点数</span>,
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-      width: 100,
-      // render:(text,record,index)=>{ 
-      //   if(!isPlanCalibrationModal&&!isPlanInspectionModal&&!isActualCalibrationModal){
-      //     return  <Button type="link"
-      //     onClick={()=>{
-      //      insideOperaPointClick(record)
-      //     }}
-      //    >{text}</Button>
-      //   }else{
-      //     return text;
-      //   }
+    // {
+    //   title: '运维企业数',
+    //   dataIndex: 'entCount',
+    //   key: 'entCount',
+    //   align: 'center',
+    //   width: 100,
+    // },
+    // {
+    //   // title: <span>运维监测点数{!isActualCalibrationModal && !isPlanCalibrationModal && <Tooltip title={`点击运维监测点数，可以查看运维监测点在条件日期内完成的计划巡检工单、计划校准工单情况。`}><QuestionCircleOutlined style={{ paddingLeft: 5 }} /></Tooltip>}</span>,
+    //   title: <span>运维监测点数</span>,
+    //   dataIndex: 'pointCount',
+    //   key: 'pointCount',
+    //   align: 'center',
+    //   width: 100,
+    //   // render:(text,record,index)=>{ 
+    //   //   if(!isPlanCalibrationModal&&!isPlanInspectionModal&&!isActualCalibrationModal){
+    //   //     return  <Button type="link"
+    //   //     onClick={()=>{
+    //   //      insideOperaPointClick(record)
+    //   //     }}
+    //   //    >{text}</Button>
+    //   //   }else{
+    //   //     return text;
+    //   //   }
 
-      // }
-    },
+    //   // }
+    // },
     {
       title: '计划巡检工单',
       width: 255,
@@ -474,20 +474,20 @@ const Index = (props, ref) => {
         return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: text, };
       }
     },
-    {
-      title: '运维企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-      width: 100,
-    },
-    {
-      title: <span>运维监测点数</span>,
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-      width: 100,
-    },
+    // {
+    //   title: '运维企业数',
+    //   dataIndex: 'entCount',
+    //   key: 'entCount',
+    //   align: 'center',
+    //   width: 100,
+    // },
+    // {
+    //   title: <span>运维监测点数</span>,
+    //   dataIndex: 'pointCount',
+    //   key: 'pointCount',
+    //   align: 'center',
+    //   width: 100,
+    // },
     {
       title: '计划巡检工单',
       width: 200,
@@ -979,20 +979,20 @@ const Index = (props, ref) => {
         >{text}</Button>
       }
     },
-    {
-      title: '运维企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-      width: 100,
-    },
-    {
-      title: <span>运维监测点数</span>,
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-      width: 100,
-    },
+    // {
+    //   title: '运维企业数',
+    //   dataIndex: 'entCount',
+    //   key: 'entCount',
+    //   align: 'center',
+    //   width: 100,
+    // },
+    // {
+    //   title: <span>运维监测点数</span>,
+    //   dataIndex: 'pointCount',
+    //   key: 'pointCount',
+    //   align: 'center',
+    //   width: 100,
+    // },
     {
       title: '计划外完成工单',
       width: 200,
@@ -1050,20 +1050,20 @@ const Index = (props, ref) => {
         return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: <div style={{ textAlign: 'center' }}> <a href="javascript:;" onClick={() => { cityDetail(record) }}>{text}</a></div>, };
       }
     },
-    {
-      title: '运维企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-      width: 100,
-    },
-    {
-      title: <span>运维监测点数</span>,
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-      width: 100,
-    },
+    // {
+    //   title: '运维企业数',
+    //   dataIndex: 'entCount',
+    //   key: 'entCount',
+    //   align: 'center',
+    //   width: 100,
+    // },
+    // {
+    //   title: <span>运维监测点数</span>,
+    //   dataIndex: 'pointCount',
+    //   key: 'pointCount',
+    //   align: 'center',
+    //   width: 100,
+    // },
     {
       title: '计划外完成工单',
       width: 200,
@@ -2169,6 +2169,7 @@ const Index = (props, ref) => {
         visible={cityVisible}
         onCancel={() => { setCityVisible(false) }}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
       >
@@ -2193,6 +2194,7 @@ const Index = (props, ref) => {
         visible={insideOperaPointVisible}
         onCancel={()=>{setInsideOperaPointVisible(false)}}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
       >
@@ -2224,6 +2226,7 @@ const Index = (props, ref) => {
         visible={insideWorkOrderVisible}
         onCancel={() => { setInsideWorkOrderVisible(false) }}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
       >
@@ -2254,6 +2257,7 @@ const Index = (props, ref) => {
         visible={outWorkOrderVisible}
         onCancel={() => { setOutWorkOrderVisible(false) }}
         footer={null}
+        mask={false}
         destroyOnClose
         centered
         wrapClassName={`spreadOverModal`}
@@ -2285,6 +2289,7 @@ const Index = (props, ref) => {
         visible={cityDetailVisible}
         onCancel={() => { setCityDetailVisible(false) }}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`spreadOverModal`}
       >
@@ -2307,6 +2312,7 @@ const Index = (props, ref) => {
           destroyOnClose
           wrapClassName='spreadOverModal'
           footer={null}
+          mask={false}
           onCancel={() => {
             setTaskRecordDetailVisible(false)
             setPopVisible(true)

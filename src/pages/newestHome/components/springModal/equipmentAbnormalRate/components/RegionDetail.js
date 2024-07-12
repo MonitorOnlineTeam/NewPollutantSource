@@ -97,21 +97,21 @@ const Index = (props) => {
         return <a onClick={() => { pointDetail(record) }} >{text}</a>
       }
     },
-    {
-      title: '运维企业数',
-      dataIndex: 'entCount',
-      key: 'entCount',
-      align: 'center',
-      sorter: (a, b) => a.entCount - b.entCount,
-    },
-    {
-      title: '运维监测点数',
-      dataIndex: 'pointCount',
-      key: 'pointCount',
-      align: 'center',
-      sorter: (a, b) => a.pointCount - b.pointCount,
+    // {
+    //   title: '运维企业数',
+    //   dataIndex: 'entCount',
+    //   key: 'entCount',
+    //   align: 'center',
+    //   sorter: (a, b) => a.entCount - b.entCount,
+    // },
+    // {
+    //   title: '运维监测点数',
+    //   dataIndex: 'pointCount',
+    //   key: 'pointCount',
+    //   align: 'center',
+    //   sorter: (a, b) => a.pointCount - b.pointCount,
 
-    },
+    // },
     ...coommonCol
   ]
   const assessmentCentreCol = deviceType == 1 ? coommonCol2 : failcoommonCol2
