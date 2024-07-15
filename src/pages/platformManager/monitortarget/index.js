@@ -237,6 +237,7 @@ export default class MonitorTarget extends Component {
         params: { configId, targetType },
       },
       dispatch,
+      hideBreadcrumb,
     } = this.props;
     //   console.log("this.props=", this.props);
     const searchConditions = searchConfigItems[configId] || [];
@@ -254,7 +255,7 @@ export default class MonitorTarget extends Component {
     //     />);
     // }
     return (
-      <BreadcrumbWrapper>
+      <BreadcrumbWrapper hideBreadcrumb={!!hideBreadcrumb}>
         <Card className={styles.contentContainer}>
           <SearchWrapper
             onSubmitForm={form => this.loadReportList(form)}

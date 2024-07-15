@@ -12,7 +12,7 @@ const dvaPropsData = ({ loading, sysDashboard, user }) => ({
   currentMenu: user.currentMenu,
 });
 
-const HomeDataScreen = props => {
+const SystemDashboardPageWrapper = props => {
   const containerRef = useRef(null);
 
   const [sysList, setSysList] = useState([]);
@@ -21,7 +21,6 @@ const HomeDataScreen = props => {
 
   const { dispatch, timeLabel, children, pageName, currentMenu } = props;
 
-  console.log('currentMenu', currentMenu);
   useEffect(() => {
     pageName === '智慧运维' &&
       dispatch({
@@ -29,7 +28,7 @@ const HomeDataScreen = props => {
         type: 'global/getOperationSetting',
         payload: {},
       });
-      
+
     // 获取中间页
     dispatch({
       type: 'sysDashboard/GetSysList',
@@ -124,7 +123,7 @@ const HomeDataScreen = props => {
       <div className={styles.leftContent}>
         <div className={styles.menuSelectContent}>
           {/* <div className={styles.selectedName}>统计周期</div> */}
-          <div className={styles.selectedName}>{timeLabel}</div>
+          <div className={`${styles.selectedName} ${styles.showList}`}>{timeLabel}</div>
           <ul>
             {dateRangeList.map(item => {
               return (
@@ -141,11 +140,11 @@ const HomeDataScreen = props => {
             })}
           </ul>
         </div>
-        <div className={styles.menuSelectContent}>
-          <div className={`${styles.selectedName} ${sysList.length > 1 ? styles.showList : ''}`}>
-            {pageInfo.key}
-          </div>
-          {sysList.length > 1 ? (
+        {sysList.length > 1 ? (
+          <div className={styles.menuSelectContent}>
+            <div className={`${styles.selectedName} ${styles.showList}`}>
+              {pageInfo.key}
+            </div>
             <ul>
               {sysList.map(item => {
                 return (
@@ -165,10 +164,10 @@ const HomeDataScreen = props => {
                 );
               })}
             </ul>
-          ) : (
-            ''
-          )}
-        </div>
+          </div>
+        ) : (
+          ''
+        )}
       </div>
       <div className={styles.rightContent}>
         <FullscreenToggle containerRef={containerRef} style={{ marginRight: 14, marginTop: 4 }} />
@@ -193,4 +192,4 @@ const HomeDataScreen = props => {
   );
 };
 
-export default connect(dvaPropsData)(HomeDataScreen);
+export default connect(dvaPropsData)(SystemDashboardPageWrapper);

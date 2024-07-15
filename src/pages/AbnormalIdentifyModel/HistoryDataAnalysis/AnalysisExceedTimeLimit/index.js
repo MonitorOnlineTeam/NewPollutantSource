@@ -1,65 +1,29 @@
-/**
- * 功  能：超标时长分析
- * 创建人：jab
- * 创建时间：2024.06
- */
-import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Upload, Popconfirm, Radio, Popover, Spin, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker } from 'antd';
-import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownloadOutlined, UploadOutlined, ImportOutlined, ExportOutlined, ProfileOutlined, AmazonCircleFilled, } from '@ant-design/icons';
-import { connect } from "dva";
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-const { RangePicker } = DatePicker;
-import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import router from 'umi/router';
-import Link from 'umi/link';
-import moment from 'moment';
-import RegionList from '@/components/RegionList'
-import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
-import styles from "./style.less"
-import Cookie from 'js-cookie';
-import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import DefaultDevelopment from '@/components/DefaultDevelopment';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'dva';
+import { Card, Radio, Badge, Row, Col, Space, Button, Statistic, Form, InputNumber } from 'antd';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import PageContent from './components/PageContent';
 
-const { Option } = Select;
-import { API } from '@config/API';
-import config from '@/config';
-const namespace = 'analysisExceedTimeLimit'
+const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
+  // loading: loading.effects['AbnormalIdentifyModel/GetDataMissAnalysis'],
+});
 
+const PointStatisticalAnalysis = props => {
+  const [form] = Form.useForm();
 
+  const { dispatch, pageTitle, entCode, DGIMN, time, regionCode } = props;
 
-
-const dvaPropsData = ({ loading, analysisExceedTimeLimit, global, }) => ({
-  configInfo: global.configInfo,
-  tableLoading: loading.effects[`${namespace}/GetQuestionList`],
-  exportLoading: loading.effects[`${namespace}/ExportQuestion`],
-})
-
-
-const Index = (props) => {
-
-
-
-
-  useEffect(() => {
-
-
-  }, []);
-
-
-
-
-
-
-
-
+  useEffect(() => {}, []);
   return (
-    <div className={`${styles.analysisExceedTimeLimitSty}`}>
-      <BreadcrumbWrapper>
-      <DefaultDevelopment />
-   
-      </BreadcrumbWrapper>
-    </div>
+    <BreadcrumbWrapper hideBreadcrumb={entCode || regionCode}>
+      <PageContent
+        time={time}
+        entCode={entCode}
+        regionCode={regionCode}
+        dataType={regionCode ? 'ent' : entCode ? 'point' : ''}
+      />
+    </BreadcrumbWrapper>
   );
 };
-export default connect(dvaPropsData)(Index);
+
+export default connect(dvaPropsData)(PointStatisticalAnalysis);

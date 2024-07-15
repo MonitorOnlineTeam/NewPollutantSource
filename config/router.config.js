@@ -75,6 +75,11 @@ const routes = [
             path: '/console/baseConfig/menuManagement',
             component: './autoformConfig/MenuManagement',
           },
+          /* 配置中心-系统配置-按钮管理 */
+          {
+            path: '/console/baseConfig/buttonManagement',
+            component: './autoformConfig/ButtonManagement',
+          },
           /* 配置中心-AutoForm配置-AutoForm数据源配置 */
           {
             path: '/console/baseConfig/datasource',
@@ -148,6 +153,12 @@ const routes = [
         component: './home/yanshi/DataFolwChart',
       },
       {
+        // 异常数据识别大屏 - 第一版
+        name: 'ModelStatisticsScreen',
+        path: '/ModelStatisticsScreen',
+        component: './DataAnalyticalWarningModel/Statistics/Screen',
+      },
+      {
         // 模型首页 - 区域和行业
         name: 'AbnormalIdentifyModelHome',
         path: '/AbnormalIdentifyModel/Home/RegionAndIndustry',
@@ -158,6 +169,43 @@ const routes = [
         name: 'ctDataScreen',
         path: '/ctDataScreen',
         component: './ctDebuggAfterSaleServiceManage/HomeDataScreen',
+      },
+      {
+        // 驾驶舱
+        name: 'SystemDashboard',
+        path: '/SystemDashboard',
+        routes: [
+          {
+            // 运维
+            name: 'Operation',
+            path: '/SystemDashboard/Operation',
+            component: './SystemDashboard/Operation',
+          },
+          {
+            // 安装调试、成套
+            name: 'Operation',
+            path: '/SystemDashboard/CT',
+            component: './SystemDashboard/CT',
+          },
+          {
+            // 异常识别模型
+            name: 'Operation',
+            path: '/SystemDashboard/AbnormalIdentify',
+            component: './SystemDashboard/AbnormalIdentify',
+          },
+          {
+            // 监督核查
+            name: 'SupervisionVerifica',
+            path: '/SystemDashboard/SupervisionVerifica',
+            component: './SystemDashboard/SupervisionVerifica',
+          },
+          {
+            //监控
+            name: 'Monitoring',
+            path: '/SystemDashboard/Monitoring',
+            component: './SystemDashboard/Monitoring',
+          },
+        ],
       },
       // appoperation
       {
@@ -793,8 +841,7 @@ const routes = [
                   },
                   {
                     name: 'commissionTestPoint', //调试检测 污染源管理 监测点
-                    path:
-                      '/commissionTest/equipmentAccount/pollutantManager/TestEnterprise/point',
+                    path: '/commissionTest/equipmentAccount/pollutantManager/TestEnterprise/point',
                     component: './commissionTest/equipmentAccount/pollutantManager/point',
                   },
                   {
@@ -910,6 +957,12 @@ const routes = [
                 path: '/assetManage/customOrder/renewalLog',
                 component: './platformManager/assetManage/renewalLog',
               },
+              {
+                // 续费管理
+                name: 'renewManage',
+                path: '/assetManage/customOrder/renewManage',
+                component: './platformManager/assetManage/renewalLog',
+              },
             ],
           },
           {
@@ -958,8 +1011,7 @@ const routes = [
               },
               {
                 name: 'entImport', //企业导入
-                path:
-                  '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/entImport',
+                path: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/entImport',
                 component: './platformManager/monitortarget/entImport',
               },
               {
@@ -1752,7 +1804,8 @@ const routes = [
               },
             ],
           },
-          { //设备运维过程管理
+          {
+            //设备运维过程管理
             path: '/operaProcess',
             name: 'operaProcess',
             routes: [
@@ -1770,7 +1823,7 @@ const routes = [
                 name: 'emergency',
                 component: './operations/TaskRecord',
               },
-            ]
+            ],
           },
           {
             path: '/rolesmanager',
@@ -1907,7 +1960,6 @@ const routes = [
                 path: '/alarmmanager/alarmverifyrecord/exceptionVerify',
                 component: './monitoring/alarmverifyrecord/index',
               },
-
             ],
           },
 
@@ -2254,7 +2306,8 @@ const routes = [
               {
                 //异常报警查询
                 name: 'exceptionrecordOnlyQuery',
-                path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/onlyQuery',
+                path:
+                  '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/onlyQuery',
                 component: './monitoring/alarmInfo/exceptionrecordNew/OnlyQuery',
               },
               // 异常报警响应查询 - 行政区
@@ -3197,6 +3250,12 @@ const routes = [
                 component: './dataSearch/dischargeStandard',
               },
               {
+                //排污单位管理
+                name: 'dischargeUnits',
+                path: '/dataSearch/dischargeUnits',
+                component: './dataSearch/dischargeUnits',
+              },
+              {
                 name: 'abnormalStandard', //异常标准
                 path: '/dataSearch/abnormalStandard',
                 component: './dataSearch/abnormalStandard',
@@ -3809,7 +3868,6 @@ const routes = [
                     path: '/oneEntsOneArchives/monitoringData/monitorExhibition',
                     component: './monitoring/dataquery',
                   },
-
                 ],
               },
               {
@@ -3933,7 +3991,172 @@ const routes = [
               },
             ],
           },
-          // 异常数据识别模型
+          // 数据分析预警模型 1.0
+          {
+            path: '/DataAnalyticalWarningModel',
+            name: 'DataAnalyticalWarningModel',
+            routes: [
+              // 智能预警
+              {
+                name: 'Warning',
+                path: '/DataAnalyticalWarningModel/Warning',
+                routes: [
+                  {
+                    // 预警记录
+                    name: 'expertManagement',
+                    path: '/DataAnalyticalWarningModel/Warning',
+                    component: './DataAnalyticalWarningModel/Warning',
+                  },
+                  {
+                    // 根据编号查看预警记录
+                    name: 'expertManagement',
+                    path: '/DataAnalyticalWarningModel/Warning/ModelType/:modelNumber',
+                    // component: './DataAnalyticalWarningModel/Warning/ModelType',
+                    component: './DataAnalyticalWarningModel/Warning',
+                  },
+                  {
+                    // 监测数据阈值异常研判
+                    name: 'AbnormalJudgmentPage',
+                    path: '/DataAnalyticalWarningModel/Warning/AbnormalJudgmentPage',
+                    component: './DataAnalyticalWarningModel/Warning/AbnormalJudgmentPage',
+                  },
+                  {
+                    // 预警核实
+                    name: 'WarningVerify',
+                    path: '/DataAnalyticalWarningModel/Warning/WarningVerify/:id',
+                    component: './DataAnalyticalWarningModel/Warning/WarningVerify',
+                  },
+                  {
+                    // 预警核实2
+                    name: 'WarningVerify2',
+                    path:
+                      '/DataAnalyticalWarningModel/Warning/ModelType/:modelNumber/WarningVerify/:id',
+                    component: './DataAnalyticalWarningModel/Warning/WarningVerify',
+                  },
+                  {
+                    // 排口参数配置
+                    name: 'PointParams',
+                    path: '/DataAnalyticalWarningModel/Warning/PointParams',
+                    component: './DataAnalyticalWarningModel/Warning/PointParams',
+                  },
+                ],
+              },
+              // 模型管理
+              {
+                name: 'ModelManagement',
+                path: '/DataAnalyticalWarningModel/Model',
+                routes: [
+                  {
+                    // 模型管理 - 列表
+                    name: 'Model',
+                    path: '/DataAnalyticalWarningModel/Model',
+                    component: './DataAnalyticalWarningModel/ModelManagement',
+                  },
+                  {
+                    // 模型编辑
+                    name: 'setting',
+                    path: '/DataAnalyticalWarningModel/Model/setting/:ID',
+                    component: './DataAnalyticalWarningModel/ModelManagement/Setting',
+                  },
+                ],
+              },
+              {
+                // 模型精度
+                name: 'Accuracy',
+                path: '/DataAnalyticalWarningModel/Accuracy',
+                component: './DataAnalyticalWarningModel/AccuracyPage/index.js',
+              },
+              // 模型分析
+              {
+                name: 'Statistics',
+                path: '/DataAnalyticalWarningModel/Statistics',
+                routes: [
+                  {
+                    // 场景模型分析
+                    name: 'WarningModelAnalysis',
+                    path: '/DataAnalyticalWarningModel/Statistics/WarningModelAnalysis',
+                    component: './DataAnalyticalWarningModel/Statistics/WarningModelAnalysis',
+                  },
+                  {
+                    // 场景模型分析报告
+                    name: 'AnalysisReport',
+                    path: '/DataAnalyticalWarningModel/Statistics/AnalysisReport',
+                    component: './DataAnalyticalWarningModel/Statistics/AnalysisReport',
+                  },
+                  {
+                    // 全企业波动范围
+                    name: 'FluctuateRange',
+                    path: '/DataAnalyticalWarningModel/Statistics/FluctuateRange',
+                    component: './DataAnalyticalWarningModel/Statistics/FluctuateRange',
+                  },
+                ],
+              },
+              // 异常精准识别核实整改率
+              {
+                name: 'abnormalVerificaRectificaRate',
+                path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate',
+                routes: [
+                  {
+                    path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate',
+                    redirect:
+                      '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
+                  },
+                  {
+                    // 核实率
+                    name: 'verificaRate',
+                    path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
+                    component:
+                      './DataAnalyticalWarningModel/abnormalVerificaRectificaRate/verificaRate',
+                  },
+                  {
+                    // 整改率
+                    name: 'rectificaRate',
+                    path: '/DataAnalyticalWarningModel/abnormalVerificaRectificaRate/rectificaRate',
+                    component:
+                      './DataAnalyticalWarningModel/abnormalVerificaRectificaRate/rectificaRate',
+                  },
+                ],
+              },
+              // 线索复核
+              {
+                name: 'reCheck',
+                path: '/DataAnalyticalWarningModel/reCheck',
+                routes: [
+                  {
+                    // 我的待办
+                    name: 'todo',
+                    path: '/DataAnalyticalWarningModel/ReCheck/Todo',
+                    component: './DataAnalyticalWarningModel/ReCheck/Todo',
+                  },
+                  {
+                    // 我的已办
+                    name: 'done',
+                    path: '/DataAnalyticalWarningModel/ReCheck/Done',
+                    component: './DataAnalyticalWarningModel/ReCheck/Done',
+                  },
+                  {
+                    // 复核详情
+                    name: 'todo',
+                    path: '/DataAnalyticalWarningModel/ReCheck/Details/:id',
+                    component: './DataAnalyticalWarningModel/ReCheck/Details',
+                  },
+                  // {
+                  //   // 场景模型分析报告
+                  //   name: 'AnalysisReport',
+                  //   path: '/DataAnalyticalWarningModel/Statistics/AnalysisReport',
+                  //   component: './DataAnalyticalWarningModel/Statistics/AnalysisReport',
+                  // },
+                  // {
+                  //   // 全企业波动范围
+                  //   name: 'FluctuateRange',
+                  //   path: '/DataAnalyticalWarningModel/Statistics/FluctuateRange',
+                  //   component: './DataAnalyticalWarningModel/Statistics/FluctuateRange',
+                  // },
+                ],
+              },
+            ],
+          },
+          // 异常数据识别模型 2.0
           {
             path: '/AbnormalIdentifyModel',
             name: 'AbnormalIdentifyModel',
@@ -3943,10 +4166,10 @@ const routes = [
                 name: 'AbnormalCluesList',
                 path: '/AbnormalIdentifyModel/CluesList',
                 routes: [
-                  {
-                    path: '/AbnormalIdentifyModel/CluesList',
-                    redirect: '/AbnormalIdentifyModel/CluesList/all',
-                  },
+                  // {
+                  //   path: '/AbnormalIdentifyModel/CluesList',
+                  //   redirect: '/AbnormalIdentifyModel/CluesList/all',
+                  // },
                   {
                     // 异常线索清单
                     name: 'CluesList',
@@ -4049,6 +4272,12 @@ const routes = [
                 component: './AbnormalIdentifyModel/ModelMatch',
               },
               {
+                // 异常数据分析报告
+                name: 'modelMatch',
+                path: '/AbnormalIdentifyModel/AnalysisReport',
+                component: './AbnormalIdentifyModel/AnalysisReport',
+              },
+              {
                 // 历史数据综合评价
                 name: 'HistoryDataAnalysis',
                 path: '/AbnormalIdentifyModel/HistoryDataAnalysis',
@@ -4073,15 +4302,65 @@ const routes = [
                       './AbnormalIdentifyModel/HistoryDataAnalysis/PointStatisticalAnalysis/index.js',
                   },
                   {
+                    // 排放源数据缺失分析
+                    name: 'missingDataAnalysis',
+                    path: '/AbnormalIdentifyModel/HistoryDataAnalysis/MissingDataAnalysis',
+                    component:
+                      './AbnormalIdentifyModel/HistoryDataAnalysis/MissingDataAnalysis/index.js',
+                  },
+                  {
+                    // 排放源工况分析
+                    name: 'missingDataAnalysis',
+                    path: '/AbnormalIdentifyModel/HistoryDataAnalysis/WorkingAnalysis',
+                    component:
+                      './AbnormalIdentifyModel/HistoryDataAnalysis/WorkingAnalysis/index.js',
+                  },
+                  {
+                    // 异常数据分级分析 - 分级
+                    name: 'AbnormalDataAnalysis',
+                    path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/level',
+                    component:
+                      './AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/index.js',
+                  },
+                  {
+                    // 异常数据分级分析 - 分类
+                    name: 'AbnormalDataAnalysis',
+                    path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/type',
+                    component:
+                      './AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/index.js',
+                  },
+                  {
+                    // 异常数据分级分析 - 行为
+                    name: 'AbnormalDataAnalysis',
+                    path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/action',
+                    component:
+                      './AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis/index.js',
+                  },
+                  {
+                    // 异常率诊断分析
+                    name: 'AnomalyDetect',
+                    path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AnomalyRateDetect',
+                    component:
+                      './AbnormalIdentifyModel/HistoryDataAnalysis/AnomalyRateDetect/index.js',
+                  },
+                  //
+                  {
                     // 超标时长分析
                     name: 'AnalysisExceedTimeLimit',
                     path: '/AbnormalIdentifyModel/HistoryDataAnalysis/AnalysisExceedTimeLimit',
                     component:
                       './AbnormalIdentifyModel/HistoryDataAnalysis/AnalysisExceedTimeLimit',
                   },
+                  {
+                    // 排放源综合分析：行业、区域、重点企业
+                    name: 'IndustryRegionEntStatistics',
+                    path:
+                      '/AbnormalIdentifyModel/HistoryDataAnalysis/IndustryRegionEntStatistics/:dataType',
+                    component:
+                      './AbnormalIdentifyModel/HistoryDataAnalysis/IndustryRegionEntStatistics',
+                  },
                 ],
               },
-
               {
                 // 模型库管理
                 name: 'AbnormalCluesList',
@@ -4198,8 +4477,7 @@ const routes = [
                   {
                     // 部门内其他工作
                     name: 'innerOtherWork',
-                    path:
-                      '/workSupervision/dailyManagement/innerOtherWork/:WorkType/:CTOperation',
+                    path: '/workSupervision/dailyManagement/innerOtherWork/:WorkType/:CTOperation',
                     component: './workSupervision/dailyManagement/work',
                   },
                   {
@@ -4237,8 +4515,7 @@ const routes = [
                     // 纪律检查
                     name: 'disciplineCheck',
                     path: '/workSupervision/dailyManagement/disciplineCheck/:systemType',
-                    component:
-                      './workSupervision/dailyManagement/disciplineCheck',
+                    component: './workSupervision/dailyManagement/disciplineCheck',
                   },
                 ],
               },
@@ -4429,15 +4706,13 @@ const routes = [
                     // 服务报告查询
                     name: 'reportQuery',
                     path: '/ctManage/projectExecuProgress/reportQuery',
-                    component:
-                      './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportQuery',
+                    component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportQuery',
                   },
                   {
                     // 服务报告审核
                     name: 'reportAudit',
                     path: '/ctManage/projectExecuProgress/reportAudit',
-                    component:
-                      './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportAudit',
+                    component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportAudit',
                   },
                   {
                     // 服务报告抽查
@@ -4473,15 +4748,13 @@ const routes = [
                 // 服务报告抽查
                 name: 'reportSpotCheck',
                 path: '/ctManage/projectExecuProgress/reportSpotCheck',
-                component:
-                  './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportSpotCheck',
+                component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/reportSpotCheck',
               },
               {
                 // 超时服务
                 name: 'TimeoutServices',
                 path: '/ctManage/projectExecuProgress/TimeoutServices',
-                component:
-                  './ctDebuggAfterSaleServiceManage/projectExecuProgress/TimeoutServices',
+                component: './ctDebuggAfterSaleServiceManage/projectExecuProgress/TimeoutServices',
               },
               {
                 // 重复服务

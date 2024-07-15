@@ -64,6 +64,10 @@ export const API = {
     ExportConsoleConfig: before + '/AutoFormConfigApi/ExportConsoleConfig',
     // 导入数据源配置
     ImportConsoleConfig: before + '/AutoFormConfigApi/ImportConsoleConfig',
+    // 保存选择的按钮
+    SaveSelectedButton: before + '/AutoFormConfigApi/SaveSelectedButton',
+    // 获取已选择的按钮
+    GetSelectedButton: before + '/AutoFormConfigApi/SetMenuButton',
     // ------------------------------------------------------------------------------------------------
 
     // 分页获取列表数据
@@ -134,7 +138,7 @@ export const API = {
     GetEntByRegionAndAtt: before + '/EnterpriseApi/GetEntByRegionAndAtt', //获取行政区和关注程度查询企业
     AddSetUser: before + '/UserApi/AddSetUser', //设置人员信息 3 整改人员清单 4 照片审核人员清单
     GetSetUser: before + '/UserApi/GetSetUser', //获取设置人员信息 3 整改人员清单 4 照片审核人员清单
-    GetLargeRegion: before + '/DailyWorkBaseApi/GetLargeRegion',  // 获取运维大区和省区
+    GetLargeRegion: before + '/DailyWorkBaseApi/GetLargeRegion', // 获取运维大区和省区
   },
   UploadApi: {
     GetAttachmentList: before + '/UploadApi/GetAttachmentList', //获取附件ID获取所有附件
@@ -1339,13 +1343,14 @@ export const API = {
     AddVideoInfo: before + '/VideoApi/AddVideoInfo', //根据监测点添加视频信息
     UpdateVideoInfo: before + '/VideoApi/UpdateVideoInfo', //更新视频信息
   },
-
-  // 异常数据识别模型Api
+  // 异常数据识别模型2.0 Api
   AbnormalIdentifyModel: {
     // 获取线索列表
     GetWarningList: before + '/WarningV2/GetWarningList',
     // 获取模型列表
     GetMoldList: before + '/MoldV2/GetMoldList',
+    // 获取级别和分类
+    GetMoldTypeLevelList: before + '/MoldV2/GetMoldTypeLevelList',
     // 模型开启、关闭
     SetMoldStatus: before + '/MoldV2/SetMoldStatus',
     // 获取模型配置
@@ -1416,6 +1421,36 @@ export const API = {
     GetAbruptChangeData: before + '/MoldV2/GetAbruptChangeData',
     // 修改陡变系数
     UpdAbruptLinear: before + '/MoldV2/UpdAbruptLinear',
+    // 波动范围重新运行
+    AutoOpeModel: before + '/WarningV2/AutoOpeModel',
+    // 获取模型运行状态
+    GetModelRunStatus: before + '/MoldV2/GetModelRunStatus',
+    // 排放源数据缺失分析(行政区/企业/排放口)
+    GetDataMissAnalysis: before + '/WarningV2/GetDataMissAnalysis',
+    // 排放源工况分析(行政区/企业/排放口)
+    GetDataGkAnalysis: before + '/WarningV2/GetDataGkAnalysis',
+    // 异常数据分级分析(行政区/企业/排放口)
+    GetWarningLevelAnalysis: before + '/WarningV2/GetWarningLevelAnalysis',
+    // 异常诊断分析
+    GetDiagnoAnalysis: before + '/WarningV2/GetDiagnoAnalysis',
+    // 重点关注企业排行
+    GetPointTopWarning: before + '/MoldHome/GetPointTopWarning',
+    // 超标时长分析
+    GetOverDataAnalysis: before + '/WarningV2/GetOverDataAnalysis',
+    // 排放源综合分析：行业、区域、重点企业
+    GetExcepDataAnalysis: before + '/WarningV2/GetExcepDataAnalysis',
+    // 获取报告列表
+    GetRegionReportList: before + '/WarningV2/GetRegionReportList',
+    // 区域报告导出
+    ExportModelRegionReport: before + '/WarningV2/ExportModelRegionReport',
+    // 删除报告
+    DeleteModelReport: before + '/WarningV2/DeleteModelReport',
+    // 上传报告
+    UploadModelReport: before + '/WarningV2/UploadModelReport',
+    // 保存点位参数配置
+    SavePointParamsRange: before + '/WarningV2/SavePointParamsRange',
+    // 获取点位参数配置
+    GetPointParamsRange: before + '/WarningV2/GetPointParamsRange',
 
     /*实时数据异常识别及管理*/
     //异常线索清单
@@ -1433,6 +1468,33 @@ export const API = {
     GetCheckedView: before + '/Clue/GetCheckedView', //核查详情
     UpdatePlanItem: before + '/Clue/UpdatePlanItem', //核查保存或提交
     CheckConfirm: before + '/Clue/CheckConfirm', //核查确认
+
+    /*模型库管理*/
+    //模型训练 - 数据接入
+    GetProjectMonitorDataList: before + '/ProjectMonitorDataApi/GetProjectMonitorDataList', //查看项目信息
+    UpdProjectMonitorData: before + '/ProjectMonitorDataApi/UpdProjectMonitorData', //修改项目信息 修改执行方式
+    AccessEntInfoList: before + '/DataFormatBaseDataApi/AccessEntInfoList', //接入企业数据执行
+    AccessPointInfoList: before + '/DataFormatBaseDataApi/AccessPointInfoList', //接入站点数据执行
+    AccessParamInfoList: before + '/DataFormatBaseDataApi/AccessParamInfoList', //接入备案参数执行
+    AccessEmissionStandardList: before + '/DataFormatBaseDataApi/AccessEmissionStandardList', //接入站点污染物排放信息执行
+    AccessMonitorPollutantList: before + '/DataFormatBaseDataApi/AccessMonitorPollutantList', //接入站点污染物关联信息执行
+    AccessHourData: before + '/DataFormatBaseDataApi/AccessHourData', //接入小时数据执行
+    //清洗数据
+    GetProjectLogsList: before + '/ProjectMonitorDataApi/GetProjectLogsList', //企业信息、排放口信息、备案参数日志信息
+    GetProjectLogsInfoList: before + '/ProjectMonitorDataApi/GetProjectLogsInfoList', //企业信息、排放口信息、备案参数日志详情信息
+    GetMonitorPollutantLogsList: before + '/ProjectMonitorDataApi/GetMonitorPollutantLogsList', //污染物日志信息
+    GetMonitorPollutantLogsInfoList:
+      before + '/ProjectMonitorDataApi/GetMonitorPollutantLogsInfoList', //污染物日志详情信息
+    GetMonitorAlarmLogsList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsList', //排放标准日志信息
+    GetMonitorAlarmLogsInfoList: before + '/ProjectMonitorDataApi/GetMonitorAlarmLogsInfoList', //排放标准日志详情信息
+    GetHourDataLogsList: before + '/ProjectMonitorDataApi/GetHourDataLogsList', //查看监测数据日志信息
+    GetPointRelevantCount: before + '/ProjectMonitorDataApi/GetPointRelevantCount', //排口表头信息
+    //排放特征学习
+    GetTrainingResult: before + '/ProjectMonitorDataApi/GetTrainingResult', //获取训练结果
+    GetTrainingRecords: before + '/ProjectMonitorDataApi/GetTrainingRecords', //获取训练日志
+    StatisNormalRange: before + '/ProjectMonitorDataApi/StatisNormalRange', //波动范围和振幅范围
+    //模型选配
+    GetModelApolegamyList: before + '/ProjectMonitorDataApi/GetModelApolegamyList', //获取模型选配信息
   },
   // 唐银钢铁Api
   TYGTApi: {
@@ -1758,7 +1820,7 @@ export const API = {
   //   GetExceptionStandValue: before + '/MonitorPointApi/GetExceptionStandValue', //获取异常标准记录
   //   ExportExceptionStandValue: before + '/MonitorPointApi/ExportExceptionStandValue', //导出异常标准记录
   // },
-  //异常数据模型分析 Api
+  //异常数据模型分析 1.0 Api
   AbnormalModelAnalysisApi: {
     /**设备参数管理**/
     GetEquipmentParametersInfo: before + '/EquipmentApi/GetEquipmentParametersInfo', //获取量程设定信息
@@ -1908,6 +1970,37 @@ export const API = {
     /*运维督查KPI*/
     GetParamKPIList: before + '/KeyParameter/GetParamKPIList', //获取运维督查KPI
     ExportParamKPIList: before + '/KeyParameter/ExportParamKPIList', //导出运维督查KPI
+  },
+  // 系统驾驶舱Api
+  SystemDashboardApi: {
+    //设备运维总览
+    GetOperationEquipmentOverview: before + '/VisualDashBoardApi/GetOperationEquipmentOverview',
+    // 异常响应分析
+    GetExceptionResponseRate: before + '/VisualDashBoardApi/GetExceptionResponseRate',
+    // 运维驾驶舱地图
+    GetMapOperationEquipmentOverview:
+      before + '/VisualDashBoardApi/GetMapOperationEquipmentOverview',
+    // 成套驾驶舱地图
+    GetInstallationDebuggingMap: before + '/CTStatisticsApi/GetInstallationDebuggingMap',
+    // 模型首页地图
+    GetMapPointInfo: before + '/MoldHome/GetMapPointInfo',
+    //监督核查
+    //督查总览
+    GetSupervisionOverview: before + '/Supervision/GetSupervisionOverview',
+    //关键参数监督核查分析、合规性监督核查分析
+    GetSupervisionUniformityAnalysis: before + '/Supervision/GetSupervisionUniformityAnalysis',
+    //合格率分析
+    GetSupervisionQualifiedAnalysis: before + '/Supervision/GetSupervisionQualifiedAnalysis',
+    //督查地图部分
+    GetSupervisionMap: before + '/Supervision/GetSupervisionMap',
+    // 排放量综合分析
+    GetEmissionsAnalysis: before + '/VisualDashBoardApi/GetEmissionsAnalysis',
+    // 超标数据分析
+    GetOverDataAnalysis: before + '/VisualDashBoardApi/GetOverDataAnalysis',
+    // 有效传输率
+    GetEffectiveTransmissionRate: before + '/VisualDashBoardApi/GetEffectiveTransmissionRate',
+    // 异常数据分析
+    GetExceptionDataAnalysis: before + '/VisualDashBoardApi/GetExceptionDataAnalysis',
   },
   /*资产管理 Api */
   AssetManagementApi: {

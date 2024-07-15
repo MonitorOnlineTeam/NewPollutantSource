@@ -5,7 +5,7 @@ import SdlTable from '@/components/SdlTable';
 import styles from '../../styles.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
-import { handleHomeDate, getModelGuidsByBaseTypeCode } from '@/pages/AbnormalIdentifyModel/CONST';
+import { handleHomeDate, getModelGuidsByBaseTypeCode, ModalTypeNameConversion } from '@/pages/AbnormalIdentifyModel/CONST';
 import EntAtmoList from '@/components/EntAtmoList';
 import { RollbackOutlined } from '@ant-design/icons';
 import CluesListModal from './CluesListModal';
@@ -189,7 +189,7 @@ const ClueStatisticsModal = props => {
 
     const sameColumns = [
       {
-        title: 'CEMS运行管理异常（条）',
+        title: '运行管理异常（条）',
         dataIndex: 'Count_3',
         key: 'Count_3',
         width: 160,
@@ -228,7 +228,7 @@ const ClueStatisticsModal = props => {
         },
       },
       {
-        title: '人为干预（条）',
+        title: ModalTypeNameConversion('人为干预（条）'),
         dataIndex: 'Count_1',
         key: 'Count_1',
         sorter: (a, b) => a.Count_1 - b.Count_1,
@@ -247,7 +247,7 @@ const ClueStatisticsModal = props => {
         },
       },
       {
-        title: '设备故障（条）',
+        title: ModalTypeNameConversion('设备故障（条）'),
         dataIndex: 'Count_2',
         key: 'Count_2',
         sorter: (a, b) => a.Count_2 - b.Count_2,
@@ -388,6 +388,7 @@ const ClueStatisticsModal = props => {
       <SdlTable
         rowKey={(record, index) => index}
         defaultWidth={200}
+        align="center"
         loading={loading}
         dataSource={dataSource[level]}
         columns={getColumns()}

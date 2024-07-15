@@ -1,0 +1,375 @@
+// 排口参数配置
+.CardPageWrapper {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background: #f0f2f5;
+  padding: 0 10px;
+  padding-bottom: 10px;
+
+  .title {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 12px;
+    line-height: 26px;
+    &::before {
+      position: absolute;
+      left: 0;
+      display: table;
+      content: ' ';
+      width: 4px;
+      height: 14px;
+      background-color: #1890ff;
+    }
+  }
+
+  :global {
+    .ant-card-bordered {
+      padding-top: 0 !important;
+      margin-bottom: 12px;
+    }
+
+    .ant-descriptions-item-label {
+      font-weight: 500;
+    }
+  }
+}
+
+// 波动范围
+.dataRangeUpdateTimeBox {
+  margin-top: -20px;
+  padding: 0 10%;
+  display: flex;
+  margin-top: 0;
+
+  .updateTime {
+    margin-left: 10px;
+    margin-top: 4px;
+    color: #444;
+    font-size: 12px;
+  }
+}
+
+// 告警核实详情
+.WarningVerifyWrapper {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  // max-height: calc(100vh + -60px);
+  background: #f0f2f5;
+  padding: 0 10px;
+  padding-bottom: 10px;
+
+  :global {
+    .ant-card-body {
+      // padding: 10px 24px !important;
+    }
+
+    .ant-card-bordered {
+      padding-top: 0 !important;
+      margin-bottom: 12px;
+    }
+
+    .ant-descriptions-item-label {
+      font-weight: 500;
+    }
+
+    .ant-descriptions-item-content {
+      overflow: hidden;
+    }
+  }
+
+  .chartWrapper {
+    padding: 20px 0;
+    min-height: 320px;
+    width: 100%;
+
+    & > div {
+      width: 100%;
+    }
+  }
+}
+
+// 模型设置
+.ModelSettingWrapper {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  // max-height: calc(100vh + -60px);
+  background: #f0f2f5;
+  padding: 0 10px;
+  padding-bottom: 10px;
+
+  :global {
+    .ant-card-body {
+      // padding: 10px 24px !important;
+    }
+
+    .ant-card-bordered {
+      padding-top: 0 !important;
+      margin-bottom: 12px;
+    }
+
+    .ant-descriptions-item-label {
+      font-weight: 500;
+    }
+  }
+}
+
+.textOverflow {
+  max-width: 100%;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chartBox {
+  position: relative;
+  // height: 100%;
+  height: 320px;
+  margin-bottom: 20px;
+
+  .legendBox {
+    width: 100%;
+    position: absolute;
+    bottom: -6px;
+    display: flex;
+    justify-content: center;
+
+    .legendItem {
+      display: inline-block;
+      padding-left: 14px;
+      position: relative;
+      margin-right: 24px;
+      cursor: pointer;
+      color: rgb(204, 204, 204);
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &.active {
+        color: rgba(0, 0, 0, 0.85);
+      }
+      i {
+        // content: '';
+        position: absolute;
+        top: 8px;
+        left: -6px;
+        width: 12px;
+        height: 6px;
+        // background: #5e9df8;
+        background: rgb(204, 204, 204);
+      }
+    }
+  }
+
+  .trend {
+    position: absolute;
+    right: 90px;
+    top: 76px;
+    font-size: 12px;
+    z-index: 1;
+  }
+}
+
+.WarningDataTable {
+  :global {
+    .ant-table-tbody td {
+      padding: 0 !important;
+    }
+  }
+
+  .tdBox {
+    padding: 8px;
+  }
+}
+
+// 公式
+.formulaImageWrapper {
+  padding: 0 20px;
+  margin-top: 20px;
+  .formulaBox {
+    display: inline-block;
+    .title {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+}
+
+// 报警记录
+.warningWrapper,
+.AnalysisReport,
+.FluctuateRange {
+  :global {
+    .ant-form-inline .ant-form-item {
+      margin-bottom: 14px;
+    }
+  }
+}
+
+.ModelTableWrapper {
+  :global {
+    .ant-table-row-expand-icon-cell {
+      padding: 16px !important;
+    }
+    .ant-table.ant-table-middle .ant-table-tbody .ant-table-wrapper:only-child .ant-table {
+      margin: -11px -8px -13px 40px;
+    }
+
+    .ant-table-row-expand-icon {
+      display: inline-flex;
+      float: none;
+      vertical-align: sub;
+    }
+  }
+}
+
+// 报警分析
+.WarningModelAnalysis {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  // max-height: calc(100vh + -60px);
+  background: #f0f2f5;
+  padding: 0 10px;
+  padding-bottom: 10px;
+
+  .chartWrapper {
+    height: 300px;
+    overflow: hidden;
+    overflow-x: auto;
+    white-space: nowrap;
+
+    .chartItemBox {
+      display: inline-block;
+      height: 300px;
+    }
+  }
+}
+
+// 场景模型分析报告
+.AnalysisReport {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  // max-height: calc(100vh + -60px);
+  background: #f0f2f5;
+  padding: 0 10px;
+  padding-bottom: 10px;
+  .description {
+    padding-left: 20px;
+  }
+
+  .resultInfo {
+    padding: 10px 0;
+  }
+
+  .DescriptionsWrapper {
+    :global {
+      .ant-descriptions-item-label {
+        font-weight: bold;
+      }
+
+      .ant-card-head-title {
+        padding: 10px 0;
+      }
+    }
+  }
+
+  .title {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 20px;
+    position: relative;
+    padding-left: 16px;
+    // margin-bottom: 6px;
+    padding-bottom: 6px;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 20px;
+      background: #5e9df8;
+    }
+    // color: #333333;
+  }
+
+  .ClueInfoChartWrapper {
+    height: 300px;
+  }
+}
+
+.spinWrapper,
+.spinWrapperFlex {
+  position: relative;
+  height: 100%;
+  :global {
+    .ant-spin-container {
+      height: 100%;
+    }
+  }
+}
+
+.spinWrapperFlex {
+  :global {
+    .ant-spin-container {
+      display: flex;
+      width: 100%;
+      height: calc(100% - 60px);
+    }
+  }
+}
+
+.legendInfo {
+  // color: #fff;
+  display: flex;
+  align-items: center;
+  // font-weight: 500;
+  margin-bottom: 50px;
+  font-size: 15px;
+
+  span {
+    display: inline-block;
+  }
+  span:first-child {
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+  }
+
+  .num {
+    color: #26e3ff;
+    font-size: 14px;
+  }
+}
+
+// 复核
+.processTitle {
+  color: #212121;
+  background-color: #f1f1f1;
+  padding: 4px 10px;
+
+  .status {
+    color: '#000';
+    font-weight: bold;
+    margin: 0 20px 0 10px;
+  }
+
+  .date {
+    color: #666;
+  }
+}
+
+.processContent {
+  margin-top: 16px;
+  padding-left: 40px;
+  // p {
+  //   margin-bottom: 0;
+  // }
+}

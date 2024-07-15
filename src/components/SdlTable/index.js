@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-10 15:08:21
+ * @Last Modified time: 2024-07-12 10:37:01
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -333,19 +333,19 @@ class SdlTable extends PureComponent {
     }
 
     const fixedHeight = this.state.computeHeight;
-    console.log('fixedHeight', fixedHeight)
     const scrollYHeight =
       this.props.scroll && this.props.scroll.y
         ? this.props.scroll.y
         : fixedHeight
         ? clientHeight - fixedHeight - headAndFooterHeight
         : '';
-
-        console.log('scrollYHeight', scrollYHeight)
+    console.log('clientHeight', clientHeight)
+    console.log('scrollYHeight', scrollYHeight)
     // 没有分页高度 + 40
     const scrollY =
-      pagination === false && (this.props.scroll && !this.props.scroll.y)
-        ? scrollYHeight + 40
+      pagination === false && typeof scrollYHeight === 'number'
+        ? // pagination === false && (this.props.scroll && !this.props.scroll.y)
+          scrollYHeight + 40
         : scrollYHeight;
     // 处理表格长度，防止错位
     const _columns = (columns || []).map((col, index) => ({
@@ -435,7 +435,7 @@ class SdlTable extends PureComponent {
                     x:
                       (this.props.scroll && this.props.scroll.x && this.props.scroll.x) ||
                       scrollXWidth,
-                      y: this.props.scroll?.y==='hidden'? undefined : scrollY,
+                    y: this.props.scroll?.y === 'hidden' ? undefined : scrollY,
                   }
             }
           />

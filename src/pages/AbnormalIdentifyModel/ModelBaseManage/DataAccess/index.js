@@ -47,7 +47,7 @@ const Index = (props) => {
     const { tableDatas, tableLoading, } = props;
 
 
-
+   
 
     useEffect(() => {
         handleChange(1);
@@ -96,10 +96,10 @@ const Index = (props) => {
             ellipsis: true,
             render: (text, record, index) => {
                 const colorObj = {
-                    1: { color: '#52c41a', text: `执行成功${record.SuccessCount ? `，接入数据${record.SuccessCount}条` : ''}` },
-                    2: { color: '#fa8c16', text: `执行中` },
-                    3: { color: '#f5222d', text: `执行失败，查看日志` },
-
+                    1: {color:'#52c41a',text:`执行成功${record.SuccessCount? `，接入数据${record.SuccessCount}条`: ''  }`},
+                    2: {color:'#fa8c16',text:`执行中`},
+                    3: {color:'#f5222d',text:`执行失败，查看日志`},
+                    
                 }
                 return <Badge color={colorObj[text]?.color} text={colorObj[text]?.text} />
             }
@@ -117,24 +117,24 @@ const Index = (props) => {
             fixed: 'right',
             width: 100,
             ellipsis: true,
-            render: (text, record, index) => {
+            render: (text, record,index) => {
                 return (record.TaskCode == 6 ?
                     <a onClick={() => { setStartExecuVisible(true); setStartExecuTitle(`${record.ProjectName}`); /*setStartExecuTitle(`${record.ProjectName} - 开始执行（接入小时数据）`)*/setStartConfirmVisible(false) }}>开始执行</a>
                     :
-                    <Popconfirm visible={startConfirmVisible && index == startConfirmIndex} placement="left" title={'确定要开始执行？'}
-                        okButtonProps={{
-                            loading: startExecuLoading[record.TaskCode],
-                        }}
-                        onCancel={() => { setStartConfirmVisible(false) }}
-                        onConfirm={() => startExecuConfirm(1, record)} okText="开始执行" >
-                        <a onClick={() => { setStartConfirmVisible(true); setStartConfirmIndex(index); }}>开始执行</a>
+                    <Popconfirm visible={startConfirmVisible && index == startConfirmIndex} placement="left" title={'确定要开始执行？'}   
+                      okButtonProps={{
+                        loading: startExecuLoading[record.TaskCode],
+                      }} 
+                      onCancel={()=>{setStartConfirmVisible(false)}}
+                      onConfirm={() => startExecuConfirm(1,record)} okText="开始执行" >
+                        <a onClick={() => { setStartConfirmVisible(true); setStartConfirmIndex(index);}}>开始执行</a>
                     </Popconfirm>
                 );
 
             }
         },
     ];
-
+  
 
 
     const [row, setRow] = useState({})
@@ -152,20 +152,20 @@ const Index = (props) => {
     const [startConfirmIndex, setStartConfirmIndex] = useState(-1)
 
     const startExecuConfirm = async (type, record) => {
-
+       
         let par = {}
 
-        if (type == 1) {
-            par = { projectType: 1 }
-        } else {
+        if(type == 1){
+            par = { projectType : 1}
+        }else{
             const values = await form2.validateFields();
-            par = {
-                projectType: 1,
-                BeginTime: values.time?.[0] && moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: values.time?.[1] && moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+            par = { 
+                projectType : 1,
+                BeginTime:values.time?.[0]&&moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime:values.time?.[1]&&moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
             }
         }
-
+        
         const objRequest = {
             '1': 'AccessEntInfoList',
             '2': 'AccessPointInfoList',
@@ -175,13 +175,13 @@ const Index = (props) => {
             '6': 'AccessHourData',
         }
         const code = record?.TaskCode
-        setStartExecuLoading({ ...startExecuLoading, [code]: true })
+        setStartExecuLoading({...startExecuLoading,[code]:true})
         props.dispatch({
             type: `${namespace}/${objRequest[code]}`,
             payload: { ...par },
-            callback: (isSuccess) => {
-                setStartExecuLoading({ ...startExecuLoading, code: false })
-                if (isSuccess) {
+            callback:(isSuccess)=>{
+                setStartExecuLoading({...startExecuLoading,code:false})
+                if(isSuccess){
                     handleChange(1);
                     setStartConfirmVisible(false)
                 }
@@ -208,10 +208,10 @@ const Index = (props) => {
             payload: {
                 ...values,
                 ID: row.ID,
-                FirstDate: values.FirstDate && moment(values.FirstDate).format("YYYY-MM-DD HH:mm:ss"),
-                BeginTime: values.time?.[0] && moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: values.time?.[1] && moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
-                time: undefined
+                FirstDate:values.FirstDate&&moment(values.FirstDate).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime:values.time?.[0]&&moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime:values.time?.[1]&&moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                time:undefined
             },
             callback: res => {
                 setExecutionMethodVisible(false);
@@ -248,9 +248,10 @@ const Index = (props) => {
             <BreadcrumbWrapper >
                 <Card title={searchComponents()}>
                     <SdlTable
-                        onClick={record => {
-                            setRow(record)
-                        }}
+                        onRow={record => ({
+                            onClick: event => { setRow(record) },
+                        })
+                        }
                         loading={tableLoading}
                         bordered
                         dataSource={tableDatas}
@@ -299,7 +300,7 @@ const Index = (props) => {
                     destroyOnClose
                     confirmLoading={startExecuLoading[row.TaskCode]}
                     footer={[
-                        <Button type="primary" onClick={() => startExecuConfirm(2, row)}>
+                        <Button type="primary" onClick={() => startExecuConfirm(2,row)}>
                             开始执行
                         </Button>,
                     ]}

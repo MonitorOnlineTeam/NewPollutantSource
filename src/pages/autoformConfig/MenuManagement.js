@@ -5,11 +5,12 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Table, Row, Col, Card, Input, Button, Popconfirm, Modal, AutoComplete } from 'antd';
+import { Table, Row, Col, Card, Input, Button, Divider, Modal, AutoComplete } from 'antd';
 import styles from './MenuManagement.less';
 import { getParentKeys } from '@/utils/getTreeKeys';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import MenuManagementModal from './components/MenuManagementModal'; //菜单管理弹框
+import ButtonsSelectModal from './components/ButtonsSelectModal'; //设置按钮
 import { Form } from '@ant-design/compatible';
 
 const { confirm } = Modal;
@@ -41,7 +42,7 @@ class MenuManagement extends Component {
       {
         title: '菜单名称',
         dataIndex: 'Menu_Name',
-        width: '20%',
+        width: 200,
         render: (text, record) => (
           <span style={{ color: record.DeleteMark === 1 ? 'rgba(0, 0, 0, 0.85)' : '#a9a3a3' }}>
             {text}
@@ -51,7 +52,7 @@ class MenuManagement extends Component {
       {
         title: '菜单提示',
         dataIndex: 'Menu_Title',
-        width: '20%',
+        width: 200,
         align: 'center',
         render: (text, record) => (
           <span style={{ color: record.DeleteMark === 1 ? 'rgba(0, 0, 0, 0.85)' : '#a9a3a3' }}>
@@ -91,7 +92,7 @@ class MenuManagement extends Component {
       {
         title: '链接地址',
         dataIndex: 'NavigateUrl',
-        width: '20%',
+        width: 200,
         align: 'center',
         render: (text, record) => (
           <span
@@ -108,7 +109,7 @@ class MenuManagement extends Component {
       {
         title: '启用',
         dataIndex: 'DeleteMark',
-        width: '5%',
+        width: 120,
         key: 'add',
         align: 'center',
         render: text => (text === 1 ? '启用' : <span style={{ color: '#ccc' }}>禁用</span>),
@@ -116,7 +117,7 @@ class MenuManagement extends Component {
       {
         title: '排序',
         dataIndex: 'SortCode',
-        width: '5%',
+        width: 120,
         align: 'center',
         render: (text, record) => (
           <span style={{ color: record.DeleteMark === 1 ? 'rgba(0, 0, 0, 0.85)' : '#a9a3a3' }}>
@@ -125,19 +126,30 @@ class MenuManagement extends Component {
         ),
       },
       {
-        title: '编辑',
+        title: '操作',
         dataIndex: 'Set',
         align: 'center',
-        render: (text, record) => (
-          <MenuManagementModal
-            type={1}
-            selectedRowKeys={this.state.selectedRowKeys}
-            reloadData={this.reloadData}
-            TableData={this.props.TableData}
-            record={record}
-            title="编辑菜单"
-          />
-        ),
+        width: 200,
+        render: (text, record) => {
+          return (
+            <>
+              <MenuManagementModal
+                type={1}
+                selectedRowKeys={this.state.selectedRowKeys}
+                reloadData={this.reloadData}
+                TableData={this.props.TableData}
+                record={record}
+                title="编辑菜单"
+              />
+              {record.ParentId !== '0' && (
+                <>
+                  <Divider type="vertical" />
+                  <ButtonsSelectModal record={record} />
+                </>
+              )}
+            </>
+          );
+        },
       },
     ];
   }

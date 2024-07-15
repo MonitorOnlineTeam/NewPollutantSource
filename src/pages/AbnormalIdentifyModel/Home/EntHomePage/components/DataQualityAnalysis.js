@@ -5,7 +5,7 @@ import styles from '../../styles.less';
 import ReactEcharts from 'echarts-for-react';
 import HomeCard from '../../components/HomeCard';
 import DataQualityAnalysisModal from '../../ModalPage/DataQualityAnalysisModal';
-
+import { ModalTypeNameConversion } from '@/pages/AbnormalIdentifyModel/CONST'
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   entRequestParams: AbnormalIdentifyModelHome.entRequestParams,
   loading: loading.effects['AbnormalIdentifyModelHome/GetDataQualityAnalysis'],
@@ -204,7 +204,7 @@ const DataQualityAnalysis = props => {
               <span className={styles.num}>{analysisData.StopHour}</span>
             </div>
             <div className={styles.itemInfoBox}>
-              <span className={styles.itemName}>人为干预</span>
+              <span className={styles.itemName}>{ModalTypeNameConversion('人为干预')}</span>
               <div className={styles.itemProgress}>
                 <Progress
                   style={{ width: '100%' }}

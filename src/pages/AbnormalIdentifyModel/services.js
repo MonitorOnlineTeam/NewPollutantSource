@@ -154,7 +154,7 @@ export async function GetSingleWarning(params) {
 
 // // 根据企业获取排口
 // export async function getPointByEntCode(params) {
-//   const result = await post(API.CommonApi.GetNoFilterPointByEntCode, params);
+//   const result = await post(API.BaseDataApi.GetNoFilterPointByEntCode, params);
 //   return result;
 // }
 
@@ -232,14 +232,14 @@ export async function UpdAbruptLinear(params) {
 
 // 保存点位参数配置
 export async function SavePointParamsRange(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/SavePointParamsRange', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/SavePointParamsRange', params);
   return result;
 }
 
 // 保存关联排口
 export async function SaveModelRelationDGIMN(params) {
   const result = await post(
-    '/rest/PollutantSourceApi/Warning/SaveModelRelationDGIMN',
+    '/newApi/rest/PollutantSourceApi/Warning/SaveModelRelationDGIMN',
     params,
   );
   return result;
@@ -248,7 +248,7 @@ export async function SaveModelRelationDGIMN(params) {
 // 获取模型精度版本列表
 export async function GetEvaluationVersionList(params) {
   const result = await post(
-    '/rest/PollutantSourceApi/Warning/GetEvaluationVersionList',
+    '/newApi/rest/PollutantSourceApi/Warning/GetEvaluationVersionList',
     null,
   );
   return result;
@@ -256,44 +256,44 @@ export async function GetEvaluationVersionList(params) {
 
 // 获取模型精度数据
 export async function GetEvaluationList(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/GetEvaluationList', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetEvaluationList', params);
   return result;
 }
 
 // 报警统计 - 线索信息统计
 export async function StatisAlarmInfo(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/StatisAlarmInfo', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisAlarmInfo', params);
   return result;
 }
 
 // 报警统计 - 统计核实、异常原因
 export async function StatisAlarmInfoCheck(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/StatisAlarmInfoCheck', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisAlarmInfoCheck', params);
   return result;
 }
 
 // 报警统计 - 核实次数及企业及模型执行率
 export async function StatisAlarmInfoRate(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/StatisAlarmInfoRate', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisAlarmInfoRate', params);
   return result;
 }
 
 // 报警统计 - 已选择行统计
 export async function StatisAlarmInfoSum(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/StatisAlarmInfoSum', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisAlarmInfoSum', params);
   return result;
 }
 
 // 线索信息统计
 export async function StatisAlarmInfoIndiz(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/StatisAlarmInfoIndiz', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisAlarmInfoIndiz', params);
   return result;
 }
 
 // 场景模型分析报告 - 导出
 export async function ExportStatisAlarmReport(params) {
   const result = await post(
-    '/rest/PollutantSourceApi/Warning/ExportStatisAlarmReport',
+    '/newApi/rest/PollutantSourceApi/Warning/ExportStatisAlarmReport',
     params,
   );
   return result;
@@ -301,32 +301,32 @@ export async function ExportStatisAlarmReport(params) {
 
 // 场景模型分析 - 导出
 export async function ExportStatisAlarm(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/ExportStatisAlarm', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/ExportStatisAlarm', params);
   return result;
 }
 
 // 首页 - 数据统计分析
 export async function StatisForData(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/StatisForData', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisForData', params);
   return result;
 }
 
 // 首页 - 线索和企业排名
 export async function StatisVeriAndEr(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/StatisVeriAndEr', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisVeriAndEr', params);
   return result;
 }
 
 // 首页 - 线索统计
 export async function StatisTipMsg(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/StatisTipMsg', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/StatisTipMsg', params);
   return result;
 }
 
 // 我的待办
 export async function GetMyModelExceptionByPManager(params) {
   const result = await post(
-    '/rest/PollutantSourceApi/Warning/GetMyModelExceptionByPManager',
+    '/newApi/rest/PollutantSourceApi/Warning/GetMyModelExceptionByPManager',
     params,
   );
   return result;
@@ -334,14 +334,14 @@ export async function GetMyModelExceptionByPManager(params) {
 
 // 我的已办
 export async function GetMyModelException(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/GetMyModelException', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/GetMyModelException', params);
   return result;
 }
 
 // 复核详情
 export async function GetWarningVerifyCheckInfo(params) {
   const result = await post(
-    '/rest/PollutantSourceApi/Warning/GetWarningVerifyCheckInfo',
+    '/newApi/rest/PollutantSourceApi/Warning/GetWarningVerifyCheckInfo',
     params,
   );
   return result;
@@ -349,19 +349,19 @@ export async function GetWarningVerifyCheckInfo(params) {
 
 // 报警核实
 export async function InsertWarningVerify(params) {
-  const result = await post('/rest/PollutantSourceApi/Warning/InsertWarningVerify', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Warning/InsertWarningVerify', params);
   return result;
 }
 
 // 模型重新运行
 export async function onRunModel(params) {
-  const result = await post('/rest/PollutantSourceApi/Mold/RunModel', params);
+  const result = await post('/newApi/rest/PollutantSourceApi/Mold/RunModel', params);
   return result;
 }
 // 获取模型运行状态
 export async function GetModelRunState(params) {
   const result = await post(
-    '/rest/PollutantSourceApi/Mold/GetModelRunState?modelGuid=' + params.modelGuid,
+    '/newApi/rest/PollutantSourceApi/Mold/GetModelRunState?modelGuid=' + params.modelGuid,
     {},
   );
   return result;
@@ -434,5 +434,17 @@ export async function GetPollutionDischargeGap(params) {
 // 排污缺口 导出
 export async function ExportPollutionDischargeGap(params) {
   const result = await post(API.AbnormalIdentifyModel.ExportPollutionDischargeGap, params);
+  return result;
+}
+
+// 波动范围重新运行
+export async function AutoOpeModel(params) {
+  const result = await post(API.AbnormalIdentifyModel.AutoOpeModel, params);
+  return result;
+}
+
+// 波动范围重新运行状态
+export async function GetModelRunStatus(params) {
+  const result = await post(`${API.AbnormalIdentifyModel.GetModelRunStatus}?ModelGuid=${params.ModelGuid}&DGIMN=${params.DGIMN}`, {});
   return result;
 }

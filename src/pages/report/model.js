@@ -386,7 +386,13 @@ export default Model.extend({
           }
         });
         yield update({
-          entAndPontList: filterData,
+          entAndPontList: [
+            {
+              key: '0-0',
+              title: '全部',
+              children: filterData,
+            },
+          ],
         });
         callback && callback(result.Datas);
       } else {

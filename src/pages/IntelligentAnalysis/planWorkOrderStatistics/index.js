@@ -172,7 +172,7 @@ const Index = (props) => {
       initialValues={{
         pollutantType: isPlanCalibrationModal || isPlanInspectionModal || isActualCalibrationModal ? props.pollutantTypes : 2,
         abnormalType: 1,
-        time: [moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')],
+        time: props.time || [moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')],
       }}
     >
       {showType == 1 ? <Row align='middle'>

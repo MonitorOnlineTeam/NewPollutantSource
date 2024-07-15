@@ -150,7 +150,7 @@ export default class MonitorPoint extends Component {
     const { dispatch, match } = this.props;
     console.log('match=', match);
     const buttonList = permissionButton('/platformconfig/monitortarget/AEnterpriseTest/1');
-    console.log(buttonList)
+    console.log(buttonList);
     buttonList.map(item => {
       switch (item) {
         case 'ModifyPointOpratioinStatus':
@@ -1206,11 +1206,11 @@ export default class MonitorPoint extends Component {
                 <Button
                   style={{ marginLeft: 10 }}
                   onClick={() => {
-                    // history.go(-1);
-                    router.push({
-                      pathname: `/platformconfig/monitortarget/AEnterpriseTest/1`,
-                      query: { thisPage: true },
-                    });
+                    history.go(-1);
+                    // router.push({
+                    //   pathname: `/platformconfig/monitortarget/AEnterpriseTest/1`,
+                    //   query: { thisPage: true },
+                    // });
                   }}
                   type="link"
                   size="small"
@@ -1425,41 +1425,41 @@ export default class MonitorPoint extends Component {
             destroyOnClose
             bodyStyle={{ paddingBottom: 0 }}
             footer={
-              tabKey == 2? //污染物信息
-              null
-              :
-              [
-              !this.state.isView
-                ? ((
-                    <Button key="back" onClick={this.handleCancel}>
-                      取消
-                    </Button>
-                  ),
-                  (
-                    <>
-                      {pointFlag ? (
-                        <Button key="submit" onClick={this.modelClose}>
-                          取消
-                        </Button>
-                      ) : (
-                        <>
-                          <Button
-                            key="submit"
-                            type="primary"
-                            loading={this.loadingStatus()}
-                            onClick={this.onSubmitForm.bind(this)}
-                          >
-                            确定
-                          </Button>
-                          <Button key="submit" onClick={this.modelClose}>
+              tabKey == 2 //污染物信息
+                ? null
+                : [
+                    !this.state.isView
+                      ? ((
+                          <Button key="back" onClick={this.handleCancel}>
                             取消
                           </Button>
-                        </>
-                      )}
-                    </>
-                  ))
-                : '',
-            ]}
+                        ),
+                        (
+                          <>
+                            {pointFlag ? (
+                              <Button key="submit" onClick={this.modelClose}>
+                                取消
+                              </Button>
+                            ) : (
+                              <>
+                                <Button
+                                  key="submit"
+                                  type="primary"
+                                  loading={this.loadingStatus()}
+                                  onClick={this.onSubmitForm.bind(this)}
+                                >
+                                  确定
+                                </Button>
+                                <Button key="submit" onClick={this.modelClose}>
+                                  取消
+                                </Button>
+                              </>
+                            )}
+                          </>
+                        ))
+                      : '',
+                  ]
+            }
           >
             {console.log('1111=', this.props.form.getFieldsValue())}
             {console.log('1111--222=', this.props.form.getFieldValue('Col7'))}

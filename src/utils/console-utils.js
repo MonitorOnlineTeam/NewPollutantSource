@@ -24,6 +24,12 @@ export const menuList = [
         "breadcrumbNames": "基础信息配置/菜单管理",
       },
       {
+        "name": "按钮管理",
+        "path": "/console/baseConfig/buttonManagement",
+        "icon": "FundViewOutlined",
+        "breadcrumbNames": "基础信息配置/按钮管理",
+      },
+      {
         "name": "数据源配置",
         "path": "/console/baseConfig/datasource",
         "icon": "FundViewOutlined",
