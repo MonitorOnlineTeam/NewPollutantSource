@@ -37,7 +37,6 @@ const PageContent = props => {
   const [loading, setLoading] = useState(false);
   const [missRate, setMissRate] = useState(0);
   const [dataSource, setDataSource] = useState([]);
-  const [statisticalData, setStatisticalData] = useState({});
   const [dataType, setDataType] = useState(props.dataType || 'region'); //region/ent/point
   const [mildValue, setMildValue] = useState(30); // 轻微
   const [moderateValue, setModerateValue] = useState(50); // 中度
