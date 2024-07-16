@@ -65,6 +65,12 @@ const dvaDispatch = (dispatch) => {
         payload: { ...payload },
       })
     },
+    GetBWOperatePointList: (payload) => { //运维信息总览 宝武
+      dispatch({
+        type: `${namespace}/GetBWOperatePointList`,
+        payload: { ...payload },
+      })
+    },
     GetOperationTaskList: (payload) => { //运维工单统计
       dispatch({
         type: `${namespace}/GetOperationTaskList`,
@@ -125,7 +131,7 @@ const Index = (props) => {
 
 
 
-  const { operaOrderData, latelyDays30, pollType, subjectFontSize, operationSettingInfo: { TaskPlanType },operationTaskStatisticsInfoByDayLoading } = props;
+  const { operaOrderData, latelyDays30, pollType, subjectFontSize, operationSettingInfo: { TaskPlanType }, operationTaskStatisticsInfoByDayLoading } = props;
   const [workOrderExecuTimeVal, setWorkOrderExecuTimeVal] = useState('1')
   const workOrderExecuTimeOptions =
     [{ label: '今日', value: '1' },
@@ -149,32 +155,34 @@ const Index = (props) => {
   }, []);
   const pollutantType = pollType[props.type]
   const initData = () => {
-    props.GetOperatePointList({ //运维监测点信息
-      pollutantType: pollutantType,
-    })
     getOperationRegionPlanTaskRate(1) //计划完成率
   }
 
   useEffect(() => {
-    if(TaskPlanType){
-    if (TaskPlanType == 1) {
-      props.GetOperationTaskList({ //运维工单统计
+    if (TaskPlanType) {
+      if (TaskPlanType == 1) {
+        props.GetOperationTaskList({ //运维工单统计
+          pollutantType: pollutantType,
+          beginTime: moment(moment().add(-30, 'day')).format('YYYY-MM-DD 00:00:00'),
+          endTime: moment(moment()).format('YYYY-MM-DD 23:59:59')
+        })
+        props.GetOperationPlanTaskRate({ //计划运维情况
+          pollutantType: pollutantType,
+          ...latelyDays30
+        })
+
+      } else {
+        GetOperationTaskStatisticsInfoByDayRequest(workOrderExecuTimeVal) //工单执行情况 固定到天
+        props.GetPlanOperationTaskCompleteRateByDay({ //近30日运维情况 固定到天
+          pollutantType: pollutantType,
+          ...latelyDays30
+        })
+      }
+      props.GetOperatePointList({ //运维监测点信息
         pollutantType: pollutantType,
-        beginTime: moment(moment().add(-30, 'day')).format('YYYY-MM-DD 00:00:00'),
-        endTime: moment(moment()).format('YYYY-MM-DD 23:59:59')
-      })
-      props.GetOperationPlanTaskRate({ //计划运维情况
-        pollutantType: pollutantType,
-        ...latelyDays30
-      })
-    } else {
-      GetOperationTaskStatisticsInfoByDayRequest(workOrderExecuTimeVal) //工单执行情况 固定到天
-      props.GetPlanOperationTaskCompleteRateByDay({ //近30日运维情况 固定到天
-        pollutantType: pollutantType,
-        ...latelyDays30
+        isBW: TaskPlanType == 2
       })
     }
-  }
 
   }, [TaskPlanType]);
   const [workOrderExecuData, setWorkOrderExecuData] = useState({})
@@ -260,7 +268,7 @@ const Index = (props) => {
       type: 'category',
       // data: [ '配合比对', '配合检查','参数核对','校验测试','维护','维修','校准','巡检', ],
       // data: ['配合比对', '配合检查', '校验测试', '异常处理', '维护', '维修', '校准', '巡检',],
-      data: [ '配合检查',  '异常处理', '维护', '维修', '校准', '巡检',],
+      data: ['配合检查', '异常处理', '维护', '维修', '校准', '巡检',],
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: {
@@ -322,19 +330,19 @@ const Index = (props) => {
   };
 
   let operaTypeData = [
-    { name: '巡检', key: 'inspectionCount', value: workOrderExecuData.inspectionCount,taskType:workOrderExecuData.inspectionTaskType, color1: '#0487ED', color2: '#0FD5F9' },
-    { name: '校准', key: 'calibrationCount', value: workOrderExecuData.calibrationCount,taskType:workOrderExecuData.calibrationTaskType, color1: '#0666E8', color2: '#0487ED' },
-    { name: '维修', key: 'repairCount', value: workOrderExecuData.repairCount, taskType:workOrderExecuData.repairTaskType,color1: '#3EB076', color2: '#A2FFD0' },
-    { name: '维护', key: 'maintainReportCount', value: workOrderExecuData.maintainReportCount,taskType:workOrderExecuData.maintainReportTaskType, color1: '#C1C049', color2: '#FFFE95' },
-    { name: '异常处理', key: 'dealExceptionCount', value: workOrderExecuData.dealExceptionCount,taskType:workOrderExecuData.dealExceptionTaskType, color1: '#FFCD5E', color2: '#FF9000' },
-    { name: '校验测试', key: 'calibrationTestCount', value: workOrderExecuData.calibrationTestCount,taskType:workOrderExecuData.calibrationTestTaskType, color1: '#56E5EB', color2: '#56E5EB' },
-    { name: '配合检查', key: 'cooperationInspectionCount', value: workOrderExecuData.cooperationInspectionCount,taskType:workOrderExecuData.cooperationInspectionTaskType, color1: '#FF87A7', color2: '#FF87A7' },
-    { name: '配合比对', key: 'coordinationComparisonCount', value: workOrderExecuData.coordinationComparisonCount,taskType:workOrderExecuData.coordinationComparisonTaskType, color1: '#2043B9', color2: '#2043B9' },
-    { name: '参数核对', key: 'matchingComparisonCount', value: workOrderExecuData.matchingComparisonCount,taskType:workOrderExecuData.matchingComparisonTaskType, color1: '#C8C8C8', color2: '#C8C8C8' },
-    { name: '备品备件更换', key: 'sparesCount', value: workOrderExecuData.sparesCount,taskType:workOrderExecuData.sparesTaskType, color1: '#f759ab', color2: '#f759ab' },
-    { name: '易耗品更换', key: 'consumablesCount', value: workOrderExecuData.consumablesCount,taskType:workOrderExecuData.consumablesTaskType, color1: '#b37feb', color2: '#b37feb' },
-    { name: '标准物质更换', key: 'standCount', value: workOrderExecuData.standCount,taskType:workOrderExecuData.standTaskType, color1: '#5cdbd3', color2: '#5cdbd3' },
-    { name: '试剂更换', key: 'reagentCount', value: workOrderExecuData.reagentCount, taskType:workOrderExecuData.reagentTaskType,color1: '#ff85c0', color2: '#ff85c0' },
+    { name: '巡检', key: 'inspectionCount', value: workOrderExecuData.inspectionCount, taskType: workOrderExecuData.inspectionTaskType, color1: '#0487ED', color2: '#0FD5F9' },
+    { name: '校准', key: 'calibrationCount', value: workOrderExecuData.calibrationCount, taskType: workOrderExecuData.calibrationTaskType, color1: '#0666E8', color2: '#0487ED' },
+    { name: '维修', key: 'repairCount', value: workOrderExecuData.repairCount, taskType: workOrderExecuData.repairTaskType, color1: '#3EB076', color2: '#A2FFD0' },
+    { name: '维护', key: 'maintainReportCount', value: workOrderExecuData.maintainReportCount, taskType: workOrderExecuData.maintainReportTaskType, color1: '#C1C049', color2: '#FFFE95' },
+    { name: '异常处理', key: 'dealExceptionCount', value: workOrderExecuData.dealExceptionCount, taskType: workOrderExecuData.dealExceptionTaskType, color1: '#FFCD5E', color2: '#FF9000' },
+    { name: '校验测试', key: 'calibrationTestCount', value: workOrderExecuData.calibrationTestCount, taskType: workOrderExecuData.calibrationTestTaskType, color1: '#56E5EB', color2: '#56E5EB' },
+    { name: '配合检查', key: 'cooperationInspectionCount', value: workOrderExecuData.cooperationInspectionCount, taskType: workOrderExecuData.cooperationInspectionTaskType, color1: '#FF87A7', color2: '#FF87A7' },
+    { name: '配合比对', key: 'coordinationComparisonCount', value: workOrderExecuData.coordinationComparisonCount, taskType: workOrderExecuData.coordinationComparisonTaskType, color1: '#2043B9', color2: '#2043B9' },
+    { name: '参数核对', key: 'matchingComparisonCount', value: workOrderExecuData.matchingComparisonCount, taskType: workOrderExecuData.matchingComparisonTaskType, color1: '#C8C8C8', color2: '#C8C8C8' },
+    { name: '备品备件更换', key: 'sparesCount', value: workOrderExecuData.sparesCount, taskType: workOrderExecuData.sparesTaskType, color1: '#f759ab', color2: '#f759ab' },
+    { name: '易耗品更换', key: 'consumablesCount', value: workOrderExecuData.consumablesCount, taskType: workOrderExecuData.consumablesTaskType, color1: '#b37feb', color2: '#b37feb' },
+    { name: '标准物质更换', key: 'standCount', value: workOrderExecuData.standCount, taskType: workOrderExecuData.standTaskType, color1: '#5cdbd3', color2: '#5cdbd3' },
+    { name: '试剂更换', key: 'reagentCount', value: workOrderExecuData.reagentCount, taskType: workOrderExecuData.reagentTaskType, color1: '#ff85c0', color2: '#ff85c0' },
   ]
   const operaOrderOptionDay = () => {
     operaTypeData = operaTypeData.filter(item => item.value != 0)
@@ -484,7 +492,7 @@ const Index = (props) => {
           // name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : '实际校准完成率',
           name: type == 1 ? '计划巡检完成率' : '计划校准完成率',
           type: 'pie',
-          radius:TaskPlanType==1? ['70%', '80%'] :  ['80%', '90%'] ,
+          radius: TaskPlanType == 1 ? ['70%', '80%'] : ['80%', '90%'],
           avoidLabelOverlap: false,
           label: { normal: { show: false, position: 'center' }, },
           // data: [
@@ -528,33 +536,33 @@ const Index = (props) => {
     }
   }
 
-  const [taskRecordVisible,setTaskRecordVisible] = useState(false)
-  const [taskStatus,setTaskStatus] = useState()
-  const [operaStatus,setOperaStatus] = useState()
-  const [completeTime,setCompleteTime] = useState()
+  const [taskRecordVisible, setTaskRecordVisible] = useState(false)
+  const [taskStatus, setTaskStatus] = useState()
+  const [operaStatus, setOperaStatus] = useState()
+  const [completeTime, setCompleteTime] = useState()
 
-  
+
   const operaOrderOptionDayClick = (type) => {  //工单执行情况 固定到天 详情 
     setTaskRecordVisible(true)
-    setTaskStatus(workOrderExecuTimeVal==1&&(type=='未完成'||type=='超时未完成')? ['1','2','11'] : ['3'])
-    setOperaStatus((workOrderExecuTimeVal==1&&(type=='完成'||type=='未完成')) || type=='完成'? undefined : '3'  )
-    if(type=='完成'|| type=='超时完成'){
-      setCompleteTime(workOrderExecuTimeObj[workOrderExecuTimeVal]&&[moment(workOrderExecuTimeObj[workOrderExecuTimeVal].beginTime), moment(workOrderExecuTimeObj[workOrderExecuTimeVal].endTime)])
-    }else{
+    setTaskStatus(workOrderExecuTimeVal == 1 && (type == '未完成' || type == '超时未完成') ? ['1', '2', '11'] : ['3'])
+    setOperaStatus((workOrderExecuTimeVal == 1 && (type == '完成' || type == '未完成')) || type == '完成' ? undefined : '3')
+    if (type == '完成' || type == '超时完成') {
+      setCompleteTime(workOrderExecuTimeObj[workOrderExecuTimeVal] && [moment(workOrderExecuTimeObj[workOrderExecuTimeVal].beginTime), moment(workOrderExecuTimeObj[workOrderExecuTimeVal].endTime)])
+    } else {
       setCompleteTime()
     }
   }
-const [operaTaskType,setOperaTaskType] = useState()
- const operaOrderOptionDayEchartsClick = (params) =>{ //工单执行情况 图表各项点击事件
-  if (params.componentType === 'series' && params.seriesType === 'pie') {
-     setTaskRecordVisible(true)
-      setCompleteTime(workOrderExecuTimeObj[workOrderExecuTimeVal]&&[moment(workOrderExecuTimeObj[workOrderExecuTimeVal].beginTime), moment(workOrderExecuTimeObj[workOrderExecuTimeVal].endTime)])
+  const [operaTaskType, setOperaTaskType] = useState()
+  const operaOrderOptionDayEchartsClick = (params) => { //工单执行情况 图表各项点击事件
+    if (params.componentType === 'series' && params.seriesType === 'pie') {
+      setTaskRecordVisible(true)
+      setCompleteTime(workOrderExecuTimeObj[workOrderExecuTimeVal] && [moment(workOrderExecuTimeObj[workOrderExecuTimeVal].beginTime), moment(workOrderExecuTimeObj[workOrderExecuTimeVal].endTime)])
       setTaskStatus(['3'])
-      const taskType = operaTypeData.filter(item=>item.name ==  params.name)?.[0]?.taskType;
+      const taskType = operaTypeData.filter(item => item.name == params.name)?.[0]?.taskType;
       setOperaTaskType(taskType)
 
+    }
   }
- }
 
   const [operatingInfoType, setOperatingInfoType] = useState()
   const [operatingStatus, setOperatingStatus] = useState(1)
@@ -570,7 +578,7 @@ const [operaTaskType,setOperaTaskType] = useState()
   const [planOperationVisible, setPlanOperationVisible] = useState(false)
   const [planOperationTitle, setPlanOperationTitle] = useState(false)
 
-  const planOperation = (title) =>{ //近30日计划运维情况 固定到天
+  const planOperation = (title) => { //近30日计划运维情况 固定到天
     setPlanOperationVisible(true)
     setPlanOperationTitle(title)
   }
@@ -581,7 +589,7 @@ const [operaTaskType,setOperaTaskType] = useState()
         <ReactEcharts
           option={planOperaOption(1)}
           style={{ width: 105, height: 105 }}
-          onEvents={{ click: TaskPlanType == 1 ? planInspection : ()=>planOperation('巡检') }}
+          onEvents={{ click: TaskPlanType == 1 ? planInspection : () => planOperation('巡检') }}
         />
         <img style={{ padding: '0 24px' }} src='./homePlanSplitLine.png' />
         <div className={styles.planOperaText} >
@@ -599,15 +607,15 @@ const [operaTaskType,setOperaTaskType] = useState()
               <div>超时未完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionOverIncompleteCount}</span></div>
               <div style={{ color: '#4BF3F9' }}>今日待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.inspectionTodayInCompleteCount}</span> </div>
             </>
-          } 
+          }
         </div>
       </Row>
-      <div style={{ width: '100%', height: 1, marginLeft: -21, background: "rgba(65, 66, 69, 0.5)",margin: TaskPlanType == 1? 0 : '4px 0' }}></div>
+      <div style={{ width: '100%', height: 1, marginLeft: -21, background: "rgba(65, 66, 69, 0.5)", margin: TaskPlanType == 1 ? 0 : '4px 0' }}></div>
       <Row type='flex' align='middle'>
         <ReactEcharts
           option={planOperaOption(2)}
           style={{ width: 105, height: 105 }}
-          onEvents={{ click: TaskPlanType == 1 ? planCalibration : ()=>planOperation('校准') }}
+          onEvents={{ click: TaskPlanType == 1 ? planCalibration : () => planOperation('校准') }}
         />
         <img style={{ padding: '0 24px' }} src='./homePlanSplitLine.png' />
         <div className={styles.planOperaText} >
@@ -616,7 +624,7 @@ const [operaTaskType,setOperaTaskType] = useState()
               <div>计划内结束次数：<span style={{ color: '#FFDD54' }}>{planOperaList.calibrationCloseCount}</span></div>
               <div>计划内完成次数：<span style={{ color: '#FFDD54' }}>{planOperaList.calibrationCompleteCount}</span></div>
               <div style={{ color: '#4BF3F9' }}>计划内待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.calibrationIncompleteCount}</span> </div>
-             </>
+            </>
             :
             <>
               <div>计划内应完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationCount}</span></div>
@@ -626,9 +634,9 @@ const [operaTaskType,setOperaTaskType] = useState()
               <div style={{ color: '#4BF3F9' }}>今日待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.calibrationTodayInCompleteCount}</span> </div>
             </>
           }
-          </div>
+        </div>
       </Row>
-        {/* <Col span={8} align='middle'>
+      {/* <Col span={8} align='middle'>
        <ReactEcharts
          option={planOperaOption(3)}
          style={{ width: '100%', height: 120 }}
@@ -638,30 +646,30 @@ const [operaTaskType,setOperaTaskType] = useState()
    </Col> */}
     </div>
   }, [planOperaList])
-  const operaOrderOptionDayEcharts = useMemo(() => {  
-   return  <ReactEcharts
-    option={operaOrderOptionDay()}
-    onEvents={{ click: operaOrderOptionDayEchartsClick }}
-    style={{ height: 'calc(100% - 58px )', width: '100%' }}
-  />
-    
+  const operaOrderOptionDayEcharts = useMemo(() => {
+    return <ReactEcharts
+      option={operaOrderOptionDay()}
+      onEvents={{ click: operaOrderOptionDayEchartsClick }}
+      style={{ height: 'calc(100% - 58px )', width: '100%' }}
+    />
+
   }, [workOrderExecuData])
   const cancel = () => {
-        props.entWorkOrderStatistics({
-          payload: {
-            initialForm: {
-              Time: [moment().subtract(30, "days").startOf("day"), moment().endOf("day")],
-              RegionCode: undefined,
-              AttentionCode: undefined,
-              PollutantTypeCode: '1',
-            },
-          },
-        });
+    props.entWorkOrderStatistics({
+      payload: {
+        initialForm: {
+          Time: [moment().subtract(30, "days").startOf("day"), moment().endOf("day")],
+          RegionCode: undefined,
+          AttentionCode: undefined,
+          PollutantTypeCode: '1',
+        },
+      },
+    });
 
   }
 
   pollutantType == 1 && operationColumns.splice(2, 2, {
-        title: '监测点',
+    title: '监测点',
     dataIndex: 'allPointCount',
     key: 'allPointCount',
     align: 'center',
@@ -670,10 +678,10 @@ const [operaTaskType,setOperaTaskType] = useState()
       return <span style={{ cursor: 'pointer' }} onClick={() => { operatingInfo('point', record) }}>{text}</span>
     }
   })
-  const {operationLoading, operationDataSource} = props; {/**运维信息总览 */}
-  const {operationTaskLoading} = props; {/**近30日运维工单 */}
-  const {operationPlanTaskLoading, operationTaskCompleteRateByDayLoading} = props; {/**近30日运维情况 */}
-  const {planCompleteList, planCompleteListLoading} = props; {/**计划完成率 */}
+  const { operationLoading, operationDataSource } = props; {/**运维信息总览 */ }
+  const { operationTaskLoading } = props; {/**近30日运维工单 */ }
+  const { operationPlanTaskLoading, operationTaskCompleteRateByDayLoading } = props; {/**近30日运维情况 */ }
+  const { planCompleteList, planCompleteListLoading } = props; {/**计划完成率 */ }
   const [planCalibrationVisible, setPlanCalibrationVisible] = useState(false)
   const [planInspectionVisible, setPlanInspectionVisible] = useState(false)
   const [actualInspectionVisible, setActualInspectionVisible] = useState(false)
@@ -682,167 +690,167 @@ const [operaTaskType,setOperaTaskType] = useState()
 
 
 
- const workOrderExecuDotSty = {
-        display:'inline-block',width:8,height:8,marginRight:6, backgroundColor:'#1BDEEA',borderRadius:'50%'
- }
- const workOrderExecuNumSty={
-        fontFamily: 'YouSheBiaoTiHei',
-  fontWeight: 400,
-  fontSize: 18,
-  color: '#1BDEEA',
-  paddingRight:8,
- }
+  const workOrderExecuDotSty = {
+    display: 'inline-block', width: 8, height: 8, marginRight: 6, backgroundColor: '#1BDEEA', borderRadius: '50%'
+  }
+  const workOrderExecuNumSty = {
+    fontFamily: 'YouSheBiaoTiHei',
+    fontWeight: 400,
+    fontSize: 18,
+    color: '#1BDEEA',
+    paddingRight: 8,
+  }
 
 
   return (
     <div>
-        <Spin spinning={operationLoading}>
-          <div className={styles.pointSty}>
-            <CardHeader title='运维信息总览' />
-            <Table style={{ padding: '16px 15px 0 0' }} columns={operationColumns} dataSource={operationDataSource} pagination={false} />
-          </div>
-        </Spin>
+      <Spin spinning={operationLoading}>
+        <div className={styles.pointSty}>
+          <CardHeader title='运维信息总览' />
+          <Table style={{ padding: '16px 15px 0 0' }} columns={operationColumns} dataSource={operationDataSource} pagination={false} />
+        </div>
+      </Spin>
 
-        {TaskPlanType == 1 ? <Spin spinning={operationTaskLoading}>
-          <div className={styles.operaOrder}>
-            <CardHeader title='近30日运维工单' />
-            <div style={{ height: '100%', padding: '20px 10px 0 0' }}>
-              <ReactEcharts
-                option={operaOrderOption}
-                style={{ height: 'calc(100% - 44px )', width: '100%' }}
-              />
-              <MoreBtn style={{ padding: '8px 10px 0' }} type='operaOrder' moreBtnClick={moreBtnClick} />
-            </div>
+      {TaskPlanType == 1 ? <Spin spinning={operationTaskLoading}>
+        <div className={styles.operaOrder}>
+          <CardHeader title='近30日运维工单' />
+          <div style={{ height: '100%', padding: '20px 10px 0 0' }}>
+            <ReactEcharts
+              option={operaOrderOption}
+              style={{ height: 'calc(100% - 44px )', width: '100%' }}
+            />
+            <MoreBtn style={{ padding: '8px 10px 0' }} type='operaOrder' moreBtnClick={moreBtnClick} />
           </div>
-        </Spin> :
-          <Spin spinning={operationTaskStatisticsInfoByDayLoading}> {/*固定到天 */}
-            <div className={styles.operaOrder}>
-              <CardHeader title='工单执行情况' />
-              <Select placeholder="请选择" value={workOrderExecuTimeVal} size='small' getPopupContainer={trigger => trigger.parentNode}
-                className={'operationTaskSelectSty'} options={workOrderExecuTimeOptions}
-                onChange={(value) => {
-                  setWorkOrderExecuTimeVal(value)
-                  GetOperationTaskStatisticsInfoByDayRequest(value)
-                }}
-              />
-              <div style={{ height: '100%', padding: '18px 10px 0 0' }}>
-                <Row gutter={workOrderExecuTimeVal == 1 ? 0 : 16}  style={{ justifyContent: workOrderExecuTimeVal == 1 ? 'space-between' : 'center',paddingRight:8 }}>
-                  <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('完成')}><div><span style={workOrderExecuDotSty}></span>完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.completeCount}</span>个</div></Col>
-                  <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('超时完成')}><div><span style={workOrderExecuDotSty}></span>超时完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeCompleteCount}</span>个</div></Col>
-                  {workOrderExecuTimeVal == 1 ? <>
-                    <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('未完成')}><div><span style={workOrderExecuDotSty}></span>未完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.notCompleteCount}</span>个</div></Col>
-                    <Col style={{cursor:'pointer'}} onClick={()=>operaOrderOptionDayClick('超时未完成')}><div><span style={workOrderExecuDotSty}></span>超时未完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeNotCompleteCount}</span>个</div></Col>
-                  </> : <></>}
-                </Row>
-                {/* <ReactEcharts
+        </div>
+      </Spin> :
+        <Spin spinning={operationTaskStatisticsInfoByDayLoading}> {/*固定到天 */}
+          <div className={styles.operaOrder}>
+            <CardHeader title='工单执行情况' />
+            <Select placeholder="请选择" value={workOrderExecuTimeVal} size='small' getPopupContainer={trigger => trigger.parentNode}
+              className={'operationTaskSelectSty'} options={workOrderExecuTimeOptions}
+              onChange={(value) => {
+                setWorkOrderExecuTimeVal(value)
+                GetOperationTaskStatisticsInfoByDayRequest(value)
+              }}
+            />
+            <div style={{ height: '100%', padding: '18px 10px 0 0' }}>
+              <Row gutter={workOrderExecuTimeVal == 1 ? 0 : 16} style={{ justifyContent: workOrderExecuTimeVal == 1 ? 'space-between' : 'center', paddingRight: 8 }}>
+                <Col style={{ cursor: 'pointer' }} onClick={() => operaOrderOptionDayClick('完成')}><div><span style={workOrderExecuDotSty}></span>完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.completeCount}</span>个</div></Col>
+                <Col style={{ cursor: 'pointer' }} onClick={() => operaOrderOptionDayClick('超时完成')}><div><span style={workOrderExecuDotSty}></span>超时完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeCompleteCount}</span>个</div></Col>
+                {workOrderExecuTimeVal == 1 ? <>
+                  <Col style={{ cursor: 'pointer' }} onClick={() => operaOrderOptionDayClick('未完成')}><div><span style={workOrderExecuDotSty}></span>未完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.notCompleteCount}</span>个</div></Col>
+                  <Col style={{ cursor: 'pointer' }} onClick={() => operaOrderOptionDayClick('超时未完成')}><div><span style={workOrderExecuDotSty}></span>超时未完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeNotCompleteCount}</span>个</div></Col>
+                </> : <></>}
+              </Row>
+              {/* <ReactEcharts
                   option={operaOrderOptionDay()}
                   onEvents={{ click: operaOrderOptionDayEchartsClick }}
                   style={{ height: 'calc(100% - 58px )', width: '100%' }}
                 /> */}
-                {operaOrderOptionDayEcharts}
-              </div>
-            </div>
-          </Spin>
-        }
-        <Spin spinning={TaskPlanType == 1 ? operationPlanTaskLoading : operationTaskCompleteRateByDayLoading}> {/**近30日运维情况 */}
-          <div className={styles.planOpera} style={{height:TaskPlanType==1? 292 : 269}}>
-            <CardHeader title='近30日运维情况' isPopover />
-            {planOperaEcharts}
-          </div>
-        </Spin>
-
-        <Spin spinning={planCompleteListLoading}>
-          <div className={styles.planComplete}>
-            <CardHeader btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='近30日运维排名' />
-            <div style={{ height: '100%', padding: '21px 18px 0 0' }}>
-              {!planCompleteListLoading && <ScrollTable data={[...planCompleteList]} column={[]} />}
-              {/* <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/> */}
+              {operaOrderOptionDayEcharts}
             </div>
           </div>
         </Spin>
+      }
+      <Spin spinning={TaskPlanType == 1 ? operationPlanTaskLoading : operationTaskCompleteRateByDayLoading}> {/**近30日运维情况 */}
+        <div className={styles.planOpera} style={{ height: TaskPlanType == 1 ? 292 : 269 }}>
+          <CardHeader title='近30日运维情况' isPopover />
+          {planOperaEcharts}
+        </div>
+      </Spin>
 
-        <PlanWorkOrderStatistics  //计划校准完成率弹框
-          modalType="planCalibration"
-          visible={planCalibrationVisible}
-          type={pollutantType}
-          onCancel={() => { setPlanCalibrationVisible(false) }}
-          time={[moment(latelyDays30.beginTime), moment(latelyDays30.endTime)]}
-        />
-        <PlanWorkOrderStatistics  //计划巡检完成率弹框
-          modalType="planInspection"
-          visible={planInspectionVisible}
-          type={pollutantType}
-          onCancel={() => { setPlanInspectionVisible(false) }}
-          time={[moment(latelyDays30.beginTime), moment(latelyDays30.endTime)]}
-        />
-        <PlanWorkOrderStatistics  //实际校准完成率弹框
-          modalType="actualCalibration"
-          visible={actualInspectionVisible}
-          type={pollutantType}
-          onCancel={() => { setActualInspectionVisible(false) }}
-          time={[moment(latelyDays30.beginTime), moment(latelyDays30.endTime)]}
-        />
-        <PlanWorkOrderStatistics  //计划巡检完成率、计划校准完成率 固定到天
-          isDay
-          visible={actualInspectionVisible}
-          type={pollutantType}
-          onCancel={() => { setActualInspectionVisible(false) }}
-          time={[moment(latelyDays30.beginTime), moment(latelyDays30.endTime)]}
-        />
-        
-        <EntWorkOrderModal  //近30日运维工单
-          showModal={orderModalVisible}
-          onCloseListener={() => {
-            setOrderModalVisible(false)
-            cancel();
-          }}
-          pollutantTypeCode={pollutantType}
-        />
-       <Modal
+      <Spin spinning={planCompleteListLoading}>
+        <div className={styles.planComplete}>
+          <CardHeader btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='近30日运维排名' />
+          <div style={{ height: '100%', padding: '21px 18px 0 0' }}>
+            {!planCompleteListLoading && <ScrollTable data={[...planCompleteList]} column={[]} />}
+            {/* <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/> */}
+          </div>
+        </div>
+      </Spin>
+
+      <PlanWorkOrderStatistics  //计划校准完成率弹框
+        modalType="planCalibration"
+        visible={planCalibrationVisible}
+        type={pollutantType}
+        onCancel={() => { setPlanCalibrationVisible(false) }}
+        time={[moment(latelyDays30.beginTime), moment(latelyDays30.endTime)]}
+      />
+      <PlanWorkOrderStatistics  //计划巡检完成率弹框
+        modalType="planInspection"
+        visible={planInspectionVisible}
+        type={pollutantType}
+        onCancel={() => { setPlanInspectionVisible(false) }}
+        time={[moment(latelyDays30.beginTime), moment(latelyDays30.endTime)]}
+      />
+      <PlanWorkOrderStatistics  //实际校准完成率弹框
+        modalType="actualCalibration"
+        visible={actualInspectionVisible}
+        type={pollutantType}
+        onCancel={() => { setActualInspectionVisible(false) }}
+        time={[moment(latelyDays30.beginTime), moment(latelyDays30.endTime)]}
+      />
+      <PlanWorkOrderStatistics  //计划巡检完成率、计划校准完成率 固定到天
+        isDay
+        visible={actualInspectionVisible}
+        type={pollutantType}
+        onCancel={() => { setActualInspectionVisible(false) }}
+        time={[moment(latelyDays30.beginTime), moment(latelyDays30.endTime)]}
+      />
+
+      <EntWorkOrderModal  //近30日运维工单
+        showModal={orderModalVisible}
+        onCloseListener={() => {
+          setOrderModalVisible(false)
+          cancel();
+        }}
+        pollutantTypeCode={pollutantType}
+      />
+      <Modal
         title={`工单执行情况`}
         destroyOnClose
         wrapClassName='spreadOverModal'
         visible={taskRecordVisible}
-        onCancel={()=>{setTaskRecordVisible(false)}}
+        onCancel={() => { setTaskRecordVisible(false) }}
         footer={null}
         mask={false}
-        bodyStyle={{padding:0}}
+        bodyStyle={{ padding: 0 }}
       >
-         <TaskRecord
+        <TaskRecord
           hideBreadcrumb
           isWorkExecue
-          taskStatus={taskStatus} 
+          taskStatus={taskStatus}
           operaStatus={operaStatus}
           completeTime={completeTime}
           operaTaskType={operaTaskType}
-          />
+        />
       </Modal>
       <Modal
         title={`运维情况`}
         destroyOnClose
         wrapClassName='spreadOverModal'
         visible={planOperationVisible}
-        onCancel={()=>{setPlanOperationVisible(false)}}
+        onCancel={() => { setPlanOperationVisible(false) }}
         footer={null}
-        bodyStyle={{padding:0}}
+        bodyStyle={{ padding: 0 }}
       >
-         <PlanWorkOrderStatisticsDay
+        <PlanWorkOrderStatisticsDay
           hideBreadcrumb
-          planType={planOperationTitle=='巡检'? '1' : '2'}
+          planType={planOperationTitle == '巡检' ? '1' : '2'}
           time={[moment(latelyDays30.beginTime), moment(latelyDays30.endTime)]}
           pollutantTypes={Number(pollutantType)}
-          />
-      </Modal>
-        <OperatingInfo  //运维信息总览
-          visible={operatingInfoVisible}
-          type={pollutantType}
-          onCancel={() => { setOperatingInfoVisible(false) }}
-          type={operatingInfoType}
-          pollutantType={pollutantType}
-          operatingStatus={operatingStatus}
-          outputType={outputType}
         />
-      </div>
+      </Modal>
+      <OperatingInfo  //运维信息总览
+        visible={operatingInfoVisible}
+        type={pollutantType}
+        onCancel={() => { setOperatingInfoVisible(false) }}
+        type={operatingInfoType}
+        pollutantType={pollutantType}
+        operatingStatus={operatingStatus}
+        outputType={outputType}
+      />
+    </div>
   );
 };
 export default connect(dvaPropsData, dvaDispatch)(Index);

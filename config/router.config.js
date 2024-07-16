@@ -885,6 +885,11 @@ const routes = [
                 component: './systemManger/logManger',
               },
               {
+                name: 'dataSourceStatistics',
+                path: '/systemManger/dataSourceStatistic', // 数据来源统计
+                component: './systemManger/dataSourceStatistic',
+              },
+              {
                 name: 'operationBasConfig',
                 path: '/systemManger/operationBasConfig', // 运维基础配置
                 component: './systemManger/operationBasConfig',

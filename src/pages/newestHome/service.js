@@ -3,7 +3,7 @@ import { API } from '@config/API';
 
 //首页 运维信息统计
 export async function GetOperatePointList(params) {
-  const result = await post(API.VisualKanbanApi.GetVisualDashBoardOperatePointInfo, params, null);
+  const result = await post(params.isBW? API.VisualKanbanApi.GetBWVisualDashBoardOperatePointInfo : API.VisualKanbanApi.GetVisualDashBoardOperatePointInfo, params, null);
   return result;
 }
 

@@ -48,7 +48,7 @@ export default Model.extend({
     mapStatusEntData: { exceptionCount: 0, normalCount: 0, overCount: 0, stopCount: 0, unLineCount: 0 },
   },
   effects: {
-    *GetOperatePointList({ payload, callback }, { call, put, update }) { //运维信息统计
+    *GetOperatePointList({ payload, callback }, { call, put, select, update }) { //运维信息统计
       const result = yield call(services.GetOperatePointList, payload);
       if (result.IsSuccess) {
         let item = result.Datas;

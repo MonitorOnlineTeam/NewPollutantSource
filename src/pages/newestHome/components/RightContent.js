@@ -127,9 +127,12 @@ const Index = (props) => {
     getEffectiveTransmissionRateList(latelyDays7)
     getAlarmResponse(latelyDays7)
     getHomePageNetworkingRate()
-    getOperationExpirePointList()
   }
-
+  useEffect(() => {
+    if(TaskPlanType){
+     getOperationExpirePointList()//运维监测点信息
+  }
+  }, [TaskPlanType]);
 
 
 

@@ -171,7 +171,7 @@ class SdlTable extends PureComponent {
       const nextColumns = [...columns];
       nextColumns[index] = {
         ...nextColumns[index],
-        width: size.width || defaultWidth,
+        width: size.width || this.props.defaultWidth,
       };
       return { columns: nextColumns };
     });
@@ -364,9 +364,9 @@ class SdlTable extends PureComponent {
             ),
       align: align || 'center',
       ...col,
-      width: this.getInitialColWidth(col),
+      width: col.width == 'auto' || (!col.width && this.props.autowidth && col.title!='序号') ?  false : this.getInitialColWidth(col) || defaultWidth,
       onHeaderCell: column => ({
-        width: column.width,
+        width:  !col.width && this.props.autowidth && col.title!='序号' ? (document.getElementById('sdlTable')?.clientWidth - 54 )/(columns.length-1)  : column.width,//自适应除序号列表格宽度并且能伸缩
         onResize: resizable ? this.handleResize(index) : undefined,
       }),
     }));

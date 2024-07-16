@@ -388,7 +388,6 @@ const Index = (props) => {
 
     try {
       const values = await form.validateFields();
-      console.log(values)
       props.getProjectReportList(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
         ...values,
         status: values.status ? 1 : '',
@@ -539,7 +538,7 @@ const Index = (props) => {
         visible={formVisible}
         record={row}
         onCancel={() => { setFormVisible(false) }}
-        onFinish = {()=>{onFinish(pageIndex, pageSize)}}
+        onFinish = {()=>onFinish(pageIndex, pageSize)}
       />
       {/* <Modal
         title={title}

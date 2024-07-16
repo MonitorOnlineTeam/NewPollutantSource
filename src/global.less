@@ -1213,6 +1213,9 @@ a:hover {
 .green {
   color: #52c41a;
 }
+.blue {
+  color: #1890ff;
+}
 .tabLayoutOverhiddenSty {
   :global {
     .ant-layout {
@@ -1395,7 +1398,9 @@ a:hover {
       padding-right: 8px;
     }
   }
-
+  .ant-card-body{
+    padding: 8px 24px;
+  }
   .ant-picker,.ant-input-number{
     width: 100% !important;
     margin-left: 0 !important;
@@ -1436,5 +1441,10 @@ a:hover {
   .ant-select-status-error.ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover
     .ant-select-selector {
     border-color: #40a9ff;
+  }
+}
+.smallCardWrapper :global {
+  .ant-pro-page-header-wrap-children-content>.ant-card>.ant-card-body{
+    padding:8px 24px;
   }
 }

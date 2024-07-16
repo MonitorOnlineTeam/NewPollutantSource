@@ -126,7 +126,6 @@ const Model = {
                 let contentInParentheses = matches[1];
                 sessionStorage.setItem('sysPollutantCodes', contentInParentheses);
               }
-
               // Cookie.set('sysMenuId', sysList.id);
               router.push(defaultNavigateUrl);
             }

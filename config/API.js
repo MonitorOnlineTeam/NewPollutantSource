@@ -1,5 +1,5 @@
 export const before = '/rest/PollutantSourceApi';
-const isBW = localStorage.getItem('sysConfigInfo') && JSON.parse(localStorage.getItem('sysConfigInfo'))?.IsShowProjectRegion//宝武
+const isBW = sessionStorage.getItem('isBW')==='true'//宝武
 export const API = {
   //
   SystemApi: {
@@ -344,31 +344,6 @@ export const API = {
     GetQCAStatus: before + '/QCStatus/GetQCAStatus',
     // 更改质控标准要求
     UpdQCStandard: before + '/QCStandard/UpdQCStandard',
-  },
-  // 系统管理Api
-  SystemManageApi: {
-    /*公告管理*/
-    GetNoticeList: before + '/NoticeApi/GetNoticeList', //获取公告管理信息
-    AddOrUpdateNoticeInfo: before + '/NoticeApi/AddOrUpdateNoticeInfo', //添加修改公告
-    DeleteNoticeInfo: before + '/NoticeApi/DeleteNoticeInfo', //删除公告
-    GetAllRoleList: before + '/NoticeApi/GetAllRoleList', //获取角色
-    /*资源中心*/
-    GetQuestionList: before + '/HelpCenterApi/GetQuestionList', //获取问题清单信息
-    AddOrUpdateQuestionInfo: before + '/HelpCenterApi/AddOrUpdateQuestionInfo', //获取问题清单信息
-    DeleteQuestionInfo: before + '/HelpCenterApi/DeleteQuestionInfo', //删除问题清单信息
-    GetQuestionTypeList: before + '/HelpCenterApi/GetQuestionTypeList', //获取问题清单类别
-    GetQuestionType: before + '/HelpCenterApi/GetQuestionType', //获取问题类别
-
-    /*日志管理*/
-    GetSystemExceptionList: before + '/LogsApi/GetSystemExceptionList', //获取问题清单列表
-    DeleteSystemException: before + '/LogsApi/DeleteSystemException', //获取问题清单列表
-    GetSystemLongInLogs: before + '/LogsApi/GetSystemLongInLogs', //获取问题清单列表
-    DeleteSystemLongInLogs: before + '/LogsApi/DeleteSystemLongInLogs', //获取问题清单列表
-    GetUserOprationLogsList: before + '/LogsApi/GetUserOprationLogsList', //获取问题清单列表
-    DeleteUserOprationLogs: before + '/LogsApi/DeleteUserOprationLogs', //获取问题清单列表
-    /*运维基础配置*/
-    GetOperationSetting: before + '/ConfigureApi/GetOperationSetting', //获取运维基础配置信息
-    UpdOperationSetting: before + '/ConfigureApi/UpdOperationSetting', //设置运维基础配置
   },
   // 企业及点位API
   EntAndPointApi: {
@@ -1482,8 +1457,8 @@ export const API = {
   /*************************************************************** 运维 ********************************************************************** */
   // 可视化看板Api
   VisualKanbanApi: {
-    GetVisualDashBoardOperatePointInfo:
-    isBW? before + '/BWDataApi/GetBWVisualDashBoardOperatePointInfo' :  before + '/VisualDashBoardApi/GetVisualDashBoardOperatePointInfo', //获取运维信息总览信息
+    GetVisualDashBoardOperatePointInfo: before + '/VisualDashBoardApi/GetVisualDashBoardOperatePointInfo', //获取运维信息总览信息
+    GetBWVisualDashBoardOperatePointInfo: before + '/BWDataApi/GetBWVisualDashBoardOperatePointInfo', //获取运维信息总览信息 宝武
     GetOperationTaskStatisticsInfo: before + '/VisualDashBoardApi/GetOperationTaskStatisticsInfo', //获取近30日运维工单统计
     GetPlanOperationTaskCompleteRate:
       before + '/VisualDashBoardApi/GetPlanOperationTaskCompleteRate', //获取计划巡检完成率、校准完成率
@@ -1500,8 +1475,10 @@ export const API = {
     GetStatePointEquipmentExceptionsOverview:
       before + '/VisualDashBoardApi/GetStatePointEquipmentExceptionsOverview', //获取设备异常总览 设备异常率、设备故障率、设备故障修复率（评估中心）
     GetMapPointList: before + '/VisualDashBoardApi/GetMapPointList', //获取地图数据
-    GetOperatePointList:isBW? before + '/BWDataApi/GetBWOperatePointList' : before + '/VisualDashBoardApi/GetOperatePointList', //获取运维信息总览 详情运维企业、监测点信息
-    ExportOperatePointList: isBW? before + '/BWDataApi/ExportBWOperatePointList' : before + '/VisualDashBoardApi/ExportOperatePointList', //导出运维信息总览 详情运维企业、监测点信息
+    GetOperatePointList:  before + '/VisualDashBoardApi/GetOperatePointList', //获取运维信息总览 详情运维企业、监测点信息
+    ExportOperatePointList: before + '/VisualDashBoardApi/ExportOperatePointList', //导出运维信息总览 详情运维企业、监测点信息
+    GetBWOperatePointList: before + '/BWDataApi/GetBWOperatePointList', //获取运维信息总览 详情运维企业、监测点信息 宝武
+    ExportBWOperatePointList:  before + '/BWDataApi/ExportBWOperatePointList', //导出运维信息总览 详情运维企业、监测点信息 宝武
     GetOperationPlanTaskList: before + '/VisualDashBoardApi/GetOperationPlanTaskList', // 获取近30日运维工单统计 详情
     ExportOperationPlanTaskList: before + '/VisualDashBoardApi/ExportOperationPlanTaskList', // 导出近30日运维工单统计 详情
     GetVisualDashBoardNetworkingRate:
@@ -1659,8 +1636,10 @@ export const API = {
     ExportExceptionTaskOrderList: before + '/WorkOrderStatistics/ExportExceptionTaskOrderList', //导出异常工单信息
     GetExceptionTaskOrderSignList: before + '/WorkOrderStatistics/GetExceptionTaskOrderSignList', //获取企业异常打卡信息（地图）
     /*运维到期提醒*/
-    GetOperationExpireAnalysis: isBW? before + '/BWDataApi/GetBWOperationExpireAnalysis' : before + '/OperationExpireAnalysis/GetOperationExpireAnalysis', //运维到期点位统计
-    ExportOperationExpireAnalysis:isBW? before + '/BWDataApi/ExportBWOperationExpireAnalysis' : before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis', //导出运维到期点位统计
+    GetOperationExpireAnalysis:  before + '/OperationExpireAnalysis/GetOperationExpireAnalysis', //运维到期点位统计
+    ExportOperationExpireAnalysis:  before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis', //导出运维到期点位统计
+    GetBWOperationExpireAnalysis:  before + '/BWDataApi/GetBWOperationExpireAnalysis', //运维到期点位统计 宝武
+    ExportBWOperationExpireAnalysis: before + '/BWDataApi/ExportBWOperationExpireAnalysis', //导出运维到期点位统计 宝武
     /**运维计划**/
     /*制定运维计划*/
     GetOperationPlanList: before + '/WorkOrderApi/GetOperationPlanList', //运维计划列表
@@ -2219,6 +2198,9 @@ export const API = {
     DeleteSystemLongInLogs: before + '/LogsApi/DeleteSystemLongInLogs', //获取问题清单列表
     GetUserOprationLogsList: before + '/LogsApi/GetUserOprationLogsList', //获取问题清单列表
     DeleteUserOprationLogs: before + '/LogsApi/DeleteUserOprationLogs', //获取问题清单列表
+    /*数据来源统计*/
+    GetPGZXPointStatusList: before + '/VisualDashBoardApi/GetPGZXPointStatusList', //数据来源统计查询
+    ExportPGZXPointStatusList: before + '/VisualDashBoardApi/ExportPGZXPointStatusList', //数据来源统计导出
     /*运维基础配置*/
     GetOperationSetting: before + '/ConfigureApi/GetOperationSetting', //获取运维基础配置信息
     UpdOperationSetting: before + '/ConfigureApi/UpdOperationSetting', //设置运维基础配置

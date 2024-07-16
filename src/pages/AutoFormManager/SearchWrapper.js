@@ -55,6 +55,7 @@ const { RangePicker, MonthPicker } = DatePicker;
   searchConfigItems: autoForm.searchConfigItems,
   whereList: autoForm.whereList,
   clientHeight: global.clientHeight,
+  configInfo: global.configInfo,
 }))
 @Form.create({
   mapPropsToFields(props) {
@@ -420,7 +421,7 @@ class SearchWrapper extends Component {
 
   render() {
     const { formLayout, inputPlaceholder, selectPlaceholder } = this._SELF_;
-    const { searchConfigItems, configId } = this.props;
+    const { searchConfigItems, configId,   configInfo: { IsOpera }, } = this.props;
     const searchConditions = searchConfigItems[configId] || [];
     const style = {};
     if (searchConditions.length % 3 === 0 && !this.state.expand) {
@@ -434,7 +435,7 @@ class SearchWrapper extends Component {
         <Row>
           {this._renderFormItem()}
           {searchConditions.length ? (
-            <div style={{ marginTop: 6, display: 'inline-block', ...style }}>
+            <div style={{ marginTop: 4, marginBottom: 4,  display: 'inline-block', ...style }}>
               <Button
                 type="primary"
                 onClick={() => {

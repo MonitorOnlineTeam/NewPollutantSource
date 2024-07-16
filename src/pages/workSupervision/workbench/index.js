@@ -40,6 +40,7 @@ import ReportAuditModal from '@/pages/ctDebuggAfterSaleServiceManage/projectExec
 import HandleComplaints from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/handleComplaints/components/Dispose';
 import ProjectQueryDetail from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/projectQuery/Detail';
 import StandardGasValidityContent from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/standardGasValidity/components/StandardGasValidityContent';
+import HandoverReportEditModal from '@/pages/platformManager/configurationInfo/handoverReport/EditModal';
 import router from 'umi/router';
 import { PageLoading } from '@ant-design/pro-layout';
 import Cookie from 'js-cookie';
@@ -174,8 +175,12 @@ const Workbench = props => {
   const [projectQueryDetailTitle, setProjectQueryDetailTitle] = useState('详情');
   const [projectQueryDetailCode, setProjectQueryDetailCode] = useState();
 
-  const [standardGasValidityVisible, setStandardGasValidityVisible] = useState();
+  const [standardGasValidityVisible, setStandardGasValidityVisible] = useState(false);
   const [standardGasValidityId, setStandardGasValidityId] = useState();
+
+  //上传运维交接报告
+  const [handoverReportVisible, setHandoverReportVisible] = useState(false);
+  const [handoverReportId, setHandoverReportId] = useState();
 
   const type = props.location.pathname === '/ctManage/workbench' ? 1 : '';
   const paddingBottomVal = 10;
@@ -1872,6 +1877,7 @@ const Workbench = props => {
         >
           <StandardGasValidityContent id={standardGasValidityId} isAll isWorkBench />
         </Modal>
+        <HandoverReportEditModal visible={handoverReportVisible} onCancel={()=>setHandoverReportVisible(false)}/>
       </BreadcrumbWrapper>
     </div>
   );

@@ -144,7 +144,7 @@ class Login extends Component {
     Cookie.remove('currentUser');
     Cookie.remove('newToken');
     // Cookie.remove('sysMenuId');
-    sessionStorage.clear();
+    // sessionStorage.clear();
     dispatch({ type: 'global/updateState', payload: { sysPollutantTypeList: [] } });
   };
   componentDidMount() {
@@ -152,6 +152,7 @@ class Login extends Component {
       this.child && this.child.current && this.child.current.click(); // 3分钟刷新一次
     }, 1000 * 60 * 3);
     this.clearData();
+
   }
 
   componentWillUnmount() {
