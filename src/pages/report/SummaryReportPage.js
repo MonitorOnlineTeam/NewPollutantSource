@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { ExportOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Card, Table, Select, Row, Col, DatePicker, Input, Button, Spin, message } from 'antd';
+import { Card, TreeSelect, Select, Row, Col, DatePicker, Input, Button, Spin, message } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import moment from 'moment';
 import style from './index.less';
@@ -61,8 +61,8 @@ class SummaryReportPage extends PureComponent {
     };
     this.SELF = {
       formLayout: {
-        labelCol: { span: 7 },
-        wrapperCol: { span: 17 },
+        labelCol: { span: 8 },
+        wrapperCol: { span: 16 },
       },
       defaultSearchForm: {
         PollutantSourceType: 1,
@@ -235,6 +235,7 @@ class SummaryReportPage extends PureComponent {
                 type: 'report/getDailySummaryDataList',
                 payload: {
                   DGIMN: values.PollutantSourceType == '5' ? values.DGIMN : null,
+                  // DGIMN: values.DGIMN,
                   type: match.params.reportType,
                   PollutantSourceType: values.PollutantSourceType,
                   Regions: values.Regions.toString(),
@@ -359,7 +360,7 @@ class SummaryReportPage extends PureComponent {
             payload: {
               DGIMN: values.PollutantSourceType == '5' ? values.DGIMN : null,
               PollutantSourceType: values.PollutantSourceType,
-              Regions: '', // values.Regions.toString(),
+              Regions: values.Regions.toString(),
               ReportTime: values.ReportTime && moment(values.ReportTime).format('YYYY-MM-DD'),
               BeginTime: this.state.beginTime,
               EndTime: this.state.endTime,
@@ -397,6 +398,34 @@ class SummaryReportPage extends PureComponent {
     });
     // 获取表格数据
     this.statisticsReport();
+  };
+
+  // 根据污染物类型及行政区获取企业和排口
+  getEntAndPointList = PollutantTypes => {
+    //   this.getAirDefaultTime()
+    this.props.dispatch({
+      type: 'report/getPointReportEntAndPointList',
+      payload: {
+        PollutantTypes: PollutantTypes,
+        RegionCode: this.state.regions,
+        Name: '',
+        Status: [0, 1, 2, 3],
+        QCAUse: '',
+        RunState: '',
+        isFilter: true,
+      },
+      callback: res => {
+        let DGIMN = [];
+        for (let i = 0; i < res.length; i++) {
+          if (res[i].children.length) {
+            DGIMN = [res[i].children[0].key];
+            break;
+          }
+        }
+        this.props.form.setFieldsValue({ DGIMN });
+        this.changeReportType(this.props.form.getFieldValue('reportType'), PollutantTypes);
+      },
+    });
   };
 
   render() {
@@ -476,13 +505,29 @@ class SummaryReportPage extends PureComponent {
       />
     );
 
+    const tProps = {
+      treeData: entAndPontList,
+      fieldNames: { title: 'title', value: 'key', children: 'children' },
+      treeCheckable: true,
+      // showCheckedStrategy: SHOW_PARENT,
+      maxTagCount: 3,
+      maxTagTextLength: 5,
+      maxTagPlaceholder: '...',
+      // checkStrictly: false,
+      placeholder: '请选择',
+      style: {
+        width: '100%',
+      },
+      treeDefaultExpandAll: true,
+    };
+
     return (
       <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
           <Card className="contentContainer">
             <Form style={{ marginBottom: 20 }}>
               <Row>
-                <Col md={5} xs={24}>
+                <Col md={4} xs={24}>
                   <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
                     {getFieldDecorator('reportType', {
                       initialValue: 'daily',
@@ -518,33 +563,7 @@ class SummaryReportPage extends PureComponent {
                       <SelectPollutantType
                         placeholder="请选择污染物类型"
                         onChange={value => {
-                          //   this.getAirDefaultTime()
-                          this.props.dispatch({
-                            type: 'report/getPointReportEntAndPointList',
-                            payload: {
-                              PollutantTypes: value,
-                              RegionCode: '',
-                              Name: '',
-                              Status: [0, 1, 2, 3],
-                              QCAUse: '',
-                              RunState: '',
-                              isFilter: true,
-                            },
-                            callback: res => {
-                              let DGIMN = [];
-                              for (let i = 0; i < res.length; i++) {
-                                if (res[i].children.length) {
-                                  DGIMN = [res[i].children[0].key];
-                                  break;
-                                }
-                              }
-                              this.props.form.setFieldsValue({ DGIMN });
-                              this.changeReportType(
-                                this.props.form.getFieldValue('reportType'),
-                                value,
-                              );
-                            },
-                          });
+                          this.getEntAndPointList(value);
                         }}
                       />,
                     )}
@@ -566,15 +585,20 @@ class SummaryReportPage extends PureComponent {
                         data={regionList}
                         placeholder="请选择行政区"
                         onChange={(value, selectedOptions) => {
-                          this.setState({ regions: value.join(',') });
+                          this.setState({ regions: value.join(',') }, () => {
+                            this.getEntAndPointList(
+                              this.props.form.getFieldValue('PollutantSourceType'),
+                            );
+                          });
                         }}
                       />,
                     )}
                   </FormItem>
                 </Col>
-                {getFieldValue('PollutantSourceType') == 5 && (
+                {/* {getFieldValue('PollutantSourceType') == 5 && ( */}
+                {true && (
                   // 大气站显示监控目标
-                  <Col sm={24} md={5}>
+                  <Col sm={24} md={6}>
                     <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
                       {getFieldDecorator('DGIMN', {
                         initialValue: this.props.form.getFieldValue('DGIMN'),
@@ -585,18 +609,19 @@ class SummaryReportPage extends PureComponent {
                           },
                         ],
                       })(
-                        <CascaderMultiple
-                          regionCode={this.state.regions}
-                          pollutantTypes={this.props.form.getFieldValue('PollutantSourceType')}
-                          {...this.props}
-                        />,
+                        // <CascaderMultiple
+                        //   regionCode={this.state.regions}
+                        //   pollutantTypes={this.props.form.getFieldValue('PollutantSourceType')}
+                        //   {...this.props}
+                        // />,
+                        <TreeSelect {...tProps} />,
                       )}
                     </FormItem>
                   </Col>
                 )}
                 <Col
                   sm={24}
-                  md={5}
+                  md={4}
                   style={{
                     display:
                       getFieldValue('PollutantSourceType') == 5 && reportType != 'quarter'
@@ -618,7 +643,7 @@ class SummaryReportPage extends PureComponent {
                 </Col>
                 <Col
                   sm={24}
-                  md={5}
+                  md={4}
                   style={{
                     display:
                       getFieldValue('PollutantSourceType') == 5 || reportType == 'quarter'
@@ -640,7 +665,7 @@ class SummaryReportPage extends PureComponent {
                 </Col>
                 <Col
                   sm={24}
-                  md={5}
+                  md={4}
                   style={{ display: reportType === 'quarter' ? 'block' : 'none' }}
                 >
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
@@ -703,7 +728,7 @@ class SummaryReportPage extends PureComponent {
                     </InputGroup>
                   </FormItem>
                 </Col>
-                <Col md={5} sm={24}>
+                <Col md={4} sm={24}>
                   <FormItem label="" style={{ width: '100%', marginLeft: 5 }}>
                     {/* {getFieldDecorator("", {})( */}
                     <Button

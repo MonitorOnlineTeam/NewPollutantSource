@@ -12,6 +12,7 @@ import Emissions from './components/Emissions';
 import MapContent from './components/MapContent';
 import { CloseOutlined } from '@ant-design/icons';
 import EntHomePage from '../EntHomePage/EntHomePage';
+import { ModalTypeNameConversion } from '@/pages/AbnormalIdentifyModel/CONST';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModelHome }) => ({
   entHomeIsOpen: AbnormalIdentifyModelHome.entHomeIsOpen,
@@ -93,9 +94,9 @@ const RegionAndIndustryPage = props => {
               <i className={styles.rt}></i>
               <MapContent />
             </div>
-            <div className={styles.emissionsWrapper}>
+            {/* <div className={styles.emissionsWrapper}>
               <Emissions />
-            </div>
+            </div> */}
           </Col>
           <Col style={{ width: '27%', minWidth: 400 }} className={styles.rightWrapper}>
             <div className={styles.ranStateWrapper}>
@@ -103,10 +104,18 @@ const RegionAndIndustryPage = props => {
             </div>
             <div className={styles.RunkingWrapper}>
               <div className={styles.Runking}>
-                <Ranking title="疑似人为干预排名" type={1} modelBaseType={1} />
+                <Ranking
+                  title={ModalTypeNameConversion('人为干预排名')}
+                  type={1}
+                  modelBaseType={1}
+                />
               </div>
               <div className={styles.Runking}>
-                <Ranking title="疑似设备故障排名" type={2} modelBaseType={2} />
+                <Ranking
+                  title={ModalTypeNameConversion('设备故障排名')}
+                  type={2}
+                  modelBaseType={2}
+                />
               </div>
             </div>
           </Col>

@@ -13,8 +13,10 @@ import path from 'path';
 // const API_HOST = 'http://60.29.13.132:60061';  // 60
 // const API_HOST = 'http://172.16.12.60:6001/';  // 60
 // const API_HOST = 'http://172.16.12.134:61003/';  // 运维正式
-const API_HOST = 'http://172.16.12.39:49003/';  // 234 运维测试
+// const API_HOST = 'http://172.16.12.39:49003/';  // 234 运维测试
 // const API_HOST = 'http://172.16.12.91:61007/' //宝武集团 正式
+const API_HOST = 'http://172.16.12.134:61005/'; //134 - 演示
+
 
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
@@ -144,7 +146,6 @@ export default {
   },
   chainWebpack: webpackPlugin,
   proxy: {
-    
     '/rest': {
       target: API_HOST,
       changeOrigin: true,

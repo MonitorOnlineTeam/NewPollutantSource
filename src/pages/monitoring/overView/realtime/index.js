@@ -443,13 +443,13 @@ class Realtime extends Component {
   render() {
     const { currentDataType, columns, realTimeDataView, time, dayTime, pollutantCode } = this.state;
     // const { realTimeDataView, dataLoading, columnLoading } = this.props;
-    const { dataLoading, columnLoading } = this.props;
+    const { dataLoading, columnLoading, hideBreadcrumb } = this.props;
     const _columns = columns.filter(item => item.show);
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     const wrwList = columns.filter(itm => itm.wrw);
 
     return (
-      <BreadcrumbWrapper>
+      <BreadcrumbWrapper hideBreadcrumb={!!hideBreadcrumb}>
         <Card
           title={
             <Space>
@@ -640,17 +640,19 @@ class Realtime extends Component {
             </Space>
           }
           extra={
-            <Radio.Group
-              value="data"
-              buttonStyle="solid"
-              onChange={e => {
-                e.target.value === 'map' &&
-                  router.push('/monitoring/mapview?tabName=数据总览 - 地图');
-              }}
-            >
-              <Radio.Button value="data">数据</Radio.Button>
-              <Radio.Button value="map">地图</Radio.Button>
-            </Radio.Group>
+            !hideBreadcrumb && (
+              <Radio.Group
+                value="data"
+                buttonStyle="solid"
+                onChange={e => {
+                  e.target.value === 'map' &&
+                    router.push('/monitoring/mapview?tabName=数据总览 - 地图');
+                }}
+              >
+                <Radio.Button value="data">数据</Radio.Button>
+                <Radio.Button value="map">地图</Radio.Button>
+              </Radio.Group>
+            )
           }
         >
           <SdlTable

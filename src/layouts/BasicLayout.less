@@ -1,7 +1,16 @@
 :global {
-  .ant-pro-top-nav-header-logo{
+  .ant-pro-top-nav-header-left {
+    width: 300px;
+  }
+  .ant-pro-top-nav-header-logo {
+    // max-width: 300px;
+    width: 100%;
     display: flex;
     align-items: center;
+
+    a {
+      width: calc(100% - 60px);
+    }
   }
   .ant-pro-top-nav-header-logo h1 {
     color: #fff;
@@ -10,27 +19,27 @@
     font-size: 18px;
     margin: 0 0 0 12px;
     font-weight: bold;
-    width: 200px;
-    // overflow: hidden;
+    width: 100%;
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    text-align: center;
+    // text-align: center;
   }
 
-  .ant-pro-top-nav-header-logo a {
-    display: flex;
-    align-items: center;
-  }
+  // .ant-pro-top-nav-header-logo a {
+  //   display: flex;
+  //   align-items: center;
+  // }
 }
 .layoutSty{
   overflow: hidden;
   width: 212px;
-    .ant-pro-top-nav-header-logo a {
+  .ant-pro-top-nav-header-logo a {
     display: flex;
     align-items: center;
   }
   h1{
-  animation: scroll-left 24s linear infinite;
+    animation: scroll-left 24s linear infinite;
   }
 }
 .layoutSty2{

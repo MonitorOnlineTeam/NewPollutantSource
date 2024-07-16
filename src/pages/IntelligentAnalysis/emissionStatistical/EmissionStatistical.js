@@ -46,7 +46,7 @@ const ImportantTypeList = [
 @Form.create()
 class Gas extends PureComponent {
   state = {
-    time: [
+    time: this.props.time || [
       moment()
         .subtract(1, 'days')
         .startOf('day'),
@@ -92,7 +92,7 @@ class Gas extends PureComponent {
         PollutantType: _PollutantType,
       });
 
-      if(_PollutantType) {
+      if (_PollutantType) {
         this.props.form.setFieldsValue({ PollutantType: _PollutantType });
         this.getAllPollutantCode();
         this.getTableData(this.state.DataType);

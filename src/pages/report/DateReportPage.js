@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { ExportOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Table, Row, Col, Input, Select, Card, Button, DatePicker, message, Spin } from 'antd';
+import { Table, Row, Col, TreeSelect, Select, Card, Button, DatePicker, message, Spin } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 // import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
@@ -22,6 +22,7 @@ import { timeDifference, getDataTruseMsg } from '@/utils/utils';
 const FormItem = Form.Item;
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
+const { SHOW_PARENT, SHOW_ALL } = TreeSelect;
 
 @connect(({ loading, report, autoForm, global }) => ({
   loading: loading.effects['report/getDateReportData'],
@@ -190,10 +191,12 @@ class DateReportPage extends PureComponent {
         render: (text, row, index) => {
           // 数据不可信处理
           if (item.dataIndex === 'time') {
-            return <span>
-              {getDataTruseMsg(row)}
-              {text}
-            </span>
+            return (
+              <span>
+                {getDataTruseMsg(row)}
+                {text}
+              </span>
+            );
           }
           if (text) {
             const _text = text.split('|');
@@ -280,7 +283,12 @@ class DateReportPage extends PureComponent {
     } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        if (moment(this.state.endTime).diff(moment(this.state.beginTime), 'day') * values.DGIMN.length > 365 && values["reportType"] === "siteDaily") {
+        if (
+          moment(this.state.endTime).diff(moment(this.state.beginTime), 'day') *
+            values.DGIMN.length >
+            365 &&
+          values['reportType'] === 'siteDaily'
+        ) {
           message.error('站点日报导出：时间间隔 × 排口数量不能超过12个月');
           return;
         }
@@ -404,6 +412,21 @@ class DateReportPage extends PureComponent {
     } else {
       pageSize = 12;
     }
+    const tProps = {
+      treeData: entAndPontList,
+      fieldNames: { title: 'title', value: 'key', children: 'children' },
+      treeCheckable: true,
+      // showCheckedStrategy: SHOW_PARENT,
+      maxTagCount: 3,
+      maxTagTextLength: 5,
+      maxTagPlaceholder: '...',
+      // checkStrictly: false,
+      placeholder: '请选择',
+      style: {
+        width: '100%',
+      },
+      treeDefaultExpandAll: true,
+    };
     // };
     return (
       <BreadcrumbWrapper>
@@ -508,10 +531,11 @@ class DateReportPage extends PureComponent {
                           },
                         ],
                       })(
-                        <CascaderMultiple
-                          pollutantTypes={getFieldValue('PollutantSourceType')}
-                          {...this.props}
-                        />,
+                        // <CascaderMultiple
+                        //   pollutantTypes={getFieldValue('PollutantSourceType')}
+                        //   {...this.props}
+                        // />,
+                        <TreeSelect {...tProps} />,
                       )}
                     </FormItem>
                   </Col>

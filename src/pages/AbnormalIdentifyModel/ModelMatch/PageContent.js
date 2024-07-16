@@ -69,6 +69,9 @@ const Index = props => {
         DGIMN: DGIMN,
         modelGuidList: modelGuidList,
       },
+      callback:()=>{
+        props.saveCallBack && props.saveCallBack()
+      }
     });
   };
 

@@ -154,8 +154,8 @@ const ModelChartMultipleBig = props => {
     <Modal
       title={title}
       destroyOnClose
-      wrapClassName={'spreadOverModal'}
-      visible={visible}
+      wrapClassName={'fullScreenModal'}
+      open={visible}
       footer={false}
       onCancel={() => onCancel()}
     >

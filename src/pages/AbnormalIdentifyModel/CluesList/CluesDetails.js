@@ -340,8 +340,13 @@ const CluesDetails = props => {
               </Tooltip>
             </Descriptions.Item>
             <Descriptions.Item label="发现线索时间">{warningInfo.WarningTime}</Descriptions.Item>
-            <Descriptions.Item label="线索内容" span={3}>
+            <Descriptions.Item label="线索内容" span={2}>
               {warningInfo.WarningContent}
+            </Descriptions.Item>
+            <Descriptions.Item label="异常现象">{warningInfo.ModelPhen}</Descriptions.Item>
+            <Descriptions.Item label="分析结论">{warningInfo.ModelDes}</Descriptions.Item>
+            <Descriptions.Item label="核查建议" span={3}>
+              {warningInfo.ModelAttr}
             </Descriptions.Item>
             <Descriptions.Item>
               <CopyToClipboard

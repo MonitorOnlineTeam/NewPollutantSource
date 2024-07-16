@@ -4,7 +4,7 @@
  * 创建时间：2020
  */
 import React, { Component } from 'react';
-import { ExportOutlined, QuestionCircleTwoTone, RollbackOutlined} from '@ant-design/icons';
+import { ExportOutlined, QuestionCircleTwoTone, RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -29,7 +29,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import styles from './style.less';
-import { downloadFile,interceptTwo } from '@/utils/utils';
+import { downloadFile, interceptTwo } from '@/utils/utils';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 // import IndexModal from './IndexModal';
@@ -37,8 +37,8 @@ const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const monthFormat = 'YYYY-MM';
-import QutPage from "@/pages/IntelligentAnalysis/newTransmissionefficiency/qutPage"
-import RegionList from '@/components/RegionList'
+import QutPage from '@/pages/IntelligentAnalysis/newTransmissionefficiency/qutPage';
+import RegionList from '@/components/RegionList';
 
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
@@ -58,7 +58,7 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   // pollutantType: newtransmissionefficiency.pollutantType,
   assessment: newtransmissionefficiency.assessment,
   RegionCode: newtransmissionefficiency.RegionCode,
-  operationpersonnel:newtransmissionefficiency.operationpersonnel,
+  operationpersonnel: newtransmissionefficiency.operationpersonnel,
 }))
 @Form.create()
 export default class EntIndexModal extends Component {
@@ -71,14 +71,14 @@ export default class EntIndexModal extends Component {
       visible: false,
       eName: '',
       regions: '',
-      operationpersonnel:'',
+      operationpersonnel: '',
       effectiveVisible: false,
       effectiveLoading: false,
-      TTVisible:false,
+      TTVisible: false,
       PollutantType: props.pollutantType,
-      beginTime:props.beginTime,
-      endTime:props.endTime,
-      level:1
+      beginTime: props.beginTime,
+      endTime: props.endTime,
+      level: 1,
     };
   }
 
@@ -89,16 +89,22 @@ export default class EntIndexModal extends Component {
     // });
     // this.getTableData();
   }
-  componentDidUpdate(props){
-    if(props.TVisible!==this.props.TVisible&&this.props.TVisible){
+  componentDidUpdate(props) {
+    if (props.TVisible !== this.props.TVisible && this.props.TVisible) {
       this.updateState({
-        pollutantType:this.state.PollutantType,
-        RegionCode:'',
+        pollutantType: this.state.PollutantType,
+        RegionCode: '',
       });
-      this.setState({
-          PollutantType: props.pollutantType, beginTime:props.beginTime,endTime:props.endTime},()=>{
+      this.setState(
+        {
+          PollutantType: props.pollutantType,
+          beginTime: props.beginTime,
+          endTime: props.endTime,
+        },
+        () => {
           this.getTableData();
-        })
+        },
+      );
     }
   }
   updateState = payload => {
@@ -108,16 +114,16 @@ export default class EntIndexModal extends Component {
     });
   };
 
-  getTableData = (regionCode) => {
+  getTableData = regionCode => {
     this.props.dispatch({
       type: pageUrl.getData,
       payload: {
-        PollutantType: this.state.PollutantType?this.state.PollutantType:'',
-        beginTime:this.state.beginTime,
-        endTime:this.state.endTime,
-        RegionCode:this.state.level==2? regionCode: this.props.RegionCode,
-        regionLevel:this.state.level
-      }
+        PollutantType: this.state.PollutantType ? this.state.PollutantType : '',
+        beginTime: this.state.beginTime,
+        endTime: this.state.endTime,
+        RegionCode: this.state.level == 2 ? regionCode : this.props.RegionCode,
+        regionLevel: this.state.level,
+      },
     });
   };
 
@@ -177,9 +183,9 @@ export default class EntIndexModal extends Component {
   });
 
   typeChange = value => {
-    this.setState({PollutantType: value})
+    this.setState({ PollutantType: value });
     this.updateState({
-      pollutantType: value?value:"",
+      pollutantType: value ? value : '',
     });
   };
 
@@ -191,10 +197,10 @@ export default class EntIndexModal extends Component {
 
   changeRegion = value => {
     this.updateState({
-      RegionCode: value? value : '',
+      RegionCode: value ? value : '',
     });
   };
-  
+
   changeOperation = value => {
     this.updateState({
       operationpersonnel: value,
@@ -202,7 +208,7 @@ export default class EntIndexModal extends Component {
   };
 
   //创建并获取模板   导出
-  template = (level) => {
+  template = level => {
     this.updateState({
       exRegionloading: true,
     });
@@ -210,8 +216,8 @@ export default class EntIndexModal extends Component {
     dispatch({
       type: 'newtransmissionefficiency/exportTransmissionEfficiencyForRegion',
       payload: {
-        RegionCode:level==2? this.state.regionCode: this.props.RegionCode,
-        regionLevel:level,
+        RegionCode: level == 2 ? this.state.regionCode : this.props.RegionCode,
+        regionLevel: level,
         callback: data => {
           downloadFile(data);
         },
@@ -223,7 +229,7 @@ export default class EntIndexModal extends Component {
     this.setState({
       beginTime: date[0].format('YYYY-MM-DD 00:00:00'),
       endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-    })
+    });
     this.updateState({
       beginTime: date[0].format('YYYY-MM-DD 00:00:00'),
       endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
@@ -250,58 +256,63 @@ export default class EntIndexModal extends Component {
   //         tabName: "有效传输率 - 详情"
   //     }
   // })
-  showChildModal=()=>{
+  showChildModal = () => {
     // console.log('this.state.pollutantType',this.state.pollutantType);
-    this.setState({
-      TVisible:false,
-      TTVisible:true,
-    },()=>{
-      
-    })
-  }
-  interceptTwo=(value)=>{
+    this.setState(
+      {
+        TVisible: false,
+        TTVisible: true,
+      },
+      () => {},
+    );
+  };
+  interceptTwo = value => {
     const data = value.toString();
-    const result = data.substring(0,data.indexOf(".")+3)
+    const result = data.substring(0, data.indexOf('.') + 3);
     return result;
-  }
-  showModal=()=>{
-    
-    const { eName,level } = this.state;
-    const { regionList, exRegionloading, RegionCode,operationpersonnel } = this.props;
+  };
+  showModal = () => {
+    const { eName, level } = this.state;
+    const { regionList, exRegionloading, RegionCode, operationpersonnel } = this.props;
     const columns = [
       {
         title: <span style={{ fontWeight: 'normal' }}>行政区</span>,
         dataIndex: 'RegionName',
         key: 'RegionName',
         align: 'center',
-        render: (text, record) => { 
+        render: (text, record) => {
           let RegionCode = record.RegionCode;
-          return <a onClick={()=>{
-            if(this.state.level==2){
-              this.setState({
-                showDetails: true,
-                RegionCode: RegionCode,
-                OperationPersonnel:operationpersonnel
-              })
-            }else{
-              this.setState({
-                level: 2,
-                regionCode:RegionCode,
-              },()=>{
-                this.getTableData(RegionCode);
-              })
-            }
-
-          }}>
-            {text}
-          </a>
+          return (
+            <a
+              onClick={() => {
+                if (this.state.level == 2) {
+                  this.setState({
+                    showDetails: true,
+                    RegionCode: RegionCode,
+                    OperationPersonnel: operationpersonnel,
+                  });
+                } else {
+                  this.setState(
+                    {
+                      level: 2,
+                      regionCode: RegionCode,
+                    },
+                    () => {
+                      this.getTableData(RegionCode);
+                    },
+                  );
+                }
+              }}
+            >
+              {text}
+            </a>
+          );
           //  return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
           //              query: { RegionCode:text=='全部合计'? '': record.RegionCode},
           //              }}
           //              >
           //           {text}
           //       </Link>
-                  
         },
       },
       {
@@ -312,8 +323,7 @@ export default class EntIndexModal extends Component {
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-         return <span>{text}</span>;
-         
+          return <span>{text}</span>;
         },
       },
       {
@@ -324,8 +334,7 @@ export default class EntIndexModal extends Component {
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-          return <span>{text}</span>
-
+          return <span>{text}</span>;
         },
       },
       {
@@ -335,7 +344,7 @@ export default class EntIndexModal extends Component {
         // width: '10%',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           }
           if (record.AvgEffectiveRate <= text) {
@@ -365,16 +374,14 @@ export default class EntIndexModal extends Component {
         // width: '10%',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           }
           if (record.AvgTransmissionRate <= text) {
             return <span>{`${interceptTwo(Number(text) * 100)}%`}</span>;
           }
           return (
-            <span className={styles.avgtext}>
-              {`${interceptTwo(Number(text) * 100)}%`}
-            </span>
+            <span className={styles.avgtext}>{`${interceptTwo(Number(text) * 100)}%`}</span>
             // </Popover>
           );
         },
@@ -387,7 +394,7 @@ export default class EntIndexModal extends Component {
         align: 'center',
         sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           }
           // 红色：#f5222d 绿色：#52c41a
@@ -399,7 +406,7 @@ export default class EntIndexModal extends Component {
                   successPercent={percent}
                   percent={percent}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{ width: '90%' }}
                   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
                 />
               </div>
@@ -412,7 +419,7 @@ export default class EntIndexModal extends Component {
                 percent={percent}
                 status="exception"
                 size="small"
-                style={{width:'90%'}}
+                style={{ width: '90%' }}
                 format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
               />
             </div>
@@ -426,27 +433,27 @@ export default class EntIndexModal extends Component {
         width: 145,
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
-          }else{
-          return <span>{text}</span>
+          } else {
+            return <span>{text}</span>;
           }
         },
       },
     ];
-    return(
-     <Card
-          bordered={false}
-          title={
-            <>
-              {level == 1 && <Form layout="inline">
-
-               <Form.Item>
+    return (
+      <Card
+        bordered={false}
+        title={
+          <>
+            {level == 1 && (
+              <Form layout="inline">
+                <Form.Item>
                   查询时间：
                   <RangePicker_
-                    dateValue={[moment(this.state.beginTime), moment(this.state.endTime)]}
+                    value={[moment(this.state.beginTime), moment(this.state.endTime)]}
                     format="YYYY-MM-DD"
-                    callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+                    onChange={(dates, dataType) => this.dateCallback(dates, dataType)}
                     allowClear={false}
                   />
                 </Form.Item>
@@ -460,7 +467,6 @@ export default class EntIndexModal extends Component {
                   >
                     <Option value="2">废气</Option>
                     <Option value="1">废水</Option>
-                  
                   </Select>
                 </Form.Item>
                 <Form.Item>
@@ -477,23 +483,29 @@ export default class EntIndexModal extends Component {
                   </Select>
                 </Form.Item>
                 <Form.Item>
-                   <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
+                  <RegionList
+                    style={{ width: 200, marginLeft: 10 }}
+                    changeRegion={this.changeRegion}
+                    RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}
+                  />
                 </Form.Item>
                 <Form.Item>
-                <Button type="primary" onClick={this.getTableData}>
+                  <Button type="primary" onClick={this.getTableData}>
                     查询
                   </Button>
                   <Button
                     style={{ margin: '0 5px' }}
                     icon={<ExportOutlined />}
-                    onClick={()=>this.template(level)}
+                    onClick={() => this.template(level)}
                     loading={exRegionloading}
                   >
                     导出
                   </Button>
                 </Form.Item>
-              </Form>}
-              {level==1&&  <div style={{ paddingTop: 10 }}>
+              </Form>
+            )}
+            {level == 1 && (
+              <div style={{ paddingTop: 10 }}>
                 <div
                   style={{
                     width: 20,
@@ -522,70 +534,86 @@ export default class EntIndexModal extends Component {
                   }}
                 />
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                   {`<90%未达标`}
+                  {`<90%未达标`}
                 </span>
-                <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算昨日的有效传输率，每月4号和10号重新计算上个月的有效传输率</span>
-              </div>}
-              {level==2&&<><Button
-                    style={{ margin: '0 5px' }}
-                    icon={<ExportOutlined />}
-                    onClick={()=>this.template(level)}
-                    loading={exRegionloading}
-                  >
-                    导出
-                  </Button><Button
-                    onClick={() => {
-                      this.setState({
-                        level:1,
-                      },()=>{
+                <span style={{ color: '#f5222d', fontSize: 14, paddingLeft: 15 }}>
+                  每日凌晨计算昨日的有效传输率，每月4号和10号重新计算上个月的有效传输率
+                </span>
+              </div>
+            )}
+            {level == 2 && (
+              <>
+                <Button
+                  style={{ margin: '0 5px' }}
+                  icon={<ExportOutlined />}
+                  onClick={() => this.template(level)}
+                  loading={exRegionloading}
+                >
+                  导出
+                </Button>
+                <Button
+                  onClick={() => {
+                    this.setState(
+                      {
+                        level: 1,
+                      },
+                      () => {
                         this.getTableData();
-                      })
-                    }}
-                  >
-                    <RollbackOutlined />
-                    返回
-                  </Button></>}
-            </>
-          }
-        >
-          <SdlTable
-             rowKey={(record, index) => `complete${index}`}
-             loading={this.props.loading}
-             columns={columns}
-             dataSource={this.props.tableDatas}
-            //  scroll={{ y: 'calc(100vh - 450px)'}}
-             pagination={false}
-           /> 
-        </Card>
-    )
-  }
+                      },
+                    );
+                  }}
+                >
+                  <RollbackOutlined />
+                  返回
+                </Button>
+              </>
+            )}
+          </>
+        }
+      >
+        <SdlTable
+          rowKey={(record, index) => `complete${index}`}
+          loading={this.props.loading}
+          columns={columns}
+          dataSource={this.props.tableDatas}
+          //  scroll={{ y: 'calc(100vh - 450px)'}}
+          pagination={false}
+        />
+      </Card>
+    );
+  };
   render() {
     // console.log("props.pollutantType=",this.props.pollutantType)
     // console.log("state.pollutantType=",this.state.PollutantType)
-  const {TVisible,TCancle,TTVisible, wrapClassName} = this.props
-  return (
+    const { TVisible, TCancle, TTVisible, wrapClassName } = this.props;
+    return (
       <div>
-           <Modal
+        <Modal
           centered
-          title='有效传输率'
-          visible={TVisible}
+          title="有效传输率"
+          open={TVisible}
           footer={null}
           mask={false}
-          wrapClassName={wrapClassName ||'spreadOverModal'}
-          onCancel={TCancle}>
-           {
-              !this.state.showDetails && this.showModal()
-            }
-            {
-              this.state.showDetails && <QutPage hideBreadcrumb isModal={true} location={{ query: { RegionCode: this.state.RegionCode } }} _pollutantType={this.state.PollutantType} onBack={() => {
+          wrapClassName={wrapClassName || 'spreadOverModal'}
+          onCancel={TCancle}
+        >
+          {!this.state.showDetails && TVisible && this.showModal()}
+          {this.state.showDetails && (
+            <QutPage
+              hideBreadcrumb
+              isModal={true}
+              location={{ query: { RegionCode: this.state.RegionCode } }}
+              _pollutantType={this.state.PollutantType}
+              onBack={() => {
                 this.setState({
                   showDetails: false,
-                  RegionCode: undefined
-                })
-              }} />
-            }
-          </Modal> 
+                  RegionCode: undefined,
+                });
+              }}
+            />
+          )}
+        </Modal>
       </div>
-  );
-}
+    );
+  }
 }

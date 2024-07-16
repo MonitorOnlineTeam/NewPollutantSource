@@ -4,21 +4,22 @@ import { Tooltip } from 'antd';
 const FullscreenToggle = props => {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const { containerRef, style } = props;
+  const { style } = props;
 
   const toggleFullscreen = () => {
+    let container = document.documentElement;
     if (!document.fullscreenElement) {
-      if (containerRef.current.requestFullscreen) {
-        containerRef.current.requestFullscreen();
-      } else if (containerRef.current.mozRequestFullScreen) {
+      if (container.requestFullscreen) {
+        container.requestFullscreen();
+      } else if (container.mozRequestFullScreen) {
         // Firefox
-        containerRef.current.mozRequestFullScreen();
-      } else if (containerRef.current.webkitRequestFullscreen) {
+        container.mozRequestFullScreen();
+      } else if (container.webkitRequestFullscreen) {
         // Chrome, Safari, Opera
-        containerRef.current.webkitRequestFullscreen();
-      } else if (containerRef.current.msRequestFullscreen) {
+        container.webkitRequestFullscreen();
+      } else if (container.msRequestFullscreen) {
         // IE/Edge
-        containerRef.current.msRequestFullscreen();
+        container.msRequestFullscreen();
       }
       setIsFullscreen(true);
     } else {

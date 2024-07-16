@@ -174,7 +174,7 @@ const ModalName = {
   湿度异常陡降: '疑似监测样品混入氧混合气',
   疑似采样管线不密封: '疑似监测样品混入空气',
   烟气排放量数值异常: '疑似修改烟道截面积',
-  折算浓度异常: '疑似修改标准过量空气系数',
+  折算浓度异常: '疑似修改标准标准过量空气系数',
   污染物排放量异常: '疑似修改速度场系数',
   计算公式或备案参数异常: '疑似计算公式或备案参数错误',
   机组停运未做停运标识: '疑似机组停运未及时上报',
@@ -191,6 +191,22 @@ export const ModalNameConversion = name => {
     return ModalName[name];
   }
   return name;
+};
+
+const ModalTypeName = {
+  人为干预: '疑似不规范运行',
+  设备故障: '疑似设备故障',
+};
+export const ModalTypeNameConversion = inputText => {
+  let result = inputText;
+  for (const key in ModalTypeName) {
+    let target = key;
+    if (inputText.includes(target)) {
+      // 使用全局替换
+      result = inputText.replace(new RegExp(target, 'g'), ModalTypeName[key]);
+    }
+  }
+  return result;
 };
 
 export const handleHomeDate = (date, dateType) => {

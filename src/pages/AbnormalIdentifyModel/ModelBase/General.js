@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-06-01 09:07:41
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-28 17:07:44
+ * @Last Modified time: 2024-05-17 11:16:38
  * @Description：模型管理
  */
 
@@ -300,7 +300,7 @@ const General = props => {
       <div className={styles.PageWrapper}>
         {modelList.map(item => {
           let tempModelList = item.ModelBaseList[0].ModelList;
-          if (item.ModelBaseTypeName === 'CEMS运行管理异常') {
+          if (item.ModelBaseTypeName === '运行管理异常') {
             tempModelList.push({
               ModelGuid: '测试',
               ModelNumber: 99,

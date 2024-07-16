@@ -20,6 +20,8 @@ import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
 import NumTips from '@/components/NumTips'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import CustopmRenew from '@/pages/platformManager/assetManage/custopmRenew';
+
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane }  = Tabs;
@@ -299,6 +301,11 @@ const Index = (props) => {
       <TabPane tab="客户订单明细日志" key="2" >
       { tabContent}
       </TabPane>
+      {
+        location.pathname === '/assetManage/customOrder/renewManage' && <TabPane tab="客户续费" key="3" >
+          <CustopmRenew hideBreadcrumb/>
+        </TabPane>
+      }
       </Tabs>
 
    </BreadcrumbWrapper>

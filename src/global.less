@@ -203,10 +203,11 @@ a:hover {
   text-decoration: none !important;
 }
 
-// .contentContainer {
-//   height: calc(100vh - 170px);
-//   overflow-y: auto;
-// }
+.contentContainer {
+  // height: calc(100vh - 170px);
+  // overflow-y: auto;
+  border: none;
+}
 
 .center {
   display: flex !important;
@@ -238,8 +239,8 @@ a:hover {
 /*滚动条颜色*/
 @scrollbar-thumb-color: rgba(214, 212, 212, 0.8);
 /*滚动条大小*/
-@scrollbar-width: 10px;
-@scrollbar-height: 10px;
+@scrollbar-width: 12px;
+@scrollbar-height: 12px;
 
 .fixedHeader {
   position: fixed;
@@ -732,32 +733,31 @@ a:hover {
   }
 }
 
-.spreadOverHiddenModal {
-  //铺满页面的弹框 长度隐藏
-  :global {
-    .ant-modal-content {
-      overflow-y: hidden;
-    }
-  }
-}
-.fullScreenModal {
-  //全面屏弹框
-  :global {
-    .ant-modal {
-      max-width: 100vw;
-      width: 100vw !important;
-      position: fixed;
-      height: 100vh;
-      top: 0;
-      bottom: 0;
-      left: 0;
-    }
-    .ant-modal-content {
-      height: 100vh;
-    }
-    
-  }
-}
+// .spreadOverHiddenModal {
+//   //铺满页面的弹框 长度隐藏
+//   :global {
+//     .ant-modal-content {
+//       overflow-y: hidden;
+//     }
+//   }
+// }
+// .fullScreenModal {
+//   //全面屏弹框
+//   :global {
+//     .ant-modal {
+//       max-width: 100vw;
+//       width: 100vw !important;
+//       position: fixed;
+//       height: 100vh;
+//       top: 0;
+//       bottom: 0;
+//       left: 0;
+//     }
+//     .ant-modal-content {
+//       height: 100vh;
+//     }
+//   }
+// }
 
 .home-dark-theme {
   // 亮色主题颜色全局变量
@@ -1120,7 +1120,7 @@ a:hover {
   }
 }
 .noTitleSty :global {
-   //没有标题栏的弹框
+  //没有标题栏的弹框
   .ant-modal-body {
     max-height: calc(100vh - 64px);
     overflow-y: auto;
@@ -1141,7 +1141,7 @@ a:hover {
   }
 }
 .fullScreenModal {
-  z-index: 1002;
+  // z-index: 1002;
   //全面屏弹框
   :global {
     .ant-modal {
@@ -1160,21 +1160,24 @@ a:hover {
     .ant-modal-body {
       height: calc(100% - 30px);
       overflow-y: auto;
-      padding: 8px  24px;
+      padding: 8px 24px;
     }
 
-    .ant-pro-page-header-wrap-children-content{
+    .ant-pro-page-header-wrap-children-content {
       // margin: 14px 10px 0;
       margin: 0;
     }
     .ant-modal-close-x {
       line-height: 40px;
     }
-    .ant-modal-header{
+    .ant-modal-header {
       padding: 8px 12px;
     }
-    .ant-card-body{
-     padding: 8px  24px;
+    .ant-card-body {
+      padding: 8px 24px;
+    }
+    .ant-pro-page-header-wrap-page-header-warp {
+      display: none;
     }
   }
 }
@@ -1398,10 +1401,16 @@ a:hover {
       padding-right: 8px;
     }
   }
+<<<<<<< HEAD
   .ant-card-body{
     padding: 8px 24px;
   }
   .ant-picker,.ant-input-number{
+=======
+
+  .ant-picker,
+  .ant-input-number {
+>>>>>>> bc5ce83aac6042749f93fe00e7d83a43aaa66480
     width: 100% !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
@@ -1443,8 +1452,11 @@ a:hover {
     border-color: #40a9ff;
   }
 }
+<<<<<<< HEAD
 .smallCardWrapper :global {
   .ant-pro-page-header-wrap-children-content>.ant-card>.ant-card-body{
     padding:8px 24px;
   }
 }
+=======
+>>>>>>> bc5ce83aac6042749f93fe00e7d83a43aaa66480

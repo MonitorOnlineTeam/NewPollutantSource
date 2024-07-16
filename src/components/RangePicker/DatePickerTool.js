@@ -29,13 +29,14 @@ class DatePickerTool extends Component {
        {
            case "month":
            case "monthly":
-           case "quarter":
                 return <MonthPicker value={this.state.defaultValue} {...this.props}  onChange={this.onChange}/>
+           case "quarter":
+                return <DatePicker value={this.state.defaultValue} {...this.props} onChange={this.onChange} picker="quarter" />
            case "year":
            case "annals":
                return  <YearPicker  value={this.state.defaultValue} {...this.props}  onPanelChange={this.onChange} />
            //默认是日
-           default: return <DatePicker value={this.state.defaultValue} {...this.props}  picker='date'   onChange={this.onChange}/>
+           default: return <DatePicker value={this.state.defaultValue} {...this.props} picker='date'   onChange={this.onChange}/>
        }
     }
 
