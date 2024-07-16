@@ -336,7 +336,7 @@ class SearchWrapper extends Component {
       }
       return (
         element &&
-        <Col style={{ display: isHide, marginBottom: 6 }} key={index} md={8} sm={24}>
+        <Col style={{ display: isHide, marginBottom:  4 }} key={index} md={8} sm={24}>
           <FormItem {...formLayout} label={labelText} style={{ width: '100%', marginBottom: 0 }}>
             {getFieldDecorator(`${fieldName}`, {})(
               element
@@ -394,7 +394,7 @@ class SearchWrapper extends Component {
             this._renderFormItem()
           }
           {
-            searchConditions.length ? <div style={{ marginTop: 4, display: 'inline-block', ...style }}>
+            searchConditions.length ? <div style={{ marginTop: 4, marginBottom: 4, display: 'inline-block', ...style }}>
               <Button type="primary" onClick={() => {
                 // 重置分页并查询数据
                 this.props.dispatch({

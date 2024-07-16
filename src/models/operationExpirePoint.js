@@ -15,9 +15,10 @@ export default Model.extend({
     checkName:'0~7日'
   },
   effects: {
-    *getOperationExpirePointList({ payload,callback }, { call, put, update }) { //运维到期点位统计
+    *getOperationExpirePointList({ payload,callback }, { call, put, update, select }) { //运维到期点位统计
       yield update({ tableLoading:true})
-      const result = yield call(services.GetOperationExpirePointList, payload);
+      const global = yield select(state => state.global);
+      const result = yield call(services.GetOperationExpirePointList, {...payload,isBW:global?.operationSettingInfo?.TaskPlanType == 2});
       if (result.IsSuccess) {
         yield update({
           totalDatas:result.Datas,
@@ -30,7 +31,8 @@ export default Model.extend({
       }
     },
     *exportOperationExpirePointList({ callback,payload }, { call, put, update, select }) { //运维到期点位统计 导出
-      const response = yield call(services.ExportOperationExpirePointList, { ...payload });
+      const global = yield select(state => state.global);
+      const response = yield call(services.ExportOperationExpirePointList, {...payload,isBW:global?.operationSettingInfo?.TaskPlanType == 2});
       if (response.IsSuccess) {
         message.success('下载成功');
         downloadFile(`${response.Datas}`);

@@ -19,8 +19,9 @@ export default Model.extend({
     tableDatas:[],
   },
   effects: {
-    *getOperateRIHPointList({ payload,callback }, { call, put, update }) { //列表
-      const result = yield call(services.getOperateRIHPointList, payload);
+    *getOperateRIHPointList({ payload,callback }, { call, put, update, select }) { //列表
+      const global = yield select(state => state.global);
+      const result = yield call(services.getOperateRIHPointList, {...payload,isBW:global?.operationSettingInfo?.TaskPlanType == 2});
       if (result.IsSuccess) {
         yield update({
             tableDatas:result.Datas,
@@ -30,8 +31,9 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *exportOperateRIHPointList({ payload,callback }, { call, put, update }) { //导出
-        const result = yield call(services.exportOperateRIHPointList, payload);
+    *exportOperateRIHPointList({ payload,callback }, { call, put, update, select }) { //导出
+        const global = yield select(state => state.global);
+        const result = yield call(services.exportOperateRIHPointList,  {...payload,isBW:global?.operationSettingInfo?.TaskPlanType == 2});
          if (result.IsSuccess) {
             message.success('下载成功');
            downloadFile(`${result.Datas}`);

@@ -493,7 +493,7 @@ const Index = props => {
   
   const { modalWrapClassName } = props;
   return (
-    <div className={styles.installEquipmentSty}>
+    <div className={`${styles.installEquipmentSty} queryCriterTitleSty`}>
       <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
         <Card title={searchComponents()} bordered={!hideBreadcrumb}>
           <SdlTable

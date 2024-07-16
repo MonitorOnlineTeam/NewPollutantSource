@@ -149,9 +149,6 @@ const Index = (props) => {
   }, []);
   const pollutantType = pollType[props.type]
   const initData = () => {
-    props.GetOperatePointList({ //运维监测点信息
-      pollutantType: pollutantType,
-    })
     getOperationRegionPlanTaskRate(1) //计划完成率
   }
 
@@ -174,6 +171,10 @@ const Index = (props) => {
         ...latelyDays30
       })
     }
+    props.GetOperatePointList({ //运维监测点信息
+      pollutantType: pollutantType,
+      isBW: TaskPlanType == 2
+    })
   }
 
   }, [TaskPlanType]);

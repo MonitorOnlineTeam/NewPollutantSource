@@ -1,5 +1,5 @@
 /**
- * 功  能：交接和报告
+ * 功  能：交接和报告 编辑组件
  * 创建人：jab
  * 创建时间：2023.10.08
  */
@@ -94,7 +94,7 @@ const Index = (props) => {
     const initData = () => {
         form2.resetFields();
         setFilesList1([])
-        if (record.ReceiveFile && record.ReceiveFile[0] && record.ReceiveFile != '待上传') { //运维接收-运维交接单 照片
+        if (record?.ReceiveFile && record.ReceiveFile[0] && record.ReceiveFile != '待上传') { //运维接收-运维交接单 照片
             const fileList = []
             record.ReceiveFile.map(item => {
                 if (!item.IsDelete) {
@@ -109,7 +109,7 @@ const Index = (props) => {
             setFilesList1(fileList)
         }
         setFilesList2([])
-        if (record.TransferFile && record.TransferFile[0] && record.TransferFile != '待上传') { //运维移交-运维交接单 照片
+        if (record?.TransferFile && record.TransferFile[0] && record.TransferFile != '待上传') { //运维移交-运维交接单 照片
             const fileList = []
             record.TransferFile.map(item => {
                 if (!item.IsDelete) {
@@ -124,7 +124,7 @@ const Index = (props) => {
             setFilesList2(fileList)
         }
         setFilesList3([])
-        if (record.PerformanceFile && record.PerformanceFile[0] && record.PerformanceFile != '待上传') { //运维合同履约完成报告 照片
+        if (record?.PerformanceFile && record.PerformanceFile[0] && record.PerformanceFile != '待上传') { //运维合同履约完成报告 照片
             const fileList = []
             record.PerformanceFile.map(item => {
                 if (!item.IsDelete) {
@@ -140,14 +140,14 @@ const Index = (props) => {
         }
         try {
             form2.setFieldsValue({
-                remark: record.Remark,
-                status: record.Status,
-                id: record.ID,
-                projectID: record.ProjectID,
-                performanceFile: record.PerformanceFile == '待上传' || !record.PerformanceFile ? cuid() : record.PerformanceFile?.[0]?.FileUuid,
-                receiveFile: record.ReceiveFile == '待上传' || !record.ReceiveFile ? cuid() : record.ReceiveFile?.[0]?.FileUuid,
-                transferFile: record.TransferFile == '待上传' || !record.TransferFile ? cuid() : record.TransferFile?.[0]?.FileUuid,
-                EndStatus: record.EndStatus,
+                remark: record?.Remark,
+                status: record?.Status,
+                id: record?.ID,
+                projectID: record?.ProjectID,
+                performanceFile: record?.PerformanceFile == '待上传' || !record?.PerformanceFile ? cuid() : record?.PerformanceFile?.[0]?.FileUuid,
+                receiveFile: record?.ReceiveFile == '待上传' || !record?.ReceiveFile ? cuid() : record?.ReceiveFile?.[0]?.FileUuid,
+                transferFile: record?.TransferFile == '待上传' || !record?.TransferFile ? cuid() : record?.TransferFile?.[0]?.FileUuid,
+                EndStatus: record?.EndStatus,
             })
 
 

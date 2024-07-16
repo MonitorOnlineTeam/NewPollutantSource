@@ -242,7 +242,7 @@ const ProjectExecutionModal = props => {
       }}
       bodyStyle={{ padding: 0 }}
     >
-      <Card bordered={false} title={<SearchComponents />}>
+      <Card bordered={false} className='queryCriterTitleSty' title={<SearchComponents />}>
         <SdlTable
           loading={queryLoading}
           align="center"
@@ -250,7 +250,7 @@ const ProjectExecutionModal = props => {
           dataSource={dataSource}
           columns={getColumns()}
           scroll={{
-            y: 'calc(100vh - 260px)',
+            y: 'calc(100vh - 200px)',
           }}
           pagination={false}
         />

@@ -171,7 +171,7 @@ class SdlTable extends PureComponent {
       const nextColumns = [...columns];
       nextColumns[index] = {
         ...nextColumns[index],
-        width: size.width || defaultWidth,
+        width: size.width,
       };
       return { columns: nextColumns };
     });
@@ -321,13 +321,13 @@ class SdlTable extends PureComponent {
             ),
       align: align,
       ...col,
-      width: col.width == 'auto' ? false : this.getInitialColWidth(col),
+      width: col.width == 'auto' || (!col.width && this.props.autowidth && col.title!='序号') ?  false : this.getInitialColWidth(col) || defaultWidth,
       onHeaderCell: column => ({
-        width: column.width,
+        width:  !col.width && this.props.autowidth && col.title!='序号' ? (this.sdlTable?.clientWidth - 54 )/(columns.length-1)  : column.width,//自适应除序号列表格宽度并且能伸缩
         onResize: resizable ? this.handleResize(index) : undefined,
       }),
     }));
-    const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
+    const scrollXWidth = this.props.autowidth? (columns.length-1) * defaultWidth + 54 : _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
       <DndProvider backend={HTML5Backend}>
         <div ref={el => (this.sdlTableFrame = el)}>

@@ -117,7 +117,6 @@ export default Model.extend({
         // }
        window.configInfo = response.Datas;
        console.log(window.configInfo )
-       sessionStorage.setItem('isBW',response.Datas?.IsShowProjectRegion)
         yield put({
           type: 'setConfigInfo',
           payload: {

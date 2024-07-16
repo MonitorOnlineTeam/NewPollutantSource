@@ -210,7 +210,7 @@ const Office = props => {
       ellipsis: true,
     },
   ];
-  return (
+  return (<div className='smallCardWrapper'>
     <BreadcrumbWrapper hideBreadcrumb={isModal}>
       <Card bordered={false}>
         <SearchWrapper configId={CONFIGID} />
@@ -338,6 +338,7 @@ const Office = props => {
         </Modal>
       </Card>
     </BreadcrumbWrapper>
+    </div>
   );
 };
 
