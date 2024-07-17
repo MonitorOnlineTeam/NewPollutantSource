@@ -22,6 +22,8 @@ const AssistDataAnalysis = props => {
     saveLoading,
     dataChartParams,
     defaultActiveKey,
+    pointInfo,
+    warningId,
   } = props;
   const [DGIMN, setDGIMN] = useState(props.DGIMN);
   // const [images, setImages] = useState([]);
@@ -44,7 +46,7 @@ const AssistDataAnalysis = props => {
   //     });
   //   }
   // };
-
+  console.log('pointInfo1', pointInfo);
   const getPageContent = () => {
     return (
       <Card bodyStyle={{ paddingTop: 0 }} bordered={displayType !== 'modal'}>
@@ -57,6 +59,8 @@ const AssistDataAnalysis = props => {
               // defaultChartSelected={['氧含量', '烟气湿度', '烟气温度', '流速']}
               // defaultChartSelected={['s01', 's05', 's03', 's02']}
               displayType={displayType}
+              pointInfo={pointInfo}
+              warningId={warningId}
               {...dataChartParams}
             />
           </Tabs.TabPane>

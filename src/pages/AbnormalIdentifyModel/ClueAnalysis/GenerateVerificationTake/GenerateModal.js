@@ -14,7 +14,7 @@ import {
   Space,
   Select,
   Badge,
-  Tooltip,
+  Divider,
   Input,
   Radio,
   Modal,
@@ -91,10 +91,7 @@ const Index = props => {
     ? JSON.parse(props?.history?.location?.query?.data)
     : '';
 
-  useEffect(() => {
-
-  }, []);
-
+  useEffect(() => {}, []);
 
   useEffect(() => {
     if (collapsekey == 1) {
@@ -106,7 +103,7 @@ const Index = props => {
             modalForm.validateFields(['planContent']);
           });
         }
-      },200);
+      }, 200);
     } else {
       quillRef.current = null;
     }
@@ -125,7 +122,6 @@ const Index = props => {
       quillRef2.current = null;
     }
   }, [siteVerificationPlanType]);
-
 
   const getVerificationPlanColumns = () => {
     return [
@@ -263,9 +259,6 @@ const Index = props => {
     setVerificationActionData(newData);
   };
 
-
-
-
   const [preTakeFlagDatas, setPreTakeFlagDatas] = useState([]); //专家意见
   const [checkRoleDatas, setCheckRoleDatas] = useState([]); //核查角色
   const [planDatas, setPlanDatas] = useState([]); //已有核查方案
@@ -322,7 +315,7 @@ const Index = props => {
                 value: chilItem.UserID,
               })),
             };
-          });   
+          });
           setCheckRoleDatas(userList);
         },
       });
@@ -334,8 +327,8 @@ const Index = props => {
         },
       });
     } else {
-    //   setSelectedRowKeys([]);
-    //   setSelectedRow([]);
+      //   setSelectedRowKeys([]);
+      //   setSelectedRow([]);
       setCollapsekey();
       setPreTakeFlagDatas([]);
       setCheckRoleDatas([]);
@@ -385,12 +378,16 @@ const Index = props => {
               }
             : undefined,
       };
+
+      console.log('parData', parData);
+      // props.onFinish();
+      // return;
       dispatch({
         type: 'AbnormalIdentifyModel/AddPlanTask',
         payload: { ...parData },
         callback: res => {
-          props.onCancel&&props.onCancel();
-          props.onFinish&&props.onFinish();
+          props.onCancel && props.onCancel();
+          props.onFinish && props.onFinish();
         },
       });
     };
@@ -575,428 +572,426 @@ const Index = props => {
     fileList: filesList[files],
   };
 
-  return (
-    <div>
-        <Modal
-          title={'生成核查任务'}
-          destroyOnClose
-          wrapClassName={'spreadOverModal'}
-          mask={false}
-          className={styles.generateVerificationTakeModal}
-          {...props}
-          footer={[
-            <Button
-              key="back"
-              onClick={() => {
-                setVisible(false);
-              }}
-            >
-              取消
-            </Button>,
-            siteVerificationPlanType == 1 && saveType == 1 && verificationPlanType == 1 ? ( //新建方案保存
-              <Button key="submit" type="primary" loading={addLoading} onClick={() => save(1)}>
-                提交并新增到方案库
-              </Button>
-            ) : siteVerificationPlanType == 1 && saveType == 1 && verificationPlanType == 2 ? ( //选择方案保存
-              <>
-                <Button key="submit" type="primary" loading={addLoading} onClick={() => save(1)}>
-                  提交并新增到方案库
-                </Button>
-                <Button key="submit" type="primary" loading={addLoading} onClick={() => save(2)}>
-                  提交并覆盖原有方案库
-                </Button>
-              </>
-            ) : (
-              <Button type="primary" loading={addLoading} onClick={() => save(3)}>
-                提交
-              </Button>
-            ),
-          ]}
+  const getFooterBtns = () => {
+    return (
+      <Space>
+        <Button
+          key="back"
+          onClick={() => {
+            props.onCancel();
+          }}
         >
-          <Form
-            name="basic2"
-            form={modalForm}
-            initialValues={{
-              verificationPlanType: 1,
-              isSceneCheck: 1,
-              checkResult: 1,
-              checkUserId: locationPar?.operationUser,
-            }}
-          >
-            <Row>
-              <Col span={8}>
-                <Form.Item label="企业">{selectedRow?.EntName}</Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item label="排口">{selectedRow?.PointName}</Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item
-                  name="isSceneCheck"
-                  label="现场核查"
-                  rules={[{ required: true, message: '请选择现场核查!' }]}
-                >
-                  <Radio.Group
-                    onChange={e => {
-                      setSiteVerificationPlanType(e.target?.value);
-                      setCollapsekey(e.target.value == 1 ? 1 : undefined);
-                      setSaveType();
-                      modalForm.resetFields();
-                      modalForm.setFieldsValue({
-                        isSceneCheck: e.target?.value,
-                      });
-                      initVerificationActionData(); //重新初始化核查动作数据
-                    }}
-                  >
-                    <Radio value={1}>需要</Radio>
-                    <Radio value={2}>不需要</Radio>
-                  </Radio.Group>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Spin spinning={!!preTakeFlagDatasLoading} size="small" style={{ width: 440, top: -6 }}>
+          取消
+        </Button>
+        {siteVerificationPlanType == 1 && saveType == 1 && verificationPlanType == 1 ? ( //新建方案保存
+          <Button key="submit" type="primary" loading={addLoading} onClick={() => save(1)}>
+            提交并新增到方案库
+          </Button>
+        ) : siteVerificationPlanType == 1 && saveType == 1 && verificationPlanType == 2 ? ( //选择方案保存
+          <>
+            <Button key="submit" type="primary" loading={addLoading} onClick={() => save(1)}>
+              提交并新增到方案库
+            </Button>
+            <Button key="submit" type="primary" loading={addLoading} onClick={() => save(2)}>
+              提交并覆盖原有方案库
+            </Button>
+          </>
+        ) : (
+          <Button type="primary" loading={addLoading} onClick={() => save(3)}>
+            提交
+          </Button>
+        )}
+      </Space>
+    );
+  };
+
+  const getPageContent = isShowFooter => {
+    return (
+      <>
+        <Form
+          name="basic2"
+          form={modalForm}
+          initialValues={{
+            verificationPlanType: 1,
+            isSceneCheck: 1,
+            checkResult: 1,
+            checkUserId: locationPar?.operationUser,
+          }}
+        >
+          <Row>
+            <Col span={8}>
+              <Form.Item label="企业">{selectedRow?.EntName}</Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="排口">{selectedRow?.PointName}</Form.Item>
+            </Col>
+            <Col span={8}>
               <Form.Item
-                name="preTakeFlag"
-                label="专家意见"
-                rules={[{ required: true, message: '请选择标记!' }]}
+                name="isSceneCheck"
+                label="现场核查"
+                rules={[{ required: true, message: '请选择现场核查!' }]}
               >
-                <Cascader
-                  showSearch
-                  filterOption={(input, option) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                  style={{ width: 300 }}
-                  fieldNames={{ label: 'FlagName', value: 'FlagCode', children: 'ChildrenFlags' }}
-                  options={preTakeFlagDatas}
-                  placeholder="请选择标记"
-                />
-              </Form.Item>
-            </Spin>
-            {siteVerificationPlanType == 1 ? (
-              <>
-                <Spin
-                  spinning={!!checkRoleDatasLoading}
-                  size="small"
-                  style={{ width: 440, top: -6 }}
+                <Radio.Group
+                  onChange={e => {
+                    setSiteVerificationPlanType(e.target?.value);
+                    setCollapsekey(e.target.value == 1 ? 1 : undefined);
+                    setSaveType();
+                    modalForm.resetFields();
+                    modalForm.setFieldsValue({
+                      isSceneCheck: e.target?.value,
+                    });
+                    initVerificationActionData(); //重新初始化核查动作数据
+                  }}
                 >
-                  <Form.Item
-                    name="checkUserId"
-                    label="核查人"
-                    rules={[{ required: true, message: '请选择核查人!' }]}
-                  >
-                    <Select
-                      options={checkRoleDatas?.[0] ? checkRoleDatas : []}
-                      style={{ width: 300 }}
-                      placeholder="请选择"
-                      showSearch
-                      filterOption={(input, option) =>
-                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  <Radio value={1}>需要</Radio>
+                  <Radio value={2}>不需要</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Spin spinning={!!preTakeFlagDatasLoading} size="small" style={{ width: 440, top: -6 }}>
+            <Form.Item
+              name="preTakeFlag"
+              label="专家意见"
+              rules={[{ required: true, message: '请选择标记!' }]}
+            >
+              <Cascader
+                showSearch
+                filterOption={(input, option) =>
+                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
+                style={{ width: 300 }}
+                fieldNames={{ label: 'FlagName', value: 'FlagCode', children: 'ChildrenFlags' }}
+                options={preTakeFlagDatas}
+                placeholder="请选择标记"
+              />
+            </Form.Item>
+          </Spin>
+          {siteVerificationPlanType == 1 ? (
+            <>
+              <Spin spinning={!!checkRoleDatasLoading} size="small" style={{ width: 440, top: -6 }}>
+                <Form.Item
+                  name="checkUserId"
+                  label="核查人"
+                  rules={[{ required: true, message: '请选择核查人!' }]}
+                >
+                  <Select
+                    options={checkRoleDatas?.[0] ? checkRoleDatas : []}
+                    style={{ width: 300 }}
+                    placeholder="请选择"
+                    showSearch
+                    filterOption={(input, option) =>
+                      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                    }
+                  />
+                </Form.Item>
+              </Spin>
+              <Row>
+                <Form.Item
+                  name="verificationPlanType"
+                  label="核查方案"
+                  rules={[{ required: true, message: '请选择核查方案!' }]}
+                >
+                  <Select
+                    style={{ width: 300 }}
+                    value={verificationPlanType}
+                    placeholder="请选择"
+                    onChange={value => {
+                      setVerificationPlanType(value);
+                      modalForm.setFieldsValue({ planName: '', planContent: '', planCode: '' });
+                      initVerificationActionData();
+                      setPlanPopVisible(false);
+                      if (editor?.root?.innerHTML) {
+                        editor.root.innerHTML = ''; //清空富文本内容
                       }
-                    />
-                  </Form.Item>
-                </Spin>
-                <Row>
-                  <Form.Item
-                    name="verificationPlanType"
-                    label="核查方案"
-                    rules={[{ required: true, message: '请选择核查方案!' }]}
-                  >
-                    <Select
-                      style={{ width: 300 }}
-                      value={verificationPlanType}
-                      placeholder="请选择"
-                      onChange={value => {
-                        setVerificationPlanType(value);
-                        modalForm.setFieldsValue({ planName: '', planContent: '', planCode: '' });
-                        initVerificationActionData();
-                        setPlanPopVisible(false);
-                        if (editor?.root?.innerHTML) {
-                          editor.root.innerHTML = ''; //清空富文本内容
-                        }
-                      }}
-                    >
-                      <Option value={1}>新建方案</Option>
-                      <Option value={2}>选择已有方案</Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item
-                    name="planName"
-                    style={{ margin: '0 6px' }}
-                    rules={[{ required: true, message: '请输入方案名称!' }]}
-                  >
-                    <Input
-                      style={{ width: 320 }}
-                      disabled={verificationPlanType === 2}
-                      placeholder={verificationPlanType == 1 ? '请输入方案名称' : '请选择'}
-                    />
-                  </Form.Item>
-                  <Popover
-                    visible={planPopVisible}
-                    title="核查预案"
-                    trigger="click"
-                    getPopupContainer={node => {
-                      if (node && node.parentNode) {
-                        return node.parentNode;
-                      }
-                      return node;
                     }}
-                    placement={planDatas?.length >= 18 ? 'rightBottom' : 'right'}
-                    content={
-                      <>
-                        <Table
-                          rowKey={(record, index) => index}
-                          bordered
+                  >
+                    <Option value={1}>新建方案</Option>
+                    <Option value={2}>选择已有方案</Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  name="planName"
+                  style={{ margin: '0 6px' }}
+                  rules={[{ required: true, message: '请输入方案名称!' }]}
+                >
+                  <Input
+                    style={{ width: 320 }}
+                    disabled={verificationPlanType === 2}
+                    placeholder={verificationPlanType == 1 ? '请输入方案名称' : '请选择'}
+                  />
+                </Form.Item>
+                <Popover
+                  visible={planPopVisible}
+                  title="核查预案"
+                  trigger="click"
+                  getPopupContainer={node => {
+                    if (node && node.parentNode) {
+                      return node.parentNode;
+                    }
+                    return node;
+                  }}
+                  placement={planDatas?.length >= 18 ? 'rightBottom' : 'right'}
+                  content={
+                    <>
+                      <Table
+                        rowKey={(record, index) => index}
+                        bordered
+                        size="small"
+                        rowSelection={rowPlanSelection}
+                        columns={getVerificationPlanColumns()}
+                        dataSource={planDatas}
+                        loading={planDatasLoading}
+                        scroll={{ x: '100%', y: 'calc(100vh - 260px)' }}
+                        pagination={false}
+                      />
+                      <Row justify="end" style={{ marginTop: 8 }}>
+                        <Button
+                          type="default"
                           size="small"
-                          rowSelection={rowPlanSelection}
-                          columns={getVerificationPlanColumns()}
-                          dataSource={planDatas}
-                          loading={planDatasLoading}
-                          scroll={{ x: '100%', y: 'calc(100vh - 260px)' }}
-                          pagination={false}
-                        />
-                        <Row justify="end" style={{ marginTop: 8 }}>
+                          onClick={() => {
+                            setPlanPopVisible(false);
+                            setSelectedPlanRowKeys([]);
+                            setSelectedPlanRow([]);
+                          }}
+                        >
+                          取消
+                        </Button>
+                        {planDatas?.[0] && (
                           <Button
-                            type="default"
+                            type="primary"
                             size="small"
                             onClick={() => {
-                              setPlanPopVisible(false);
-                              setSelectedPlanRowKeys([]);
-                              setSelectedPlanRow([]);
-                            }}
-                          >
-                            取消
-                          </Button>
-                          {planDatas?.[0] && (
-                            <Button
-                              type="primary"
-                              size="small"
-                              onClick={() => {
-                                if (selectedPlanRowKeys?.length > 0) {
-                                  setPlanPopVisible(false);
-                                  setCollapsekey(1);
-                                  setTimeout(() => {
-                                    if (selectedPlanRow?.PlanItemDatas?.[0]) {
-                                      modalForm.setFieldsValue({
-                                        planName: selectedPlanRow.PlanName,
-                                        planContent: selectedPlanRow.PlanContent,
-                                        planCode: selectedPlanRow?.PlanCode,
-                                      });
-                                      setTimeout(() => {
-                                        //给富文本赋值
-                                        if (quillRef.current) {
-                                          editor.root.innerHTML = selectedPlanRow.PlanContent;
-                                        }
-                                      });
-                                      const data = selectedPlanRow.PlanItemDatas;
-                                      setVerificationActionData(data);
-                                      if (data?.[0]) {
-                                        data.map(item => {
-                                          modalForm.setFieldsValue({
-                                            [`QTitle_${item.PlanItemCode}`]: item.QTitle,
-                                            [`QContent_${item.PlanItemCode}`]: item.QContent,
-                                            [`QAttachment_${item.PlanItemCode}`]:
-                                              item.QAttachment[0] && item.QAttachment[0].FileUuid,
-                                          });
-                                        });
-                                        //图片回显
-                                        const uploadList = {},
-                                          uploadCuid = {};
-                                        data.map(item => {
-                                          const attachmentFilesList = [];
-                                          item.QAttachment?.[0] &&
-                                            item.QAttachment.map(attachmentItem => {
-                                              if (!attachmentItem.IsDelete) {
-                                                attachmentFilesList.push({
-                                                  uid: attachmentItem.GUID,
-                                                  name: attachmentItem.FileName,
-                                                  status: 'done',
-                                                  url: `${uploadPrefix}/${attachmentItem.FileName}`,
-                                                });
-                                              }
-                                            });
-                                          uploadList[
-                                            `QAttachment_${item.PlanItemCode}`
-                                          ] = attachmentFilesList;
-                                          uploadCuid[`QAttachment_${item.PlanItemCode}`] = item
-                                            .QAttachment?.[0]?.FileUuid
-                                            ? item.QAttachment[0].FileUuid
-                                            : cuid();
-                                        });
-                                        setFilesList({ ...uploadList });
-                                        setFilesCuidList({ ...uploadCuid });
+                              if (selectedPlanRowKeys?.length > 0) {
+                                setPlanPopVisible(false);
+                                setCollapsekey(1);
+                                setTimeout(() => {
+                                  if (selectedPlanRow?.PlanItemDatas?.[0]) {
+                                    modalForm.setFieldsValue({
+                                      planName: selectedPlanRow.PlanName,
+                                      planContent: selectedPlanRow.PlanContent,
+                                      planCode: selectedPlanRow?.PlanCode,
+                                    });
+                                    setTimeout(() => {
+                                      //给富文本赋值
+                                      if (quillRef.current) {
+                                        editor.root.innerHTML = selectedPlanRow.PlanContent;
                                       }
+                                    });
+                                    const data = selectedPlanRow.PlanItemDatas;
+                                    setVerificationActionData(data);
+                                    if (data?.[0]) {
+                                      data.map(item => {
+                                        modalForm.setFieldsValue({
+                                          [`QTitle_${item.PlanItemCode}`]: item.QTitle,
+                                          [`QContent_${item.PlanItemCode}`]: item.QContent,
+                                          [`QAttachment_${item.PlanItemCode}`]:
+                                            item.QAttachment[0] && item.QAttachment[0].FileUuid,
+                                        });
+                                      });
+                                      //图片回显
+                                      const uploadList = {},
+                                        uploadCuid = {};
+                                      data.map(item => {
+                                        const attachmentFilesList = [];
+                                        item.QAttachment?.[0] &&
+                                          item.QAttachment.map(attachmentItem => {
+                                            if (!attachmentItem.IsDelete) {
+                                              attachmentFilesList.push({
+                                                uid: attachmentItem.GUID,
+                                                name: attachmentItem.FileName,
+                                                status: 'done',
+                                                url: `${uploadPrefix}/${attachmentItem.FileName}`,
+                                              });
+                                            }
+                                          });
+                                        uploadList[
+                                          `QAttachment_${item.PlanItemCode}`
+                                        ] = attachmentFilesList;
+                                        uploadCuid[`QAttachment_${item.PlanItemCode}`] = item
+                                          .QAttachment?.[0]?.FileUuid
+                                          ? item.QAttachment[0].FileUuid
+                                          : cuid();
+                                      });
+                                      setFilesList({ ...uploadList });
+                                      setFilesCuidList({ ...uploadCuid });
                                     }
-                                    setSelectedPlanRowKeys([]);
-                                    setSelectedPlanRow([]);
-                                  }, 0);
-                                } else {
-                                  message.warning('请选择核查方案');
-                                }
-                              }}
-                              style={{ marginLeft: 6 }}
-                            >
-                              选择
-                            </Button>
-                          )}
-                        </Row>
-                      </>
-                    }
-                  >
-                    {verificationPlanType == 2 && (
-                      <Button
-                        type="primary"
-                        onClick={() => {
-                          setPlanPopVisible(true);
-                        }}
-                      >
-                        选择已有方案
-                      </Button>
-                    )}
-                  </Popover>
-                </Row>
-                <Collapse
-                  onChange={value => {
-                    setCollapsekey(value?.[0]);
-                  }}
-                  ghost
-                  defaultActiveKey={1}
-                >
-                  <Panel header={<div style={{ fontWeight: 'bold' }}>核查方案</div>} key="1">
-                    <Form.Item
-                      name="isSavePlan"
-                      label="保存到方案库"
-                      rules={[{ required: true, message: '请选择是否保存到方案库!' }]}
-                    >
-                      <Radio.Group
-                        onChange={e => {
-                          setSaveType(e.target.value);
-                        }}
-                      >
-                        <Radio value={1}>保存</Radio>
-                        <Radio value={2}>不保存</Radio>
-                      </Radio.Group>
-                    </Form.Item>
-                    <ResizableBox
-                      height={260}
-                      axis={'y'}
-                      minConstraints={['100%', 120]}
-                      className={'resizable_quill_sty'}
-                      style={{ marginTop: 8 }}
-                    >
-                      <Form.Item
-                        name="planContent"
-                        style={{ height: '100%' }}
-                        rules={[
-                          {
-                            validator: (_, value) => {
-                              const editorContent = editor?.root?.innerHTML;
-                              const contentVal =
-                                editorContent && editorContent.replaceAll(/<p>|[</p>]/g, '').trim();
-                              if (!contentVal || contentVal === 'br') {
-                                return Promise.reject(new Error('请输入核查方案!'));
+                                  }
+                                  setSelectedPlanRowKeys([]);
+                                  setSelectedPlanRow([]);
+                                }, 0);
                               } else {
-                                modalForm.setFieldsValue({ planContent: editorContent });
-                                return Promise.resolve();
+                                message.warning('请选择核查方案');
                               }
-                            },
-                          },
-                        ]}
-                      >
-                        <div ref={quillRef} />
-                      </Form.Item>
-                    </ResizableBox>
-                    <Row align="middle" style={{ marginBottom: 6 }}>
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          height: 14,
-                          width: 4,
-                          marginRight: 4,
-                          backgroundColor: '#3888ff',
-                        }}
-                      ></span>{' '}
-                      核查动作
-                    </Row>
-                    <Table
-                      components={{
-                        body: {
-                          cell: EditableCell,
-                        },
-                      }}
-                      bordered
-                      dataSource={verificationActionData}
-                      columns={verificationActionColumns}
-                      scroll={{ x: 680, y: 'hidden' }}
-                      pagination={false}
-                      size="small"
-                      className={'verificationActionTableSty'}
-                    />
+                            }}
+                            style={{ marginLeft: 6 }}
+                          >
+                            选择
+                          </Button>
+                        )}
+                      </Row>
+                    </>
+                  }
+                >
+                  {verificationPlanType == 2 && (
                     <Button
-                      style={{ margin: '10px 0 15px 0' }}
-                      type="dashed"
-                      block
-                      icon={<PlusOutlined />}
-                      onClick={() => verificationActionAdd()}
+                      type="primary"
+                      onClick={() => {
+                        setPlanPopVisible(true);
+                      }}
                     >
-                      新增
+                      选择已有方案
                     </Button>
-                  </Panel>
-                </Collapse>
-              </>
-            ) : (
-              <>
-                <Form.Item
-                  name="checkResult"
-                  label="核查结果与线索是否符合"
-                  rules={[{ required: true, message: '请选择核查结果与线索是否符合!' }]}
-                >
-                  <Radio.Group>
-                    <Radio value={1}>符合</Radio>
-                    <Radio value={2}>部分符合</Radio>
-                    <Radio value={3}>不符合</Radio>
-                  </Radio.Group>
-                </Form.Item>
-                <Form.Item
-                  label="核查结论"
-                  name="checkConclusion"
-                  rules={[{ required: true, message: '请输入核查结论!' }]}
-                >
-                  <Input.TextArea placeholder="请输入" />
-                </Form.Item>
-                <ResizableBox
-                  height={260}
-                  axis={'y'}
-                  minConstraints={['100%', 120]}
-                  className={'resizable_quill_sty'}
-                >
+                  )}
+                </Popover>
+              </Row>
+              <Collapse
+                onChange={value => {
+                  setCollapsekey(value?.[0]);
+                }}
+                ghost
+                defaultActiveKey={1}
+              >
+                <Panel header={<div style={{ fontWeight: 'bold' }}>核查方案</div>} key="1">
                   <Form.Item
-                    label="原因"
-                    name="checkReason"
-                    rules={[
-                      {
-                        required: true,
-                        validator: (_, value) => {
-                          const editorContent2 = editor2?.root?.innerHTML;
-                          const contentVal =
-                            editorContent2 && editorContent2.replaceAll(/<p>|[</p>]/g, '').trim();
-                          if (!contentVal || contentVal === 'br') {
-                            return Promise.reject(new Error('请输入原因！'));
-                          } else {
-                            modalForm.setFieldsValue({ checkReason: editorContent2 });
-                            return Promise.resolve();
-                          }
-                        },
-                      },
-                    ]}
+                    name="isSavePlan"
+                    label="保存到方案库"
+                    rules={[{ required: true, message: '请选择是否保存到方案库!' }]}
                   >
-                    <div ref={quillRef2} />
+                    <Radio.Group
+                      onChange={e => {
+                        setSaveType(e.target.value);
+                      }}
+                    >
+                      <Radio value={1}>保存</Radio>
+                      <Radio value={2}>不保存</Radio>
+                    </Radio.Group>
                   </Form.Item>
-                </ResizableBox>
-              </>
-            )}
-            <Form.Item name="planCode" hidden></Form.Item>
-          </Form>
-        </Modal>
+                  <ResizableBox
+                    height={260}
+                    axis={'y'}
+                    minConstraints={['100%', 120]}
+                    className={'resizable_quill_sty'}
+                    style={{ marginTop: 8 }}
+                  >
+                    <Form.Item
+                      name="planContent"
+                      style={{ height: '100%' }}
+                      rules={[
+                        {
+                          validator: (_, value) => {
+                            const editorContent = editor?.root?.innerHTML;
+                            const contentVal =
+                              editorContent && editorContent.replaceAll(/<p>|[</p>]/g, '').trim();
+                            if (!contentVal || contentVal === 'br') {
+                              return Promise.reject(new Error('请输入核查方案!'));
+                            } else {
+                              modalForm.setFieldsValue({ planContent: editorContent });
+                              return Promise.resolve();
+                            }
+                          },
+                        },
+                      ]}
+                    >
+                      <div ref={quillRef} />
+                    </Form.Item>
+                  </ResizableBox>
+                  <Row align="middle" style={{ marginBottom: 6 }}>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        height: 14,
+                        width: 4,
+                        marginRight: 4,
+                        backgroundColor: '#3888ff',
+                      }}
+                    ></span>{' '}
+                    核查动作
+                  </Row>
+                  <Table
+                    components={{
+                      body: {
+                        cell: EditableCell,
+                      },
+                    }}
+                    bordered
+                    dataSource={verificationActionData}
+                    columns={verificationActionColumns}
+                    scroll={{ x: 680, y: 'hidden' }}
+                    pagination={false}
+                    size="small"
+                    className={'verificationActionTableSty'}
+                  />
+                  <Button
+                    style={{ margin: '10px 0 15px 0' }}
+                    type="dashed"
+                    block
+                    icon={<PlusOutlined />}
+                    onClick={() => verificationActionAdd()}
+                  >
+                    新增
+                  </Button>
+                </Panel>
+              </Collapse>
+            </>
+          ) : (
+            <>
+              <Form.Item
+                name="checkResult"
+                label="核查结果与线索是否符合"
+                rules={[{ required: true, message: '请选择核查结果与线索是否符合!' }]}
+              >
+                <Radio.Group>
+                  <Radio value={1}>符合</Radio>
+                  <Radio value={2}>部分符合</Radio>
+                  <Radio value={3}>不符合</Radio>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item
+                label="核查结论"
+                name="checkConclusion"
+                rules={[{ required: true, message: '请输入核查结论!' }]}
+              >
+                <Input.TextArea placeholder="请输入" />
+              </Form.Item>
+              <ResizableBox
+                height={260}
+                axis={'y'}
+                minConstraints={['100%', 120]}
+                className={'resizable_quill_sty'}
+              >
+                <Form.Item
+                  label="原因"
+                  name="checkReason"
+                  rules={[
+                    {
+                      required: true,
+                      validator: (_, value) => {
+                        const editorContent2 = editor2?.root?.innerHTML;
+                        const contentVal =
+                          editorContent2 && editorContent2.replaceAll(/<p>|[</p>]/g, '').trim();
+                        if (!contentVal || contentVal === 'br') {
+                          return Promise.reject(new Error('请输入原因！'));
+                        } else {
+                          modalForm.setFieldsValue({ checkReason: editorContent2 });
+                          return Promise.resolve();
+                        }
+                      },
+                    },
+                  ]}
+                >
+                  <div ref={quillRef2} />
+                </Form.Item>
+              </ResizableBox>
+            </>
+          )}
+          <Form.Item name="planCode" hidden></Form.Item>
+        </Form>
+        {isShowFooter && (
+          <Divider orientation="right" plain>
+            {getFooterBtns()}
+          </Divider>
+        )}
         <Modal
           title="上传图片"
           visible={fileVisible}
@@ -1025,6 +1020,27 @@ const Index = props => {
             setPreviewVisible(false);
           }}
         />
+      </>
+    );
+  };
+
+  if (props.isShowModal) {
+    return getPageContent(true);
+  }
+
+  return (
+    <div>
+      <Modal
+        title={'生成核查任务'}
+        destroyOnClose
+        wrapClassName={'spreadOverModal'}
+        mask={false}
+        className={styles.generateVerificationTakeModal}
+        {...props}
+        footer={getFooterBtns}
+      >
+        {getPageContent(false)}
+      </Modal>
     </div>
   );
 };

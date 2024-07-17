@@ -644,7 +644,7 @@ const Index = props => {
    if(!visible){
       setSelectedRowKeys([]);
       setSelectedRow([]);
-   }
+    }
   }, [visible]);
 
   // const save = type => {
@@ -1112,15 +1112,18 @@ const Index = props => {
             )}
           </Modal>
         </Card>
-        <GenerateModal
-          visible={visible}
-          onCancel={() => {
-            setVisible(false);
-          }}
-          selectedRowKeys={selectedRowKeys}
-          selectedRow={selectedRow}
-          onFinish={()=>onFinish(pageIndex, pageSize, 'query')}
-        />
+        {visible && (
+          <GenerateModal
+            visible={visible}
+            onCancel={() => {
+              setVisible(false);
+            }}
+            selectedRowKeys={selectedRowKeys}
+            selectedRow={selectedRow}
+            onFinish={() => onFinish(pageIndex, pageSize, 'query')}
+          />
+        )}
+
         {/* <Modal
           title={'生成核查任务'}
           destroyOnClose

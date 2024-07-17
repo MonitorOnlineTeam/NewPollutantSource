@@ -16,7 +16,7 @@ import {
   Tag,
 } from 'antd';
 import ReactEcharts from 'echarts-for-react';
-import { formatPollutantPopover } from '@/utils/utils';
+import { formatPollutantPopover, permissionButton } from '@/utils/utils';
 import styles from '../../styles.less';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
@@ -24,6 +24,7 @@ import { RightOutlined } from '@ant-design/icons';
 import { getColorByName, ModalTypeNameConversion } from '../../CONST';
 import TableText from '@/components/TableText';
 import moment from 'moment';
+import UpdateDataFlag from './UpdateDataFlag';
 
 const { CheckableTag } = Tag;
 
@@ -71,7 +72,11 @@ const WarningDataAndChart = props => {
   const [dataZoomPosition, setDataZoomPosition] = useState([]);
   const [echartRef, setEchartRef] = useState();
   const [currentLegend, setCurrentLegend] = useState([]);
+  const [isModalOpenDataFlag, setIsModalOpenDataFlag] = useState(false);
 
+  const buttonList = permissionButton(location.pathname);
+  console.log('location', location);
+  console.log('buttonList', buttonList);
   const RWGYText = ModalTypeNameConversion('人为干预');
   const GZText = ModalTypeNameConversion('故障原因');
 
@@ -115,7 +120,7 @@ const WarningDataAndChart = props => {
     describe,
     warningDate,
     defaultChartSelected,
-    chartStyle,
+    pointInfo,
     chartPollutantList,
     defaultShowType,
   } = props;
@@ -1531,7 +1536,17 @@ const WarningDataAndChart = props => {
             </Radio.Group>
           </Spin>
         )}
-
+        {props.displayType == 'modal' && pointInfo && buttonList.includes('UpdateDataScript') && (
+          <Button
+            type="primary"
+            onClick={() => {
+              setIsModalOpenDataFlag(true);
+            }}
+            style={{ position: 'absolute', right: 0, top: 50 }}
+          >
+            修改数据标记
+          </Button>
+        )}
         {// 弹窗不显示编辑功能
         props.displayType !== 'modal' && (
           <Button
@@ -1676,6 +1691,19 @@ const WarningDataAndChart = props => {
           </Space>
         </Row>
       </Modal>
+
+      {isModalOpenDataFlag && (
+        <UpdateDataFlag
+          pointInfo={pointInfo}
+          warningId={props.warningId}
+          open={isModalOpenDataFlag}
+          onCancel={() => {
+            setIsModalOpenDataFlag(false);
+          }}
+        />
+      )}
+
+      {console.log('props', props)}
     </>
   );
 };

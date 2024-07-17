@@ -125,8 +125,8 @@ export function formatPollutantPopover(value, additional) {
   ) : value === 0 ? (
     0
   ) : (
-        '-'
-      );
+    '-'
+  );
 }
 export function asc(a, b) {
   //数字类型
@@ -338,8 +338,8 @@ export function interceptTwo(value) {
     data.indexOf('.') == -1
       ? `${value.toFixed(2)}`
       : data.split('.')[1].length <= 2
-        ? `${value.toFixed(2)}`
-        : data.substring(0, data.indexOf('.') + 3);
+      ? `${value.toFixed(2)}`
+      : data.substring(0, data.indexOf('.') + 3);
   return result;
 }
 
@@ -364,16 +364,16 @@ export function isInsidePolygon(lng, lat, poly) {
     for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
       ((poly[i].lng <= lng && lng < poly[j].lng) || (poly[j].lng <= lng && lng < poly[i].lng)) &&
         lat <
-        ((poly[j].lat - poly[i].lat) * (lng - poly[i].lng)) / (poly[j].lng - poly[i].lng) +
-        poly[i].lat &&
+          ((poly[j].lat - poly[i].lat) * (lng - poly[i].lng)) / (poly[j].lng - poly[i].lng) +
+            poly[i].lat &&
         (c = !c);
     return c;
   } else {
     for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
       ((poly[i][0] <= lng && lng < poly[j][0]) || (poly[j][0] <= lng && lng < poly[i][0])) &&
         lat <
-        ((poly[j][1] - poly[i][1]) * (lng - poly[i][0])) / (poly[j][0] - poly[i][0]) +
-        poly[i][1] &&
+          ((poly[j][1] - poly[i][1]) * (lng - poly[i][0])) / (poly[j][0] - poly[i][0]) +
+            poly[i][1] &&
         (c = !c);
     return c;
   }
@@ -500,7 +500,7 @@ export function numVerify(val, callback) {
 
 export function arrDistinctByProp(arr, prop) {
   //对象数组去重
-  return arr.filter(function (item, index, self) {
+  return arr.filter(function(item, index, self) {
     return self.findIndex(el => el[prop] == item[prop]) === index;
   });
 }
@@ -520,6 +520,21 @@ export function getSysName(systemName) {
 import { post, get } from '@/utils/request';
 export async function requestPost(url, params) {
   return post(url, params)
+    .then(res => {
+      if (res.IsSuccess) {
+        return res;
+      } else {
+        message.error(res.Message);
+        return false;
+      }
+    })
+    .catch(error => {
+      console['error'](error);
+      return error;
+    });
+}
+export async function requestGet(url, params) {
+  return get(url, params)
     .then(res => {
       if (res.IsSuccess) {
         return res;
@@ -786,7 +801,6 @@ export function fomatFloat(num, n) {
   }
   return s;
 }
-
 
 // AES对称加密
 export function encryptionRequest(value) {

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-14 10:37:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-14 09:20:08
+ * @Last Modified time: 2024-07-17 15:30:17
  * @Description: 报警数据 - 弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -29,6 +29,7 @@ const WarningData = props => {
     ComparePointName,
     warningDate,
     defaultChartSelected,
+    warningId,
   } = props;
 
   const [DGIMN, setDGIMN] = useState(props.DGIMN);
@@ -68,11 +69,16 @@ const WarningData = props => {
       wrapClassName={wrapClassName}
       footer={false}
       onCancel={() => onCancel()}
-      bodyStyle={{ paddingTop: 6 }}
+      bodyStyle={{ padding: 0 }}
     >
       <AssistDataAnalysis
         displayType={'modal'}
+        warningId={warningId}
         DGIMN={DGIMN}
+        pointInfo={{
+          EntName: PointName?.split(' - ')[0],
+          PointName: PointName?.split(' - ')[1],
+        }}
         dataChartParams={{
           describe,
           warningDate,

@@ -451,6 +451,7 @@ const CluesDetails = props => {
         {/* 报警数据弹窗 */}
         {dataModalVisible && searchDate && (
           <WarningDataModal
+            warningId={warningId}
             PointName={`${warningInfo.EntNmae} - ${warningInfo.PointName}`}
             DGIMN={warningInfo.Dgimn}
             CompareDGIMN={warningInfo.CompareDGIMN}

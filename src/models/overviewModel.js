@@ -552,7 +552,7 @@ export default Model.extend({
       const result = yield call(getRealTimeDataView, payload);
       if (result.IsSuccess) {
         yield update({
-          realTimeDataView: result.Datas.data,
+          realTimeDataView: result.Datas,
           realTimeTotal: result.Total,
         });
         callback && callback(result.Datas);

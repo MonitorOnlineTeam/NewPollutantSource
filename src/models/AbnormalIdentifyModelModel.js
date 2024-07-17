@@ -2,7 +2,7 @@ import * as services from '@/pages/AbnormalIdentifyModel/services.js';
 import Model from '@/utils/model';
 import { message } from 'antd';
 import moment from 'moment';
-import { downloadFile, requestPost } from '@/utils/utils';
+import { downloadFile, requestPost, requestGet } from '@/utils/utils';
 import { ModelNumberIdsDatas } from '@/pages/AbnormalIdentifyModel/CONST.js';
 import { getListPager } from '@/services/autoformapi';
 import { API } from '@config/API';
@@ -18,7 +18,7 @@ function initWarningForm() {
         moment().endOf('day'),
       ],
       date1: [],
-      PollutantCode: '', 
+      PollutantCode: '',
       warningTypeCode: [],
       level: [],
       types: [],
@@ -889,6 +889,13 @@ export default Model.extend({
     // 获取级别和分类
     *GetMoldTypeLevelList({ payload, callback }, { call, select, update }) {
       const result = yield call(requestPost, API.AbnormalIdentifyModel.GetMoldTypeLevelList, {});
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 获取任务列表
+    *GetRelaWarningList({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestGet, API.AbnormalIdentifyModel.GetRelaWarningList, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       }

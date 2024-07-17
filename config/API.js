@@ -1442,6 +1442,8 @@ export const API = {
     GetCheckedView: before + '/Clue/GetCheckedView', //核查详情
     UpdatePlanItem: before + '/Clue/UpdatePlanItem', //核查保存或提交
     CheckConfirm: before + '/Clue/CheckConfirm', //核查确认
+    // 获取任务列表
+    GetRelaWarningList: before + '/Clue/GetRelaWarningList',
 
     /*模型库管理*/
     //模型训练 - 数据接入
