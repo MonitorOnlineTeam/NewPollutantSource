@@ -154,7 +154,7 @@ export default Model.extend({
         window.configInfo = configInfo;
         configInfo.IsShowSysPage = '1';
         configInfo.SystemName = getSysName(configInfo.SystemName);
-        configInfo.IsOpera = process.env.NODE_ENV === 'production'? configInfo.SystemName === '污染源智慧监测管理系统' : configInfo.SystemName === '污染源安装调试系统'; //是否为公司运维项目 测试环境
+        configInfo.IsOpera =  configInfo.SystemName === '污染源智慧监测管理系统' || configInfo.SystemName === '污染源安装调试系统'; //是否为公司运维项目 测试环境
         // configInfo.IsOpera = false;
         localStorage.setItem(
           'sysConfigInfo',

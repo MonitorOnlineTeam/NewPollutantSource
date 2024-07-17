@@ -41,14 +41,26 @@ import cuid from 'cuid';
 import Cookie from 'js-cookie';
 import { ModelNumberIdsDatas, ModalNameConversion } from '../../CONST';
 import { Resizable, ResizableBox } from 'react-resizable';
-import Quill from 'quill';
-import 'quill/dist/quill.snow.css';
+// import Quill from 'quill';
+// import 'quill/dist/quill.snow.css';
 import { API } from '@config/API';
 import { cookieName, uploadPrefix } from '@/config';
 import ImageView from '@/components/ImageView';
 import { useHistory } from 'react-router-dom';
 import CluesDetails from '@/pages/AbnormalIdentifyModel/CluesList/CluesDetails.js';
-const { Panel } = Collapse;
+import GenerateModal from './GenerateModal.js';
+
+// // 自定义文字大小
+// let fontSize = ['12px', '14px', '16px', '18px', '20px', '24px', '36px'];
+// Quill.imports['attributors/style/size'].whitelist = fontSize;
+// Quill.register(Quill.imports['attributors/style/size']);
+// import BetterTable from 'quill-better-table';
+// import 'quill-better-table/dist/quill-better-table.css';
+// // 注册 better-table 模块到 Quill
+// Quill.register({ 'modules/better-table': BetterTable }, true);
+// import { quillModules } from '@/utils/utils';
+
+// const { Panel } = Collapse;
 const textStyle = {
   width: '100%',
   display: 'inline-block',
@@ -56,15 +68,6 @@ const textStyle = {
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
 };
-// 自定义文字大小
-let fontSize = ['12px', '14px', '16px', '18px', '20px', '24px', '36px'];
-Quill.imports['attributors/style/size'].whitelist = fontSize;
-Quill.register(Quill.imports['attributors/style/size']);
-import BetterTable from 'quill-better-table';
-import 'quill-better-table/dist/quill-better-table.css';
-// 注册 better-table 模块到 Quill
-Quill.register({ 'modules/better-table': BetterTable }, true);
-import { quillModules } from '@/utils/utils';
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   generateVerificationTakeData: AbnormalIdentifyModel.generateVerificationTakeData,
   waitCheckDatasQueryPar: AbnormalIdentifyModel.waitCheckDatasQueryPar,
@@ -74,19 +77,19 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   pointListLoading: loading.effects['common/getPointByEntCode'],
   entListLoading: loading.effects['common/GetEntByRegion'],
   queryPlanLoading: loading.effects['AbnormalIdentifyModel/GetWaitCheckDatas'],
-  preTakeFlagDatasLoading: loading.effects['AbnormalIdentifyModel/GetPreTakeFlagDatas'],
-  checkRoleDatasLoading: loading.effects['AbnormalIdentifyModel/GetCheckRoleDatas'],
-  planDatasLoading: loading.effects['AbnormalIdentifyModel/GetPlanDatas'],
-  addLoading: loading.effects['AbnormalIdentifyModel/AddPlanTask'],
+  // preTakeFlagDatasLoading: loading.effects['AbnormalIdentifyModel/GetPreTakeFlagDatas'],
+  // checkRoleDatasLoading: loading.effects['AbnormalIdentifyModel/GetCheckRoleDatas'],
+  // planDatasLoading: loading.effects['AbnormalIdentifyModel/GetPlanDatas'],
+  // addLoading: loading.effects['AbnormalIdentifyModel/AddPlanTask'],
 });
 
-let editor, editor2;
+// let editor, editor2;
 const Index = props => {
   const [form] = Form.useForm();
-  const [modalForm] = Form.useForm();
+  // const [modalForm] = Form.useForm();
 
-  const quillRef = useRef(null);
-  const quillRef2 = useRef(null);
+  // const quillRef = useRef(null);
+  // const quillRef2 = useRef(null);
 
   const {
     dispatch,
@@ -99,11 +102,11 @@ const Index = props => {
     waitCheckDatasQueryPar,
     workTowerData,
     history,
-    queryPlanLoading,
-    preTakeFlagDatasLoading,
-    checkRoleDatasLoading,
-    planDatasLoading,
-    addLoading,
+    // queryPlanLoading,
+    // preTakeFlagDatasLoading,
+    // checkRoleDatasLoading,
+    // planDatasLoading,
+    // addLoading,
     location: { pathname },
   } = props;
   const currentUser = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser'));
@@ -112,10 +115,10 @@ const Index = props => {
   const [dataSource, setDataSource] = useState([]);
   const [total, setTotal] = useState(0);
   const [visible, setVisible] = useState(false);
-  const [planPopVisible, setPlanPopVisible] = useState(false);
-  const [collapsekey, setCollapsekey] = useState();
-  const [siteVerificationPlanType, setSiteVerificationPlanType] = useState(1);
   const [cluesDetailsProps, setCluesDetailsProps] = useState();
+  // const [planPopVisible, setPlanPopVisible] = useState(false);
+  // const [collapsekey, setCollapsekey] = useState();
+  // const [siteVerificationPlanType, setSiteVerificationPlanType] = useState(1);
 
   let locationPar = history?.location?.query?.data
     ? JSON.parse(props?.history?.location?.query?.data)
@@ -173,36 +176,36 @@ const Index = props => {
       }
     });
   };
-  useEffect(() => {
-    if (collapsekey == 1) {
-      setTimeout(() => {
-        if (quillRef.current) {
-          editor = new Quill(quillRef.current, { ...quillModules });
-          editor.on('text-change', () => {
-            // 监听Quill编辑器的内容变化
-            modalForm.validateFields(['planContent']);
-          });
-        }
-      });
-    } else {
-      quillRef.current = null;
-    }
-  }, [collapsekey]);
-  useEffect(() => {
-    if (siteVerificationPlanType == 2) {
-      setTimeout(() => {
-        if (quillRef2.current) {
-          editor2 = new Quill(quillRef2.current, { ...quillModules });
-          console.log('editor2', editor2);
-          editor2.on('text-change', () => {
-            modalForm.validateFields(['checkReason']);
-          });
-        }
-      });
-    } else {
-      quillRef2.current = null;
-    }
-  }, [siteVerificationPlanType]);
+  // useEffect(() => {
+  //   if (collapsekey == 1) {
+  //     setTimeout(() => {
+  //       if (quillRef.current) {
+  //         editor = new Quill(quillRef.current, { ...quillModules });
+  //         editor.on('text-change', () => {
+  //           // 监听Quill编辑器的内容变化
+  //           modalForm.validateFields(['planContent']);
+  //         });
+  //       }
+  //     });
+  //   } else {
+  //     quillRef.current = null;
+  //   }
+  // }, [collapsekey]);
+  // useEffect(() => {
+  //   if (siteVerificationPlanType == 2) {
+  //     setTimeout(() => {
+  //       if (quillRef2.current) {
+  //         editor2 = new Quill(quillRef2.current, { ...quillModules });
+  //         console.log('editor2', editor2);
+  //         editor2.on('text-change', () => {
+  //           modalForm.validateFields(['checkReason']);
+  //         });
+  //       }
+  //     });
+  //   } else {
+  //     quillRef2.current = null;
+  //   }
+  // }, [siteVerificationPlanType]);
   const detailPath = '/AbnormalIdentifyModel/CluesList/CluesDetails';
   const historys = useHistory();
   useEffect(() => {
@@ -573,133 +576,137 @@ const Index = props => {
     }
   };
 
-  const initVerificationActionData = () => {
-    //初始化核查动作
-    setVerificationActionData([]);
-    setFilesList({});
-    setFilesCuidList({});
-    const initCode = cuid();
-    const newData = {
-      type: 'add',
-      PlanItemCode: initCode,
-      QTitle: '',
-      QContent: '',
-    };
-    //图片
-    setFilesList({ [`QAttachment_${initCode}`]: [] });
-    setFilesCuidList({ [`QAttachment_${initCode}`]: initCode });
-    setVerificationActionData([newData]);
-  };
+  // const initVerificationActionData = () => {
+  //   //初始化核查动作
+  //   setVerificationActionData([]);
+  //   setFilesList({});
+  //   setFilesCuidList({});
+  //   const initCode = cuid();
+  //   const newData = {
+  //     type: 'add',
+  //     PlanItemCode: initCode,
+  //     QTitle: '',
+  //     QContent: '',
+  //   };
+  //   //图片
+  //   setFilesList({ [`QAttachment_${initCode}`]: [] });
+  //   setFilesCuidList({ [`QAttachment_${initCode}`]: initCode });
+  //   setVerificationActionData([newData]);
+  // };
 
   useEffect(() => {
-    if (visible) {
-      modalForm.resetFields();
-      setSaveType();
-      setSiteVerificationPlanType(1);
-      setVerificationPlanType(1);
-      setCollapsekey('1');
-      dispatch({
-        type: 'AbnormalIdentifyModel/GetPreTakeFlagDatas',
-        payload: {},
-        callback: res => {
-          setPreTakeFlagDatas(res);
-        },
-      });
-      dispatch({
-        type: 'AbnormalIdentifyModel/GetCheckRoleDatas',
-        payload: {},
-        callback: res => {
-          const userList = res?.map(item => {
-            return {
-              label: item.QuestionName,
-              options: item?.Users?.map(chilItem => ({
-                label: chilItem.UserName,
-                value: chilItem.UserID,
-              })),
-            };
-          });
-          console.log(userList);
-          setCheckRoleDatas(userList);
-        },
-      });
-      dispatch({
-        type: 'AbnormalIdentifyModel/GetPlanDatas',
-        payload: {},
-        callback: res => {
-          setPlanDatas(res);
-        },
-      });
-    } else {
+  //   if (visible) {
+  //     modalForm.resetFields();
+  //     setSaveType();
+  //     setSiteVerificationPlanType(1);
+  //     setVerificationPlanType(1);
+  //     setCollapsekey('1');
+  //     dispatch({
+  //       type: 'AbnormalIdentifyModel/GetPreTakeFlagDatas',
+  //       payload: {},
+  //       callback: res => {
+  //         setPreTakeFlagDatas(res);
+  //       },
+  //     });
+  //     dispatch({
+  //       type: 'AbnormalIdentifyModel/GetCheckRoleDatas',
+  //       payload: {},
+  //       callback: res => {
+  //         const userList = res?.map(item => {
+  //           return {
+  //             label: item.QuestionName,
+  //             options: item?.Users?.map(chilItem => ({
+  //               label: chilItem.UserName,
+  //               value: chilItem.UserID,
+  //             })),
+  //           };
+  //         });
+  //         console.log(userList);
+  //         setCheckRoleDatas(userList);
+  //       },
+  //     });
+  //     dispatch({
+  //       type: 'AbnormalIdentifyModel/GetPlanDatas',
+  //       payload: {},
+  //       callback: res => {
+  //         setPlanDatas(res);
+  //       },
+  //     });
+  //   } else {
+  //     setSelectedRowKeys([]);
+  //     setSelectedRow([]);
+  //     setPreTakeFlagDatas([]);
+  //     setCheckRoleDatas([]);
+  //     setPlanDatas([]);
+  //     initVerificationActionData();
+  //   }
+   if(!visible){
       setSelectedRowKeys([]);
       setSelectedRow([]);
-      setPreTakeFlagDatas([]);
-      setCheckRoleDatas([]);
-      setPlanDatas([]);
-      initVerificationActionData();
-    }
+   }
   }, [visible]);
 
-  const save = type => {
-    const validateFieldsFun = async () => {
-      const modalValues = await modalForm.validateFields();
-      if (siteVerificationPlanType == 1) {
-        //现场核查
-        if (verificationActionData?.length == 0) {
-          message.error('请新增核查动作');
-          return;
-        }
-      }
-      const parData = {
-        planAction: type,
-        createUserId: currentUser?.User_ID,
-        warningCodes: selectedRowKeys?.[0] ? selectedRowKeys.toString() : '',
-        isSceneCheck: modalValues.isSceneCheck,
-        isSavePlan: modalValues.isSavePlan,
-        preTakeFlag: modalValues.preTakeFlag?.length
-          ? modalValues.preTakeFlag[modalValues.preTakeFlag.length - 1]
-          : undefined,
-        checkResult: modalValues.checkResult,
-        checkConclusion: modalValues.checkConclusion,
-        checkReason: modalValues.checkReason,
-        checkUserId: modalValues.checkUserId,
-        checkPlan:
-          siteVerificationPlanType == 1
-            ? {
-                planCode: modalValues.planCode,
-                planName: modalValues.planName,
-                planContent: modalValues.planContent,
-                planItems: verificationActionData.map(item => {
-                  const planItemCode = item.type === 'add' ? '' : item.PlanItemCode;
-                  return {
-                    planItemCode: planItemCode,
-                    planItemContent: modalValues[`QTitle_${item.PlanItemCode}`],
-                    planItemDesc: modalValues[`QContent_${item.PlanItemCode}`],
-                    planItemAttachment: modalValues[`QAttachment_${item.PlanItemCode}`],
-                  };
-                }),
-              }
-            : undefined,
-      };
-      dispatch({
-        type: 'AbnormalIdentifyModel/AddPlanTask',
-        payload: { ...parData },
-        callback: res => {
-          setVisible(false);
-          setCollapsekey('1');
-          onFinish(pageIndex, pageSize, 'query');
-        },
-      });
-    };
-    if (siteVerificationPlanType == 1 && !collapsekey) {
-      //未展开核实方案
-      setCollapsekey('1');
-      setTimeout(() => {
-        validateFieldsFun();
-      }, 0);
-    } else {
-      validateFieldsFun();
-    }
-  };
+  // const save = type => {
+  //   const validateFieldsFun = async () => {
+  //     const modalValues = await modalForm.validateFields();
+  //     if (siteVerificationPlanType == 1) {
+  //       //现场核查
+  //       if (verificationActionData?.length == 0) {
+  //         message.error('请新增核查动作');
+  //         return;
+  //       }
+  //     }
+  //     const parData = {
+  //       planAction: type,
+  //       createUserId: currentUser?.User_ID,
+  //       warningCodes: selectedRowKeys?.[0] ? selectedRowKeys.toString() : '',
+  //       isSceneCheck: modalValues.isSceneCheck,
+  //       isSavePlan: modalValues.isSavePlan,
+  //       preTakeFlag: modalValues.preTakeFlag?.length
+  //         ? modalValues.preTakeFlag[modalValues.preTakeFlag.length - 1]
+  //         : undefined,
+  //       checkResult: modalValues.checkResult,
+  //       checkConclusion: modalValues.checkConclusion,
+  //       checkReason: modalValues.checkReason,
+  //       checkUserId: modalValues.checkUserId,
+  //       checkPlan:
+  //         siteVerificationPlanType == 1
+  //           ? {
+  //             planCode: modalValues.planCode,
+  //             planName: modalValues.planName,
+  //             planContent: modalValues.planContent,
+  //             planItems: verificationActionData.map(item => {
+  //               const planItemCode = item.type === 'add' ? '' : item.PlanItemCode;
+  //               return {
+  //                 planItemCode: planItemCode,
+  //                 planItemContent: modalValues[`QTitle_${item.PlanItemCode}`],
+  //                 planItemDesc: modalValues[`QContent_${item.PlanItemCode}`],
+  //                 planItemAttachment: modalValues[`QAttachment_${item.PlanItemCode}`],
+  //               };
+  //             }),
+  //           }
+  //           : undefined,
+  //     };
+  //     dispatch({
+  //       type: 'AbnormalIdentifyModel/AddPlanTask',
+  //       payload: { ...parData },
+  //       callback: res => {
+  //         setVisible(false);
+  //         setCollapsekey('1');
+  //         onFinish(pageIndex, pageSize, 'query');
+  //       },
+  //     });
+  //   };
+  //   if (siteVerificationPlanType == 1 && !collapsekey) {
+  //     //未展开核实方案
+  //     setCollapsekey('1');
+  //     setTimeout(() => {
+  //       validateFieldsFun();
+  //     }, 0);
+  //   } else {
+  //     validateFieldsFun();
+  //   }
+  // };
   function findDifferentValues(array1, array2) {
     // 合并两个数组，并去除重复值
     let mergedArray = [...new Set(array1.concat(array2))];
@@ -756,175 +763,175 @@ const Index = props => {
     },
   };
 
-  const [selectedPlanRowKeys, setSelectedPlanRowKeys] = useState([]);
-  const [selectedPlanRow, setSelectedPlanRow] = useState([]);
-  const rowPlanSelection = {
-    selectedRowKeys: selectedPlanRowKeys,
-    onChange: (newSelectedRowKeys, row) => {
-      if (newSelectedRowKeys?.length === 1) {
-        setSelectedPlanRowKeys(newSelectedRowKeys);
-        setSelectedPlanRow(row?.[0]);
-      } else {
-        let diffIndex = newSelectedRowKeys.filter(x => !selectedPlanRowKeys.includes(x));
-        setSelectedPlanRowKeys(diffIndex);
-        setSelectedPlanRow(row?.[diffIndex]);
-      }
-    },
-  };
-  const [verificationPlanType, setVerificationPlanType] = useState(1);
-  const [saveType, setSaveType] = useState();
-  const EditableCell = ({
-    editing,
-    dataIndex,
-    title,
-    inputType,
-    record,
-    index,
-    name,
-    children,
-    ...restProps
-  }) => {
-    let inputNode =
-      title === '图片' ? (
-        <div style={{ textAlign: 'center' }}>
-          {' '}
-          <a
-            onClick={() => {
-              setFileVisible(true);
-              setFiles(`QAttachment_${record.PlanItemCode}`);
-            }}
-          >
-            {filesList[`QAttachment_${record.PlanItemCode}`] &&
-            filesList[`QAttachment_${record.PlanItemCode}`][0]
-              ? '查看图片'
-              : '上传图片'}
-          </a>
-        </div>
-      ) : (
-        <Input.TextArea placeholder={`请输入`} />
-      );
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item
-            name={`${dataIndex}_${record.PlanItemCode}`}
-            style={{ margin: 0 }}
-            rules={[{ required: title === '图片' ? false : true, message: `请输入${title}!` }]}
-          >
-            {inputNode}
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
-  const [fileVisible, setFileVisible] = useState(false);
-  const [previewVisible, setPreviewVisible] = useState(false);
-  const [previewTitle, setPreviewTitle] = useState();
-  const [photoIndex, setPhotoIndex] = useState(0); //预览图片Index
-  const [imgUrlList, setImgUrlList] = useState([]); //预览图片列表
+  // const [selectedPlanRowKeys, setSelectedPlanRowKeys] = useState([]);
+  // const [selectedPlanRow, setSelectedPlanRow] = useState([]);
+  // const rowPlanSelection = {
+  //   selectedRowKeys: selectedPlanRowKeys,
+  //   onChange: (newSelectedRowKeys, row) => {
+  //     if (newSelectedRowKeys?.length === 1) {
+  //       setSelectedPlanRowKeys(newSelectedRowKeys);
+  //       setSelectedPlanRow(row?.[0]);
+  //     } else {
+  //       let diffIndex = newSelectedRowKeys.filter(x => !selectedPlanRowKeys.includes(x));
+  //       setSelectedPlanRowKeys(diffIndex);
+  //       setSelectedPlanRow(row?.[diffIndex]);
+  //     }
+  //   },
+  // };
+  // const [verificationPlanType, setVerificationPlanType] = useState(1);
+  // const [saveType, setSaveType] = useState();
+  // const EditableCell = ({
+  //   editing,
+  //   dataIndex,
+  //   title,
+  //   inputType,
+  //   record,
+  //   index,
+  //   name,
+  //   children,
+  //   ...restProps
+  // }) => {
+  //   let inputNode =
+  //     title === '图片' ? (
+  //       <div style={{ textAlign: 'center' }}>
+  //         {' '}
+  //         <a
+  //           onClick={() => {
+  //             setFileVisible(true);
+  //             setFiles(`QAttachment_${record.PlanItemCode}`);
+  //           }}
+  //         >
+  //           {filesList[`QAttachment_${record.PlanItemCode}`] &&
+  //             filesList[`QAttachment_${record.PlanItemCode}`][0]
+  //             ? '查看图片'
+  //             : '上传图片'}
+  //         </a>
+  //       </div>
+  //     ) : (
+  //         <Input.TextArea placeholder={`请输入`} />
+  //       );
+  //   return (
+  //     <td {...restProps}>
+  //       {editing ? (
+  //         <Form.Item
+  //           name={`${dataIndex}_${record.PlanItemCode}`}
+  //           style={{ margin: 0 }}
+  //           rules={[{ required: title === '图片' ? false : true, message: `请输入${title}!` }]}
+  //         >
+  //           {inputNode}
+  //         </Form.Item>
+  //       ) : (
+  //           children
+  //         )}
+  //     </td>
+  //   );
+  // };
+  // const [fileVisible, setFileVisible] = useState(false);
+  // const [previewVisible, setPreviewVisible] = useState(false);
+  // const [previewTitle, setPreviewTitle] = useState();
+  // const [photoIndex, setPhotoIndex] = useState(0); //预览图片Index
+  // const [imgUrlList, setImgUrlList] = useState([]); //预览图片列表
 
-  const [files, setFiles] = useState();
-  const [filesCuidList, setFilesCuidList] = useState({});
-  const [filesList, setFilesList] = useState({});
+  // const [files, setFiles] = useState();
+  // const [filesCuidList, setFilesCuidList] = useState({});
+  // const [filesList, setFilesList] = useState({});
 
-  const filesCuid = () => {
-    for (var key in filesCuidList) {
-      if (key == files) {
-        return filesCuidList[key];
-      }
-    }
-  };
-  const uploadProps = {
-    //图片上传
-    action: API.UploadApi.UploadPicture,
-    headers: { Cookie: null, Authorization: 'Bearer ' + Cookie.get(cookieName) },
-    accept: 'image/*',
-    data: {
-      FileUuid: filesCuid(),
-      FileActualType: '0',
-    },
-    listType: 'picture-card',
-    beforeUpload: file => {
-      const fileType = file?.type; //获取文件类型 type  image/*
-      if (!/^image/g.test(fileType)) {
-        message.error(`请上传图片格式文件!`);
-        return false;
-      }
-    },
-    onChange(info) {
-      const fileList = [];
-      info.fileList.map(item => {
-        if (item.response && item.response.IsSuccess) {
-          //刚上传的
-          fileList.push({ ...item, url: `/${item.response.Datas}` });
-        } else if (!item.response) {
-          fileList.push({ ...item });
-        }
-      });
-      if (info.file.status === 'uploading') {
-        setFilesList({ ...filesList, [files]: fileList });
-      }
-      if (
-        info.file.status === 'done' ||
-        info.file.status === 'removed' ||
-        info.file.status === 'error'
-      ) {
-        setFilesList({ ...filesList, [files]: fileList });
-        if (info.file.status === 'done') {
-          if (info.file?.response?.IsSuccess) {
-            modalForm.setFieldsValue({ [files]: filesCuid() });
-            message.success('上传成功！');
-          } else {
-            message.error(info.file?.response?.Message);
-          }
-        }
-        info.file.status === 'error' &&
-          message.error(
-            `${info.file.name}${
-              info.file && info.file.response && info.file.response.Message
-                ? info.file.response.Message
-                : '上传失败'
-            }`,
-          );
-      }
-    },
-    onPreview: async file => {
-      //预览
+  // const filesCuid = () => {
+  //   for (var key in filesCuidList) {
+  //     if (key == files) {
+  //       return filesCuidList[key];
+  //     }
+  //   }
+  // };
+  // const uploadProps = {
+  //   //图片上传
+  //   action: API.UploadApi.UploadPicture,
+  //   headers: { Cookie: null, Authorization: 'Bearer ' + Cookie.get(cookieName) },
+  //   accept: 'image/*',
+  //   data: {
+  //     FileUuid: filesCuid(),
+  //     FileActualType: '0',
+  //   },
+  //   listType: 'picture-card',
+  //   beforeUpload: file => {
+  //     const fileType = file?.type; //获取文件类型 type  image/*
+  //     if (!/^image/g.test(fileType)) {
+  //       message.error(`请上传图片格式文件!`);
+  //       return false;
+  //     }
+  //   },
+  //   onChange(info) {
+  //     const fileList = [];
+  //     info.fileList.map(item => {
+  //       if (item.response && item.response.IsSuccess) {
+  //         //刚上传的
+  //         fileList.push({ ...item, url: `/${item.response.Datas}` });
+  //       } else if (!item.response) {
+  //         fileList.push({ ...item });
+  //       }
+  //     });
+  //     if (info.file.status === 'uploading') {
+  //       setFilesList({ ...filesList, [files]: fileList });
+  //     }
+  //     if (
+  //       info.file.status === 'done' ||
+  //       info.file.status === 'removed' ||
+  //       info.file.status === 'error'
+  //     ) {
+  //       setFilesList({ ...filesList, [files]: fileList });
+  //       if (info.file.status === 'done') {
+  //         if (info.file?.response?.IsSuccess) {
+  //           modalForm.setFieldsValue({ [files]: filesCuid() });
+  //           message.success('上传成功！');
+  //         } else {
+  //           message.error(info.file?.response?.Message);
+  //         }
+  //       }
+  //       info.file.status === 'error' &&
+  //         message.error(
+  //           `${info.file.name}${
+  //           info.file && info.file.response && info.file.response.Message
+  //             ? info.file.response.Message
+  //             : '上传失败'
+  //           }`,
+  //         );
+  //     }
+  //   },
+  //   onPreview: async file => {
+  //     //预览
 
-      const imageList = filesList[files];
+  //     const imageList = filesList[files];
 
-      let imageListIndex = 0;
-      imageList.map((item, index) => {
-        if (item.uid === file.uid) {
-          imageListIndex = index;
-        }
-      });
-      if (imageList && imageList[0]) {
-        //拼接放大的图片地址列表
-        const imgData = [];
-        imageList.map((item, key) => {
-          imgData.push(item.url);
-        });
-        setImgUrlList(imgData);
-      }
-      setPhotoIndex(imageListIndex);
-      setPreviewVisible(true);
-      setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
-    },
-    onRemove: file => {
-      if (!file.error) {
-        dispatch({
-          type: 'autoForm/deleteAttach',
-          payload: {
-            Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
-          },
-        });
-      }
-    },
-    fileList: filesList[files],
-  };
+  //     let imageListIndex = 0;
+  //     imageList.map((item, index) => {
+  //       if (item.uid === file.uid) {
+  //         imageListIndex = index;
+  //       }
+  //     });
+  //     if (imageList && imageList[0]) {
+  //       //拼接放大的图片地址列表
+  //       const imgData = [];
+  //       imageList.map((item, key) => {
+  //         imgData.push(item.url);
+  //       });
+  //       setImgUrlList(imgData);
+  //     }
+  //     setPhotoIndex(imageListIndex);
+  //     setPreviewVisible(true);
+  //     setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+  //   },
+  //   onRemove: file => {
+  //     if (!file.error) {
+  //       dispatch({
+  //         type: 'autoForm/deleteAttach',
+  //         payload: {
+  //           Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
+  //         },
+  //       });
+  //     }
+  //   },
+  //   fileList: filesList[files],
+  // };
 
   return (
     <div className={styles.verificationTakeWrapper}>
@@ -1105,7 +1112,16 @@ const Index = props => {
             )}
           </Modal>
         </Card>
-        <Modal
+        <GenerateModal
+          visible={visible}
+          onCancel={() => {
+            setVisible(false);
+          }}
+          selectedRowKeys={selectedRowKeys}
+          selectedRow={selectedRow}
+          onFinish={()=>onFinish(pageIndex, pageSize, 'query')}
+        />
+        {/* <Modal
           title={'生成核查任务'}
           destroyOnClose
           wrapClassName={'spreadOverModal'}
@@ -1527,8 +1543,8 @@ const Index = props => {
             )}
             <Form.Item name="planCode" hidden></Form.Item>
           </Form>
-        </Modal>
-        <Modal
+        </Modal> */}
+        {/* <Modal
           title="上传图片"
           visible={fileVisible}
           onOk={() => {
@@ -1555,7 +1571,7 @@ const Index = props => {
           onCloseRequest={() => {
             setPreviewVisible(false);
           }}
-        />
+        /> */}
       </BreadcrumbWrapper>
     </div>
   );

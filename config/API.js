@@ -1,5 +1,4 @@
 export const before = '/rest/PollutantSourceApi';
-const isBW = sessionStorage.getItem('isBW')==='true'//宝武
 export const API = {
   //
   SystemApi: {

@@ -754,6 +754,12 @@ class Index extends Component {
             scroll={{ y: 'calc(100vh - 370px)' }}
             // scroll={{ x: scrollXWidth }}
             onChange={this.handleChange}
+            // pagination={{
+            //   total: this.props.total,
+            //   pageSize: this.props.pageSize,
+            //   current: this.props.pageIndex,
+            //   onChange: this.onChange,
+            // }}
           />
         </Card>
       </BreadcrumbWrapper>
