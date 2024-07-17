@@ -548,13 +548,14 @@ export default Model.extend({
     },
 
     // 获取实时数据一览
-    *getRealTimeDataView({ payload }, { call, update, select }) {
+    *getRealTimeDataView({ payload, callback }, { call, update, select }) {
       const result = yield call(getRealTimeDataView, payload);
       if (result.IsSuccess) {
         yield update({
-          realTimeDataView: result.Datas,
+          realTimeDataView: result.Datas.data,
           realTimeTotal: result.Total,
         });
+        callback && callback(result.Datas);
       } else {
         message.error(result.Message);
       }

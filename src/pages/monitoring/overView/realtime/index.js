@@ -17,6 +17,7 @@ import {
   Button,
   Checkbox,
   message,
+  Spin,
 } from 'antd';
 import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
@@ -29,13 +30,21 @@ import { router } from 'umi';
 import { formatPollutantPopover, getDirLevel, getDataTruseMsg } from '@/utils/utils';
 import _ from 'lodash';
 import moment from 'moment';
-
 import $ from 'jquery';
 import styles from '../index.less';
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
+const { CheckableTag } = Tag;
 const DateTypeList = ['RealTimeData', 'MinuteData', 'HourData', 'DayData'];
+
+const statusList = [
+  { value: 1, label: '正常', color: '#34c066' },
+  { value: 2, label: '超标', color: '#f04d4d' },
+  { value: 0, label: '离线', color: '#999999' },
+  { value: 3, label: '异常', color: '#e94' },
+  // { value: 4, label: '停产', color: '#40474e' },
+];
 
 @connect(({ loading, overview, global, common }) => ({
   noticeList: global.notices,
@@ -53,6 +62,8 @@ class Realtime extends Component {
       : undefined;
     this.state = {
       columns: [],
+      selectedStatus: [],
+      statusNumList: { 0: 0, 1: 0, 2: 0, 3: 0 },
       pageIndex: 1,
       fixed: false,
       currentDataType: 'HourData',
@@ -73,220 +84,7 @@ class Realtime extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
-      let fixed =
-        nextProps.realtimeColumns.length * 94 + 50 + 70 + 210 + 160 > $('#sdlTable').width();
-      // const fixed = false;
-      const width = 200;
-
-      const realtimeColumns = nextProps.realtimeColumns.map((item, idx) => ({
-        title: item.unit ? (
-          <>
-            {item.name}
-            <br />({item.unit})
-          </>
-        ) : (
-          item.title
-        ),
-        dataIndex: item.field,
-        key: item.field,
-        name: item.name,
-        // width: item.title.indexOf("(") > -1 ? item.title.length * 10 : item.title.length * 20,
-        width: item.width || undefined,
-        sorter: item.wrw !== false ? (a, b) => a[item.field] - b[item.field] : false,
-        defaultSortOrder: item.field === 'AQI' ? 'descend' : null,
-        show: true,
-        align: 'center',
-        wrw: item.wrw !== undefined ? item.wrw : true,
-        render: (text, record) => {
-          if (item.field === 'AQI') {
-            return AQIPopover(text, record);
-          }
-          if (record[`${item.field}_Value`] !== undefined) {
-            return IAQIPopover(text, record, item.field);
-          }
-          if (item.title === '空气质量') {
-            return text ? <span style={{ color: record.AQI_Color }}>{text}</span> : '-';
-          }
-          // 风向转换
-          if (item.name === '风向') {
-            const _text = text ? `${getDirLevel(text)}` : '-';
-            return formatPollutantPopover(_text, record[`${item.field}_params`]);
-          }
-          return formatPollutantPopover(text, record[`${item.field}_params`]);
-        },
-      }));
-
-      let statusFilters = [
-        {
-          text: (
-            <span>
-              <LegendIcon style={{ color: '#34c066' }} />
-              正常
-            </span>
-          ),
-          value: 1,
-        },
-        {
-          text: (
-            <span>
-              <LegendIcon style={{ color: '#f04d4d' }} />
-              超标
-            </span>
-          ),
-          value: 2,
-        },
-        {
-          text: (
-            <span>
-              <LegendIcon style={{ color: '#999999' }} />
-              离线
-            </span>
-          ),
-          value: 0,
-        },
-        {
-          text: (
-            <span>
-              <LegendIcon style={{ color: '#e94' }} />
-              异常
-            </span>
-          ),
-          value: 3,
-        },
-      ];
-
-      // 大气站状态筛选
-      if (
-        this.state.pollutantCode === 5 ||
-        (this.state.pollutantCode === 12 && configInfo.IsOpenAQI === '1')
-      ) {
-        statusFilters = airLevel.map(item => ({
-          text: (
-            <span>
-              <LegendIcon style={{ color: item.color }} />
-              {item.text}
-            </span>
-          ),
-          value: item.levelText,
-        }));
-        statusFilters.unshift({
-          text: (
-            <span>
-              <LegendIcon style={{ color: '#999999' }} />
-              离线
-            </span>
-          ),
-          value: 0,
-        });
-      }
-
-      let { sortedInfo, filteredInfo, pollutantCode, pageIndex, Status } = this.state;
-      console.log('Status', Status)
-      filteredInfo = filteredInfo || {};
-      const columns = [
-        {
-          title: '序号',
-          dataIndex: 'index',
-          key: 'index',
-          width: 50,
-          align: 'center',
-          fixed,
-          show: true,
-          render: (value, record, index) => {
-            debugger
-            console.log('this.state.pageIndex', this.state.pageIndex)
-            return (this.state.pageIndex - 1) * 50 + index + 1
-          },
-        },
-        {
-          title: '状态',
-          dataIndex: 'Status',
-          key: 'Status',
-          width: 70,
-          // width: 120,
-          align: 'center',
-          fixed,
-          show: true,
-          filters: statusFilters,
-          // filteredValue: Status || null,
-          // onFilter: (value, record) => {
-          //   if (
-          //     record.pollutantTypeCode == 5 ||
-          //     (record.pollutantTypeCode == 12 && configInfo.IsOpenAQI === '1')
-          //   ) {
-          //     if (value != 0) {
-          //       return record.AirLevel == value;
-          //     }
-          //     return !record.AirLevel;
-          //   }
-          //   return record.status == value;
-          // },
-          render: (value, record, index) => {
-            if (
-              record.pollutantTypeCode == 5 ||
-              (record.pollutantTypeCode == 12 && configInfo.IsOpenAQI === '1')
-            ) {
-              const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
-              const color = airLevelObj.color || '#999999';
-              return (
-                <div className={styles.airStatus}>
-                  <span style={{ backgroundColor: color }} />
-                </div>
-              );
-            }
-            return getPointStatusImg(record, this.props.noticeList);
-          },
-        },
-        {
-          title: '监测点',
-          dataIndex: 'pointName',
-          // width: 160,
-          width: 210,
-          // ellipsis: true,
-          key: 'pointName',
-          fixed,
-          show: true,
-          render: (text, record) => {
-            // 单企业不显示企业名称
-            let pointName =
-              configInfo.IsSingleEnt == '1' ? text : `${record.abbreviation} - ${text}`;
-            if (this.state.pollutantCode == 5) {
-              pointName = text;
-            }
-            let el = (
-              <span>
-                {pointName}
-                {record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
-              </span>
-            );
-            return el;
-          },
-        },
-        {
-          title: '监测时间',
-          width: 220,
-          // width: 10,
-          dataIndex: 'MonitorTime',
-          key: 'MonitorTime',
-          fixed,
-          show: true,
-          align: 'center',
-          render: (text, record) => {
-            return (
-              <span>
-                {getDataTruseMsg(record)}
-                {text}
-              </span>
-            );
-          },
-          // sorter: (a, b) => a.MonitorTime - b.MonitorTime,
-          // defaultSortOrder: 'descend'
-        },
-        ...realtimeColumns,
-      ];
-      this.setState({
-        columns,
-      });
+      this.getTableColumns(nextProps);
     }
     if (this.props.realTimeDataView !== nextProps.realTimeDataView) {
       // 排序后在展示
@@ -297,6 +95,227 @@ class Realtime extends Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.selectedStatus !== prevState.selectedStatus) {
+      this.getTableColumns(this.props);
+    }
+  }
+
+  // 获取表格
+  getTableColumns = nextProps => {
+    let fixed =
+      nextProps.realtimeColumns.length * 94 + 50 + 70 + 210 + 160 > $('#sdlTable').width();
+    // const fixed = false;
+    const width = 200;
+
+    const realtimeColumns = nextProps.realtimeColumns.map((item, idx) => ({
+      title: item.unit ? (
+        <>
+          {item.name}
+          <br />({item.unit})
+        </>
+      ) : (
+        item.title
+      ),
+      dataIndex: item.field,
+      key: item.field,
+      name: item.name,
+      // width: item.title.indexOf("(") > -1 ? item.title.length * 10 : item.title.length * 20,
+      width: item.width || undefined,
+      sorter: item.wrw !== false ? (a, b) => a[item.field] - b[item.field] : false,
+      defaultSortOrder: item.field === 'AQI' ? 'descend' : null,
+      show: true,
+      align: 'center',
+      wrw: item.wrw !== undefined ? item.wrw : true,
+      render: (text, record) => {
+        if (item.field === 'AQI') {
+          return AQIPopover(text, record);
+        }
+        if (record[`${item.field}_Value`] !== undefined) {
+          return IAQIPopover(text, record, item.field);
+        }
+        if (item.title === '空气质量') {
+          return text ? <span style={{ color: record.AQI_Color }}>{text}</span> : '-';
+        }
+        // 风向转换
+        if (item.name === '风向') {
+          const _text = text ? `${getDirLevel(text)}` : '-';
+          return formatPollutantPopover(_text, record[`${item.field}_params`]);
+        }
+        return formatPollutantPopover(text, record[`${item.field}_params`]);
+      },
+    }));
+
+    let statusFilters = [
+      {
+        text: (
+          <span>
+            <LegendIcon style={{ color: '#34c066' }} />
+            正常
+          </span>
+        ),
+        value: 1,
+      },
+      {
+        text: (
+          <span>
+            <LegendIcon style={{ color: '#f04d4d' }} />
+            超标
+          </span>
+        ),
+        value: 2,
+      },
+      {
+        text: (
+          <span>
+            <LegendIcon style={{ color: '#999999' }} />
+            离线
+          </span>
+        ),
+        value: 0,
+      },
+      {
+        text: (
+          <span>
+            <LegendIcon style={{ color: '#e94' }} />
+            异常
+          </span>
+        ),
+        value: 3,
+      },
+    ];
+
+    // 大气站状态筛选
+    if (
+      this.state.pollutantCode === 5 ||
+      (this.state.pollutantCode === 12 && configInfo.IsOpenAQI === '1')
+    ) {
+      statusFilters = airLevel.map(item => ({
+        text: (
+          <span>
+            <LegendIcon style={{ color: item.color }} />
+            {item.text}
+          </span>
+        ),
+        value: item.levelText,
+      }));
+      statusFilters.unshift({
+        text: (
+          <span>
+            <LegendIcon style={{ color: '#999999' }} />
+            离线
+          </span>
+        ),
+        value: 0,
+      });
+    }
+
+    let { sortedInfo, filteredInfo, pollutantCode, pageIndex, selectedStatus } = this.state;
+    filteredInfo = filteredInfo || {};
+    const columns = [
+      {
+        title: '序号',
+        dataIndex: 'index',
+        key: 'index',
+        width: 50,
+        align: 'center',
+        fixed,
+        show: true,
+        render: (value, record, index) => {
+          console.log('this.state.pageIndex', this.state.pageIndex);
+          return (this.state.pageIndex - 1) * 50 + index + 1;
+        },
+      },
+      {
+        title: '状态',
+        dataIndex: 'Status',
+        key: 'Status',
+        width: 70,
+        // width: 120,
+        align: 'center',
+        fixed,
+        show: true,
+        filters: statusFilters,
+        filteredValue: selectedStatus || [],
+        // onFilter: (value, record) => {
+        //   if (
+        //     record.pollutantTypeCode == 5 ||
+        //     (record.pollutantTypeCode == 12 && configInfo.IsOpenAQI === '1')
+        //   ) {
+        //     if (value != 0) {
+        //       return record.AirLevel == value;
+        //     }
+        //     return !record.AirLevel;
+        //   }
+        //   return record.status == value;
+        // },
+        render: (value, record, index) => {
+          if (
+            record.pollutantTypeCode == 5 ||
+            (record.pollutantTypeCode == 12 && configInfo.IsOpenAQI === '1')
+          ) {
+            const airLevelObj = airLevel.find(itm => itm.levelText == record.AirLevel) || {};
+            const color = airLevelObj.color || '#999999';
+            return (
+              <div className={styles.airStatus}>
+                <span style={{ backgroundColor: color }} />
+              </div>
+            );
+          }
+          return getPointStatusImg(record, this.props.noticeList);
+        },
+      },
+      {
+        title: '监测点',
+        dataIndex: 'pointName',
+        // width: 160,
+        width: 210,
+        // ellipsis: true,
+        key: 'pointName',
+        fixed,
+        show: true,
+        render: (text, record) => {
+          // 单企业不显示企业名称
+          let pointName = configInfo.IsSingleEnt == '1' ? text : `${record.abbreviation} - ${text}`;
+          if (this.state.pollutantCode == 5) {
+            pointName = text;
+          }
+          let el = (
+            <span>
+              {pointName}
+              {record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
+            </span>
+          );
+          return el;
+        },
+      },
+      {
+        title: '监测时间',
+        width: 220,
+        // width: 10,
+        dataIndex: 'MonitorTime',
+        key: 'MonitorTime',
+        fixed,
+        show: true,
+        align: 'center',
+        render: (text, record) => {
+          return (
+            <span>
+              {getDataTruseMsg(record)}
+              {text}
+            </span>
+          );
+        },
+        // sorter: (a, b) => a.MonitorTime - b.MonitorTime,
+        // defaultSortOrder: 'descend'
+      },
+      ...realtimeColumns,
+    ];
+    this.setState({
+      columns,
+    });
+  };
+
   // 获取页面数据
   getPageData = pollutantCode => {
     this.setState(
@@ -305,7 +324,7 @@ class Realtime extends Component {
         pageIndex: 1,
       },
       () => {
-        this.getColumns();
+        this.getRealTimeColumn();
         this.getRealTimeDataView();
       },
     );
@@ -313,7 +332,7 @@ class Realtime extends Component {
 
   // 获取表格数据
   getRealTimeDataView = () => {
-    const { pointName, currentDataType, pollutantCode, time, dayTime, Status } = this.state;
+    const { pointName, currentDataType, pollutantCode, time, dayTime, selectedStatus } = this.state;
     let searchTime;
     // ? moment(this.state.time).format("YYYY-MM-DD HH:00:00") : undefined
     if (currentDataType === 'HourData') {
@@ -333,13 +352,19 @@ class Realtime extends Component {
         dataType: currentDataType,
         pollutantTypes: pollutantCode,
         time: searchTime,
-        status: Status,
+        status: selectedStatus,
+        IsAddNums: true, // 是否返回状态数量
+      },
+      callback: res => {
+        this.setState({
+          statusNumList: res.statusList,
+        });
       },
     });
   };
 
   // 获取表头
-  getColumns = () => {
+  getRealTimeColumn = () => {
     this.props.dispatch({
       type: 'overview/getRealTimeColumn',
       payload: {
@@ -350,25 +375,22 @@ class Realtime extends Component {
 
   handleChange = (pagination, filters, sorter) => {
     console.log('filters', filters);
-    const { current, pageSize } = pagination;
+    console.log('pagination', filters);
+    let { current, pageSize } = pagination;
+    if (this.state.selectedStatus !== filters.Status) {
+      current = 1;
+    }
+
     this.setState(
       {
         pageIndex: current,
         pageSize: pageSize,
-        Status: filters.Status,
+        selectedStatus: filters.Status || [],
       },
       () => {
         this.getRealTimeDataView();
       },
     );
-
-    // const newColumns = this.state.columns;
-    // if (newColumns.length) {
-    //   newColumns[1].filteredValue = filters.Status || null;
-    //   this.setState({
-    //     columns: newColumns,
-    //   });
-    // }
   };
 
   // 当前时间0-1之间：currentTime - 前一天；nextDayTime - 当天；
@@ -446,27 +468,34 @@ class Realtime extends Component {
     );
   };
 
-  // 分页
-  onTableChange = (current, pageSize) => {
-    this.setState(
-      {
-        pageIndex: current,
-        pageSize: pageSize,
-      },
-      () => {
-        this.getRealTimeDataView();
-      },
-    );
-  };
+  onTagChange(tag, checked) {
+    const { selectedStatus } = this.state;
+    const nextSelectedTags = checked
+      ? [...selectedStatus, tag]
+      : selectedStatus.filter(t => t !== tag);
+    debugger;
+    console.log('You are interested in: ', nextSelectedTags);
+    this.setState({ selectedStatus: nextSelectedTags }, () => {
+      this.getRealTimeDataView();
+    });
+  }
 
   render() {
-    const { currentDataType, columns, realTimeDataView, time, dayTime, pollutantCode } = this.state;
+    const {
+      currentDataType,
+      columns,
+      realTimeDataView,
+      time,
+      dayTime,
+      pollutantCode,
+      selectedStatus,
+      statusNumList,
+    } = this.state;
     // const { realTimeDataView, dataLoading, columnLoading } = this.props;
     const { dataLoading, columnLoading, hideBreadcrumb } = this.props;
     const _columns = columns.filter(item => item.show);
-    const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     const wrwList = columns.filter(itm => itm.wrw);
-
+    console.log('selectedStatus', selectedStatus);
     return (
       <BreadcrumbWrapper hideBreadcrumb={!!hideBreadcrumb}>
         <Card
@@ -656,22 +685,63 @@ class Realtime extends Component {
                 }}
                 placeholder="请输入监控目标/监测点名称"
               />
+
+              {!hideBreadcrumb && (
+                <Radio.Group
+                  value="data"
+                  buttonStyle="solid"
+                  onChange={e => {
+                    e.target.value === 'map' &&
+                      router.push('/monitoring/mapview?tabName=数据总览 - 地图');
+                  }}
+                >
+                  <Radio.Button value="data">数据</Radio.Button>
+                  <Radio.Button value="map">地图</Radio.Button>
+                </Radio.Group>
+              )}
             </Space>
           }
           extra={
-            !hideBreadcrumb && (
-              <Radio.Group
-                value="data"
-                buttonStyle="solid"
-                onChange={e => {
-                  e.target.value === 'map' &&
-                    router.push('/monitoring/mapview?tabName=数据总览 - 地图');
-                }}
-              >
-                <Radio.Button value="data">数据</Radio.Button>
-                <Radio.Button value="map">地图</Radio.Button>
-              </Radio.Group>
-            )
+            <Spin spinning={!!dataLoading}>
+              {statusList.map(item => {
+                return (
+                  <CheckableTag
+                    style={{
+                      backgroundColor: selectedStatus.includes(item.value)
+                        ? 'transparent'
+                        : item.color,
+                      padding: '2px 10px',
+                      cursor: 'pointer',
+                      borderRadius: 0,
+                      marginRight: 4,
+                    }}
+                    key={item.value}
+                    checked={selectedStatus.includes(item.value)}
+                    onChange={checked => this.onTagChange(item.value, checked)}
+                  >
+                    <i
+                      style={{
+                        backgroundColor: item.color,
+                        width: 4,
+                        height: 4,
+                        display: selectedStatus.includes(item.value) ? 'inline-block' : 'none',
+                        borderRadius: '50%',
+                        margin: '0 4px 4px 0',
+                      }}
+                    ></i>
+                    <span
+                      style={{
+                        fontSize: 14,
+                        color: selectedStatus.includes(item.value) ? item.color : '#fff',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {`${item.label} ${statusNumList[item.value]}`}
+                    </span>
+                  </CheckableTag>
+                );
+              })}
+            </Spin>
           }
         >
           <SdlTable
@@ -687,14 +757,12 @@ class Realtime extends Component {
                     showSizeChanger: false,
                     pageSize: 50, // this.props.pageSize,
                     current: this.state.pageIndex,
-                    // onChange: this.onTableChange,
                     total: this.props.realTimeTotal,
                   }
                 : false
             }
             dataSource={realTimeDataView}
             columns={_columns}
-            // scroll={{ x: scrollXWidth }}
             onChange={this.handleChange}
           />
         </Card>

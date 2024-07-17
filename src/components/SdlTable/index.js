@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-12 10:37:01
+ * @Last Modified time: 2024-07-17 10:06:45
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -339,8 +339,8 @@ class SdlTable extends PureComponent {
         : fixedHeight
         ? clientHeight - fixedHeight - headAndFooterHeight
         : '';
-    console.log('clientHeight', clientHeight)
-    console.log('scrollYHeight', scrollYHeight)
+    // console.log('clientHeight', clientHeight)
+    // console.log('scrollYHeight', scrollYHeight)
     // 没有分页高度 + 40
     const scrollY =
       pagination === false && typeof scrollYHeight === 'number'
