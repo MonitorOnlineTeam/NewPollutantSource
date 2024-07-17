@@ -691,10 +691,9 @@ class MapContent extends PureComponent {
       entTitleShow,
       pointTitleShow,
       markersList,
-      mapBtnStatusIndex,
       level,
     } = this.state;
-    const { level1MapData, level4MapData } = this.props;
+    const { level1MapData, level4MapData, onFullScreenChange } = this.props;
     if (!map) {
       console.log('组件必须作为 Map 的子组件使用');
       return;
@@ -754,11 +753,21 @@ class MapContent extends PureComponent {
           this.setState({ pointTitleShow: false, markersList: [...markersList] });
         }
         break;
+      case '全屏':
+        this.setState({ fullScreen: true }, () => {
+          onFullScreenChange(true);
+        });
+        break;
+      case '退出全屏':
+        this.setState({ fullScreen: false }, () => {
+          onFullScreenChange(false);
+        });
+        break;
     }
   };
 
   RightIconMapComponent = () => {
-    const { level, pointTitleShow } = this.state;
+    const { level, fullScreen } = this.state;
     const operationBtnArr = [
       {
         text: '展示企业',
@@ -777,6 +786,10 @@ class MapContent extends PureComponent {
       { text: '展示/隐藏名称', url: '/SystemDashboard/map/toolShowText.png' },
       { text: '放大', url: '/SystemDashboard/map/zoomIn.png' },
       { text: '缩小', url: '/SystemDashboard/map/zoomOut.png' },
+      {
+        text: fullScreen ? '退出全屏' : '全屏',
+        url: fullScreen ? '/SystemDashboard/map/contract.png' : '/SystemDashboard/map/expand.png',
+      },
     ];
     return (
       <div className={styles.mapOperationBtn}>
@@ -801,19 +814,16 @@ class MapContent extends PureComponent {
       markersList,
       hoverEntTitle,
       hoverPointTitle,
-      hoverEntTitleShow,
       hoverTitleShow,
       hoverTitleLngLat,
-      pointInfoWindowPosition,
-      pointInfoWindowVisible,
       level,
       selectedLegend,
-      currentPointInfo,
+      fullScreen,
     } = this.state;
     const { loading } = this.props;
 
     return (
-      <div className={`${styles.mapWrapper}`}>
+      <div className={`${styles.mapWrapper} ${fullScreen ? styles.fullScreen : ''}`}>
         <Spin spinning={!!loading}>
           <Map
             resizeEnable={true}

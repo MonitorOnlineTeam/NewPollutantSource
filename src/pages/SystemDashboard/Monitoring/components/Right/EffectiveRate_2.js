@@ -192,7 +192,7 @@ const EffectiveRate_2 = props => {
         <Row className={styles.rateContent}>
           <p className={styles.title}>有效传输率</p>
           <Progress
-            style={{ width: '96%' }}
+            style={{ width: '93%' }}
             percent={rates.TransmissionEfficiencyRate}
             strokeColor="#11C0F9"
             trailColor="#0D6B8A"

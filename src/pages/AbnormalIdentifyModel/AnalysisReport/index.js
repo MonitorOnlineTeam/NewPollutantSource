@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-07-01 10:28:01
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-01 14:23:53
+ * @Last Modified time: 2024-07-16 17:00:26
  * @Description:  异常数据分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -78,8 +78,8 @@ const AnalysisReport = props => {
         payload: {
           ...values,
           time: undefined,
-          beginTime: moment(values.beginTime).format('YYYY-MM-DD 00:00:00'),
-          endTime: moment(values.endTime).format('YYYY-MM-DD 23:59:59'),
+          beginTime: moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+          endTime: moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         },
         callback: res => {
           message.success('生成报告成功!');
@@ -102,8 +102,8 @@ const AnalysisReport = props => {
         payload: {
           ...values,
           time: undefined,
-          beginTime: moment(values.beginTime).format('YYYY-MM-DD 00:00:00'),
-          endTime: moment(values.endTime).format('YYYY-MM-DD 23:59:59'),
+          beginTime: moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+          endTime: moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         },
         callback: res => {
           message.success('上传报告成功!');
@@ -347,7 +347,7 @@ const AnalysisReport = props => {
             >
               <RangePicker_
                 // allowClear={false}
-                dataType="day"
+                // dataType="day"
                 format="YYYY-MM-DD"
                 style={{ width: 400 }}
               />

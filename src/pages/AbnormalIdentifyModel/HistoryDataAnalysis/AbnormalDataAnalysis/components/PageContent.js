@@ -1,25 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import {
-  Card,
-  Radio,
-  Tooltip,
-  Row,
-  Col,
-  Select,
-  Button,
-  Statistic,
-  Form,
-  InputNumber,
-  Modal,
-} from 'antd';
+import { Card, Radio, Row, Col, Select, Button, Form, Modal } from 'antd';
 import styles from '../../../styles.less';
 import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import ReactEcharts from 'echarts-for-react';
 import AbnormalDataAnalysis from '../index';
-import { MoreOutlined } from '@ant-design/icons';
 import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
 import WarningDataAndChart from '@/pages/AbnormalIdentifyModel/AssistDataAnalysis/components/WarningDataAndChart.js';
 
@@ -170,6 +157,8 @@ const PageContent = props => {
     let types = pageInfoData[excepType].types;
     let list = pageInfoData[excepType].list;
 
+    let idx = index + 1;
+
     let params = {};
     // 次数
     if (rtnType === 'nums') {
@@ -185,7 +174,8 @@ const PageContent = props => {
           break;
       }
       updateCluesListFormState({
-        EntCode: dataType === 'ent' ? record.Key : dataType === 'point' ? record.ParentKey : undefined,
+        EntCode:
+          dataType === 'ent' ? record.Key : dataType === 'point' ? record.ParentKey : undefined,
         regionCode: dataType === 'region' ? record.Key : undefined,
         DGIMN: dataType === 'point' ? record.Key : undefined,
         ...params,
@@ -195,13 +185,13 @@ const PageContent = props => {
       let durationTypes = '';
       switch (excepType) {
         case 'action': // 行为
-          durationTypes = pageInfoData[excepType].durationTypes;
+          durationTypes = pageInfoData[excepType].durationTypes[index];
           break;
         case 'level': // 级别
-          durationTypes = 'level-' + index;
+          durationTypes = 'level-' + idx;
           break;
         case 'type': // 分类
-          durationTypes = 'type-' + index;
+          durationTypes = 'type-' + idx;
           break;
       }
 
@@ -280,7 +270,7 @@ const PageContent = props => {
       excepTypeName = '分类';
       break;
     case 'action':
-      excepTypeName = '行为';
+      excepTypeName = '成因';
       break;
     default:
       break;

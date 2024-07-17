@@ -1088,6 +1088,7 @@ class RoleIndex extends Component {
                       columns={this.getMenuColumns()}
                       dataSource={this.props.MenuTree}
                       defaultExpandAllRows={this.state.expandRows}
+                      pagination={false}
                     />
                   )}
                 </div>

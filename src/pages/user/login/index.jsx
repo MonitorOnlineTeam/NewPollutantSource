@@ -188,11 +188,9 @@ class Login extends Component {
     const provinceShow = configInfo?.IsShowProjectRegion; //是否为宝武
     // 是否显示手机号登录
     let IsPhoneLogin = configInfo.IsPhoneLogin === 'true';
-
+    
     return (
-      <div
-        className={`${styles.main} ${IsPhoneLogin && styles.phone}`}
-      >
+      <div className={`${styles.main} ${IsPhoneLogin && styles.phone}`}>
         <LoginComponents
           defaultActiveKey={type}
           onTabChange={this.onTabChange}

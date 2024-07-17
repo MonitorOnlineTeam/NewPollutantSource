@@ -6,18 +6,13 @@ import {
   Badge,
   Row,
   Col,
-  Space,
   Button,
-  Statistic,
   Form,
-  InputNumber,
   Modal,
 } from 'antd';
 import styles from '../../../styles.less';
 import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
-import { getModelGuidsByBaseTypeCode, handleHomeDate } from '@/pages/AbnormalIdentifyModel/CONST';
-import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import ReactEcharts from 'echarts-for-react';
 import AnalysisExceedTimeLimit from '../index';

@@ -544,7 +544,7 @@ export default Model.extend({
       let url =
         payload.version === '2'
           ? API.AbnormalIdentifyModel.GetPointParamsRange
-          : '/newApi/rest/PollutantSourceApi/Warning/GetPointParamsRange';
+          : '/rest/PollutantSourceApi/Warning/GetPointParamsRange';
 
       // const result = yield call(services.GetPointParamsRange, payload);
 
@@ -558,7 +558,7 @@ export default Model.extend({
       let url =
         payload.version === '2'
           ? API.AbnormalIdentifyModel.SavePointParamsRange
-          : '/newApi/rest/PollutantSourceApi/Warning/SavePointParamsRange';
+          : '/rest/PollutantSourceApi/Warning/SavePointParamsRange';
       const result = yield call(requestPost, url, payload);
       if (result.IsSuccess) {
         message.success('操作成功！');

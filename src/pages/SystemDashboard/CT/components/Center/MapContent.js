@@ -541,8 +541,11 @@ class MapContent extends PureComponent {
                   padding: '0 4px',
                 }}
               >
-                <p style={{ color: '#00a3ff', fontSize: 20 }}>{position.PointCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排放口数量</p>
+                <p style={{ color: '#00a3ff', fontSize: 20 }}>
+                  {position.PointCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>排口数量</p>
               </Col>
               <Col
                 span={12}
@@ -553,8 +556,11 @@ class MapContent extends PureComponent {
                   padding: '0 4px',
                 }}
               >
-                <p style={{ color: '#FF3737', fontSize: 20 }}>{position.GuideInstallationCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>安装完成数量</p>
+                <p style={{ color: '#FF3737', fontSize: 20 }}>
+                  {position.GuideInstallationCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>安装完成排口</p>
               </Col>
               <Col
                 span={12}
@@ -565,8 +571,11 @@ class MapContent extends PureComponent {
                   padding: '0 4px',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.DebuggingCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>调试完成数量</p>
+                <p style={{ color: '#2EEB9D', fontSize: 20 }}>
+                  {position.DebuggingCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>调试完成排口</p>
               </Col>
               <Col
                 span={12}
@@ -577,8 +586,11 @@ class MapContent extends PureComponent {
                   padding: '0 4px',
                 }}
               >
-                <p style={{ color: '#FFCC00', fontSize: 20 }}>{position.CheckedCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>验收完成数量</p>
+                <p style={{ color: '#FFCC00', fontSize: 20 }}>
+                  {position.CheckedCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>验收完成排口</p>
               </Col>
             </Row>
           </div>
@@ -639,6 +651,7 @@ class MapContent extends PureComponent {
       mapBtnStatusIndex,
       level,
     } = this.state;
+    const { onFullScreenChange } = this.props;
     if (!map) {
       console.log('组件必须作为 Map 的子组件使用');
       return;
@@ -686,11 +699,21 @@ class MapContent extends PureComponent {
           this.setState({ pointTitleShow: false, markersList: [...markersList] });
         }
         break;
+      case '全屏':
+        this.setState({ fullScreen: true }, () => {
+          onFullScreenChange(true);
+        });
+        break;
+      case '退出全屏':
+        this.setState({ fullScreen: false }, () => {
+          onFullScreenChange(false);
+        });
+        break;
     }
   };
 
   RightIconMapComponent = () => {
-    const { level, pointTitleShow } = this.state;
+    const { level, fullScreen } = this.state;
     const operationBtnArr = [
       {
         text: '展示企业',
@@ -709,6 +732,10 @@ class MapContent extends PureComponent {
       { text: '展示/隐藏名称', url: '/SystemDashboard/map/toolShowText.png' },
       { text: '放大', url: '/SystemDashboard/map/zoomIn.png' },
       { text: '缩小', url: '/SystemDashboard/map/zoomOut.png' },
+      {
+        text: fullScreen ? '退出全屏' : '全屏',
+        url: fullScreen ? '/SystemDashboard/map/contract.png' : '/SystemDashboard/map/expand.png',
+      },
     ];
     return (
       <div className={styles.mapOperationBtn}>
@@ -738,10 +765,11 @@ class MapContent extends PureComponent {
       selectedLegend,
       pointInfoWindowPosition,
       pointInfoWindowVisible,
+      fullScreen,
     } = this.state;
     const { loading } = this.props;
     return (
-      <div className={`${styles.mapWrapper}`}>
+      <div className={`${styles.mapWrapper} ${fullScreen ? styles.fullScreen : ''}`}>
         <Spin spinning={!!loading}>
           <Map
             resizeEnable={true}

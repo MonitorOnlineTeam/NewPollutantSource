@@ -81,7 +81,7 @@
     text-align: center;
     background: url(/SystemDashboard/header_bg.png) no-repeat;
     background-size: 100% 170%;
-    font-family: YouSheBiaoTiHei;
+    // font-family: YouSheBiaoTiHei;
     font-size: 30px;
     font-weight: bold;
     color: #4fd3ff;
@@ -147,7 +147,7 @@
         background: #112552;
         left: 12px;
         min-width: calc(100% - 12px);
-        z-index: 9;
+        z-index: 1001;
         li {
           // min-width: ;
           line-height: 36px;
@@ -262,6 +262,35 @@
       }
     }
 
+    /* 定义淡入动画 */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* 定义淡出动画 */
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
+
+    /* 应用动画 */
+    .fade-in {
+      animation: fadeIn 0.5s ease-in forwards;
+    }
+
+    .fade-out {
+      animation: fadeOut 0.5s ease-out forwards;
+    }
+
     // 图表标题
     .echartsTitle {
       text-align: center;
@@ -284,6 +313,14 @@
       }
     }
 
+    // 总览 - 数量单位
+    .overViewUnit {
+      margin-left: 4px;
+      font-size: 12px;
+      // color: #c7ebff;
+      font-family: none;
+    }
+
     .centerWrapper {
       display: flex;
       flex-direction: column;
@@ -299,7 +336,7 @@
           position: fixed;
           z-index: 1000;
           width: 100%;
-          height: calc(100vh - 60px);
+          height: calc(100% - 60px);
           left: 0;
         }
 
@@ -697,7 +734,6 @@
       }
     }
 
-
     // 图表图例
     .chartLegendWrapper {
       // display: flex;
@@ -860,14 +896,14 @@
         width: 100%;
         .pointClassifyItem {
           display: flex;
-          justify-content: center;
+          // justify-content: center;
           align-items: center;
           height: 50%;
 
           img {
             width: 67px;
             height: 61px;
-            margin-right: 30px;
+            margin-right: 20px;
           }
           .numberContent {
             display: inline-block;
@@ -1194,50 +1230,50 @@
   }
 }
 
-    // 切换按钮
-    .toggleRadio {
-      // position: absolute;
-      // right: 20px;
-      // top: 10px;
-      :global {
-        // .ant-radio-button-wrapper {
-        //   background: #021235;
-        //   color: #70a7ff;
-        //   border-color: #1a65e1;
-        //   font-weight: bold;
-        //   border-radius: 0;
-        //   height: 26px;
-        //   line-height: 24px;
-        //   padding: 0 10px;
-        // }
-        // .ant-radio-button-wrapper-checked {
-        //   background-color: #1d70f5;
-        //   font-weight: bold;
-        //   color: #fff;
-        // }
-        .ant-radio-button-wrapper:not(:first-child)::before {
-          // background: #1a65e1;
-        }
-      }
-      :global {
-        .ant-radio-button-wrapper {
-          height: 26px;
-          line-height: 24px;
-          padding: 0 14px;
-          border-radius: 0;
-          background-color: transparent;
-          font-size: 13px;
-          // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
-          color: #c3f0ff;
-          border-color: #203e72;
-          font-weight: bold;
-        }
-        .ant-radio-button-wrapper-checked {
-          // background-color: #007bfd;
-          background: linear-gradient(0deg, #0c4390, rgba(10, 124, 255, 0.1));
-          border-color: #007bfd;
-          font-weight: bold;
-          color: #fff;
-        }
-      }
+// 切换按钮
+.toggleRadio {
+  // position: absolute;
+  // right: 20px;
+  // top: 10px;
+  :global {
+    // .ant-radio-button-wrapper {
+    //   background: #021235;
+    //   color: #70a7ff;
+    //   border-color: #1a65e1;
+    //   font-weight: bold;
+    //   border-radius: 0;
+    //   height: 26px;
+    //   line-height: 24px;
+    //   padding: 0 10px;
+    // }
+    // .ant-radio-button-wrapper-checked {
+    //   background-color: #1d70f5;
+    //   font-weight: bold;
+    //   color: #fff;
+    // }
+    .ant-radio-button-wrapper:not(:first-child)::before {
+      // background: #1a65e1;
     }
+  }
+  :global {
+    .ant-radio-button-wrapper {
+      height: 26px;
+      line-height: 24px;
+      padding: 0 14px;
+      border-radius: 0;
+      background-color: transparent;
+      font-size: 13px;
+      // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+      color: #c3f0ff;
+      border-color: #203e72;
+      font-weight: bold;
+    }
+    .ant-radio-button-wrapper-checked {
+      // background-color: #007bfd;
+      background: linear-gradient(0deg, #0c4390, rgba(10, 124, 255, 0.1));
+      border-color: #007bfd;
+      font-weight: bold;
+      color: #fff;
+    }
+  }
+}

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:47:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-10 15:37:17
+ * @Last Modified time: 2024-07-15 15:19:24
  * @Description:
  */
 import React, { useState, useEffect } from 'react';
@@ -323,14 +323,9 @@ const Index = props => {
                   }}
                 />
               </Form.Item>
-              {// 脱敏角色不显示企业
-              !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
-                // <Spin spinning={entLoading}>
-                  <Form.Item label="企业" name="EntCode">
-                    <EntAtmoList mode="multiple" regionCode={regionCode} style={{ width: 200 }} />
-                  </Form.Item>
-                // </Spin>
-              )}
+              <Form.Item label="企业" name="EntCode">
+                <EntAtmoList mode="multiple" regionCode={regionCode} style={{ width: 200 }} />
+              </Form.Item>
               <Form.Item label="行业" name="IndustryTypeCode">
                 <SearchSelect
                   placeholder="排口所属行业"

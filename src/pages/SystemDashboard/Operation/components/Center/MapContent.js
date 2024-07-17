@@ -241,7 +241,6 @@ class MapContent extends PureComponent {
     );
   };
 
-
   // 绘制行政区边界
   renderRegionBoundary = regionName => {
     console.log('regionName', regionName);
@@ -388,7 +387,7 @@ class MapContent extends PureComponent {
             transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
             padding: '0 10px',
             cursor: 'text',
-            width: 200,
+            width: 240,
             height: 170,
             background: `url(/SystemDashboard/regionTip.png)`,
             backgroundSize: '100% 100%',
@@ -405,7 +404,7 @@ class MapContent extends PureComponent {
               className="textOverflow"
               style={{
                 width: 'calc(100% - 28px)',
-                height: 28,
+                height: 24,
                 lineHeight: '28px',
                 fontWeight: 'bold',
                 cursor: 'pointer',
@@ -435,7 +434,10 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#00a3ff', fontSize: 20 }}>{position.entCount}</p>
+                <p style={{ color: '#00a3ff', fontSize: 20 }}>
+                  {position.entCount}
+                  <span className={styles.overViewUnit}>家</span>
+                </p>
                 <p style={{ fontSize: 13, color: '#fff' }}>企业数量</p>
               </Col>
               <Col
@@ -446,8 +448,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#00a3ff', fontSize: 20 }}>{position.pointCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排放口数量</p>
+                <p style={{ color: '#00a3ff', fontSize: 20 }}>
+                  {position.pointCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>排口数量</p>
               </Col>
               <Col
                 span={14}
@@ -457,8 +462,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.normarlCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维正常</p>
+                <p style={{ color: '#2EEB9D', fontSize: 20 }}>
+                  {position.normarlCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>运维正常排口</p>
               </Col>
               <Col
                 span={10}
@@ -468,8 +476,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FFCC00', fontSize: 20 }}>{position.exceptionCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维异常</p>
+                <p style={{ color: '#FFCC00', fontSize: 20 }}>
+                  {position.exceptionCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>运维异常排口</p>
               </Col>
             </Row>
           </div>
@@ -498,7 +509,7 @@ class MapContent extends PureComponent {
             transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
             padding: '0 10px',
             cursor: 'text',
-            width: 280,
+            width: 300,
             height: 120,
             background: `url(/SystemDashboard/regionTip.png)`,
             backgroundSize: '100% 100%',
@@ -541,15 +552,18 @@ class MapContent extends PureComponent {
               }}
             >
               <Col
-                span={9}
+                span={8}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#00a3ff', fontSize: 20 }}>{position.pointCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排放口数量</p>
+                <p style={{ color: '#00a3ff', fontSize: 20 }}>
+                  {position.pointCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>排口数量</p>
               </Col>
               <Col
                 span={8}
@@ -559,19 +573,25 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.normarlCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维正常</p>
+                <p style={{ color: '#2EEB9D', fontSize: 20 }}>
+                  {position.normarlCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>运维正常排口</p>
               </Col>
               <Col
-                span={7}
+                span={8}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FFCC00', fontSize: 20 }}>{position.exceptionCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维异常</p>
+                <p style={{ color: '#FFCC00', fontSize: 20 }}>
+                  {position.exceptionCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>运维异常排口</p>
               </Col>
             </Row>
           </div>
@@ -629,15 +649,12 @@ class MapContent extends PureComponent {
   operationChange = (text, mapProps) => {
     const map = aMap;
     const {
-      regionMarkers,
-      selectPointMarkers,
       entTitleShow,
       pointTitleShow,
       markersList,
-      mapBtnStatusIndex,
       level,
     } = this.state;
-    const { level1MapData, level4MapData } = this.props;
+    const { level1MapData, level4MapData, onFullScreenChange } = this.props;
     if (!map) {
       console.log('组件必须作为 Map 的子组件使用');
       return;
@@ -694,11 +711,21 @@ class MapContent extends PureComponent {
           this.setState({ pointTitleShow: false, markersList: [...markersList] });
         }
         break;
+      case '全屏':
+        this.setState({ fullScreen: true }, () => {
+          onFullScreenChange(true);
+        });
+        break;
+      case '退出全屏':
+        this.setState({ fullScreen: false }, () => {
+          onFullScreenChange(false);
+        });
+        break;
     }
   };
 
   RightIconMapComponent = () => {
-    const { level, pointTitleShow } = this.state;
+    const { level, fullScreen } = this.state;
     const operationBtnArr = [
       {
         text: '展示企业',
@@ -717,6 +744,10 @@ class MapContent extends PureComponent {
       { text: '展示/隐藏名称', url: '/SystemDashboard/map/toolShowText.png' },
       { text: '放大', url: '/SystemDashboard/map/zoomIn.png' },
       { text: '缩小', url: '/SystemDashboard/map/zoomOut.png' },
+      {
+        text: fullScreen ? '退出全屏' : '全屏',
+        url: fullScreen ? '/SystemDashboard/map/contract.png' : '/SystemDashboard/map/expand.png',
+      },
     ];
     return (
       <div className={styles.mapOperationBtn}>
@@ -741,11 +772,9 @@ class MapContent extends PureComponent {
       markersList,
       hoverEntTitle,
       hoverPointTitle,
-      hoverEntTitleShow,
+      fullScreen,
       hoverTitleShow,
       hoverTitleLngLat,
-      pointInfoWindowPosition,
-      pointInfoWindowVisible,
       level,
       selectedLegend,
       currentPointInfo,
@@ -753,7 +782,7 @@ class MapContent extends PureComponent {
     const { loading } = this.props;
 
     return (
-      <div className={`${styles.mapWrapper}`}>
+      <div className={`${styles.mapWrapper} ${fullScreen ? styles.fullScreen : ''}`}>
         <Spin spinning={!!loading}>
           <Map
             resizeEnable={true}

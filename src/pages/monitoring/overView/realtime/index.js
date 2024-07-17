@@ -180,7 +180,8 @@ class Realtime extends Component {
         });
       }
 
-      let { sortedInfo, filteredInfo, pollutantCode, pageIndex } = this.state;
+      let { sortedInfo, filteredInfo, pollutantCode, pageIndex, Status } = this.state;
+      console.log('Status', Status)
       filteredInfo = filteredInfo || {};
       const columns = [
         {
@@ -191,7 +192,11 @@ class Realtime extends Component {
           align: 'center',
           fixed,
           show: true,
-          render: (value, record, index) => (this.state.pageIndex - 1) * 50 + index + 1,
+          render: (value, record, index) => {
+            debugger
+            console.log('this.state.pageIndex', this.state.pageIndex)
+            return (this.state.pageIndex - 1) * 50 + index + 1
+          },
         },
         {
           title: '状态',
@@ -203,19 +208,19 @@ class Realtime extends Component {
           fixed,
           show: true,
           filters: statusFilters,
-          filteredValue: filteredInfo.Status || null,
-          onFilter: (value, record) => {
-            if (
-              record.pollutantTypeCode == 5 ||
-              (record.pollutantTypeCode == 12 && configInfo.IsOpenAQI === '1')
-            ) {
-              if (value != 0) {
-                return record.AirLevel == value;
-              }
-              return !record.AirLevel;
-            }
-            return record.status == value;
-          },
+          // filteredValue: Status || null,
+          // onFilter: (value, record) => {
+          //   if (
+          //     record.pollutantTypeCode == 5 ||
+          //     (record.pollutantTypeCode == 12 && configInfo.IsOpenAQI === '1')
+          //   ) {
+          //     if (value != 0) {
+          //       return record.AirLevel == value;
+          //     }
+          //     return !record.AirLevel;
+          //   }
+          //   return record.status == value;
+          // },
           render: (value, record, index) => {
             if (
               record.pollutantTypeCode == 5 ||
@@ -308,7 +313,7 @@ class Realtime extends Component {
 
   // 获取表格数据
   getRealTimeDataView = () => {
-    const { pointName, currentDataType, pollutantCode, time, dayTime } = this.state;
+    const { pointName, currentDataType, pollutantCode, time, dayTime, Status } = this.state;
     let searchTime;
     // ? moment(this.state.time).format("YYYY-MM-DD HH:00:00") : undefined
     if (currentDataType === 'HourData') {
@@ -328,6 +333,7 @@ class Realtime extends Component {
         dataType: currentDataType,
         pollutantTypes: pollutantCode,
         time: searchTime,
+        status: Status,
       },
     });
   };
@@ -343,13 +349,26 @@ class Realtime extends Component {
   };
 
   handleChange = (pagination, filters, sorter) => {
-    const newColumns = this.state.columns;
-    if (newColumns.length) {
-      newColumns[1].filteredValue = filters.Status || null;
-      this.setState({
-        columns: newColumns,
-      });
-    }
+    console.log('filters', filters);
+    const { current, pageSize } = pagination;
+    this.setState(
+      {
+        pageIndex: current,
+        pageSize: pageSize,
+        Status: filters.Status,
+      },
+      () => {
+        this.getRealTimeDataView();
+      },
+    );
+
+    // const newColumns = this.state.columns;
+    // if (newColumns.length) {
+    //   newColumns[1].filteredValue = filters.Status || null;
+    //   this.setState({
+    //     columns: newColumns,
+    //   });
+    // }
   };
 
   // 当前时间0-1之间：currentTime - 前一天；nextDayTime - 当天；
@@ -668,7 +687,7 @@ class Realtime extends Component {
                     showSizeChanger: false,
                     pageSize: 50, // this.props.pageSize,
                     current: this.state.pageIndex,
-                    onChange: this.onTableChange,
+                    // onChange: this.onTableChange,
                     total: this.props.realTimeTotal,
                   }
                 : false

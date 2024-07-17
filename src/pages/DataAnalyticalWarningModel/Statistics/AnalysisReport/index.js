@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:26:19
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-01-04 18:26:27
+ * @Last Modified time: 2024-07-15 15:11:41
  * @Description：场景模型分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -110,7 +110,7 @@ const Index = props => {
   };
 
   // 获取页面数据,  flag：是否出现错误提示
-  const getPageData = (flag) => {
+  const getPageData = flag => {
     const values = form.getFieldsValue();
     if (!values.modelGuid) {
       !flag && message.error('请选择场景后查询！');
@@ -622,19 +622,16 @@ const Index = props => {
                   }}
                 />
               </Form.Item>
-              {// 脱敏角色不显示企业
-              !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
-                <Form.Item label="企业" name="EntCode">
-                  <EntAtmoList
-                    mode="multiple"
-                    maxTagCount={2}
-                    maxTagTextLength={6}
-                    maxTagPlaceholder="..."
-                    regionCode={regionCode}
-                    style={{ width: 300 }}
-                  />
-                </Form.Item>
-              )}
+              <Form.Item label="企业" name="EntCode">
+                <EntAtmoList
+                  mode="multiple"
+                  maxTagCount={2}
+                  maxTagTextLength={6}
+                  maxTagPlaceholder="..."
+                  regionCode={regionCode}
+                  style={{ width: 300 }}
+                />
+              </Form.Item>
               <Form.Item label="行业" name="IndustryTypeCode">
                 <SearchSelect
                   placeholder="排口所属行业"

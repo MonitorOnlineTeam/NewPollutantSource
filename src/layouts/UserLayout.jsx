@@ -71,7 +71,8 @@ const UserLayout = props => {
     >
       <Fragment>
         <div
-          className={`${styles.container} ${bgImageType ? styles.container_bg : ''} ${IsOpera&&styles.operaSty}`}
+          className={`${styles.container} ${bgImageType ? styles.container_bg : ''} ${IsOpera &&
+            styles.operaSty}`}
           style={{
             backgroundImage: `url(${bgImageUrl})`,
             height: '100vh',
@@ -176,7 +177,7 @@ const UserLayout = props => {
             </div>
             {children}
           </div>
-          <div style={{ textAlign: 'center', color: 'rgba(0, 0, 0, 0.45)' }}>
+          <div className={styles.tipsInfo} style={{ textAlign: 'center' }}>
             请使用谷歌chrome浏览器访问系统
           </div>
           {/* <DefaultFooter copyright={'污染源智能分析平台  2019 SDL'} links={[]} /> */}

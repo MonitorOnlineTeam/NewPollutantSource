@@ -40,8 +40,9 @@ const OverviewCard = props => {
             <div className={styles.numberContent}>
               <p className={styles.num} style={{ color: colors[0] }}>
                 {MonitoringCountAnalysis.pointCount}
+                <span className={styles.overViewUnit}>个</span>
               </p>
-              <p className={styles.text}>排放口数量</p>
+              <p className={styles.text}>排口数量</p>
             </div>
           </Col>
           <Col span={12} className={styles.pointClassifyItem}>
@@ -49,8 +50,9 @@ const OverviewCard = props => {
             <div className={styles.numberContent}>
               <p className={styles.num} style={{ color: colors[1] }}>
                 {MonitoringCountAnalysis.normalCount}
+                <span className={styles.overViewUnit}>个</span>
               </p>
-              <p className={styles.text}>在线数量</p>
+              <p className={styles.text}>在线排口</p>
             </div>
           </Col>
           <Col span={12} className={styles.pointClassifyItem}>
@@ -58,8 +60,10 @@ const OverviewCard = props => {
             <div className={styles.numberContent}>
               <p className={styles.num} style={{ color: colors[2] }}>
                 {MonitoringCountAnalysis.overCount}
+                <span className={styles.overViewUnit}>个</span>
+
               </p>
-              <p className={styles.text}>超标数量</p>
+              <p className={styles.text}>超标排口</p>
             </div>
           </Col>
           <Col span={12} className={styles.pointClassifyItem} style={{ height: '33.3333%' }}>
@@ -67,8 +71,9 @@ const OverviewCard = props => {
             <div className={styles.numberContent}>
               <p className={styles.num} style={{ color: colors[3] }}>
                 {MonitoringCountAnalysis.exceptionCount}
+                <span className={styles.overViewUnit}>个</span>
               </p>
-              <p className={styles.text}>异常数量</p>
+              <p className={styles.text}>异常排口</p>
             </div>
           </Col>
           <Col span={12} className={styles.pointClassifyItem} style={{ height: '33.3333%' }}>
@@ -76,8 +81,9 @@ const OverviewCard = props => {
             <div className={styles.numberContent}>
               <p className={styles.num} style={{ color: colors[4] }}>
                 {MonitoringCountAnalysis.stopCount}
+                <span className={styles.overViewUnit}>个</span>
               </p>
-              <p className={styles.text}>停运数量</p>
+              <p className={styles.text}>停运排口</p>
             </div>
           </Col>
           <Col span={12} className={styles.pointClassifyItem} style={{ height: '33.3333%' }}>
@@ -85,8 +91,9 @@ const OverviewCard = props => {
             <div className={styles.numberContent}>
               <p className={styles.num} style={{ color: colors[5] }}>
                 {MonitoringCountAnalysis.unLineCount}
+                <span className={styles.overViewUnit}>个</span>
               </p>
-              <p className={styles.text}>离线数量</p>
+              <p className={styles.text}>离线排口</p>
             </div>
           </Col>
         </Row>

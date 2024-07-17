@@ -41,6 +41,11 @@ const PageContent = props => {
   const [mildValue, setMildValue] = useState(30); // 轻微
   const [moderateValue, setModerateValue] = useState(50); // 中度
   const [severeValue, setSevereValue] = useState(100); // 严重
+  const [nums, setNums] = useState({
+    EntNums: 0,
+    MissHours: 0,
+    PointNums: 0,
+  });
   const [levelCounts, setLevelCounts] = useState({
     notMissing: 0,
     mild: 0,
@@ -76,6 +81,11 @@ const PageContent = props => {
       },
       callback: result => {
         if (result.IsSuccess) {
+          setNums({
+            EntNums: result.Datas.EntNums,
+            MissHours: result.Datas.MissHours,
+            PointNums: result.Datas.PointNums,
+          });
           setMissRate(result.Datas.MissRate);
           setDataSource(result.Datas.TableData);
           analyzeMissingData(result.Datas.TableData);
@@ -512,11 +522,12 @@ const PageContent = props => {
       ],
       series: [
         {
-          name: '应传小时数',
+          name: '实传小时数',
           type: 'bar',
           // z: -1,
           barMaxWidth: 50,
-          barGap: '-100%',
+          // barGap: '-100%',
+          stack: 'total',
           itemStyle: {
             // color: '#92cc75',
           },
@@ -532,6 +543,7 @@ const PageContent = props => {
           type: 'bar',
           z: 99,
           barMaxWidth: 50,
+          stack: 'total',
           itemStyle: {
             // color: '#ff4d4f',
           },
@@ -728,13 +740,13 @@ const PageContent = props => {
             />
             <Row justify="center">
               <Col span={24} style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
-                <Badge status="processing" text="数据缺失企业数量：10个" />
+                <Badge status="processing" text={`数据缺失企业数量：${nums.EntNums} 个`} />
               </Col>
               <Col span={24} style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
-                <Badge status="processing" text="排放口数量：10个" />
+                <Badge status="processing" text={`排放口数量：${nums.PointNums} 个`} />
               </Col>
               <Col span={24} style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
-                <Badge status="processing" text="数据缺失小时数：10个" />
+                <Badge status="processing" text={`数据缺失小时数：${nums.MissHours} 个`} />
               </Col>
             </Row>
           </Card>

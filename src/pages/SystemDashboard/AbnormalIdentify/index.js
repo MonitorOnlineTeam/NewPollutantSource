@@ -16,11 +16,16 @@ const dvaPropsData = ({ loading, sysDashboard }) => ({
 });
 
 const HomeDataScreen = props => {
+  const [fullScreen, setFullScreen] = useState(false);
+
   useEffect(() => {}, []);
 
   return (
     <SystemDashboardPageWrapper pageName="异常数据识别">
-      <Col style={{ width: '27%', minWidth: 400 }} className={styles.leftWrapper}>
+      <Col
+        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        className={styles.leftWrapper}
+      >
         {/* 总览 */}
         <OverviewCard />
         {/* 分级 */}
@@ -30,9 +35,16 @@ const HomeDataScreen = props => {
       </Col>
       <Col style={{ maxWidth: '46%' }} flex={'auto'} className={styles.centerWrapper}>
         {/* 地图 */}
-        <MapContent />
+        <MapContent
+          onFullScreenChange={value => {
+            setFullScreen(value);
+          }}
+        />
       </Col>
-      <Col style={{ width: '27%', minWidth: 400 }} className={styles.rightWrapper}>
+      <Col
+        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        className={styles.rightWrapper}
+      >
         {/* 异常行为分析 */}
         <BehaviorAnalysis />
         {/* 疑似异常率分析 */}

@@ -52,7 +52,7 @@ const DeviceInfoCount = props => {
     setOpen(true);
   };
   const dataList = [
-    { name: '排放口数量', value: nums?.pointCount, iconUrl: '/SystemDashboard/supervision/zl_type1.png' },
+    { name: '排口数量', value: nums?.pointCount, iconUrl: '/SystemDashboard/supervision/zl_type1.png' },
     { name: '核查不规范', value: nums?.unqualifiedCount, iconUrl: '/SystemDashboard/supervision/zl_type2.png' },
     { name: '整改中', value: nums?.rectificationCount, iconUrl: '/SystemDashboard/supervision/zl_type3.png' },
     { name: '核查正常', value: nums?.qualifiedCount, iconUrl: '/SystemDashboard/supervision/zl_type4.png' }

@@ -422,7 +422,7 @@ const ReCheckDetails = props => {
           <Form.Item label="附件" name="file">
             <SdlUpload
               accept="image/*"
-              action="/newApi/rest/PollutantSourceApi/UploadApi/UploadFiles"
+              action="/api/rest/PollutantSourceApi/UploadApi/UploadFiles"
               cuid={uid}
               uploadSuccess={cuid => {}}
             />

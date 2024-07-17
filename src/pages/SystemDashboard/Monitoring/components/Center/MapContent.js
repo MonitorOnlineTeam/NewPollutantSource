@@ -515,7 +515,10 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#00a3ff', fontSize: 20 }}>{position.pointCount || 12}</p>
+                <p style={{ color: '#00a3ff', fontSize: 20 }}>
+                  {position.pointCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
                 <p style={{ fontSize: 13, color: '#fff' }}>排口数量</p>
               </Col>
               <Col
@@ -526,8 +529,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>{position.normalCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>在线数量</p>
+                <p style={{ color: '#2EEB9D', fontSize: 20 }}>
+                  {position.normalCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>在线排口</p>
               </Col>
               <Col
                 span={8}
@@ -537,8 +543,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#C9C9C9', fontSize: 20 }}>{position.unLineCount || 22}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>离线数量</p>
+                <p style={{ color: '#C9C9C9', fontSize: 20 }}>
+                  {position.unLineCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>离线排口</p>
               </Col>
               <Col
                 span={8}
@@ -548,8 +557,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FF3737', fontSize: 20 }}>{position.overCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>超标数量</p>
+                <p style={{ color: '#FF3737', fontSize: 20 }}>
+                  {position.overCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>超标排口</p>
               </Col>
               <Col
                 span={8}
@@ -559,8 +571,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FFCC00', fontSize: 20 }}>{position.exceptionCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>异常数量</p>
+                <p style={{ color: '#FFCC00', fontSize: 20 }}>
+                  {position.exceptionCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>异常排口</p>
               </Col>
               <Col
                 span={8}
@@ -570,8 +585,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#836bfb', fontSize: 20 }}>{position.stopCount}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>停产数量</p>
+                <p style={{ color: '#836bfb', fontSize: 20 }}>
+                  {position.stopCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: 13, color: '#fff' }}>停产排口</p>
               </Col>
             </Row>
           </div>
@@ -637,7 +655,7 @@ class MapContent extends PureComponent {
       mapBtnStatusIndex,
       level,
     } = this.state;
-    const { level1MapData, level4MapData } = this.props;
+    const { level1MapData, level4MapData, onFullScreenChange } = this.props;
     if (!map) {
       console.log('组件必须作为 Map 的子组件使用');
       return;
@@ -694,11 +712,21 @@ class MapContent extends PureComponent {
           this.setState({ pointTitleShow: false, markersList: [...markersList] });
         }
         break;
+      case '全屏':
+        this.setState({ fullScreen: true }, () => {
+          onFullScreenChange(true);
+        });
+        break;
+      case '退出全屏':
+        this.setState({ fullScreen: false }, () => {
+          onFullScreenChange(false);
+        });
+        break;
     }
   };
 
   RightIconMapComponent = () => {
-    const { level, pointTitleShow } = this.state;
+    const { level, fullScreen } = this.state;
     const operationBtnArr = [
       {
         text: '展示企业',
@@ -717,6 +745,10 @@ class MapContent extends PureComponent {
       { text: '展示/隐藏名称', url: '/SystemDashboard/map/toolShowText.png' },
       { text: '放大', url: '/SystemDashboard/map/zoomIn.png' },
       { text: '缩小', url: '/SystemDashboard/map/zoomOut.png' },
+      {
+        text: fullScreen ? '退出全屏' : '全屏',
+        url: fullScreen ? '/SystemDashboard/map/contract.png' : '/SystemDashboard/map/expand.png',
+      },
     ];
     return (
       <div className={styles.mapOperationBtn}>
@@ -741,7 +773,7 @@ class MapContent extends PureComponent {
       markersList,
       hoverEntTitle,
       hoverPointTitle,
-      hoverEntTitleShow,
+      fullScreen,
       hoverTitleShow,
       hoverTitleLngLat,
       pointInfoWindowPosition,
@@ -751,9 +783,8 @@ class MapContent extends PureComponent {
       currentPointInfo,
     } = this.state;
     const { loading } = this.props;
-
     return (
-      <div className={`${styles.mapWrapper}`}>
+      <div className={`${styles.mapWrapper} ${fullScreen ? styles.fullScreen : ''}`}>
         <Spin spinning={!!loading}>
           <Map
             resizeEnable={true}

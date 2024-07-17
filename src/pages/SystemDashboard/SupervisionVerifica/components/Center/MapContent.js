@@ -11,7 +11,6 @@ import SupervisionManager from '@/pages/operations/supervisionManager';
 import CruxParSupervisionRectifica from '@/pages/operations/cruxParSupervisionRectifica3.0';
 import SuperviseRectification from '@/pages/operations/superviseRectification';
 
-
 const legendList = [
   {
     name: '核查正常',
@@ -28,8 +27,6 @@ const legendList = [
     color: '#FF7E00',
     value: '2',
   },
-
-
 ];
 let aMap;
 
@@ -66,10 +63,9 @@ class MapContent extends PureComponent {
       hoverTitleLngLat: {},
       hoverEntTitle: '',
       hoverPointTitle: '',
-      rectificationing:false,
+      rectificationing: false,
       open: false,
       openData: {},
-
     };
     this.mapEvents = {
       created(m) {
@@ -79,7 +75,7 @@ class MapContent extends PureComponent {
           if (config.offlineMapUrl.domain) {
             var Layer = new window.aMap.TileLayer({
               zIndex: 2,
-              getTileUrl: function (x, y, z) {
+              getTileUrl: function(x, y, z) {
                 return config.offlineMapUrl.domain + '/gaode/' + z + '/' + x + '/' + y + '.png';
               },
             });
@@ -134,7 +130,18 @@ class MapContent extends PureComponent {
         const { level, pointInfoWindowVisible } = this.state;
         if ((level == 3 || level == 4) && pointInfoWindowVisible === false) {
           const position = marker.De.extData.position;
-          this.setState({ open: true, rectificationing:position.Status==1, openData: { EntCode: position.entCode, DGIMN: position.dgimn, time: position.BTime && position.ETime ? [moment(position.BTime), moment(position.ETime)] : [] } })
+          this.setState({
+            open: true,
+            rectificationing: position.Status == 1,
+            openData: {
+              EntCode: position.entCode,
+              DGIMN: position.dgimn,
+              time:
+                position.BTime && position.ETime
+                  ? [moment(position.BTime), moment(position.ETime)]
+                  : [],
+            },
+          });
         }
       },
     };
@@ -239,7 +246,6 @@ class MapContent extends PureComponent {
       case '1': // 整改中
         color = legendList[1].color;
         break;
-
     }
 
     return (
@@ -254,8 +260,7 @@ class MapContent extends PureComponent {
           textAlign: 'center',
           color: '#484020',
         }}
-      >
-      </div>
+      ></div>
     );
   };
 
@@ -324,7 +329,7 @@ class MapContent extends PureComponent {
       });
       const regName = regionName == '新疆生产建设兵团' ? '新疆维吾尔自治区' : regionName;
       // 搜索所有省/直辖市信息
-      districtSearch.search(regName, function (status, result) {
+      districtSearch.search(regName, function(status, result) {
         // 查询成功时，result即为对应的行政区信息
         if (status === 'complete') {
           const bounds = result?.districtList[0]?.boundaries;
@@ -358,7 +363,7 @@ class MapContent extends PureComponent {
         this.renderRegionBoundary(extData.position.regionName);
       },
     );
-    this.updateCardData({ level: 2, regionCode: extData.position.regionCode })
+    this.updateCardData({ level: 2, regionCode: extData.position.regionCode });
   };
 
   // 企业点击
@@ -372,7 +377,7 @@ class MapContent extends PureComponent {
         this.loadPageData();
       },
     );
-    this.updateCardData({ level: 3, entCode: extData.position.entCode })
+    this.updateCardData({ level: 3, entCode: extData.position.entCode });
   };
 
   // 返回按钮点击
@@ -385,7 +390,7 @@ class MapContent extends PureComponent {
       this.setState({ level: 1, pointInfoWindowVisible: false, selectedLegend: undefined }, () => {
         this.handleMarkerDatas(level1MapData);
       });
-      this.updateCardData({ level: 1 })
+      this.updateCardData({ level: 1 });
     }
 
     // 企业下监测点返回企业
@@ -393,7 +398,7 @@ class MapContent extends PureComponent {
       this.setState({ level: 2, pointInfoWindowVisible: false }, () => {
         this.loadPageData();
       });
-      this.updateCardData({ level: 2 })
+      this.updateCardData({ level: 2 });
     }
   };
 
@@ -529,12 +534,7 @@ class MapContent extends PureComponent {
       //监测点
       return (
         <div style={{ position: 'relative', marginTop: 24 }}>
-          <span
-            onClick={() => {
-            }}
-          >
-            {this.getPointIcon(extData.position)}
-          </span>
+          <span onClick={() => {}}>{this.getPointIcon(extData.position)}</span>
           {pointTitleShow ? (
             <div className={styles.pointTitlePopSty}>
               <div className={styles.titlePopSty}>
@@ -559,7 +559,7 @@ class MapContent extends PureComponent {
       mapBtnStatusIndex,
       level,
     } = this.state;
-    const { level1MapData, level4MapData } = this.props;
+    const { level1MapData, level4MapData, onFullScreenChange } = this.props;
     if (!map) {
       console.log('组件必须作为 Map 的子组件使用');
       return;
@@ -617,11 +617,21 @@ class MapContent extends PureComponent {
           this.setState({ pointTitleShow: false, markersList: [...markersList] });
         }
         break;
+      case '全屏':
+        this.setState({ fullScreen: true }, () => {
+          onFullScreenChange(true);
+        });
+        break;
+      case '退出全屏':
+        this.setState({ fullScreen: false }, () => {
+          onFullScreenChange(false);
+        });
+        break;
     }
   };
 
   RightIconMapComponent = () => {
-    const { level, pointTitleShow } = this.state;
+    const { level, fullScreen } = this.state;
     const operationBtnArr = [
       {
         text: '展示企业',
@@ -640,6 +650,10 @@ class MapContent extends PureComponent {
       { text: '展示/隐藏名称', url: '/SystemDashboard/map/toolShowText.png' },
       { text: '放大', url: '/SystemDashboard/map/zoomIn.png' },
       { text: '缩小', url: '/SystemDashboard/map/zoomOut.png' },
+      {
+        text: fullScreen ? '退出全屏' : '全屏',
+        url: fullScreen ? '/SystemDashboard/map/contract.png' : '/SystemDashboard/map/expand.png',
+      },
     ];
     return (
       <div className={styles.mapOperationBtn}>
@@ -659,33 +673,29 @@ class MapContent extends PureComponent {
     );
   };
 
-
   render() {
     const {
       markersList,
       hoverEntTitle,
       hoverPointTitle,
-      hoverEntTitleShow,
+      fullScreen,
       hoverTitleShow,
       hoverTitleLngLat,
-      pointInfoWindowPosition,
-      pointInfoWindowVisible,
       level,
       selectedLegend,
-      currentPointInfo,
       openData,
     } = this.state;
     const { loading } = this.props;
 
     return (
-      <div className={`${styles.mapWrapper}`}>
+      <div className={`${styles.mapWrapper} ${fullScreen ? styles.fullScreen : ''}`}>
         <Spin spinning={!!loading}>
           <Map
             resizeEnable={true}
             events={this.mapEvents}
             mapStyle="amap://styles/6daa80e94c53325ff909a31f3d3d8809"
             amapkey={'1440c67033e5ede0f3a068605de5fb5f'}
-          // center={mapCenter}
+            // center={mapCenter}
           >
             {this.RightIconMapComponent()}
             <Markers
@@ -719,7 +729,7 @@ class MapContent extends PureComponent {
                 <div
                   className={`${styles.legendItem} ${
                     selectedLegend === item.value ? styles.active : ''
-                    }`}
+                  }`}
                   style={{
                     color: selectedLegend === item.value ? item.color : '',
                     borderColor: selectedLegend === item.value ? item.color : '',
@@ -734,7 +744,7 @@ class MapContent extends PureComponent {
           </div>
         </Spin>
         <Modal
-          title='监督核查记录'
+          title="监督核查记录"
           destroyOnClose
           wrapClassName={`fullScreenModal ${styles.SupervisionVerificaRecordModal}`}
           bodyStyle={{ padding: 0 }}
@@ -742,23 +752,43 @@ class MapContent extends PureComponent {
           mask={false}
           onCancel={() => {
             this.setState({
-              open: false
-            })
+              open: false,
+            });
           }}
         >
           <Tabs
             defaultActiveKey="1"
-            tabPosition='left'
+            tabPosition="left"
             items={[
               {
                 label: `关键参数核查`,
                 key: '1',
-                children: this.state.rectificationing? <CruxParSupervisionRectifica hideBreadcrumb par={openData}  /> :  <RemoteSupervision hideBreadcrumb par={openData} match={{ path: '/operations/remoteSupervisionRecord' }} />,
+                children: this.state.rectificationing ? (
+                  <CruxParSupervisionRectifica hideBreadcrumb par={openData} />
+                ) : (
+                  <RemoteSupervision
+                    hideBreadcrumb
+                    par={openData}
+                    match={{ path: '/operations/remoteSupervisionRecord' }}
+                  />
+                ),
               },
               {
                 label: `系统设施核查`,
                 key: '2',
-                children: this.state.rectificationing? <SuperviseRectification hideBreadcrumb par={openData} match={{ path: '/operations/superviseRectification' }}  /> : <SupervisionManager hideBreadcrumb par={openData} match={{ path: '/operations/siteSupervisionRecod' }} />,
+                children: this.state.rectificationing ? (
+                  <SuperviseRectification
+                    hideBreadcrumb
+                    par={openData}
+                    match={{ path: '/operations/superviseRectification' }}
+                  />
+                ) : (
+                  <SupervisionManager
+                    hideBreadcrumb
+                    par={openData}
+                    match={{ path: '/operations/siteSupervisionRecod' }}
+                  />
+                ),
               },
             ]}
           />

@@ -14,9 +14,14 @@ import AfterSaleService from './components/Right/AfterSaleService_3';
 const dvaPropsData = ({ loading, sysDashboard }) => ({});
 
 const HomeDataScreen = props => {
+  const [fullScreen, setFullScreen] = useState(false);
+
   return (
     <SystemDashboardPageWrapper pageName="安装调试">
-      <Col style={{ width: '27%', minWidth: 400 }} className={styles.leftWrapper}>
+      <Col
+        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        className={styles.leftWrapper}
+      >
         {/* 总览 */}
         <OverviewCard />
         {/* 服务报告合格分析 */}
@@ -26,9 +31,16 @@ const HomeDataScreen = props => {
       </Col>
       <Col style={{ maxWidth: '46%' }} flex={'auto'} className={styles.centerWrapper}>
         {/* 地图 */}
-        <MapContent />
+        <MapContent
+          onFullScreenChange={value => {
+            setFullScreen(value);
+          }}
+        />
       </Col>
-      <Col style={{ width: '27%', minWidth: 400 }} className={styles.rightWrapper}>
+      <Col
+        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        className={styles.rightWrapper}
+      >
         {/* 服务响应及时分析 */}
         <ServiceResponseRate />
         {/* 客户满意度分析 */}

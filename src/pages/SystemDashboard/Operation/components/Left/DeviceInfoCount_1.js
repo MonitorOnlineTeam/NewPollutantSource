@@ -65,7 +65,7 @@ const DeviceInfoCount = props => {
           <ul>
             <li>
               <img src="/SystemDashboard/opera/pointNum1.png" />
-              <span className={styles.text}>排放口数量</span>
+              <span className={styles.text}>排口数量</span>
               <div style={{ position: 'absolute', right: 10 }}>
                 <span className={styles.num} style={{ color: '#00A3FF' }}>
                   {nums.pointCount}
@@ -75,7 +75,7 @@ const DeviceInfoCount = props => {
             </li>
             <li>
               <img src="/SystemDashboard/opera/pointNum2.png" />
-              <span className={styles.text}>正常运维数量</span>
+              <span className={styles.text}>正常运维排口</span>
               <div style={{ position: 'absolute', right: 10 }}>
                 <span className={styles.num} style={{ color: '#2EEB9D' }}>
                   {nums.normalCount}
@@ -85,7 +85,7 @@ const DeviceInfoCount = props => {
             </li>
             <li>
               <img src="/SystemDashboard/opera/pointNum3.png" />
-              <span className={styles.text}>异常运维数量</span>
+              <span className={styles.text}>异常运维排口</span>
               <div style={{ position: 'absolute', right: 10 }}>
                 <span className={styles.num} style={{ color: '#FFCC00' }}>
                   {nums.exceptionCount}

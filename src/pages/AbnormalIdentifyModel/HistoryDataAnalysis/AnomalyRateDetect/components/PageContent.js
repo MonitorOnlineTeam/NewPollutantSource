@@ -19,7 +19,6 @@ import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import ReactEcharts from 'echarts-for-react';
 import WorkingAnalysis from '../index';
-import { MoreOutlined } from '@ant-design/icons';
 import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
 import QuestionTooltip from '@/components/QuestionTooltip';
 
@@ -671,7 +670,7 @@ const PageContent = props => {
               marginRight: 8,
             }}
             bodyStyle={{ padding: '10px 24px', height: 'calc(100% - 41px)' }}
-            title={<div className="innerCardTitle">传输有效率</div>}
+            title={<div className="innerCardTitle">传输有效率分析（标准）</div>}
           >
             <ReactEcharts
               option={getOption1()}
@@ -689,7 +688,7 @@ const PageContent = props => {
               marginRight: 8,
             }}
             bodyStyle={{ padding: '10px 24px', height: 'calc(100% - 41px)' }}
-            title={<div className="innerCardTitle">模型识别异常分析</div>}
+            title={<div className="innerCardTitle">传输有效率分析（模型）</div>}
           >
             <ReactEcharts
               option={getOption2()}

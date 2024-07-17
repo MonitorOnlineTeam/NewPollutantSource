@@ -158,7 +158,7 @@ class index extends PureComponent {
                 let pollutantList =[]
                 this.props.PollutantByType.map(item =>{
                     pollutantList.push({PollutantCode:item.PollutantCode})
-                    selectPollution.push({PollutantName:item.PollutantName,PollutantCode:item.PollutantCode})
+                    selectPollution.push({PollutantName:item.PollutantName,PollutantCode:item.PollutantCode, Unit: item.Unit})
                 })
                 const { entType, dataType, time } = this.state
                 this.setState({
@@ -200,6 +200,7 @@ class index extends PureComponent {
                 let Max = null
                 if (values[item.PollutantCode] != '') {
                     let pollution = {}
+                    pollution['Unit'] = item.Unit
                     pollution['PollutantName'] = item.PollutantName
                     pollution['PollutantCode'] = values[item.PollutantCode].toString()
                     selectPollution.push(pollution)
@@ -232,7 +233,7 @@ class index extends PureComponent {
             })
         }else{
             pollutionData = PollutantByType.map(item=>{return{ PollutantCode: item.PollutantCode }})
-            selectPollution = PollutantByType.map(item=>{return{ PollutantName: item.PollutantName, PollutantCode: item.PollutantCode, }})
+            selectPollution = PollutantByType.map(item=>{return{ PollutantName: item.PollutantName, PollutantCode: item.PollutantCode, Unit: item.Unit}})
         }
 
               this.setState({
@@ -287,6 +288,7 @@ class index extends PureComponent {
                 let Max = null
                 if (values[item.PollutantCode] != '') {
                     let pollution = {}
+                    pollution['Unit'] = item.Unit
                     pollution['PollutantName'] = item.PollutantName
                     pollution['PollutantCode'] = values[item.PollutantCode].toString()
                     selectPollution.push(pollution)
@@ -319,7 +321,7 @@ class index extends PureComponent {
                })
              }else{
                 pollutionData = PollutantByType.map(item=>{return{ PollutantCode: item.PollutantCode }})
-                selectPollution = PollutantByType.map(item=>{return{ PollutantName: item.PollutantName, PollutantCode: item.PollutantCode, }})
+                selectPollution = PollutantByType.map(item=>{return{ PollutantName: item.PollutantName, PollutantCode: item.PollutantCode,Unit: item.Unit }})
             }
               this.setState({
                   selectPollution: selectPollution,
@@ -533,7 +535,6 @@ class index extends PureComponent {
             visible:true,
            
         })
-        console.log(PollutantList)
         let arr = []
         PollutantList.map(item=>{
             if(item.PollutantCode == pointCode)
@@ -604,7 +605,6 @@ class index extends PureComponent {
     }
     //超标次数弹框
     exCountHandle=(pointCode,rCode,flag,EntCode,name)=>{
-        console.log(EntCode)
         if(flag)
         {
             this.setState({
@@ -623,7 +623,6 @@ class index extends PureComponent {
         }
         const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,PollutantList ,selectPollution ,regionCode,operationpersonnel} = this.state
         let arr = []
-        console.log(PollutantList)
         PollutantList.map(item=>{
             if(item.PollutantCode == pointCode)
             {
@@ -1295,7 +1294,7 @@ class index extends PureComponent {
         selectPollution.map(item=>{
             let addColumns ={}
             addColumns = {
-                title: item.PollutantName,
+                title: `${item.PollutantName}`,
                 align: 'center',
                 fixed: fixed,
                 children: [
@@ -1808,11 +1807,10 @@ class index extends PureComponent {
                 key: 'OverTime',
             }
         ]
-
         modalSelectPollution2.map(item=>{
             let addColumns ={}
             addColumns = {
-                title: item.PollutantName,
+                title: `${item.PollutantName} (${item.Unit})`,
                 align: 'center',
                 fixed: fixed,
                 children: [

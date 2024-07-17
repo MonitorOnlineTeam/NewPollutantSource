@@ -30,7 +30,7 @@ const BehaviorAnalysis = props => {
 
   return (
     <HomeCard
-      title="异常行为分析"
+      title="异常成因分析"
       style={{ minHeight: 300, flex: 3 }}
       bodyStyle={{ height: 'calc(100% - 40px)' }}
       loading={loading}
@@ -65,7 +65,7 @@ const BehaviorAnalysis = props => {
         })}
       </div>
       <Modal
-        title={'异常行为分析'}
+        title={'异常数据成因分析'}
         wrapClassName="fullScreenModal"
         destroyOnClose
         open={open}

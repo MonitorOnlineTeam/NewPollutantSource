@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-02 12:22:54
+ * @Last Modified time: 2024-07-15 15:14:20
  * @Description：报警记录
  */
 
@@ -418,46 +418,42 @@ const WarningRecord = props => {
           <Form.Item label="行政区" name="regionCode">
             <RegionList noFilter style={{ width: 140 }} />
           </Form.Item>
-          {// 脱敏角色不显示企业
-          !currentUser.RoleIds.includes('1dd68676-cd35-43bb-8e16-40f0fde55c6c') && (
-            <>
-              {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
-                <Form.Item label="企业" name="EntCode">
-                  <EntAtmoList
-                    noFilter
-                    style={{ width: 200 }}
-                    onChange={value => {
-                      if (!value) {
-                        form.setFieldsValue({ DGIMN: undefined });
-                      } else {
-                        form.setFieldsValue({ DGIMN: undefined });
-                        getPointList(value);
-                      }
-                    }}
-                  />
-                </Form.Item>
-              {/* </Spin> */}
-              <Spin spinning={!!pointListLoading} size="small" style={{ background: '#fff' }}>
-                <Form.Item label="监测点名称" name="DGIMN">
-                  <Select
-                    placeholder="请选择"
-                    showSearch
-                    allowClear
-                    optionFilterProp="children"
-                    style={{ width: 150 }}
-                  >
-                    {pointList.map(item => {
-                      return (
-                        <Option key={item.DGIMN} value={item.DGIMN}>
-                          {item.PointName}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-              </Spin>
-            </>
-          )}
+
+          {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
+          <Form.Item label="企业" name="EntCode">
+            <EntAtmoList
+              noFilter
+              style={{ width: 200 }}
+              onChange={value => {
+                if (!value) {
+                  form.setFieldsValue({ DGIMN: undefined });
+                } else {
+                  form.setFieldsValue({ DGIMN: undefined });
+                  getPointList(value);
+                }
+              }}
+            />
+          </Form.Item>
+          {/* </Spin> */}
+          <Spin spinning={!!pointListLoading} size="small" style={{ background: '#fff' }}>
+            <Form.Item label="监测点名称" name="DGIMN">
+              <Select
+                placeholder="请选择"
+                showSearch
+                allowClear
+                optionFilterProp="children"
+                style={{ width: 150 }}
+              >
+                {pointList.map(item => {
+                  return (
+                    <Option key={item.DGIMN} value={item.DGIMN}>
+                      {item.PointName}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Spin>
           <Form.Item label="行业" name="IndustryType">
             <SearchSelect
               placeholder="排口所属行业"
