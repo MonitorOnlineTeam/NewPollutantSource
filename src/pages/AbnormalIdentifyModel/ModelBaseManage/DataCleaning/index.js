@@ -65,8 +65,8 @@ const Index = (props) => {
     }
     const obj2 = {
         '排放口信息清洗': { time: tableDatas2?.[0]?.cleanTime, numData: [{ label: '清洗排放口数量', value: sumData(tableDatas2?.filter(item=>item.paramName=='站点名称'), 'successCount') + sumData(tableDatas2?.filter(item=>item.paramName=='站点名称'), 'falseCount') || 0 }, { label: '入库排放口数量', value: sumData(tableDatas2?.filter(item=>item.paramName=='站点名称'), 'successCount') || 0 }], data: tableDatas2, loading: tableLoading2, taskType: 2, logTitle: '排放口', logUrl: 'GetProjectLogsInfoList' },
-        '污染物': { time: tableDatas4?.cleanTime, numData: [{ label: '清洗排放口数量', value: sumData(tableDatas4, 'successCount') + sumData(tableDatas4, 'falseCount') || 0 }, { label: '入库污染物数量', value: sumData(tableDatas4, 'successCount') || 0 }, { label: '清洗失败', value: sumData(tableDatas4, 'falseCount') }], data: tableDatas4, loading: tableLoading4, taskType: 4, logTitle: '污染物缺失', logUrl: 'GetMonitorPollutantLogsInfoList' },
-        '排放标准': { time: tableDatas5?.cleanTime, numData: [{ label: '清洗排放标准数量', value: sumData(tableDatas5, 'successCount') + sumData(tableDatas5, 'falseCount') || 0 }, { label: '入库排放标准', value: sumData(tableDatas5, 'successCount') || 0 }, { label: '清洗失败', value: sumData(tableDatas5, 'falseCount') || 0 }], data: tableDatas5, loading: tableLoading5, logTitle: '排放标准缺失', taskType: 5, logUrl: 'GetMonitorAlarmLogsInfoList' },
+        '污染物': { time: tableDatas4?.[0]?.cleanTime, numData: [{ label: '清洗排放口数量', value: sumData(tableDatas4, 'successCount') + sumData(tableDatas4, 'falseCount') || 0 }, { label: '入库污染物数量', value: sumData(tableDatas4, 'successCount') || 0 }, { label: '清洗失败', value: sumData(tableDatas4, 'falseCount') }], data: tableDatas4, loading: tableLoading4, taskType: 4, logTitle: '污染物缺失', logUrl: 'GetMonitorPollutantLogsInfoList' },
+        '排放标准': { time: tableDatas5?.[0]?.cleanTime, numData: [{ label: '清洗排放标准数量', value: sumData(tableDatas5, 'successCount') + sumData(tableDatas5, 'falseCount') || 0 }, { label: '入库排放标准', value: sumData(tableDatas5, 'successCount') || 0 }, { label: '清洗失败', value: sumData(tableDatas5, 'falseCount') || 0 }], data: tableDatas5, loading: tableLoading5, logTitle: '排放标准缺失', taskType: 5, logUrl: 'GetMonitorAlarmLogsInfoList' },
     }
     const missDefaultValue = 80;
     useEffect(() => {
@@ -222,15 +222,15 @@ const Index = (props) => {
         },
         {
             title: '缺失数据',
-            dataIndex: 'passeDataCount',
-            key: 'passeDataCount',
+            dataIndex: 'actualDataCount',
+            key: 'actualDataCount',
             align: 'center',
             ellipsis: true,
         },
         {
             title: '应传数据',
-            dataIndex: 'actualDataCount',
-            key: 'actualDataCount',
+            dataIndex: 'passeDataCount',
+            key: 'passeDataCount',
             align: 'center',
             ellipsis: true,
         },

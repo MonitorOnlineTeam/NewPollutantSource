@@ -113,12 +113,12 @@ const Model = {
             sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl);
             // Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
             Cookie.set('systemNavigateUrl', systemNavigateUrl);
+            sessionStorage.setItem('sysMenuId', sysList.id);
+            sessionStorage.setItem("sysName", sysList.name);
             //进入系统，运维系统不跳转中间页
             if (configInfo.IsShowSysPage === '1') {
               router.push('/sysTypeMiddlePage');
             } else {
-              sessionStorage.setItem('sysMenuId', sysList.id);
-              sessionStorage.setItem("sysName", sysList.name);
               Cookie.set("sysName", sysList.name)
               // 找到系统默认污染物
               let matches = desc.match(/\(([^)]+)\)/);

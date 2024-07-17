@@ -635,6 +635,7 @@ const Index = props => {
   //   } else {
   //     setSelectedRowKeys([]);
   //     setSelectedRow([]);
+  //     setCollapsekey();
   //     setPreTakeFlagDatas([]);
   //     setCheckRoleDatas([]);
   //     setPlanDatas([]);
@@ -692,7 +693,6 @@ const Index = props => {
   //       payload: { ...parData },
   //       callback: res => {
   //         setVisible(false);
-  //         setCollapsekey('1');
   //         onFinish(pageIndex, pageSize, 'query');
   //       },
   //     });
@@ -1186,7 +1186,7 @@ const Index = props => {
                   <Radio.Group
                     onChange={e => {
                       setSiteVerificationPlanType(e.target?.value);
-                      setCollapsekey(e.target.value == 1 ? 1 : undefined);
+                      setCollapsekey(e.target.value == 1 ? '1' : undefined);
                       setSaveType();
                       modalForm.resetFields();
                       modalForm.setFieldsValue({

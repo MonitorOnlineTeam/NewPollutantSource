@@ -106,7 +106,7 @@ const Index = props => {
             modalForm.validateFields(['planContent']);
           });
         }
-      });
+      },200);
     } else {
       quillRef.current = null;
     }
@@ -116,7 +116,6 @@ const Index = props => {
       setTimeout(() => {
         if (quillRef2.current) {
           editor2 = new Quill(quillRef2.current, { ...quillModules });
-          console.log('editor2', editor2);
           editor2.on('text-change', () => {
             modalForm.validateFields(['checkReason']);
           });
@@ -303,7 +302,7 @@ const Index = props => {
       setSaveType();
       setSiteVerificationPlanType(1);
       setVerificationPlanType(1);
-      setCollapsekey('1');
+      setCollapsekey(1);
       dispatch({
         type: 'AbnormalIdentifyModel/GetPreTakeFlagDatas',
         payload: {},
@@ -323,8 +322,7 @@ const Index = props => {
                 value: chilItem.UserID,
               })),
             };
-          });
-          console.log(userList);
+          });   
           setCheckRoleDatas(userList);
         },
       });
@@ -338,6 +336,7 @@ const Index = props => {
     } else {
     //   setSelectedRowKeys([]);
     //   setSelectedRow([]);
+      setCollapsekey();
       setPreTakeFlagDatas([]);
       setCheckRoleDatas([]);
       setPlanDatas([]);
@@ -390,15 +389,14 @@ const Index = props => {
         type: 'AbnormalIdentifyModel/AddPlanTask',
         payload: { ...parData },
         callback: res => {
-          props.onCancel()
-          setCollapsekey('1');
-          props.onFinish();
+          props.onCancel&&props.onCancel();
+          props.onFinish&&props.onFinish();
         },
       });
     };
     if (siteVerificationPlanType == 1 && !collapsekey) {
       //未展开核实方案
-      setCollapsekey('1');
+      setCollapsekey(1);
       setTimeout(() => {
         validateFieldsFun();
       }, 0);
@@ -775,7 +773,7 @@ const Index = props => {
                               onClick={() => {
                                 if (selectedPlanRowKeys?.length > 0) {
                                   setPlanPopVisible(false);
-                                  setCollapsekey('1');
+                                  setCollapsekey(1);
                                   setTimeout(() => {
                                     if (selectedPlanRow?.PlanItemDatas?.[0]) {
                                       modalForm.setFieldsValue({
@@ -861,7 +859,7 @@ const Index = props => {
                     setCollapsekey(value?.[0]);
                   }}
                   ghost
-                  defaultActiveKey="1"
+                  defaultActiveKey={1}
                 >
                   <Panel header={<div style={{ fontWeight: 'bold' }}>核查方案</div>} key="1">
                     <Form.Item
