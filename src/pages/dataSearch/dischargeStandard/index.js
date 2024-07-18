@@ -21,7 +21,7 @@ export default class Index extends Component {
    }
   render() {
     return (
-        <BreadcrumbWrapper title="排放标准查询">
+        <BreadcrumbWrapper>
            <StandardData />
         </BreadcrumbWrapper>
     );

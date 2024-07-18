@@ -300,7 +300,7 @@ const Index = (props) => {
       props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
         setPointList(res)
         setPointLoading(false)
-        // form.setFieldsValue({ DGIMN: res[0].DGIMN })
+        form.setFieldsValue({ DGIMN: undefined })
       })
     }
   }

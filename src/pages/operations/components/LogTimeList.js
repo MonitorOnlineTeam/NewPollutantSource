@@ -23,6 +23,7 @@ import NavigationTree from '@/components/NavigationTree';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import styles from '../index.less';
 import config from '@/config';
+import RecordForm from '@/pages/operations/recordForm'
 
 const { Option } = Select;
 
@@ -42,7 +43,7 @@ function getBase64(file) {
   imageList: common.imageList,
   imageListVisible: common.imageListVisible,
   logForm: operations.logForm,
-  loading: loading.effects['operations/getOperationLogList'],
+  // loading: loading.effects['operations/getOperationLogList'],
   currentRecordType: operationform.currentRecordType,
   currentDate: operationform.currentDate,
   // mainSelectDate:operationform.mainSelectDate
@@ -60,6 +61,10 @@ class LogTimeList extends Component {
       DGIMN: props.DGIMN,
       mainSelectValue: props.mainSelectValue,
       mainSelectDate: props.mainSelectDate,
+      detailVisible:false,
+      typeID:'',
+      taskID:'',
+      loading:false,
     };
   }
 
@@ -97,7 +102,7 @@ class LogTimeList extends Component {
       });
     }
 
-    if (this.props.mainSelectValue !== nextProps.mainSelectValue) {
+    if (this.props.mainSelectValue !== nextProps.mainSelectValue && this.props.DGIMN == nextProps.DGIMN) {
       this.setState(
         {
           mainSelectValue: nextProps.mainSelectValue,
@@ -107,7 +112,7 @@ class LogTimeList extends Component {
         },
       );
     }
-    if (this.props.currentDate !== nextProps.currentDate) {
+    if (this.props.currentDate !== nextProps.currentDate && this.props.DGIMN == nextProps.DGIMN) {
       this.setState(
         {
           currentDate: nextProps.currentDate,
@@ -151,7 +156,7 @@ class LogTimeList extends Component {
   // 渲染时间轴
   renderTimeLineItem = () => {
     const timelineItems = [];
-    console.log('typeiD', this.props.timeLineList);
+    // console.log('typeiD', this.props.timeLineList);
     this.props.timeLineList.map(item => {
       timelineItems.push(
         <Timeline.Item
@@ -197,23 +202,34 @@ class LogTimeList extends Component {
                     fontSize: 13,
                   }}
                   onClick={() => {
-                    if (
-                      config.XinJiang &&
-                      node.TypeID != 58 &&
-                      node.TypeID != 59 &&
-                      node.TypeID != 60
-                    ) {
-                      this.getOperationImageList(node);
-                    } else if (
-                      node.PollutantType !== 2 &&
-                      node.TypeID != 58 &&
-                      node.TypeID != 59 &&
-                      node.TypeID != 60
-                    ) {
-                      // 查看图片
-                      this.getOperationImageList(node);
-                    } else {
-                      router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`);
+                     // 新疆兵团只要任务图片 故障小时数记录表不使用图片
+                    // if (
+                    //   config.XinJiang &&
+                    //   node.TypeID != 58 &&
+                    //   node.TypeID != 59 &&
+                    //   node.TypeID != 60
+                    // ) {
+                    //   this.getOperationImageList(node);
+                    // } else if (
+                    //   node.PollutantType !== 2 &&
+                    //   node.TypeID != 58 &&
+                    //   node.TypeID != 59 &&
+                    //   node.TypeID != 60
+                    // ) {
+                    //   // 查看图片
+                    //   this.getOperationImageList(node);
+                    // } else {
+                    //   router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`);
+                    // }
+                    // if(node.TypeID == 5 || node.TypeID == 6 || node.TypeID == 7 || node.TypeID ==10 || node.TypeID==67 || node.TypeID == 75 || node.TypeID == 76){
+                    //   this.getOperationImageList(node); 
+                    // }else{
+                    //   this.setState({ detailVisible:true,typeID:node.TypeID,taskID:node.TaskID, })
+                    // }
+                    if(node.RecordType==1){
+                      this.setState({ detailVisible:true,typeID:node.TypeID,taskID:node.TaskID, })
+                    }else{
+                      this.getOperationImageList(node); 
                     }
                   }}
                 >
@@ -237,7 +253,8 @@ class LogTimeList extends Component {
 
   // 获取运维日志数据
   getOperationLogList = flag => {
-    const { dateValues, DGIMN, currentRecordType } = this.state;
+    const { dateValues, DGIMN, currentRecordType,mainSelectValue, } = this.state;
+    this.setState({loading:true},()=>{
     this.props.dispatch({
       type: 'operations/getOperationLogList',
       payload: {
@@ -247,10 +264,14 @@ class LogTimeList extends Component {
         // "beginTime": dateValues[0].format('YYYY-MM-DD 00:00:00'),
         // "endTime": dateValues[1].format('YYYY-MM-DD 23:59:59'),
         // "RecordType": flag ? "" : this.props.logForm.RecordType
-        RecordType: flag ? '' : this.props.currentRecordType,
+        RecordType: flag ? '' : this.props.mainSelectValue,
       },
-    });
-  };
+      callback:()=>{
+        this.setState({loading:false})
+      }
+    })
+  });
+  }
 
   // 获取详情图片
   getOperationImageList = data => {
@@ -302,8 +323,6 @@ class LogTimeList extends Component {
   };
   onDateChange = date => {
     const { logForm } = this.props;
-
-    // console.log("我是日期哈哈哈" + date)
     this.props.dispatch({
       type: 'operations/updateState',
       payload: {
@@ -337,10 +356,9 @@ class LogTimeList extends Component {
       imageList,
       style,
       logForm,
-      loading,
       currentRecordType,
     } = this.props;
-    const { dateValues, current, previewVisible, previewImage } = this.state;
+    const { dateValues, current, previewVisible, previewImage,loading, } = this.state;
     // let defaultValue = logForm.RecordType || undefined;
     // let defaultValue = currentRecordType || undefined;
     // console.log("defaultValue=", defaultValue)
@@ -442,6 +460,17 @@ class LogTimeList extends Component {
         </div>
         {/* </Card>  */}
         {this.props.imageListVisible && <ViewImagesModal />}
+        <Modal
+        title={'详情'}
+        visible={this.state.detailVisible}
+        destroyOnClose
+        onCancel={() => { this.setState({detailVisible:false}) }}
+        wrapClassName='spreadOverModal'
+        footer={null}
+        mask={false}
+      >
+        <RecordForm hideBreadcrumb isHomeModal  match={{params:{typeID: this.state.typeID,taskID:this.state.taskID}}}  />
+        </Modal>
       </>
     );
   }

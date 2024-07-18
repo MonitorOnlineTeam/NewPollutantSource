@@ -155,7 +155,7 @@ const DurationTable = props => {
             width: 120,
             align: 'center',
             render: (text,record) => {
-              return <OverTimeComponents text={text} record={record}/>
+              return <OverTimeComponents text={text} record={{...record,ServiceAreaCode:item.ID}}/>
             }
           },
           {
@@ -219,7 +219,7 @@ const DurationTable = props => {
             align: 'center',
             fixed: 'left',
             render: (text,record) => {
-              return <OverTimeComponents text={text} record={record} />
+              return <OverTimeComponents text={text} record={{...record}}/>
             }
           },
           {
@@ -271,6 +271,7 @@ const DurationTable = props => {
         dataIndex: 'CustomEnt',
         key: 'CustomEnt',
         ellipsis: true,
+        width: 'auto',
       },
       {
         title: '服务大区',
@@ -291,7 +292,7 @@ const DurationTable = props => {
         key: 'OverTime',
         ellipsis: true,
         sorter: true,
-        width: 180,
+        width: 120,
         // sorter: (a, b) => a.OverTime - b.OverTime,
       },
       {
@@ -300,7 +301,7 @@ const DurationTable = props => {
         key: 'LeaveDate',
         ellipsis: true,
         sorter: true,
-        width: 120,
+        width: 160,
       },
       {
         title: '填报人',
@@ -316,7 +317,7 @@ const DurationTable = props => {
         key: 'CreateTime',
         ellipsis: true,
         sorter: true,
-        width: 120,
+        width: 140,
       },
     ];
 

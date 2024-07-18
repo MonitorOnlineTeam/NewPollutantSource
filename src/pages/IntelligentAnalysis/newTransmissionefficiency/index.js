@@ -380,7 +380,7 @@ export default class EntTransmissionEfficiency extends Component {
       },
     ];
     return (
-      <BreadcrumbWrapper title="有效传输率">
+      <BreadcrumbWrapper>
         {/* <div className="contentContainer"> */}
         <Card
           bordered={false}

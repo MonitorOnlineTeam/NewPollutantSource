@@ -562,7 +562,7 @@ class CalendarPage extends PureComponent {
     const { currentCellInfo, dateFormat, listData, columns, modalTableCurrent, taskRecordDetailVisible, abnormalTitle, } = this.state;
     const cardTitle = `${currentCellInfo.text} - ${moment(currentCellInfo.date).format(dateFormat)}`;
     return (
-      <BreadcrumbWrapper title="运维日历">
+      <BreadcrumbWrapper>
         <div className={styles.calendarWrapper}>
           <div style={{ display: "flex" }}>
             <div style={{ flex: 5, marginRight: 10 }}>

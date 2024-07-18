@@ -1776,7 +1776,7 @@ class index extends PureComponent {
         ]
         return <>
             <div id="siteParamsPage" className={style.cardTitle}>
-                <BreadcrumbWrapper title="超标数据报警核实记录查询">
+                <BreadcrumbWrapper>
                     <Card
                         extra={
                             <>

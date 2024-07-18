@@ -192,7 +192,8 @@ const Index = props => {
           bottom: 0,
           background: '#fff',
           padding: 10,
-          width:props.isModal? 'calc(100vw - 46px)' : 'calc(100vw - 366px)',
+          marginLeft: 1,
+          width:props.isModal? 'calc(100vw - 46px)' : 'calc(100vw - 354px)',
         }}
       >
         <Button type="primary" style={{ float: 'right' }} onClick={AddDataAttributeAndPoint}>

@@ -121,12 +121,21 @@ class OperationRecord extends Component {
       this.props.dispatch({
         type: 'operationform/updateState',
         payload: {
-          currentRecordType: value,
+          currentRecordType: value, //下拉框选中的值 运维记录
         },
       });
+      setTimeout(() => {
+        this.props.dispatch({
+          type: 'autoForm/getPageConfig',
+          payload: {
+            configId: this.getRecordType(this.props.DGIMN),
+          },
+        });
+      }, 0);
     }
     if (maintenanceFlag === 'log') {
-      this.setState({ maintenanceSelectValue: value });
+      this.setState({ maintenanceSelectValue: value }); //下拉框选中的值 运维日志
+
     }
 
     // if (value == '8') {
@@ -139,14 +148,14 @@ class OperationRecord extends Component {
     //     }
     //   })
     // } else {
-    setTimeout(() => {
-      this.props.dispatch({
-        type: 'autoForm/getPageConfig',
-        payload: {
-          configId: this.getRecordType(this.props.DGIMN),
-        },
-      });
-    }, 0);
+    // setTimeout(() => {
+    //   this.props.dispatch({
+    //     type: 'autoForm/getPageConfig',
+    //     payload: {
+    //       configId: this.getRecordType(this.props.DGIMN),
+    //     },
+    //   });
+    // }, 0);
     // }
   };
   // onTreeSearch = (val) => {
@@ -161,40 +170,47 @@ class OperationRecord extends Component {
 
   // 获取数据
   getOperationrecordData = props => {
-    this.props.dispatch({
+    const { dispatch } = this.props;
+    dispatch({
       type: 'operationform/getOperationLogList',
       payload: {
         DGIMN: props.DGIMN,
         // RecordType: this.props.currentRecordType
       },
-      callback: () => {
+      callback: (res) => {
         // 获取table数据
-        this.props.dispatch({
-          type: 'autoForm/getPageConfig',
-          payload: {
-            configId: this.getRecordType(),
-          },
-        });
+        // dispatch({
+        //   type: 'autoForm/getPageConfig',
+        //   payload: {
+        //     configId: this.getRecordType(),
+        //   },
+        // });
       },
     });
   };
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.DGIMN != nextProps.DGIMN) {
+      this.setState({ maintenanceSelectValue: null })
+    }
     if (this.props.PollutantType != nextProps.PollutantType) {
-      this.getOperationrecordData(nextProps);
+      this.getOperationrecordData(nextProps)
     }
-    if (
-      this.props.DGIMN !== nextProps.DGIMN &&
-      this.props.PollutantType === nextProps.PollutantType
-    ) {
-      // 获取table数据
-      this.props.dispatch({
-        type: 'autoForm/getPageConfig',
-        payload: {
-          configId: this.getRecordType(nextProps.DGIMN),
-        },
-      });
-    }
+    // if (
+    //   this.props.DGIMN !== nextProps.DGIMN 
+    //   // &&
+    //   // this.props.PollutantType === nextProps.PollutantType
+    // ) {
+    //   this.setState({maintenanceSelectValue:null},()=>{
+    //   // 获取table数据
+    //   this.props.dispatch({
+    //     type: 'autoForm/getPageConfig',
+    //     payload: {
+    //       configId: this.getRecordType(nextProps.DGIMN),
+    //     },
+    //   })
+    // }); 
+    // }
   }
 
   //根据表单类型获取configid
@@ -204,8 +220,8 @@ class OperationRecord extends Component {
     const defaultValue = this.props.currentRecordType
       ? this.props.currentRecordType
       : this.props.recordTypeList[0]
-      ? this.props.recordTypeList[0].TypeId
-      : undefined;
+        ? this.props.recordTypeList[0].TypeId
+        : undefined;
     let currentRecordType = this.props.currentRecordType || defaultValue || 1;
     configid = 'FormMainInfoPic';
     // if (type == "2") {
@@ -285,13 +301,12 @@ class OperationRecord extends Component {
         currentDate: [date[0], date[1]],
       },
     });
-
     if (maintenanceFlag === 'operationrecord') {
       this.setState({
         rangeDate: date,
       });
 
-      if (this.props.currentRecordType == '8') {
+      if (this.props.currentRecordType == '8') {//运维没这个类型
         this.props.dispatch({
           type: 'operationform/getjzhistoryinfo',
           payload: {
@@ -335,15 +350,17 @@ class OperationRecord extends Component {
     //运维按钮组操作事件
 
     this.setState({ maintenanceFlag: e.target.value });
-
+    const { recordTypeList } = this.props;
     if (e.target.value === 'log') {
       //运维日志
       this.props.dispatch({
         type: 'operationform/updateState',
         payload: {
           breadTitle: '运维日志',
+          currentRecordType: this.props.currentRecordType ? this.props.currentRecordType : null,
         },
       });
+      this.setState({ maintenanceSelectValue: this.props.currentRecordType }); //下拉框选中的值 运维日志
     }
     if (e.target.value === 'operationrecord') {
       //运维记录
@@ -351,6 +368,7 @@ class OperationRecord extends Component {
         type: 'operationform/updateState',
         payload: {
           breadTitle: '运维记录',
+          currentRecordType: this.props.currentRecordType ? this.props.currentRecordType : recordTypeList && recordTypeList[0] && recordTypeList[0].TypeId,
         },
       });
     }
@@ -364,22 +382,20 @@ class OperationRecord extends Component {
       DGIMN,
       PollutantType,
     } = this.props;
-    const { columns, searchParams, maintenanceFlag, maintenanceSelectValue } = this.state;
-    // const defaultValue = currentRecordType ? currentRecordType : (recordTypeList[0] ? recordTypeList[0].TypeId : undefined);
+    const { columns, searchParams, maintenanceFlag, maintenanceSelectValue, } = this.state;
     const currentType = currentRecordType || 1;
     const currentDate = this.props.currentDate;
-
-    const defaultValue = (() => {
-      if (currentRecordType) {
-        return currentRecordType;
-      } else if (recordTypeList[0] && maintenanceFlag === 'operationrecord') {
-        return recordTypeList[0].TypeId;
-      } else if (recordTypeList[0] && maintenanceFlag === 'log') {
-        return null;
-      } else {
-        return undefined;
-      }
-    })();
+    // const defaultValue = (() => {
+    //   if (currentRecordType && maintenanceFlag === 'log') {
+    //     return currentRecordType;
+    //   } else if (recordTypeList[0] && maintenanceFlag === 'operationrecord') {
+    //     return recordTypeList[0].TypeId;
+    //   } else if (recordTypeList[0] && maintenanceFlag === 'log') {
+    //     return null;
+    //   } else {
+    //     return undefined;
+    //   }
+    // })();
     return (
       <div>
         <Card
@@ -389,7 +405,7 @@ class OperationRecord extends Component {
                 style={{ width: 220, marginRight: 10 }}
                 onChange={this.onTreeChange}
                 // onSearch={this.onTreeSearch}
-                value={defaultValue}
+                value={maintenanceSelectValue}
                 placeholder="请选择表单类型"
                 loading={this.props.RecordTypeTreeLoading}
               >
@@ -399,17 +415,17 @@ class OperationRecord extends Component {
                   </Option>
                 ) : null}
                 {// recordTypeList.map(option => {
-                //   return RecordTypeTree.length ?
-                //     <Option key={option.key} value={option.key}>{option.value}</Option> :
-                //     ""
-                // }
-                recordTypeList.map(item => {
-                  return (
-                    <Option value={item.TypeId} key={item.TypeId}>
-                      {item.Abbreviation}
-                    </Option>
-                  );
-                })}
+                  //   return RecordTypeTree.length ?
+                  //     <Option key={option.key} value={option.key}>{option.value}</Option> :
+                  //     ""
+                  // }
+                  recordTypeList.map(item => {
+                    return (
+                      <Option value={item.TypeId} key={item.TypeId}>
+                        {item.CnName}
+                      </Option>
+                    );
+                  })}
               </Select>
               <RangePicker_
                 style={{ width: 350, textAlign: 'left', marginRight: 10 }}
@@ -429,7 +445,7 @@ class OperationRecord extends Component {
                 }}
               >
                 <Radio.Button value="log">运维日志</Radio.Button>
-                <Radio.Button value="operationrecord">运维记录</Radio.Button>
+                {/* <Radio.Button value="operationrecord">运维记录</Radio.Button> */}
               </Radio.Group>
             </>
           }
@@ -437,75 +453,77 @@ class OperationRecord extends Component {
           <Card.Grid
             style={{
               width: '100%',
-              height: 'calc(100vh - 270px)',
+              height: !this.props.isHomeModal ? 'calc(100vh - 270px)' : 'calc(100vh - 210px)',
               overflow: 'auto',
+              marginBottom: 10,
+              paddingBottom: 44,
               ...this.props.style,
             }}
           >
             {// this.props.currentRecordType == '8' ?
-            //   <>
-            //     <Row className={styles.buttonWrapper}>
-            //       <Button
-            //         style={{ marginRight: 8 }}
-            //         icon="export"
-            //         type="primary"
-            //         loading={exportReportLoading}
-            //         onClick={() => {
-            //           this.export();
-            //         }}
-            //       >导出
-            //              </Button>
-            //     </Row>
-            //     <SDLTable
-            //       dataSource={this.props.JZDatas}
-            //       columns={columns}
-            //     >
-            //     </SDLTable>
-            //   </>
-            //   :
-            maintenanceFlag == 'operationrecord' ? (
-              this.state.configName && currentType ? (
-                <AutoFormTable
-                  // (this.state.configName && this.props.RecordType ? <AutoFormTable
-                  configId={this.state.configName || 'FormMainInfoPic'}
-                  searchParams={searchParams}
-                  appendHandleRows={row => {
-                    return (
-                      <Tooltip title="详情">
-                        <a
-                          onClick={() => {
-                            // if (this.props.PollutantType == "2") {
-                            //   router.push('/operations/recordForm/' + currentType + '/' + row['dbo.T_Bas_Task.ID'])
-                            // } else {
-                            // 获取详情图片
-                            this.props.dispatch({
-                              type: 'common/getOperationImageList',
-                              payload: {
-                                FormMainID: row['dbo.T_Bas_RecordFormPic.FormMainID'],
-                                // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
-                              },
-                              callback: res => {
-                                this.setState({
-                                  visible: true,
-                                });
-                              },
-                            });
-                            // }
-                          }}
-                        >
-                          <ProfileOutlined style={{ fontSize: 16 }} />
-                        </a>
-                      </Tooltip>
-                    );
-                  }}
-                  {...this.props}
-                ></AutoFormTable>
+              //   <>
+              //     <Row className={styles.buttonWrapper}>
+              //       <Button
+              //         style={{ marginRight: 8 }}
+              //         icon="export"
+              //         type="primary"
+              //         loading={exportReportLoading}
+              //         onClick={() => {
+              //           this.export();
+              //         }}
+              //       >导出
+              //              </Button>
+              //     </Row>
+              //     <SDLTable
+              //       dataSource={this.props.JZDatas}
+              //       columns={columns}
+              //     >
+              //     </SDLTable>
+              //   </>
+              //   :
+              maintenanceFlag == 'operationrecord' ? (
+                this.state.configName && currentType ? (
+                  <AutoFormTable
+                    // (this.state.configName && this.props.RecordType ? <AutoFormTable
+                    configId={this.state.configName || 'FormMainInfoPic'}
+                    searchParams={searchParams}
+                    appendHandleRows={row => {
+                      return (
+                        <Tooltip title="详情">
+                          <a
+                            onClick={() => {
+                              // if (this.props.PollutantType == "2") {
+                              //   router.push('/operations/recordForm/' + currentType + '/' + row['dbo.T_Bas_Task.ID'])
+                              // } else {
+                              // 获取详情图片
+                              this.props.dispatch({
+                                type: 'common/getOperationImageList',
+                                payload: {
+                                  FormMainID: row['dbo.T_Bas_RecordFormPic.FormMainID'],
+                                  // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
+                                },
+                                callback: res => {
+                                  this.setState({
+                                    visible: true,
+                                  });
+                                },
+                              });
+                              // }
+                            }}
+                          >
+                            <ProfileOutlined style={{ fontSize: 16 }} />
+                          </a>
+                        </Tooltip>
+                      );
+                    }}
+                    {...this.props}
+                  ></AutoFormTable>
+                ) : (
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
+                  )
               ) : (
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
-              )
-            ) : (
-              <LogPage dgimn={DGIMN} maintenanceSelectValue={maintenanceSelectValue} />
-            )}
+                  <LogPage dgimn={DGIMN} maintenanceSelectValue={maintenanceSelectValue} />
+                )}
             {this.state.visible && <ViewImagesModal />}
             {/* <BdTestRecordContent TaskID="1f22ede2-68a0-4594-a93b-a5f706fe6662" /> */}
           </Card.Grid>

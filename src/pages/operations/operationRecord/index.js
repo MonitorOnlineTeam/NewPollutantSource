@@ -53,7 +53,7 @@ class Index extends Component {
             }}
           />
         )}
-        <BreadcrumbWrapper title={breadTitle} hideBreadcrumb={this.props.hideBreadcrumb}>
+        <BreadcrumbWrapper  hideBreadcrumb={this.props.hideBreadcrumb}>
           {!isHomeModal ? (
             <>
               {' '}

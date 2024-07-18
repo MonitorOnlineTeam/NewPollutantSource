@@ -14,7 +14,6 @@ import {
 } from '../services/operationBaseApi';
 import { message } from 'antd';
 import moment from 'moment';
-import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
   namespace: 'operationform',
@@ -76,7 +75,7 @@ export default Model.extend({
       const result = yield call(getOperationLogList, postData);
       if (result.IsSuccess) {
         yield update({
-          recordTypeList: result.Datas.RecordType,
+          recordTypeList: result.Datas&&result.Datas.RecordType? result.Datas.RecordType : [],
         });
         callback && callback();
       }
@@ -85,8 +84,8 @@ export default Model.extend({
     *exportReport({ payload, callback }, { call, put, update, select }) {
       const result = yield call(exportReport, payload);
       if (result.IsSuccess) {
-        downloadFile(result.Datas)
-        message.success('导出成功');
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
       } else {
         message.error(result.Message);
       }

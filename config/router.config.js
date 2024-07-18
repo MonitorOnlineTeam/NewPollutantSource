@@ -212,6 +212,21 @@ const routes = [
         path: '/appoperation',
         component: '../layouts/BlankLayout',
         routes: [
+          /* 督查详情 移动端 */
+          {
+            path: '/appoperation/appRemoteSupervisionDetail/:id',
+            component: './AppOperation/AppRemoteSupervisionDetail',
+          },
+          /*帮助中心详情 移动端 */
+          {
+            path: '/appoperation/appQuestionDetail/:id',
+            component: './systemManger/helpCenter/QueDetail',
+          },
+          /* 公告内容 移动端 */
+          {
+            path: '/appoperation/noticeContentDetail/:id',
+            component: './systemManger/noticeManger/NoticeContentDetail',
+          },
           /* 维修记录 */
           {
             path: '/appoperation/apprepairrecord/:TaskID/:TypeID',
@@ -276,6 +291,57 @@ const routes = [
           {
             path: '/appoperation/appsparepartreplacerecord/:TaskID/:TypeID',
             component: './AppOperation/AppSparePartReplaceRecord',
+          },
+          /* 试剂更换记录表 */
+          {
+            path: '/appoperation/appreagentreplaceRecord/:TaskID/:TypeID',
+            component: './AppOperation/AppReagentReplaceRecord',
+          },
+          /* 配合检查记录表 */
+          {
+            path: '/appoperation/appCooperaInspection/:TaskID/:TypeID',
+            component: './AppOperation/AppCooperaInspection',
+          },
+
+          /* 数据一致性记录表 小时与日数据 */
+          {
+            path: '/appoperation/appDataConsistencyRealDate/:TaskID/:TypeID',
+            component: './AppOperation/AppDataConsistencyRealDate',
+          },
+          /* 数据一致性记录表 实时数据 */
+          {
+            path: '/appoperation/appDataConsistencyRealTime/:TaskID/:TypeID',
+            component: './AppOperation/AppDataConsistencyRealTime',
+          },
+          /* 上月委托第三方检测次数 */
+          {
+            path: '/appoperation/appThirdPartyTestingContent/:TaskID/:TypeID',
+            component: './AppOperation/AppThirdPartyTestingContent',
+          },
+          /* 校准记录 */
+          {
+            path: '/appoperation/appWaterQualityCalibrationRecord/:TaskID/:TypeID',
+            component: './AppOperation/AppWaterQualityCalibrationRecord',
+          },
+          /* 标准溶液核查记录 */
+          {
+            path: '/appoperation/appStandardSolutionVerificationRecord/:TaskID/:TypeID',
+            component: './AppOperation/AppStandardSolutionVerificationRecord',
+          },
+          /* 设备参数变动记录 废水*/
+          {
+            path: '/appoperation/appDeviceParameterChange/:TaskID/:TypeID',
+            component: './AppOperation/AppDeviceParameterChange',
+          },
+          /* 设备参数变动记录 废气*/
+          {
+            path: '/appoperation/appGasDeviceParameterChange/:TaskID/:TypeID',
+            component: './AppOperation/AppGasDeviceParameterChange',
+          },
+          /* 实际水样对比实验结果记录表*/
+          {
+            path: '/appoperation/comparisonTestResults/:TaskID/:TypeID',
+            component: './AppOperation/AppComparisonTestResults',
           },
           /* 手机端二维码 */
           { path: '/appoperation/appqrcodemain', component: './AppOperation/AppQRCodeMain' },

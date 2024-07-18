@@ -301,9 +301,8 @@ const WorkTower = props => {
             </Row>
           </Spin>
         </Card>
-      </BreadcrumbWrapper>
-      {total && total > 0 ? (
-        <div style={{ textAlign: 'right', marginTop: 12 }}>
+        {total && total > 0 ? (
+        <div style={{ position:'absolute',right:0, marginTop: 12 }}>
           <Pagination
             showSizeChanger
             total={total}
@@ -314,6 +313,7 @@ const WorkTower = props => {
           />
         </div>
       ) : null}
+      </BreadcrumbWrapper>
     </div>
   );
 };

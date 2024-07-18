@@ -40,11 +40,11 @@ class DataQuery extends Component {
       displayType: 'data',
       displayName: '查看数据',
       // rangeDate: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
-      format: 'YYYY-MM-DD HH:mm:ss',
+      format: 'YYYY-MM-DD HH',
       selectDisplay: false,
       // selectP: '',
       dgimn: '',
-      dateValue: props.date || [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
+      dateValue: props.date || [moment(new Date()).add(-60, 'minutes').startOf('h'), moment(new Date()).endOf('h')],
       dataType: props.dataType || 'realtime',
     };
   }
@@ -71,7 +71,7 @@ class DataQuery extends Component {
       },
       callback: historyparams => {
         if (!this.props.date) {
-          this.children.onDataTypeChange(this.state.dataType);
+          this.children.onDataTypeChange(this.state.dataType, [moment().add(-1, 'h').startOf('hour'), moment().endOf('hour')]);
         } else {
           if (!pollutantlist[0] || !historyparams.pollutantCodes) {
             this.dateCallback(this.state.dateValue, this.state.dataType, dgimn);
@@ -118,7 +118,6 @@ class DataQuery extends Component {
   //         default:
   //             return;
   //     }
-  //     console.log('date=', date);
   //     this.setState({ rangeDate: date });
   //     historyparams = {
   //         ...historyparams,
@@ -172,9 +171,24 @@ class DataQuery extends Component {
     const dataType = e.target.value;
     this.setState({ dataType });
     this.onResetPage();
-    setTimeout(() => {
-      this.children.onDataTypeChange(dataType);
-    }, 0);
+    switch (dataType) {
+      case "realtime":
+        this.children.onDataTypeChange(dataType, [moment().add(-1, 'h').startOf('hour'), moment().endOf('hour')]);
+        break;
+      case "minute":
+        this.children.onDataTypeChange(dataType, [moment().add(-4, 'h').startOf('hour'), moment().endOf('hour')]);
+        break;
+      case "hour":
+        this.children.onDataTypeChange(dataType, [moment().add(-1, 'day').startOf('day'), moment().endOf('hour')]);
+        break;
+      case "day":
+        this.children.onDataTypeChange(dataType, [moment().add(-30, 'day').startOf('day'), moment().endOf('day')]);
+
+    }
+    // this.onResetPage();
+    // setTimeout(() => {
+    //   this.children.onDataTypeChange(dataType);
+    // }, 0);
   };
 
   /** 图表转换 */
@@ -381,7 +395,7 @@ class DataQuery extends Component {
         loading={dataloading}
         resizable
         defaultWidth={80}
-        scroll={{ y: this.props.tableHeight || 'calc(100vh - 389px)' }}
+        scroll={{ y: this.props.tableHeight || 'calc(100vh - 402px)' }}
         // pagination={{ pageSize: 20 }}
         pagination={{
           total: this.props.total,
@@ -446,7 +460,6 @@ class DataQuery extends Component {
    * 回调获取时间(实时、分钟、小时、日)并重新请求数据
    */
   dateCallback = (dates, dataType, dgimn) => {
-    console.log('dgimn', dgimn)
     let { historyparams, dispatch } = this.props;
     this.setState({
       dateValue: dates,
@@ -460,7 +473,6 @@ class DataQuery extends Component {
       pageIndex: 1,
       pageSize: 20,
     };
-    console.log('historyparams-dateCallback', historyparams);
     dispatch({
       type: 'dataquery/updateState',
       payload: {
@@ -481,7 +493,6 @@ class DataQuery extends Component {
       datatype: dataType,
     };
 
-    console.log('historyparams-dateCallbackDataQuery', historyparams);
     dispatch({
       type: 'dataquery/updateState',
       payload: {
@@ -518,7 +529,6 @@ class DataQuery extends Component {
 
   render() {
     const { dataType, dateValue, displayType, searchDataType } = this.state;
-    console.log('dateValue2', dateValue[1].format('YYYY-MM-DD HH:mm:ss'));
     const {
       dataloading,
       loadingPollutant,
@@ -533,8 +543,6 @@ class DataQuery extends Component {
       tableHeight,
       hideTitle,
     } = this.props;
-    console.log('historyparams', historyparams);
-    console.log('dataStatus', dataStatus);
     let flag = '',
       mode = [];
     if (pollutantlist && pollutantlist[0]) {
@@ -563,12 +571,12 @@ class DataQuery extends Component {
           title={
             <div>
               <div>{entName + '-' + pointName}</div>
-              <div style={{ marginTop: 10 }}>
+              <div style={{ marginTop: 8 }}>
                 <Form layout="inline">
-                  <Form.Item style={{ marginRight: 5 }}>
+                  <Form.Item style={{ marginRight: 4 }}>
                     {!this.props.loadingPollutant && this.getpollutantSelect()}
                   </Form.Item>
-                  <Form.Item style={{ marginRight: 5 }}>
+                  <Form.Item style={{ marginRight: 8 }}>
                     {
                       // mode.length !== 0 ?
                       <RangePicker_
@@ -586,7 +594,7 @@ class DataQuery extends Component {
                           this.dateCallbackDataQuery(dates, dataType)
                         }
                         allowClear={false}
-                        showTime={this.state.format}
+                        showTime={{ format: 'HH' }}
                       />
                       //     :
                       // <RangePicker_ style={{ width: 360 }} dateValue={dateValue}
@@ -613,7 +621,7 @@ class DataQuery extends Component {
                       </Select>
                     </Form.Item>
                   )}
-                  <Form.Item style={{ marginRight: 5 }}>
+                  <Form.Item style={{ marginRight: 8 }}>
                     <Button
                       type="primary"
                       loading={dataloading || loadingPollutant}
@@ -623,7 +631,7 @@ class DataQuery extends Component {
                           this.reloaddatalist();
                         }, 0);
                       }}
-                      style={{ marginRight: 10 }}
+                      style={{ marginRight: 4 }}
                     >
                       查询
                     </Button>
@@ -640,7 +648,7 @@ class DataQuery extends Component {
                       导出
                     </Button>
                   </Form.Item>
-                  <Form.Item style={{ marginRight: 5 }}>
+                  {/* <Form.Item style={{ marginRight: 5 }}>
                     <ButtonGroup_
                       style={{ width: '100%' }}
                       pollutantType={Type}
@@ -649,8 +657,8 @@ class DataQuery extends Component {
                       showOtherTypes={flag}
                       onChange={this._handleDateTypeChange}
                     />
-                  </Form.Item>
-                  <Form.Item style={{ marginRight: 5 }}>
+                  </Form.Item> */}
+                  <Form.Item style={{ marginRight: 4 }}>
                     <Radio.Group
                       style={{ width: '100%' }}
                       defaultValue={displayType}
@@ -664,6 +672,16 @@ class DataQuery extends Component {
                     </Radio.Group>
                   </Form.Item>
                 </Form>
+              </div>
+              <div>
+                <ButtonGroup_
+                  style={{ width: '100%', paddingTop: 2 }}
+                  pollutantType={Type}
+                  // checked={Type == 10 ? 'hour' : 'realtime'}
+                  checked={Type == 10 ? 'hour' : dataType}
+                  showOtherTypes={flag}
+                  onChange={this._handleDateTypeChange}
+                />
               </div>
             </div>
           }

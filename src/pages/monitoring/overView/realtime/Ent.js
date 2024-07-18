@@ -51,6 +51,7 @@ const statusList = [
   regionList: autoForm.regionList,
   realtimeColumns: overview.realtimeColumns,
   realTimeDataView: overview.realTimeDataView,
+  realTimeTotal: overview.realTimeTotal,
   entListByRegion: overview.entListByRegion,
   dataLoading: loading.effects['overview/getRealTimeDataView'],
   columnLoading: loading.effects['overview/getRealTimeColumn'],
@@ -73,11 +74,13 @@ class Index extends Component {
       time:
         moment().hour() > 1
           ? moment(new Date())
-              .add(-1, 'hour')
-              .format('YYYY-MM-DD HH:00:00')
+            .add(-1, 'hour')
+            .format('YYYY-MM-DD HH:00:00')
           : moment(new Date()).format('YYYY-MM-DD HH:00:00'),
       dayTime: moment(new Date()).add(-1, 'day'),
       regionCode: '',
+      pageIndex: 1,
+      pageSize: 20,
     };
   }
 
@@ -114,8 +117,8 @@ class Index extends Component {
             <br />({item.unit})
           </>
         ) : (
-          item.title
-        ),
+            item.title
+          ),
         dataIndex: item.field,
         name: item.name,
         // width: item.title.indexOf("(") > -1 ? item.title.length * 10 : item.title.length * 20,
@@ -296,6 +299,8 @@ class Index extends Component {
         entCode: entCode,
         operationpersonnel: operationpersonnel,
         status: selectedTags && selectedTags.length ? selectedTags : [0, 1, 2, 3, 4],
+        pageIndex: this.state.pageIndex,
+        pageSize: this.state.pageSize
       },
     });
   };
@@ -318,6 +323,12 @@ class Index extends Component {
         columns: newColumns,
       });
     }
+    this.setState({
+      pageIndex: pagination.current,
+      pageSize: pagination.pageSize,
+    }, () => {
+      this.getRealTimeDataView()
+    })
   };
 
   // 当前时间0-1之间：currentTime - 前一天；nextDayTime - 当天；
@@ -328,13 +339,13 @@ class Index extends Component {
       moment().hour() > 1
         ? moment().format('YYYY-MM-DD')
         : moment()
-            .add(-1, 'day')
-            .format('YYYY-MM-DD');
+          .add(-1, 'day')
+          .format('YYYY-MM-DD');
     const nextDayTime =
       moment().hour() > 1
         ? moment()
-            .add(1, 'day')
-            .format('YYYY-MM-DD')
+          .add(1, 'day')
+          .format('YYYY-MM-DD')
         : moment().format('YYYY-MM-DD');
     for (let i = 1; i < 24; i++) {
       const label = i >= 10 ? `${i}:00:00` : `0${i}:00:00`;
@@ -468,7 +479,7 @@ class Index extends Component {
                   initCallback={defaultPollutantCode => {
                     this.getPageData(this.props.defaultPollutantCode || defaultPollutantCode);
                   }}
-                  // defaultValue={selectpollutantTypeCode}
+                // defaultValue={selectpollutantTypeCode}
                 />
                 <Radio.Group
                   value={currentDataType}
@@ -743,23 +754,21 @@ class Index extends Component {
           }
         >
           <SdlTable
-            rowClassName={(record, index, indent) => {}}
+            rowClassName={(record, index, indent) => { }}
             defaultWidth={94}
             loading={dataLoading || columnLoading}
             size="middle"
             bordered
-            pagination={false}
             dataSource={realTimeDataView}
             columns={_columns}
-            scroll={{ y: 'calc(100vh - 370px)' }}
+            scroll={{ y: 'calc(100vh - 387px)' }}
             // scroll={{ x: scrollXWidth }}
             onChange={this.handleChange}
-            // pagination={{
-            //   total: this.props.total,
-            //   pageSize: this.props.pageSize,
-            //   current: this.props.pageIndex,
-            //   onChange: this.onChange,
-            // }}
+            pagination={{
+              total: this.props.realTimeTotal,
+              pageSize: this.state.pageSize,
+              current: this.state.pageIndex,
+            }}
           />
         </Card>
       </BreadcrumbWrapper>

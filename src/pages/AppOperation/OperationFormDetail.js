@@ -7,6 +7,7 @@ import Lightbox from "react-image-lightbox-rotate";
 import "react-image-lightbox/style.css";
 import { router } from 'umi'
 import { Spin } from 'antd';
+import config from '@/config';
 const Item = List.Item;
 @connect(({ task, loading }) => ({
     loading: loading.effects['task/GetOperationFormDetail'],
@@ -96,10 +97,10 @@ class OperationFormDetail extends PureComponent {
                     uid: index,
                     name: item.replace('_thumbnail', ''),
                     status: 'done',
-                    url: `/upload/${item}`,
+                    url: `${config.opoperationUploadPrefix}/${item}`,
                 });
                 UrlTaskDitailsAttachmentList.push(
-                    `/upload/${item}`,
+                    `${config.opoperationUploadPrefix}/${item}`,
                 );
             });
         }
@@ -121,10 +122,10 @@ class OperationFormDetail extends PureComponent {
                     uid: indexAttachment,
                     name: item.replace('_thumbnail', ''),
                     status: 'done',
-                    url: `/upload/${item}`,
+                    url: `${config.opoperationUploadPrefix}/${item}`,
                 });
                 URLattachment.push(
-                    `/upload/${item}`,
+                    `${config.opoperationUploadPrefix}/${item}`,
                 );
             });
         }
@@ -147,7 +148,8 @@ class OperationFormDetail extends PureComponent {
             />);
         }
         return (
-            <Card full style={{ height: '100vh', overflow: 'scroll' }}>
+            <div className='operationFormDetail'>
+            <Card full  style={{ height: '100vh', overflow: 'scroll' }}>
                 <Card.Header
                     title={
                         <span>
@@ -177,7 +179,7 @@ class OperationFormDetail extends PureComponent {
                 <Card.Body>
                     <List renderHeader={() => '基本信息'} className="my-list">
                         <Item ><span style={{ fontSize: 13 }}> 任务单号：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].TaskCode : null}</span></Item>
-                        <Item ><span style={{ fontSize: 13 }}> 监控标：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].EnterpriseName : null}</span></Item>
+                        <Item ><span style={{ fontSize: 13 }}> 监控目标：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].EnterpriseName : null}</span></Item>
                         <Item ><span style={{ fontSize: 13 }}> 监测点名称：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].PointName : null}</span></Item>
                         <Item ><span style={{ fontSize: 13 }}> 任务来源：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].TaskFromText : null}</span></Item>
                         <Item ><span style={{ fontSize: 13 }}> 任务状态：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].TaskStatusText : null}</span></Item>
@@ -186,9 +188,9 @@ class OperationFormDetail extends PureComponent {
                         <Item ><span style={{ fontSize: 13 }}> 创建时间：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].CreateTime : null}</span></Item>
                     </List>
                     <List renderHeader={() => '处理说明'} className="my-list">
-                        <Item wrap><span style={{ fontSize: 13 }}>{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].TaskDescription : null}</span></Item>
+                        <Item><span style={{ fontSize: 13 }}>{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].TaskDescription : null}</span></Item>
                     </List>
-                    <List renderHeader={() => '处理记录'}>
+                    <List renderHeader={() => '处理记录'} className="my-list">
                         <Item>
                             <Upload
                                 {...upload}
@@ -209,6 +211,7 @@ class OperationFormDetail extends PureComponent {
                         </Item>
                     </List>
                 </Card.Body>
+                
                 {/* 处理记录 */}
                 {this.state.previewVisible && (
                     <Lightbox
@@ -226,6 +229,7 @@ class OperationFormDetail extends PureComponent {
                                 photoIndex: (photoIndex + 1) % UrlTaskDitailsAttachmentList.length
                             })
                         }
+                        imageTitle={`${photoIndex+1}/${UrlTaskDitailsAttachmentList.length}`}
                     />
                 )}
                 {/* 附件 */}
@@ -245,9 +249,11 @@ class OperationFormDetail extends PureComponent {
                                 photoIndexAttach: (photoIndexAttach + 1) % URLattachment.length
                             })
                         }
+                        imageTitle={`${photoIndexAttach+1}/${URLattachment.length}`}
                     />
                 )}
             </Card>
+            </div>
         );
     }
 }
