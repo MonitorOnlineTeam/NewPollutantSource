@@ -279,6 +279,9 @@ const RegionalProportionCard2 = props => {
       name: 'pie2d',
       type: 'pie',
       hoverAnimation: false, // 取消悬浮效果
+      grid:{
+        top:-10,
+      },
       label: {
         show: true,
         position: 'outside',

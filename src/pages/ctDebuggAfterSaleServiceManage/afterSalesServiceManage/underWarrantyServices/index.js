@@ -75,6 +75,8 @@ const UnderWarrantyServices = props => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+  const minWidth = 1500
+  const widthFlag = windowWidth<=minWidth
   return (
     <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
       <div className={styles.pageWrapper}>
@@ -102,27 +104,27 @@ const UnderWarrantyServices = props => {
             </Space>
           </Card>
           <Row gutter={8}>
-            <Col span={10}>
-              <RegionalCountCard1 title={type === 1 ? '大区服务次数，时长' : '大区次数，时长'} />
+            <Col span={widthFlag? 24: 10}>
+              <RegionalCountCard1 title={type === 1 ? '大区服务次数，时长' : '大区次数，时长'} windowWidth={windowWidth} minWidth={minWidth}/>
             </Col>
-            <Col span={14}>
+            <Col span={widthFlag? 24: 14} style={widthFlag&&{paddingTop:8}}>
               <RegionalProportionCard2 title={type === 1 ? '大区服务占比' : '大区占比'} />
             </Col>
           </Row>
           <Row gutter={8}>
-            <Col span={17}>
+            <Col span={widthFlag? 24: 17}>
               <ProductCountCard3
                 type={type}
                 title={type === 1 ? '产品类别服务次数、时长' : '服务原因次数、时长'}
               />
             </Col>
-            <Col span={7}>
-              <ProductProportionCard4 title={type === 1 ? '产品类别占比' : '服务原因占比'} windowWidth={windowWidth}/>
+            <Col span={widthFlag? 24: 7} style={widthFlag&&{paddingTop:8}}>
+              <ProductProportionCard4 title={type === 1 ? '产品类别占比' : '服务原因占比'} windowWidth={windowWidth} minWidth={minWidth}/>
             </Col>
           </Row>
           <Row>
             <Col span={24}>
-              <TableCard date={date} type={type} modalWrapClassName={modalWrapClassName} />
+              <TableCard date={date} type={type} modalWrapClassName={modalWrapClassName} minWidth={minWidth}/>
             </Col>
           </Row>
         </Space>

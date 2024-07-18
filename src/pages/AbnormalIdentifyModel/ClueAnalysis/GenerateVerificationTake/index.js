@@ -618,7 +618,6 @@ const Index = props => {
               })),
             };
           });
-          console.log(userList);
           setCheckRoleDatas(userList);
         },
       });
@@ -632,6 +631,7 @@ const Index = props => {
     } else {
       setSelectedRowKeys([]);
       setSelectedRow([]);
+      setCollapsekey();
       setPreTakeFlagDatas([]);
       setCheckRoleDatas([]);
       setPlanDatas([]);

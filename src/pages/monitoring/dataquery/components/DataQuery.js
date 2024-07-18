@@ -188,16 +188,6 @@ class DataQuery extends Component {
     const { historyparams, pollutantlist, dispatch } = this.props;
     const dataType = e.target.value;
     this.setState({ dataType });
-    // switch (dataType) {
-    //     case "realtime":
-    //     case "minute":
-    //     case "hour":
-    //     case "day":
-    //         pollutantlist.map((item)=>{
-
-    //         })
-
-    // }
     dispatch({
       type: 'dataquery/updateState',
       payload: { historyparams },
@@ -209,7 +199,20 @@ class DataQuery extends Component {
         dateTypes:dataType,
       },
     });
-    this.children.onDataTypeChange(dataType);
+    switch (dataType) {
+      case "realtime":
+        this.children.onDataTypeChange(dataType, [moment().add(-1, 'h').startOf('hour'), moment().endOf('hour')]);
+        break;
+      case "minute":
+        this.children.onDataTypeChange(dataType, [moment().add(-4, 'h').startOf('hour'), moment().endOf('hour')]);
+        break;
+      case "hour":
+        this.children.onDataTypeChange(dataType, [moment().add(-1, 'day').startOf('day'), moment().endOf('hour')]);
+        break;
+      case "day":
+        this.children.onDataTypeChange(dataType, [moment().add(-30, 'day').startOf('day'), moment().endOf('day')]);
+
+    }
   };
 
   /** 图表转换 */
@@ -412,7 +415,7 @@ class DataQuery extends Component {
         columns={this.props.tabType=='shi'? columns : column}
         resizable
         defaultWidth={80}
-        scroll={{ y: this.props.tableHeight || undefined }}
+        scroll={{ y: this.props.tableHeight || 'calc(100vh - 422px)' }}
         // pagination={{ pageSize: 20 }}
         pagination={{
           showSizeChanger: true,
@@ -550,7 +553,7 @@ class DataQuery extends Component {
         mode = [];
         break;
     }
-   return <div style={{ marginTop: 10 }}>
+   return <div>
     <Form layout="inline">
       <Form.Item style={{ marginRight: 5 }}>
         {!this.props.isloading && this.getpollutantSelect()}
@@ -573,7 +576,7 @@ class DataQuery extends Component {
             //   this.dateCallbackDataQuery(dates, dataType)
             // }
             allowClear={false}
-            showTime={ {format: 'HH',}}
+            showTime={ {format: 'HH'}}
           />
           //     :
           // <RangePicker_ style={{ width: 360 }} dateValue={dateValue}
@@ -630,7 +633,7 @@ class DataQuery extends Component {
     </Form>
     <div>
     <ButtonGroup_
-        style={{ width: '100%',padding:'10px 0' }}
+        style={{ width: '100%',padding:'4px 0px 10px 0' }}
         checked={this.state.dataType}
         showOtherTypes={ flag}
         ifShowOther={tabType=='biao'? false:true}

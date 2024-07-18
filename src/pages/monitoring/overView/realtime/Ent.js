@@ -45,6 +45,7 @@ const statusList = [{ value: 1, label: "正常", color: "#34c066" }, { value: 2,
   regionList: autoForm.regionList,
   realtimeColumns: overview.realtimeColumns,
   realTimeDataView: overview.realTimeDataView,
+  realTimeTotal: overview.realTimeTotal,
   entListByRegion: overview.entListByRegion,
   dataLoading: loading.effects['overview/getRealTimeDataView'],
   columnLoading: loading.effects['overview/getRealTimeColumn'],
@@ -66,7 +67,9 @@ class Index extends Component {
       currentHour: moment().hour(),
       time: moment().hour() > 1 ? moment(new Date()).add(-1, 'hour').format('YYYY-MM-DD HH:00:00') : moment(new Date()).format('YYYY-MM-DD HH:00:00'),
       dayTime: moment(new Date()).add(-1, 'day'),
-      regionCode:''
+      regionCode:'',
+      pageIndex: 1,
+      pageSize: 20,
     };
   }
 
@@ -274,7 +277,9 @@ class Index extends Component {
         regionCode: regionCode,
         entCode: entCode,
         operationpersonnel:operationpersonnel,
-        status: selectedTags && selectedTags.length ? selectedTags : [0, 1, 2, 3, 4]
+        status: selectedTags && selectedTags.length ? selectedTags : [0, 1, 2, 3, 4],
+        pageIndex:this.state.pageIndex,
+        pageSize:this.state.pageSize
       },
     });
   };
@@ -297,6 +302,12 @@ class Index extends Component {
         columns: newColumns,
       });
     }
+    this.setState({
+      pageIndex: pagination.current,
+      pageSize: pagination.pageSize,
+    }, () => {
+      this.getRealTimeDataView()
+    })
   };
 
   // 当前时间0-1之间：currentTime - 前一天；nextDayTime - 当天；
@@ -667,11 +678,15 @@ class Index extends Component {
             loading={dataLoading || columnLoading}
             size="middle"
             bordered
-            pagination={false}
             dataSource={realTimeDataView}
             columns={_columns}
             // scroll={{ x: scrollXWidth }}
             onChange={this.handleChange}
+            pagination={{
+              total: this.props.realTimeTotal,
+              pageSize: this.state.pageSize,
+              current: this.state.pageIndex,
+            }}
           />
         </Card >
       </BreadcrumbWrapper >

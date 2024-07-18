@@ -61,12 +61,14 @@ const Index = (props) => {
     const obj1 = {
         '企业信息清洗': { time: tableDatas?.[0]?.cleanTime, numData: [{ label: '清洗企业数量', value: sumData(tableDatas?.filter(item=>item.paramName=='企业名称'), 'successCount') + sumData(tableDatas?.filter(item=>item.paramName=='企业名称'), 'falseCount') || 0 }, { label: '入库数量', value: sumData(tableDatas?.filter(item=>item.paramName=='企业名称'), 'successCount') || 0 }], data: tableDatas, loading: tableLoading, taskType: 1, logTitle: '企业日志', logUrl: 'GetProjectLogsInfoList' },
         '备案参数': { time: tableDatas3?.[0]?.cleanTime, numData: [{ label: '清洗备案参数数量', value: sumData(tableDatas3, 'successCount') + sumData(tableDatas3, 'falseCount') || 0 }, { label: '入库备案参数', value: sumData(tableDatas3, 'successCount') || 0 }, { label: '清洗失败', value: sumData(tableDatas3, 'falseCount') }], data: tableDatas3, loading: tableLoading3, taskType: 3, logTitle: '备案参数日志', logUrl: 'GetProjectLogsInfoList' },
-        '监测数据': { time: tableDatas6?.cleanTime, numData: [{ label: '清洗数据', value: tableDatas6?.successCount || 0 }, { label: '非法', value: tableDatas6?.falseCount || 0 }], data: tableDatas6?.dataList, loading: tableLoading6, taskType: 6, },
+        '监测数据': { time: tableDatas6?.cleanTime, 
+                    //  numData: [{ label: '清洗数据', value: tableDatas6?.successCount || 0 }, { label: '非法', value: tableDatas6?.falseCount || 0 }], 
+                     data: tableDatas6?.dataList, loading: tableLoading6, taskType: 6, },
     }
     const obj2 = {
         '排放口信息清洗': { time: tableDatas2?.[0]?.cleanTime, numData: [{ label: '清洗排放口数量', value: sumData(tableDatas2?.filter(item=>item.paramName=='站点名称'), 'successCount') + sumData(tableDatas2?.filter(item=>item.paramName=='站点名称'), 'falseCount') || 0 }, { label: '入库排放口数量', value: sumData(tableDatas2?.filter(item=>item.paramName=='站点名称'), 'successCount') || 0 }], data: tableDatas2, loading: tableLoading2, taskType: 2, logTitle: '排放口', logUrl: 'GetProjectLogsInfoList' },
-        '污染物': { time: tableDatas4?.cleanTime, numData: [{ label: '清洗排放口数量', value: sumData(tableDatas4, 'successCount') + sumData(tableDatas4, 'falseCount') || 0 }, { label: '入库污染物数量', value: sumData(tableDatas4, 'successCount') || 0 }, { label: '清洗失败', value: sumData(tableDatas4, 'falseCount') }], data: tableDatas4, loading: tableLoading4, taskType: 4, logTitle: '污染物缺失', logUrl: 'GetMonitorPollutantLogsInfoList' },
-        '排放标准': { time: tableDatas5?.cleanTime, numData: [{ label: '清洗排放标准数量', value: sumData(tableDatas5, 'successCount') + sumData(tableDatas5, 'falseCount') || 0 }, { label: '入库排放标准', value: sumData(tableDatas5, 'successCount') || 0 }, { label: '清洗失败', value: sumData(tableDatas5, 'falseCount') || 0 }], data: tableDatas5, loading: tableLoading5, logTitle: '排放标准缺失', taskType: 5, logUrl: 'GetMonitorAlarmLogsInfoList' },
+        '污染物': { time: tableDatas4?.[0]?.cleanTime, numData: [{ label: '清洗排放口数量', value: sumData(tableDatas4, 'successCount') + sumData(tableDatas4, 'falseCount') || 0 }, { label: '入库污染物数量', value: sumData(tableDatas4, 'successCount') || 0 }, { label: '清洗失败', value: sumData(tableDatas4, 'falseCount') }], data: tableDatas4, loading: tableLoading4, taskType: 4, logTitle: '污染物缺失', logUrl: 'GetMonitorPollutantLogsInfoList' },
+        '排放标准': { time: tableDatas5?.[0]?.cleanTime, numData: [{ label: '清洗排放标准数量', value: sumData(tableDatas5, 'successCount') + sumData(tableDatas5, 'falseCount') || 0 }, { label: '入库排放标准', value: sumData(tableDatas5, 'successCount') || 0 }, { label: '清洗失败', value: sumData(tableDatas5, 'falseCount') || 0 }], data: tableDatas5, loading: tableLoading5, logTitle: '排放标准缺失', taskType: 5, logUrl: 'GetMonitorAlarmLogsInfoList' },
     }
     const missDefaultValue = 80;
     useEffect(() => {
@@ -222,15 +224,15 @@ const Index = (props) => {
         },
         {
             title: '缺失数据',
-            dataIndex: 'passeDataCount',
-            key: 'passeDataCount',
+            dataIndex: 'actualDataCount',
+            key: 'actualDataCount',
             align: 'center',
             ellipsis: true,
         },
         {
             title: '应传数据',
-            dataIndex: 'actualDataCount',
-            key: 'actualDataCount',
+            dataIndex: 'passeDataCount',
+            key: 'passeDataCount',
             align: 'center',
             ellipsis: true,
         },
@@ -345,11 +347,11 @@ const Index = (props) => {
                 <div style={{ fontSize: 18, fontWeight: 'bold' }}>{title}</div>
                 <div>最近清洗时间：{time}</div>
             </Row>
-            <Row style={{ margin: '8px 0' }}>
+            {numData && <Row style={{ margin: '8px 0' }}>
                 {
                     numData.map(item => <div style={{ ...typeStyle }} >{item.label} <span style={{ color: item.label === '清洗失败' || item.label === '非法' ? '#f5222d' : '#d4ab32', fontWeight: 'bold', paddingLeft: 12 }}>{item.value}</span></div>)
                 }
-            </Row>
+            </Row>}
         </>
     }
 
@@ -399,7 +401,7 @@ const Index = (props) => {
                             Object.keys(obj1).map(item => {
                                 return <Card style={{ marginBottom: 12 }}>
                                     <TitleComponents title={item} time={obj1[item].time} numData={obj1[item].numData} />
-                                    {item == '监测数据' && <Row align='middle' style={{ marginBottom: 8 }}><div style={{ paddingRight: 12 }}>数据缺失超过<span><InputNumber min={0} max={100} style={{ width: 70, margin: '0 4px' }} defaultValue={missDefaultValue || 0} onChange={missingDataChange} />%</span></div> 排放口统计 {dischargePortLoading ? <span style={{ paddingLeft: 6 }} ><LoadingOutlined /></span> : <span>{dischargePort || 0}%</span>}</Row>}
+                                    {item == '监测数据' && <Row align='middle' style={{ margin: '8px 0' }}><div style={{ paddingRight: 12 }}>数据缺失超过<span><InputNumber min={0} max={100} style={{ width: 70, margin: '0 4px' }} defaultValue={missDefaultValue || 0} onChange={missingDataChange} />%</span></div> 排放口统计 {dischargePortLoading ? <span style={{ paddingLeft: 6 }} ><LoadingOutlined /></span> : <span>{dischargePort || 0}%</span>}</Row>}
                                     <SdlTable
                                         loading={obj1[item].loading}
                                         bordered

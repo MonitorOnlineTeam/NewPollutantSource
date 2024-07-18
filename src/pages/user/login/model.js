@@ -67,6 +67,9 @@ const Model = {
             // sessionStorage.setItem('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
             Cookie.set('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
             callback && callback(response.IsSuccess);
+            sessionStorage.setItem('sysMenuId', sysList.id);
+            // sessionStorage.setItem("sysName", sysList.name);
+            Cookie.set("sysName", sysList.name);
             //进入系统
             if (payload.redirctUrl) { //大屏
               router.push(payload.redirctUrl);
@@ -74,9 +77,6 @@ const Model = {
               if (configInfo.IsShowSysPage === '1') {
                 router.push('/sysTypeMiddlePage');
               } else {
-                sessionStorage.setItem('sysMenuId', sysList.id);
-                // sessionStorage.setItem("sysName", sysList.name);
-                Cookie.set("sysName", sysList.name);
                 router.push(defaultNavigateUrl);
               }
               //  router.push(defaultNavigateUrl);

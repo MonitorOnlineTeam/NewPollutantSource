@@ -3,14 +3,14 @@
  * 创建人：jab
  * 创建时间：2021.11.03
  */
-import React, { useState,useEffect,Fragment, useRef,useMemo  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Popover,Radio    } from 'antd';
+import React, { useState, useEffect, Fragment, useRef, useMemo } from 'react';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover, Radio } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,RollbackOutlined } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
-import { DelIcon, DetailIcon, EditIcon,PointIcon } from '@/utils/icon'
+import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import ReactEcharts from 'echarts-for-react';
@@ -30,18 +30,18 @@ const namespace = 'newestHome'
 
 
 
-const dvaPropsData =  ({ loading,newestHome }) => ({
+const dvaPropsData = ({ loading, newestHome }) => ({
 
 })
 
-const  dvaDispatch = (dispatch) => {
+const dvaDispatch = (dispatch) => {
   return {
-    updateState:(payload)=>{ //更新参数
-        dispatch({
-          type: `${namespace}/updateState`, 
-          payload:{...payload},
-        }) 
-      },
+    updateState: (payload) => { //更新参数
+      dispatch({
+        type: `${namespace}/updateState`,
+        payload: { ...payload },
+      })
+    },
 
   }
 }
@@ -51,38 +51,57 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  
- const [pollutantType,setPollutantType] = useState('')
+
+  const [pollutantType, setPollutantType] = useState('')
 
 
-  const  {  } = props; 
+  const { } = props;
 
   useEffect(() => {
-  initData()
-  },[]);
+    initData()
+  }, []);
 
 
-  const initData = () =>{
+  const initData = () => {
     setMinWidth()
   }
-  const setMinWidth=(e)=>{  
+  const setMinWidth = (e) => {
     document.querySelector("body").setAttribute('style', 'min-width:1500px');
-}
-  const cancelMinWidth=(e)=>{  
-   document.querySelector("body").setAttribute('style', 'min-width:inherit');
+
+
   }
- 
-  const handleResize = (e) =>{
-    if( e.target.innerWidth <=1800){
-      props.updateState({subjectFontSize:13})
-    }else{
-      props.updateState({subjectFontSize:14})
+  const setScrollbarSty = () => {
+    // 获取文档中的样式表
+    var styleSheet = document.styleSheets[0]; // 这里假设你的样式表在第一个位置，你可以根据实际情况进行调整
+
+    // 遍历样式表中的规则（rules），查找包含滚动条伪类的规则
+    for (var i = 0; i < styleSheet.cssRules.length; i++) {
+      var rule = styleSheet.cssRules[i];
+
+      // 检查规则是否包含滚动条的伪类，比如 ::-webkit-scrollbar 或 ::-webkit-scrollbar-thumb
+      if (rule.selectorText.indexOf('::-webkit-scrollbar') !== -1) {
+        // 找到滚动条的伪类样式规则
+        // 设置滚动条的宽度和颜色
+        rule.style.width = '10px';
+        rule.style.backgroundColor = 'lightgray';
+      }
+    }
+  }
+  const cancelMinWidth = (e) => {
+    document.querySelector("body").setAttribute('style', 'min-width:inherit');
+  }
+
+  const handleResize = (e) => {
+    if (e.target.innerWidth <= 1800) {
+      props.updateState({ subjectFontSize: 13 })
+    } else {
+      props.updateState({ subjectFontSize: 14 })
     }
   }
 
 
-  const [scrollTop,setScrollTop] = useState(0)
-  const handleScroll=(e)=>{
+  const [scrollTop, setScrollTop] = useState(0)
+  const handleScroll = (e) => {
     //滚动条高度
     // console.log(e.srcElement.scrollTop)
     setScrollTop(e.srcElement.scrollTop)
@@ -95,41 +114,41 @@ const Index = (props) => {
     // window.addEventListener("resize", handleResize);
 
     // 销毁
-    return () =>  {
+    return () => {
       cancelMinWidth()
       // scrollEle.removeEventListener("scroll", handleScroll);
       // window.removeEventListener("resize", handleResize);
     }
-  },[]);
-  const [fullScreen,setFullScreen] = useState(false)
-  const fullScreenClick = (visible) =>{
-     setFullScreen(visible)
+  }, []);
+  const [fullScreen, setFullScreen] = useState(false)
+  const fullScreenClick = (visible) => {
+    setFullScreen(visible)
   }
 
 
 
   return (
-  // <BreadcrumbWrapper  hideBreadcrumb>
+    // <BreadcrumbWrapper  hideBreadcrumb>
 
-      <div className={styles.homePage}>
-        <Row style={{paddingTop:10,height:'100%'}}>   {/**地图部分 和 地图两侧*/}
-          <Col style={{width:395}} className={`${fullScreen? `${styles.leftContent} ${styles.mapModalHide}`: `${styles.leftContent} ${styles.mapModalShow}` }` }>
-             <LeftContent {...props}/>
-           </Col>
-           <Col  style={{width:'calc(100% - 790px)'}} className={styles.mapContent}>
-             <MapContent {...props} fullScreenClick={fullScreenClick}/>
-           </Col>
-           
-           <Col style={{width:395}} className={`${fullScreen? `${styles.rightContent} ${styles.mapModalHide}`: `${styles.rightContent} ${styles.mapModalShow}` }` }>
-            <RightContent {...props}/>
-            </Col>
-        </Row>  
-        <div className={styles.bottomContent} style={{display: fullScreen? 'none' :''}}>    {/**底部组件*/}
-         <BottomContent {...props} />
-        </div>
-      </div>  
-  //  </BreadcrumbWrapper>
+    <div className={styles.homePage}>
+      <Row style={{ paddingTop: 10, height: '100%' }}>   {/**地图部分 和 地图两侧*/}
+        <Col style={{ width: 395 }} className={`${fullScreen ? `${styles.leftContent} ${styles.mapModalHide}` : `${styles.leftContent} ${styles.mapModalShow}`}`}>
+          <LeftContent {...props} />
+        </Col>
+        <Col style={{ width: 'calc(100% - 790px)' }} className={styles.mapContent}>
+          <MapContent {...props} fullScreenClick={fullScreenClick} />
+        </Col>
+
+        <Col style={{ width: 395 }} className={`${fullScreen ? `${styles.rightContent} ${styles.mapModalHide}` : `${styles.rightContent} ${styles.mapModalShow}`}`}>
+          <RightContent {...props} />
+        </Col>
+      </Row>
+      <div className={styles.bottomContent} style={{ display: fullScreen ? 'none' : '' }}>    {/**底部组件*/}
+        <BottomContent {...props} />
+      </div>
+    </div>
+    //  </BreadcrumbWrapper>
 
   );
 };
-export default connect(dvaPropsData,dvaDispatch)(Index);
+export default connect(dvaPropsData, dvaDispatch)(Index);

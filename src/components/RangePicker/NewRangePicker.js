@@ -260,7 +260,12 @@ class NewRangePicker extends Component {
         }
     }
 
-    onDataTypeChange = dataType => {
+    onDataTypeChange = (dataType,customDate) => {
+        if(customDate){
+          this.setState({ dateValue: customDate});
+          this.props.callback && this.props.callback(customDate, dataType, this.props.fieldName) 
+          return
+        }
         const dateValue = this.getFormatDate(1, 1, dataType);
         this.setState({
             dateValue,

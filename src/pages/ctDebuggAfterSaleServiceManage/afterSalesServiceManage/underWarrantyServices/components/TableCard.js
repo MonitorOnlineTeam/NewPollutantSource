@@ -127,9 +127,9 @@ const TableCard = props => {
             key: `Num${item.ID}`,
             width: 120,
             align: 'center',
-            render: (text, record) => {
-              return <TypeRenderComponents data={{ serviceAreaCode: item.ID, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
-            }
+            // render: (text, record) => {
+            //   return <TypeRenderComponents data={{ serviceAreaCode: item.ID, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
+            // }
           },
           {
             title: '次数占比',
@@ -663,7 +663,7 @@ const TableCard = props => {
           >
             导出
           </Button>
-          {/* <Button
+          <Button
             type="primary"
             onClick={() => {
               setIsModalOpen(true);
@@ -671,7 +671,7 @@ const TableCard = props => {
             }}
           >
             查看基础数据
-          </Button> */}
+          </Button> 
         </Space>
       }
       size="small"
@@ -711,23 +711,23 @@ const TableCard = props => {
           }}
           autoComplete="off"
         >
-          <Row gutter={8} align="middle">
-            <Col span={6}>
+          {/* <Row gutter={8} align="middle"> */}
+            {/* <Col span={6}>
               <Form.Item name="num" label="派工单号">
                 <Input placeholder="请输入" allowClear />
               </Form.Item>
-            </Col>
-            <Col span={6}>
+            </Col> */}
+            {/* <Col span={6}> */}
               <Form.Item name="projectCode" label="项目编号">
                 <Input placeholder="请输入合同编号/立项号" allowClear />
               </Form.Item>
-            </Col>
-            <Col span={6}>
+            {/* </Col> */}
+            {/* <Col span={6}> */}
               <Form.Item name="projectName" label="项目名称" className={type==2&&'form_label_width_97'}>
                 <Input placeholder="请输入" allowClear />
               </Form.Item>
-            </Col>
-            <Col span={6}>
+            {/* </Col> */}
+            {/* <Col span={6}>
               <Form.Item name="customEnt" label="最终用户" className={type==1&&'form_label_width_97'}>
                 <Input placeholder="请输入" allowClear />
               </Form.Item>
@@ -780,8 +780,8 @@ const TableCard = props => {
                   <Radio value={0}>否</Radio>
                 </Radio.Group>
               </Form.Item>
-            </Col>
-            <Col span={6}>
+            </Col> */}
+            {/* <Col span={6}> */}
               <Form.Item name="time" label="离开现场时间" >
                 <RangePicker_
                   style={{ width: '100%' }}
@@ -790,8 +790,8 @@ const TableCard = props => {
                   format="YYYY-MM-DD"
                 />
               </Form.Item>
-            </Col>
-            <Col span={6}>
+            {/* </Col> */}
+            {/* <Col span={6}> */}
               <Form.Item>
                 <Space>
                   <Button
@@ -819,8 +819,8 @@ const TableCard = props => {
                 </Button>
                 </Space>
               </Form.Item>
-            </Col>
-          </Row>
+            {/* </Col> */}
+          {/* </Row> */}
         </Form>
         <SdlTable
           loading={basicsLoading}

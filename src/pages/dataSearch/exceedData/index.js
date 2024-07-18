@@ -255,8 +255,8 @@ class index extends PureComponent {
                     AttentionCode: values.attention == undefined ? '' : values.attention,
                     PollutantTypeCode: values.outlet == undefined ? '' : values.outlet,
                     DataType: values.dataType == undefined ? '' : values.dataType == 'Hour'?'HourData':'DayData',
-                    BeginTime: values.dateTime[0],
-                    EndTime: values.dateTime[1],
+                    BeginTime: values.dateTime?.[0].format('YYYY-MM-DD HH:mm:ss'),
+                    EndTime: values.dateTime?.[1].format('YYYY-MM-DD HH:mm:ss'),
                     TabType: values.outlet == undefined ? '' : values.outlet,
                     PollutantList: pollutionData,
                     operationpersonnel:operationpersonnel,
@@ -926,7 +926,7 @@ class index extends PureComponent {
                         getFieldDecorator('dateTime', {
                             initialValue: this.state.time
                         })(
-                            <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={this.state.time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
+                            <RangePicker_ allowClear={false} onRef={this.onRef1} dateValue={this.state.time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
                                 (dates, dataType) => {
                                     this.setState({
                                         time: [dates[0].startOf('day'),dates[1].endOf('day')],

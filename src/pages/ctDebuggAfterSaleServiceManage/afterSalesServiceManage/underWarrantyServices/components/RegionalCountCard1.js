@@ -16,7 +16,10 @@ const RegionalCountCard1 = props => {
     title,
     loading,
     underWarrantyServicesData: { LargeRegionAnalysis },
+    windowWidth,
+    minWidth,
   } = props;
+  const windowWidthFlag = windowWidth<=minWidth&&windowWidth>=920
 
   useEffect(() => {}, []);
 
@@ -74,8 +77,8 @@ const RegionalCountCard1 = props => {
             show: false,
           },
           axisLabel: {
-            // interval: 0,
-            rotate: 30,
+            interval: 0,
+            rotate: windowWidthFlag ? 0 :  30, // 或者其他角度,
             textStyle: {
               // fontSize: 14,
               color: '#333333',
@@ -219,7 +222,7 @@ const RegionalCountCard1 = props => {
         theme="my_theme"
       />
     );
-  }, [LargeRegionAnalysis, echarts]);
+  }, [LargeRegionAnalysis, echarts,windowWidth]);
 
   return (
     <Card title={title} size="small" bodyStyle={{ height: 340 }} loading={loading}>
