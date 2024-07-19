@@ -1661,7 +1661,11 @@ const routes = [
                 name: 'taskRecord',
                 component: './operations/TaskRecord',
               },
-
+              {
+                path: '/operations/taskRecord/:type',
+                name: 'taskRecord',
+                component: './operations/TaskRecord',
+              },
               {
                 path: '/operations/taskRecord/details/:TaskID/:DGIMN',
                 name: 'taskRecordDetail',

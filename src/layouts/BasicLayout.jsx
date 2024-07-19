@@ -33,7 +33,7 @@ class BasicLayout extends Component {
     //   type: 'global/getSystemConfigInfo',
     //   payload: {},
     // });
-    configInfo.IsOpera &&
+    // configInfo.IsOpera &&
       dispatch({
         //获取运维基础配置
         type: 'global/getOperationSetting',

@@ -68,11 +68,15 @@ const filteredHandle = (filters) => {
 const Index = (props) => {
 
 
-  const [tabType, setType] = useState([{ name: '企业信息', value: '1' }, { name: '监测点信息', value: '2' }, { name: '运维信息', value: '3' }, { name: '系统信息', value: '4' },
-  { name: '设备信息', value: '5' }, { name: '数据核查项', value: '6' }, { name: '设备参数项', value: '7' }, { name: '监测点系数', value: '8' }, { name: '工单类型系数', value: '9' }, { name: '巡检频次系数', value: '10' }, { name: '点位匹配信息', value: '11' }]);
+  const [tabType, setType] = useState([{ name: '企业信息', key: '1' }, { name: '监测点信息', key: '2' }, { name: '运维信息', key: '3' }, { name: '系统信息', key: '4' },
+  { name: '设备信息', key: '5' }, { name: '数据核查项', key: '6' }, { name: '设备参数项', key: '7' }, { name: '监测点系数', key: '8' }, { name: '工单类型系数', key: '9' }, { name: '巡检频次系数', key: '10' }, { name: '点位匹配信息', key: '11' }]);
 
   useEffect(() => {
-    console.log(props, 11111111111)
+    if(props?.location?.query?.nav){
+      const filterArray = props?.location?.query?.nav
+      const filteredArray = tabType.filter(obj => filterArray.includes(obj.key));
+      setType(filteredArray)
+    }
   }, [])
 
   const tabComponents = (key) => {
@@ -95,9 +99,11 @@ const Index = (props) => {
       <BreadcrumbWrapper>
         <Tabs tabPosition='left'>
           {tabType.map(item => {
-            return tabComponents()
+            return  <TabPane tab={item.name} key={item.key}>
+              {tabComponents(item.key)}
+            </TabPane>
           })}
-          <TabPane tab="企业信息" key="1">
+          {/* <TabPane tab="企业信息" key="1">
             <EntInfo props />
           </TabPane>
           <TabPane tab="监测点信息" key="2">
@@ -129,7 +135,7 @@ const Index = (props) => {
           </TabPane>
           <TabPane tab="点位匹配信息" key="11">
             <PointMatchingSet props />
-          </TabPane>
+          </TabPane> */}
         </Tabs>
       </BreadcrumbWrapper>
 

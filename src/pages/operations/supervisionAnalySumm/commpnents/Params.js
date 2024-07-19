@@ -58,10 +58,11 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const { tableDatas, tableTotal,tableLoading,exportLoading, } = props;
+  const { tableDatas, tableTotal,tableLoading,exportLoading,tabType, time} = props;
 
 
   useEffect(() => {
+    time&&form.setFieldsValue({time:time})
     onFinish(pageIndex,pageSize);
   }, []);
 
@@ -218,7 +219,7 @@ const Index = (props) => {
   })
   }
 
-  const [type,setType] = useState(1)
+  const [type,setType] =  useState(tabType? 3 : 1)
   const onValuesChange = (hangedValues, allValues) => {
     if (Object.keys(hangedValues).join() == 'DateType') {
         setType(hangedValues.DateType)
@@ -241,6 +242,7 @@ const Index = (props) => {
   return (
     <div className={styles.analysisSummarySty}>
       <Card
+        bordered={!tabType}
         title={
           <Form
             form={form}
@@ -248,7 +250,7 @@ const Index = (props) => {
             onFinish={() => {setPageIndex(1);onFinish(1, pageSize) }}
             layout='inline'
             initialValues={{
-              DateType:1,
+              DateType: tabType? 3 : 1,
               time: moment(),
             }}
             className={styles.queryForm}
@@ -306,7 +308,7 @@ const Index = (props) => {
             showQuickJumper: true,
             onChange: handleTableChange,
         }}
-        scroll={{ x: '100%',y:'calc(100vh - 418px)' }}
+        scroll={{ x: '100%',y: tabType?   'calc(100vh - 349px)' : 'calc(100vh - 442px)' }}
         />
       </Card>
     </div>

@@ -639,6 +639,7 @@ const Index = (props) => {
               bordered
               dataSource={tableDatas2}
               columns={columns2}
+              scroll={{ y: 'calc(100vh - 320px)' }}
               pagination={false}
             />
           </Card>
