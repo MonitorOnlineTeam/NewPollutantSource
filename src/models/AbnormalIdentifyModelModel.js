@@ -269,7 +269,6 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result);
       } else {
-        callback && callback([]);
         message.error(result.Message);
       }
     },

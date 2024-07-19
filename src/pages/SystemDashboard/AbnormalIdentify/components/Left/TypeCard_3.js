@@ -8,6 +8,8 @@ import PlanWorkOrderStatistics from '@/pages/newestHome/components/springModal/p
 import moment from 'moment';
 import ToggleRadio from '@/pages/SystemDashboard/components/ToggleRadio.js';
 import AbnormalDataAnalysis from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis';
+import QuestionTooltip from '@/components/QuestionTooltip';
+
 const COLOR = ['#0FD4F9', '#066EE9', '#73DAA6', '#E9E87A', '#A339E6'];
 
 const dvaPropsData = ({ sysDashboard, loading }) => ({
@@ -22,9 +24,26 @@ const TypeCard = props => {
   const [open, setOpen] = useState(false);
   const [dataType, setDataType] = useState('Hours');
   const [echarts, setEcharts] = useState();
-  const { time, loading, typelList, entCode, regionCode } = props;
+  const [typeList, setTypeList] = useState([]);
+  const { dispatch, time, loading, typelList, entCode, regionCode } = props;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    GetMoldTypeLevelList();
+  }, []);
+
+  // 获取级别和分类
+  const GetMoldTypeLevelList = () => {
+    dispatch({
+      type: 'AbnormalIdentifyModel/GetMoldTypeLevelList',
+      payload: {
+        type: 1, // 过滤掉打标记和数据现象
+      },
+      callback: res => {
+        let typeList = res.type;
+        setTypeList(typeList);
+      },
+    });
+  };
 
   const getOption = () => {
     if (!echarts) {
@@ -105,7 +124,45 @@ const TypeCard = props => {
   };
 
   return (
-    <HomeCard title="异常分类统计" bodyStyle={{ position: 'relative' }} loading={loading}>
+    <HomeCard
+      title={
+        <>
+          异常分类统计
+          <QuestionTooltip
+            color="#073783"
+            placement="right"
+            overlayInnerStyle={{ width: 300 }}
+            style={{ color: '#fff' }}
+            content={
+              <div style={{ fontWeight: 'bold', width: 300 }}>
+                {typeList.map((item, i) => {
+                  return (
+                    <div key={i} style={{ marginBottom: i + 1 === typeList.length ? 0 : 10 }}>
+                      <p>{item.ModelTypeName}包括：</p>
+                      <div style={{ marginLeft: 20 }}>
+                        {item.ModelList.map((model, index) => {
+                          return (
+                            <p key={index}>
+                              {index + 1}. {model.ModelName}
+                            </p>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* <p>重点异常：影响数据质量，无法判断明显动机，非正常运行的。</p>
+                <p>一般异常：对数据质量影响较小，但仍需要解决的。</p>
+                <p>轻微异常：不影响数据质量，属于管理不规范的。 </p> */}
+              </div>
+            }
+          />
+        </>
+      }
+      bodyStyle={{ position: 'relative' }}
+      loading={loading}
+    >
       <ToggleRadio
         style={{ position: 'absolute', right: 20, top: 10, zIndex: 1 }}
         onChange={e => {

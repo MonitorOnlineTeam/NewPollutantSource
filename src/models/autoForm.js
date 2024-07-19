@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-20 09:35:07
+ * @Last Modified time: 2024-07-18 17:25:58
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -577,7 +577,12 @@ export default Model.extend({
     *exportDataExcel({ payload }, { call, select, update }) {
       const state = yield select(state => state.autoForm);
       const postData = getQueryParams(state, payload);
-      const result = yield call(services.exportDataExcel, { ...postData, ...payload });
+      const result = yield call(services.exportDataExcel, {
+        ...postData,
+        pageIndex: undefined,
+        pageSize: undefined,
+        ...payload,
+      });
       if (result.IsSuccess) {
         message.success('下载成功');
         result.Datas && downloadFile(`${result.Datas}`);
