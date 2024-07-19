@@ -17,7 +17,7 @@
 // const uploadHost = 'http://172.16.12.165:9090/upload/';
 
 // 新疆系统的废气要显示成图片
-const XinJiang = true;
+const XinJiang = false;
 
 // const apiHost = 'http://localhost:52198/';
 const apiHost = 'http://172.16.12.39:9090/';
