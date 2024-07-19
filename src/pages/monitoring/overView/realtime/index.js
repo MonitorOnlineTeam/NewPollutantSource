@@ -708,12 +708,14 @@ class Realtime extends Component {
                   <CheckableTag
                     style={{
                       backgroundColor: selectedStatus.includes(item.value)
-                        ? 'transparent'
-                        : item.color,
+                        ? item.color
+                        : 'transparent',
                       padding: '2px 10px',
                       cursor: 'pointer',
                       borderRadius: 0,
                       marginRight: 4,
+                      // border: '1px solid rgb(52, 192, 102)',
+                      // width: 94,
                     }}
                     key={item.value}
                     checked={selectedStatus.includes(item.value)}
@@ -722,17 +724,17 @@ class Realtime extends Component {
                     <i
                       style={{
                         backgroundColor: item.color,
-                        width: 4,
-                        height: 4,
-                        display: selectedStatus.includes(item.value) ? 'inline-block' : 'none',
+                        width: 6,
+                        height: 6,
+                        display: selectedStatus.includes(item.value) ? 'none' : 'inline-block',
                         borderRadius: '50%',
-                        margin: '0 4px 4px 0',
+                        margin: '0 6px 2px 0',
                       }}
                     ></i>
                     <span
                       style={{
                         fontSize: 14,
-                        color: selectedStatus.includes(item.value) ? item.color : '#fff',
+                        color: selectedStatus.includes(item.value) ? '#fff' : item.color,
                         fontWeight: 'bold',
                       }}
                     >

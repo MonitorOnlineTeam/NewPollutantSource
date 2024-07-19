@@ -146,6 +146,12 @@ class NavigationTree extends Component {
       panelDataListAys: [],
       RunState: '',
       useChioce: true,
+      stateNumber: {
+        0: 0,
+        1: 0,
+        2: 0,
+        3: 0,
+      },
       // panelSelKey:"",
       panelColumn: [
         {
@@ -283,7 +289,23 @@ class NavigationTree extends Component {
     }
   }
 
-  loadCallback = (data, isInit) => {
+  loadCallback = (data, isInit, isUpdateNumbers = true) => {
+    let stateNumber = { ...this.state.stateNumber };
+    if (isUpdateNumbers) {
+      stateNumber = {
+        0: 0,
+        1: 0,
+        2: 0,
+        3: 0,
+      };
+      data.map(item => {
+        item.children.map(point => {
+          stateNumber[point.Status] += 1;
+        });
+      });
+    }
+
+    console.log('stateNumber', stateNumber);
     if (!isInit) {
       this.props.dispatch({
         type: 'navigationtree/updateState',
@@ -299,6 +321,7 @@ class NavigationTree extends Component {
     this.setState(
       {
         EntAndPoint: data,
+        stateNumber: stateNumber,
       },
       () => {
         this.clearData();
@@ -874,7 +897,7 @@ class NavigationTree extends Component {
         ...this.props.propsParams,
       },
       callback: data => {
-        this.loadCallback(data);
+        this.loadCallback(data, false, false);
       },
     });
   };
@@ -1151,7 +1174,7 @@ class NavigationTree extends Component {
   }
 
   render() {
-    const { searchValue, expandedKeys, autoExpandParent } = this.state;
+    const { searchValue, expandedKeys, autoExpandParent, stateNumber } = this.state;
     const { configInfo, showIndustry } = this.props;
     // 渲染数据及企业排口图标和运行状态
     const loop = data =>
@@ -1212,7 +1235,7 @@ class NavigationTree extends Component {
               style={{ width: '100%' }}
               title={
                 <div style={{ width: '254px', position: 'relative' }}>
-                  <div className={styles.titleStyle} title={item.title} style={{width:210}}>
+                  <div className={styles.titleStyle} title={item.title} style={{ width: 210 }}>
                     {this.getPollutantIcon(item.PollutantType, 16)}
                     {title}
                     {item.outPutFlag == 1 ? (
@@ -1303,15 +1326,25 @@ class NavigationTree extends Component {
                 style={this.state.normalState ? styleNor : styleFor}
                 onClick={() => this.screenData(1)}
               >
-                <LegendIcon
+                <Badge
+                  showZero
+                  overflowCount="9999"
+                  offset={[0, -10]}
                   style={{
-                    color: '#34c066',
-                    fontSize: '20px',
-                    verticalAlign: 'middle',
-                    marginBottom: '2px',
+                    backgroundColor: '#34c066',
                   }}
-                />
-                正常
+                  count={stateNumber['1']}
+                >
+                  <LegendIcon
+                    style={{
+                      color: '#34c066',
+                      fontSize: '20px',
+                      verticalAlign: 'middle',
+                      marginBottom: '2px',
+                    }}
+                  />
+                  正常
+                </Badge>
               </Col>
               <Col span={1}></Col>
               <Col
@@ -1319,16 +1352,25 @@ class NavigationTree extends Component {
                 style={this.state.offState ? styleTrue : styleFalse}
                 onClick={() => this.screenData(0)}
               >
-                {' '}
-                <LegendIcon
+                <Badge
+                  showZero
+                  overflowCount="9999"
+                  offset={[0, -10]}
                   style={{
-                    color: '#999999',
-                    fontSize: '20px',
-                    verticalAlign: 'middle',
-                    marginBottom: '2px',
+                    backgroundColor: '#999999',
                   }}
-                />
-                离线
+                  count={stateNumber['0']}
+                >
+                  <LegendIcon
+                    style={{
+                      color: '#999999',
+                      fontSize: '20px',
+                      verticalAlign: 'middle',
+                      marginBottom: '2px',
+                    }}
+                  />
+                  离线
+                </Badge>
               </Col>
               <Col span={1}></Col>
               <Col
@@ -1336,15 +1378,25 @@ class NavigationTree extends Component {
                 style={this.state.overState ? styleTrue : styleFalse}
                 onClick={() => this.screenData(2)}
               >
-                <LegendIcon
+                <Badge
+                  showZero
+                  overflowCount="9999"
+                  offset={[0, -10]}
                   style={{
-                    color: '#f04d4d',
-                    fontSize: '20px',
-                    verticalAlign: 'middle',
-                    marginBottom: '2px',
+                    backgroundColor: '#f04d4d',
                   }}
-                />
-                超标
+                  count={stateNumber['2']}
+                >
+                  <LegendIcon
+                    style={{
+                      color: '#f04d4d',
+                      fontSize: '20px',
+                      verticalAlign: 'middle',
+                      marginBottom: '2px',
+                    }}
+                  />
+                  超标
+                </Badge>
               </Col>
               <Col span={1}></Col>
               <Col
@@ -1352,15 +1404,25 @@ class NavigationTree extends Component {
                 style={this.state.exceState ? styleTrue : styleFalse}
                 onClick={() => this.screenData(3)}
               >
-                <LegendIcon
+                <Badge
+                  showZero
+                  overflowCount="9999"
+                  offset={[0, -10]}
                   style={{
-                    color: '#e94',
-                    fontSize: '20px',
-                    verticalAlign: 'middle',
-                    marginBottom: '2px',
+                    backgroundColor: '#e94',
                   }}
-                />
-                异常
+                  count={stateNumber['3']}
+                >
+                  <LegendIcon
+                    style={{
+                      color: '#e94',
+                      fontSize: '20px',
+                      verticalAlign: 'middle',
+                      marginBottom: '2px',
+                    }}
+                  />
+                  异常
+                </Badge>
               </Col>
             </Row>
           </div>

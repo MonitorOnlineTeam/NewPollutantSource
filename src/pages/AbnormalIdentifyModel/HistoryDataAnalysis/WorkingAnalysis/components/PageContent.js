@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Children } from 'react';
 import { connect } from 'dva';
 import {
   Card,
@@ -40,9 +40,11 @@ const PageContent = props => {
   const [entCode, setEntCode] = useState();
   const [loading, setLoading] = useState(false);
   const [stopRate, setStopRate] = useState(0);
+  const [stopReportRate, setStopReportRate] = useState(0);
   const [dataSource, setDataSource] = useState([]);
   const [dataType, setDataType] = useState(props.dataType || 'region'); //region/ent/point
   const [stopPieData, setStopPieData] = useState([{}, {}, {}, {}]);
+  const [stopReportPie, setStopReportPie] = useState([{}, {}, {}, {}]);
   const [warningInfo, setWarningInfo] = useState([]);
 
   useEffect(() => {
@@ -66,6 +68,7 @@ const PageContent = props => {
       callback: result => {
         if (result.IsSuccess) {
           setStopRate(result.Datas.StopRate);
+          setStopReportRate(result.Datas.StopReportRate);
           setDataSource(result.Datas.TableData);
           setWarningInfo(result.Datas.WarningInfo);
           let StopPie = [];
@@ -76,6 +79,14 @@ const PageContent = props => {
             });
           }
           setStopPieData(StopPie);
+          let StopReportPie = [];
+          for (const key in result.Datas.StopReportPie) {
+            StopReportPie.push({
+              name: key,
+              value: result.Datas.StopReportPie[key],
+            });
+          }
+          setStopReportPie(StopReportPie);
         }
         setLoading(false);
       },
@@ -114,8 +125,8 @@ const PageContent = props => {
     });
   };
 
-  const getOption1 = () => {
-    const data = stopRate;
+  const getOption1 = type => {
+    const data = type === 1 ? stopRate : stopReportRate;
     let option = {
       color: '#F46848',
       backgroundColor: '#fff',
@@ -263,7 +274,7 @@ const PageContent = props => {
     return option;
   };
 
-  const getOption2 = () => {
+  const getOption2 = type => {
     let option = {
       color: [
         '#5CDC9F',
@@ -286,7 +297,8 @@ const PageContent = props => {
         {
           name: '停运时长分布',
           type: 'pie',
-          radius: [50, 80],
+          radius: [40, 70],
+          center: ['50%', '40%'],
           // roseType: 'area',
           padAngle: 1,
           itemStyle: {
@@ -345,7 +357,7 @@ const PageContent = props => {
               width: 2, // 引导线宽度
             },
           },
-          data: stopPieData,
+          data: type === 1 ? stopPieData : stopReportPie,
         },
       ],
     };
@@ -353,20 +365,24 @@ const PageContent = props => {
     return option;
   };
 
-  const getOption3 = () => {
+  const getOption3 = type => {
     let RunHours = [],
       StopHours = [],
+      RunReportHour = [],
+      StopReportHour = [],
       CountHours = [],
       xData = [];
     dataSource.map(item => {
       RunHours.push(item.RunHour);
       StopHours.push(item.StopHour);
+      RunReportHour.push(item.RunReportHour);
+      StopReportHour.push(item.StopReportHour);
       CountHours.push(item.ShouldHour);
       xData.push(item.Name);
     });
 
     let option = {
-      color: ['#5cdc9f', '#fac858', '#5370c6'],
+      color: ['#5cdc9f', '#fac858', '#3ba272', '#fc8452', '#5370c6'],
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -464,7 +480,7 @@ const PageContent = props => {
       ],
       series: [
         {
-          name: '正常运行时长',
+          name: '正常运行时长（模型）',
           type: 'bar',
           // z: -1,
           barMaxWidth: 50,
@@ -481,7 +497,7 @@ const PageContent = props => {
           data: RunHours,
         },
         {
-          name: '停运时长',
+          name: '停运时长（模型）',
           type: 'bar',
           // z: 99,
           stack: 'count',
@@ -494,6 +510,38 @@ const PageContent = props => {
             color: '#fff',
           },
           data: StopHours,
+        },
+        {
+          name: '正常运行时长（上报）',
+          type: 'bar',
+          // z: -1,
+          barMaxWidth: 50,
+          // barGap: '-100%',
+          stack: 'count2',
+          // itemStyle: {
+          //   color: '#92cc75',
+          // },
+          label: {
+            show: true,
+            position: 'insideTop',
+            color: '#fff',
+          },
+          data: RunReportHour,
+        },
+        {
+          name: '停运时长（上报）',
+          type: 'bar',
+          // z: 99,
+          stack: 'count2',
+          barMaxWidth: 50,
+          // itemStyle: {
+          //   color: '#ff4d4f',
+          // },
+          label: {
+            show: true,
+            color: '#fff',
+          },
+          data: StopReportHour,
         },
         {
           name: '总时长',
@@ -530,7 +578,7 @@ const PageContent = props => {
                     setIsModalOpen(true);
                     setRegionCode(record.Key);
                     setEntCode(undefined);
-                    setModalTitle(record.Name + ' - 数据缺失情况');
+                    setModalTitle(record.Name + ' - 停运详情');
                   }}
                 >
                   {text}
@@ -553,7 +601,7 @@ const PageContent = props => {
                     setIsModalOpen(true);
                     setRegionCode(undefined);
                     setEntCode(record.Key);
-                    setModalTitle(record.Name + ' - 数据缺失情况');
+                    setModalTitle(record.Name + ' - 停运详情');
                   }}
                 >
                   {text}
@@ -585,55 +633,113 @@ const PageContent = props => {
     const columns = [
       ...column,
       {
-        title: '运行率',
-        dataIndex: 'RunRate',
-        key: 'RunRate',
-        sorter: (a, b) => a.RunRate - b.RunRate,
-        render: text => {
-          return text + '%';
-        },
+        title: '模型',
+        children: [
+          {
+            title: '运行率',
+            dataIndex: 'RunRate',
+            key: 'RunRate',
+            align: 'center',
+            sorter: (a, b) => a.RunRate - b.RunRate,
+            render: text => {
+              return text + '%';
+            },
+          },
+          {
+            title: '正常运行时间',
+            dataIndex: 'RunHour',
+            key: 'RunHour',
+            align: 'center',
+            sorter: (a, b) => a.RunHour - b.RunHour,
+          },
+          {
+            title: '停运时长',
+            dataIndex: 'StopHour',
+            key: 'StopHour',
+            align: 'center',
+            sorter: (a, b) => a.StopHour - b.StopHour,
+          },
+          {
+            title: '停运时间占比',
+            dataIndex: 'StopRate',
+            key: 'StopRate',
+            align: 'center',
+            sorter: (a, b) => a.StopRate - b.StopRate,
+            render: text => {
+              return text + '%';
+            },
+          },
+        ],
       },
       {
-        title: '正常运行时间',
-        dataIndex: 'RunHour',
-        key: 'RunHour',
-        sorter: (a, b) => a.RunHour - b.RunHour,
+        title: '上报',
+        children: [
+          {
+            title: '运行率',
+            dataIndex: 'RunReportRate',
+            key: 'RunReportRate',
+            align: 'center',
+            sorter: (a, b) => a.RunReportHour - b.RunReportHour,
+            render: text => {
+              return text + '%';
+            },
+          },
+          {
+            title: '正常运行时间',
+            dataIndex: 'RunReportHour',
+            key: 'RunReportHour',
+            align: 'center',
+            sorter: (a, b) => a.RunReportHour - b.RunReportHour,
+          },
+          {
+            title: '停运时长',
+            dataIndex: 'StopReportHour',
+            key: 'StopReportHour',
+            align: 'center',
+            sorter: (a, b) => a.StopReportHour - b.StopReportHour,
+          },
+          {
+            title: '停运时间占比',
+            dataIndex: 'StopReportRate',
+            key: 'StopReportRate',
+            align: 'center',
+            sorter: (a, b) => a.StopReportRate - b.StopReportRate,
+            render: text => {
+              return text + '%';
+            },
+          },
+        ],
       },
       {
         title: '停运次数',
         dataIndex: 'StopNums',
         key: 'StopNums',
+        width: 120,
         sorter: (a, b) => a.StopNums - b.StopNums,
-      },
-      {
-        title: '停运时长',
-        dataIndex: 'StopHour',
-        key: 'StopHour',
-        sorter: (a, b) => a.StopHour - b.StopHour,
       },
       {
         title: '总时长',
         dataIndex: 'ShouldHour',
         key: 'ShouldHour',
+
         sorter: (a, b) => a.ShouldHour - b.ShouldHour,
-      },
-      {
-        title: '停运时间占比',
-        dataIndex: 'StopRate',
-        key: 'StopRate',
-        sorter: (a, b) => a.StopRate - b.StopRate,
-        render: text => {
-          return text + '%';
-        },
       },
     ];
     return columns;
   };
 
+  const echartTitleStyle = {
+    textAlign: 'center',
+    position: 'absolute',
+    width: '100%',
+    bottom: 12,
+    fontSize: 14,
+  };
+
   return (
     <div className={styles.PageWrapper}>
       {!props.dataType && (
-        <Card>
+        <Card size="small">
           <Form
             form={form}
             layout="inline"
@@ -674,8 +780,8 @@ const PageContent = props => {
           </Form>
         </Card>
       )}
-      <Row gutter={[0, 16]} style={{ height: 320, marginTop: 8 }}>
-        <Col span={5} style={{ height: '100%' }}>
+      <Row gutter={[0, 16]} style={{ height: 280, marginTop: 8 }}>
+        <Col span={10} style={{ height: '100%' }}>
           <Card
             loading={loading}
             style={{
@@ -687,33 +793,62 @@ const PageContent = props => {
             bodyStyle={{ padding: '10px 24px', height: 'calc(100% - 41px)' }}
             title={<div className="innerCardTitle">停运时长占比</div>}
           >
-            <ReactEcharts
-              option={getOption1()}
-              style={{ height: 'calc(100%)' }}
-              className="echarts-for-echarts"
-              theme="my_theme"
-            />
+            <Row style={{ height: '100%' }}>
+              <Col span={12}>
+                <ReactEcharts
+                  option={getOption1(1)}
+                  style={{ height: 'calc(90%)' }}
+                  className="echarts-for-echarts"
+                  theme="my_theme"
+                />
+                <p style={echartTitleStyle}>模型停运时长占比</p>
+              </Col>
+              <Col span={12}>
+                <ReactEcharts
+                  option={getOption1(2)}
+                  style={{ height: 'calc(90%)' }}
+                  className="echarts-for-echarts"
+                  theme="my_theme"
+                />
+                <p style={echartTitleStyle}>上报停运时长占比</p>
+              </Col>
+            </Row>
           </Card>
         </Col>
-        <Col span={7} style={{ height: '100%' }}>
+        <Col span={14} style={{ height: '100%' }}>
           <Card
             loading={loading}
             style={{
               height: '100%',
-              marginRight: 8,
             }}
             bodyStyle={{ padding: '10px 24px', height: 'calc(100% - 41px)' }}
             title={<div className="innerCardTitle">停运时长分布</div>}
           >
-            <ReactEcharts
-              option={getOption2()}
-              style={{ height: 'calc(100%)' }}
-              className="echarts-for-echarts"
-              theme="my_theme"
-            />
+            <Row style={{ height: '100%' }}>
+              <Col span={12}>
+                <ReactEcharts
+                  option={getOption2(1)}
+                  style={{ height: 'calc(90%)' }}
+                  className="echarts-for-echarts"
+                  theme="my_theme"
+                />
+                <p style={{ ...echartTitleStyle, bottom: 8 }}>模型停运时长分布</p>
+              </Col>
+              <Col span={12}>
+                <ReactEcharts
+                  option={getOption2(2)}
+                  style={{ height: 'calc(90%)' }}
+                  className="echarts-for-echarts"
+                  theme="my_theme"
+                />
+                <p style={{ ...echartTitleStyle, bottom: 8 }}>上报停运时长分布</p>
+              </Col>
+            </Row>
           </Card>
         </Col>
-        <Col span={12} style={{ height: '100%' }}>
+      </Row>
+      <Row gutter={[0, 16]} style={{ height: 300, marginTop: 8 }}>
+        <Col span={24} style={{ height: '100%' }}>
           <Card
             loading={loading}
             style={{
@@ -731,7 +866,7 @@ const PageContent = props => {
           </Card>
         </Col>
       </Row>
-      <Row gutter={[0, 16]}>
+      <Row gutter={[0, 16]} style={{ marginTop: 8 }}>
         {loading
           ? [
               <Col span={12}>
@@ -741,12 +876,12 @@ const PageContent = props => {
                 <Card style={{ height: 130 }} loading={true}></Card>
               </Col>,
             ]
-          : warningInfo.map(item => {
+          : warningInfo.map((item, index) => {
               return (
                 <Col span={12}>
                   <Card
                     loading={loading}
-                    style={{ marginTop: 8, marginRight: 8 }}
+                    style={{ marginRight: (index + 1) % 2 === 0 ? 0 : 8 }}
                     bodyStyle={{ padding: '16px 24px' }}
                     title={<div className="innerCardTitle">{item.ModelName}</div>}
                     extra={
@@ -825,6 +960,7 @@ const PageContent = props => {
           columns={getColumns()}
           dataSource={dataSource}
           pagination={false}
+          scroll={false}
         />
       </Card>
       {isModalOpen && (
@@ -836,7 +972,7 @@ const PageContent = props => {
           footer={false}
           onCancel={() => setIsModalOpen(false)}
         >
-          <WorkingAnalysis regionCode={regionCode} entCode={entCode} time={date}/>
+          <WorkingAnalysis regionCode={regionCode} entCode={entCode} time={date} />
         </Modal>
       )}
       <CluesListModal

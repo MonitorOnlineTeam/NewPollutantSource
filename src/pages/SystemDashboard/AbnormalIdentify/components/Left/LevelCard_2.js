@@ -7,6 +7,7 @@ import ReactEcharts from 'echarts-for-react';
 import AbnormalDataAnalysis from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis';
 import ToggleRadio from '@/pages/SystemDashboard/components/ToggleRadio.js';
 import _ from 'lodash';
+import QuestionTooltip from '@/components/QuestionTooltip';
 
 let myChart;
 const dvaPropsData = ({ loading, sysDashboard }) => ({
@@ -196,7 +197,29 @@ const LevelCard = props => {
   };
 
   return (
-    <HomeCard title="异常分级统计" bodyStyle={{ position: 'relative' }} loading={loading}>
+    <HomeCard
+      title={
+        <>
+          异常分级统计
+          <QuestionTooltip
+            color="#073783"
+            placement="right"
+            overlayInnerStyle={{ width: 394 }}
+            style={{ color: '#fff' }}
+            content={
+              <div style={{ fontWeight: 'bold', width: 394 }}>
+                <p>严重异常：严重影响数据质量，动机定义明确，影响恶劣的。</p>
+                <p>重点异常：影响数据质量，无法判断明显动机，非正常运行的。</p>
+                <p>一般异常：对数据质量影响较小，但仍需要解决的。</p>
+                <p>轻微异常：不影响数据质量，属于管理不规范的。 </p>
+              </div>
+            }
+          />
+        </>
+      }
+      bodyStyle={{ position: 'relative' }}
+      loading={loading}
+    >
       <ToggleRadio
         style={{ position: 'absolute', right: 20, top: 10, zIndex: 1 }}
         onChange={e => {

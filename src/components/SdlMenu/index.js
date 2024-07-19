@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-06-03 11:20:32
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-06-07 16:54:02
+ * @Last Modified time: 2024-07-18 11:11:57
  * @Description:  菜单组件
  */
 import React, { Component } from 'react';
@@ -99,6 +99,7 @@ class SdlMenu extends Component {
     let sortMenu = _.sortBy(currentMenuData, item => {
       return !item.children.length;
     });
+
     sortMenu.forEach((item, index) => {
       if (item.children.length) {
         menuData.push(item);
@@ -110,6 +111,12 @@ class SdlMenu extends Component {
         return;
       }
     });
+
+    const lastItem = menuData[menuData.length - 1];
+    if (Object.keys(lastItem).length === 2 && 'name' in lastItem && 'children' in lastItem) {
+      menuData = [lastItem, ...menuData.slice(0, -1)];
+    }
+
     return menuData.map(menuItem => {
       return (
         <Menu.ItemGroup key={menuItem.path} title={menuItem.name}>
