@@ -143,7 +143,7 @@ class TaskRecord extends Component {
          if (par[0] === 'taskform') {
           this.LoadData({ TaskFrom: par[1] });
          }else{
-          this.LoadData({ TaskType: par[1].split(',') });
+          this.LoadData({ TaskTypeList: par[1].split(',') });
         }
       }
       })
@@ -163,7 +163,7 @@ class TaskRecord extends Component {
       expand: !this.state.expand,
     }, () => {
       // 展开、收起重新计算table高度
-      if (!this.props.tableHeight && !this.props.hideBreadcrumb) {
+      if (!this.props.tableHeight && !this.props.isWorkExecue) {
         const tableElement = document.getElementsByClassName('ant-table-wrapper');
         if (tableElement.length) {
           const tableOffsetTop = this.getOffsetTop(tableElement[0]) + 110;
@@ -221,7 +221,8 @@ class TaskRecord extends Component {
           TaskFrom: baseReportSearchForm.TaskFrom != undefined ? baseReportSearchForm.TaskFrom : '',
           TaskStatusList: baseReportSearchForm.TaskStatusList != undefined ? baseReportSearchForm.TaskStatusList : '',
           OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
-          TaskType: baseReportSearchForm.TaskType != undefined ? (this.props.match?.params?.type? baseReportSearchForm.TaskType.toString() : baseReportSearchForm.TaskType ): '',
+          TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
+          TaskTypeList: baseReportSearchForm.TaskTypeList != undefined ? baseReportSearchForm.TaskTypeList  : '',
           ApproveStatus: baseReportSearchForm.ApproveStatus != undefined ? baseReportSearchForm.ApproveStatus : '',//审批状态
           CompleteTime: baseReportSearchForm.CompleteTime,
           CreateTime: baseReportSearchForm.CreateTime,
@@ -273,7 +274,7 @@ class TaskRecord extends Component {
       CompleteTime: completeTime,
       CreateTime: isWorkExecue ? '' : [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
       TaskFrom: par?.TaskFrom || undefined,
-      TaskType: par?.TaskType || undefined,
+      TaskTypeList: par?.TaskTypeList || undefined,
     })
     dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: false, }, })
 
@@ -304,7 +305,8 @@ class TaskRecord extends Component {
           TaskFrom: baseReportSearchForm.TaskFrom != undefined ? baseReportSearchForm.TaskFrom : '',
           TaskStatusList: baseReportSearchForm.TaskStatusList != undefined ? baseReportSearchForm.TaskStatusList : '',
           OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
-          TaskType: baseReportSearchForm.TaskType != undefined ? (this.props.match?.params?.type? baseReportSearchForm.TaskType.toString() : baseReportSearchForm.TaskType ): '',
+          TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
+          TaskTypeList: baseReportSearchForm.TaskTypeList != undefined ? baseReportSearchForm.TaskTypeList  : '',
           CompleteTime: baseReportSearchForm.CompleteTime,
           CreateTime: baseReportSearchForm.CreateTime,
           pageIndex,
@@ -334,7 +336,8 @@ class TaskRecord extends Component {
           TaskFrom: baseReportSearchForm.TaskFrom != undefined ? baseReportSearchForm.TaskFrom : '',
           TaskStatusList: baseReportSearchForm.TaskStatusList != undefined ? baseReportSearchForm.TaskStatusList : '',
           OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
-          TaskType: baseReportSearchForm.TaskType != undefined ? (this.props.match?.params?.type? baseReportSearchForm.TaskType.toString() : baseReportSearchForm.TaskType ): '',
+          TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
+          TaskTypeList: baseReportSearchForm.TaskTypeList != undefined ? baseReportSearchForm.TaskTypeList  : '',
           CompleteTime: baseReportSearchForm.CompleteTime,
           CreateTime: baseReportSearchForm.CreateTime,
           EntCode: baseReportSearchForm.EntCode,
@@ -799,10 +802,9 @@ class TaskRecord extends Component {
     // }
 
     const { pointList, pointLoading, } = this.state;
-    const { isWorkExecue } = this.props;
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
-        <Card className={`contentContainer ${styles.taskRecordSty}`} bordered={!isWorkExecue} bodyStyle={isWorkExecue&&{marginTop:-2}}>
+        <Card className={`contentContainer ${styles.taskRecordSty}`} bordered={!this.props.isWorkExecue}>
           <Form layout="" className='searchForm' style={{ marginBottom: '10' }}>
             <Row>
               {!isHomeModal && <>
@@ -966,8 +968,8 @@ class TaskRecord extends Component {
               </Col>
               <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                 <FormItem {...formLayout} label="任务类型" style={{ width: '100%' }}>
-                  {getFieldDecorator('TaskType', {
-                    initialValue: gettasklistqueryparams.TaskType ? gettasklistqueryparams.TaskType : undefined,
+                  {getFieldDecorator(this.props.match?.params?.type?  'TaskTypeList' : 'TaskType', {
+                    initialValue:  this.props.match?.params?.type?  gettasklistqueryparams.TaskTypeList || undefined : gettasklistqueryparams.TaskType || undefined,
                   })(
                     <SearchSelect
                       mode={this.props.match?.params?.type? 'multiple' : '-'}
@@ -1051,7 +1053,7 @@ class TaskRecord extends Component {
             }}
             columns={columns}
             // scroll={{ y: isHomeModal? this.props.clientHeight - 480 :null }}
-            scroll={{ y: this.state.expand ? "calc(100vh - 434px)" :  isWorkExecue?  "calc(100vh - 338px)" : this.props.tableHeight || undefined }}
+            scroll={this.props.isWorkExecue? {y: this.state.expand ? "calc(100vh - 408px)" : "calc(100vh - 312px)"  } : { y: this.state.expand ? "calc(100vh - 434px)" : this.props.tableHeight || undefined }}
           />
         </Card>
         <Modal

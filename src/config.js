@@ -18,7 +18,6 @@
 
 // 新疆系统的废气要显示成图片
 const XinJiang = false;
-
 // const apiHost = 'http://localhost:52198/';
 const apiHost = 'http://172.16.12.39:9090/';
 // const apiHost = 'http://172.16.12.234:61002/';

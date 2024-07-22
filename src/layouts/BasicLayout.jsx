@@ -50,6 +50,14 @@ class BasicLayout extends Component {
         clientHeight: document.body.clientHeight,
       },
     });
+    const sysName = sessionStorage.getItem("sysName") || Cookie.get("sysName")
+    dispatch({
+      type: 'global/updateState',
+      payload: {
+        clientHeight: document.body.clientHeight,
+        configInfo:{...this.props.configInfo,IsOpera:sysName=='智慧运维管理平台' || sysName=='污染源监测安装调试系统'}
+      },
+    });
     dispatch({
       type: 'login/IfSpecial',
       payload: {},
