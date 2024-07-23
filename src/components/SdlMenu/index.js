@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-06-03 11:20:32
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-18 11:11:57
+ * @Last Modified time: 2024-07-22 16:52:40
  * @Description:  菜单组件
  */
 import React, { Component } from 'react';
@@ -12,6 +12,7 @@ import styles from './index.less';
 import { router } from 'umi';
 import _ from 'lodash';
 const { Text, Link } = Typography;
+import RightContent from '@/components/GlobalHeader/RightContent';
 
 const { SubMenu } = Menu;
 
@@ -213,7 +214,7 @@ class SdlMenu extends Component {
               </Menu>
             </div>
           </div>
-          <div style={{ minWidth: 298 }}></div>
+          <div style={{ minWidth: 320 }}></div>
         </div>
       </div>
     );

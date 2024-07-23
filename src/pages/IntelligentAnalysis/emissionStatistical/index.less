@@ -1,22 +1,47 @@
+.cardTitle {
+  :global {
+    // height: 998px;
+    // overflow: hidden;
+    .ant-card-body {
+      // height: 800px;
+      // overflow: auto;
+    }
+    .ant-card-extra {
+      padding: 6.5px 0 !important;
+    }
 
-.cardTitle{
-    :global {
-      // height: 998px;
-      // overflow: hidden;
-      .ant-card-body{
-        // height: 800px;
-        // overflow: auto;
-      }
-      .ant-card-extra{
-        padding: 6.5px 0 !important;
-      }
-     
-      .cardBg{
-        .ant-card-type-inner .ant-card-head
-        {
-          background: none;
-        } 
+    .cardBg {
+      .ant-card-type-inner .ant-card-head {
+        background: none;
       }
     }
+  }
 }
 
+.legendWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+
+  li {
+    margin-right: 30px;
+
+    i {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 8px;
+    }
+
+    i.color1 {
+      background-color: #5470c6;
+    }
+    i.color2 {
+      background-color: #92cc75;
+    }
+    i.color3 {
+      background-color: #fac858;
+    }
+  }
+}

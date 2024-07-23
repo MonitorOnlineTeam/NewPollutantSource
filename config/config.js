@@ -13,9 +13,9 @@ import path from 'path';
 // const API_HOST = 'http://60.29.13.132:60061';  // 60
 // const API_HOST = 'http://172.16.12.60:6001/';  // 60
 // const API_HOST = 'http://172.16.12.134:61003/';  // 运维正式
-const API_HOST = 'http://172.16.12.39:49003/';  // 234 运维测试
+// const API_HOST = 'http://172.16.12.39:49003/';  // 234 运维测试
 // const API_HOST = 'http://172.16.12.91:61007/' //宝武集团 正式
-// const API_HOST = 'http://172.16.12.134:61005/'; //134 - 演示
+const API_HOST = 'http://172.16.12.134:61005/'; //134 - 演示
 const API_HOST2 = 'http://172.16.12.109:61001/'; //调试服务导出PDF api
 
 
@@ -192,7 +192,7 @@ export default {
       changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
       pathRewrite: { '^/DataTransmit': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
     },
-    '/testPdfApi': { 
+    '/testPdfApi': {
       target: API_HOST2, //调试服务导出PDF 代理
       changeOrigin: true,
       pathRewrite: {

@@ -86,7 +86,7 @@ const Emissions = props => {
       return {};
     }
 
-    let serviceNum = [counts['zs01'], counts['zs02'], counts['zs03']];
+    let serviceNum = [counts['zs01'] || 0, counts['zs02'] || 0, counts['zs03'] || 0];
 
     return {
       color: ['#3AE3FD', '#00AEFF', '#FFC75D'],
@@ -195,10 +195,11 @@ const Emissions = props => {
       tooltip: {
         trigger: 'axis',
         formatter: params => {
+          // <span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background:linear-gradient(to bottom,#28CBFA, #64B0FD);\"></span>${params[0].name} ：${params[0].value} (kg)<br />`
           return (
             params &&
             `${params[0].seriesName}<br />
-              <span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background:linear-gradient(to bottom,#28CBFA, #64B0FD);\"></span>${params[0].name} ：${params[0].value}<br />`
+               ${params[0].marker}${params[0].name} ：${params[0].value}（h）<br />`
           );
         },
       },
@@ -246,7 +247,7 @@ const Emissions = props => {
         }}
         bodyStyle={{ padding: 0 }}
       >
-        <ExceedData time={time}  />
+        <ExceedData time={time} />
       </Modal>
     </HomeCard>
   );

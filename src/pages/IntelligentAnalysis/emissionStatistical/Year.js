@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { ExportOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Card, Row, Select, Tabs, Button, message, DatePicker } from 'antd';
+import { Card, Row, Select, Tabs, Button, message, DatePicker, Radio, Spin } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { connect } from 'dva';
 import SdlTable from '@/components/SdlTable';
@@ -10,6 +10,8 @@ import moment from 'moment';
 import IndustryTree from '@/components/IndustryTree';
 import RegionList from '@/components/RegionList';
 import SelectPollutantType from '@/components/SelectPollutantType';
+import ReactEcharts from 'echarts-for-react';
+import styles from './index.less';
 
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
@@ -45,6 +47,9 @@ class Year extends PureComponent {
     regionFlag: true,
     entFlag: false,
     pointFlag: false,
+    regionShowType: 'data',
+    entShowType: 'data',
+    pointShowType: 'data',
   };
   _SELF_ = {
     formLayout: {
@@ -89,7 +94,6 @@ class Year extends PureComponent {
     //   message.error("请将时间填写完整");
     //   return;
     // }
-    console.log('values=', values);
     this.props.dispatch({
       type: 'emissionsStatistics/getEmissionsListForYear',
       payload: {
@@ -151,6 +155,231 @@ class Year extends PureComponent {
     });
   };
 
+  getToggleEle = (type, loading) => {
+    const { regionYearLoading, entYearLoading, pointYearLoading } = this.props;
+    const { regionShowType, entShowType, pointShowType } = this.state;
+    let defaultValue =
+      type === 'region' ? regionShowType : type === 'ent' ? entShowType : pointShowType;
+
+    return (
+      <div style={{ position: 'absolute', right: 0, top: -46 }}>
+        <Spin spinning={!!loading} size="small">
+          <Radio.Group
+            defaultValue={defaultValue}
+            optionType="button"
+            buttonStyle="solid"
+            size="small"
+            // loading={regionYearLoading || entYearLoading || pointYearLoading}
+            onChange={e => {
+              this.setState({
+                [`${type}ShowType`]: e.target.value,
+              });
+            }}
+          >
+            <Radio.Button value={'data'}>数据</Radio.Button>
+            <Radio.Button value={'chart'}>图表</Radio.Button>
+          </Radio.Group>
+        </Spin>
+      </div>
+    );
+  };
+
+  getOption = (data, labelName) => {
+    const { pollutantCodeList } = this.props;
+    let title = [],
+      grid = [],
+      xAxis = [],
+      yAxis = [],
+      series = [];
+    pollutantCodeList.map((pollutant, index) => {
+      title.push({
+        text: pollutant.name,
+        left: 'center',
+        top: index * 300,
+      });
+      grid.push({
+        left: 80,
+        right: 50,
+        top: index * 300 + 40,
+        height: 200,
+      });
+
+      yAxis.push(
+        ...[
+          {
+            gridIndex: index,
+            name: 'kg',
+            type: 'value',
+          },
+          {
+            gridIndex: index,
+            name: '%',
+            type: 'value',
+            splitLine: {
+              show: false,
+            },
+          },
+        ],
+      );
+
+      let xAxisData = [],
+        currentData2 = [],
+        rate = [];
+
+      const currentData = data.map(item => {
+        let label =
+          labelName === 'PointName' ? item.EntName + '-' + item.PointName : item[labelName];
+        xAxisData.push(label);
+        currentData2.push(item[pollutant.field + '-EmissionsValue2']);
+        rate.push(item[pollutant.field + '-EmissionsValueYear'].replace('%', ''));
+        return item[pollutant.field + '-EmissionsValue'];
+      });
+
+      xAxis.push({
+        gridIndex: index,
+        type: 'category',
+        boundaryGap: false,
+        axisLine: { onZero: true },
+        data: xAxisData,
+        // position: 'top'
+      });
+      series.push(
+        ...[
+          {
+            name: pollutant.name + '排放量',
+            data: currentData,
+            type: 'bar',
+            xAxisIndex: index,
+            yAxisIndex: index * 2,
+            itemStyle: {
+              color: '#5470c6',
+            },
+            // smooth: true,
+          },
+          {
+            name: pollutant.name + '同期排放量',
+            data: currentData2,
+            type: 'bar',
+            xAxisIndex: index,
+            yAxisIndex: index * 2,
+            itemStyle: {
+              color: '#92cc75',
+            },
+            // smooth: true,
+          },
+          {
+            name: pollutant.name + '同比',
+            data: rate,
+            type: 'line',
+            xAxisIndex: index,
+            yAxisIndex: index * 2 + 1,
+            itemStyle: {
+              color: '#fac858',
+            },
+            // smooth: true,
+          },
+        ],
+      );
+      // series.push({
+      //   name: pollutant.name,
+      //   data: currentData,
+      //   type: 'line',
+      //   xAxisIndex: index,
+      //   yAxisIndex: index,
+      //   smooth: true,
+      //   // markArea: {
+      //   //   itemStyle: {
+      //   //     color: 'rgba(255, 173, 177, 0.4)',
+      //   //   },
+      //   //   label: {
+      //   //     color: 'red',
+      //   //   },
+      //   //   data: markAreaData,
+      //   // },
+      // });
+    });
+    return {
+      title: title,
+      tooltip: {
+        trigger: 'axis',
+        confine: true,
+        axisPointer: {
+          animation: false,
+        },
+        formatter: function(params) {
+          let str = '';
+          console.log('params', params);
+          params.forEach((m, index) => {
+            let unit = '%';
+            if (m.componentSubType === 'bar') {
+              // unit = pollutantCodeList[m.axisIndex].unit;
+              unit = 'kg';
+            }
+            str += `<div style="padding: 4px 0;">
+                  <span class="chart-tooltip-color" style="display: inline-block; margin-right: 10px; background-color: ${
+                    m.color
+                  }; width: 10px; height: 10px; border-radius:100%; margin-right: 5px"></span>
+                  ${m.seriesName}：${m.data !== undefined ? m.data : '-'} ${unit}<br/>
+                </div>
+                `;
+          });
+          return `<p style="margin-bottom: 6px; font-weight: 500;">${params[0].axisValue}</p>
+          ${str}`;
+        },
+      },
+      // legend: {},
+      toolbox: {
+        // feature: {
+        //   dataZoom: {
+        //     show: true,
+        //     title: {
+        //       zoom: '区域缩放',
+        //       back: '区域缩放还原',
+        //     },
+        //   },
+        //   restore: { show: true, title: '还原' },
+        //   saveAsImage: { show: true, title: '保存为图片' },
+        // },
+      },
+      axisPointer: {
+        link: [
+          {
+            xAxisIndex: 'all',
+          },
+        ],
+      },
+      // dataZoom: [
+      //   {
+      //     type: 'inside',
+      //     xAxisIndex: [0, 1],
+      //   },
+      // ],
+      grid: grid,
+      xAxis: xAxis,
+      yAxis: yAxis,
+      series: series,
+    };
+  };
+
+  getLegend = () => {
+    return (
+      <ul className={styles.legendWrapper}>
+        <li>
+          <i className={styles.color1}></i>
+          排放量
+        </li>
+        <li>
+          <i className={styles.color2}></i>
+          同期排放量
+        </li>
+        <li>
+          <i className={styles.color3}></i>
+          同比
+        </li>
+      </ul>
+    );
+  };
+
   render() {
     const {
       form: { getFieldDecorator, getFieldValue },
@@ -167,7 +396,15 @@ class Year extends PureComponent {
       entYearTableDataSource,
       pointYearTableDataSource,
     } = this.props;
-    const { DataType, regionFlag, entFlag, pointFlag } = this.state;
+    const {
+      DataType,
+      regionFlag,
+      entFlag,
+      pointFlag,
+      regionShowType,
+      entShowType,
+      pointShowType,
+    } = this.state;
     let loading = regionYearLoading || entYearLoading || pointYearLoading;
     let exportLoading = regionYearExportLoading || entYearExportLoading || pointYearExportLoading;
     let _regionList = regionList.length ? regionList[0].children : [];
@@ -242,18 +479,18 @@ class Year extends PureComponent {
     ];
     let EntColumns = [
       {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
-        width: 180,
-      },
-      {
         title: '序号',
         key: 'index',
         width: 60,
         render: (text, record, index) => {
           return index + 1;
         },
+      },
+      {
+        title: '行政区',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        width: 180,
       },
       {
         title: '企业',
@@ -288,19 +525,19 @@ class Year extends PureComponent {
     ];
     let PointColumns = [
       {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
-        width: 180,
-        // width: 150,
-      },
-      {
         title: '序号',
         key: 'index',
         width: 60,
         render: (text, record, index) => {
           return index + 1;
         },
+      },
+      {
+        title: '行政区',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        width: 180,
+        // width: 150,
       },
       {
         title: '企业',
@@ -368,7 +605,10 @@ class Year extends PureComponent {
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>行政区</span>}>
                 {getFieldDecorator('RegionCode', {})(
-                  <RegionList RegionCode={this.props.form.getFieldValue('RegionCode')} />,
+                  <RegionList
+                    style={{ width: 200 }}
+                    RegionCode={this.props.form.getFieldValue('RegionCode')}
+                  />,
                 )}
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>行业</span>}>
@@ -445,36 +685,97 @@ class Year extends PureComponent {
             }}
           >
             {!configInfo.IsSingleEnterprise && (
+              // {true && (
               <TabPane tab="辖区排放量" key="region">
-                <SdlTable
-                  scroll={{ y: 'calc(100vh - 400px)' }}
-                  loading={regionYearLoading}
-                  pagination={false}
-                  align="center"
-                  dataSource={regionYearTableDataSource}
-                  columns={RegionColumns}
-                />
+                {this.getToggleEle('region', regionYearLoading)}
+                {regionShowType === 'data' ? (
+                  <SdlTable
+                    scroll={{ y: 'calc(100vh - 350px)' }}
+                    loading={regionYearLoading}
+                    pagination={false}
+                    align="center"
+                    dataSource={regionYearTableDataSource}
+                    columns={RegionColumns}
+                  />
+                ) : (
+                  <>
+                    {this.getLegend()}
+                    <ReactEcharts
+                      theme="light"
+                      option={this.getOption(regionYearTableDataSource, 'RegionName')}
+                      lazyUpdate
+                      notMerge
+                      id="rightLine"
+                      showLoading={regionYearLoading}
+                      style={{
+                        // marginTop: 34,
+                        width: '100%',
+                        height: pollutantCodeList.length * 300,
+                      }}
+                    />
+                  </>
+                )}
               </TabPane>
             )}
             <TabPane tab="企业排放量" key="ent">
-              <SdlTable
-                scroll={{ y: 'calc(100vh - 400px)' }}
-                loading={entYearLoading}
-                pagination={false}
-                align="center"
-                dataSource={entYearTableDataSource}
-                columns={EntColumns}
-              />
+              {this.getToggleEle('ent', entYearLoading)}
+              {entShowType === 'data' ? (
+                <SdlTable
+                  scroll={{ y: 'calc(100vh - 350px)' }}
+                  loading={entYearLoading}
+                  pagination={false}
+                  align="center"
+                  dataSource={entYearTableDataSource}
+                  columns={EntColumns}
+                />
+              ) : (
+                <>
+                  {this.getLegend()}
+                  <ReactEcharts
+                    theme="light"
+                    option={this.getOption(entYearTableDataSource, 'EntName')}
+                    lazyUpdate
+                    notMerge
+                    id="rightLine"
+                    showLoading={entYearLoading}
+                    style={{
+                      // marginTop: 34,
+                      width: '100%',
+                      height: pollutantCodeList.length * 300,
+                    }}
+                  />
+                </>
+              )}
             </TabPane>
             <TabPane tab="监测点排放量" key="point">
-              <SdlTable
-                scroll={{ y: 'calc(100vh - 400px)' }}
-                loading={pointYearLoading}
-                pagination={false}
-                align="center"
-                dataSource={pointYearTableDataSource}
-                columns={PointColumns}
-              />
+              {this.getToggleEle('point', pointYearLoading)}
+              {pointShowType === 'data' ? (
+                <SdlTable
+                  scroll={{ y: 'calc(100vh - 350px)' }}
+                  loading={pointYearLoading}
+                  pagination={false}
+                  align="center"
+                  dataSource={pointYearTableDataSource}
+                  columns={PointColumns}
+                />
+              ) : (
+                <>
+                  {this.getLegend()}
+                  <ReactEcharts
+                    theme="light"
+                    option={this.getOption(pointYearTableDataSource, 'PointName')}
+                    lazyUpdate
+                    notMerge
+                    id="rightLine"
+                    showLoading={pointYearLoading}
+                    style={{
+                      // marginTop: 34,
+                      width: '100%',
+                      height: pollutantCodeList.length * 300,
+                    }}
+                  />
+                </>
+              )}
             </TabPane>
           </Tabs>
         </Card>

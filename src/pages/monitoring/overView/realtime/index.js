@@ -374,10 +374,8 @@ class Realtime extends Component {
   };
 
   handleChange = (pagination, filters, sorter) => {
-    console.log('filters', filters);
-    console.log('pagination', filters);
     let { current, pageSize } = pagination;
-    if (this.state.selectedStatus !== filters.Status) {
+    if (this.state.selectedStatus.toString() !== filters.Status.toString()) {
       current = 1;
     }
 

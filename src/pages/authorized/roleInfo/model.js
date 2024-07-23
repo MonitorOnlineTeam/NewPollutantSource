@@ -19,6 +19,21 @@ import {
   getSetRoleId,
 } from './service';
 import { message } from 'antd';
+
+// 递归函数返回一个新的数组，并删除空的 children 属性
+function removeEmptyChildren(arr) {
+  return arr.map(item => {
+    const newItem = { ...item };
+    if (newItem.children) {
+      newItem.children = removeEmptyChildren(newItem.children);
+      if (newItem.children.length === 0) {
+        delete newItem.children;
+      }
+    }
+    return newItem;
+  });
+}
+
 /*
 用户管理相关接口
 add by lzp
@@ -162,8 +177,10 @@ export default Model.extend({
     *getrolemenutree({ payload }, { call, update }) {
       const result = yield call(getrolemenutree, { ...payload });
       if (result.IsSuccess) {
+        let newData = removeEmptyChildren(result.Datas);
+        console.log('newData', newData);
         yield update({
-          MenuTree: result.Datas,
+          MenuTree: removeEmptyChildren(result.Datas),
         });
       }
     },

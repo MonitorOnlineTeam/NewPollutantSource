@@ -253,7 +253,7 @@ const PageContent = props => {
               value: rateData.EffRate,
             },
             {
-              name: '异常率',
+              name: '无效占比',
               value: rateData.InvRate,
             },
           ],

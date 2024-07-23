@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-11 14:28:06
+ * @Last Modified time: 2024-07-22 16:40:55
  * @Description：线索列表
  */
 
@@ -369,11 +369,11 @@ const CluesList = props => {
     // if (modelNumber && !warningTypeCode && modelNumber !== 'all') {
     //   warningTypeCode = ModelNumberIdsDatas[modelNumber].toString();
     // }
-    if (!values.date.length && !values.date1.length) {
+    if (!values?.date?.length && !values?.date1?.length) {
       message.error('请选择日期后查询！');
       return;
     }
-    console.log('codes', codes);
+    console.log('values', values);
     props.dispatch({
       type: 'AbnormalIdentifyModel/GetWarningList',
       payload: {
@@ -383,11 +383,15 @@ const CluesList = props => {
         types: undefined,
         level: undefined,
         date: undefined,
-        beginTime: values.date[0]?.format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.date[1]?.format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values.date ? values.date[0]?.format('YYYY-MM-DD HH:mm:ss') : undefined,
+        endTime: values.date ? values.date[1]?.format('YYYY-MM-DD HH:mm:ss') : undefined,
         date1: undefined,
-        WarningBeginTime: values.date1[0]?.startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-        WarningEndTime: values.date1[1]?.endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+        WarningBeginTime: values.date1
+          ? values.date1[0]?.startOf('day').format('YYYY-MM-DD HH:mm:ss')
+          : undefined,
+        WarningEndTime: values.date1
+          ? values.date1[1]?.endOf('day').format('YYYY-MM-DD HH:mm:ss')
+          : undefined,
         modelNumber: modelNumber,
         // pageSize: warningForm[modelNumber].pageSize,
         // pageIndex: warningForm[modelNumber].pageIndex,

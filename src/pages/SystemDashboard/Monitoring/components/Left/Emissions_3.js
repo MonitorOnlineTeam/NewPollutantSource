@@ -189,10 +189,11 @@ const Emissions = props => {
       tooltip: {
         trigger: 'axis',
         formatter: params => {
+          // <span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background:linear-gradient(to bottom,#28CBFA, #64B0FD);\"></span>${params[0].name} ：${params[0].value} (kg)<br />`
           return (
             params &&
             `${params[0].seriesName}<br />
-              <span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background:linear-gradient(to bottom,#28CBFA, #64B0FD);\"></span>${params[0].name} ：${params[0].value}<br />`
+               ${params[0].marker}${params[0].name} ：${params[0].value}（kg）<br />`
           );
         },
       },

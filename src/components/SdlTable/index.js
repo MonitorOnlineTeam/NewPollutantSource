@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-17 10:06:45
+ * @Last Modified time: 2024-07-22 14:13:17
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -144,6 +144,15 @@ class SdlTable extends PureComponent {
   };
 
   componentDidMount() {
+    // debugger;
+    this.setState(
+      {
+        computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
+      },
+      () => {
+        console.log('computeHeight1', this.state.computeHeight)
+      },
+    );
     // 动态计算表格纵向位置
     setTimeout(() => {
       // let fr=this.refs.polytableframe;
@@ -339,7 +348,6 @@ class SdlTable extends PureComponent {
         : fixedHeight
         ? clientHeight - fixedHeight - headAndFooterHeight
         : '';
-    // console.log('clientHeight', clientHeight)
     // console.log('scrollYHeight', scrollYHeight)
     // 没有分页高度 + 40
     const scrollY =
@@ -347,6 +355,10 @@ class SdlTable extends PureComponent {
         ? // pagination === false && (this.props.scroll && !this.props.scroll.y)
           scrollYHeight + 40
         : scrollYHeight;
+
+        console.log('scrollY', scrollY)
+        console.log('computeHeight2', this.state.computeHeight)
+
     // 处理表格长度，防止错位
     const _columns = (columns || []).map((col, index) => ({
       render: (text, record) =>
@@ -364,9 +376,15 @@ class SdlTable extends PureComponent {
             ),
       align: align || 'center',
       ...col,
-      width: col.width == 'auto' || (!col.width && this.props.autowidth && col.title!='序号') ?  false : this.getInitialColWidth(col) || defaultWidth,
+      width:
+        col.width == 'auto' || (!col.width && this.props.autowidth && col.title != '序号')
+          ? false
+          : this.getInitialColWidth(col) || defaultWidth,
       onHeaderCell: column => ({
-        width:  !col.width && this.props.autowidth && col.title!='序号' ? (document.getElementById('sdlTable')?.clientWidth - 54 )/(columns.length-1)  : column.width,//自适应除序号列表格宽度并且能伸缩
+        width:
+          !col.width && this.props.autowidth && col.title != '序号'
+            ? (document.getElementById('sdlTable')?.clientWidth - 54) / (columns.length - 1)
+            : column.width, //自适应除序号列表格宽度并且能伸缩
         onResize: resizable ? this.handleResize(index) : undefined,
       }),
     }));

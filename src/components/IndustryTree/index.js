@@ -1,8 +1,8 @@
 /*
  * @Author: Jiaqi 
  * @Date: 2019-12-09 15:58:41 
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-01-08 10:57:43
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-07-19 16:35:48
  * @desc: 产业级联组件
  */
 import React, { PureComponent } from 'react';
@@ -46,7 +46,7 @@ class IndustryTree extends PureComponent {
   render() {
     const { industryTreeList } = this.state;
     return (
-      <Cascader options={industryTreeList} placeholder="请选择产业" {...this.props} />
+      <Cascader options={industryTreeList} placeholder="请选择行业" {...this.props} />
     );
   }
 }

@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import {
-  Card,
-  Radio,
-  Badge,
-  Row,
-  Col,
-  Button,
-  Form,
-  Modal,
-} from 'antd';
+import { Card, Radio, Badge, Row, Col, Button, Form, Modal } from 'antd';
 import styles from '../../../styles.less';
 import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
@@ -303,10 +294,7 @@ const PageContent = props => {
               return (
                 <a
                   onClick={() => {
-                    setIsModalOpen(true);
-                    setRegionCode(record.Key);
-                    setEntCode(undefined);
-                    setModalTitle(record.Name + ' - 数据缺失情况');
+                    drillDownClick(record);
                   }}
                 >
                   {text}
@@ -326,10 +314,7 @@ const PageContent = props => {
               return (
                 <a
                   onClick={() => {
-                    setIsModalOpen(true);
-                    setRegionCode(undefined);
-                    setEntCode(record.Key);
-                    setModalTitle(record.Name + ' - 数据缺失情况');
+                    drillDownClick(record);
                   }}
                 >
                   {text}
@@ -386,6 +371,29 @@ const PageContent = props => {
     default:
       break;
   }
+
+  // 下钻点击
+  const drillDownClick = record => {
+    if (dataType === 'region') {
+      setRegionCode(record.Key);
+      setEntCode(undefined);
+    } else {
+      setRegionCode(undefined);
+      setEntCode(record.Key);
+    }
+
+    setIsModalOpen(true);
+    setModalTitle(record.Name + ' - 数据缺失情况');
+  };
+
+  // 饼图点击事件 - 分类点击
+  const onClickEcharts = e => {
+    const { dataIndex } = e;
+    if (dataType !== 'point') {
+      let record = dataSource[dataIndex];
+      drillDownClick(record);
+    }
+  };
 
   return (
     <div className={styles.PageWrapper}>
@@ -475,6 +483,9 @@ const PageContent = props => {
               style={{ height: 'calc(100%)' }}
               className="echarts-for-echarts"
               theme="my_theme"
+              onEvents={{
+                click: onClickEcharts,
+              }}
             />
           </Card>
         </Col>
