@@ -18,7 +18,6 @@ import path from 'path';
 const API_HOST = 'http://172.16.12.134:61005/'; //134 - 演示
 const API_HOST2 = 'http://172.16.12.109:61001/'; //调试服务导出PDF api
 
-
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
@@ -161,6 +160,25 @@ export default {
       target: 'http://172.16.12.134:61001/', // 接口的域名
       changeOrigin: true, //
     },
+    '~* /.*UploadApi/': {
+      target: 'http://172.16.12.134:61001/', // 接口的域名
+      changeOrigin: true, //
+    },
+    '/testPdfApi': {
+      target: API_HOST2, //调试服务导出PDF 代理
+      changeOrigin: true,
+      pathRewrite: {
+        '^/testPdfApi': '',
+      },
+    },
+    '/testPdfUpload': {
+      target: API_HOST2, //调试服务导出PDF 代理
+      changeOrigin: true,
+      pathRewrite: {
+        '^/testPdfUpload/upload': '',
+      }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
+    },
+
     // 乐橙云
     '/openapi': {
       target: 'https://openapi.lechange.cn/', // 接口的域名
@@ -191,20 +209,6 @@ export default {
       target: 'http://172.16.12.39:33624/', // 接口的域名
       changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
       pathRewrite: { '^/DataTransmit': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
-    },
-    '/testPdfApi': {
-      target: API_HOST2, //调试服务导出PDF 代理
-      changeOrigin: true,
-      pathRewrite: {
-        '^/testPdfApi': '',
-      },
-    },
-    '/testPdfUpload': {
-      target: API_HOST2, //调试服务导出PDF 代理
-      changeOrigin: true,
-      pathRewrite: {
-        '^/testPdfUpload/upload': '',
-      }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
     },
   },
 };
