@@ -87,7 +87,7 @@ const Index = (props) => {
       onFinish();
     }
 
-  }, []);
+  }, [TaskPlanType]);
 
   const showTypeChange = (e) => {
     setShowType(e.target.value)

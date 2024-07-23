@@ -10,6 +10,6 @@ export async function getOperateRIHPointList(params) {
 
 //运维信息  导出
 export async function exportOperateRIHPointList(params) {
-  const result = await post(params.isBW? API.VisualKanbanApi.ExportBWOperatePointList : API.VisualKanbanApi.ExportOperatePointList, null);
+  const result = await post(params.isBW? API.VisualKanbanApi.ExportBWOperatePointList : API.VisualKanbanApi.ExportOperatePointList,params, null);
   return result;
 }

@@ -508,7 +508,7 @@ export default class EntTransmissionEfficiency extends Component {
             columns={columns}
             // onChange={this.handleTableChange}
             dataSource={this.props.tableDatas}
-            // scroll={{ y: 'calc(100vh - 450px)' }}
+            scroll={{ y: 'calc(100vh - 326px)' }}
             // scroll={{ y: 550 }}
             pagination={false}
           />

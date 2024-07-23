@@ -40,7 +40,6 @@ class Index extends Component {
         }
         const { cooperatInspectionRecordList } = this.props;
         const Content = cooperatInspectionRecordList? cooperatInspectionRecordList : null;
-        console.log(Content)
         if (this.props.isloading) {
             return (<Spin
                 style={{

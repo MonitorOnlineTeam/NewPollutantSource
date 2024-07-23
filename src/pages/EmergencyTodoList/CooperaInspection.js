@@ -124,121 +124,155 @@ class RepalceRecordList extends Component {
                 >
                     <tbody>
                         <tr>
-                            <td colSpan="12" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>
-                                配合检查记录表
+                            <td colSpan="4" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>
+                              配合检查记录表
                             </td>
                         </tr>
                         <tr>
-                            <td colSpan="2" style={{ width: '18%', minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                被查日期
+                            <td style={{ textAlign: 'center' }}>
+                                检查日期
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 200 }}>
+                            <td>
                                 {Content !== null ? Content.CooperationDate : null}
                             </td>
-                            <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
-                                检查单位
+                            <td style={{ textAlign: 'center' }}>
+                                行业类型
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
+                            <td >
+                                {Content !== null ? Content.ProjectNumber : null}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: 'center' }}>
+                                检查属性
+                            </td>
+                            <td>
                                 {Content !== null ? Content.CooperationCompany : null}
                             </td>
-                            <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
-                                核查成员
+                            <td style={{ textAlign: 'center' }}>
+                                检查属性其他说明
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
+                            <td>
+                                {Content !== null ? Content.CooperationCompanyRemark : null}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: 'center' }}>
+                                检查单位
+                            </td>
+                            <td colSpan="3">
+                                {Content !== null ? Content.InspectionUnit : null}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: 'center' }}>
+                                检查成员
+                            </td>
+                            <td colSpan="3">
                                 {Content !== null ? Content.CooperationMember : null}
                             </td>
                         </tr>
                         <tr>
-                            <td colSpan="2" style={{ width: '18%', minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                被查企业名称
+                            <td style={{ textAlign: 'center' }}>
+                                检查主题
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 200 }}>
-                                {Content !== null ? Content.EnterpriseName : null}
-                            </td>
-                            <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
-                                被查单位备注
-                            </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
-                                {Content !== null ? Content.CooperationCompanyRemark : null}
-                            </td>
-                            <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
-                                问题等级
-                            </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
-                                {Content !== null ? Content.ProblemLevel : null}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2" style={{ width: '18%', minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                被查对象所在区域
-                            </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 200 }}>
-                                {Content !== null ? Content.RegionName : null}
-                            </td>
-                            <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
-                                被核查对象对应项目
-                            </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
-                                {Content !== null ? Content.ProjectNumber : null}
-                            </td>
-                            <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
-                                解决方式
-                            </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
-                                {Content !== null ? Content.Solution : null}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2" style={{ minWidth: 200, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                核查主题
-                            </td>
-                            <td colSpan="4" style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
+                            <td colSpan="3">
                                 {Content !== null ? Content.CooperationTheme : null}
                             </td>
-
-                            <td colSpan="2" style={{ minWidth: 200, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                核查内容
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: 'center' }}>
+                                被检查企业省/直辖市
                             </td>
-                            <td colSpan="4" style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
+                            <td colSpan="3">
+                                {Content !== null ? Content.RegionName : null}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: 'center', }}>
+                                被检查企业名称
+                            </td>
+                            <td colSpan="3">
+                                {Content !== null ? Content.EnterpriseName : null}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: 'center' }}>
+                                被检查企业点位
+                            </td>
+                            <td colSpan="3">
+                                {Record?.Content?.PointPosition || null}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: 'center' }}>
+                                检查内容
+                            </td>
+                            <td colSpan="3">
                                 {Content !== null ? Content.CooperationContent : null}
                             </td>
                         </tr>
                         <tr>
-                            <td colSpan="2" style={{ minWidth: 200, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                            <td colSpan="1" style={{ textAlign: 'center' }}>
                                 核查发现问题
                             </td>
-                            <td colSpan="4" style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
+                            <td colSpan="3">
                                 {Content !== null ? Content.DiscoverProblems : null}
                             </td>
-
-                            <td colSpan="2" style={{ minWidth: 200, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                        </tr>
+                        <tr>
+                            <td style={{ textAlign: 'center' }}>
+                                问题等级
+                            </td>
+                            <td >
+                                {Content !== null ? Content.ProblemLevel : null}
+                            </td>
+                            <td style={{ textAlign: 'center' }}>
+                                解决方式
+                            </td>
+                            <td>
+                                {Content !== null ? Content.Solution : null}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan="1" style={{ textAlign: 'center' }}>
+                                遗留问题
+                            </td>
+                            <td colSpan="3">
+                                {Content !== null ? Content.RemainingProblems : null}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan="1" style={{ textAlign: 'center' }}>
                                 整改措施
                             </td>
-                            <td colSpan="4" style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
+                            <td colSpan="3">
                                 {Content !== null ? Content.Rectification : null}
                             </td>
                         </tr>
                         <tr>
-                            <td colSpan="2" style={{ minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                遗留问题
+                            <td colSpan="1" style={{ textAlign: 'center' }}>
+                                是否上报主管领导
                             </td>
-                            <td colSpan="4" style={{ textAlign: 'center', fontSize: '14px', minWidth: 200 }}>
-                                {Content !== null ? Content.RemainingProblems : null}
+                            <td colSpan="3">
+                                {Content !== null ? Content.IsReportLeader : null}
                             </td>
+                        </tr>
+                        <tr>
 
-                            <td colSpan="2" style={{ minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                            <td colSpan="1" style={{ textAlign: 'center' }}>
                                 重大问题汇报
                             </td>
-                            <td colSpan="4" style={{ textAlign: 'center', fontSize: '14px', minWidth: 200 }}>
+                            <td colSpan="3">
                                 {Content !== null ? Content.MajorProblemReport : null}
                             </td>
                         </tr>
 
-                        <tr>
+                        {/* <tr>
                             <td colSpan="12" style={{ height: '50px', fontSize: '14px' }}>
                                 <>
                                     图片
-                                    {Content !== null ? Content.PictureFilesList && Content.PictureFilesList.ImgList.map((item,index) => {
+                                    {Content !== null ? Content.PictureFilesList && Content.PictureFilesList.ImgList && Content.PictureFilesList.ImgList.map((item,index) => {
                                     return <img
                                         width={20}
                                         height={20}
@@ -247,7 +281,7 @@ class RepalceRecordList extends Component {
                                         onClick={() => {
                                             this.setState({
                                                 isOpen: true,
-                                                imageList: Content.PictureFilesList?.ImgList.map(item=>`/${item}`),
+                                                imageList: Content.PictureFilesList.ImgList.map(item=>`/${item}`),
                                                 imageIndex:index,
                                             })
                                         }}
@@ -259,22 +293,21 @@ class RepalceRecordList extends Component {
                         </tr>
                         <tr>
                             <td colSpan="12" style={{ fontSize: '14px' }}>
-
                                 <>
                                     附件
-                                    {Content !== null ? Content.EnclosureFilesList && Content.EnclosureFilesList.NameList.map((item,index) => {
+                                    {Content !== null ? Content.EnclosureFilesList && Content.EnclosureFilesList.ImgList.map((item,index) => {
                                     return <a
-                                        href={`/${Content.EnclosureFilesList?.ImgList?.[index]}`}
+                                        href={`/${item}`}
                                         style={{ marginLeft: 10 }}
                                         download
                                     >
-                                        {item}
+                                        {Content.EnclosureFilesList?.ImgNameList?.[0]? Content.EnclosureFilesList.ImgNameList[index] : '附件.pdf'}
                                     </a>
                                 })
                                         : null}
                                 </>
                             </td>
-                        </tr>
+                        </tr> */}
                     </tbody>
                 </table>
                 <table className={styles.FormTable} style={{ height: '50px' }}>
