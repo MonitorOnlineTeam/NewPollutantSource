@@ -60,6 +60,8 @@ const DurationTable = props => {
         pageIndex: _pageIndex || pageIndex,
         pageSize: _pageSize || pageSize,
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values?.time?.[0]&& values.time[0].format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values?.time?.[1]&& values.time[1].format('YYYY-MM-DD HH:mm:ss'),
         sort: _sort || sort,
         ...values,
       },
@@ -107,6 +109,8 @@ const DurationTable = props => {
         // pageIndex: _pageIndex || pageIndex,
         // pageSize: _pageSize || pageSize,
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values?.time?.[0]&& values.time[0].format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values?.time?.[1]&& values.time[1].format('YYYY-MM-DD HH:mm:ss'),
         sort: sort,
         ...values,
       },
@@ -116,7 +120,20 @@ const DurationTable = props => {
   const onCancel = () => {
     setIsModalOpen(false);
   };
-
+  const typeClick = (record) => {
+    setIsModalOpen(true);
+    form.setFieldsValue({
+      questionID:record.questionID,
+      serviceAreaCode:record.serviceAreaCode,
+      time:[moment(record.btime),moment(record.etime) ],
+    });
+    handleTableChange(1, 20);
+    getLargeRegion();
+    GetReasonList();
+  }
+  const TypeRenderComponents = ({ record }) => {
+    return <a onClick={() => typeClick(record)}>{record?.text || record?.text == 0 ? record.text : ''}</a>
+  }
   //
   const getColumns = () => {
     let columnList = ColumnList.map(item => {
@@ -129,6 +146,9 @@ const DurationTable = props => {
             key: `Times${item.ID}`,
             width: 120,
             align: 'center',
+            render: (text, record) => {
+              return <TypeRenderComponents record={{text:text, serviceAreaCode:item.ID, ...record }}  />
+            }
           },
           {
             title: '占比',
@@ -322,17 +342,18 @@ const DurationTable = props => {
           >
             导出
           </Button>
-          <Button
+          {/* <Button
             type="primary"
             onClick={() => {
+              setIsModalOpen(true);
               handleTableChange(1, 20);
               getLargeRegion();
               GetReasonList();
-              setIsModalOpen(true);
+            
             }}
           >
             查看基础数据
-          </Button>
+          </Button> */}
         </Space>
       }
       size="small"
@@ -355,6 +376,7 @@ const DurationTable = props => {
         visible={isModalOpen}
         destroyOnClose
         footer={null}
+        mask={false}
         onCancel={() => {
           form.resetFields();
           onCancel();

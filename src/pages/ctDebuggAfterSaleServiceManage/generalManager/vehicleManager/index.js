@@ -67,11 +67,12 @@ const Index = (props) => {
 
 
 
-  const { queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,isModal,  } = props;
+  const { queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,isModal,useDepartment,  } = props;
 
 
 
   useEffect(() => {
+    form.setFieldsValue({useDepartment:useDepartment})
     onFinish(pageIndex, pageSize);
 
   }, []);
@@ -242,7 +243,7 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item name='useDepartment' label='使用部门'  className='minWidth'>
-            <Input placeholder="请输入" allowClear />
+            <Input placeholder="请输入" allowClear disabled={useDepartment}/>
           </Form.Item>
         </Col>
         <Col span={8} >

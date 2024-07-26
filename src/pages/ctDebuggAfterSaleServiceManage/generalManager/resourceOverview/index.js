@@ -23,7 +23,7 @@ import styles from "./style.less"
 
 const { Option } = Select;
 
-const namespace = 'newestHome'
+const namespace = 'resourceOverview'
 
 
 
@@ -59,8 +59,26 @@ const Index = (props) => {
   initData()
   },[]);
 
+  const [leftData, setLeftData] = useState({})
+  const [rightData, setRightData] = useState({})
 
   const initData = () =>{
+    props.dispatch({
+      type: `${namespace}/GetResourceOverviewLeft`,
+      payload: {},
+      callback: (data) => {
+        setLeftData(data)
+
+      }
+    })
+    props.dispatch({
+      type: `${namespace}/GetResourceOverviewRight`,
+      payload: {},
+      callback: (data) => {
+        setRightData(data)
+
+      }
+    })
     setMinWidth()
   }
   const setMinWidth=(e)=>{  
@@ -70,32 +88,12 @@ const Index = (props) => {
    document.querySelector("body").setAttribute('style', 'min-width:inherit');
   }
  
-  const handleResize = (e) =>{
-    if( e.target.innerWidth <=1800){
-      props.updateState({subjectFontSize:13})
-    }else{
-      props.updateState({subjectFontSize:14})
-    }
-  }
-
-
-  const [scrollTop,setScrollTop] = useState(0)
-  const handleScroll=(e)=>{
-    //滚动条高度
-    setScrollTop(e.srcElement.scrollTop)
-  }
 
   useEffect(() => {
-    // let scrollEle = document.querySelector(".homeBreadcrumb");
-    // 监听
-    // scrollEle.addEventListener("scroll", handleScroll);
-    // window.addEventListener("resize", handleResize);
 
     // 销毁
     return () =>  {
       cancelMinWidth()
-      // scrollEle.removeEventListener("scroll", handleScroll);
-      // window.removeEventListener("resize", handleResize);
     }
   },[]);
   const [fullScreen,setFullScreen] = useState(false)
@@ -109,18 +107,18 @@ const Index = (props) => {
       <div className={styles.resourceOverviewPage}>
         <Row style={{height:'100%'}}>   {/**地图部分 和 地图两侧*/}
           <Col style={{width:445}} className={`leftPageSty ${fullScreen? `mapModalHide`: `mapModalShow` }` }>
-             <LeftContent {...props}/>
+             <LeftContent {...props} data={leftData} />
            </Col>
            <Col  style={{width:'calc(100% - 890px)'}} className={'mapPageSty'}>
              <MapContent {...props} fullScreenClick={fullScreenClick}/>
            </Col>
            
            <Col style={{width:445}} className={`rightPageSty ${fullScreen? `mapModalHide`: `mapModalShow` }` }>
-            <RightContent {...props}/>
+            <RightContent {...props} data={rightData} />
             </Col>
         </Row>  
       </div>  
 
   );
 };
-export default connect(dvaPropsData,dvaDispatch)(Index);
+export default connect(dvaPropsData)(Index);

@@ -382,7 +382,7 @@ const Index = (props) => {
             bordered
             dataSource={tableDatas}
             columns={columns}
-            scroll={{ y: 'calc(100vh - 360px)' }}
+            scroll={{ y: props.hideBreadcrumb? 'calc(100vh - 260px)' : 'calc(100vh - 360px)' }}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,

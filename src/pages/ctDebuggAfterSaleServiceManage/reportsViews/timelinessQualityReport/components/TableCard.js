@@ -54,7 +54,6 @@ const TableCard = props => {
     setIsModalOpen(true);
     setLevel(type);
     setBasicTitle(type === '2' ? '验收服务报告及时率基础数据' : '验收服务报告合格率基础数据');
-    // console.log
     setQueryData(data)
   }
   const TypeRenderComponents = ({ type, data }) => {

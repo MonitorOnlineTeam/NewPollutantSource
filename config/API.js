@@ -2537,6 +2537,8 @@ export const API = {
     /*车辆管理*/
     GetCarList: before + '/CTProjectExecutionApi/GetCarList', //获取车辆信息
     ExportCarList: before + '/CTProjectExecutionApi/ExportCarList', //车辆信息 导出
+    GetCarStatistics: before + '/CTProjectExecutionApi/GetCarStatistics', //获取车辆按行业分类信息
+    ExportCarStatistics: before + '/CTProjectExecutionApi/ExportCarStatistics', //车辆按行业分类信息 导出
     /*人员档案*/
     GetUserList: before + '/CTProjectExecutionApi/GetUserList', //获取人员档案
     ExportUserList: before + '/CTProjectExecutionApi/ExportUserList', //人员档案 导出

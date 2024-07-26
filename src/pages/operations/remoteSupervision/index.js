@@ -3131,7 +3131,7 @@ const Index = (props) => {
     <div className={styles.remoteSupervisionSty}>
 
       <BreadcrumbWrapper>
-        <Card title={
+        <Card  bordered={!props.hideBreadcrumb} title={
           <Form
             form={form}
             name="advanced_search"

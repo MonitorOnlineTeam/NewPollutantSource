@@ -217,7 +217,7 @@ const Index = (props) => {
           }}
         />
       </Form.Item>
-      <Spin spinning={taskTypeLoading} size='small'>
+      <Spin spinning={taskTypeLoading} size='small'  className='formItemSpinSty'>
         <Form.Item label='运维内容' name='TaskType'>
           <Select placeholder='请选择' allowClear style={{ width: 150 }}>
             {taskTypeList.map(item => <Option key={item.ID} value={item.ID} >{item.TypeName}</Option>)}

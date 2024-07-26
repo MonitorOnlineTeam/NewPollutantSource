@@ -400,6 +400,9 @@ const BasicData = props => {
         dataSource={dataSource}
         columns={getBasicsColumns()}
         align="center"
+        scroll={{
+          y: `calc(100vh - ${wrapClassName? 286: 360}px)`,
+        }}
         pagination={{
           total: tableTotal,
           pageSize: pageSize,
@@ -412,7 +415,7 @@ const BasicData = props => {
 
       <Modal
         title="服务响应详情"
-        wrapClassName="spreadOverModal"
+        wrapClassName={wrapClassName || `spreadOverModal`}
         visible={isDetailsModalOpen}
         destroyOnClose
         footer={null}

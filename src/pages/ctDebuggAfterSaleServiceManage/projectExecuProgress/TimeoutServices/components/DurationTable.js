@@ -94,10 +94,14 @@ const DurationTable = props => {
 
   // 导出
   const onExport = () => {
+    const values = form.getFieldsValue();
     dispatch({
       type: 'timeoutServices/ExportTimeoutServiceAnalysis',
       payload: {
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values?.time?.[0]&& values.time[0].format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values?.time?.[1]&& values.time[1].format('YYYY-MM-DD HH:mm:ss'),
+
       },
     });
   };
@@ -111,6 +115,8 @@ const DurationTable = props => {
         // pageIndex: _pageIndex || pageIndex,
         // pageSize: _pageSize || pageSize,
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values?.time?.[0]&& values.time[0].format('YYYY-MM-DD HH:mm:ss'),
+        endTime: values?.time?.[1]&& values.time[1].format('YYYY-MM-DD HH:mm:ss'),
         sort: sort,
         ...values,
       },
@@ -128,7 +134,7 @@ const DurationTable = props => {
         const par = {
           serviceAreaCode:record.ServiceAreaCode,
           questionID:record.QuestionID,
-          time:[moment(moment(date).startOf('year')),moment(moment(date).endOf('year'))],
+          time:record.btime && record.etime? [moment(record.btime),moment(record.etime) ] : [moment(moment(date).startOf('year')),moment(moment(date).endOf('year'))],
         }
         form.setFieldsValue({
           ...par

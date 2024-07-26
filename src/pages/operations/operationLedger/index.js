@@ -5,7 +5,7 @@
  * @Description: 运维台账 合并运维日志和运维记录
  */
 import React, { Component } from 'react';
-import { Table,Tabs } from 'antd';
+import { Table,Tabs,Radio } from 'antd';
 import { PointIcon } from '@/utils/icon';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
@@ -25,6 +25,7 @@ class Index extends Component {
       dgimn: '',
       type: '',
       breadTitle: props.breadTitle,
+      tabType:1,
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -35,7 +36,7 @@ class Index extends Component {
     }
   }
   render() {
-    const { breadTitle } = this.state;
+    const {dgimn, breadTitle,tabType } = this.state;
     return (
       <div id="record"  className={styles.operationLedgerSty}>
        <NavigationTree
@@ -52,8 +53,23 @@ class Index extends Component {
           }}
         />
         <BreadcrumbWrapper title={breadTitle} hideBreadcrumb={this.props.hideBreadcrumb}>
-            <div>
-              {this.state.dgimn && <Tabs
+           {dgimn && <>
+           <div style={{position:'absolute',right:0,zIndex:10,lineHeight:'65px'}}>
+            <Radio.Group
+                defaultValue={1}
+                onChange={e => {
+                  this.setState({
+                    tabType:e.target.value
+                  })
+                }}
+              >
+                <Radio.Button value={1}>时间轴</Radio.Button>
+                <Radio.Button value={2}>列表</Radio.Button>
+              </Radio.Group>
+             </div>
+              {tabType == 1 && <OperationRecord DGIMN={this.state.dgimn} PollutantType={this.props.type} {...this.props} />}
+              {tabType == 2 && <OperationRecordList DGIMN={ this.state.dgimn}  PollutantType={this.state.type} {...this.props}/>} 
+               {/* <Tabs
                 defaultActiveKey="1"
                 items={[
                   {
@@ -67,8 +83,8 @@ class Index extends Component {
                     children: <OperationRecordList DGIMN={ this.state.dgimn}  PollutantType={this.state.type} {...this.props}/>,
                   },
                 ]}
-              />}
-              </div>
+              /> */}
+              </>}
         </BreadcrumbWrapper>
       </div>
     );

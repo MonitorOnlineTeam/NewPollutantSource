@@ -267,7 +267,7 @@ const DeviceInfoCountModal = props => {
           dataSource={dataSource}
           columns={getColumns()}
           scroll={{
-            y: 'calc(100vh - 338px)',
+            y: 'calc(100vh - 298px)',
           }}
           pagination={{
             total: tableTotal,

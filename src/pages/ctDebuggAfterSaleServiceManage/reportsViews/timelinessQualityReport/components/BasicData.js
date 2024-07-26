@@ -458,6 +458,7 @@ const BasicData = props => {
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item name="workerID" hidden></Form.Item>         
       </Form>
       <SdlTable
         resizable

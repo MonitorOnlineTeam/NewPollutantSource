@@ -20,6 +20,7 @@ import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import LargeRegionList from '@/pages/ctDebuggAfterSaleServiceManage/components/largeRegionList';
 
 const dvaPropsData = ({ loading, oneResolutRate }) => ({
   disposableRateList: oneResolutRate.disposableRateList,
@@ -64,9 +65,9 @@ const Index = props => {
         analysisDate: disposableDate,
         sort: _sort || sort,
         ...values,
-        beginTime: values.time&&values.time[0].format('YYYY-MM-DD 00:00:00'),
-        endTime:  values.time&&values.time[1].format('YYYY-MM-DD 23:59:59'),
-        time:undefined
+        beginTime: values.time && values.time[0].format('YYYY-MM-DD 00:00:00'),
+        endTime: values.time && values.time[1].format('YYYY-MM-DD 23:59:59'),
+        time: undefined
       },
       callback: res => {
         setBasicsDataSource(res.Datas);
@@ -96,9 +97,9 @@ const Index = props => {
         analysisDate: disposableDate,
         sort: 2,
         ...values,
-        beginTime: values.time&&values.time[0].format('YYYY-MM-DD 00:00:00'),
-        endTime:  values.time&&values.time[1].format('YYYY-MM-DD 23:59:59'),
-        time:undefined
+        beginTime: values.time && values.time[0].format('YYYY-MM-DD 00:00:00'),
+        endTime: values.time && values.time[1].format('YYYY-MM-DD 23:59:59'),
+        time: undefined
       },
     });
   };
@@ -106,18 +107,36 @@ const Index = props => {
   const onCancel = () => {
     setIsModalOpen(false);
   };
+  const typeClick = (record) => {
+    setIsModalOpen(true);
+    form.setFieldsValue({
+      solveStatus:record.solveStatus,
+      serviceAreaCode:record.serviceAreaCode,
+      time:record.btime && record.etime? [moment(record.btime),moment(record.etime) ] : [ moment(moment(disposableDate).format('YYYY')).startOf('year'),moment(moment(disposableDate)).endOf('year')],
+      questionID:record.QuestionID,
+    });
+    setTimeout(()=>{
+      handleTableChange(1, 20);
+    })
+  }
+  const TypeRenderComponents = ({ record }) => {
+    return <a onClick={() => typeClick(record)}>{record?.text || record?.text == 0 ? record.text : ''}</a>
+  }
 
   const getColumns = () => {
-    let columnList = disposableRateList?.ColumnList? disposableRateList.ColumnList.map(item => {
+    let columnList = disposableRateList?.ColumnList ? disposableRateList.ColumnList.map(item => {
       return {
         title: item.LargeRegion,
-        children: [
+        children: [ 
           {
             title: '总次数',
             dataIndex: `count${item.ID}`,
             key: `count${item.ID}`,
             width: 120,
             align: 'center',
+            render: (text, record) => {
+              return <TypeRenderComponents record={{text:text,solveStatus:'', serviceAreaCode:item.ID, ...record }}  />
+            }
           },
           {
             title: '已解决次数',
@@ -125,6 +144,9 @@ const Index = props => {
             key: `solveCount${item.ID}`,
             width: 120,
             align: 'center',
+            render: (text, record) => {
+              return <TypeRenderComponents record={{text:text,solveStatus:1, serviceAreaCode:item.ID, ...record}}  />
+            }
           },
           {
             title: '未解决次数',
@@ -132,6 +154,9 @@ const Index = props => {
             key: `notSolveCount${item.ID}`,
             width: 120,
             align: 'center',
+            render: (text, record) => {
+              return <TypeRenderComponents record={{text:text, solveStatus:0,serviceAreaCode:item.ID, ...record}}  />
+            }
           },
           {
             title: '一次解决率',
@@ -193,6 +218,9 @@ const Index = props => {
             width: 120,
             align: 'center',
             fixed: 'left',
+            render: (text, record) => {
+              return <TypeRenderComponents record={{text:text,solveStatus:'',  ...record }}  />
+            }
           },
           {
             title: '已解决次数',
@@ -201,6 +229,9 @@ const Index = props => {
             width: 120,
             align: 'center',
             fixed: 'left',
+            render: (text, record) => {
+              return <TypeRenderComponents record={{text:text,solveStatus:1, ...record}}  />
+            }
           },
           {
             title: '未解决次数',
@@ -209,6 +240,9 @@ const Index = props => {
             width: 120,
             align: 'center',
             fixed: 'left',
+            render: (text, record) => {
+              return <TypeRenderComponents record={{text:text,solveStatus:0, ...record}}  />
+            }
           },
           {
             title: '一次解决率',
@@ -284,7 +318,7 @@ const Index = props => {
         key: 'solveStatusName',
         ellipsis: true,
         render: (text, record, index) => {
-        return text=='未解决'? <span className='red'>{text}</span> : text;
+          return text == '未解决' ? <span className='red'>{text}</span> : text;
         },
       },
       {
@@ -335,7 +369,7 @@ const Index = props => {
           >
             导出
           </Button>
-          <Button
+          {/* <Button
             type="primary"
             onClick={() => {
               setIsModalOpen(true);
@@ -344,7 +378,7 @@ const Index = props => {
             }}
           >
             查看基础数据
-          </Button>
+          </Button> */}
         </Space>
       }
       size="small"
@@ -362,82 +396,84 @@ const Index = props => {
       />
 
       <Modal
-        title={`${disposableDate&&moment(disposableDate).format('YYYY年')}质保内服务一次解决率基础数据`}
-        wrapClassName={`spreadOverModal ${styles.modalSty}` }
+        title={`${disposableDate && moment(disposableDate).format('YYYY年')}质保内服务一次解决率基础数据`}
+        wrapClassName={`spreadOverModal ${styles.modalSty}`}
         visible={isModalOpen}
         destroyOnClose
         footer={null}
+        mask={false}
         onCancel={() => {
           onCancel();
         }}
       >
-        <Form
+       <Form
           id="searchForm"
           form={form}
           initialValues={{
             time: [moment().startOf('month'), moment()],
-            solveStatus:'',
+            solveStatus: '',
           }}
           autoComplete="off"
           style={{ marginTop: 10, marginBottom: 10 }}
         >
-            <Row>
+         <Row>
             <Col span={8}>
-              <Form.Item name='time' label='离开现场时间' style={{paddingRight:8}}>
+              <Form.Item name='time' label='离开现场时间' style={{ paddingRight: 8 }}>
                 <RangePicker_ style={{ width: '100%' }}
                   allowClear={false}
                   showTime={false}
                   format="YYYY-MM-DD"
                 />
               </Form.Item>
-              </Col>
-              <Col span={8} >
-                <Form.Item name='projectCode' label='项目编号' style={{paddingRight:8}}>
-                  <Input placeholder="请输入" allowClear />
-                </Form.Item>
-              </Col>
-              <Col span={8} >
-                <Form.Item name='projectName' label='项目名称' style={{paddingRight:8}}>
-                  <Input placeholder="请输入" allowClear />
-                </Form.Item>
-              </Col>
-              <Col>
-                <Form.Item name='solveStatus' label='解决状态' className='minWidth' >
-                  <Radio.Group>
-                    <Radio value={''}>全部</Radio>
-                    <Radio value={1}>已解决</Radio>
-                    <Radio value={0}>未解决</Radio>
-                  </Radio.Group>
-                </Form.Item>
-              </Col>
-              <Col>
-                <Form.Item>
-                  <Space>
-                    <Button
-                      loading={basicsLoading}
-                      type="primary"
-                      onClick={() => handleTableChange(1, 20)}
-                    >
-                      查询
+            </Col>
+            <Col span={8} >
+              <Form.Item name='projectCode' label='项目编号' style={{ paddingRight: 8 }}>
+                <Input placeholder="请输入" allowClear />
+              </Form.Item>
+            </Col>
+            <Col span={8} >
+              <Form.Item name='projectName' label='项目名称' style={{ paddingRight: 8 }}>
+                <Input placeholder="请输入" allowClear />
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item name='solveStatus' label='解决状态' className='minWidth' >
+                <Radio.Group>
+                  <Radio value={''}>全部</Radio>
+                  <Radio value={1}>已解决</Radio>
+                  <Radio value={0}>未解决</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item>
+                <Space>
+                  <Button
+                    loading={basicsLoading}
+                    type="primary"
+                    onClick={() => handleTableChange(1, 20)}
+                  >
+                    查询
                 </Button>
-                    <Button
-                      loading={basicsLoading}
-                      onClick={() => {
-                        form.resetFields();
-                        handleTableChange(1, 20);
-                      }}
-                    >
-                      重置
+                  <Button
+                    loading={basicsLoading}
+                    onClick={() => {
+                      form.resetFields();
+                      handleTableChange(1, 20);
+                    }}
+                  >
+                    重置
                 </Button>
-                    <Button  loading={exportDisposableServiceLoading}  icon={<ExportOutlined />}  onClick={() => onBasicsExport()}>
-                      导出
+                  <Button loading={exportDisposableServiceLoading} icon={<ExportOutlined />} onClick={() => onBasicsExport()}>
+                    导出
                 </Button>
-                  </Space>
-                </Form.Item>
-              </Col>
-            </Row>
-           
-        </Form>
+                </Space>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item name='serviceAreaCode' hidden> </Form.Item>
+          <Form.Item name='questionID' hidden> </Form.Item>
+        </Form> 
         <SdlTable
           loading={basicsLoading}
           dataSource={basicsDataSource}

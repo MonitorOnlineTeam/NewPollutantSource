@@ -399,7 +399,7 @@ class OperationRecord extends Component {
     return (
       <div>
         <Card
-          extra={
+          title={
             <>
               <Select
                 style={{ width: 220, marginRight: 10 }}
@@ -434,7 +434,7 @@ class OperationRecord extends Component {
                 // format={this.state.formats}
                 callback={this._handleDateChange}
               />
-              <Radio.Group
+              {/* <Radio.Group
                 defaultValue="log"
                 buttonStyle="solid"
                 onChange={e => {
@@ -443,10 +443,10 @@ class OperationRecord extends Component {
                   // }
                   this.maintenanceOperation(e);
                 }}
-              >
-                <Radio.Button value="log">运维日志</Radio.Button>
+              > */}
+                {/* <Radio.Button value="log">运维日志</Radio.Button> */}
                 {/* <Radio.Button value="operationrecord">运维记录</Radio.Button> */}
-              </Radio.Group>
+              {/* </Radio.Group> */}
             </>
           }
         >

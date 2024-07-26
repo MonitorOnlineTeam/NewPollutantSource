@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Form, Card, Input, Button, Descriptions, Space, Tooltip, Modal, Row, } from 'antd';
+import { Form, Card, Input, Button, Descriptions, Space, Tooltip, Modal,Row,Col,Select,Radio,  } from 'antd';
 import styles from '../index.less';
 import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
@@ -15,6 +15,7 @@ const dvaPropsData = ({ loading, reportsAndViews, common }) => ({
   basicsLoading: loading.effects[`reportsAndViews/GetWarrantyServiceInfo`],
   exportLoading: loading.effects['reportsAndViews/ExportWarrantyServiceAnalysis'],
   basicsExportLoading: loading.effects['reportsAndViews/ExportWarrantyServiceInfo'],
+  largeRegionList: common.CtLargeRegionList,
 });
 
 const TableCard = props => {
@@ -38,13 +39,19 @@ const TableCard = props => {
     exportLoading,
     basicsLoading,
     basicsExportLoading,
-    underWarrantyServicesData: { ColumnList, TableList },
+    underWarrantyServicesData: { ColumnList, TableList,WarrantyAnalysis },
     type,
     date,
     modalWrapClassName,
+    largeRegionList,
   } = props;
 
-  useEffect(() => {}, []);
+  useEffect(() => { 
+    dispatch({
+      type: 'common/getCTLargeRegion',
+      payload: {},
+    });
+  }, []);
 
   // 获取基础数据
   const getBasicsData = (_pageIndex, _pageSize, _sort) => {
@@ -72,10 +79,14 @@ const TableCard = props => {
 
   // 导出
   const onExport = () => {
+    const values = form.getFieldsValue();
+    let time = values.time || [moment(date).startOf('year'), moment()];
     dispatch({
       type: 'reportsAndViews/ExportWarrantyServiceAnalysis',
       payload: {
         analysisDate: date.format('YYYY-MM-DD HH:mm:ss'),
+        btime: time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+        eTime: time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
         type: type,
       },
     });
@@ -100,7 +111,21 @@ const TableCard = props => {
   const onCancel = () => {
     setIsModalOpen(false);
   };
-
+  const typeClick = (record) => {
+    setIsModalOpen(true);
+    form.setFieldsValue({
+      responseStatus:record.responseStatus,
+      serviceAreaCode:record.serviceAreaCode,
+      time:record.btime && record.etime && [moment(record.btime),moment(record.etime) ],
+      questionID:record.QuestionID,
+    });
+    setTimeout(()=>{
+      handleTableChange(1, 20);
+    })
+  }
+  const TypeRenderComponents = ({ record }) => {
+    return <a onClick={() => typeClick(record)}>{record?.text || record?.text == 0 ? record.text : ''}</a>
+  }
   //
   const getColumns = () => {
     let columnList = ColumnList.map(item => {
@@ -113,6 +138,9 @@ const TableCard = props => {
             key: `Num${item.ID}`,
             width: 120,
             align: 'center',
+            render: (text, record) => {
+              return <TypeRenderComponents record={{text:text, serviceAreaCode:item.ID, ...record }}  />
+            }
           },
           {
             title: '次数占比',
@@ -127,6 +155,9 @@ const TableCard = props => {
             key: `Times${item.ID}`,
             width: 120,
             align: 'center',
+            render: (text, record) => {
+              return <TypeRenderComponents record={{text:text,serviceAreaCode:item.ID, ...record }}  />
+            }
           },
           {
             title: '时长占比',
@@ -188,6 +219,9 @@ const TableCard = props => {
             width: 120,
             align: 'center',
             fixed: 'left',
+            render: (text, record) => {
+              return <TypeRenderComponents record={{text:text, ...record }}  />
+            }
           },
           {
             title: '次数占比',
@@ -204,6 +238,9 @@ const TableCard = props => {
             width: 120,
             align: 'center',
             fixed: 'left',
+            render: (text, record) => {
+              return <TypeRenderComponents record={{text:text, ...record }}  />
+            }
           },
           {
             title: '时长占比',
@@ -646,7 +683,7 @@ const TableCard = props => {
           >
             导出
           </Button>
-          <Button
+          {/* <Button
             type="primary"
             onClick={() => {
               setIsModalOpen(true);
@@ -654,7 +691,7 @@ const TableCard = props => {
             }}
           >
             查看基础数据
-          </Button>
+          </Button>  */}
         </Space>
       }
       size="small"
@@ -674,11 +711,12 @@ const TableCard = props => {
       <Modal
         title={`${moment(date).format('YYYY年')}质保内服务统计（${
           type === 1 ? '按产品类别' : '按服务原因'
-        }）`}
+          }）`}
         wrapClassName={modalWrapClassName || 'spreadOverModal'}
         visible={isModalOpen}
         destroyOnClose
         footer={null}
+        mask={false}
         onCancel={() => {
           form.resetFields();
           onCancel();
@@ -692,46 +730,119 @@ const TableCard = props => {
             time: [moment(date).startOf('year'), moment()],
           }}
           autoComplete="off"
-          style={{ marginTop: 10, marginBottom: 10 }}
         >
-          <Space>
-            <Form.Item name="projectCode" label="项目编号">
-              <Input placeholder="请输入" allowClear />
-            </Form.Item>
-            <Form.Item name="projectName" label="项目名称">
-              <Input placeholder="请输入" allowClear />
-            </Form.Item>
-            <Form.Item name="time" label="离开现场时间">
-              <RangePicker_ style={{ width: '100%' }} format="YYYY-MM-DD" allowClear={false} />
-            </Form.Item>
-            <Form.Item>
-              <Space>
-                <Button
-                  loading={basicsLoading}
-                  type="primary"
-                  onClick={() => handleTableChange(1, 20)}
-                >
-                  查询
+          {/* <Row gutter={8} align="middle"> */}
+             {/* <Col span={6}>
+              <Form.Item name="num" label="派工单号">
+                <Input placeholder="请输入" allowClear />
+              </Form.Item>
+            </Col>  */}
+            {/* <Col span={6}> */}
+              <Form.Item name="projectCode" label="项目编号">
+                <Input placeholder="请输入合同编号/立项号" allowClear />
+              </Form.Item>
+            {/* </Col> */}
+            {/* <Col span={6}> */}
+              <Form.Item name="projectName" label="项目名称" className={type==2&&'form_label_width_97'}>
+                <Input placeholder="请输入" allowClear />
+              </Form.Item>
+            {/* </Col> */}
+             {/* <Col span={6}>
+              <Form.Item name="customEnt" label="最终用户" className={type==1&&'form_label_width_97'}>
+                <Input placeholder="请输入" allowClear />
+              </Form.Item>
+            </Col> */}
+            {/* {type == 1 && (
+              <Col span={6}>
+                <Form.Item name="questionID" label="设备型号">
+                  <Select
+                    placeholder="请选择设备型号"
+                    style={{ width: '100%' }}
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                  >
+                    {WarrantyAnalysis?.[0]&&WarrantyAnalysis.map(item => {
+                      return (
+                        <Option value={item.ReasonName} key={item.ReasonName} data-childList={item.ReasonName}>
+                          {item.ReasonName}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )} 
+              <Col span={6}>
+                <Form.Item name="serviceAreaCode" label="服务大区">
+                  <Select
+                    placeholder="请选择服务大区"
+                    style={{ width: '100%' }}
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                  >
+                    {largeRegionList.map(item => {
+                      return (
+                        <Option value={item.ID} key={item.ID} data-childList={item.ChildList}>
+                          {item.LargeRegion}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+            <Col span={6}>
+              <Form.Item name="responseStatus" label="是否解决">
+                <Radio.Group>
+                  <Radio value={''}>全部</Radio>
+                  <Radio value={1}>是</Radio>
+                  <Radio value={0}>否</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col> */}
+            {/* <Col span={6}> */}
+              <Form.Item name="time" label="离开现场时间" >
+                <RangePicker_
+                  style={{ width: '100%' }}
+                  allowClear={false}
+                  showTime={false}
+                  format="YYYY-MM-DD"
+                />
+              </Form.Item>
+            {/* </Col> */}
+            {/* <Col span={6}> */}
+              <Form.Item>
+                <Space>
+                  <Button
+                    loading={basicsLoading}
+                    type="primary"
+                    onClick={() => handleTableChange(1, 20)}
+                  >
+                    查询
                 </Button>
-                <Button
-                  loading={basicsLoading}
-                  onClick={() => {
-                    form.resetFields();
-                    handleTableChange(1, 20);
-                  }}
-                >
-                  重置
+                  <Button
+                    loading={basicsLoading}
+                    onClick={() => {
+                      form.resetFields();
+                      handleTableChange(1, 20);
+                    }}
+                  >
+                    重置
                 </Button>
-                <Button
-                  type="primary"
-                  onClick={() => onBasicsExport()}
-                  loading={basicsExportLoading}
-                >
-                  导出
+                  <Button
+                    type="primary"
+                    onClick={() => onBasicsExport()}
+                    loading={basicsExportLoading}
+                  >
+                    导出
                 </Button>
-              </Space>
-            </Form.Item>
-          </Space>
+                </Space>
+              </Form.Item>
+            {/* </Col> */}
+          {/* </Row> */}
+          <Form.Item name='serviceAreaCode' hidden> </Form.Item>
+          <Form.Item name='questionID' hidden> </Form.Item>
         </Form>
         <SdlTable
           loading={basicsLoading}
@@ -755,6 +866,7 @@ const TableCard = props => {
         visible={isDetailsModalOpen}
         destroyOnClose
         footer={null}
+        mask={false}
         onCancel={() => {
           setIsDetailsModalOpen(false);
         }}

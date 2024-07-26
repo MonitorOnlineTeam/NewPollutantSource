@@ -37,21 +37,28 @@ export default Model.extend({
       const result = yield call(requestPost, API.GeneralManagerApi.GetResourceOverviewMap, payload);
       if (result.IsSuccess) {
         const data = result.Datas;
-        // data.RegionStandbyMachineList = data.RegionStandbyMachineList.map(item => ({
-        //   position: { ...item.position, ...item,position:undefined}
-        // }))
-        // data.RegionPortableInstrumentList = data.RegionPortableInstrumentList.map(item => ({
-        //   position: { ...item.position,...item,position:undefined}
-        // }))
         data.RegionOfficeLocationList = data?.RegionOfficeLocationList?.map(item => ({
-          position: {...item.position, ...item,position:undefined}
-        }))?.filter(item=>item?.position?.OfficeLocationNum!=0 || item?.position?.OfficeAndUserNum!=0)
+          position: { ...item.position, ...item, position: undefined }
+        }))?.filter(item => item?.position?.OfficeLocationNum != 0 || item?.position?.OfficeAndUserNum != 0)
         data.RegionStorehouseList = data?.RegionStorehouseList?.map(item => ({
-          position: {...item.position, ...item,position:undefined}
+          position: { ...item.position, ...item, position: undefined }
         }))
-
-
         callback && callback(data);
+      }
+    },
+    // 车辆统计按行业分类
+    *GetCarStatistics({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.GeneralManagerApi.GetCarStatistics, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 车辆统计按行业分类 导出
+    *ExportCarStatistics({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestPost, API.GeneralManagerApi.ExportCarStatistics, payload);
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
       }
     },
   },

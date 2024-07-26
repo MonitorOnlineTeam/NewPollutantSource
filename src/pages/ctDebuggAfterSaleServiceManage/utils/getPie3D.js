@@ -12,7 +12,7 @@ function getHeight3D(series, height, customVal) { //customVal 默认高度
 
 
 // 生成扇形的曲面参数方程，用于 series-surface.parametricEquation
-function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h, selection, i, defaultselection, defaultIndex) {
+function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h) {
     // 计算
     let midRatio = (startRatio + endRatio) / 2;
     let startRadian = startRatio * Math.PI * 2;
@@ -24,19 +24,8 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
     }
     // 通过扇形内径/外径的值，换算出辅助参数 k（默认值 1/3）
     k = typeof k !== 'undefined' ? k : 1 / 3;
-    // 计算选中效果分别在 x 轴、y 轴方向上的位移（未选中，则位移均为 0）
-    let selectSpac = selection || defaultselection && i == defaultIndex ? 3 : ''; //默认选中间距
     let offsetX =  0;
     let offsetY =  0;
-    if (selectSpac) {
-        if (midRatio >= 0.5) {
-            offsetX = 0.2
-            offsetY = -0.2
-        } else {
-            offsetX = -0.2
-            offsetY = 0.2
-        }
-    }
     if (isSelected) {
         offsetX = Math.cos(midRadian) * 0.1
         offsetX = Math.sin(midRadian) * 0.1
@@ -77,20 +66,20 @@ function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k, h
         },
         z: function (u, v) {
             if (u < -Math.PI * 0.5) {
-                return selectSpac + Math.sin(u);
+                return Math.sin(u);
             }
-            if (selection && u < -Math.PI * 0.5) {
-                return selectSpac + Math.sin(u);
+            if (u > Math.PI * 2.5) {
+                return Math.sin(u) * h * 0.1;
             }
-            // 调整扇形高度
-            return selectSpac + (Math.sin(v) > 0 ? 0.1 * h : -1);
+            // 当前图形的高度是Z根据h（每个value的值决定的）
+            return Math.sin(v) > 0 ? 1 * h * 0.1 : -1;
         }
     };
 }
 
 let selectedIndex = -1;
 
-export function getPie3D(pieData, { internalDiameterRatio, customVal, legendOption, height, selection, defaultselection, defaultIndex,positiveSequence }, viewControl) {
+export function getPie3D(pieData, { internalDiameterRatio, customVal, legendOption, height,positiveSequence }, viewControl) {
 
     //internalDiameterRatio:透明的空心占比
     let series = [];
@@ -100,7 +89,7 @@ export function getPie3D(pieData, { internalDiameterRatio, customVal, legendOpti
     let legendData = [];
     let legendBfb = [];
     let k = 1 - internalDiameterRatio;
-    selectedIndex = defaultIndex || defaultIndex == 0 ? defaultIndex : -1
+    selectedIndex = -1
     positiveSequence?
     pieData.sort((a, b) => {
         return (a.value - b.value);
@@ -147,7 +136,7 @@ export function getPie3D(pieData, { internalDiameterRatio, customVal, legendOpti
         series[i].pieData.startRatio = startValue / sumValue;
         series[i].pieData.endRatio = endValue / sumValue;
         series[i].parametricEquation = getParametricEquation(series[i].pieData.startRatio, series[i].pieData.endRatio,
-            false, false, k, height ? height : series[i].pieData.value, selection, i, defaultselection, defaultIndex);
+            false, false, k, height ? height : series[i].pieData.value, );
         startValue = endValue;
         let bfb = fomatFloat(series[i].pieData.value / sumValue, 4);
         legendData.push({

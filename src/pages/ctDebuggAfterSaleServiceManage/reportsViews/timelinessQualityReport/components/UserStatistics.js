@@ -34,7 +34,7 @@ const UserStatistics = props => {
   const [level, setLevel] = useState();
   const [basicTitle, setBasicTitle] = useState();
 
-  const { dispatch, loading, exportLoading, date, autoForm } = props;
+  const { dispatch, loading, exportLoading, date, autoForm,modalWrapClassName } = props;
 
   useEffect(() => {
     getUserList();
@@ -86,7 +86,17 @@ const UserStatistics = props => {
       },
     });
   };
-
+  const [queryData, setQueryData] = useState({})
+  const typeClick = (type, data) => {
+    setIsModalOpen(true);
+    setLevel(type);
+    setBasicTitle(type === '2' ? '服务报告及时率基础数据' : '服务报告合格率基础数据');
+    const values = form.getFieldsValue();
+    setQueryData({...data, time: values.time})
+  }
+  const TypeRenderComponents = ({ type, data }) => {
+    return <a onClick={() => typeClick(type, data)}>{data?.text || data?.text == 0 ? data.text + '%' : ''}</a>
+  }
   //
   const getColumns = () => {
     return [
@@ -122,9 +132,9 @@ const UserStatistics = props => {
         ellipsis: true,
         width:'auto',
         sorter: (a, b) => a.ReportTimelyRate - b.ReportTimelyRate,
-        render: (text, row) => {
-          return text + '%';
-        },
+        render: (text, record) => {
+          return <TypeRenderComponents type='2' data={{ workerID: record.WorkerID,  text: text,}} />
+        }
       },
       {
         title: '报告合格率',
@@ -134,9 +144,9 @@ const UserStatistics = props => {
         ellipsis: true,
         width:'auto',
         sorter: (a, b) => a.ReportTimelyQualifiedRate - b.ReportTimelyQualifiedRate,
-        render: (text, row) => {
-          return text + '%';
-        },
+        render: (text, record) => {
+          return <TypeRenderComponents type='3' data={{ workerID: record.WorkerID,  text: text,}} />
+        }
       },
       {
         title: '报告及时合格率',
@@ -161,7 +171,7 @@ const UserStatistics = props => {
   };
 
   return (
-    <Card bodyStyle={{ paddingBottom: 20 }}>
+    <Card bodyStyle={{ padding: '12px 24px 16px 24px' }}>
       <Form
         id="searchForm"
         form={form}
@@ -169,7 +179,7 @@ const UserStatistics = props => {
           time: [moment().startOf('month'), moment()],
         }}
         autoComplete="off"
-        style={{ marginTop: 10, marginBottom: 10 }}
+        style={{ marginTop: 6, marginBottom: 6 }}
         // labelCol={{
         //   flex: '120px',
         // }}
@@ -221,7 +231,7 @@ const UserStatistics = props => {
               <Button loading={exportLoading} icon={<ExportOutlined />} onClick={() => onExport()}>
                 导出
               </Button>
-              <Button
+              {/* <Button
                 type="primary"
                 onClick={() => {
                   setIsModalOpen(true);
@@ -240,7 +250,7 @@ const UserStatistics = props => {
                 }}
               >
                 合格率基础数据
-              </Button>
+              </Button> */}
             </Space>
           </Form.Item>
         </Space>
@@ -249,7 +259,10 @@ const UserStatistics = props => {
         loading={loading}
         dataSource={dataSource}
         columns={getColumns()}
-        scroll={{x:710}}
+        scroll={{
+          x:710,
+          y: `calc(100vh - ${modalWrapClassName? 272: 335}px)`,
+        }}
         align="center"
         pagination={{
           total: tableTotal,
@@ -263,11 +276,13 @@ const UserStatistics = props => {
 
       {isModalOpen && (
         <BasicData
+          wrapClassName={modalWrapClassName}
           type='2'
           level={level}
           isModalOpen={isModalOpen}
           title={basicTitle}
           defaultTime={form.getFieldValue('time')}
+          queryData={queryData}
           onCancel={() => {
             setIsModalOpen(false);
           }}

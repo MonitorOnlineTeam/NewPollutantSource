@@ -11,7 +11,7 @@ import {
   chartMouseout,
 } from '@/pages/ctDebuggAfterSaleServiceManage/utils/getPie3D.js';
 
-const customVal = 0.03456;
+const customVal = 0;
 
 const dvaPropsData = ({ loading, reportsAndViews }) => ({
   underWarrantyServicesData: reportsAndViews.underWarrantyServicesData,
@@ -279,6 +279,9 @@ const RegionalProportionCard2 = props => {
       name: 'pie2d',
       type: 'pie',
       hoverAnimation: false, // 取消悬浮效果
+      grid:{
+        top:-10,
+      },
       label: {
         show: true,
         position: 'outside',
@@ -304,17 +307,17 @@ const RegionalProportionCard2 = props => {
         },
       },
       labelLine: {
-        length: 32,
+        length: 28,
         length2: 90,
         color: 'inherit',
         lineStyle: {
           width: 2, // 引导线宽度
         },
       },
-      startAngle: -40, //起始角度，支持范围[0, 360]。
+      startAngle: -34, //起始角度，支持范围[0, 360]。
       clockwise: false, //饼图的扇区是否是顺时针排布。上述这两项配置主要是为了对齐3d的样式
       radius: ['40%', '60%'],
-      center: ['50%', '55%'],
+      center: ['50%', '53%'],
       data: pie2dData.sort((a, b) => {
         return b.value - a.value;
       }),

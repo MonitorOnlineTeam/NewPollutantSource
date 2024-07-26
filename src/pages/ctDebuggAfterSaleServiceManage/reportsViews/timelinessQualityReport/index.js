@@ -140,7 +140,7 @@ const TimelinessQualityReport = props => {
             </>
           ) : (
             // 按人员统计
-            <UserStatistics />
+            <UserStatistics  modalWrapClassName={modalWrapClassName}/>
           )}
         </Space>
       </div>

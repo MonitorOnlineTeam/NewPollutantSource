@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { connect } from 'dva';
-import { Card, Row, Divider } from 'antd';
+import { Card, Row, Col, Divider } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 import styles from '../index.less';
@@ -11,7 +11,7 @@ import {
   chartMouseout,
 } from '@/pages/ctDebuggAfterSaleServiceManage/utils/getPie3D.js';
 
-const customVal = 0.03456;
+const customVal = 0;
 
 const dvaPropsData = ({ loading, reportsAndViews }) => ({
   underWarrantyServicesData: reportsAndViews.underWarrantyServicesData,
@@ -26,20 +26,23 @@ const ProductProportionCard4 = props => {
     title,
     loading,
     underWarrantyServicesData: { WarrantyAnalysis },
-    windowWidth
+    windowWidth,
+    minWidth,
     // timeoutServicesData: { TimeoutReasonAnalysis },
   } = props;
-  const legendTextWidth = 110;
-  useEffect(() => {}, []);
+  const legendTextWidth = 128;
+  const windowWidthFlag = windowWidth <= minWidth
+
+  useEffect(() => { }, []);
   useEffect(() => {
     if (WarrantyAnalysis.length && echarts3D) {
       setTimeout(() => {
         let myChart = echarts3D?.current?.getEchartsInstance();
         let echartsOption = echarts3D?.current?.props;
-        myChart?.on('mouseover', function(params) {
+        myChart?.on('mouseover', function (params) {
           chartMouseover(myChart, echartsOption, params);
         });
-        myChart?.on('globalout', function(params) {
+        myChart?.on('globalout', function (params) {
           chartMouseout(myChart, echartsOption, params); // 修正取消高亮失败的 bug
         });
       }, 400);
@@ -81,7 +84,7 @@ const ProductProportionCard4 = props => {
     });
     // 创建一个副本，避免改变原数组
     let copyData = tempData.slice();
-        copyData.sort((a, b) => b.TimeRate - a.TimeRate);
+    copyData.sort((a, b) => b.TimeRate - a.TimeRate);
     // 根据 TimeRate 进行降序排序
     // 获取前四个元素
     let topFour = copyData.splice(0, 4);
@@ -89,16 +92,16 @@ const ProductProportionCard4 = props => {
     // 计算前四个元素的 TimeRate 总和
     let topFourTotal = topFour.reduce((sum, current) => sum + current.TimeRate, 0).toFixed(2);
 
-      // 获取其他元素
-      let otherData = copyData;
-      // 计算前其他元素的 TimeRate 总和
-      let otherTotalData = otherData.reduce((sum, current) => sum + current.Times, 0);
+    // 获取其他元素
+    let otherData = copyData;
+    // 计算前其他元素的 TimeRate 总和
+    let otherTotalData = otherData.reduce((sum, current) => sum + current.Times, 0);
 
     // 创建 '其他' 元素, 如果所有数据都为0，'其他' 选项的 TimeRate 也应为0
     let other = {
       ReasonName: '其他',
       Times: otherTotalData,
-      TimeRate: topFourTotal == 0 ?  '0.00' : (100 - topFourTotal).toFixed(2),
+      TimeRate: topFourTotal == 0 ? '0.00' : (100 - topFourTotal).toFixed(2),
       Num: 0,
       NumRate: 0,
     };
@@ -121,7 +124,7 @@ const ProductProportionCard4 = props => {
     let option = {
       color: ['#35D6FF', '#3C88FE', '#FA5C90', '#FFBC63', '#7F66FE'],
       tooltip: {
-        valueFormatter: function(value) {
+        valueFormatter: function (value) {
           return value + '%';
         },
       },
@@ -131,7 +134,7 @@ const ProductProportionCard4 = props => {
         right: 4,
         icon: 'circle',
         triggerEvent: true,
-        tooltip: { 
+        tooltip: {
           show: true,
           trigger: 'item',
         },
@@ -160,8 +163,8 @@ const ProductProportionCard4 = props => {
           name: '产品类别占比',
           type: 'pie',
           // radius: [50, 250],
-          radius: windowWidth<=1600 && windowWidth>1515 ? ['50%', '78%'] : windowWidth<=1515? ['37%', '56%'] : ['60%', '88%'],
-          center: ['25%','50%'],
+          radius: windowWidth <= 1600 && windowWidth > minWidth || windowWidth<=1200 ? ['50%', '78%'] :  ['60%', '88%'],
+          center: ['25%', '50%'],
           itemStyle: {
             borderRadius: 6,
             borderColor: '#fff',
@@ -188,7 +191,7 @@ const ProductProportionCard4 = props => {
     let seriesData = chartData.map((item, index) => {
       count += item.Times;
       return {
-        value: item.Times || customVal,
+        value: item.TimeRate * 1 || customVal,
         name: item.ReasonName,
         rate: item.TimeRate,
         itemStyle: {
@@ -233,14 +236,14 @@ const ProductProportionCard4 = props => {
 
     option.grid3D = {
       show: false,
-      boxHeight: 15, //圆环的高度
+      // boxHeight: 7, //圆环的高度
       width: '100%',
       top: '-6%',
       left: '-25%',
       viewControl: {
         //3d效果可以放大、旋转等，请自己去查看官方配置
         alpha: 30, //角度
-        distance: windowWidth<=1600 && windowWidth>1515? 190 : windowWidth<=1515? 220 : 175,//调整视角到主体的距离，类似调整zoom
+        distance: windowWidth <= 1600 && windowWidth > minWidth || windowWidth<=1200 ? 190 : 175,//调整视角到主体的距离，类似调整zoom
         rotateSensitivity: 0, //设置为0无法旋转
         zoomSensitivity: 0, //设置为0无法缩放
         panSensitivity: 0, //设置为0无法平移
@@ -271,11 +274,11 @@ const ProductProportionCard4 = props => {
       itemHeight: 12,
       itemGap: 14,
       triggerEvent: true,
-      tooltip: { 
+      tooltip: {
         show: true,
         trigger: 'item',
       },
-      formatter: name => {  
+      formatter: name => {
         const item = seriesData.find(i => {
           return i.name === name;
         });
@@ -329,22 +332,38 @@ const ProductProportionCard4 = props => {
   }, [WarrantyAnalysis, echarts, windowWidth]);
 
   return (
-    <Card title={title} size="small" bodyStyle={{ height: 640, paddingTop: 4 }} loading={loading}>
-      <div className={styles.ProductProportionWrapper}>
-        <div className={styles.chartItemWrapper}>
+    <Card title={title} size="small" bodyStyle={{ height: windowWidthFlag ? 640/2 : 640, paddingTop: 4 }} loading={loading}>
+      <Row className={styles.ProductProportionWrapper} style={{ flexDirection: windowWidthFlag ? 'row' : 'column' }}>
+        <Col span={windowWidthFlag ? 11 : 24} className={styles.chartItemWrapper} >
           {renderCountEcharts}
           <Row align="center" className={styles.chartNameBox}>
             <span className={styles.name}>次数占比</span>
           </Row>
-        </div>
-        <div
-          style={{
-            flex: 'none',
-          }}
-        >
-          <Divider dashed />
-        </div>
-        <div className={styles.chartItemWrapper}>
+        </Col>
+
+        {windowWidthFlag ?
+          <Col flex="none">
+            <div
+              style={{
+                padding: '16px 0',
+                height: '100%',
+              }}
+            >
+              <Divider type="vertical" dashed style={{ height: '100%' }} />
+            </div>
+          </Col>
+
+          :
+          <div
+            style={{
+              flex: 'none',
+            }}
+          >
+            <Divider dashed type={"horizontal"} />
+          </div>
+
+        }
+        <Col span={windowWidthFlag ? 11 : 24} className={styles.chartItemWrapper}>
           {WarrantyAnalysis.length ? (
             <ReactEcharts
               option={getOption2()}
@@ -354,13 +373,13 @@ const ProductProportionCard4 = props => {
               theme="my_theme"
             />
           ) : (
-            ''
-          )}
+              ''
+            )}
           <Row align="center" className={styles.chartNameBox}>
             <span className={styles.name}>时长占比</span>
           </Row>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </Card>
   );
 };

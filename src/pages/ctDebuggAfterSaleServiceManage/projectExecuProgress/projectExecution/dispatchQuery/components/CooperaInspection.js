@@ -39,8 +39,7 @@ class Index extends Component {
             }
         }
         const { cooperatInspectionRecordList } = this.props;
-        const Content = cooperatInspectionRecordList? cooperatInspectionRecordList : null;
-        console.log(Content)
+        const Content = cooperatInspectionRecordList ? cooperatInspectionRecordList : null;
         if (this.props.isloading) {
             return (<Spin
                 style={{
@@ -175,7 +174,7 @@ class Index extends Component {
                             <td colSpan="12" style={{ height: '50px', fontSize: '14px' }}>
                                 <>
                                     图片
-                                    {Content !== null ? Content.PictureFilesList && Content.PictureFilesList.ImgList && Content.PictureFilesList.ImgList.map((item,index) => {
+                                    {Content !== null ? Content.PictureFilesList && Content.PictureFilesList.ImgList && Content.PictureFilesList.ImgList.map((item, index) => {
                                     return <img
                                         width={20}
                                         height={20}
@@ -184,8 +183,8 @@ class Index extends Component {
                                         onClick={() => {
                                             this.setState({
                                                 isOpen: true,
-                                                imageList: Content.PictureFilesList.ImgList.map(item=>`/${item}`),
-                                                imageIndex:index,
+                                                imageList: Content.PictureFilesList.ImgList.map(item => `/${item}`),
+                                                imageIndex: index,
                                             })
                                         }}
                                     />
@@ -198,13 +197,13 @@ class Index extends Component {
                             <td colSpan="12" style={{ fontSize: '14px' }}>
                                 <>
                                     附件
-                                    {Content !== null ? Content.EnclosureFilesList && Content.EnclosureFilesList.ImgList.map((item,index) => {
+                                    {Content !== null ? Content.EnclosureFilesList && Content.EnclosureFilesList.ImgList.map((item, index) => {
                                     return <a
                                         href={`/${item}`}
                                         style={{ marginLeft: 10 }}
                                         download
                                     >
-                                        {Content.EnclosureFilesList?.ImgNameList?.[0]? Content.EnclosureFilesList.ImgNameList[index] : '附件.pdf'}
+                                        {Content.EnclosureFilesList?.ImgNameList?.[0] ? Content.EnclosureFilesList.ImgNameList[index] : '附件.pdf'}
                                     </a>
                                 })
                                         : null}

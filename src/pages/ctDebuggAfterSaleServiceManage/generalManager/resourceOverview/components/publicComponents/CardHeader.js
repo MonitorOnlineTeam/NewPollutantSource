@@ -52,7 +52,7 @@ const Index = (props) => {
       <div style={{paddingLeft:32,height:37, background:'url(/currencyResOver/btbk.png)',backgroundSize:'100%',fontSize:16,cursor:'pointer'}} onClick={()=>onClick&&onClick()}>
         {title}
       </div>
-    {isStatistics&&<div className='cardBodySty' style={{ padding:'8px 16px'}}>
+    {isStatistics&&<div className='cardBodySty' style={{ padding:'8px 16px'}} onClick={()=>onClick&&onClick()}>
       <Row justify='space-between' align='middle' style={{padding:'0 24px', height:50,  background:'url(/currencyResOver/zs.png)',backgroundSize:'100% 100%'}}>
         <div>
         <img src={`/currencyResOver/cardIcon_${index}.png`} />

@@ -45,7 +45,7 @@ const AfterSaleService = props => {
     setOpen(true);
     setOpenType(type)
   };
-  const [dataType, setDataType] = useState('1');
+  const [dataType, setDataType] = useState(1);
 
   return (
     <HomeCard
@@ -59,6 +59,7 @@ const AfterSaleService = props => {
         height: 'calc(100% - 41px)'
       }}
       loading={loading}
+      onClick={()=>onOpenModal(dataType)}
     >
       
       <Row className={styles.AfterSaleServiceWrapper}>
@@ -73,8 +74,8 @@ const AfterSaleService = props => {
         >
         <ToggleRadio
           radioList={[
-            { name: '质保内服务产品类别', value: '1' },
-            { name: '质保内服务原因', value: '2' },
+            { name: '质保内服务产品类别', value: 1 },
+            { name: '质保内服务原因', value: 2 },
           ]}
           onChange={e => {
             setDataType(e.target.value);
