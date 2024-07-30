@@ -715,11 +715,14 @@ class MapContent extends PureComponent {
       case '全屏':
         this.setState({ fullScreen: true }, () => {
           onFullScreenChange(true);
+          aMap.setFitView();
+          aMap.setZoom(5);
         });
         break;
       case '退出全屏':
         this.setState({ fullScreen: false }, () => {
           onFullScreenChange(false);
+          aMap.setFitView();
         });
         break;
     }

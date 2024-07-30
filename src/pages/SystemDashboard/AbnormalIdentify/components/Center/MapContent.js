@@ -254,6 +254,7 @@ class MapContent extends PureComponent {
               latitude: item.PoinLatitudetName,
               longitude: item.Longitude,
             },
+            zIndex: item.Level
           };
         });
         break;
@@ -535,6 +536,7 @@ class MapContent extends PureComponent {
         level: 4,
       },
       () => {
+        aMap.clearMap();
         if (level4MapData.length) {
           this.handleMarkerDatas(level4MapData);
         } else {
@@ -662,7 +664,7 @@ class MapContent extends PureComponent {
     } else if (level == 3 || level == 4) {
       //监测点
       return (
-        <div style={{ position: 'relative', marginTop: 24 }}>
+        <div style={{ position: 'relative', marginTop: 24, zIndex: extData.position.Level }}>
           <span
             onClick={() => {
               this.onClickPoint(extData);
@@ -756,11 +758,14 @@ class MapContent extends PureComponent {
       case '全屏':
         this.setState({ fullScreen: true }, () => {
           onFullScreenChange(true);
+          aMap.setFitView();
+          aMap.setZoom(5);
         });
         break;
       case '退出全屏':
         this.setState({ fullScreen: false }, () => {
           onFullScreenChange(false);
+          aMap.setFitView();
         });
         break;
     }

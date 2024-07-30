@@ -478,7 +478,7 @@ class RoleIndex extends Component {
   // };
   componentDidMount() {
     const buttonList = permissionButton(this.props.match.path);
-    console.log(this.props.match.path,buttonList,2222222)
+    console.log(this.props.match.path, buttonList, 2222222);
     buttonList.map(item => {
       switch (item) {
         case 'SetRole':
@@ -646,14 +646,18 @@ class RoleIndex extends Component {
 
   addRight = () => {
     const keys = this.state.selectedRowKeys.key;
-    // console.log(this.state.selectButton); //菜单权限列表
-    // console.log(this.state.buttonState) //菜单按钮权限列表
+    console.log(this.state.selectButton); //菜单权限列表
+    console.log(this.state.buttonState); //菜单按钮权限列表
     let buttonAuthority = this.state.buttonState.filter(item => item.State == 1); //按钮权限
     if (buttonAuthority?.[0]) {
       buttonAuthority = buttonAuthority.map(item => item.ID);
     }
+    console.log('buttonAuthority', buttonAuthority);
     let menuIDArr = [...this.state.selectButton, ...buttonAuthority];
     menuIDArr = menuIDArr.filter((item, index) => menuIDArr.indexOf(item) === index); //数组去重
+
+    console.log('menuIDArr', menuIDArr);
+    // return;
     this.props.dispatch({
       type: 'roleinfo/insertmenubyroleid',
       payload: {
@@ -818,14 +822,25 @@ class RoleIndex extends Component {
         this.setState({
           selectButton: selectedRowsKey,
         });
-        let btnState = this.findDifferentElements(this.state.selectButton, selectedRowsKey); //筛选权限按钮
-        if (btnState?.[0] && btnState.length > 1) {
-          btnState = btnState.filter(item => item != record['Menu_ID']); //删除当前选中或取消的菜单节点meunId
-          btnState = btnState.map(item => ({ ID: item, State: '1' }));
-          this.setState({
-            buttonState: [...this.state.buttonState, ...btnState],
-          });
-        }
+        // console.log('selectedRows', selectedRows)
+        // let btnState = this.findDifferentElements(this.state.selectButton, selectedRowsKey); //筛选权限按钮
+        // console.log('btnState', btnState)
+        // if (btnState?.[0] && btnState.length > 1) {
+        //   btnState = btnState.filter(item => item != record['Menu_ID']); //删除当前选中或取消的菜单节点meunId
+        //   btnState = btnState.map(item => ({ ID: item, State: '1' }));
+        //   this.setState({
+        //     buttonState: [...this.state.buttonState, ...btnState],
+        //   });
+        // }
+        let btnState = [];
+        selectedRows.map(item => {
+          if (item.Menu_Button) {
+            btnState = item.Menu_Button.map(btn => ({ ID: btn, State: '1' }));
+          }
+        });
+        this.setState({
+          buttonState: btnState,
+        });
       },
       onChange: (se, selectedRows) => {
         //当前版本无法获取 点击的当前行的菜单id

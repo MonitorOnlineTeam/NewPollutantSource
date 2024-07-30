@@ -899,5 +899,14 @@ export default Model.extend({
         callback && callback(result.Datas);
       }
     },
+    // 获取异常问题二级页面
+    *GetExcepInfoPageData({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetExcepInfoPageData,
+        payload,
+      );
+      callback && callback(result);
+    },
   },
 });

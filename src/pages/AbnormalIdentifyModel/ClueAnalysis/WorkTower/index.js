@@ -16,19 +16,18 @@ import {
   Badge,
   Tooltip,
   Row,
-  Col,
+  TreeSelect,
   Tag,
   Pagination,
   Empty,
 } from 'antd';
 import styles from '../../styles.less';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import SdlTable from '@/components/SdlTable';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import RegionList from '@/components/RegionList';
 import EntAtmoList from '@/components/EntAtmoList';
-import { DetailIcon } from '@/utils/icon';
+import { transformData } from '@/pages/AbnormalIdentifyModel/CONST.js';
 import { router } from 'umi';
 import { useHistory } from 'react-router-dom';
 const textStyle = {
@@ -43,6 +42,7 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   queryLoading: loading.effects['AbnormalIdentifyModel/GetClueDatas'],
   pointListLoading: loading.effects['common/getPointByEntCode'],
   entListLoading: loading.effects['common/GetEntByRegion'],
+  modelListLoading: loading.effects['AbnormalIdentifyModel/GetModelList'],
   generateVerificationTakeData: AbnormalIdentifyModel.generateVerificationTakeData,
   workTowerData: AbnormalIdentifyModel.workTowerData,
   queryPar: AbnormalIdentifyModel.workTowerQueryPar,
@@ -59,12 +59,16 @@ const WorkTower = props => {
     workTowerData,
     workTowerData: { pageIndex, pageSize, type },
     queryPar,
+    modelListLoading,
   } = props;
   const [pointList, setPointList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [total, setTotal] = useState();
+  const [statisticsInfo, setStatisticsInfo] = useState('');
+  const [modelList, setModelList] = useState([]);
 
   useEffect(() => {
+    GetModelList();
     console.log(type, queryPar);
     if (type == 2) {
       //从生成核查任务返回
@@ -129,8 +133,23 @@ const WorkTower = props => {
         pageSize: pageSize,
       },
       callback: res => {
-        setDataSource(res.Datas);
+        setDataSource(res.Datas.showWarnings);
         setTotal(res.Total);
+        setStatisticsInfo(res.Datas.sumInfo);
+      },
+    });
+  };
+
+  // 获取数据模型列表
+  const GetModelList = () => {
+    dispatch({
+      type: 'AbnormalIdentifyModel/GetModelList',
+      payload: {
+        type: 1, // 过滤掉打标记和数据现象
+      },
+      callback: (res, unfoldModelList) => {
+        let modelList = transformData(res);
+        setModelList(modelList);
       },
     });
   };
@@ -162,11 +181,27 @@ const WorkTower = props => {
       },
     });
   };
+
+  const tProps = {
+    treeData: modelList,
+    treeCheckable: true,
+    // showCheckedStrategy: SHOW_PARENT,
+    maxTagCount: 3,
+    maxTagTextLength: 5,
+    maxTagPlaceholder: '...',
+    placeholder: '请选择场景类别',
+    style: {
+      width: '400px',
+    },
+    treeDefaultExpandAll: true,
+  };
+
   return (
-    <div className={styles.workTowerWrapper}>
-      <BreadcrumbWrapper>
+    <BreadcrumbWrapper>
+      <div className={styles.workTowerWrapper}>
         <Card
           style={{ paddingTop: 0 }}
+          bodyStyle={{ background: '#edeff2' }}
           title={
             <Form
               name="basic"
@@ -185,21 +220,21 @@ const WorkTower = props => {
                 />
               </Form.Item>
               {/* <Spin spinning={!!entListLoading} size="small"> */}
-                <Form.Item label="企业" name="entCode">
-                  <EntAtmoList
-                    style={{ width: 200 }}
-                    onChange={value => {
-                      if (!value) {
-                        form.setFieldsValue({ dgimn: undefined });
-                        setPointList([]);
-                      } else {
-                        form.setFieldsValue({ dgimn: undefined });
-                        getPointList(value);
-                      }
-                    }}
-                    placeholder="请选择"
-                  />
-                </Form.Item>
+              <Form.Item label="企业" name="entCode">
+                <EntAtmoList
+                  style={{ width: 200 }}
+                  onChange={value => {
+                    if (!value) {
+                      form.setFieldsValue({ dgimn: undefined });
+                      setPointList([]);
+                    } else {
+                      form.setFieldsValue({ dgimn: undefined });
+                      getPointList(value);
+                    }
+                  }}
+                  placeholder="请选择"
+                />
+              </Form.Item>
               {/* </Spin> */}
               <Spin spinning={!!pointListLoading} size="small">
                 <Form.Item label="排口" name="dgimn">
@@ -218,6 +253,11 @@ const WorkTower = props => {
                       );
                     })}
                   </Select>
+                </Form.Item>
+              </Spin>
+              <Spin spinning={modelListLoading} size="small">
+                <Form.Item label="场景类别" name="warningTypeCode">
+                  <TreeSelect {...tProps} allowClear showSearch treeNodeFilterProp="label" />
                 </Form.Item>
               </Spin>
               <Form.Item>
@@ -245,10 +285,21 @@ const WorkTower = props => {
           }
         >
           <Spin spinning={queryLoading}>
-            <Row>
+            <Card
+              title={
+                <div style={{ color: '#3988ff', fontWeight: 'bold' }}>
+                  <InfoCircleOutlined style={{ marginRight: 10 }} />
+                  {statisticsInfo}
+                </div>
+              }
+              style={{ marginTop: 10 }}
+              bodyStyle={{ background: '#fff' }}
+              size="small"
+              bordered={false}
+            >
               {total && total > 0 ? (
                 dataSource.map(item => (
-                  <Col span={8}>
+                  <Card.Grid className={styles.cardGrid}>
                     <div
                       title={`${item.EntName} - ${item.PointName}`}
                       className="title"
@@ -290,7 +341,7 @@ const WorkTower = props => {
                         </Tag>
                       ))}
                     </div>
-                  </Col>
+                  </Card.Grid>
                 ))
               ) : (
                 <Empty
@@ -298,23 +349,31 @@ const WorkTower = props => {
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
                 />
               )}
-            </Row>
+            </Card>
           </Spin>
         </Card>
+
         {total && total > 0 ? (
-        <div style={{ position:'absolute',right:0, marginTop: 12 }}>
-          <Pagination
-            showSizeChanger
-            total={total}
-            current={pageIndex}
-            pageSize={pageSize}
-            onChange={onTableChange}
-            pageSizeOptions={['12']}
-          />
-        </div>
-      ) : null}
-      </BreadcrumbWrapper>
-    </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'right',
+              margin: '12px 0px',
+              padding: '0 10px',
+            }}
+          >
+            <Pagination
+              showSizeChanger
+              total={total}
+              current={pageIndex}
+              pageSize={pageSize}
+              onChange={onTableChange}
+              pageSizeOptions={['12']}
+            />
+          </div>
+        ) : null}
+      </div>
+    </BreadcrumbWrapper>
   );
 };
 

@@ -21,6 +21,7 @@ import ReactEcharts from 'echarts-for-react';
 import WorkingAnalysis from '../index';
 import { MoreOutlined } from '@ant-design/icons';
 import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
+import PointCluesStatistics from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/ExceptionProblem/PointCluesStatistics.js';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   warningForm: AbnormalIdentifyModel.warningForm,
@@ -46,6 +47,8 @@ const PageContent = props => {
   const [stopPieData, setStopPieData] = useState([{}, {}, {}, {}]);
   const [stopReportPie, setStopReportPie] = useState([{}, {}, {}, {}]);
   const [warningInfo, setWarningInfo] = useState([]);
+  const [pointCluesModalOpen, setPointCluesModalOpen] = useState(false);
+  const [currentPointData, setCurrentPointData] = useState({});
 
   useEffect(() => {
     loadData();
@@ -728,6 +731,29 @@ const PageContent = props => {
     return columns;
   };
 
+  // 下钻点击
+  const drillDownClick = record => {
+    if (dataType === 'region') {
+      setRegionCode(record.Key);
+      setEntCode(undefined);
+    } else {
+      setRegionCode(undefined);
+      setEntCode(record.Key);
+    }
+
+    setIsModalOpen(true);
+    setModalTitle(record.Name + ' - 数据缺失情况');
+  };
+
+  // 图表点击事件 - 分类点击
+  const onClickEcharts = e => {
+    const { dataIndex } = e;
+    if (dataType !== 'point') {
+      let record = dataSource[dataIndex];
+      drillDownClick(record);
+    }
+  };
+
   const echartTitleStyle = {
     textAlign: 'center',
     position: 'absolute',
@@ -862,6 +888,9 @@ const PageContent = props => {
               style={{ height: 'calc(100%)' }}
               className="echarts-for-echarts"
               theme="my_theme"
+              onEvents={{
+                click: onClickEcharts,
+              }}
             />
           </Card>
         </Col>
@@ -888,7 +917,9 @@ const PageContent = props => {
                       <Tooltip title="查看线索数据">
                         <a
                           onClick={() => {
-                            updateCluesListFormState(item.ModelGuid);
+                            // updateCluesListFormState(item.ModelGuid);
+                            setPointCluesModalOpen(true);
+                            setCurrentPointData(item);
                           }}
                         >
                           <MoreOutlined />
@@ -980,6 +1011,17 @@ const PageContent = props => {
         open={isModalOpen2}
         onCancel={() => setIsModalOpen2(false)}
       />
+      {pointCluesModalOpen && (
+        <PointCluesStatistics
+          open={pointCluesModalOpen}
+          onCancel={() => setPointCluesModalOpen(false)}
+          data={currentPointData}
+          reqParams={{
+            modelGuid: currentPointData.ModelGuid,
+            date: date,
+          }}
+        />
+      )}
     </div>
   );
 };

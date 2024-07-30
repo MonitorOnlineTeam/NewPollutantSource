@@ -21,6 +21,7 @@ import ReactEcharts from 'echarts-for-react';
 import WorkingAnalysis from '../index';
 import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
 import QuestionTooltip from '@/components/QuestionTooltip';
+import ExceptionProblem from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/ExceptionProblem';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   warningForm: AbnormalIdentifyModel.warningForm,
@@ -49,6 +50,9 @@ const PageContent = props => {
   const [dataSource, setDataSource] = useState([]);
   const [dataSource2, setDataSource2] = useState([]);
   const [dataType, setDataType] = useState(props.dataType || 'region'); //region/ent/point
+  const [level2PageOpen, setLevel2PageOpen] = useState(false);
+  const [level2Params, setLevel2Params] = useState({});
+  const [level2PageTitle, setLevel2PageTitle] = useState();
 
   useEffect(() => {
     loadData();
@@ -534,8 +538,8 @@ const PageContent = props => {
             align: 'center',
             showSorterTooltip: false,
             sorter: (a, b) => a.ExcepRate - b.ExcepRate,
-            render: text => {
-              return text + '%';
+            render: (text, row) => {
+              return <a onClick={() => onEnterSecondaryPage(row)}>{text} %</a>;
             },
           },
           {
@@ -614,6 +618,73 @@ const PageContent = props => {
     default:
       break;
   }
+
+  // 下钻点击
+  const drillDownClick = record => {
+    if (dataType === 'region') {
+      setRegionCode(record.Key);
+      setEntCode(undefined);
+    } else {
+      setRegionCode(undefined);
+      setEntCode(record.Key);
+    }
+
+    setIsModalOpen(true);
+    setModalTitle(record.Name + ' - 数据缺失情况');
+  };
+
+  // 图表点击事件 - 分类点击
+  const onClickEcharts = e => {
+    const { dataIndex } = e;
+    if (dataType !== 'point') {
+      let record = dataSource[dataIndex];
+      drillDownClick(record);
+    }
+  };
+
+  // 进入二级页面
+  const onEnterSecondaryPage = row => {
+    let typeName = '',
+      params = {};
+    switch (dataType) {
+      case 'region':
+        typeName = row.Name;
+        params = {
+          regionCode: row.Key,
+          date: date,
+        };
+        break;
+      case 'ent':
+        typeName = row.Name;
+        params = {
+          entCode: row.Key,
+          date: date,
+        };
+        break;
+      case 'point':
+        typeName = row.ParentName + ' - ' + row.Name;
+        params = {
+          dgimn: row.Key,
+          entCode: row.ParentKey,
+          date: date,
+        };
+        break;
+    }
+    setLevel2Params(params);
+    let bTime = moment(date[0]).format('YYYY-MM-DD');
+    let eTime = moment(date[1]).format('YYYY-MM-DD');
+    setLevel2PageTitle(`${typeName}（${bTime} - ${eTime}）`);
+    setLevel2PageOpen(true);
+    // dgimn: '',
+    // entCode: '',
+    // regionCode: '',
+    // beginTime: '2024-01-23',
+    // endTime: '2024-07-23',
+    // modelExcepLevel: '',
+    // modelExcepType: '',
+    // modelExcepAction: '',
+    // modelGuid: '',
+  };
 
   return (
     <div className={styles.PageWrapper}>
@@ -746,6 +817,9 @@ const PageContent = props => {
           style={{ height: 'calc(100%)' }}
           className="echarts-for-echarts"
           theme="my_theme"
+          onEvents={{
+            click: onClickEcharts,
+          }}
         />
       </Card>
       <Card
@@ -786,6 +860,14 @@ const PageContent = props => {
         open={isModalOpen2}
         onCancel={() => setIsModalOpen2(false)}
       />
+      {level2PageOpen && (
+        <ExceptionProblem
+          title={level2PageTitle}
+          reqParams={level2Params}
+          open={level2PageOpen}
+          onCancel={() => setLevel2PageOpen(false)}
+        />
+      )}
     </div>
   );
 };

@@ -355,6 +355,17 @@ const routes = [
         ],
       },
       {
+        path: '/user/newLogin',
+        component: '../layouts/UserLayout2',
+        routes: [
+          {
+            name: 'newLogin',
+            path: '/user/newLogin',
+            component: './user/login/NewLogin',
+          },
+        ],
+      },
+      {
         path: '/user',
         component: '../layouts/UserLayout',
         routes: [
@@ -390,6 +401,7 @@ const routes = [
         // authority: ['admin', 'user'],
         routes: [
           { path: '/', redirect: '' },
+
           {
             path: '/Demo',
             name: 'Demo',

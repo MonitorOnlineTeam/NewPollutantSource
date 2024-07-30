@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-07-01 10:28:01
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-16 17:00:26
+ * @Last Modified time: 2024-07-30 13:55:59
  * @Description:  异常数据分析报告
  */
 import React, { useState, useEffect } from 'react';
@@ -218,6 +218,7 @@ const AnalysisReport = props => {
     },
     style: { width: 400 },
     onChange(info) {
+      console.log('info', info)
       const fileArr = [];
       info.fileList.forEach(file => {
         const { status, uid, name, response, url, percent } = file;
@@ -243,7 +244,9 @@ const AnalysisReport = props => {
       });
       setFileList(fileArr);
     },
-    onDrop(e) {},
+    onDrop(e) {
+      console.log('e', e)
+    },
     onRemove(file) {
       if (!file.error) {
         dispatch({
@@ -362,7 +365,7 @@ const AnalysisReport = props => {
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>
-                  <p className="ant-upload-text">单击或拖动文件到此区域进行上传</p>
+                  <p className="ant-upload-text">请选择文件进行上传</p>
                   <p className="ant-upload-hint">文件扩展名：.doc/.docx</p>
                 </Dragger>
               </Form.Item>

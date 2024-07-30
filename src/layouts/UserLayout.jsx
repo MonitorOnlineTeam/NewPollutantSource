@@ -23,10 +23,10 @@ const UserLayout = props => {
     if (dispatch) {
       Cookie.set(config.cookieName, null);
       Cookie.set('currentUser', null);
-      dispatch({
-        type: 'global/getSystemLoginConfigInfo',
-        payload: {},
-      });
+      // dispatch({
+      //   type: 'global/getSystemLoginConfigInfo',
+      //   payload: {},
+      // });
       dispatch({
         type: 'login/IfSpecial',
         payload: {},

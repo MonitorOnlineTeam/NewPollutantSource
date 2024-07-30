@@ -7,6 +7,7 @@ import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import ReactEcharts from 'echarts-for-react';
 import AnalysisExceedTimeLimit from '../index';
+import WarningTableData from '@/pages/AbnormalIdentifyModel/Home/ModalPage/WarningTableData.js';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   loading: loading.effects['AbnormalIdentifyModel/GetOverDataAnalysis'],
@@ -19,6 +20,8 @@ const PageContent = props => {
 
   const [date, setDate] = useState(time || [moment().startOf('month'), moment()]); // 时间
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
+  const [currentPointData, setCurrentPointData] = useState({});
   const [modalTitle, setModalTitle] = useState();
   const [regionCode, setRegionCode] = useState();
   const [entCode, setEntCode] = useState();
@@ -335,6 +338,18 @@ const PageContent = props => {
             title: '排口',
             dataIndex: 'Name',
             key: 'Name',
+            render: (text, row) => {
+              return (
+                <a
+                  onClick={() => {
+                    setIsModalOpen2(true);
+                    setCurrentPointData(row);
+                  }}
+                >
+                  {text}
+                </a>
+              );
+            },
           },
         ];
         break;
@@ -386,7 +401,7 @@ const PageContent = props => {
     setModalTitle(record.Name + ' - 数据缺失情况');
   };
 
-  // 饼图点击事件 - 分类点击
+  // 图表点击事件 - 分类点击
   const onClickEcharts = e => {
     const { dataIndex } = e;
     if (dataType !== 'point') {
@@ -515,6 +530,20 @@ const PageContent = props => {
         >
           <AnalysisExceedTimeLimit regionCode={regionCode} entCode={entCode} time={date} />
         </Modal>
+      )}
+
+      {isModalOpen2 && (
+        // 数据图表
+        <WarningTableData
+          open={isModalOpen2}
+          DGIMN={currentPointData.Key}
+          date={date}
+          title={`(${currentPointData.ParentName}/${currentPointData.Name})`}
+          showOnlyList={['数据图表']}
+          onCancel={() => {
+            setIsModalOpen2(false);
+          }}
+        />
       )}
     </div>
   );

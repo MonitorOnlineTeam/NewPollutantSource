@@ -19,6 +19,7 @@ import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import ReactEcharts from 'echarts-for-react';
 import MissingDataAnalysis from './index';
+import WarningTableData from '@/pages/AbnormalIdentifyModel/Home/ModalPage/WarningTableData.js';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   // loading: loading.effects['AbnormalIdentifyModel/GetDataMissAnalysis'],
@@ -31,6 +32,8 @@ const PageContent = props => {
 
   const [date, setDate] = useState(time || [moment().startOf('year'), moment()]); // 时间
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
+  const [currentPointData, setCurrentPointData] = useState({});
   const [modalTitle, setModalTitle] = useState();
   const [regionCode, setRegionCode] = useState();
   const [entCode, setEntCode] = useState();
@@ -635,6 +638,18 @@ const PageContent = props => {
             title: '排口',
             dataIndex: 'Name',
             key: 'Name',
+            render: (text, row) => {
+              return (
+                <a
+                  onClick={() => {
+                    setIsModalOpen2(true);
+                    setCurrentPointData(row);
+                  }}
+                >
+                  {text}
+                </a>
+              );
+            },
           },
         ];
         break;
@@ -669,9 +684,30 @@ const PageContent = props => {
     ];
     return columns;
   };
-  {
-    console.log('regionCode', regionCode);
-  }
+
+  // 下钻点击
+  const drillDownClick = record => {
+    if (dataType === 'region') {
+      setRegionCode(record.Key);
+      setEntCode(undefined);
+    } else {
+      setRegionCode(undefined);
+      setEntCode(record.Key);
+    }
+
+    setIsModalOpen(true);
+    setModalTitle(record.Name + ' - 数据缺失情况');
+  };
+
+  // 图表点击事件 - 分类点击
+  const onClickEcharts = e => {
+    const { dataIndex } = e;
+    if (dataType !== 'point') {
+      let record = dataSource[dataIndex];
+      drillDownClick(record);
+    }
+  };
+
   return (
     <div className={styles.PageWrapper}>
       {!props.dataType && (
@@ -843,6 +879,9 @@ const PageContent = props => {
               style={{ height: 'calc(100%)' }}
               className="echarts-for-echarts"
               theme="my_theme"
+              onEvents={{
+                click: onClickEcharts,
+              }}
             />
           </Card>
         </Col>
@@ -873,6 +912,19 @@ const PageContent = props => {
         >
           <MissingDataAnalysis regionCode={regionCode} entCode={entCode} time={date} />
         </Modal>
+      )}
+      {isModalOpen2 && (
+        // 数据图表
+        <WarningTableData
+          open={isModalOpen2}
+          DGIMN={currentPointData.Key}
+          date={date}
+          title={`(${currentPointData.ParentName}/${currentPointData.Name})`}
+          showOnlyList={['数据图表']}
+          onCancel={() => {
+            setIsModalOpen2(false);
+          }}
+        />
       )}
     </div>
   );

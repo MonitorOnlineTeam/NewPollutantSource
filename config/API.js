@@ -1425,6 +1425,8 @@ export const API = {
     SavePointParamsRange: before + '/WarningV2/SavePointParamsRange',
     // 获取点位参数配置
     GetPointParamsRange: before + '/WarningV2/GetPointParamsRange',
+    // 获取异常二级页面
+    GetExcepInfoPageData: before + '/WarningV2/GetExcepInfoPageData',
 
     /*实时数据异常识别及管理*/
     //异常线索清单
@@ -1520,8 +1522,10 @@ export const API = {
   /*************************************************************** 运维 ********************************************************************** */
   // 可视化看板Api
   VisualKanbanApi: {
-    GetVisualDashBoardOperatePointInfo: before + '/VisualDashBoardApi/GetVisualDashBoardOperatePointInfo', //获取运维信息总览信息
-    GetBWVisualDashBoardOperatePointInfo: before + '/BWDataApi/GetBWVisualDashBoardOperatePointInfo', //获取运维信息总览信息 宝武
+    GetVisualDashBoardOperatePointInfo:
+      before + '/VisualDashBoardApi/GetVisualDashBoardOperatePointInfo', //获取运维信息总览信息
+    GetBWVisualDashBoardOperatePointInfo:
+      before + '/BWDataApi/GetBWVisualDashBoardOperatePointInfo', //获取运维信息总览信息 宝武
     GetOperationTaskStatisticsInfo: before + '/VisualDashBoardApi/GetOperationTaskStatisticsInfo', //获取近30日运维工单统计
     GetPlanOperationTaskCompleteRate:
       before + '/VisualDashBoardApi/GetPlanOperationTaskCompleteRate', //获取计划巡检完成率、校准完成率
@@ -1538,10 +1542,10 @@ export const API = {
     GetStatePointEquipmentExceptionsOverview:
       before + '/VisualDashBoardApi/GetStatePointEquipmentExceptionsOverview', //获取设备异常总览 设备异常率、设备故障率、设备故障修复率（评估中心）
     GetMapPointList: before + '/VisualDashBoardApi/GetMapPointList', //获取地图数据
-    GetOperatePointList:  before + '/VisualDashBoardApi/GetOperatePointList', //获取运维信息总览 详情运维企业、监测点信息
+    GetOperatePointList: before + '/VisualDashBoardApi/GetOperatePointList', //获取运维信息总览 详情运维企业、监测点信息
     ExportOperatePointList: before + '/VisualDashBoardApi/ExportOperatePointList', //导出运维信息总览 详情运维企业、监测点信息
     GetBWOperatePointList: before + '/BWDataApi/GetBWOperatePointList', //获取运维信息总览 详情运维企业、监测点信息 宝武
-    ExportBWOperatePointList:  before + '/BWDataApi/ExportBWOperatePointList', //导出运维信息总览 详情运维企业、监测点信息 宝武
+    ExportBWOperatePointList: before + '/BWDataApi/ExportBWOperatePointList', //导出运维信息总览 详情运维企业、监测点信息 宝武
     GetOperationPlanTaskList: before + '/VisualDashBoardApi/GetOperationPlanTaskList', // 获取近30日运维工单统计 详情
     ExportOperationPlanTaskList: before + '/VisualDashBoardApi/ExportOperationPlanTaskList', // 导出近30日运维工单统计 详情
     GetVisualDashBoardNetworkingRate:
@@ -1699,9 +1703,10 @@ export const API = {
     ExportExceptionTaskOrderList: before + '/WorkOrderStatistics/ExportExceptionTaskOrderList', //导出异常工单信息
     GetExceptionTaskOrderSignList: before + '/WorkOrderStatistics/GetExceptionTaskOrderSignList', //获取企业异常打卡信息（地图）
     /*运维到期提醒*/
-    GetOperationExpireAnalysis:  before + '/OperationExpireAnalysis/GetOperationExpireAnalysis', //运维到期点位统计
-    ExportOperationExpireAnalysis:  before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis', //导出运维到期点位统计
-    GetBWOperationExpireAnalysis:  before + '/BWDataApi/GetBWOperationExpireAnalysis', //运维到期点位统计 宝武
+    GetOperationExpireAnalysis: before + '/OperationExpireAnalysis/GetOperationExpireAnalysis', //运维到期点位统计
+    ExportOperationExpireAnalysis:
+      before + '/OperationExpireAnalysis/ExportOperationExpireAnalysis', //导出运维到期点位统计
+    GetBWOperationExpireAnalysis: before + '/BWDataApi/GetBWOperationExpireAnalysis', //运维到期点位统计 宝武
     ExportBWOperationExpireAnalysis: before + '/BWDataApi/ExportBWOperationExpireAnalysis', //导出运维到期点位统计 宝武
     /**运维计划**/
     /*制定运维计划*/

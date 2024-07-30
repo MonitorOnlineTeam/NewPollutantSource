@@ -162,7 +162,8 @@ export default Model.extend({
         ...payload,
       });
       if (result.IsSuccess) {
-        let SelectMenu = result.Datas.filter(item => item.TipsName.indexOf('ReactShow') > -1);
+        // let SelectMenu = result.Datas.filter(item => item.TipsName.indexOf('ReactShow') > -1);
+        let SelectMenu = result.Datas;
         SelectMenu.unshift({
           ID: '0',
           Name: '全部',

@@ -9,6 +9,7 @@ import ReactEcharts from 'echarts-for-react';
 import AbnormalDataAnalysis from '../index';
 import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
 import WarningDataAndChart from '@/pages/AbnormalIdentifyModel/AssistDataAnalysis/components/WarningDataAndChart.js';
+import ExceptionProblem from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/ExceptionProblem';
 
 const { Option } = Select;
 
@@ -90,6 +91,9 @@ const PageContent = props => {
   const [pieData, setPieData] = useState([{}, {}, {}, {}]);
   const [levelList, setLevelList] = useState([]);
   const [typeList, setTypeList] = useState([]);
+  const [level2PageOpen, setLevel2PageOpen] = useState(false);
+  const [level2Params, setLevel2Params] = useState({});
+  const [level2PageTitle, setLevel2PageTitle] = useState();
 
   useEffect(() => {
     GetModelList();
@@ -620,7 +624,8 @@ const PageContent = props => {
         key: item,
         sorter: (a, b) => a[item] - b[item],
         render: (text, record, index) => {
-          return <a onClick={() => onNumClick(record, idx)}>{text}</a>;
+          // return <a onClick={() => onNumClick(record, idx)}>{text}</a>;
+          return <a onClick={() => onEnterSecondaryPage(record, idx)}>{text}</a>;
         },
       };
     });
@@ -652,6 +657,86 @@ const PageContent = props => {
     default:
       break;
   }
+
+  // 下钻点击
+  const drillDownClick = record => {
+    if (dataType === 'region') {
+      setRegionCode(record.Key);
+      setEntCode(undefined);
+    } else {
+      setRegionCode(undefined);
+      setEntCode(record.Key);
+    }
+
+    setIsModalOpen(true);
+    setModalTitle(record.Name + ` - 异常${excepTypeName}分析详情`);
+  };
+
+  // 图表点击事件 - 分类点击
+  const onClickEcharts = e => {
+    const { dataIndex } = e;
+    if (dataType !== 'point') {
+      let record = dataSource[dataIndex];
+      drillDownClick(record);
+    }
+  };
+
+  // 进入二级页面
+  const onEnterSecondaryPage = (row, index) => {
+    let typeName = '',
+      params = {};
+    switch (dataType) {
+      case 'region':
+        typeName = row.Name;
+        params = {
+          regionCode: row.Key,
+          date: date,
+        };
+        break;
+      case 'ent':
+        typeName = row.Name;
+        params = {
+          entCode: row.Key,
+          date: date,
+        };
+        break;
+      case 'point':
+        typeName = row.ParentName + ' - ' + row.Name;
+        params = {
+          dgimn: row.Key,
+          entCode: row.ParentKey,
+          date: date,
+        };
+        break;
+    }
+    switch (excepType) {
+      case 'level':
+        params.modelExcepLevel = index + 1;
+        break;
+      case 'type':
+        params.modelExcepType = index + 1;
+        break;
+      case 'action':
+        params.modelExcepAction = index + 1;
+        break;
+      default:
+        break;
+    }
+    setLevel2Params(params);
+    let bTime = moment(date[0]).format('YYYY-MM-DD');
+    let eTime = moment(date[1]).format('YYYY-MM-DD');
+    setLevel2PageTitle(`${typeName}（${bTime} - ${eTime}）`);
+    setLevel2PageOpen(true);
+    // dgimn: '',
+    // entCode: '',
+    // regionCode: '',
+    // beginTime: '2024-01-23',
+    // endTime: '2024-07-23',
+    // modelExcepLevel: '',
+    // modelExcepType: '',
+    // modelExcepAction: '',
+    // modelGuid: '',
+  };
 
   return (
     <div className={styles.PageWrapper}>
@@ -791,6 +876,9 @@ const PageContent = props => {
               style={{ height: 'calc(100%)' }}
               className="echarts-for-echarts"
               theme="my_theme"
+              onEvents={{
+                click: onClickEcharts,
+              }}
             />
           </Card>
         </Col>
@@ -885,6 +973,14 @@ const PageContent = props => {
         />
       </Modal>
       <CluesListModal open={isModalOpen2} onCancel={() => setIsModalOpen2(false)} />
+      {level2PageOpen && (
+        <ExceptionProblem
+          title={level2PageTitle}
+          reqParams={level2Params}
+          open={level2PageOpen}
+          onCancel={() => setLevel2PageOpen(false)}
+        />
+      )}
     </div>
   );
 };

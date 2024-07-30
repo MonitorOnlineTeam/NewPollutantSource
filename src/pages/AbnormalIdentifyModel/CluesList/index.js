@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-22 16:40:55
+ * @Last Modified time: 2024-07-24 14:34:23
  * @Description：线索列表
  */
 
@@ -31,7 +31,7 @@ import RegionList from '@/components/RegionList';
 import EntAtmoList from '@/components/EntAtmoList';
 import { DetailIcon } from '@/utils/icon';
 import { router } from 'umi';
-import { ModelNumberIdsDatas, ModalNameConversion } from '../CONST';
+import { ModelNumberIdsDatas, ModalNameConversion, transformData } from '../CONST';
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import CluesDetails from './CluesDetails';
 import { isArray } from 'lodash';
@@ -123,37 +123,6 @@ const CluesList = props => {
       getPointList(warningForm[modelNumber].EntCode);
     }
   }, [warningForm[modelNumber]]);
-
-  function transformData(data) {
-    return data.map(base => {
-      const children = base.ModelBaseList.flatMap(type => {
-        // 如果ModelType对象的ModelTypeCode和ModelTypeName为空，则直接使用ModelList
-        if (type.ModelTypeCode === '' && type.ModelTypeName === '') {
-          return type.ModelList.map(model => ({
-            label: model.ModelName,
-            value: model.ModelGuid,
-            ...model,
-          }));
-        }
-        // 否则，创建正常的层级结构
-        return {
-          label: type.ModelTypeName,
-          value: base.ModelBaseTypeCode + '-' + type.ModelTypeCode,
-          children: type.ModelList.map(model => ({
-            label: model.ModelName,
-            value: model.ModelGuid,
-            ...model,
-          })),
-        };
-      });
-
-      return {
-        label: base.ModelBaseTypeName,
-        value: base.ModelBaseTypeCode,
-        children: children,
-      };
-    });
-  }
 
   // 获取数据模型列表
   const GetModelList = () => {

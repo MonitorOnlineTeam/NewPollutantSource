@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-02-18 15:16:30
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-04-06 16:53:03
+ * @Last Modified time: 2024-07-30 09:49:40
  * @desc
  */
 import React, { PureComponent } from 'react';
@@ -96,9 +96,11 @@ class SmokeReportPage extends PureComponent {
         this.tableFooter = '';
         this.unit1 = 'kg/h';
         this.unit2 = 'm³/h';
-        beginTime = moment().format('YYYY-MM-DD 01:00:00');
+        beginTime = moment()
+          .add(-1, 'day')
+          .format('YYYY-MM-DD 01:00:00');
         endTime = moment()
-          .add(1, 'day')
+          // .add(1, 'day')
           .format('YYYY-MM-DD 00:00:00');
         reportType = 'dayanddate';
         // strMsg = '排放量为小时均值*小时流量';
@@ -169,7 +171,8 @@ class SmokeReportPage extends PureComponent {
         msg: strMsg,
       },
     });
-    this.props.form.setFieldsValue({ time: moment() });
+    // this.props.form.setFieldsValue({ time: moment() });
+    this.props.form.setFieldsValue({ time: moment(beginTime) });
     this.timeEle = (
       <DatePickerTool
         allowClear={false}
@@ -346,7 +349,6 @@ class SmokeReportPage extends PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname != this.props.location.pathname) {
       this.switchInfo(nextProps.match.params.reportType);
-      console.log('props=', this.props);
       this.props.dispatch({
         type: 'report/updateState',
         payload: {
@@ -578,7 +580,10 @@ class SmokeReportPage extends PureComponent {
               </Select>
               <FormItem {...formLayout} label="监测日期" style={{ width: 250, marginTop: -6 }}>
                 {getFieldDecorator('time', {
-                  initialValue: moment(),
+                  initialValue:
+                    this.props.match.params.reportType === 'day'
+                      ? moment().subtract(1, 'day')
+                      : moment(),
                   rules: [
                     {
                       message: '请填写监测日期',

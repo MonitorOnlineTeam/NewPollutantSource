@@ -46,9 +46,9 @@ const DeviceInfoCount = props => {
             <div className={styles.numberContent}>
               <p className={styles.num} style={{ color: '#FF3737' }}>
                 {CTCountAnalysis.GuideInstallationCount}
-                <span className={styles.overViewUnit}>个</span>
+                <span className={styles.overViewUnit}>套</span>
               </p>
-              <p className={styles.text}>安装完成排口</p>
+              <p className={styles.text}>安装完成设备</p>
             </div>
           </Col>
           <Col span={12} className={styles.pointClassifyItem}>
@@ -56,9 +56,9 @@ const DeviceInfoCount = props => {
             <div className={styles.numberContent}>
               <p className={styles.num} style={{ color: '#2EEB9D' }}>
                 {CTCountAnalysis.DebuggingCount}
-                <span className={styles.overViewUnit}>个</span>
+                <span className={styles.overViewUnit}>套</span>
               </p>
-              <p className={styles.text}>调试完成排口</p>
+              <p className={styles.text}>调试完成设备</p>
             </div>
           </Col>
           <Col span={12} className={styles.pointClassifyItem}>
@@ -66,9 +66,9 @@ const DeviceInfoCount = props => {
             <div className={styles.numberContent}>
               <p className={styles.num} style={{ color: '#FFCC00' }}>
                 {CTCountAnalysis.CheckedCount}
-                <span className={styles.overViewUnit}>个</span>
+                <span className={styles.overViewUnit}>套</span>
               </p>
-              <p className={styles.text}>验收完成排口</p>
+              <p className={styles.text}>验收完成设备</p>
             </div>
           </Col>
         </Row>

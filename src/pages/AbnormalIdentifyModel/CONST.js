@@ -240,6 +240,36 @@ export const getModelGuidsByBaseTypeCode = (data, baseTypeCode) => {
   return results;
 };
 
+export function transformData(data) {
+  return data.map(base => {
+    const children = base.ModelBaseList.flatMap(type => {
+      // 如果ModelType对象的ModelTypeCode和ModelTypeName为空，则直接使用ModelList
+      if (type.ModelTypeCode === '' && type.ModelTypeName === '') {
+        return type.ModelList.map(model => ({
+          label: model.ModelName,
+          value: model.ModelGuid,
+          ...model,
+        }));
+      }
+      // 否则，创建正常的层级结构
+      return {
+        label: type.ModelTypeName,
+        value: base.ModelBaseTypeCode + '-' + type.ModelTypeCode,
+        children: type.ModelList.map(model => ({
+          label: model.ModelName,
+          value: model.ModelGuid,
+          ...model,
+        })),
+      };
+    });
+
+    return {
+      label: base.ModelBaseTypeName,
+      value: base.ModelBaseTypeCode,
+      children: children,
+    };
+  });
+}
 // export const ChartDefaultSelected = {/*  */
 //   // 疑似监测样品为空气
 //   '9104ab9f-d3f3-4bd9-a0d9-898d87def4dd': [

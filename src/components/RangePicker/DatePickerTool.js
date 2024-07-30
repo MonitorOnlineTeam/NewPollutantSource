@@ -2,11 +2,12 @@
 
 import React, { Component } from 'react';
 import moment from 'moment';
-import { DatePicker, LocaleProvider } from 'antd';
+import 'moment/locale/zh-cn';
+import { DatePicker, ConfigProvider } from 'antd';
 import PropTypes from 'prop-types';
 import YearPicker from '@/components/YearPicker';
 const { WeekPicker, MonthPicker } = DatePicker;
-import zhCN from 'antd/es/date-picker/locale/zh_CN';
+import locale from 'antd/es/date-picker/locale/zh_CN';
 const dateChildren = [];
 const dateYear = moment().get('year');
 for (let i = dateYear; i > dateYear - 10; --i) {
@@ -32,7 +33,7 @@ class DatePickerTool extends Component {
       case 'quarter':
         return (
           <DatePicker
-            format={'第Q季度'}
+            format={'YYYY-Q季度'}
             value={this.state.defaultValue}
             {...this.props}
             onChange={this.onChange}

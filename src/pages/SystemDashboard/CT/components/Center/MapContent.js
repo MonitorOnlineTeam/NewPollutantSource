@@ -558,9 +558,9 @@ class MapContent extends PureComponent {
               >
                 <p style={{ color: '#FF3737', fontSize: 20 }}>
                   {position.GuideInstallationCount}
-                  <span className={styles.overViewUnit}>个</span>
+                  <span className={styles.overViewUnit}>套</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>安装完成排口</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>安装完成设备</p>
               </Col>
               <Col
                 span={12}
@@ -573,9 +573,9 @@ class MapContent extends PureComponent {
               >
                 <p style={{ color: '#2EEB9D', fontSize: 20 }}>
                   {position.DebuggingCount}
-                  <span className={styles.overViewUnit}>个</span>
+                  <span className={styles.overViewUnit}>套</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>调试完成排口</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>调试完成设备</p>
               </Col>
               <Col
                 span={12}
@@ -588,9 +588,9 @@ class MapContent extends PureComponent {
               >
                 <p style={{ color: '#FFCC00', fontSize: 20 }}>
                   {position.CheckedCount}
-                  <span className={styles.overViewUnit}>个</span>
+                  <span className={styles.overViewUnit}>套</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>验收完成排口</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>验收完成设备</p>
               </Col>
             </Row>
           </div>
@@ -702,11 +702,14 @@ class MapContent extends PureComponent {
       case '全屏':
         this.setState({ fullScreen: true }, () => {
           onFullScreenChange(true);
+          aMap.setFitView();
+          aMap.setZoom(5);
         });
         break;
       case '退出全屏':
         this.setState({ fullScreen: false }, () => {
           onFullScreenChange(false);
+          aMap.setFitView();
         });
         break;
     }

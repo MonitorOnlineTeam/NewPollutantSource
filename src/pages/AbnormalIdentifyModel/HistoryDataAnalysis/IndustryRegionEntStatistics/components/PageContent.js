@@ -6,6 +6,7 @@ import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import ReactEcharts from 'echarts-for-react';
+import ExceptionProblem from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/ExceptionProblem';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   loading: loading.effects['AbnormalIdentifyModel/GetExcepDataAnalysis'],
@@ -19,6 +20,9 @@ const PageContent = props => {
   const [date, setDate] = useState(time || [moment().startOf('year'), moment()]); // 时间
   const [dataSource, setDataSource] = useState([]);
   const [rank, setRank] = useState(10);
+  const [level2PageOpen, setLevel2PageOpen] = useState(false);
+  const [level2Params, setLevel2Params] = useState({});
+  const [level2PageTitle, setLevel2PageTitle] = useState();
 
   useEffect(() => {
     loadData();
@@ -198,8 +202,8 @@ const PageContent = props => {
         key: 'ExcepRate',
         align: 'center',
         sorter: (a, b) => a.ExcepRate - b.ExcepRate,
-        render: text => {
-          return text + '%';
+        render: (text, row) => {
+          return <a onClick={() => onEnterSecondaryPage(row)}>{text} %</a>;
         },
       },
       {
@@ -208,9 +212,9 @@ const PageContent = props => {
         key: 'ExcepNums',
         align: 'center',
         sorter: (a, b) => a.ExcepNums - b.ExcepNums,
-        // render: text => {
-        //   return text + '次'
-        // },
+        render: (text, row) => {
+          return <a onClick={() => onEnterSecondaryPage(row)}>{text}</a>;
+        },
       },
       {
         title: '异常小时数',
@@ -218,6 +222,9 @@ const PageContent = props => {
         key: 'ExcepHours',
         align: 'center',
         sorter: (a, b) => a.ExcepHours - b.ExcepHours,
+        render: (text, row) => {
+          return <a onClick={() => onEnterSecondaryPage(row)}>{text}</a>;
+        },
       },
       {
         title: '主要异常问题',
@@ -260,8 +267,8 @@ const PageContent = props => {
         key: 'ExcepRate',
         align: 'center',
         sorter: (a, b) => a.ExcepRate - b.ExcepRate,
-        render: text => {
-          return text + '%';
+        render: (text, row) => {
+          return <a onClick={() => onEnterSecondaryPage(row)}>{text} %</a>;
         },
       },
       {
@@ -270,6 +277,9 @@ const PageContent = props => {
         key: 'ExcepHours',
         align: 'center',
         sorter: (a, b) => a.ExcepHours - b.ExcepHours,
+        render: (text, row) => {
+          return <a onClick={() => onEnterSecondaryPage(row)}>{text}</a>;
+        },
       },
       {
         title: '运行率',
@@ -331,6 +341,51 @@ const PageContent = props => {
       break;
   }
 
+  // 进入二级页面
+  const onEnterSecondaryPage = row => {
+
+    let typeName = '',
+      params = {};
+    switch (dataType) {
+      case 'indus':
+        typeName = row.Name + '行业';
+        params = {
+          IndustryType: row.Key,
+          date: date,
+        };
+        break;
+      case 'region':
+        typeName = row.Name;
+        params = {
+          regionCode: row.Key,
+          date: date,
+        };
+        break;
+      case 'point':
+        typeName = row.ParentName + ' - ' + row.Name;
+        params = {
+          dgimn: row.Key,
+          entCode: row.ParentKey,
+          date: date,
+        };
+        break;
+    }
+    setLevel2Params(params);
+    let bTime = moment(date[0]).format('YYYY-MM-DD');
+    let eTime = moment(date[1]).format('YYYY-MM-DD');
+    setLevel2PageTitle(`${typeName}（${bTime} - ${eTime}）`);
+    setLevel2PageOpen(true);
+    // dgimn: '',
+    // entCode: '',
+    // regionCode: '',
+    // beginTime: '2024-01-23',
+    // endTime: '2024-07-23',
+    // modelExcepLevel: '',
+    // modelExcepType: '',
+    // modelExcepAction: '',
+    // modelGuid: '',
+  };
+
   return (
     <div className={styles.PageWrapper}>
       <Card bodyStyle={{ padding: '12px 24px' }}>
@@ -388,6 +443,12 @@ const PageContent = props => {
           style={{ height: 'calc(100%)' }}
           className="echarts-for-echarts"
           theme="my_theme"
+          onEvents={{
+            click: event => {
+              const { dataIndex } = event;
+              onEnterSecondaryPage(dataSource[dataIndex]);
+            },
+          }}
         />
       </Card>
       <Card
@@ -404,6 +465,14 @@ const PageContent = props => {
           // scroll={{ y: '400px' }}
         />
       </Card>
+      {level2PageOpen && (
+        <ExceptionProblem
+          title={level2PageTitle}
+          reqParams={level2Params}
+          open={level2PageOpen}
+          onCancel={() => setLevel2PageOpen(false)}
+        />
+      )}
     </div>
   );
 };
