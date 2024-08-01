@@ -416,6 +416,8 @@ class DateReportPage extends PureComponent {
       treeData: entAndPontList,
       fieldNames: { title: 'title', value: 'key', children: 'children' },
       treeCheckable: true,
+      showSearch:true,
+      treeNodeFilterProp: 'title',
       // showCheckedStrategy: SHOW_PARENT,
       maxTagCount: 3,
       maxTagTextLength: 5,

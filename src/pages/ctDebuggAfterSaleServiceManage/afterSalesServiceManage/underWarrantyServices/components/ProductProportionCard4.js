@@ -236,7 +236,7 @@ const ProductProportionCard4 = props => {
 
     option.grid3D = {
       show: false,
-      // boxHeight: 7, //圆环的高度
+      boxHeight: 8, //圆环的高度
       width: '100%',
       top: '-6%',
       left: '-25%',

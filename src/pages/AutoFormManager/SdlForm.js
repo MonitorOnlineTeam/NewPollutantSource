@@ -310,7 +310,9 @@ class SdlForm extends PureComponent {
               itemValue={item.configDataItemValue}
               configId={item.configId}
               data={item.value}
+              selectType={labelText === '行政区' ? item.selectType : '999,是'}
               placeholder={placeholder}
+              isCtPoll={configId==='CTEnterprise'}
             />
           );
           break;

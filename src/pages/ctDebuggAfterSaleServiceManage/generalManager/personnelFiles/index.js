@@ -71,7 +71,7 @@ const Index = (props) => {
 
 
 
-  const {queryPar, tableDatas, tableTotal,  tableLoading, exportLoading, isModal, } = props;
+  const {queryPar, tableDatas, tableTotal,  tableLoading, exportLoading, isModal,personPollType, } = props;
 
   const [codList,setCodList] = useState([]) //岗位类别
   const [codLoading,setCodLoading] = useState(true) 
@@ -79,6 +79,13 @@ const Index = (props) => {
   const [codList2,setCodList2] = useState([])//行业属性
   const [codLoading2,setCodLoading2] = useState(true) 
 
+
+  
+  useEffect(() => {
+    if(personPollType){
+      form.setFieldsValue({attribute:personPollType})
+    }
+  }, [personPollType]);
   useEffect(() => {
     onFinish(pageIndex, pageSize);
     props.GetCodList({CodID:55},(res)=>{ 
@@ -229,7 +236,7 @@ const Index = (props) => {
         <Col span={8}>
         <Spin spinning={codLoading2} size='small' className='formItemSpinSty'>
             <Form.Item name='attribute' label='行业属性'>
-            <Select placeholder='请选择' allowClear showSearch  optionFilterProp="children">
+            <Select placeholder='请选择' allowClear showSearch  optionFilterProp="children"  disabled={personPollType}>
                 {codList2.map(item => <Option key={item.BaseCnName} value={item.BaseCnName}>{item.BaseCnName}</Option>)}
               </Select>
             </Form.Item>

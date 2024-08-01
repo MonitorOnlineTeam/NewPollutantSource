@@ -85,7 +85,6 @@ const Model = {
               children: undefined,
             }));
             Cookie.set('sysList', systemList?.length > 0 ? JSON.stringify(systemList) : []);
-
             callback && callback(response.IsSuccess);
             //生成菜单数组保存 清空路由和路由权限使用
             function getMeun(meun) {
@@ -115,6 +114,7 @@ const Model = {
             Cookie.set('systemNavigateUrl', systemNavigateUrl);
             sessionStorage.setItem('sysMenuId', sysList.id);
             sessionStorage.setItem("sysName", sysList.name);
+            Cookie.set('sysMenuId', sysList.id);
             //进入系统，运维系统不跳转中间页
             if (configInfo.IsShowSysPage === '1') {
               router.push('/sysTypeMiddlePage');
@@ -126,7 +126,6 @@ const Model = {
                 let contentInParentheses = matches[1];
                 sessionStorage.setItem('sysPollutantCodes', contentInParentheses);
               }
-              // Cookie.set('sysMenuId', sysList.id);
               router.push(defaultNavigateUrl);
             }
           }

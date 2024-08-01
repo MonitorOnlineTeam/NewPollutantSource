@@ -4,7 +4,7 @@
  * 创建时间：2023.10.08
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Radio, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Checkbox, Upload } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography, Spin, Card, Button, Radio, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Checkbox, Upload } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, UploadOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
@@ -33,6 +33,7 @@ const namespace = 'handoverReport'
 
 
 const dvaPropsData = ({ loading, handoverReport, global, }) => ({
+    projectReportListLoading: loading.effects[`${namespace}/getProjectReportList`],
     loadingConfirm: loading.effects[`${namespace}/addOrUpdProjectReportInfo`],
 })
 
@@ -83,17 +84,21 @@ const Index = (props) => {
 
 
 
-    const { record, loadingConfirm, } = props;
+    const { visible, record, loadingConfirm, projectReportListLoading, } = props;
+
 
     const [editPermis, setPermisEdit] = useState(false)
     useEffect(() => {
-        props.visible && initData()
+        visible && record && initData()
 
-    }, [props.visible]);
+    }, [visible, record]);
 
     const initData = () => {
         form2.resetFields();
         setFilesList1([])
+        if (!record) {
+            return
+        }
         if (record.ReceiveFile && record.ReceiveFile[0] && record.ReceiveFile != '待上传') { //运维接收-运维交接单 照片
             const fileList = []
             record.ReceiveFile.map(item => {
@@ -138,23 +143,20 @@ const Index = (props) => {
             })
             setFilesList3(fileList)
         }
-        try {
-            form2.setFieldsValue({
-                remark: record.Remark,
-                status: record.Status,
-                id: record.ID,
-                projectID: record.ProjectID,
-                performanceFile: record.PerformanceFile == '待上传' || !record.PerformanceFile ? cuid() : record.PerformanceFile?.[0]?.FileUuid,
-                receiveFile: record.ReceiveFile == '待上传' || !record.ReceiveFile ? cuid() : record.ReceiveFile?.[0]?.FileUuid,
-                transferFile: record.TransferFile == '待上传' || !record.TransferFile ? cuid() : record.TransferFile?.[0]?.FileUuid,
-                EndStatus: record.EndStatus,
-            })
+        form2.setFieldsValue({
+            remark: record.Remark,
+            status: record.Status,
+            id: record.ID,
+            projectID: record.ProjectID,
+            performanceFile: record.PerformanceFile == '待上传' || !record.PerformanceFile ? cuid() : record.PerformanceFile?.[0]?.FileUuid,
+            receiveFile: record.ReceiveFile == '待上传' || !record.ReceiveFile ? cuid() : record.ReceiveFile?.[0]?.FileUuid,
+            transferFile: record.TransferFile == '待上传' || !record.TransferFile ? cuid() : record.TransferFile?.[0]?.FileUuid,
+            EndStatus: record.EndStatus,
+        })
 
 
 
-        } catch (errInfo) {
-            console.log('Validate Failed:', errInfo);
-        }
+
     }
 
     const [filesList, setFilesList] = useState([]);
@@ -212,7 +214,7 @@ const Index = (props) => {
                 ...values,
             }, () => {
                 props.onCancel()
-                props.onFinish&&props.onFinish()
+                props.onFinish && props.onFinish()
             })
 
 
@@ -286,62 +288,64 @@ const Index = (props) => {
                 title={props.title}
                 visible={props.visible}
                 onOk={onModalOk}
-                confirmLoading={!!loadingConfirm}
+                confirmLoading={!!loadingConfirm || !!projectReportListLoading}
                 onCancel={() => { props.onCancel() }}
                 className={styles.formModal}
                 destroyOnClose
             >
-                <Form
-                    name="basic"
-                    form={form2}
-                >
-                    <Form.Item label="项目接收状态" name="status" rules={[{ required: true, message: '请选择项目接收状态！' }]}>
-                        <Radio.Group>
-                            <Radio value="1">续签</Radio>
-                            <Radio value="2">新签</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-                    <Form.Item label="运维接收-运维交接单" name="receiveFile" >
-                        <Upload {...uploadProps2('receiveFile')} accept='image/*'>
-                            <Button icon={<UploadOutlined />}>上传照片</Button>
-                        </Upload>
-                    </Form.Item>
-                    <Form.Item label="项目结束状态" name="EndStatus" >
-                        <Radio.Group>
-                            <Radio value="1">续签</Radio>
-                            <Radio value="2">不续签</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-                    <Form.Item label="运维移交-运维交接单" name="transferFile" >
-                        <Upload {...uploadProps2('transferFile')} accept='image/*'>
-                            <Button icon={<UploadOutlined />}>上传照片</Button>
-                        </Upload>
-                    </Form.Item>
-                    <Form.Item label="运维合同履约完成报告" name="performanceFile" >
-                        <Upload {...uploadProps2('performanceFile')} accept='image/*'>
-                            <Button icon={<UploadOutlined />}>上传照片</Button>
-                        </Upload>
-                    </Form.Item>
-                    <Form.Item label="备注" name="remark" >
-                        <Input.TextArea placeholder='请输入' />
-                    </Form.Item>
-                    <Form.Item name="id" hidden>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name="projectID" hidden>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item>
-                        <Row style={{ color: '#f5222d' }}>
-                            <span style={{ paddingRight: 12 }}>注：</span>
-                            <ol type="1" style={{ listStyle: 'auto' }}>
-                                <li>在合同执行开始日期的前后7天内上传运维接收-运维交接单；如果项目接收状态是续签则无需上传；</li>
-                                <li>在合同执行结束日期的前后7天内上传运维移交-运维交接单，如果项目被续签则无需上传；</li>
-                                <li>在合同执行结束日期的前后15天内上传运维合同履约完成报告；</li>
-                            </ol>
-                        </Row>
-                    </Form.Item>
-                </Form>
+                <Spin spinning={!!projectReportListLoading}>
+                    <Form
+                        name="basic"
+                        form={form2}
+                    >
+                        <Form.Item label="项目接收状态" name="status" rules={[{ required: true, message: '请选择项目接收状态！' }]}>
+                            <Radio.Group>
+                                <Radio value="1">续签</Radio>
+                                <Radio value="2">新签</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                        <Form.Item label="运维接收-运维交接单" name="receiveFile" >
+                            <Upload {...uploadProps2('receiveFile')} accept='image/*'>
+                                <Button icon={<UploadOutlined />}>上传照片</Button>
+                            </Upload>
+                        </Form.Item>
+                        <Form.Item label="项目结束状态" name="EndStatus" >
+                            <Radio.Group>
+                                <Radio value="1">续签</Radio>
+                                <Radio value="2">不续签</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                        <Form.Item label="运维移交-运维交接单" name="transferFile" >
+                            <Upload {...uploadProps2('transferFile')} accept='image/*'>
+                                <Button icon={<UploadOutlined />}>上传照片</Button>
+                            </Upload>
+                        </Form.Item>
+                        <Form.Item label="运维合同履约完成报告" name="performanceFile" >
+                            <Upload {...uploadProps2('performanceFile')} accept='image/*'>
+                                <Button icon={<UploadOutlined />}>上传照片</Button>
+                            </Upload>
+                        </Form.Item>
+                        <Form.Item label="备注" name="remark" >
+                            <Input.TextArea placeholder='请输入' />
+                        </Form.Item>
+                        <Form.Item name="id" hidden>
+                            <Input />
+                        </Form.Item>
+                        <Form.Item name="projectID" hidden>
+                            <Input />
+                        </Form.Item>
+                        <Form.Item>
+                            <Row style={{ color: '#f5222d' }}>
+                                <span style={{ paddingRight: 12 }}>注：</span>
+                                <ol type="1" style={{ listStyle: 'auto' }}>
+                                    <li>在合同执行开始日期的前后7天内上传运维接收-运维交接单；如果项目接收状态是续签则无需上传；</li>
+                                    <li>在合同执行结束日期的前后7天内上传运维移交-运维交接单，如果项目被续签则无需上传；</li>
+                                    <li>在合同执行结束日期的前后15天内上传运维合同履约完成报告；</li>
+                                </ol>
+                            </Row>
+                        </Form.Item>
+                    </Form>
+                </Spin>
             </Modal>
             {/* 查看附件弹窗 */}
             <ImageView

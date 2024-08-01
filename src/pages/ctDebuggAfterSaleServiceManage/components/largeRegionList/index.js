@@ -55,7 +55,7 @@ const Index = (props) => {
 
 
   return (
-      <Form.Item name={name ? name : 'serviceAreaCode'} label={label ? label : '服务大区'}  >
+      <Form.Item name={name ? name : 'serviceAreaCode'} label={label ? label : '服务大区'}  className={props.formItemClassName}>
         {props.largeRegionListLoading ?
           <Spin size='small'> <Select placeholder='请选择' style={{width:'100%'}}/> </Spin>
           :

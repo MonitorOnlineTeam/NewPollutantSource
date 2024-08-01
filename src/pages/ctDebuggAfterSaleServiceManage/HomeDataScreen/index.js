@@ -40,9 +40,12 @@ const HomeDataScreen = props => {
             color: 'rgb(101, 217, 255)',
           }}
           onClick={() => {
-            let meunList =  Cookie.get("systemNavigateUrl")
-            if (meunList) {
-              router.push(meunList);
+            let meunList = sessionStorage.getItem('menuDatas')
+              ? JSON.parse(sessionStorage.getItem('menuDatas'))
+              : [];
+              console.log(meunList)
+            if (meunList?.length >= 1) {
+              router.push(meunList[1]);
             } else {
               router.push('/ctManage/workbench')
             }

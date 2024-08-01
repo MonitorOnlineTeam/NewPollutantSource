@@ -75,9 +75,9 @@ export default Model.extend({
       const result = yield call(requestPost, API.VisualKanbanApi.GetWorkOrderAnalysisListDay, payload);
       if (result.IsSuccess && result.Datas) {
         yield update({
-          insideOrOutsiderWorkTableDatas: result.Datas.resList,
+          insideOrOutsiderWorkTableDatas: result.Datas?.resList || [],
           insideOrOutsiderWorkTableTotal: result.Total,
-          dateCol: result.Datas.colList || [],
+          dateCol: result.Datas?.colList || [],
           queryPar: { ...payload,entCode: undefined, entName: undefined, pointName: undefined },
         })
       }

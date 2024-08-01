@@ -11,7 +11,7 @@ import { Tabs, Dropdown, Menu, message } from 'antd';
 import webConfig from '../../public/webConfig';
 import SdlMenu from '@/components/SdlMenu';
 import styles from './BasicLayout.less';
-
+import { isOperaSystem } from '@/utils/utils';
 class BasicLayout extends Component {
   constructor(props) {
     super(props);
@@ -34,11 +34,11 @@ class BasicLayout extends Component {
     //   payload: {},
     // });
     // configInfo.IsOpera &&
-      dispatch({
-        //获取运维基础配置
-        type: 'global/getOperationSetting',
-        payload: {},
-      });
+    dispatch({
+      //获取运维基础配置
+      type: 'global/getOperationSetting',
+      payload: {},
+    });
     // 获取菜单
     dispatch({
       type: 'user/fetchCurrent',
@@ -55,7 +55,7 @@ class BasicLayout extends Component {
       type: 'global/updateState',
       payload: {
         clientHeight: document.body.clientHeight,
-        configInfo:{...this.props.configInfo,IsOpera:sysName=='智慧运维管理平台' || sysName=='污染源监测安装调试系统'}
+        configInfo: { ...this.props.configInfo, IsOpera: isOperaSystem(sysName) }
       },
     });
     dispatch({
@@ -176,9 +176,9 @@ class BasicLayout extends Component {
           menuHeaderRender={(logo, title, props) => {
             return <>
               {isShowLogo && logoRender()} {/*  || (isLogoScroll && styles.layoutSty2) 带logo的*/}
-              <a className={(isScroll && styles.layoutSty)} href={currentMenu?.[0]?.path}> <h1 style={{width: isScroll && _settings.title?.length * 19}} title={_settings.title}>{_settings.title}</h1></a>
+              <a className={(isScroll && styles.layoutSty)} href={currentMenu?.[0]?.path}> <h1 style={{ width: isScroll && _settings.title?.length * 19 }} title={_settings.title}>{_settings.title}</h1></a>
             </>
-           }
+          }
           } //宝武 系统名称太长 添加滚动效果
         >
           {webConfig.isShowBreadcrumb ? (

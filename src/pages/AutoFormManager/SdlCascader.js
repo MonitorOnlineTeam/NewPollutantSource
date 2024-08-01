@@ -145,29 +145,29 @@ class SdlCascader extends Component {
       testRegionList,
       isCtPoll,
     } = this.props;
-    if (
-      props.regionList !== regionList ||
-      (props.noFilterRegionList !== noFilterRegionList &&
-        (itemName === 'dbo.T_Cod_Region.RegionName' || !configId))
-    ) {
-      //资产管理污染源管理 或 不需要过滤的行政区
-      this.setState({
-        industryTreeList: this.industryTreeListFormat(
-          noFilter ? noFilterRegionList : regionList,
-          1,
-        ),
-      });
-    }
-    if (
-      props.testRegionList !== testRegionList &&
-      itemName === 'dbo.View_TestRegion.RegionName' &&
-      !isCtPoll
-    ) {
-      //调试服务
-      this.setState({
-        industryTreeList: this.industryTreeListFormat(this.props.testRegionList, 1),
-      });
-    }
+    // if (
+    //   props.regionList !== regionList ||
+    //   (props.noFilterRegionList !== noFilterRegionList &&
+    //     (itemName === 'dbo.T_Cod_Region.RegionName' || !configId))
+    // ) {
+    //   //资产管理污染源管理 或 不需要过滤的行政区
+    //   this.setState({
+    //     industryTreeList: this.industryTreeListFormat(
+    //       noFilter ? noFilterRegionList : regionList,
+    //       1,
+    //     ),
+    //   });
+    // }
+    // if (
+    //   props.testRegionList !== testRegionList &&
+    //   itemName === 'dbo.View_TestRegion.RegionName' &&
+    //   !isCtPoll
+    // ) {
+    //   //调试服务
+    //   this.setState({
+    //     industryTreeList: this.industryTreeListFormat(this.props.testRegionList, 1),
+    //   });
+    // }
   }
   industryTreeListFormat = (data, i) => {
     const { selectType } = this.props;

@@ -222,10 +222,8 @@ export default Model.extend({
     },
     /*获取行政区详细信息及层级关系**/
     *getregioninfobytree({ payload }, { call, update }) {
-      debugger
       const result = yield call(getregioninfobytree, { ...payload });
       if (result.IsSuccess) {
-        debugger
         yield update({
           RegionInfoTree: result.Datas.list,
         });
@@ -261,7 +259,6 @@ export default Model.extend({
       //         PollutantTypes:dd.defaultPollutantCode
       //     }
       // }
-      debugger
       if (!payload.PollutantType) {
         let global = yield select(state => state.common);
         if (!global.defaultPollutantCode) {

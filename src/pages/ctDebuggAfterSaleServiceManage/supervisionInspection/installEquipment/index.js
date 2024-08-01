@@ -112,203 +112,228 @@ const Index = props => {
     });
     onFinish(pageIndex, pageSize);
   }, []);
-  const columns = [
-    {
-      title: '序号',
-      align: 'center',
-      ellipsis: true,
-      render: (text, record, index) => {
-        return index + 1 + (pageIndex - 1) * pageSize;
-      },
-    },
-    {
-      title: '派工单号',
-      dataIndex: 'Num',
-      key: 'Num',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '合同编号',
-      dataIndex: 'ProjectCode',
-      key: 'ProjectCode',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '立项号',
-      dataIndex: 'ItemCode',
-      key: 'ItemCode',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '项目名称',
-      dataIndex: 'ProjectName',
-      key: 'ProjectName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '服务大区',
-      dataIndex: 'ServiceAreaName',
-      key: 'ServiceAreaName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '项目所在省',
-      dataIndex: 'ProvinceName',
-      key: 'ProvinceName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '服务工程师',
-      dataIndex: 'WorkerName',
-      key: 'WorkerName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '企业名称',
-      dataIndex: 'EntName',
-      key: 'EntName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '监测点名称',
-      dataIndex: 'PointName',
-      key: 'PointName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '设备型号',
-      dataIndex: 'SystemModelName',
-      key: 'SystemModelName',
-      align: 'center',
-      ellipsis: true,
-    },
+  const getColumns = () => {
 
-    {
-      title: '离开现场时间',
-      dataIndex: 'LeaveDate',
-      key: 'LeaveDate',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '安装照片',
-      align: 'center',
-      ellipsis: true,
-      render: (text, record) => {
-        return <a onClick={() => viewPhotos(record)}>查看照片</a>;
+    const columns = [
+      {
+        title: '序号',
+        align: 'center',
+        ellipsis: true,
+        render: (text, record, index) => {
+          return index + 1 + (pageIndex - 1) * pageSize;
+        },
       },
-    },
-    {
-      title: '照片上传时间',
-      dataIndex: 'CreateTime',
-      key: 'CreateTime',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '成套经理审核人',
-      dataIndex: 'ManagerName',
-      key: 'ManagerName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '专工审核人',
-      dataIndex: 'ExpertName',
-      key: 'ExpertName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: type == 1 ? '审核状态' : '审核结果',
-      dataIndex: type == 1 ? 'StatusName' : 'AuditResultsName',
-      key: type == 1 ? 'StatusName' : 'AuditResultsName',
-      align: 'center',
-      ellipsis: true,
-      render: text => {
-        if (type == 1) {
+      {
+        title: '派工单号',
+        dataIndex: 'Num',
+        key: 'Num',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '合同编号',
+        dataIndex: 'ProjectCode',
+        key: 'ProjectCode',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '立项号',
+        dataIndex: 'ItemCode',
+        key: 'ItemCode',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '项目名称',
+        dataIndex: 'ProjectName',
+        key: 'ProjectName',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '服务大区',
+        dataIndex: 'ServiceAreaName',
+        key: 'ServiceAreaName',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '项目所在省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '服务工程师',
+        dataIndex: 'WorkerName',
+        key: 'WorkerName',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '企业名称',
+        dataIndex: 'EntName',
+        key: 'EntName',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '监测点名称',
+        dataIndex: 'PointName',
+        key: 'PointName',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '设备型号',
+        dataIndex: 'SystemModelName',
+        key: 'SystemModelName',
+        align: 'center',
+        ellipsis: true,
+      },
+
+      {
+        title: '离开现场时间',
+        dataIndex: 'LeaveDate',
+        key: 'LeaveDate',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '安装照片',
+        align: 'center',
+        ellipsis: true,
+        render: (text, record) => {
+          return <a onClick={() => viewPhotos(record)}>查看照片</a>;
+        },
+      },
+      {
+        title: '照片上传时间',
+        dataIndex: 'CreateTime',
+        key: 'CreateTime',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '成套经理审核人',
+        dataIndex: 'ManagerName',
+        key: 'ManagerName',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '专工审核人',
+        dataIndex: 'ExpertName',
+        key: 'ExpertName',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '审核状态',
+        dataIndex: 'StatusName',
+        key: 'StatusName',
+        align: 'center',
+        ellipsis: true,
+        render: text => {
           return (
             <span style={{ color: text == '审核未通过' ? '#f5222d' : 'rgba(0, 0, 0, 0.85)' }}>
               {text}
             </span>
           );
-        } else {
+        },
+      },
+      {
+        title: <span>操作</span>,
+        align: 'center',
+        fixed: 'right',
+        width: 60,
+        ellipsis: true,
+        fixed: 'right',
+        render: (text, record, index) => {
+          const disabledFlag = !record.SystemModelName;
+          return type == 1 ? (
+            record.IsFlag && (
+              <Tooltip
+                placement={disabledFlag ? 'left' : 'top'}
+                title={disabledFlag ? '无设备型号，暂不支持审核' : '审核'}
+              >
+                <a
+                  style={{
+                    cursor: disabledFlag && 'not-allowed',
+                    color: disabledFlag && 'rgba(0, 0, 0, 0.25)',
+                  }}
+                  onClick={() => {
+                    if (disabledFlag) {
+                      return;
+                    }
+                    examinePhotos(record);
+                  }}
+                >
+                  <AuditOutlined style={{ fontSize: 16 }} />
+                </a>
+              </Tooltip>
+            )
+          ) : (
+              <Tooltip title="导出">
+                <a
+                  onClick={() => {
+                    setExportIndex(index);
+                    exports2({
+                      systemModelId: record.Col1,
+                      dispatchId: record.DispatchId,
+                      pointId: record.PointId,
+                      equipmentAuditId: record.EquipmentAuditId,
+                      entName: record.EntName,
+                      pointName: record.PointName,
+                      systemModelName: record.SystemModelName,
+                      projectCode: record.ProjectCode,
+                    });
+                  }}
+                >
+                  {index == exportIndex && exportLoading2 ? (
+                    <Spin size="small" />
+                  ) : (
+                      <ExportOutlined style={{ fontSize: 16 }} />
+                    )}
+                </a>
+              </Tooltip>
+            );
+        },
+      }
+    ];
+    if (type == 2) {
+      columns.splice(5, 0, {
+        title: '合同类型',
+        dataIndex: 'ProjectType',
+        key: 'ProjectType',
+        align: 'center',
+        ellipsis: true,
+      }, {
+        title: '最终用户',
+        dataIndex: 'CustomEnt',
+        key: 'CustomEnt',
+        align: 'center',
+        ellipsis: true,
+      })
+      columns.splice(columns.length - 2, 0, {
+        title: '合格状态',
+        dataIndex: 'AuditResultsName',
+        key: 'AuditResultsName',
+        align: 'center',
+        ellipsis: true,
+        render: text => {
           return (
             <span style={{ color: text == '优秀' ? '#52c41a' : 'rgba(0, 0, 0, 0.85)' }}>
               {text}
             </span>
           );
-        }
-      },
-    },
-    {
-      title: <span>操作</span>,
-      align: 'center',
-      fixed: 'right',
-      width: 60,
-      ellipsis: true,
-      fixed: 'right',
-      render: (text, record, index) => {
-        const disabledFlag = !record.SystemModelName;
-        return type == 1 ? (
-          record.IsFlag && (
-            <Tooltip
-              placement={disabledFlag ? 'left' : 'top'}
-              title={disabledFlag ? '无设备型号，暂不支持审核' : '审核'}
-            >
-              <a
-                style={{
-                  cursor: disabledFlag && 'not-allowed',
-                  color: disabledFlag && 'rgba(0, 0, 0, 0.25)',
-                }}
-                onClick={() => {
-                  if (disabledFlag) {
-                    return;
-                  }
-                  examinePhotos(record);
-                }}
-              >
-                <AuditOutlined style={{ fontSize: 16 }} />
-              </a>
-            </Tooltip>
-          )
-        ) : (
-          <Tooltip title="导出">
-            <a
-              onClick={() => {
-                setExportIndex(index);
-                exports2({
-                  systemModelId: record.Col1,
-                  dispatchId: record.DispatchId,
-                  pointId: record.PointId,
-                  equipmentAuditId: record.EquipmentAuditId,
-                  entName: record.EntName,
-                  pointName: record.PointName,
-                  systemModelName: record.SystemModelName,
-                  projectCode: record.ProjectCode,
-                });
-              }}
-            >
-              {index == exportIndex && exportLoading2 ? (
-                <Spin size="small" />
-              ) : (
-                <ExportOutlined style={{ fontSize: 16 }} />
-              )}
-            </a>
-          </Tooltip>
-        );
-      },
-    },
-  ];
+        },
+      })
+    }
+    return columns
+  }
   const [viewPhotosVisible, setViewPhotosVisible] = useState(false);
   const viewPhotos = row => {
     setViewPhotosVisible(true);
@@ -330,21 +355,17 @@ const Index = props => {
       const par = queryPar
         ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize }
         : {
-            ...values,
-            status: values.status
-              ? values.status
-              : type == 1
-              ? '1,2,3,4'
-              : defaultStatus !== undefined
-              ? defaultStatus
-              : '5',
-            isAll:type==1? undefined : '1',
-            bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
-            eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
-            time: undefined,
-            pageIndex: PageIndex,
-            pageSize: PageSize,
-          };
+          ...values,
+          status: values.status ? values.status
+            : type == 1 ? '1,2,3,4'
+            : defaultStatus,
+          isAll: type == 1 ? undefined : '1',
+          bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+          eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
+          time: undefined,
+          pageIndex: PageIndex,
+          pageSize: PageSize,
+        };
       props.dispatch({
         type: `${namespace}/GetEquipmentAuditList`,
         payload: {
@@ -403,47 +424,62 @@ const Index = props => {
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item name="projectCode" label="项目编号">
+            <Form.Item name="projectCode" label="项目编号" className={type == 2 && 'minWidth'}>
               <Input placeholder="合同编号、立项号" allowClear />
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item name="projectName" label="项目名称" className={type == 2 && 'minWidth'}>
+            <Form.Item name="projectName" label="项目名称">
               <Input placeholder="请输入" allowClear />
             </Form.Item>
           </Col>
-          {type == 2 && (
+          {type == 1 ?
             <Col span={8}>
-              <LargeRegionList />
-            </Col>
-          )}
-          <Col span={8}>
-            {type == 1 ? (
               <Form.Item name="status" label="审核状态">
                 <Select placeholder="请选择" allowClear>
                   <Option value={'1,3'}>待审核</Option>
                   <Option value={'2,4'}>审核未通过</Option>
                 </Select>
               </Form.Item>
-            ) : (
-              <Form.Item name="auditResults" label="审核状态">
-                <Select placeholder="请选择" allowClear>
-                  {auditResultList.includes(1) && <Option value={1}>优秀</Option>}
-                  {auditResultList.includes(2) && <Option value={2}>合格</Option>}
-                  {auditResultList.includes(3) && <Option value={3}>不合格</Option>}
-                  {auditResultList.includes(4) && <Option value={4}>无照片</Option>}
-                  {auditResultList.includes(5) && <Option value={5}>/</Option>}
-                </Select>
-              </Form.Item>
-            )}
-          </Col>
-          {type == 2 && (
-            <Col span={8}>
-              <Form.Item name="time" label="离开现场时间">
-                <RangePicker_ format="YYYY-MM-DD" style={{ width: '100%' }} />
-              </Form.Item>
             </Col>
-          )}
+            :
+            <>
+              <Col span={8}>
+                <Form.Item name="customEnt" label="最终用户">
+                  <Input placeholder="请输入" allowClear />
+                </Form.Item>
+              </Col>
+              <Col span={8} >
+                <LargeRegionList formItemClassName={type == 2 && 'minWidth'} />
+              </Col>
+              <Col span={8}>
+                <Form.Item name="auditResults" label="合格状态">
+                  <Select placeholder="请选择" allowClear>
+                    {auditResultList.includes(1) && <Option value={1}>优秀</Option>}
+                    {auditResultList.includes(2) && <Option value={2}>合格</Option>}
+                    {auditResultList.includes(3) && <Option value={3}>不合格</Option>}
+                    {auditResultList.includes(4) && <Option value={4}>无照片</Option>}
+                    {auditResultList.includes(5) && <Option value={5}>/</Option>}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item name="status" label="审核状态">
+                  <Select placeholder="请选择" allowClear>
+                    <Option value={'1'}>待经理审核</Option>
+                    <Option value={'3'}>待专工审核</Option>
+                    <Option value={'2,4'}>待工程师整改</Option>
+                    <Option value={'5'}>审核通过</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item name="time" label="离开现场时间">
+                  <RangePicker_ format="YYYY-MM-DD" style={{ width: '100%' }} />
+                </Form.Item>
+              </Col>
+            </>
+          }
           <Col span={8}>
             <Form.Item>
               <Button type="primary" htmlType="submit" loading={tableLoading}>
@@ -490,7 +526,7 @@ const Index = props => {
     setExamineTitle(`审核安装照片（${row.EntName} - ${row.PointName} - ${row.SystemModelName} ）`);
     setExamineData(row);
   };
-  
+
   const { modalWrapClassName } = props;
   return (
     <div className={`${styles.installEquipmentSty} queryCriterTitleSty`}>
@@ -502,8 +538,8 @@ const Index = props => {
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
-            columns={columns}
-            scroll={{y: modalWrapClassName && 'calc(100vh - 282px)'  }}
+            columns={getColumns()}
+            scroll={{ y: modalWrapClassName && 'calc(100vh - 282px)' }}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,
@@ -546,7 +582,7 @@ const Index = props => {
 };
 
 Index.defaultProps = {
-  auditResultList: [1, 2, 5],
+  auditResultList: [1, 2, 3,4,5],
 };
 
 export default connect(dvaPropsData)(Index);

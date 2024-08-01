@@ -57,9 +57,9 @@ export default Model.extend({
       const result = yield call(services.abnormalExceptionTaskList, payload);
       if (result.IsSuccess) {
         yield update({
-          abnormalList: result.Datas,
+          abnormalList: result?.Datas?.resList,
           abnormalListTotal: result.Total,
-          dateCol: result.Datas[0] && result.Datas[0].datePick,
+          dateCol: result?.Datas?.colList,
           queryPar: { ...payload, entCode: undefined, entName: undefined },
         })
 

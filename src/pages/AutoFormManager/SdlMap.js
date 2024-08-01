@@ -466,10 +466,14 @@ class SdlMap extends PureComponent {
     thisMap && this.props.handlePolygon && thisMap.setFitView()
     return res;
   }
-
-  render() {
+  
+  render() { 
     const { mapVisible } = this.state;
-    const { handleMarker, handlePolygon, mode, latitude, longitude } = this.props;
+    const { handleMarker, handlePolygon, mode, latitude, longitude,  configInfo: { IsOpera }, } = this.props;
+    const operaMapSty = IsOpera && {
+      width:'calc(100% - 4px)',
+      height:'calc(100vh - 180px)',
+    }
     return (
       <Fragment>
         {
@@ -518,6 +522,8 @@ class SdlMap extends PureComponent {
           visible={mapVisible}
           title="编辑位置信息"
           width="70%"
+          wrapClassName={IsOpera && 'spreadOverModal isFooterSty'}
+          mask={!IsOpera}
           destroyOnClose// 清除上次数据
           onOk={() => {
             this.onOk();
@@ -527,7 +533,7 @@ class SdlMap extends PureComponent {
             this.onCloseModal();
           }}
         >
-          <div className={styles.mapContent} style={{ ...this.props.style }}>
+          <div className={styles.mapContent} style={{ ...operaMapSty,  ...this.props.style }}>
             {this.renderMapContent()}
             <div className={styles.mouseTool}>
               <Button className={styles.ClearButton} onClick={() => {

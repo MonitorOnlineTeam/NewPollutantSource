@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Form, Card, Input, Button, Descriptions, Space, Tooltip, Modal,Row,Col,Select,Radio,  } from 'antd';
+import { Form, Card, Input, Button, Descriptions, Space, Tooltip, Modal, Row, Col, Select, Radio, } from 'antd';
 import styles from '../index.less';
 import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
@@ -28,6 +28,8 @@ const TableCard = props => {
   const [basicsDataSource, setBasicsDataSource] = useState([]);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [allDetailsDataList, setAllDetailsDataList] = useState([]);
+  const [sort, setSort] = useState(0);
+
   const [detailsData, setDetailsData] = useState({
     CategoryTableList: [],
     ReasonTableList: [],
@@ -39,14 +41,14 @@ const TableCard = props => {
     exportLoading,
     basicsLoading,
     basicsExportLoading,
-    underWarrantyServicesData: { ColumnList, TableList,WarrantyAnalysis },
+    underWarrantyServicesData: { ColumnList, TableList, WarrantyAnalysis },
     type,
     date,
     modalWrapClassName,
     largeRegionList,
   } = props;
 
-  useEffect(() => { 
+  useEffect(() => {
     dispatch({
       type: 'common/getCTLargeRegion',
       payload: {},
@@ -56,15 +58,14 @@ const TableCard = props => {
   // 获取基础数据
   const getBasicsData = (_pageIndex, _pageSize, _sort) => {
     const values = form.getFieldsValue();
-    console.log('values', values);
-    let time = values.time || [moment(date).startOf('year'), moment()];
+    let time = values.time;
     dispatch({
       type: 'reportsAndViews/GetWarrantyServiceInfo',
       payload: {
         pageIndex: _pageIndex || pageIndex,
         pageSize: _pageSize || pageSize,
-        btime: time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-        eTime: time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+        btime: time[0] && time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+        eTime: time[1] && time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
         // sort: _sort || sort,
         ...values,
         time: undefined,
@@ -114,14 +115,14 @@ const TableCard = props => {
   const typeClick = (record) => {
     setIsModalOpen(true);
     form.setFieldsValue({
-      responseStatus:record.responseStatus,
-      serviceAreaCode:record.serviceAreaCode,
-      time:record.btime && record.etime && [moment(record.btime),moment(record.etime) ],
-      questionID:record.QuestionID,
+      pType:type,
+      serviceAreaCode: record.serviceAreaCode,
+      time:record.btime && record.etime ?  [moment(record.btime), moment(record.etime)] :  [moment(date).startOf('year'), moment(date).endOf('year')],
+      questionID: record.QuestionID,
     });
-    setTimeout(()=>{
+    setTimeout(() => {
       handleTableChange(1, 20);
-    })
+    },200)
   }
   const TypeRenderComponents = ({ record }) => {
     return <a onClick={() => typeClick(record)}>{record?.text || record?.text == 0 ? record.text : ''}</a>
@@ -139,7 +140,7 @@ const TableCard = props => {
             width: 120,
             align: 'center',
             render: (text, record) => {
-              return <TypeRenderComponents record={{text:text, serviceAreaCode:item.ID, ...record }}  />
+              return <TypeRenderComponents record={{ text: text, serviceAreaCode: item.ID, ...record }} />
             }
           },
           {
@@ -156,7 +157,7 @@ const TableCard = props => {
             width: 120,
             align: 'center',
             render: (text, record) => {
-              return <TypeRenderComponents record={{text:text,serviceAreaCode:item.ID, ...record }}  />
+              return <TypeRenderComponents record={{ text: text, serviceAreaCode: item.ID, ...record }} />
             }
           },
           {
@@ -220,7 +221,7 @@ const TableCard = props => {
             align: 'center',
             fixed: 'left',
             render: (text, record) => {
-              return <TypeRenderComponents record={{text:text, ...record }}  />
+              return <TypeRenderComponents record={{ text: text, ...record }} />
             }
           },
           {
@@ -239,7 +240,7 @@ const TableCard = props => {
             align: 'center',
             fixed: 'left',
             render: (text, record) => {
-              return <TypeRenderComponents record={{text:text, ...record }}  />
+              return <TypeRenderComponents record={{ text: text, ...record }} />
             }
           },
           {
@@ -258,12 +259,11 @@ const TableCard = props => {
 
   // 基础数据表头
   const getBasicsColumns = () => {
-    let columns = [
+    const commomCol1 = [
       {
         title: '序号',
         align: 'center',
         ellipsis: true,
-        fixed: 'left',
         render: (text, record, index) => {
           return index + 1 + (pageIndex - 1) * pageSize;
         },
@@ -273,14 +273,12 @@ const TableCard = props => {
         dataIndex: 'Num',
         key: 'Num',
         ellipsis: true,
-        fixed: 'left',
       },
       {
         title: '项目编号',
         dataIndex: 'ProjectCode',
         key: 'ProjectCode',
         ellipsis: true,
-        fixed: 'left',
       },
       {
         title: '项目名称',
@@ -288,106 +286,55 @@ const TableCard = props => {
         key: 'ProjectName',
         ellipsis: true,
         width: 280,
-        fixed: 'left',
       },
       {
-        title: '本次服务',
+        title: '最终用户',
+        dataIndex: 'CustomEnt',
+        key: 'CustomEnt',
         ellipsis: true,
-        children: [
-          {
-            title: '开始时间',
-            dataIndex: 'BeginTime',
-            key: 'BeginTime',
-            ellipsis: true,
-            width: 180,
-            align: 'center',
-          },
-          {
-            title: '结束时间',
-            dataIndex: 'EndTime',
-            key: 'EndTime',
-            ellipsis: true,
-            align: 'center',
-            width: 180,
-          },
-          {
-            title: '服务时长（小时）',
-            dataIndex: 'ServiceCount',
-            key: 'ServiceCount',
-            ellipsis: true,
-            width: 150,
-            align: 'center',
-          },
-          {
-            title: '合同要求服务时长（小时）',
-            dataIndex: 'ProjectCount',
-            key: 'ProjectCount',
-            width: 200,
-            ellipsis: true,
-            align: 'center',
-          },
-        ],
+        width: 180,
       },
       {
-        title: '服务产品类别',
+        title: '服务大区',
+        dataIndex: 'ServiceAreaName',
+        key: 'ServiceAreaName',
         ellipsis: true,
-        children: [
-          {
-            title: '产品类别个数',
-            dataIndex: 'CategoryNum',
-            key: 'CategoryNum',
-            width: 150,
-            ellipsis: true,
-            align: 'center',
-          },
-          {
-            title: '服务次数',
-            dataIndex: 'CategoryServiceCount',
-            key: 'CategoryServiceCount',
-            ellipsis: true,
-            width: 150,
-            align: 'center',
-          },
-          {
-            title: '服务时长（小时）',
-            dataIndex: 'CategoryServiceTime',
-            key: 'CategoryServiceTime',
-            ellipsis: true,
-            width: 150,
-            align: 'center',
-          },
-        ],
+        width: 150,
       },
       {
-        title: '服务原因',
+        title: '开始时间',
+        dataIndex: 'BeginTime',
+        key: 'BeginTime',
         ellipsis: true,
-        children: [
-          {
-            title: '服务原因个数',
-            dataIndex: 'ReasonNum',
-            key: 'ReasonNum',
-            ellipsis: true,
-            align: 'center',
-            width: 150,
-          },
-          {
-            title: '服务次数',
-            dataIndex: 'ReasonServiceCount',
-            key: 'ReasonServiceCount',
-            ellipsis: true,
-            align: 'center',
-            width: 150,
-          },
-          {
-            title: '服务时长（小时）',
-            dataIndex: 'ReasonServiceTime',
-            key: 'ReasonServiceTime',
-            ellipsis: true,
-            align: 'center',
-            width: 150,
-          },
-        ],
+        width: 180,
+        align: 'center',
       },
+      {
+        title: '结束时间',
+        dataIndex: 'EndTime',
+        key: 'EndTime',
+        ellipsis: true,
+        width: 180,
+        align: 'center',
+      },
+      {
+        title: '企业名称',
+        dataIndex: 'EntName',
+        key: 'EntName',
+        ellipsis: true,
+        align: 'center',
+        width: 180,
+      },
+      {
+        title: '监测点名称',
+        dataIndex: 'PointName',
+        key: 'PointName',
+        ellipsis: true,
+        align: 'center',
+        width: 180,
+      },
+    ];
+    const commomCol2 = [
       {
         title: '离开现场时间',
         dataIndex: 'LeaveDate',
@@ -406,33 +353,88 @@ const TableCard = props => {
         key: 'CreateTime',
         ellipsis: true,
       },
-      {
-        title: '操作',
-        dataIndex: 'handle',
-        key: 'handle',
-        fixed: 'right',
-        render: (text, record) => {
-          return (
-            <Tooltip title="详情">
-              <a
-                onClick={() => {
-                  setIsDetailsModalOpen(true);
-                  let currentDetailsData = allDetailsDataList.find(item => item.Num === record.Num);
-                  handleDetailsData(currentDetailsData, record);
-                  // setDetailsData({
-                  //   ...currentDetailsData,
-                  //   ...record,
-                  // });
-                }}
-              >
-                <DetailIcon />
-              </a>
-            </Tooltip>
-          );
+      // {
+      //   title: '操作',
+      //   dataIndex: 'handle',
+      //   key: 'handle',
+      //   fixed: 'right',
+      //   render: (text, record) => {
+      //     return (
+      //       <Tooltip title="详情">
+      //         <a
+      //           onClick={() => {
+      //             setIsDetailsModalOpen(true);
+      //             let currentDetailsData = allDetailsDataList.find(item => item.Num === record.Num);
+      //             handleDetailsData(currentDetailsData, record);
+      //           }}
+      //         >
+      //           <DetailIcon />
+      //         </a>
+      //       </Tooltip>
+      //     );
+      //   },
+      // },
+    ]
+    let columns = []
+    if (type == 1) {
+      columns = [
+        ...commomCol1,
+        {
+          title: '设备型号',
+          dataIndex: 'QuestionName',
+          key: 'QuestionName',
+          ellipsis: true,
+          width: 150,
+          align: 'center',
         },
-      },
-    ];
-
+        {
+          title: '服务时长（小时）',
+          dataIndex: 'ServiceTime',
+          key: 'ServiceTime',
+          ellipsis: true,
+          width: 150,
+          align: 'center',
+        },
+        {
+          title: '是否解决',
+          dataIndex: 'SolveStatusName',
+          key: 'SolveStatusName',
+          ellipsis: true,
+          width: 150,
+          align: 'center',
+        },
+        {
+          title: '未解决原因',
+          dataIndex: 'Remark',
+          key: 'Remark',
+          ellipsis: true,
+          width: 150,
+          align: 'center',
+        },
+        ...commomCol2,
+      ]
+    } else {
+      columns = [
+        ...commomCol1,
+        {
+          title: '服务原因',
+          dataIndex: 'QuestionName',
+          key: 'QuestionName',
+          ellipsis: true,
+          width: 150,
+          align: 'center',
+        },
+        {
+          title: '服务时长（小时）',
+          dataIndex: 'ServiceTime',
+          key: 'ServiceTime',
+          ellipsis: true,
+          width: 150,
+          align: 'center',
+        },
+        ...commomCol2,
+      ]
+    }
     return columns;
   };
 
@@ -727,32 +729,51 @@ const TableCard = props => {
           form={form}
           layout="inline"
           initialValues={{
-            time: [moment(date).startOf('year'), moment()],
+            solveStatus:'',
           }}
           autoComplete="off"
         >
-          {/* <Row gutter={8} align="middle"> */}
-             {/* <Col span={6}>
+          <Row gutter={8} align="middle">
+            <Col span={6}>
               <Form.Item name="num" label="派工单号">
                 <Input placeholder="请输入" allowClear />
               </Form.Item>
-            </Col>  */}
-            {/* <Col span={6}> */}
+            </Col>
+            <Col span={6}>
               <Form.Item name="projectCode" label="项目编号">
                 <Input placeholder="请输入合同编号/立项号" allowClear />
               </Form.Item>
-            {/* </Col> */}
-            {/* <Col span={6}> */}
-              <Form.Item name="projectName" label="项目名称" className={type==2&&'form_label_width_97'}>
+            </Col>
+            <Col span={6}>
+              <Form.Item name="projectName" label="项目名称" className={type == 2 && 'form_label_width_97'}>
                 <Input placeholder="请输入" allowClear />
               </Form.Item>
-            {/* </Col> */}
-             {/* <Col span={6}>
-              <Form.Item name="customEnt" label="最终用户" className={type==1&&'form_label_width_97'}>
+            </Col>
+            <Col span={6}>
+              <Form.Item name="customEnt" label="最终用户" className={type == 1 && 'form_label_width_97'}>
                 <Input placeholder="请输入" allowClear />
               </Form.Item>
-            </Col> */}
-            {/* {type == 1 && (
+            </Col>
+            <Col span={6}>
+              <Form.Item name="serviceAreaCode" label="服务大区">
+                <Select
+                  placeholder="请选择服务大区"
+                  style={{ width: '100%' }}
+                  allowClear
+                  showSearch
+                  optionFilterProp="children"
+                >
+                  {largeRegionList.map(item => {
+                    return (
+                      <Option value={item.ID} key={item.ID} data-childList={item.ChildList}>
+                        {item.LargeRegion}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
+            {type == 1 ? <>
               <Col span={6}>
                 <Form.Item name="questionID" label="设备型号">
                   <Select
@@ -762,9 +783,9 @@ const TableCard = props => {
                     showSearch
                     optionFilterProp="children"
                   >
-                    {WarrantyAnalysis?.[0]&&WarrantyAnalysis.map(item => {
+                    {WarrantyAnalysis?.[0] && WarrantyAnalysis.map(item => {
                       return (
-                        <Option value={item.ReasonName} key={item.ReasonName} data-childList={item.ReasonName}>
+                        <Option value={item.QuestionID} key={item.QuestionID} data-childList={item.QuestionID}>
                           {item.ReasonName}
                         </Option>
                       );
@@ -772,36 +793,38 @@ const TableCard = props => {
                   </Select>
                 </Form.Item>
               </Col>
-            )} 
-              <Col span={6}>
-                <Form.Item name="serviceAreaCode" label="服务大区">
-                  <Select
-                    placeholder="请选择服务大区"
-                    style={{ width: '100%' }}
-                    allowClear
-                    showSearch
-                    optionFilterProp="children"
-                  >
-                    {largeRegionList.map(item => {
-                      return (
-                        <Option value={item.ID} key={item.ID} data-childList={item.ChildList}>
-                          {item.LargeRegion}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-              </Col>
+                 <Col span={6}>
+                 <Form.Item name="solveStatus" label="是否解决">
+                   <Radio.Group>
+                     <Radio value={''}>全部</Radio>
+                     <Radio value={1}>是</Radio>
+                     <Radio value={0}>否</Radio>
+                   </Radio.Group>
+                 </Form.Item>
+               </Col>
+               </>
+           :
+           <Col span={6}>
+           <Form.Item name="questionID" label="服务原因">
+             <Select
+               placeholder="请选择服务原因"
+               style={{ width: '100%' }}
+               allowClear
+               showSearch
+               optionFilterProp="children"
+             >
+               {WarrantyAnalysis?.[0] && WarrantyAnalysis.map(item => {
+                 return (
+                   <Option value={item.QuestionID} key={item.QuestionID} data-childList={item.QuestionID}>
+                     {item.ReasonName}
+                   </Option>
+                 );
+               })}
+             </Select>
+           </Form.Item>
+         </Col>
+          }
             <Col span={6}>
-              <Form.Item name="responseStatus" label="是否解决">
-                <Radio.Group>
-                  <Radio value={''}>全部</Radio>
-                  <Radio value={1}>是</Radio>
-                  <Radio value={0}>否</Radio>
-                </Radio.Group>
-              </Form.Item>
-            </Col> */}
-            {/* <Col span={6}> */}
               <Form.Item name="time" label="离开现场时间" >
                 <RangePicker_
                   style={{ width: '100%' }}
@@ -810,8 +833,8 @@ const TableCard = props => {
                   format="YYYY-MM-DD"
                 />
               </Form.Item>
-            {/* </Col> */}
-            {/* <Col span={6}> */}
+            </Col>
+            <Col span={6}>
               <Form.Item>
                 <Space>
                   <Button
@@ -839,10 +862,9 @@ const TableCard = props => {
                 </Button>
                 </Space>
               </Form.Item>
-            {/* </Col> */}
-          {/* </Row> */}
-          <Form.Item name='serviceAreaCode' hidden> </Form.Item>
-          <Form.Item name='questionID' hidden> </Form.Item>
+            </Col>
+          </Row>
+              <Form.Item name='pType'/>
         </Form>
         <SdlTable
           loading={basicsLoading}

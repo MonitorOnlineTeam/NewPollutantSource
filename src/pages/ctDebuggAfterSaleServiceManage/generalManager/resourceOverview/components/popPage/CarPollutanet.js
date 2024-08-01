@@ -44,7 +44,7 @@ const Index = (props) => {
 
     const { tableLoading, exportLoading, carPollType, carPollTypeList, } = props;
 
-    const [tableDatas, setTableDatas] = useState([])
+    const [tableDatas, setTableDatas] = useState({})
     const [queryPar, setQueryPar] = useState({})
 
     const [industry, setIndustry] = useState()
@@ -58,12 +58,17 @@ const Index = (props) => {
     }, [industry]);
 
 
-    
+   const colSpanFun = (text,record) =>{
+    return  {
+        children: text,
+        props: { colSpan: record.UseDepartment === '合计' ? 0 : 1 },
+      };
+   }
     const columns = [
         {
             title: '序号',
             render: (text, record, index) => {
-                return index + 1;
+                return index + 1
             },
         },
         {
@@ -72,6 +77,12 @@ const Index = (props) => {
             key: 'UseDepartment',
             align: 'center',
             width: 'auto',
+            render: (text, record, index) => {
+                return {
+                    children: text,
+                    props: { colSpan: text === '合计' ? 3 : 1 },
+                };
+            },
         },
         {
             title: '所属大区',
@@ -79,6 +90,7 @@ const Index = (props) => {
             key: 'RegionName',
             align: 'center',
             width: 'auto',
+            render: (text, record, index) => colSpanFun(text,record),
         },
         {
             title: '所属行业',
@@ -86,6 +98,7 @@ const Index = (props) => {
             key: 'Industry',
             align: 'center',
             width: 'auto',
+            render: (text, record, index) => colSpanFun(text,record),
         },
         {
             title: '车辆排序',
@@ -95,11 +108,11 @@ const Index = (props) => {
             width: 'auto',
             sorter: (a, b) => {
                 if (a.UseDepartment !== '合计' && b.UseDepartment !== '合计') {
-                  return a.Num - b.Num;
+                    return a.Num - b.Num;
                 }
-              },
+            },
             render: (text, record, index) => {
-                return <a  onClick={()=>viewAll(record)}>{text}</a>
+                return <a onClick={() => viewAll(record)}>{text}</a>
             },
         },
 
@@ -107,18 +120,18 @@ const Index = (props) => {
     const [visible, setVisible] = useState(false)
     const [modalTitle, setModalTitle] = useState()
     const [useDepartment, setUseDepartment] = useState()
-  
+
     const viewAll = (record) => {
-      setVisible(true)
-      setModalTitle(`${record.UseDepartment} - 车辆统计`)
-      setUseDepartment(record.UseDepartment)
+        setVisible(true)
+        setModalTitle(`${record.UseDepartment} - 车辆统计`)
+        setUseDepartment(record.UseDepartment)
     }
     const getOption = () => {
-        const xData = [] , yData = [];
-        tableDatas.map(item=>{
-            if(item.UseDepartment!='合计'){
-            xData.push(item.RegionName)
-            yData.push(item.Num)
+        const xData = [], yData = [];
+        tableDatas?.SList?.map(item => {
+            if (item.UseDepartment != '合计') {
+                xData.push(item.RegionName)
+                yData.push(item.Num)
             }
         })
         return {
@@ -171,11 +184,11 @@ const Index = (props) => {
                     minInterval: 1,
                     splitLine: { //网格线
                         lineStyle: { //分割线
-                          color: "#E7E7E7",
-                          width: 1,
-                          type: "dashed" //dotted：虚线 solid:实线
+                            color: "#E7E7E7",
+                            width: 1,
+                            type: "dashed" //dotted：虚线 solid:实线
                         }
-                      },
+                    },
                     axisLine: {
                         show: false,
                     },
@@ -217,15 +230,13 @@ const Index = (props) => {
     }
     const onFinish = () => {
         const values = form.getFieldsValue()
+        const par = { ...values, industry: industry }
         props.dispatch({
             type: `${namespace}/GetCarStatistics`,
-            payload: {
-                ...values,
-                industry: industry,
-            },
+            payload: par,
             callback: (res) => {
                 setTableDatas(res)
-                setQueryPar({ ...values })
+                setQueryPar(par)
             }
         });
     };
@@ -246,10 +257,10 @@ const Index = (props) => {
 
 
     const searchComponents = () => {
-        return <div style={{paddingBottom:8}}>
-                <Radio.Group value={industry} onChange={onChange} >
-                    {carPollTypeList?.map(item => <Radio.Button value={item.PollutantName}>{item.PollutantName}</Radio.Button>)}
-                </Radio.Group>
+        return <div style={{ paddingBottom: 8 }}>
+            <Radio.Group value={industry} onChange={onChange} >
+                {carPollTypeList?.map(item => <Radio.Button value={item.PollutantName}>{item.PollutantName}</Radio.Button>)}
+            </Radio.Group>
         </div>
     }
     const searchComponents2 = () => {
@@ -287,30 +298,30 @@ const Index = (props) => {
     return (<>
         <Card size='small' bordered={false}>
             <div> {searchComponents()} </div>
-            {tableLoading ? <Skeleton active  paragraph={{ rows: 7 }} style={{padding:'14px 0'}}/> : echartsComponents}
+            {tableLoading ? <Skeleton active paragraph={{ rows: 7 }} style={{ padding: '14px 0' }} /> : echartsComponents}
             <div style={{ paddingBottom: 8 }}> {searchComponents2()} </div>
             <SdlTable
                 loading={tableLoading}
                 bordered
                 size='small'
-                scroll={{ x: 580}}
-                dataSource={tableDatas}
+                scroll={{ x: 580 }}
+                dataSource={tableDatas?.rtnList}
                 columns={columns}
             />
         </Card>
         <Modal
-        visible={visible}
-        title={modalTitle}
-        onCancel={() => { setVisible(false) }}
-        footer={null}
-        destroyOnClose
-        wrapClassName={`spreadOverModal`}
-        mask={false}
-        bodyStyle={{ padding: 0 }}
-      >
-        <VehicleManager useDepartment={useDepartment} isModal /> 
-      </Modal>
-        </>
+            visible={visible}
+            title={modalTitle}
+            onCancel={() => { setVisible(false) }}
+            footer={null}
+            destroyOnClose
+            wrapClassName={`spreadOverModal`}
+            mask={false}
+            bodyStyle={{ padding: 0 }}
+        >
+            <VehicleManager useDepartment={useDepartment} isModal />
+        </Modal>
+    </>
     );
 };
 export default connect(dvaPropsData)(Index);

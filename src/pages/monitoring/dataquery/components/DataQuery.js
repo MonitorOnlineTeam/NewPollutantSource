@@ -44,7 +44,7 @@ class DataQuery extends Component {
       selectDisplay: false,
       // selectP: '',
       dgimn: '',
-      dateValue: props.date || [moment(new Date()).add(-60, 'minutes').startOf('h'), moment(new Date()).endOf('h')],
+      dateValue: props.date || [moment(new Date()).add(-1, 'h').startOf('h'), moment(new Date()).endOf('h')],
       dataType: props.dataType || 'realtime',
     };
   }
@@ -71,7 +71,7 @@ class DataQuery extends Component {
       },
       callback: historyparams => {
         if (!this.props.date) {
-          this.children.onDataTypeChange(this.state.dataType, [moment().add(-1, 'h').startOf('hour'), moment().endOf('hour')]);
+          this.children.onDataTypeChange(this.state.dataType, this.state.dateValue);
         } else {
           if (!pollutantlist[0] || !historyparams.pollutantCodes) {
             this.dateCallback(this.state.dateValue, this.state.dataType, dgimn);
@@ -269,7 +269,6 @@ class DataQuery extends Component {
       this.props.historyparams.datatype === 'hour' || this.props.historyparams.datatype === 'day'
         ? true
         : undefined;
-    debugger;
     historyparams &&
       dispatch({
         type: 'dataquery/updateState',

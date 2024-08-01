@@ -21,6 +21,7 @@ import PersonnelFiles from '@/pages/ctDebuggAfterSaleServiceManage/generalManage
 import VehicleManager from '@/pages/ctDebuggAfterSaleServiceManage/generalManager/vehicleManager'
 import Office from '@/pages/workSupervision/management/Office'
 import CarPollutanet from './popPage/CarPollutanet'
+import { bar3DrenderItem } from '@/pages/ctDebuggAfterSaleServiceManage/utils/getBar3D';
 
 // import Standby from '@/pages/workSupervision/management/standby/Standby'
 
@@ -41,11 +42,11 @@ const dvaPropsData = ({ loading, resourceOverview }) => ({
 const Index = (props) => {
 
 
-  
+
   const echartsRef = useRef(null);
   const echartsRef2 = useRef(null);
 
-  const {data } = props;
+  const { data } = props;
   // const [data, setData] = useState({})
 
   useEffect(() => {
@@ -70,6 +71,11 @@ const Index = (props) => {
   const personlStatistics = () => {
     let name = [], value = [];
     if (personType == 1) {
+      data.UserInfo?.PollutantList.map(item => {
+        name.push(item.PName)
+        value.push(item.Num)
+      })
+    } else if (personType == 2) {
       data.UserInfo?.JobCategoryList.map(item => {
         name.push(item.JobCategory)
         value.push(item.Num)
@@ -156,8 +162,7 @@ const Index = (props) => {
     };
 
   }
-  const [vehicleType, setVehicleType] = useState('1')
-  const [carPollType, setCarPollType] = useState('')
+
 
   const vehicleStatistics = () => {
     let name = [], value = [];
@@ -293,6 +298,132 @@ const Index = (props) => {
       ]
     }
   }
+  const renderItemFun = (params, api, type, e) => {
+    let color1, color2, color3;
+    if (type == 0) {
+      color1 = '#3AE3FD'
+      color2 = '#21C0E1'
+      color3 = '#3AE3FD' //顶部
+    } else if (type == 1) {
+      color1 = '#00AEFF'
+      color2 = '#0072FF'
+      color3 = '#00AEFF'
+    } else {
+      color1 = '#F5E483'
+      color2 = '#FFBB17'
+      color3 = '#F5E483'
+    }
+    return bar3DrenderItem(params, api, type, e, color1, color2, color3, { offsetX: 32, offsetY: 8, topOffsetX: 15, topOffsetY: 18, bottomAngle: true, })
+  }
+  const officeStatistics = () => {
+    const seriesName = [], seriesData = [];
+    data.OfficeLocationInfo?.UsedList.map(item => {
+      seriesName.push(item.PName)
+      seriesData.push(item.Num)
+    })
+
+    return {
+      grid: {
+        top: 28,
+        left: 32,
+        right: 12,
+        bottom: 22,
+      },
+      tooltip: {
+        show: false,
+        // backgroundColor: 'rgba(4, 39, 103, .8)',
+        // textStyle: {
+        //   color: '#fff' // 设置文本颜色
+        // },
+        // // 格式化提示内容
+        // formatter: function (params) {
+        //   console.log(params)
+        //   return params.name + '<br />' +
+        //     `${params.seriesName}: ${params.value}个`
+        // }
+      },
+      xAxis: [
+        {
+          type: 'category',
+          axisLabel: {
+            interval: 0,
+            //坐标轴刻度标签的相关设置
+            textStyle: {
+              color: '#DAEBFF',
+              fontSize: 12,
+            },
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#37B6F2',
+              opacity: 0.3
+            },
+          },
+          splitLine: {
+            show: false,
+          },
+          axisTick: {
+            show: false,
+          },
+          data: seriesName,
+        },
+      ],
+      yAxis: [
+        {
+          min: 0,
+          minInterval: 1,
+          type: 'value',
+          splitLine: {
+            show: false,
+          },
+          axisTick: {
+            show: false,
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: '#37B6F2',
+              opacity: 0.3
+            },
+          },
+          axisLabel: {
+            textStyle: {
+              fontSize: 12,
+              color: '#DAEBFF',
+            },
+          },
+        },
+      ],
+      series: [
+        {
+          name: '办事处',
+          type: "custom",
+          renderItem: (params, api) => {
+            return renderItemFun(params, api, params.dataIndex)
+          },
+          data: seriesData,
+        },
+        {
+          name: '办事处',
+          type: "bar",
+          barWidth: 0,
+          label: {
+            normal: {
+              show: true,
+              position: "top",
+              color: "#DAEBFF",
+              offset: [4, -10],//左右 上下
+            },
+          },
+          itemStyle: {
+            color: "transparent",
+          },
+          data: seriesData,
+          z: 2
+        },
+      ]
+    }
+  }
   // const workStatistics = () => {
   //   const colors = ['#39a0f5', '#00D7E9']
   //   const datalist = data?.OfficeLocationInfo?.UsedList?.map((item, index) => {
@@ -381,13 +512,20 @@ const Index = (props) => {
   //   });
   //   return option;
   // }
+  const [vehicleType, setVehicleType] = useState('1')
+  const [pollType, setPollType] = useState('')
 
-  const carPollTypeClick = (option) =>{
+  const carPollTypeClick = (option) => {
     setVisible(true)
+    setPollType(option.name)
     setModalTitle(`${option.name} - 车辆统计`)
-    setCarPollType(option.name)
-
   }
+  const personlStatisticsClick = (option) => {
+    setVisible(true)
+    setPollType(option.name)
+    setModalTitle(`${option.name} - 人员统计`)
+  }
+
   // const bjStatistics = (type) => {
   //   const list = type == 1 ? data?.StandbyMachineInfo?.InsStateList?.map(item => {
   //     return {
@@ -409,7 +547,7 @@ const Index = (props) => {
   //     data?.StandbyMachineInfo?.UseState?.map(item => {
   //       return {
   //         value: item.Num, name: item.UseState, itemStyle: {
-  //           color: item.UseState == '可使用' ? {
+  //           color: item.UseState == '空闲中' ? {
   //             x: 0, y: 0, x2: 1, y2: 0,
   //             colorStops: [{
   //               offset: 0,
@@ -490,27 +628,45 @@ const Index = (props) => {
 
   // const total = data?.OfficeLocationInfo?.OfficeLocationNum?.toString() || '0'
 
+  const personlStatisticsEcharts = useMemo(() => {
+    return (
+      <ReactEcharts
+        option={personlStatistics()}
+        style={{ width: "100%", height: 'calc(100% - 32px - 8px)' }}
+        className="echarts-for-echarts"
+        theme="my_theme"
+        onEvents={{ click: personType == 1 && personlStatisticsClick }}
+      />
+    );
+  }, [loading,personType]);
+  const vehicleStatisticsEcharts = useMemo(() => {
+    return (
+      <ReactEcharts
+        option={vehicleStatistics()}
+        style={{ width: "100%", height: 'calc(100% - 32px - 8px)' }}
+        className="echarts-for-echarts"
+        theme="my_theme"
+        onEvents={{ click: vehicleType == 1 && carPollTypeClick }}
+      />
+    );
+  }, [loading,vehicleType]);
   return (
     <Spin spinning={!!loading}>
-      <div style={{ height: '35%'}}>
+      <div style={{ height: '35%' }}>
         <CardHeader isStatistics index={1} title='人员统计' subtitle='人员总数（ 人 ）' num={data?.UserInfo?.SumUserNum} onClick={() => { viewAll('人员统计') }} />
         <div className='cardBodySty' style={{ height: 'calc(100% - 111px)' }}>
           <Radio.Group onChange={(e) => { setPersonType(e.target.value) }} defaultValue="1" buttonStyle="solid" style={{ marginBottom: 8 }}>
-            <Radio.Button value="1">业务属性</Radio.Button>
-            <Radio.Button value="2">司龄</Radio.Button>
+            <Radio.Button value="1">行业属性</Radio.Button>
+            <Radio.Button value="2">业务属性</Radio.Button>
+            <Radio.Button value="3">司龄</Radio.Button>
           </Radio.Group>
-          <ReactEcharts
-            option={personlStatistics()}
-            style={{ width: "100%", height: 'calc(100% - 32px - 8px)' }}
-            className="echarts-for-echarts"
-            theme="my_theme"
-          />
+          {personlStatisticsEcharts}
         </div>
       </div>
-      <div style={{ height: '35%', minHeight: 270  }}>
+      <div style={{ height: '35%', minHeight: 270 }}>
         <CardHeader isStatistics index={2} title='车辆统计' subtitle='车辆总数（ 辆 ）' num={data?.CarInfo?.CarNum} onClick={() => { viewAll('车辆统计') }} />
         <div className='cardBodySty' style={{ height: 'calc(100% - 36px - 66px - 8px)' }}>
-          <Row justify='space-between' align='middle'  style={{ marginBottom: 8 }}>
+          <Row justify='space-between' align='middle' style={{ marginBottom: 8 }}>
             <Radio.Group onChange={(e) => { setVehicleType(e.target.value) }} defaultValue="1" buttonStyle="solid">
               <Radio.Button value="1">行业属性</Radio.Button>
               <Radio.Button value="2">车辆分类</Radio.Button>
@@ -518,17 +674,19 @@ const Index = (props) => {
             </Radio.Group>
             <span style={{ fontSize: 12 }}>单位：（辆）</span>
           </Row>
-          <ReactEcharts
-            option={vehicleStatistics()}
-            style={{ width: "100%", height: 'calc(100% - 32px - 8px)' }}
-            className="echarts-for-echarts"
-            theme="my_theme"
-            onEvents={{ click:  vehicleType==1 && carPollTypeClick }}
-          />
+          {vehicleStatisticsEcharts}
         </div>
       </div>
       <div style={{ height: '30%' }}>
-        <CardHeader title='办事处统计' onClick={() => { viewAll('办事处统计') }} />
+        <CardHeader isStatistics title='办事处统计' index={3} subtitle='办事处总数（ 个 ）' num={data?.OfficeLocationInfo?.OfficeLocationNum} onClick={() => { viewAll('办事处统计') }} />
+        <div className='cardBodySty' style={{ height: 'calc(100% - 36px - 66px - 8px)' }}>
+          <ReactEcharts
+            option={officeStatistics()}
+            style={{ width: "100%", height: 'calc(100% - 8px)' }}
+            className="echarts-for-echarts"
+            theme="my_theme"
+          />
+        </div>
         {/* <div className='cardBodySty' style={{ height: 'calc(100% - 45px)' }}>
           <Row justify='space-between' style={{ padding: '18px 56px 12px 56px', fontSize: 16 }}>
             办事处总数
@@ -590,14 +748,14 @@ const Index = (props) => {
         mask={false}
         bodyStyle={{ padding: 0 }}
       >
-        {modalTitle == '人员统计' ? 
-         <PersonnelFiles isModal /> 
-        : modalTitle == '车辆统计' ?
-         <VehicleManager isModal /> 
-        : modalTitle == '办事处统计' ?
-        <Office isModal onlyAppendHandleRows /> 
-        : <CarPollutanet carPollTypeList={data.CarInfo?.PollutantList}  carPollType={carPollType}/> 
-      }
+        {/人员统计/.test(modalTitle) ?
+          <PersonnelFiles isModal personPollType={pollType} />
+          : modalTitle == '车辆统计' ?
+            <VehicleManager isModal />
+            : /办事处统计/.test(modalTitle) ?
+              <Office isModal onlyAppendHandleRows />
+              : <CarPollutanet carPollTypeList={data.CarInfo?.PollutantList} carPollType={pollType} />
+        }
       </Modal>
     </Spin>
 

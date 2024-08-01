@@ -198,8 +198,8 @@ const Index = (props) => {
     const values = form.getFieldsValue();
     props.GetPGZXPointStatusList({
       ...values,
-      pageIndex: pageIndex,
-      pageSize: pageSize,
+      pageIndex: PageIndex,
+      pageSize: PageSize,
     })
   }
 

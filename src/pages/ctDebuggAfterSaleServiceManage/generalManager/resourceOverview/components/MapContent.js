@@ -95,7 +95,7 @@ class Index extends PureComponent {
       markersList: [],
       selectRegionName: '',
       selectStatus: '',
-
+      pollType: [{label:'污染源',value:'污染源',color:'rgba(36, 206, 245, 1)',shadowColor:'rgba(36, 206, 245, 0.1)'},{label:'水质',value:'水质',color:'rgba(0, 115, 240, 1)',shadowColor:'rgba(0, 115, 240, 0.1)'},{label:'大气',value:'大气',color:'rgba(224, 177, 31, 1)',shadowColor:'rgba(224, 177, 31, 0.1)'}],
     }
   }
   componentWillMount() {
@@ -203,10 +203,11 @@ class Index extends PureComponent {
 
 
   btnChange = (name, index) => {
-    aMap.clearMap();
-    this.setState({ selectType: { name: name, secondFlag: name == '办事处' || name == '备件库' ? true : false } })
+
     const { selectType } = this.state;
     if (name != selectType.name) {
+      aMap.clearMap();
+      this.setState({ selectType: { name: name, secondFlag: name == '办事处' || name == '备件库' ? true : false } })
       this.setState({ selectStatus: '' }, () => {
         this.mapFitView();
       })
@@ -219,6 +220,12 @@ class Index extends PureComponent {
     })
   };
 
+
+  pollTypeComponents = ()=> <div style={{position:'absolute',bottom:24,right: 24, padding:'16px 16px 0 16px',background: '#031E49',borderRadius:2,border:'1px solid #215394'}}>
+   {
+     this.state.pollType.map(item=><Row align='middle' style={{paddingBottom:16}}><div style={{width:16,height:8,backgroundColor:item.color}}/> <span style={{paddingLeft:10}}>{item.label}</span></Row>)
+   }
+  </div>
   regionEnter = (regionName) => {
     aMap.clearMap();
     this.setState({ selectType: { ...this.state.selectType, isEnter: true }, selectRegionName: regionName }, () => { })
@@ -252,17 +259,23 @@ class Index extends PureComponent {
 
 
   renderMarkers = (extData) => {
-    const { selectType, selectStatus } = this.state;
+    const { selectType, selectStatus,pollType } = this.state;
     if (selectType.isEnter) { //进入二级页面
-      const item = extData.position
-      const data = selectType.name == '办事处' ? { name: item?.OfficeName, value: `${item?.UserNum || 0}人` } :
-        { name: item?.StorehouseName } //备件库
-      return <SecondPopver isIcon={selectType.name == '备件库'} style={selectType.name == '备件库' && { textAlign: 'center', width: 120, }} data={data} />
+      let item = extData.position
+      let data = {}
+      let filterColor=[];
+      if(selectType.name == '办事处'){
+         filterColor = pollType.filter(filterItem=>filterItem.label==item.Industry)
+         data = { name: item?.OfficeName, value: `${item?.UserNum || 0}人` } 
+      }else{
+         data = { name: item?.StorehouseName } //备件库
+      }
+      return <SecondPopver dotStyle={selectType.name == '办事处' && filterColor?.[0] && {background: filterColor[0].color, boxShadow:` 0 0 4px 4px ${filterColor[0].shadowColor}`,}}  isIcon={selectType.name == '备件库'} style={selectType.name == '备件库' && { textAlign: 'center', width: 120, }} data={data} />
     } else {
       const item = extData.position;
       let data = [];
       if (selectType.name == '备机' || selectType.name == '便携仪器') {
-        data = [{ name: '可使用', value: item?.UsedNum, unit: '台' }, { name: '使用中', value: item.UsintNum, unit: '台' }]
+        data = [{ name: '空闲中', value: item?.UsedNum, unit: '台' }, { name: '使用中', value: item.UsintNum, unit: '台' }]
         if (selectStatus) {
           data = data.filter(item => item.name == selectStatus)
         }
@@ -271,8 +284,7 @@ class Index extends PureComponent {
       } else {//备件库
         data = { name: item?.RegionName, value: `${item?.StorehouseNum}个` }
       }
-
-      return selectType.name == '备件库' ? <SecondPopver onClick={() => this.regionEnter(item?.RegionName)} isEnter data={data} /> : <RegPopver style={selectType.name != '办事处' && { width: '150px' }} unit={selectType.secondFlag ? '' : '台'} sum={selectType.secondFlag ? '' : Number(data?.[0]?.value || 0) + Number(data?.[1]?.value || 0)} onClick={() => this.regionEnter(item?.RegionName)} isEnter={selectType.secondFlag} regionName={item.RegionName} data={data} />
+      return selectType.name == '备件库' ? <SecondPopver  onClick={() => this.regionEnter(item?.RegionName)} isEnter data={data} /> : <RegPopver  style={selectType.name != '办事处' && { width: '150px' }} unit={selectType.secondFlag ? '' : '台'} sum={selectType.secondFlag ? '' : Number(data?.[0]?.value || 0) + Number(data?.[1]?.value || 0)} onClick={() => this.regionEnter(item?.RegionName)} isEnter={selectType.secondFlag} regionName={item.RegionName} data={data} />
     }
 
 
@@ -280,7 +292,7 @@ class Index extends PureComponent {
   mapContent = (props) => {
     const { selectType, markersList, fullScreen, selectRegionName, selectStatus } = this.state;
     const { leftData, rightData } = this.props;
-    const btnList = [{ name: '备机', value: leftData?.StandbyMachineInfo?.StandbyMachineNum }, { name: '便携仪器', value: rightData?.PortableInstrumentInfo?.PortableInstrumentNum }, { name: '办事处', value: rightData?.OfficeLocationInfo?.OfficeLocationNum }, { name: '备件库', value: rightData?.StorehouseInfo?.StorehouseNum },]
+    const btnList = [{ name: '备机', value: rightData?.StandbyMachineInfo?.StandbyMachineNum }, { name: '便携仪器', value: rightData?.PortableInstrumentInfo?.PortableInstrumentNum }, { name: '办事处', value: leftData?.OfficeLocationInfo?.OfficeLocationNum }, { name: '备件库', value: rightData?.StorehouseInfo?.UsedList?.filter(item=>item.Used==="启用")?.[0]?.Num || 0 },]
 
     const operationBtnArr = () => {
       const fullData = [{ text: fullScreen ? '退出全屏' : '全屏', url: fullScreen ? '/currencyResOver/maptcqp.png' : '/currencyResOver/mapqp.png' }]
@@ -307,7 +319,9 @@ class Index extends PureComponent {
         markersList?.RegionOfficeLocationList?.map(item => {
           if (item?.position?.RegionName == selectRegionName || selectType.showAll) { //从省进入或者 直接点右侧进入
             item?.position?.childList.map(item => {
-              data.push({ position: { ...item, longitude: item.Longitude, latitude: item.Latitude } })
+              if(!selectStatus || selectStatus==item.Industry){
+                data.push({ position: { ...item, longitude: item.Longitude, latitude: item.Latitude } })
+              }
             })
           }
         })
@@ -358,11 +372,18 @@ class Index extends PureComponent {
         style={{ width: 120, top: 72, left: 24 }}
         onChange={this.selectChange}
         value={selectStatus}
-        options={[{ value: '', label: '全部' }, { value: '可使用', label: '可使用' }, { value: '使用中', label: '使用中' }]} />}
+        options={[{ value: '', label: '全部' }, { value: '空闲中', label: '空闲中' }, { value: '使用中', label: '使用中' }]} />}
+   
+     {selectType.name=='办事处' && selectType.isEnter && <MapSelect
+        style={{ width: 120, top: 72, left: 24 }}
+        onChange={this.selectChange}
+        value={selectStatus}
+        options={[{ value: '', label: '全部' }, ...this.state.pollType] }/>}
       <RightIconMapComponent />
       {selectType.isEnter && <div style={{ cursor: 'pointer', position: 'absolute', top: 72, right: 66 }} onClick={this.onBack}>  { /**返回 */}
         <img title='返回' src='/currencyResOver/back.png' />
       </div>}
+     {selectType.name=='办事处' && selectType.isEnter &&  this.pollTypeComponents()}
     </Map>
 
 

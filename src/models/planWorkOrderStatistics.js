@@ -85,11 +85,12 @@ export default Model.extend({
       const result = yield  call(services.insideOrOutsideWorkGetTaskWorkOrderList, payload);
       if (result.IsSuccess) {
         yield update({
-          insideOrOutsiderWorkTableDatas:result.Datas,
+          insideOrOutsiderWorkTableDatas:result.Datas?.resList || [],
           insideOrOutsiderWorkTableTotal:result.Total,
-          dateCol:result.Datas[0]&&result.Datas[0].datePick,
+          dateCol:result.Datas?.colList || [],
           queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })  
+        callback && callback()
       }else{
         message.error(result.Message)
       }
@@ -206,9 +207,9 @@ export default Model.extend({
       const result = yield  call(services.insideOrOutsideWorkActualGetTaskWorkOrderList, payload);
       if (result.IsSuccess) {
         yield update({
-          insideOrOutsiderWorkTableDatas:result.Datas,
+          insideOrOutsiderWorkTableDatas:result.Datas?.resList || [],
           insideOrOutsiderWorkTableTotal:result.Total,
-          dateCol:result.Datas[0]&&result.Datas[0].datePick,
+          dateCol:result.Datas?.colList || [],
           queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })  
       }else{

@@ -813,7 +813,7 @@ class RoleIndex extends Component {
     // }
     const rowMenuSelection = {
       selectedRowKeys: this.state.selectButton,
-      checkStrictly: false,
+      // checkStrictly: false,
       onSelect: (record, selected, selectedRows, nativeEvent) => {
         selectedRows = selectedRows.filter(
           value => value !== undefined && value !== null && value !== '',

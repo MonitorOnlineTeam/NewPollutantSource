@@ -343,7 +343,7 @@ class SearchWrapper extends Component {
                   ? this.props.selectType
                   : '999,是'
               }
-              isCtPoll={configId === 'CTEnterprise'}
+              isCtPoll={configId==='CTEnterprise'}
             />
           );
           break;

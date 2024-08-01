@@ -498,18 +498,17 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
   const  cityColumnsPush = (col) =>{
     if(dateCol&&dateCol[0]){
       col.push({
-        title: abnormalTypes==1? '打卡异常工单分布' : '报警响应超时工单分布',
+        title: abnormalTypes == 1 ? '打卡异常工单分布' : '报警响应超时工单分布',
         width:200, 
         align:'center',
         children:dateCol.map((item,index)=>{
           return { 
-            title: `${item.date.split('_')[0]}`,
-            width: 70,
+            title: `${item.date&&moment(item.date).format('MM-DD')}`,
             align:'center',
             children: [{
-                title: `${item.date.split('_')[1]}`,
-                dataIndex: `${item.date.split('_')[1]}`,
-                key: `${item.date.split('_')[1]}`,
+                title: `${item.week}`,
+                dataIndex: `${item.week}`,
+                key: `${item.week}`,
                 width: 70,
                 align:'center',
                 render:(text,row,index)=>{

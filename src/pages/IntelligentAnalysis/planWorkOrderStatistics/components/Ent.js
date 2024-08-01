@@ -844,14 +844,13 @@ const exports = () => { //导出
          align:'center',
          children:dateCol.map((item,index)=>{
            return { 
-             title: `${item.date.split('_')[0]}`,
-             width: 70,
+             title: `${item.date&&moment(item.date).format('MM-DD')}`,
              align:'center',
              ellipsis:false,
              children: [{
-                 title: `${item.date.split('_')[1]}`,
-                 dataIndex: `${item.date.split('_')[1]}`,
-                 key: `${item.date.split('_')[1]}`,
+                 title: `${item.week}`,
+                 dataIndex: `${item.week}`,
+                 key: `${item.week}`,
                  width: 70,
                  align:'center',
                  ellipsis:false,
@@ -920,14 +919,14 @@ const exports = () => { //导出
          align:'center',
          children:dateCol.map((item,index)=>{
            return { 
-             title: `${item.date.split('_')[0]}`,
+             title: `${item.date&&moment(item.date).format('MM-DD')}`,
              width: 70,
              align:'center',
              ellipsis:false,
              children: [{
-                 title: `${item.date.split('_')[1]}`,
-                 dataIndex: `${item.date.split('_')[1]}`,
-                 key: `${item.date.split('_')[1]}`,
+                 title: `${item.week}`,
+                 dataIndex: `${item.week}`,
+                 key: `${item.week}`,
                  width: 70,
                  align:'center',
                  render:(text,row,index)=>{

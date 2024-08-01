@@ -12,7 +12,7 @@ import Cookie from 'js-cookie';
 import config from '@/config';
 import { message } from 'antd';
 import { router } from 'umi';
-import { getSysName } from '@/utils/utils';
+import { getSysName,isOperaSystem } from '@/utils/utils';
 import { GetOperationSetting } from '@/pages/systemManger/operationBasConfig/service';
 
 /**
@@ -152,9 +152,9 @@ export default Model.extend({
         // configInfo.IsSingleEnterprise = true;
         // window.IsOperation = true;
         window.configInfo = configInfo;
-        configInfo.IsShowSysPage = '1';
+        // configInfo.IsShowSysPage = '1';
         configInfo.SystemName = getSysName(configInfo.SystemName);
-        configInfo.IsOpera =  configInfo.SystemName === '技术服务智慧管理平台' || configInfo.SystemName === '污染源安装调试系统' || configInfo.SystemName === '污染源智慧运维系统'; //是否为公司运维项目
+        configInfo.IsOpera = isOperaSystem(configInfo.SystemName); //是否为公司运维项目
         // configInfo.IsOpera = false;
         localStorage.setItem(
           'sysConfigInfo',
@@ -524,6 +524,15 @@ export default Model.extend({
   },
   subscriptions: {
     socket({ dispatch }) {
+      const pathname = history.location?.pathname;
+      if (pathname=== '/hrefLogin') {
+        return
+      }
+      if (pathname === '/') {
+        window.configInfo = {};
+        let meunList = sessionStorage.getItem('menuDatas') ? JSON.parse(sessionStorage.getItem('menuDatas')) : []
+        router.push(meunList?.[0] ? meunList?.[0] : '/user/login')
+      }
       dispatch({
         type: 'getSystemConfigInfo',
         payload: {

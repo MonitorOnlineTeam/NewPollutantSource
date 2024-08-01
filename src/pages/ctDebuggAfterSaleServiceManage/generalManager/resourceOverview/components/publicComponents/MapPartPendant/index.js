@@ -28,7 +28,7 @@ export const BtnList = ({ data, onClick, style }) => {
 };
 
 //小圆点
-const  Dot = ()=><div  style={{textAlign:'center'}} ><span className={styles.circle} style={{ display:'inline-block',marginTop:16, width: 10,height: 10,background: 'rgba(0, 141, 253, 1)', boxShadow:' 0 0 4px 4px rgba(0, 141, 253, .1)',borderRadius: '50%'}}></span></div>
+const  Dot = ({style})=><div  style={{textAlign:'center'}} ><span className={styles.circle} style={{ display:'inline-block',marginTop:16, width: 10,height: 10,background: 'rgba(0, 141, 253, 1)', boxShadow:' 0 0 4px 4px rgba(0, 141, 253, .1)',borderRadius: '50%',...style}}></span></div>
 
 // 弹框组件
 export const RegPopver = ({ regionName,sum,unit,data, isEnter,style,onClick }) => { 
@@ -44,13 +44,13 @@ export const RegPopver = ({ regionName,sum,unit,data, isEnter,style,onClick }) =
         <div>{item.name}</div>
       </Col>)}
     </Row>
-    <Dot />
+    <Dot/>
   </div>;
 };
 // 弹框组件 办事处 备件库等 marginTop:'calc(-50% - 7px - 2px)',marginLeft:'-50%',
-export const SecondPopver = ({ data,style,isIcon,isEnter,onClick  }) => { 
+export const SecondPopver = ({ data,style,dotStyle,isIcon,isEnter,onClick  }) => { 
   const enterFlag = isEnter && data?.value!=0;
-  return <div style={{position:'relative',transform:  `translate(-50%, ${isIcon? 'calc(-50% - 27px)' :  'calc(-50% - 14px)'})`,padding: '0 10px',cursor:'text', width: 180, height: 44, background: `url(/currencyResOver/bsc.png)`, backgroundSize: '100% 100%',...style  }}>
+  return <div style={{position:'relative',transform:  `translate(-50%, ${isIcon? 'calc(-50% - 27px)' :  'calc(-50% - 14px)'})`,padding: '0 10px',cursor:'text', width: 180, height: 44, background: `url(/currencyResOver/bsc.png)`, backgroundSize: '100% 100%', ...style  }}>
     <Row justify='space-between' align='middle' style={{opacity:enterFlag? .9 : 1, color: enterFlag? '#52F2FF' : '#fff', height: 'calc(100% - 12px)' }}>
       <span className='textOverflow' style={{ width:enterFlag? 'calc(100% - 46px)' :  data?.value? 'calc(100% - 28px)' : '100%'}} title={data?.name}>{data?.name}</span>
       <>
@@ -58,7 +58,7 @@ export const SecondPopver = ({ data,style,isIcon,isEnter,onClick  }) => {
        {enterFlag && <RightOutlined   onClick={()=>{onClick&&onClick()}} style={{paddingLeft:4, cursor: 'pointer' }} />}
       </>
     </Row>
-    {isIcon? <div  style={{textAlign:'center',marginTop:8}} > <img src='/currencyResOver/bjkIcon.png'/> </div> :  <Dot /> }
+    {isIcon? <div  style={{textAlign:'center',marginTop:8}} > <img src='/currencyResOver/bjkIcon.png'/> </div> :  <Dot  style={{...dotStyle}}/> }
   </div>;
 };
 

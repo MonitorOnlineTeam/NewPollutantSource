@@ -10,7 +10,7 @@ import config from '@/config';
 import moment from 'moment';
 import * as services from '@/services/autoformapi';
 import * as commonServices from '@/services/commonApi';
-// import { addOrUpdateMonitorEntElectronicFence } from '@/pages/ctAssetManagement/equipmentAccount/pollutantManagement/service';
+import { addOrUpdateMonitorEntElectronicFence } from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/pollutantManagement/service';
 import { downloadFile } from '@/utils/utils';
 
 function formatDateFormat(format) {
@@ -634,13 +634,13 @@ export default Model.extend({
       } else {
       }
     },
-    // //成套企业电子围栏半径 添加
-    // *addOrUpdateMonitorEntElectronicFence({ payload, callback }, { call, put, update, select }) {
-    //   const result = yield call(addOrUpdateMonitorEntElectronicFence, { ...payload });
-    //   if (result.IsSuccess) {
-    //     callback && callback();
-    //   }
-    // },
+    //成套企业电子围栏半径 添加
+    *addOrUpdateMonitorEntElectronicFence({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(addOrUpdateMonitorEntElectronicFence, { ...payload });
+      if (result.IsSuccess) {
+        callback && callback();
+      }
+    },
     // 运维 企业设置电子围栏半径
     *addOrUpdOperationSignRadiusInfo({ payload, callback }, { call, update }) {
       const result = yield call(services.addOrUpdOperationSignRadiusInfo, { ...payload });

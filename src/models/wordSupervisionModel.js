@@ -34,6 +34,8 @@ export default Model.extend({
     largeRegionList: [],
     standgaswaringList: [],
     standgaswaringLoading: false,
+    elseList: [],
+    elseLoading: false,
   },
   effects: {
     // 获取工作台待办
@@ -697,6 +699,8 @@ export default Model.extend({
           ? { contractLoading: true }
           : payload.type == 2
           ? { projectExecutionLoading: true }
+          : payload.type == 5
+          ? { elseLoading: true }
           : payload.type == 11
           ? { customeSatisfactLoading: true }
           : payload.type == 12
@@ -718,6 +722,7 @@ export default Model.extend({
           contractList: data?.projectList || [],
           customeSatisfactList: data?.customerList || [],
           standgaswaringList: data?.standgaswaringList || [],
+          elseList: data?.elseList || [],
         });
         callback &&
           callback({
@@ -725,6 +730,7 @@ export default Model.extend({
             customerListTotal: data?.customerList?.length || 0,
             projectListTotal: data?.projectList?.length || 0,
             standgaswaringListTotal: data?.standgaswaringList?.length || 0,
+            elseListTotal: data?.elseList?.length || [],
           });
       }
       yield update(
@@ -732,6 +738,8 @@ export default Model.extend({
           ? { contractLoading: false }
           : payload.type == 2
           ? { projectExecutionLoading: false }
+          : payload.type == 5
+          ? { elseLoading: false }
           : payload.type == 11
           ? { customeSatisfactLoading: false }
           : payload.type == 12

@@ -216,6 +216,8 @@ export default class EntIndexModal extends Component {
     dispatch({
       type: 'newtransmissionefficiency/exportTransmissionEfficiencyForRegion',
       payload: {
+        beginTime: this.state.beginTime,
+        endTime: this.state.endTime,
         RegionCode: level == 2 ? this.state.regionCode : this.props.RegionCode,
         regionLevel: level,
         callback: data => {

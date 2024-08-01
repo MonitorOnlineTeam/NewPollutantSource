@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons';
 import webConfig from '../../../public/webConfig';
 import { router } from 'umi';
+import Cookie from 'js-cookie';
 
 const GlobalHeaderRight = props => {
   const {
@@ -53,7 +54,7 @@ const GlobalHeaderRight = props => {
   }
   const isShowSelectSystem = sessionStorage.getItem('isShowSelectSystem');
   const menu = (
-    <Menu selectedKeys={[sessionStorage.getItem('sysMenuId')]}>
+    <Menu selectedKeys={[sessionStorage.getItem('sysMenuId') || Cookie.get('sysMenuId') || sysPollutantTypeList?.[0]?.ID]}>
       {sysPollutantTypeList.map(item => {
         return (
           <Menu.Item key={item.ID}>

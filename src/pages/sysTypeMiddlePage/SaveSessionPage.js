@@ -17,6 +17,8 @@ class SaveSessionPage extends PureComponent {
     sessionStorage.setItem("sysMenuId", sysInfo.ID);
     sessionStorage.setItem("sysPollutantCodes", sysInfo.CodeList);
     sessionStorage.setItem("sysName", sysInfo.Name);
+    Cookie.set('sysMenuId', sysInfo.ID);
+    Cookie.set("sysName", sysInfo.Name);
     this.getMenuList(sysInfo.ID);
   }
 
@@ -57,6 +59,18 @@ class SaveSessionPage extends PureComponent {
             router.push('/oneEntsOneArchives/entList')
           }
         } else {
+          const meunArr = [];
+          const meunData = data => {
+            if (data?.length > 0) {
+              data.map(item => {
+                meunArr.push(item.path);
+                meunData(item.children);
+              });
+            }
+            return meunArr;
+          };
+          const meunList = meunData(response);
+          sessionStorage.setItem('menuDatas', meunList?.length > 0 ? JSON.stringify(meunList) : '');
           sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl)
           router.push(defaultNavigateUrl)
         }

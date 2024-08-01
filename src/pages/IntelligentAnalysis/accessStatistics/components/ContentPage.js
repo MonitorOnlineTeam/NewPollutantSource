@@ -412,7 +412,8 @@ export default class EntTransmissionEfficiency extends Component {
       const { day } = this.state;
       this.getDataList({
          beginTime: moment().subtract(e?e.target.value : day, 'day').format('YYYY-MM-DD 00:00:00'),
-         endTime: moment().format('YYYY-MM-DD 23:59:59')
+         endTime: moment().format('YYYY-MM-DD 23:59:59'),
+         DataType:1,
       })
       this.setState({day:e?e.target.value : day})
       dispatch({

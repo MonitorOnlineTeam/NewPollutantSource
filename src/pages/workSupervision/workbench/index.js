@@ -103,6 +103,9 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
     loading.effects['wordSupervision/UpdateImplementationStatus'] || false,
   customeSatisfactLoading: wordSupervision.customeSatisfactLoading,
   customeSatisfactList: wordSupervision.customeSatisfactList,
+  elseLoading: wordSupervision.elseLoading,
+  elseList: wordSupervision.elseList,
+  addOrUpdProjectReportInfoLoading: loading.effects[`handoverReport/addOrUpdProjectReportInfo`],
 });
 
 const Workbench = props => {
@@ -134,6 +137,9 @@ const Workbench = props => {
     customeSatisfactLoading,
     standgaswaringList,
     standgaswaringLoading,
+    elseList,
+    elseLoading,
+    addOrUpdProjectReportInfoLoading,
   } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [formsModalVisible, setFormsModalVisible] = useState(false);
@@ -158,7 +164,6 @@ const Workbench = props => {
 
   const [popForm] = Form.useForm(); //项目执行-解决问题
   const [remainProblemsData, setRemainProblemsData] = useState();
-
 
 
   const [installEquipmentVisible, setInstallEquipmentVisible] = useState(false);
@@ -247,11 +252,13 @@ const Workbench = props => {
                     btnObj.value = 4;
                     GetToDoDailyWorks();
                   }
-                  console.log('btnObj', btnObj);
+                  if (clItem.CName === '其他') {
+                    btnObj.value = 5;
+                    getCtWorkbenchMsg(5);
+                  }
                   btnArr.push(btnObj);
                 });
                 setSelectOperaVal(btnArr?.[0]?.value);
-                console.log('btnArr', btnArr);
                 setOperaServiceBtnList(btnArr);
               } else {
                 setOpera(false);
@@ -378,7 +385,7 @@ const Workbench = props => {
         payload: {
           ...values,
           problemTime: values.problemTime && values.problemTime.format('YYYY-MM-DD HH:mm:ss'),
-          id:row.MsgID
+          id: row.MsgID
         },
         callback: () => {
           setPopVisible(false);
@@ -459,7 +466,7 @@ const Workbench = props => {
                 </li>,
               <li>
                 <span>填写位置：</span>请跳转到
-                  <a  onClick={()=>{Modal.destroyAll();router.push('/operations/siteInspector');}}>
+                  <a onClick={() => { Modal.destroyAll(); router.push('/operations/siteInspector'); }}>
                   “监督核查/现场监督核查/系统设施核查”
                   </a>
                   页面中填写。
@@ -605,7 +612,6 @@ const Workbench = props => {
   const [myRemindBtnList, setMyRemindBtnList] = useState([]); //我的提醒
 
   const BtnComponents = ({ data, val, callback }) => {
-    console.log('data', data);
     return (
       <div className={styles.selectBtnSty}>
         {data.map(item => {
@@ -698,7 +704,7 @@ const Workbench = props => {
     props.dispatch({
       type: 'wordSupervision/CtGetWorkbenchMsg',
       payload: { type: type },
-      callback: ({ ctListTotal, customerListTotal, projectListTotal, standgaswaringListTotal }) => {
+      callback: ({ ctListTotal, customerListTotal, projectListTotal, standgaswaringListTotal, elseListTotal }) => {
         switch (type) {
           case 2:
             filterData(operaServiceBtnList, type, ctListTotal);
@@ -706,6 +712,9 @@ const Workbench = props => {
           case 3:
             filterData(operaServiceBtnList, type, customerListTotal);
             break; //客户满意度
+          case 5:
+            filterData(operaServiceBtnList, type, elseListTotal);
+            break; //其他
           case 11:
             filterData(myRemindBtnList, type, projectListTotal);
             break; //合同到期
@@ -741,7 +750,10 @@ const Workbench = props => {
       //经理日常管理任务
       filterData(operaServiceBtnList, 4, todoList?.length);
     }
-
+    if (elseList?.length >= 0) {
+      //其他
+      filterData(operaServiceBtnList, 5, elseList?.length);
+    }
     if (workAlarmPushList?.length >= 0) {
       //数据报警
       filterData(myRemindBtnList, 10, workAlarmPushTotal);
@@ -762,6 +774,7 @@ const Workbench = props => {
     contractList,
     standgaswaringList,
     todoList,
+    elseList,
   ]);
 
   const [delContractLoading, setDelContractLoading] = useState(false);
@@ -916,6 +929,45 @@ const Workbench = props => {
     '6': '（满意度调查）',
     '7': '（验收服务报告）',
   };
+  const [projectReportList,setProjectReportList] = useState() //交接和报告
+  const ListComponents = ({ list, loading }) => {
+    return <Spin
+      spinning={loading}
+    >
+      {list?.length ? (
+        list.map((item, index) => (
+          <Row
+            style={{ paddingBottom: paddingBottomVal, cursor: 'pointer' }}
+          >
+            <Col
+              flex="auto"
+              className="textOverflow"
+              style={{ width: 'calc(100% - 127px - 12px)' }}
+              title={item.Msg}
+              onClick={() => {
+                setHandoverReportVisible(true)
+                props.dispatch({
+                  type: 'handoverReport/getProjectReportList',
+                  payload: {
+                    MsgID: item.MsgID,
+                  },
+                  callback:(res)=>{
+                    res?.Datas?.[0] && setProjectReportList(res.Datas[0])
+                  }
+                });
+              }}
+            >
+              {item.Msg}
+            </Col>
+            <Col flex="12px" />
+            <Col flex="127px">{item.CreateTime}</Col>
+          </Row>
+        ))
+      ) : (
+          <Empty style={{ marginTop: '30px' }} />
+        )}
+    </Spin>
+  }
   return (
     <div className={styles.workbenchBreadSty}>
       <BreadcrumbWrapper>
@@ -1260,6 +1312,9 @@ const Workbench = props => {
                                     </div>
                                   </div>
                                 )}
+                                {selectOperaVal == 5 && (
+                                  <ListComponents list={elseList} loading={elseLoading || !!addOrUpdProjectReportInfoLoading} />
+                                )}
                               </div>
                             </>
                           )}
@@ -1280,20 +1335,20 @@ const Workbench = props => {
                           }}
                         >
                           <div className={styles.title}>我的提醒</div>
-                            <Row justify="space-between">
-                              <BtnComponents
-                                data={myRemindBtnList}
-                                val={selectMyVal}
-                                callback={val => {
-                                  setSelectMyVal(val);
-                                }}
-                              />
-                              {selectMyVal == 10 && workAlarmPushList?.length > 0
-                                ? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, val => {
-                                  dataAlarmTypeChange(val);
-                                })
-                                : null}
-                            </Row>
+                          <Row justify="space-between">
+                            <BtnComponents
+                              data={myRemindBtnList}
+                              val={selectMyVal}
+                              callback={val => {
+                                setSelectMyVal(val);
+                              }}
+                            />
+                            {selectMyVal == 10 && workAlarmPushList?.length > 0
+                              ? btnSquareComponents(dataAlarmTypeList, dataAlarmVal, val => {
+                                dataAlarmTypeChange(val);
+                              })
+                              : null}
+                          </Row>
                           <div className={'myRemindContentSty'} style={{ padding: '0 24px 0 16px' }}>
                             {remindDataAlarm && (
                               <>
@@ -1762,14 +1817,14 @@ const Workbench = props => {
           }}
           destroyOnClose
           confirmLoading={updateprojectExecutionLoading}
-          onOk={()=>solveProblem(remainProblemsData)}
+          onOk={() => solveProblem(remainProblemsData)}
         >
           <Form
             name="basicPop"
             form={popForm}
             labelCol={{ flex: '80px' }}
           >
-            <Form.Item label="解决人" name="solveUserName"  rules={[{ required: true, message: '请输入解决人！' }]} >
+            <Form.Item label="解决人" name="solveUserName" rules={[{ required: true, message: '请输入解决人！' }]} >
               <Input placeholder='请输入' allowClear />
             </Form.Item>
             <Form.Item
@@ -1877,7 +1932,14 @@ const Workbench = props => {
         >
           <StandardGasValidityContent id={standardGasValidityId} isAll isWorkBench />
         </Modal>
-        <HandoverReportEditModal visible={handoverReportVisible} onCancel={()=>setHandoverReportVisible(false)}/>
+        <HandoverReportEditModal
+          record={projectReportList}
+          visible={handoverReportVisible} 
+          onCancel={() => setHandoverReportVisible(false)}
+          onFinish = {()=>{
+            getCtWorkbenchMsg(5);
+          }}
+          />
       </BreadcrumbWrapper>
     </div>
   );

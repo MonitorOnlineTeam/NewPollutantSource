@@ -84,7 +84,6 @@ export default Model.extend({
       let historyparams = dataqueryData.historyparams;
       let _pollutantlist = dataqueryData.pollutantlist;
       let _historyparams = { ...historyparams, ...payload };
-      debugger
       let pollutantlist = _pollutantlist;
       // 电力：实时类型不显示“有功总累计电能”，其他类型只显示“有功总累计电能”
       if (payload.Type == 37) {

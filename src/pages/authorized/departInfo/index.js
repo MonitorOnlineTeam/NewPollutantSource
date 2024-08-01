@@ -277,6 +277,8 @@ const rightTableColumns = [
   addSetOperationGroupLoading: loading.effects['departinfo/addSetOperationGroup'] || false,
   getSetOperationGroupLoading: loading.effects['departinfo/getSetOperationGroup'] || false,
   groupSortLoading: loading.effects['departinfo/groupSort'] || false,
+  largeRegionListLoading: loading.effects['ctCommon/GetLargeRegionList'],
+
 }))
 @Form.create()
 class DepartIndex extends Component {
@@ -329,6 +331,7 @@ class DepartIndex extends Component {
       settingOperationGrouptitle: '设置运维小组',
       settingOperationGroupPermis: false,
       testRegionPermis: false,
+      largeRegionList: [],
     };
     this.depApproveColumns = [
       {
@@ -608,7 +611,6 @@ class DepartIndex extends Component {
                 <BellOutlined style={{ fontSize: 16 }} />
               </a>
             </Tooltip>
-            {console.log('operatioVisible', this.state.operatioVisible)}
             {this.props.configInfo && !this.props.configInfo.IsShowProjectRegion && (
               <>
                 <Divider type="vertical" />
@@ -1033,6 +1035,13 @@ class DepartIndex extends Component {
       type: 'departinfo/getGroupRegionFilter',
       payload: {},
     });
+    this.props.dispatch({
+      type: `ctCommon/GetLargeRegionList`,
+      payload: {},
+      callback: (res)=>{
+       this.setState({ largeRegionList:res })
+      },
+    })
     this.getUserList({});
     // this.props.dispatch({
     //     type: 'roleinfo/getrolestreeandobj',
@@ -1132,7 +1141,7 @@ class DepartIndex extends Component {
   };
   renderTestTreeNodes = data =>
     data.map(item => {
-      return <TreeNode title={item.label} key={item.value} dataRef={item}></TreeNode>;
+      return <TreeNode title={item.LargeRegion} key={item.ID} dataRef={item}></TreeNode>;
     });
   showTestRegionModal = () => {
     if (this.state.selectedTestRowKeys?.length == 0) {
@@ -2051,7 +2060,7 @@ class DepartIndex extends Component {
               width={900}
               confirmLoading={insertTestRegionByUserLoading}
             >
-              {this.props.testRegionByDepIDLoading ? (
+              {!!this.props.testRegionByDepIDLoading || !!this.props.largeRegionListLoading? (
                 <Spin
                   style={{
                     width: '100%',
@@ -2070,7 +2079,7 @@ class DepartIndex extends Component {
                     onCheck={this.onTestCheck}
                     checkedKeys={this.state.testCheckedKey}
                   >
-                    {this.renderTestTreeNodes(this.props.RegionInfoTree)}
+                    {this.renderTestTreeNodes(this.state.largeRegionList)}
                   </Tree>
                 </div>
               )}

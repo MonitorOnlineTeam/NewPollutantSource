@@ -200,7 +200,7 @@ const Index = (props) => {
     data?.StandbyMachineInfo?.UseState?.map(item => {
         return {
           value: item.Num, name: item.UseState, itemStyle: {
-            color: item.UseState == '可使用' ? {
+            color: item.UseState == '空闲中' ? {
               x: 0, y: 0, x2: 1, y2: 0,
               colorStops: [{
                 offset: 0,
@@ -275,7 +275,7 @@ const Index = (props) => {
   const bxColor2 = { bagColor: 'linear-gradient(90deg, #FF0000, rgba(255,0,0,0))', textColor: 'linear-gradient(0deg, #FFFFFF 0.1220703125%, rgba(255,141,154,0.8) 100%)' }
 
   const bx1 = data?.PortableInstrumentInfo?.InsStateList?.map((item, index) => ({ name: item.InsState, value: item.Num, bagColor: item.InsState == '合格' ? bxColor0.bagColor : item.InsState == '准用' ? bxColor1.bagColor : bxColor2.bagColor, textColor: item.InsState == '合格' ? bxColor0.textColor : item.InsState == '准用' ? bxColor1.textColor : bxColor2.textColor }))
-  const bx2 = data?.PortableInstrumentInfo?.UseState?.map((item, index) => ({ name: item.UseState, value: item.Num, bagColor: item.UseState == '可使用' ? bxColor0.bagColor : bxColor1.bagColor, textColor: item.UseState == '可使用' ? bxColor0.textColor : bxColor1.textColor }))
+  const bx2 = data?.PortableInstrumentInfo?.UseState?.map((item, index) => ({ name: item.UseState, value: item.Num, bagColor: item.UseState == '空闲中' ? bxColor0.bagColor : bxColor1.bagColor, textColor: item.UseState == '空闲中' ? bxColor0.textColor : bxColor1.textColor }))
 
   const total = data?.OfficeLocationInfo?.OfficeLocationNum?.toString() || '0'
   const { loading } = props;

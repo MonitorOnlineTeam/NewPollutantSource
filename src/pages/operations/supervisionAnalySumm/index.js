@@ -68,9 +68,9 @@ const Index = (props) => {
               <TabPane tab="督查总结" key="1">
                 <Summary />
               </TabPane>
-              <TabPane tab="关键参数督查汇总" key="2">
+              {/* <TabPane tab="关键参数督查汇总" key="2">
                 <Params />
-              </TabPane>
+              </TabPane> */}
               <TabPane tab="全系统督查汇总" key="3">
                 <TotalSystem />
               </TabPane>

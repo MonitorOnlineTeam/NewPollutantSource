@@ -188,7 +188,7 @@ const Index = (props) => {
       <Modal
         title={''}
         visible={entAbnormalNumVisible}
-        onCancel={() => { props.updateState({ entAbnormalNumVisible: false, entAbnormalList: [], taskList: [] }); props.onCancel(); }}
+        onCancel={() => { props.updateState({ entAbnormalNumVisible: false, entAbnormalList: [], taskList: [] }); props.onCancel && props.onCancel(); }}
         footer={null}
         destroyOnClose
         wrapClassName="spreadOverModal noTitleSty"

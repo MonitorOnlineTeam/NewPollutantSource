@@ -1717,18 +1717,19 @@ const routes = [
               {
                 name: 'operationUnit', //运维单位管理
                 path: '/operations/operationEntManage/operationUnit/:configId',
-                component: './OperationSysManager/operationEntManage/operationUnit',
+                component: './operations/operationEntManage/operationUnit',
               },
               {
                 name: 'operationPerson', //运维人员管理
                 path: '/operations/operationEntManage/operationPerson/:configId',
-                component: './OperationSysManager/operationEntManage/operationPerson',
+                component: './operations/operationEntManage/operationPerson',
               },
               {
                 name: 'operationPerson', //运维人员管理  详情
-                path: '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
+                path:
+                  '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
                 component:
-                  './OperationSysManager/operationEntManage/operationPerson/OperationPersonDetail',
+                  './operations/operationEntManage/operationPerson/OperationPersonDetail',
               },
               {
                 path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',

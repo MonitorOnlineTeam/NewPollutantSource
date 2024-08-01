@@ -1955,7 +1955,7 @@ const Index = (props) => {
         </Col>
         <Col span={24}>
           <Form.Item label="服务内容" >
-            {data.Remark}
+            {data.ServiceContent}
           </Form.Item>
         </Col>
       </Row>

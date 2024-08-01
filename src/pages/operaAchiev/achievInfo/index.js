@@ -545,7 +545,7 @@ const Index = (props) => {
       <BreadcrumbWrapper>
         <Tabs tabPosition='left' style={{ marginTop: 16 }}>
           <TabPane tab="绩效汇总" key="1">
-            <Card title={searchComponents()}>
+            <Card title={searchComponents()} bodyStyle={{paddingBottom:14}}>
 
               <SdlTable
                 loading={tableLoading}
@@ -553,6 +553,7 @@ const Index = (props) => {
                 dataSource={tableDatas}
                 columns={columns}
                 onChange={handleTableChange}
+                scroll={{y:'calc(100vh - 370px)'}}
                 pagination={{
                   total: tableTotal,
                   pageSize: pageSize,
@@ -565,7 +566,7 @@ const Index = (props) => {
             </Card>
           </TabPane>
           <TabPane tab='绩效明细' key="2">
-            <Card title={searchComponents2()}>
+            <Card title={searchComponents2()} bodyStyle={{paddingBottom:14}}>
               <SdlTable
                 loading={tableLoading2}
                 bordered
@@ -576,7 +577,7 @@ const Index = (props) => {
                 pagination={false}
               />
             </Card>
-            <Row style={{ margin: '16px 24px 0 0 ' }} justify='end'>
+            <Row style={{ margin: '0 24px' }} justify='end'>
               {tableTotal2 > 0 && <Pagination
                 size='small'
                 total={tableTotal2}

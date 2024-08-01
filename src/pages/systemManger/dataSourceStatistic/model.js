@@ -13,12 +13,6 @@ export default Model.extend({
     tableDatas:[],
     tableTotal:0,
     queryPar:{},
-    tableDatas2:[],
-    tableTotal2:0,
-    queryPar2:{},
-    tableDatas3:[],
-    tableTotal3:0,
-    queryPar3:{},
   },
   effects: {
     *GetPGZXPointStatusList({ payload,callback }, { call, put, update }) { //列表

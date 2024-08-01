@@ -1450,7 +1450,7 @@ class NavigationTree extends Component {
 
           {this.props.type == 'ent' ? (
             <Select
-              style={{ width: '100%', marginBottom: 10 }}
+              style={{ width: '100%', marginBottom: 10  }}
               onChange={this.handleChange}
               allowClear
               placeholder="请选择监测点类型"
@@ -1479,12 +1479,12 @@ class NavigationTree extends Component {
           <Search
             placeholder="请输入关键字查询"
             onChange={this.onChangeSearch}
-            style={{ marginTop: 10, width: '60%' }}
+            style={{  width: '60%' }}
           />
           <Radio.Group
             defaultValue={this.props.IsTree ? 'tree' : 'panel'}
             buttonStyle="solid"
-            style={{ marginTop: 10, marginLeft: 15, cursor: 'pointer' }}
+            style={{  marginLeft: 15, cursor: 'pointer' }}
             onChange={this.onRadioChange}
           >
             <Tooltip title="节点">
