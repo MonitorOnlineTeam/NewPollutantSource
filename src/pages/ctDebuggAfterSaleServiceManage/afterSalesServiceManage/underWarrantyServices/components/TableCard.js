@@ -28,6 +28,7 @@ const TableCard = props => {
   const [basicsDataSource, setBasicsDataSource] = useState([]);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [allDetailsDataList, setAllDetailsDataList] = useState([]);
+  const [sort, setSort] = useState(0);
   const [detailsData, setDetailsData] = useState({
     CategoryTableList: [],
     ReasonTableList: [],
