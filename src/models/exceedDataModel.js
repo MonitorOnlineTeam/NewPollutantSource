@@ -112,6 +112,7 @@ export default Model.extend({
         EndTime: payload.EndTime,
         TabType: payload.TabType,
         PollutantList: payload.PollutantList,
+        EntCode: payload.EntCode,
         //PageIndex: payload.PageIndex,
         //PageSize: payload.PageSize
         OperationPersonnel: payload.operationpersonnel,

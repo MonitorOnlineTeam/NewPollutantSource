@@ -165,7 +165,7 @@ const Index = (props) => {
   const [entName,setEntName ] = useState()
   return (
     <div  className={styles.equipmentFailurerePairRateSty}>
-      <Form layout='inline'>
+      <Form layout='inline' style={{display: !props.entCode ? 'flex' : 'none'}}>
       <Form.Item style={{ paddingBottom: '16px' }}>
         <Input placeholder='请输入企业名称' allowClear onChange={(e) => { setEntName(e.target.value) }} />
         </Form.Item>

@@ -8,7 +8,10 @@ import OverViewRealtime from '@/pages/monitoring/overView/realtime';
 const colors = ['#00a3ff', '#2EEB9D', '#FF3737', '#FFCC00', '#836bfb', '#C9C9C9'];
 
 const dvaPropsData = ({ sysDashboard, loading }) => ({
+  level: sysDashboard.level,
   time: sysDashboard.time,
+  regionCode: sysDashboard.regionCode,
+  entCode: sysDashboard.entCode,
   MonitoringCountAnalysis: sysDashboard.MonitoringCountAnalysis,
   loading: loading.effects[`sysDashboard/GetMapPointList`],
 });
@@ -16,7 +19,7 @@ const dvaPropsData = ({ sysDashboard, loading }) => ({
 const OverviewCard = props => {
   const [open, setOpen] = useState(false);
 
-  const { dispatch, MonitoringCountAnalysis, loading, time } = props;
+  const { level, MonitoringCountAnalysis, loading, regionCode, entCode } = props;
 
   useEffect(() => {}, []);
 
@@ -61,7 +64,6 @@ const OverviewCard = props => {
               <p className={styles.num} style={{ color: colors[2] }}>
                 {MonitoringCountAnalysis.overCount}
                 <span className={styles.overViewUnit}>个</span>
-
               </p>
               <p className={styles.text}>超标排口</p>
             </div>
@@ -109,7 +111,12 @@ const OverviewCard = props => {
         }}
         bodyStyle={{ padding: 0 }}
       >
-        <OverViewRealtime hideBreadcrumb={true} location={{ query: {} }} />
+        <OverViewRealtime
+          hideBreadcrumb={true}
+          location={{ query: {} }}
+          regionCode={level == 2 ? regionCode : undefined}
+          entCode={level == 3 ? entCode : undefined}
+        />
       </Modal>
     </HomeCard>
   );

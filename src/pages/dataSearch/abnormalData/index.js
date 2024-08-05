@@ -173,7 +173,13 @@ class index extends PureComponent {
     });
 
     // 根据企业类型查询监测因子
-    this.getPollutantByType(false, this.getExceptionList);
+    this.getPollutantByType(false, () => {
+      this.getExceptionList(true);
+    });
+
+    if (this.props.regionCode) {
+      this.props.form.setFieldsValue({ RegionCode: this.props.regionCode });
+    }
   }
 
   // 根据企业类型查询监测因子
@@ -193,7 +199,7 @@ class index extends PureComponent {
   };
 
   // 获取异常数据
-  getExceptionList = () => {
+  getExceptionList = isInitOpenModal => {
     let values = this.props.form.getFieldsValue();
     console.log('values=', values);
     let beginTime, endTime;
@@ -210,31 +216,50 @@ class index extends PureComponent {
           ? moment(values.time[1]).format('YYYY-MM-DD HH:59:59')
           : moment(values.time[1]).format('YYYY-MM-DD');
     }
-    this.props.dispatch({
-      type: 'abnormalData/getExceptionList',
-      payload: {
-        AttentionCode: values.AttentionCode,
-        PollutantList: values.PollutantList,
-        PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode ? values.RegionCode : '',
-        dataType: values.dataType,
-        beginTime: beginTime,
-        endTime: endTime,
-        OperationPersonnel: this.state.operationpersonnel,
-      },
-    });
-    this.setState({
-      queryCondition: {
-        AttentionCode: values.AttentionCode,
-        PollutantList: values.PollutantList,
-        PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode ? values.RegionCode : '',
-        dataType: values.dataType,
-        beginTime: beginTime,
-        endTime: endTime,
-        OperationPersonnel: this.state.operationpersonnel,
-      },
-    });
+    this.props
+      .dispatch({
+        type: 'abnormalData/getExceptionList',
+        payload: {
+          AttentionCode: values.AttentionCode,
+          PollutantList: values.PollutantList,
+          PollutantType: values.PollutantType,
+          RegionCode: values.RegionCode ? values.RegionCode : '',
+          entCode: this.props.entCode,
+          dataType: values.dataType,
+          beginTime: beginTime,
+          endTime: endTime,
+          OperationPersonnel: this.state.operationpersonnel,
+        },
+      })
+      .then(() => {
+        this.setState(
+          {
+            queryCondition: {
+              AttentionCode: values.AttentionCode,
+              PollutantList: values.PollutantList,
+              PollutantType: values.PollutantType,
+              RegionCode: values.RegionCode ? values.RegionCode : '',
+              dataType: values.dataType,
+              beginTime: beginTime,
+              endTime: endTime,
+              OperationPersonnel: this.state.operationpersonnel,
+            },
+          },
+          () => {
+            if (this.props.entCode && isInitOpenModal) {
+              let queryCondition = this.state.queryCondition;
+              queryCondition.RegionCode = this.props.regionCode;
+              queryCondition.ExceptionType = 1;
+              queryCondition.RegionName = this.props.regionName;
+              queryCondition.entCode = this.props.entCode;
+              queryCondition = JSON.stringify(queryCondition);
+              // router.push(`/dataSearch/abnormalData/details?queryCondition=${queryCondition}`)
+              this.setState({ detailVisible: true, queryConditionDetail: queryCondition });
+            }
+          },
+        );
+      });
+
     this.props.dispatch({
       type: 'abnormalData/updateState',
       payload: {
@@ -500,7 +525,7 @@ class index extends PureComponent {
                     })}
                   </Checkbox.Group>,
                 )}
-                <Button loading={loading} type="primary" onClick={this.getExceptionList}>
+                <Button loading={loading} type="primary" onClick={() => this.getExceptionList()}>
                   查询
                 </Button>
                 <Button

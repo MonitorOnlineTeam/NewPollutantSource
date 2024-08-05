@@ -7,34 +7,45 @@ import { getSysName } from '@/utils/utils';
 const dvaPropsData = ({ loading, sysDashboard }) => ({});
 
 const UserLayout2 = props => {
-  const [echarts, setEcharts] = useState();
-  const [dataType, setDataType] = useState('Hours');
-  const [open, setOpen] = useState(false);
-
   const port = location.port;
 
   const { dispatch, children, LevelList, entCode, regionCode, time } = props;
 
-  useEffect(() => {
-    console.log('configInfo', configInfo);
-  }, []);
+  useEffect(() => {}, []);
 
-  const onOpenModal = () => {};
+  // const sysName = JSON.parse(conf);
+  // const { NODE_ENV } = process.env;
+
+  // return sysName[port] ? sysName[port] : sysName[-1];
+  // let isShowSysName =
+
+  console.log('configInfo', configInfo);
+
+  const isShowSysName = configInfo.SystemName !== '污染源智慧监测管理系统';
+
+  let imgSrc = isShowSysName
+    ? `url(/newLogin/${configInfo.SystemName}/bg.jpg)`
+    : `url(/newLogin/-1.jpg)`;
 
   return (
-    <Row
-      className={styles.userLayoutWrapper}
-      style={{ backgroundImage: `url(/newLogin/${-1}.jpg)` }}
-    >
-      <Col className={styles.content} xl={14} lg={24}>
-        <div className={styles.logo}></div>
-        <div className={styles.sysName}>{configInfo.SystemName || '污染源监测监控软件'}</div>
+    <Row className={styles.userLayoutWrapper} style={{ backgroundImage: imgSrc }}>
+      <Col className={styles.content} xl={13} lg={24}>
         <div className={styles.childrenContent}>
-          <h1>账号密码登录</h1>
-          {children}
+          {isShowSysName ? (
+            <div className={styles.sysName}>
+              <img style={{ marginLeft: -14, marginRight: 10 }} src="/sdl.png" />
+              {configInfo.SystemName}
+            </div>
+          ) : (
+            <div className={styles.logo}></div>
+          )}
+          <div className={styles.loginFormContent}>
+            <h1>账号密码登录</h1>
+            {children}
+          </div>
         </div>
       </Col>
-      <Col xl={10} lg={0}></Col>
+      <Col xl={11} lg={0}></Col>
     </Row>
   );
 };

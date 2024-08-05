@@ -10,7 +10,12 @@ import moment from 'moment';
 const COLOR = ['#2998FF', '#21ECBB', '#DFE06D'];
 
 const dvaPropsData = ({ sysDashboard, loading }) => ({
+  level: sysDashboard.level,
   time: sysDashboard.time,
+  regionCode: sysDashboard.regionCode,
+  entCode: sysDashboard.entCode,
+  regionInfo: sysDashboard.regionInfo,
+  entInfo: sysDashboard.entInfo,
   InspectionAndCalibration: sysDashboard.InspectionAndCalibration,
   loading: loading.effects[`sysDashboard/GetPlanOperationTaskCompleteRate`],
 });
@@ -18,7 +23,16 @@ const dvaPropsData = ({ sysDashboard, loading }) => ({
 const Calibration = props => {
   const [open, setOpen] = useState(false);
   const [echarts, setEcharts] = useState();
-  const { time, loading, InspectionAndCalibration } = props;
+  const {
+    time,
+    loading,
+    InspectionAndCalibration,
+    level,
+    regionCode,
+    entCode,
+    regionInfo,
+    entInfo,
+  } = props;
 
   useEffect(() => {}, []);
 
@@ -145,6 +159,20 @@ const Calibration = props => {
     setOpen(true);
   };
 
+  let extraTitle = '',
+    modalParams = {};
+  if (level != 1 && (regionCode || entCode)) {
+    if (level == 2 && regionCode) {
+      extraTitle = `（${regionInfo.regionName}）`;
+      modalParams.regionCode = regionCode;
+    }
+    if (level == 3 && entCode) {
+      extraTitle = `（${regionInfo.regionName} - ${entInfo.entName}）`;
+      modalParams.regionCode = regionCode;
+      modalParams.entCode = entCode;
+    }
+  }
+
   return (
     <HomeCard title="校准质量分析" bodyStyle={{}} loading={loading}>
       <Row style={{ height: '100%' }}>
@@ -199,6 +227,7 @@ const Calibration = props => {
             setOpen(false);
           }}
           time={[moment(time[0]), moment(time[1])]}
+          {...modalParams}
         />
       )}
     </HomeCard>

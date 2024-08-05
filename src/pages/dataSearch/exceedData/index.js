@@ -128,6 +128,10 @@ class index extends PureComponent {
 
     componentDidMount() {
         this.initData();
+
+        if(this.props.regionCode) {
+            this.props.form.setFieldsValue({'Region': this.props.regionCode})
+        }
     }
 
     initData = () => {
@@ -172,7 +176,9 @@ class index extends PureComponent {
                 this.props.dispatch({
                     type: pageUrl.GetExceedDataList,
                     payload: {
-                        RegionCode: '',
+                        RegionCode: this.props.regionCode,
+                        EntCode: this.props.entCode,
+                        // RegionCode: '',
                         AttentionCode: '',
                         PollutantTypeCode: entType,
                         DataType: dataType == 'Hour'?'HourData':'DayData',
@@ -181,9 +187,15 @@ class index extends PureComponent {
                         TabType: entType,
                         PollutantList: pollutantList
                     }
+                }).then(() => {
+                    if(this.props.entCode) {
+                        this.paneAdd(this.props.regionCode, this.props.regionName)
+                    }
                 })
             }
         })
+
+       
     };
     handleSummit=(e)=>{
         const { PollutantByType } = this.props
@@ -253,6 +265,7 @@ class index extends PureComponent {
                 type:pageUrl.GetExceedDataList,
                 payload:{
                     RegionCode: values.Region == undefined ? '' : values.Region,
+                    entCode: this.props.entCode,
                     AttentionCode: values.attention == undefined ? '' : values.attention,
                     PollutantTypeCode: values.outlet == undefined ? '' : values.outlet,
                     DataType: values.dataType == undefined ? '' : values.dataType == 'Hour'?'HourData':'DayData',
@@ -370,12 +383,14 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: region,
                 PollutantList: PollutantList,
-                operationpersonnel:operationpersonnel
+                operationpersonnel:operationpersonnel,
+                EntCode: this.props.entCode,
                 //PageSize:10,
                 //PageIndex:1
             }
         }).then(()=>{
-            if(this.props.RegionDataList.length > 0)
+            // if(this.props.RegionDataList.length > 0)
+            if(true)
             {
                 const fixed = false
                 const columns = [
@@ -826,7 +841,7 @@ class index extends PureComponent {
                             //     }}>
                             //     {this.children()}
                             // </Select>
-                         <RegionList changeRegion={''} RegionCode={''}  style={{ width: 200}}/>
+                         <RegionList  noFilter style={{ width: 200}}/>
                             
                         )
                     }

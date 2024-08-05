@@ -148,14 +148,14 @@ export default {
   },
   chainWebpack: webpackPlugin,
   proxy: {
-    // '/rest/PollutantSourceApi/UploadApi': {
-    //   target: UPLOAD_HOST, // 文件上传地址
-    //   changeOrigin: true,
-    // },
-    // '/wwwroot/Upload': {
-    //   target: UPLOAD_HOST, // 接口的域名
-    //   changeOrigin: true,
-    // },
+    '/rest/PollutantSourceApi/UploadApi': {
+      target: UPLOAD_HOST, // 文件上传地址
+      changeOrigin: true,
+    },
+    '/wwwroot/Upload': {
+      target: UPLOAD_HOST, // 文件下载地址
+      changeOrigin: true,
+    },
     '/rest': {
       target: API_HOST,
       changeOrigin: true,

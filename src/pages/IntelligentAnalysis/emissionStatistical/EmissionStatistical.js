@@ -83,6 +83,10 @@ class Gas extends PureComponent {
     // this.getTableData("region");
     // this.getTableData("ent");
     // this.getTableData("point");
+
+    if (this.props.regionCode) {
+      this.props.form.setFieldsValue({ RegionCode: this.props.regionCode });
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -126,6 +130,7 @@ class Gas extends PureComponent {
             ? values.TradeCode[values.TradeCode.length - 1]
             : undefined,
         RegionCode: values.RegionCode,
+        entCode: this.props.entCode,
         ImportantType: values.ImportantType,
         // PollutantType: 1,
         PollutantType: values.PollutantType,
@@ -149,6 +154,7 @@ class Gas extends PureComponent {
             ? values.TradeCode[values.TradeCode.length - 1]
             : undefined,
         RegionCode: values.RegionCode,
+        entCode: this.props.entCode,
         ImportantType: values.ImportantType,
         // PollutantType: 1,
         PollutantType: values.PollutantType,

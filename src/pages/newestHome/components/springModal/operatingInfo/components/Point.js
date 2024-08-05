@@ -77,6 +77,7 @@ const Index = (props) => {
         pageSize:PageSize?PageSize: pageSize,
         operationStatus:operatingStatus,
         outputType:outputType,
+        entCode: props.entCode
     })
  };
 
@@ -136,12 +137,12 @@ const Index = (props) => {
   key:'outputTypeName',
   align:'center',
 })
-  const [regionCode,setRegionCode ] = useState()
+  const [regionCode,setRegionCode ] = useState(props.regionCode)
   return (
     <div  className={styles.operatingInfoSty}>
       <Form layout='inline'>
       <Form.Item style={{ paddingBottom: '16px' }}>
-      <RegionList levelNum={2}  selectType={'2,是'} style={{ width: 200 }}  changeRegion={(val)=>{setRegionCode(val)}} />
+      <RegionList defaultValue={regionCode} levelNum={2}  selectType={'2,是'} style={{ width: 200 }}  changeRegion={(val)=>{setRegionCode(val)}} />
         </Form.Item>
         <Form.Item style={{ paddingBottom: '16px' }}>
         <Button type='primary' loading={tableLoading} style={{ margin: '0 8px', }} onClick={() => {  setPageIndex(1);initData(1) }}>

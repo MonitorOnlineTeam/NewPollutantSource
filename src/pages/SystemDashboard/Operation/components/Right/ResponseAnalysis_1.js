@@ -6,6 +6,8 @@ import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import AbnormalAlarmRateModal from '@/pages/newestHome/components/springModal/abnormalAlarmRate';
+import RegionDetails from '@/pages/IntelligentAnalysis/dataAlarm/abnormalResRate/RegionDetails';
+
 import MissingDataRateModal from '@/pages/newestHome/components/springModal/missingDataRate/MissingDataRateModel';
 
 let myChart;
@@ -13,6 +15,8 @@ const dvaPropsData = ({ loading, sysDashboard }) => ({
   level: sysDashboard.level,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
+  regionInfo: sysDashboard.regionInfo,
+  entInfo: sysDashboard.entInfo,
   time: sysDashboard.time,
   loading: loading.effects['sysDashboard/GetExceptionResponseRate'],
 });
@@ -31,8 +35,9 @@ const ResponseAnalysis = props => {
   });
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [queryConditions, setQueryConditions] = useState({});
 
-  const { dispatch, time, loading, level, regionCode, entCode } = props;
+  const { dispatch, time, loading, level, regionCode, entCode, regionInfo, entInfo } = props;
 
   useEffect(() => {
     getData();
@@ -424,6 +429,20 @@ const ResponseAnalysis = props => {
     return option;
   };
 
+  let extraTitle = '',
+    modalParams = {};
+  if (level != 1 && (regionCode || entCode)) {
+    if (level == 2 && regionCode) {
+      extraTitle = `（${regionInfo.regionName}）`;
+      modalParams.regionCode = regionCode;
+    }
+    if (level == 3 && entCode) {
+      extraTitle = `（${regionInfo.regionName} - ${entInfo.entName}）`;
+      modalParams.regionCode = regionCode;
+      modalParams.entCode = entCode;
+    }
+  }
+
   return (
     <HomeCard title="响应异常分析" bodyStyle={{}} loading={loading}>
       <ReactEcharts
@@ -443,19 +462,55 @@ const ResponseAnalysis = props => {
           cursor: 'pointer',
         }}
       >
-        <Col span={12} onClick={() => setOpen1(true)}></Col>
+        <Col
+          span={12}
+          onClick={() => {
+            setQueryConditions({
+              PollutantType: '2',
+              RegionCode: modalParams.regionCode,
+              EntCode: modalParams.entCode,
+              dataType: 'HourData',
+              beginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+              endTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
+              OperationPersonnel: '',
+              RegionName: regionInfo.regionName,
+              regionLevel: 3,
+            });
+            setOpen1(true);
+          }}
+        ></Col>
         <Col span={12} onClick={() => setOpen2(true)}></Col>
       </Row>
-      {open1 && (
-        <AbnormalAlarmRateModal //异常报警响应率弹框
-          type={'1'}
-          visible={open1}
-          time={[moment(time[0]), moment(time[1])]}
-          onCancel={() => {
-            setOpen1(false);
-          }}
-        />
-      )}
+      {open1 &&
+        (!modalParams.regionCode ? (
+          <AbnormalAlarmRateModal //异常报警响应率弹框
+            type={'2'}
+            visible={open1}
+            time={[moment(time[0]), moment(time[1])]}
+            onCancel={() => {
+              setOpen1(false);
+            }}
+            {...modalParams}
+          />
+        ) : (
+          <Modal
+            title={`响应异常分析${extraTitle}`}
+            wrapClassName="spreadOverModal"
+            mask={false}
+            open={open1}
+            footer={false}
+            onCancel={() => {
+              setOpen1(false);
+            }}
+            destroyOnClose
+          >
+            <RegionDetails
+              hideBreadcrumb
+              location={{ query: { queryCondition: JSON.stringify(queryConditions) } }}
+              hideBack
+            />
+          </Modal>
+        ))}
       {open2 && (
         <MissingDataRateModal //缺失报警响应率弹框
           type={'ent'}

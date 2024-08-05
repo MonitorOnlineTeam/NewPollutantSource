@@ -6,7 +6,26 @@
 
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Form, Card, Spin, Button, Space, Select, Badge, Tooltip, Input, Radio, Modal, Row, message, Popover, Table, Collapse, Cascader, Upload } from 'antd';
+import {
+  Form,
+  Card,
+  Spin,
+  Button,
+  Space,
+  Select,
+  Badge,
+  Tooltip,
+  Input,
+  Radio,
+  Modal,
+  Row,
+  message,
+  Popover,
+  Table,
+  Collapse,
+  Cascader,
+  Upload,
+} from 'antd';
 import styles from '../../styles.less';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SdlTable from '@/components/SdlTable';
@@ -19,8 +38,10 @@ import { router } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 import Cookie from 'js-cookie';
 import { API } from '@config/API';
-import { cookieName, uploadPrefix } from '@/config'
+import { cookieName, uploadPrefix } from '@/config';
 import { useHistory } from 'react-router-dom';
+import { permissionButton } from '@/utils/utils';
+
 const textStyle = {
   width: '100%',
   display: 'inline-block',
@@ -34,12 +55,10 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   queryLoading: loading.effects['AbnormalIdentifyModel/GetCheckedList'],
   pointListLoading: loading.effects['common/getPointByEntCode'],
   entListLoading: loading.effects['common/GetEntByRegion'],
-
 });
 
 const Index = props => {
   const [form] = Form.useForm();
-
 
   const {
     dispatch,
@@ -50,35 +69,50 @@ const Index = props => {
     verificationTaskData: { pageIndex, pageSize, scrollTop, rowKey, type },
     location: { pathname },
   } = props;
-  const isAll = pathname === '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskTracking'
-  const routerType = pathname === '/AbnormalIdentifyModel/VerificationTaskManagement/TobeVerifiedTask' ? 1 : 2
+
+  const buttonList = permissionButton(props.match.path);
+  console.log('buttonList', buttonList);
+  const isAll =
+    buttonList.includes('checkOpe') || buttonList.includes('checkExpert') ? false : true;
+  const routerType = buttonList.includes('checkOpe')
+    ? 1
+    : buttonList.includes('checkExpert')
+    ? 2
+    : undefined; // 1:运维人员  2:业务专家
   const [pointList, setPointList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
     form.resetFields();
-    if (type == 2) {//从详情返回
+    if (type == 2) {
+      //从详情返回
       onFinish(pageIndex, pageSize);
     } else {
-      onTableChange(1, 20)
+      onTableChange(1, 20);
     }
-
-
   }, []);
 
   const history = useHistory();
   useEffect(() => {
-    const handleRouteChange = (location) => {
-      // 在这里执行你需要在路由变化时执行的代码  
-      const path = location.pathname
-      const detailPath = '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail'
-      const currentPath = pathname
+    const handleRouteChange = location => {
+      // 在这里执行你需要在路由变化时执行的代码
+      const path = location.pathname;
+      const detailPath = '/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail';
+      const currentPath = pathname;
       if (path !== detailPath && path !== currentPath) {
         dispatch({
           type: 'AbnormalIdentifyModel/updateState',
-          payload: { verificationTaskData: { pageIndex: 1, pageSize: 20, scrollTop: 0, rowKey: undefined, type: 1 } },
-        })
+          payload: {
+            verificationTaskData: {
+              pageIndex: 1,
+              pageSize: 20,
+              scrollTop: 0,
+              rowKey: undefined,
+              type: 1,
+            },
+          },
+        });
       }
     };
 
@@ -94,9 +128,7 @@ const Index = props => {
         width: 80,
         ellipsis: true,
         render: (text, record, index) => {
-          return (
-            (pageIndex - 1) * pageSize + index + 1
-          );
+          return (pageIndex - 1) * pageSize + index + 1;
         },
       },
       {
@@ -180,13 +212,13 @@ const Index = props => {
                       verificationTaskData: {
                         ...verificationTaskData,
                         scrollTop: scrollTop,
-                        rowKey: record.ID
+                        rowKey: record.ID,
                       },
                     },
                   });
-                  const data = { id: record.ID }
+                  const data = { id: record.ID };
                   router.push(
-                    `/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail?id=${record.ID}&&type=${record.Status}`
+                    `/AbnormalIdentifyModel/VerificationTaskManagement/VerifiedTaskDetail?id=${record.ID}&&type=${record.Status}`,
                   );
                 }}
               >
@@ -199,7 +231,6 @@ const Index = props => {
     ];
   };
 
-
   // 查询数据
   const onFinish = (pageIndex, pageSize) => {
     const values = form.getFieldsValue();
@@ -211,10 +242,19 @@ const Index = props => {
         beginTime: values.date ? values.date[0].format('YYYY-MM-DD HH:mm:ss') : undefined,
         endTime: values.date ? values.date[1].format('YYYY-MM-DD HH:mm:ss') : undefined,
         pageIndex: pageIndex,
-        pageSize: pageSize
+        pageSize: pageSize,
       },
       callback: res => {
-        const data = routerType == 1 ? res.Datas?.filter(item => item.Status == 1 || item.Status == 2) : res.Datas?.filter(item => item.Status == 3)
+        let data = [];
+        if (isAll) {
+          data = res.Datas;
+        } else {
+          data =
+            routerType == 1
+              ? res.Datas?.filter(item => item.Status == 1 || item.Status == 2)
+              : res.Datas?.filter(item => item.Status == 1 || item.Status == 3);
+        }
+
         setDataSource(data);
         setTotal(res.Total);
         // 设置滚动条高度，定位到点击详情的行号
@@ -226,7 +266,6 @@ const Index = props => {
       },
     });
   };
-
 
   // 分页
   const onTableChange = (current, pageSize) => {
@@ -254,133 +293,152 @@ const Index = props => {
       },
       callback: res => {
         setPointList(res);
-        callback && callback()
+        callback && callback();
       },
     });
   };
 
-
-  return (<div className={styles.verificationTakeWrapper}>
-    <BreadcrumbWrapper>
-      <Card style={{ paddingBottom: 24 }}>
-        <Form
-          name="basic"
-          form={form}
-          layout="inline"
-          initialValues={{
-            date: [moment().add(-1, 'months'), moment()],
-            CheckStatus: routerType == 2 && !isAll ? 3 : undefined,
-          }}
-        >
-          <Form.Item label="日期" name="date">
-            <RangePicker_
-              allowClear={false}
-              dataType="day"
-              format="YYYY-MM-DD"
-              style={{ width: 250 }}
-            />
-          </Form.Item>
-          {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
-          <Form.Item label="企业" name="entCode">
-            <EntAtmoList
-              style={{ width: 200 }}
-              onChange={value => {
-                if (!value) {
-                  form.setFieldsValue({ dgimn: undefined });
-                } else {
-                  form.setFieldsValue({ dgimn: undefined });
-                  getPointList(value);
-                }
-              }}
-            />
-          </Form.Item>
-          {/* </Spin> */}
-          <Spin spinning={!!pointListLoading} size="small">
-            <Form.Item label="监测点名称" name="dgimn">
-              <Select
-                placeholder="请选择"
-                showSearch
-                allowClear
-                optionFilterProp="children"
-                style={{ width: 150 }}
-              >
-                {pointList.map(item => {
-                  return (
-                    <Option key={item.DGIMN} value={item.DGIMN}>
-                      {item.PointName}
-                    </Option>
-                  );
-                })}
-              </Select>
+  return (
+    <div className={styles.verificationTakeWrapper}>
+      <BreadcrumbWrapper>
+        <Card style={{ paddingBottom: 24 }}>
+          <Form
+            name="basic"
+            form={form}
+            layout="inline"
+            initialValues={{
+              date: [moment().add(-1, 'months'), moment()],
+              // CheckStatus: routerType == 2 && !isAll ? 3 : undefined,
+            }}
+          >
+            <Form.Item label="日期" name="date">
+              <RangePicker_
+                allowClear={false}
+                dataType="day"
+                format="YYYY-MM-DD"
+                style={{ width: 250 }}
+              />
             </Form.Item>
-          </Spin>
-          <Form.Item label="核查状态" name="CheckStatus" hidden={routerType == 2 && !isAll}>
-            {
-              isAll ?
-                <Select placeholder='请选择' style={{width:90}} allowClear>
-                  <Option key={1} value={1}>待核查</Option>
-                  <Option key={2} value={2}>待确认</Option>
-                  <Option key={3} value={3}>已完成</Option>
+            {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
+            <Form.Item label="企业" name="entCode">
+              <EntAtmoList
+                style={{ width: 200 }}
+                onChange={value => {
+                  if (!value) {
+                    form.setFieldsValue({ dgimn: undefined });
+                  } else {
+                    form.setFieldsValue({ dgimn: undefined });
+                    getPointList(value);
+                  }
+                }}
+              />
+            </Form.Item>
+            {/* </Spin> */}
+            <Spin spinning={!!pointListLoading} size="small">
+              <Form.Item label="监测点名称" name="dgimn">
+                <Select
+                  placeholder="请选择"
+                  showSearch
+                  allowClear
+                  optionFilterProp="children"
+                  style={{ width: 150 }}
+                >
+                  {pointList.map(item => {
+                    return (
+                      <Option key={item.DGIMN} value={item.DGIMN}>
+                        {item.PointName}
+                      </Option>
+                    );
+                  })}
                 </Select>
-                :
-                routerType == 2 ?
-                  <Select>
-                    <Option key={3} value={3}>已完成</Option>
-                  </Select>
-                  :
-                  <Select placeholder='请选择' style={{ width: 90 }} allowClear>
-                    <Option key={1} value={1}>待核查</Option>
-                    <Option key={2} value={2}>待确认</Option>
-                  </Select>
-            }
-          </Form.Item>
-          <Form.Item>
-            <Space>
-              <Button
-                type="primary"
-                loading={queryLoading}
-                onClick={() => {
-                  onTableChange(1, 20);
-                }}
-              >
-                查询
-              </Button>
-              <Button
-                onClick={() => {
-                  form.resetFields();
-                  onTableChange(1, 20);
-                }}
-              >
-                重置
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Card>
+              </Form.Item>
+            </Spin>
+            <Form.Item label="核查状态" name="CheckStatus">
+              {isAll ? (
+                <Select placeholder="请选择" style={{ width: 120 }} allowClear>
+                  <Option key={1} value={1}>
+                    待核查
+                  </Option>
+                  <Option key={2} value={2}>
+                    待确认
+                  </Option>
+                  <Option key={3} value={3}>
+                    已完成
+                  </Option>
+                </Select>
+              ) : routerType == 2 ? (
+                <Select placeholder="请选择" style={{ width: 120 }} allowClear>
+                  <Option key={2} value={2}>
+                    待确认
+                  </Option>
+                  <Option key={3} value={3}>
+                    已完成
+                  </Option>
+                </Select>
+              ) : (
+                <Select placeholder="请选择" style={{ width: 120 }} allowClear>
+                  <Option key={1} value={1}>
+                    待核查
+                  </Option>
+                  <Option key={3} value={3}>
+                    已完成
+                  </Option>
+                </Select>
+              )}
+            </Form.Item>
+            <Form.Item>
+              <Space>
+                <Button
+                  type="primary"
+                  loading={queryLoading}
+                  onClick={() => {
+                    onTableChange(1, 20);
+                  }}
+                >
+                  查询
+                </Button>
+                <Button
+                  onClick={() => {
+                    form.resetFields();
+                    onTableChange(1, 20);
+                  }}
+                >
+                  重置
+                </Button>
+              </Space>
+            </Form.Item>
+          </Form>
+        </Card>
 
-      <Card
-        title={!isAll && <span style={{ fontWeight: 'bold' }}>{`${routerType == 1 ? '待核查' : '已核查'}任务单`}</span>}
-        style={{ marginTop: 12 }}
-      >
-        <SdlTable
-          rowKey={(record, index) => `${record.ID}`}
-          align="center"
-          columns={getColumns()}
-          dataSource={dataSource}
-          loading={queryLoading}
-          scroll={{ y: isAll? 'calc(100vh - 326px)' : 'calc(100vh - 410px)' }}
-          pagination={{
-            showSizeChanger: true,
-            showQuickJumper: true,
-            pageSize: pageSize,
-            current: pageIndex,
-            onChange: onTableChange,
-            total: total,
-          }}
-        />
-      </Card>
-    </BreadcrumbWrapper>
-  </div>
+        <Card
+          // title={
+          //   !isAll && (
+          //     <span style={{ fontWeight: 'bold' }}>{`${
+          //       routerType == 1 ? '待核查' : '已核查'
+          //     }任务单`}</span>
+          //   )
+          // }
+          style={{ marginTop: 12 }}
+        >
+          <SdlTable
+            rowKey={(record, index) => `${record.ID}`}
+            align="center"
+            columns={getColumns()}
+            dataSource={dataSource}
+            loading={queryLoading}
+            scroll={{ y: isAll ? 'calc(100vh - 326px)' : 'calc(100vh - 410px)' }}
+            pagination={{
+              showSizeChanger: true,
+              showQuickJumper: true,
+              pageSize: pageSize,
+              current: pageIndex,
+              onChange: onTableChange,
+              total: total,
+            }}
+          />
+        </Card>
+      </BreadcrumbWrapper>
+    </div>
   );
 };
 

@@ -36,6 +36,7 @@ const ButtonsSelectModal = props => {
       payload: {
         configId: 'ButtonManager',
         otherParams: {
+          pageIndex: 1,
           pageSize: 9999,
         },
       },

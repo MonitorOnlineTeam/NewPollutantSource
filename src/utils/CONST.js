@@ -23,7 +23,6 @@ export const DatabaseVersion = [
   { "value": "MYSQL", "key": "2" },
 ]
 
-
 //菜单管理-类型
 export const MenuTarget = [{
   TypeValue: 'Iframe',

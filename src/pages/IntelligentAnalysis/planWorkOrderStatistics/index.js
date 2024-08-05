@@ -78,7 +78,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
-  const [showType, setShowType] = useState('1')
+  const [showType, setShowType] = useState(props.showType || '1')
   const [dates, setDates] = useState([]);
   const { tableDatas, tableTotal, loadingConfirm, pointDatas, tableLoading, exportLoading, exportActualRegLoading, queryPar, isPlanCalibrationModal, isPlanInspectionModal, isActualCalibrationModal, operationSettingInfo: { TaskPlanType } } = props;
 
@@ -86,7 +86,6 @@ const Index = (props) => {
     if (TaskPlanType == 1) {
       onFinish();
     }
-
   }, [TaskPlanType]);
 
   const showTypeChange = (e) => {
@@ -132,6 +131,8 @@ const Index = (props) => {
 
         let par = {
           ...values,
+          regionCode: values.regionCode ? values.regionCode : props.regionCode,
+          entCode: values.entCode ? values.entCode : props.entCode,
           time: undefined,
           staticType: showType,
           beginTime: moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
@@ -156,7 +157,7 @@ const Index = (props) => {
 
 
   const parentCallback = (val) => {
-    // pchildref.current._childFn(values); 
+    // pchildref.current._childFn(values);
     setOutOrInside(val)
   }
   const sortRate = (a, b, attribute) => { //完成率排序 返回值为'-'
@@ -173,6 +174,7 @@ const Index = (props) => {
         pollutantType: isPlanCalibrationModal || isPlanInspectionModal || isActualCalibrationModal ? props.pollutantTypes : 2,
         abnormalType: 1,
         time: props.time || [moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')],
+        regionCode: props.regionCode
       }}
     >
       {showType == 1 ? <Row align='middle'>
@@ -258,7 +260,9 @@ const Index = (props) => {
     {TaskPlanType == 1 ? <div className={styles.planWorkOrderStatisticsSty}>
       <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
         <Card title={searchComponents()}>
-          {showType == 1 ? <Region pollutantType={form.getFieldValue('pollutantType')} isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} isActualCalibrationModal={isActualCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref} sortRate={sortRate} /> : <Ent pollutantType={form.getFieldValue('pollutantType')} parentCallback={parentCallback} sortRate={sortRate} />}
+          {showType == 1 ?
+            <Region pollutantType={form.getFieldValue('pollutantType')} isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} isActualCalibrationModal={isActualCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref} sortRate={sortRate} />
+            : <Ent pollutantType={form.getFieldValue('pollutantType')} parentCallback={parentCallback} sortRate={sortRate} />}
         </Card>
       </BreadcrumbWrapper>
     </div>

@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-22 14:13:17
+ * @Last Modified time: 2024-07-31 14:08:51
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -150,7 +150,7 @@ class SdlTable extends PureComponent {
         computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
       },
       () => {
-        console.log('computeHeight1', this.state.computeHeight)
+        // console.log('computeHeight1', this.state.computeHeight)
       },
     );
     // 动态计算表格纵向位置
@@ -356,8 +356,8 @@ class SdlTable extends PureComponent {
           scrollYHeight + 40
         : scrollYHeight;
 
-        console.log('scrollY', scrollY)
-        console.log('computeHeight2', this.state.computeHeight)
+        // console.log('scrollY', scrollY)
+        // console.log('computeHeight2', this.state.computeHeight)
 
     // 处理表格长度，防止错位
     const _columns = (columns || []).map((col, index) => ({

@@ -6,13 +6,16 @@ import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import EquipmentFailureRate from '@/pages/newestHome/components/springModal/equipmentFailureRate';
+import EquipmentFailureRatePoint from '@/pages/newestHome/components/springModal/equipmentFailureRate/components/Point';
 import EquipmentFailurerePairRate from '@/pages/newestHome/components/springModal/equipmentFailurerePairRate';
-
+import EquipmentFailurerePairRatePoint from '@/pages/newestHome/components/springModal/equipmentFailurerePairRate/components/Point.js';
 let myChart;
 const dvaPropsData = ({ loading, sysDashboard }) => ({
   level: sysDashboard.level,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
+  regionInfo: sysDashboard.regionInfo,
+  entInfo: sysDashboard.entInfo,
   time: sysDashboard.time,
   loading: loading.effects['sysDashboard/GetEquipmentExceptionsOverview'],
 });
@@ -27,7 +30,7 @@ const DeviceDiagnostics = props => {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
 
-  const { dispatch, loading, time, level, regionCode, entCode } = props;
+  const { dispatch, loading, time, level, regionCode, entCode, regionInfo, entInfo } = props;
 
   useEffect(() => {
     getData();
@@ -77,10 +80,7 @@ const DeviceDiagnostics = props => {
         color: type === 1 ? '#0EFCFF' : '#FFD725', // 100% 处的颜色
       },
     ]);
-    const colorSet = [
-      [value !== '-' ? value : 0, color],
-      [1, '#192A51'],
-    ];
+    const colorSet = [[value !== '-' ? value : 0, color], [1, '#192A51']];
     const rich = {
       bule: {
         fontSize: 120,
@@ -222,10 +222,53 @@ const DeviceDiagnostics = props => {
     return option;
   };
 
+  let extraTitle = '',
+    modalParams = {};
+  if (level != 1 && (regionCode || entCode)) {
+    if (level == 2 && regionCode) {
+      extraTitle = `（${regionInfo.regionName}）`;
+      modalParams.regionCode = regionCode;
+    }
+    if (level == 3 && entCode) {
+      extraTitle = `（${regionInfo.regionName} - ${entInfo.entName}）`;
+      modalParams.regionCode = regionCode;
+      modalParams.entCode = entCode;
+    }
+  }
+
+  const updateState = (modalParams, namespace) => {
+    dispatch({
+      type: `${namespace}/updateState`,
+      payload: {
+        queryPar: { ...modalParams },
+      },
+    });
+  };
+
   return (
     <HomeCard title="设备故障分析" bodyStyle={{}} loading={loading}>
       <Row style={{ marginTop: 16, padding: '0 20px', height: '100%' }}>
-        <Col span={12} style={{ cursor: 'pointer' }} onClick={() => setOpen1(true)}>
+        <Col
+          span={12}
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            if (level == 3 && entCode) {
+              let pointParams = {};
+              pointParams.regionCode = regionCode;
+              pointParams.entCode = entCode;
+              pointParams.pointType = 3;
+              pointParams.beginTime = moment(time[0]).format('YYYY-MM-DD HH:mm:ss');
+              pointParams.endTime = moment(time[1]).format('YYYY-MM-DD HH:mm:ss');
+              pointParams.pollutantType = 2;
+              updateState(pointParams, 'equipmentFailureRate');
+              setTimeout(() => {
+                setOpen1(true);
+              }, 0);
+            } else {
+              setOpen1(true);
+            }
+          }}
+        >
           <ReactEcharts
             ref={echart => {
               echart && setEcharts(echart.echarts);
@@ -248,7 +291,27 @@ const DeviceDiagnostics = props => {
             故障率
           </p>
         </Col>
-        <Col span={12} style={{ cursor: 'pointer' }} onClick={() => setOpen2(true)}>
+        <Col
+          span={12}
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            if (level == 3 && entCode) {
+              let pointParams = {};
+              pointParams.regionCode = regionCode;
+              pointParams.entCode = entCode;
+              pointParams.pointType = 3;
+              pointParams.beginTime = moment(time[0]).format('YYYY-MM-DD HH:mm:ss');
+              pointParams.endTime = moment(time[1]).format('YYYY-MM-DD HH:mm:ss');
+              pointParams.pollutantType = 2;
+              updateState(pointParams, 'equipmentFailurerePairRate');
+              setTimeout(() => {
+                setOpen2(true);
+              }, 0);
+            } else {
+              setOpen2(true);
+            }
+          }}
+        >
           <ReactEcharts
             ref={echart => {
               echart && setEcharts(echart.echarts);
@@ -277,26 +340,61 @@ const DeviceDiagnostics = props => {
           </p>
         </Col>
       </Row>
-      {open1 && (
-        <EquipmentFailureRate //设备故障率弹框
-          visible={open1}
-          type={2}
-          onCancel={() => {
-            setOpen1(false);
-          }}
-          time={[moment(time[0]), moment(time[1])]}
-        />
-      )}
-      {open2 && (
-        <EquipmentFailurerePairRate //设备故障修复率弹框
-          visible={open2}
-          type={2}
-          onCancel={() => {
-            setOpen2(false);
-          }}
-          time={[moment(time[0]), moment(time[1])]}
-        />
-      )}
+      {open1 &&
+        (!modalParams.entCode ? (
+          <EquipmentFailureRate //设备故障率弹框
+            visible={open1}
+            type={2}
+            onCancel={() => {
+              setOpen1(false);
+            }}
+            time={[moment(time[0]), moment(time[1])]}
+            {...modalParams}
+          />
+        ) : (
+          <Modal
+            title={`设备故障率${extraTitle}`}
+            wrapClassName="spreadOverModal"
+            mask={false}
+            open={open1}
+            footer={false}
+            onCancel={() => {
+              setOpen1(false);
+            }}
+            destroyOnClose
+          >
+            <EquipmentFailureRatePoint time={[moment(time[0]), moment(time[1])]} {...modalParams} />
+          </Modal>
+        ))}
+      {open2 &&
+        (!modalParams.entCode ? (
+          <EquipmentFailurerePairRate //设备故障修复率弹框
+            visible={open2}
+            type={2}
+            onCancel={() => {
+              setOpen2(false);
+            }}
+            time={[moment(time[0]), moment(time[1])]}
+            {...modalParams}
+          />
+        ) : (
+          <Modal
+            title={`设备故障修复率${extraTitle}`}
+            wrapClassName="spreadOverModal"
+            mask={false}
+            open={open2}
+            footer={false}
+            onCancel={() => {
+              setOpen2(false);
+            }}
+            destroyOnClose
+          >
+            <EquipmentFailurerePairRatePoint
+              time={[moment(time[0]), moment(time[1])]}
+              {...modalParams}
+            />
+          </Modal>
+        ))}
     </HomeCard>
   );
 };

@@ -11,21 +11,35 @@
     .logo {
       background: url(/newLogin/logo.png) no-repeat;
       height: 56px;
+      margin-bottom: 20%;
+      background-size: contain;
+      position: relative;
+      padding: 9% 0;
+      &:after {
+        position: absolute;
+        content: '';
+        width: 70px;
+        height: 2px;
+        background-color: #fff;
+        bottom: 00;
+        left: 0;
+      }
       // background-size: 60%;
     }
 
     .sysName {
-      margin-top: 20px;
       font-weight: 500;
       font-size: 34px;
       color: #ffffff;
       line-height: 80px;
       position: relative;
-
+      margin-bottom: 20%;
+      display: flex;
+      align-items: center;
       &:after {
         position: absolute;
         content: '';
-        width: 60px;
+        width: 80px;
         height: 2px;
         background-color: #fff;
         bottom: 0;
@@ -34,15 +48,18 @@
     }
 
     .childrenContent {
-      background: #fff;
-      height: 400px;
-      /* margin-top: 40px; */
-      width: 440px;
       position: absolute;
       top: 50%;
       left: 7%;
-      transform: translateY(-60%);
+      transform: translateY(-68%);
       border-radius: 4px;
+      .loginFormContent {
+        background: #fff;
+        height: 400px;
+        /* margin-top: 40px; */
+        width: 440px;
+        position: relative;
+      }
       h1 {
         font-family: Microsoft YaHei;
         font-weight: 500;

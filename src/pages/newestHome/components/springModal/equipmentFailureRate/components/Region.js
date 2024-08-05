@@ -43,10 +43,11 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    regGetFailureRateList:(payload)=>{ // 行政区
+    regGetFailureRateList:(payload, callback)=>{ // 行政区
       dispatch({
         type: `${namespace}/regGetFailureRateList`,
         payload:payload,
+        callback: callback
       })
     },
     getParamCodeList:(payload,callback)=>{ // 设备参数类别
@@ -92,6 +93,7 @@ const Index = (props) => {
       props.exportFailureRateList({
         ...values,
         time:undefined,
+        regionCode: props.regionCode,
         beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
         endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         parameterCategory:values.parameterCategory? values.parameterCategory.toString() :'',
@@ -152,14 +154,19 @@ const Index = (props) => {
       const par = {
         ...values,
         time:undefined,
+        regionCode: props.regionCode,
         beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
         endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         parameterCategory:values.parameterCategory? values.parameterCategory.toString() :'',
         pointType:1,
       }
-        props.regGetFailureRateList({ ...par  })
         props.updateState({
           queryPar:{ ...par }
+        })
+        props.regGetFailureRateList({ ...par  }, (res) => {
+          if(props.regionCode && res?.length) {
+            regionDetail(res[0], par)
+          }
         })
         
     } catch (errorInfo) {
@@ -169,11 +176,12 @@ const Index = (props) => {
   
   const [regionDetailVisible,setRegionDetailVisible] = useState(false)
 
-  const regionDetail = (row) =>{ 
+  const regionDetail = (row, par) =>{ 
     setRegionDetailVisible(true)
+    let queryPar = par || props.queryPar;
     props.updateState({
       queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })

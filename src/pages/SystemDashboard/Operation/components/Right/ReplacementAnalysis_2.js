@@ -7,6 +7,7 @@ import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import { bar3DrenderItem } from '@/pages/ctDebuggAfterSaleServiceManage/utils/getBar3D';
 import ConsumablesStatisticsModal from '@/pages/newestHome/components/springModal/consumablesStatistics';
+import ConsumablesStatisticsModal2 from '@/pages/newestHome/components/springModal/consumablesStatistics/components/Point.js';
 
 const COLOR = ['#3AE3FD', '#00AEFF', '#FFC75D'];
 const xData = ['标准气体更换数量', '易耗品更换数量', '备品备件更换数量'];
@@ -15,6 +16,8 @@ const dvaPropsData = ({ loading, sysDashboard }) => ({
   level: sysDashboard.level,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
+  regionInfo: sysDashboard.regionInfo,
+  entInfo: sysDashboard.entInfo,
   time: sysDashboard.time,
   loading: loading.effects['sysDashboard/GetVisualDashBoardConsumablesStatisticsInfo'],
 });
@@ -29,7 +32,7 @@ const ReplacementAnalysis = props => {
   });
   const [open, setOpen] = useState(false);
 
-  const { dispatch, loading, time, level, regionCode, entCode } = props;
+  const { dispatch, loading, time, level, regionCode, entCode, regionInfo, entInfo } = props;
 
   useEffect(() => {
     getData();
@@ -199,6 +202,20 @@ const ReplacementAnalysis = props => {
     };
   };
 
+  let extraTitle = '',
+    modalParams = {};
+  if (level != 1 && (regionCode || entCode)) {
+    if (level == 2 && regionCode) {
+      extraTitle = `（${regionInfo.regionName}）`;
+      modalParams.regionCode = regionCode;
+    }
+    if (level == 3 && entCode) {
+      extraTitle = `（${regionInfo.regionName} - ${entInfo.entName}）`;
+      modalParams.regionCode = regionCode;
+      modalParams.entCode = entCode;
+    }
+  }
+
   return (
     <HomeCard title="备件更换分析" bodyStyle={{}} loading={loading}>
       <Row style={{ marginTop: 16, padding: '0 20px' }}>
@@ -231,13 +248,28 @@ const ReplacementAnalysis = props => {
 
       {open && (
         <ConsumablesStatisticsModal //耗材统计弹框
+          title={`备件更换分析${extraTitle}`}
           visible={open}
           type={2}
           onCancel={() => {
             setOpen(false);
           }}
           time={[moment(time[0]), moment(time[1])]}
+          {...modalParams}
         />
+        // <Modal
+        // title={`备件更换分析${extraTitle}`}
+        //   wrapClassName="spreadOverModal"
+        //   mask={false}
+        //   open={open}
+        //   footer={false}
+        //        onCancel={() => {
+        //     setOpen(false);
+        //   }}
+        //   destroyOnClose
+        // >
+        //   <ConsumablesStatisticsModal2 time={[moment(time[0]), moment(time[1])]} {...modalParams} />
+        // </Modal>
       )}
     </HomeCard>
   );

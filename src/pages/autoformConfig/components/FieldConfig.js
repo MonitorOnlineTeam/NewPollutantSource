@@ -288,7 +288,7 @@ class FieldConfig extends Component {
   //外键类型change
   handelDFFOREIGNTYPE = (value, index, dataIndex) => {
     let { dbTreeArray, dbKey, id } = this.props;
-    if (value === "1") {
+    if (value == 1) {
       if (dbTreeArray && dbTreeArray.length > 0) {
         let data = dbTreeArray.find(item => item.id == dbKey).children;
         this.setState({
@@ -360,7 +360,6 @@ class FieldConfig extends Component {
       placeholder,
       ...restProps
     } = params;
-    console.log('params', params)
     // const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
     return (
       <td {...restProps}>

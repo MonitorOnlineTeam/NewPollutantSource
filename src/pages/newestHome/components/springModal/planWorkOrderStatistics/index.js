@@ -1,52 +1,61 @@
 /*
  * @Author:jab
  * @Date: 2021.12.30
- * @Last Modified by: 
- * @Last Modified time: 
+ * @Last Modified by:
+ * @Last Modified time:
  * @Description: 计划巡检完成率弹框 计划校准完成率弹框
  */
 import React, { PureComponent } from 'react';
-import { Modal } from "antd"
-import { connect } from "dva"
+import { Modal } from 'antd';
+import { connect } from 'dva';
 
-import PlanWorkOrderStatistics from '@/pages/IntelligentAnalysis/planWorkOrderStatistics'
+import PlanWorkOrderStatistics from '@/pages/IntelligentAnalysis/planWorkOrderStatistics';
 
-@connect(({ loading, newestHome, autoForm }) => ({
-}))
+@connect(({ loading, newestHome, autoForm }) => ({}))
 class Index extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      show: true
+      show: true,
     };
   }
 
-  componentWillUnmount() {
-  }
+  componentWillUnmount() {}
 
   // 关闭弹窗
   onCancel = () => {
-    this.props.onCancel()
-
-  }
+    this.props.onCancel();
+  };
 
   render() {
-    const { visible,type,time,modalType } = this.props
+    const { visible, type, time, modalType, regionCode, entCode, showType } = this.props;
     return (
       <Modal
-        title= {modalType=='planCalibration'?"计划校准完成率":modalType=='planInspection'? "计划巡检完成率" :"实际校准完成率" }
-        wrapClassName='spreadOverModal'
+        title={
+          modalType == 'planCalibration'
+            ? '计划校准完成率'
+            : modalType == 'planInspection'
+            ? '计划巡检完成率'
+            : '实际校准完成率'
+        }
+        wrapClassName="spreadOverModal"
         mask={false}
         visible={visible}
         footer={false}
         onCancel={this.onCancel}
         destroyOnClose
       >
-        <PlanWorkOrderStatistics time={time}  pollutantTypes={Number(type)}
-          isPlanCalibrationModal={modalType=='planCalibration'}
-          isPlanInspectionModal={modalType=='planInspection'} 
-          isActualCalibrationModal={modalType=='actualCalibration'} 
-          hideBreadcrumb/>
+        <PlanWorkOrderStatistics
+          showType={entCode ? 2 : 1}
+          regionCode={regionCode}
+          entCode={entCode}
+          time={time}
+          pollutantTypes={Number(type)}
+          isPlanCalibrationModal={modalType == 'planCalibration'}
+          isPlanInspectionModal={modalType == 'planInspection'}
+          isActualCalibrationModal={modalType == 'actualCalibration'}
+          hideBreadcrumb
+        />
       </Modal>
     );
   }

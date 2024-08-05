@@ -81,7 +81,7 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location, beginTime, endTime } = this.props;
+    const { dispatch, location, beginTime, endTime, entCode } = this.props;
 
     this.updateQueryState({
       RegionCode: location.query.RegionCode,
@@ -89,7 +89,7 @@ export default class EntTransmissionEfficiency extends Component {
       endTime: endTime,
       PageIndex: 1,
       PageSize: 20,
-      EntCode: '',
+      EntCode: entCode || '',
       PollutantType: this.props._pollutantType || this.props.pollutantType,
       Assessment: this.props.assessment
     });

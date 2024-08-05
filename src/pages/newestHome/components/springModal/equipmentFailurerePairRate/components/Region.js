@@ -42,10 +42,11 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    regGetRepairRateList:(payload)=>{ // 行政区
+    regGetRepairRateList:(payload, callback)=>{ // 行政区
       dispatch({
         type: `${namespace}/regGetRepairRateList`,
         payload:payload,
+        callback: callback
       })
     },
     exportRepairRateList:(payload)=>{ // 导出
@@ -80,6 +81,7 @@ const Index = (props) => {
     const par = {
       ...values,
       time:undefined,
+      regionCode: props.regionCode,
       beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
       endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
       parameterCategory:values.parameterCategory? values.parameterCategory.toString() :'',
@@ -141,15 +143,21 @@ const Index = (props) => {
       const par = {
         ...values,
         time:undefined,
+        regionCode: props.regionCode,
         beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
         endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         parameterCategory:values.parameterCategory? values.parameterCategory.toString() :'',
         pointType:1,
       }
-        props.regGetRepairRateList({ ...par  })
         props.updateState({
           queryPar:{ ...par }
         })
+        props.regGetRepairRateList({ ...par  }, (res) => {
+          if(props.regionCode && res?.length) {
+            regionDetail(res[0], par)
+          }
+        })
+       
         
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -158,8 +166,9 @@ const Index = (props) => {
   
   const [regionDetailVisible,setRegionDetailVisible] = useState(false)
 
-  const regionDetail = (row) =>{ 
+  const regionDetail = (row, par) =>{ 
     setRegionDetailVisible(true)
+    let queryPar = par || props.queryPar;
     props.updateState({
       queryPar:{
         ...queryPar,

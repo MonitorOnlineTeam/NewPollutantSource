@@ -71,6 +71,7 @@ const Index = (props) => {
   const initData =  () => {
       props.pointGetFailureRateList({
         ...props.queryPar,
+         entCode: props.entCode,
          entName:entName,
          pointType:3,
     })
@@ -81,6 +82,7 @@ const Index = (props) => {
     const values = await form.validateFields();
       props.exportFailureRateList({
         ...queryPar,
+        entCode: props.entCode,
         entName:entName,
         pointType:3,
     })
@@ -133,7 +135,7 @@ const Index = (props) => {
   const [entName,setEntName ] = useState()
   return (
     <div  className={styles.equipmentFailureRateSty}>
-      <Form layout='inline'>
+      <Form layout='inline' style={{display: !props.entCode ? 'flex' : 'none'}}>
       <Form.Item style={{ paddingBottom: '16px' }}>
         <Input placeholder='请输入企业名称' allowClear onChange={(e) => { setEntName(e.target.value) }} />
         </Form.Item>

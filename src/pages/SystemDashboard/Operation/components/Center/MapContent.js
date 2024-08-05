@@ -292,6 +292,7 @@ class MapContent extends PureComponent {
       payload: {
         level: 2,
         regionCode: extData.position.regionCode,
+        regionInfo: extData.position,
       },
     });
   };
@@ -312,6 +313,7 @@ class MapContent extends PureComponent {
       payload: {
         level: 3,
         entCode: extData.position.entCode,
+        entInfo: extData.position,
       },
     });
   };

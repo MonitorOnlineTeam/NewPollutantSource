@@ -52,7 +52,7 @@ const Index = (props) => {
 
   return (
     <Modal
-    title="耗材统计"
+    title={props.title || "耗材统计"}
     wrapClassName='spreadOverModal'
     mask={false}
     visible={props.visible}
