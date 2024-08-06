@@ -361,7 +361,7 @@ export default Model.extend({
       const result = yield call(services.exportTestPeport, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`${result.Datas}`);
+        downloadFile(payload.ExportType==1? result.Datas : `/109Api${result.Datas}`);
         callback()
       } else {
         message.error(result.Message);

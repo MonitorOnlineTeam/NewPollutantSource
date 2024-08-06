@@ -63,7 +63,7 @@ export default Model.extend({
         EndTime: payload.EndTime,
         PageSize: payload.PageSize,
         PageIndex: payload.PageIndex,
-        PollutantCodeList: payload.PollutantCodeList,
+        PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [],
         OperationPersonnel: payload.operationpersonnel,
         regionLevel: payload.regionLevel && payload.regionLevel,
       };
@@ -82,6 +82,7 @@ export default Model.extend({
     }, //超标报警核实详情
     *GetAlarmVerifyRateDetail({ payload }, { call, put, update, select }) {
       const body = {
+        ...payload,
         RegionCode: payload.RegionCode,
         attentionCode: payload.attentionCode,
         PollutantType: payload.PollutantType,
@@ -90,7 +91,7 @@ export default Model.extend({
         EndTime: payload.EndTime,
         PageSize: payload.PageSize,
         PageIndex: payload.PageIndex,
-        PollutantCodeList: payload.PollutantCodeList,
+        PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [],
         OperationPersonnel: payload.operationpersonnel,
       };
       const result = yield call(GetAlarmVerifyRateDetail, body, null);
@@ -112,13 +113,15 @@ export default Model.extend({
     }, //超标报警核实详细
     *GetAlarmVerifyDetail({ payload }, { call, put, update, select }) {
       const body = {
+        ...payload,
         RegionCode: payload.RegionCode,
         attentionCode: payload.attentionCode,
         PollutantType: payload.PollutantType,
         DataType: payload.DataType,
         BeginTime: payload.BeginTime,
         EndTime: payload.EndTime,
-        PollutantCode: payload.PollutantCode,
+        PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [],
+        PollutantCode: payload.PollutantCode=='全部合计'? '' : payload.PollutantCode,
         Status: payload.Status,
         EntCode: payload.EntCode,
         VerifyStatus: payload.VerifyStatus,
@@ -175,13 +178,14 @@ export default Model.extend({
     //超标报警核实
     *ExportAlarmVerifyRate({ payload }, { call, put, update, select }) {
       const body = {
+        ...payload,
         RegionCode: payload.RegionCode,
         attentionCode: payload.attentionCode,
         PollutantType: payload.PollutantType,
         DataType: payload.DataType,
         BeginTime: payload.BeginTime,
         EndTime: payload.EndTime,
-        PollutantCodeList: payload.PollutantCodeList,
+        PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [],
         OperationPersonnel: payload.operationpersonnel,
         regionLevel: payload.regionLevel,
       };
@@ -192,13 +196,14 @@ export default Model.extend({
     }, //超标报警核实详情
     *ExportAlarmVerifyRateDetail({ payload }, { call, put, update, select }) {
       const body = {
+        ...payload,
         RegionCode: payload.RegionCode,
         attentionCode: payload.attentionCode,
         PollutantType: payload.PollutantType,
         DataType: payload.DataType,
         BeginTime: payload.BeginTime,
         EndTime: payload.EndTime,
-        PollutantCodeList: payload.PollutantCodeList,
+        PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [],
         OperationPersonnel: payload.operationpersonnel,
         regionLevel: payload.regionLevel,
       };
@@ -209,16 +214,18 @@ export default Model.extend({
     }, //超标报警核实详细
     *ExportAlarmVerifyDetail({ payload }, { call, put, update, select }) {
       const body = {
+        ...payload,
         RegionCode: payload.RegionCode,
         attentionCode: payload.attentionCode,
         PollutantType: payload.PollutantType,
         DataType: payload.DataType,
         BeginTime: payload.BeginTime,
         EndTime: payload.EndTime,
-        PollutantCode: payload.PollutantCode,
+        PollutantCode: payload.PollutantCode=='全部合计'? '' : payload.PollutantCode,
         Status: payload.Status,
         EntCode: payload.EntCode,
         VerifyStatus: payload.VerifyStatus,
+        PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [],
         OperationPersonnel: payload.operationpersonnel,
       };
       const result = yield call(ExportAlarmVerifyDetail, body, null);

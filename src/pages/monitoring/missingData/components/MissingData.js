@@ -531,6 +531,7 @@ export default class EntTransmissionEfficiency extends Component {
           visible={this.state.missingAlarmVisible}
           wrapClassName='spreadOverModal spreadOverHiddenModal'
           footer={null}
+          mask={false}
           destroyOnClose={true}
           onCancel={() => { this.setState({ missingAlarmVisible: false }) }}
           className={styles.missDetailSty}

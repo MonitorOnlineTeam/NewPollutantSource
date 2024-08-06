@@ -231,7 +231,7 @@ class index extends PureComponent {
                 PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
                 operationpersonnel: operationpersonnel,
-                regionLevel: regionLevel
+                regionLevel: regionLevel,
             }
         })
         this.setState({
@@ -405,7 +405,7 @@ class index extends PureComponent {
     }
     //行政区 报警次数
     AlarmNumHandle = (regionCode, PollutantCode, regionName) => {
-        const { regionValue, attentionValue, outletValue, dataType, time, alarmDealTypeListCode, operationpersonnel, DGIMN } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, alarmDealTypeListCode, operationpersonnel, DGIMN, pollutantCodeList } = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -435,6 +435,7 @@ class index extends PureComponent {
                 VerifyStatus: alarmDealTypeListCode,
                 operationpersonnel: operationpersonnel,
                 DGIMN: DGIMN == undefined ? '' : DGIMN,
+                PollutantCodeList: pollutantCodeList,
             }
         })
 
@@ -442,7 +443,7 @@ class index extends PureComponent {
     }
     //行政区 已核实报警次数
     AlreadyAlarmNumHandle = (regionCode, PollutantCode, regionName) => {
-        const { regionValue, attentionValue, outletValue, dataType, time, alarmDealTypeListCode, operationpersonnel, DGIMN } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, alarmDealTypeListCode, operationpersonnel, DGIMN, pollutantCodeList} = this.state
         this.setState({
             DealType: '1',
             regVisibleAlready: true,
@@ -471,14 +472,15 @@ class index extends PureComponent {
                 EntCode: '',
                 VerifyStatus: alarmDealTypeListCode,
                 operationpersonnel: operationpersonnel,
-                DGIMN: DGIMN ? DGIMN : ''
+                DGIMN: DGIMN ? DGIMN : '',
+                PollutantCodeList: pollutantCodeList,
             }
         })
 
     }
     //行政区 待核实报警次数
     StayAlarmNumHandle = (regionCode, PollutantCode, regionName) => {
-        const { regionValue, attentionValue, outletValue, dataType, time, alarmDealTypeListCode, operationpersonnel, DGIMN } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, alarmDealTypeListCode, operationpersonnel, DGIMN, pollutantCodeList} = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -507,14 +509,15 @@ class index extends PureComponent {
                 EntCode: '',
                 VerifyStatus: alarmDealTypeListCode,
                 operationpersonnel: operationpersonnel,
-                DGIMN: DGIMN ? DGIMN : ''
+                DGIMN: DGIMN ? DGIMN : '',
+                PollutantCodeList: pollutantCodeList,
             }
         })
 
     }
     // 企业弹框
     EntAlarmHandle = (reCode, entCode, status, PollutantCode, entName, pointName, DGIMN) => {
-        const { attentionValue, outletValue, dataType, time, regionCode, alarmDealTypeListCode, operationpersonnel } = this.state
+        const { attentionValue, outletValue, dataType, time, regionCode, alarmDealTypeListCode, operationpersonnel,pollutantCodeList } = this.state
         let deal = ''
         if (status == '') {
             deal = '核实情况'
@@ -562,7 +565,8 @@ class index extends PureComponent {
                 EntCode: entCode == undefined ? '' : entCode,
                 VerifyStatus: alarmDealTypeListCode,
                 DGIMN: DGIMN ? DGIMN : '',
-                operationpersonnel: operationpersonnel
+                operationpersonnel: operationpersonnel,
+                PollutantCodeList:pollutantCodeList,
             }
         })
 
@@ -1009,7 +1013,7 @@ class index extends PureComponent {
     }
     //报警次数数据按钮查询信息
     AlertsButtonHandle = () => {
-        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel, DGIMN } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel, DGIMN,pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1026,14 +1030,15 @@ class index extends PureComponent {
                 EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
                 VerifyStatus: alarmDealTypeListCode,
                 DGIMN: DGIMN ? DGIMN : '',
-                operationpersonnel: operationpersonnel
+                operationpersonnel: operationpersonnel,
+                PollutantCodeList: pollutantCodeList,
 
             }
         })
     }
     //报警次数数据   导出
     ButtonHandleExpor = () => {
-        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel,pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1048,13 +1053,14 @@ class index extends PureComponent {
                 EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
                 VerifyStatus: alarmDealTypeListCode,
                 operationpersonnel: operationpersonnel,
+                PollutantCodeList: pollutantCodeList,
             }
         })
     }
     //已核实报警按钮查询信息
     AlreadyButtonCountHandle = () => {
 
-        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel, DGIMN } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel, DGIMN,pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1071,13 +1077,14 @@ class index extends PureComponent {
                 EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
                 VerifyStatus: alarmDealTypeListCode,
                 DGIMN: DGIMN ? DGIMN : '',
-                operationpersonnel: operationpersonnel
+                operationpersonnel: operationpersonnel,
+                PollutantCodeList: pollutantCodeList,
             }
         })
     }
     //已核实报警   导出
     AlreadyButtonHandleExpor = () => {
-        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel,pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1091,13 +1098,14 @@ class index extends PureComponent {
                 Status: '1',
                 EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
                 VerifyStatus: alarmDealTypeListCode,
-                operationpersonnel: operationpersonnel
+                operationpersonnel: operationpersonnel,
+                PollutantCodeList: pollutantCodeList,
             }
         })
     }
     ////待核实报警按钮查询信息
     StayButtonCountHandle = () => {
-        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, operationpersonnel, DGIMN } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, operationpersonnel, DGIMN,pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1114,13 +1122,14 @@ class index extends PureComponent {
                 EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
                 VerifyStatus: [],
                 DGIMN: DGIMN ? DGIMN : '',
-                operationpersonnel: operationpersonnel
+                operationpersonnel: operationpersonnel,
+                PollutantCodeList: pollutantCodeList,
             }
         })
     }
     //待核实报警   导出
     StayButtonHandleExpor = () => {
-        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, operationpersonnel } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, operationpersonnel,pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1134,12 +1143,13 @@ class index extends PureComponent {
                 Status: '0',
                 EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
                 VerifyStatus: [],
-                operationpersonnel: operationpersonnel
+                operationpersonnel: operationpersonnel,
+                PollutantCodeList: pollutantCodeList,
             }
         })
     }
     ButtonCountHandleExpor = () => {
-        const { attentionValue, outletValue, dataType, time, regionCode, PollutantCode, status, entCode, operationpersonnel } = this.state
+        const { attentionValue, outletValue, dataType, time, regionCode, PollutantCode, status, entCode, operationpersonnel,pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1153,7 +1163,8 @@ class index extends PureComponent {
                 Status: status == "2" ? "" : status,
                 EntCode: entCode,
                 VerifyStatus: [],
-                operationpersonnel: operationpersonnel
+                operationpersonnel: operationpersonnel,
+                PollutantCodeList: pollutantCodeList,
             }
         })
     }

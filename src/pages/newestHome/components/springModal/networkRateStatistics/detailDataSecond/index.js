@@ -336,6 +336,8 @@ export default class EntTransmissionEfficiency extends Component {
           name: '联网监测点',
           type: 'bar',
           stack: 'overlap',//堆叠效果(字符需要统一)
+          barWidth: '60%',
+          barMaxWidth: 48,
           // label: {
             // show: true,
             // position: 'insideRight'

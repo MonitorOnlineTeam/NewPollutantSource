@@ -76,7 +76,7 @@ const pageUrl = {
 @Form.create({
   mapPropsToFields(props) {
     return {
-      PollutantList: Form.createFormField(props.overVerifyRateForm.PollutantList),
+      PollutantCodeList: Form.createFormField(props.overVerifyRateForm.PollutantCodeList),
       PollutantType: Form.createFormField(props.overVerifyRateForm.PollutantType),
     };
   },
@@ -111,6 +111,7 @@ export default class OverVerifyLstModal extends Component {
       alarmDealTypeListCode: [],
       enterpriseValue: '',
       regionCode: '',
+      pollutantCodeList:[],
       columns2: [
         // {
         //   title: "行政区",
@@ -426,7 +427,7 @@ export default class OverVerifyLstModal extends Component {
           { checkedValues: res.map(item => item.PollutantCode), columns: newCloum , cityColumns: newCloum2 },
           () => {
             this.updateQueryState({
-              PollutantList: this.state.checkedValues,
+              PollutantCodeList: this.state.checkedValues,
             });
             cb && cb();
           },
@@ -712,7 +713,7 @@ export default class OverVerifyLstModal extends Component {
       payload: {
         overVerifyRateForm: {
           ...this.props.overVerifyRateForm,
-          PollutantList: checkedValues,
+          PollutantCodeList: checkedValues,
         },
       },
     });
@@ -795,7 +796,7 @@ export default class OverVerifyLstModal extends Component {
                 </Form.Item> 
                 </Row> 
                   <div style={{  marginTop: 10 }}>
-                  {getFieldDecorator('PollutantList', {
+                  {getFieldDecorator('PollutantCodeList', {
                     initialValue: checkedValues,
                   })(
                     <Checkbox.Group
@@ -857,7 +858,7 @@ export default class OverVerifyLstModal extends Component {
     );
   }
   entAlarmNum = (record, pollutantCode, status) => { //报警次数 弹框
-    const { overVerifyRateForm: { beginTime, endTime, EntCode, PollutantList, RegionCode, AttentionCode, PollutantType, OperationPersonnel } } = this.props;
+    const { overVerifyRateForm: { beginTime, endTime, EntCode, PollutantCodeList, RegionCode, AttentionCode, PollutantType, OperationPersonnel } } = this.props;
     this.setState({
       alarmNumVisible: true,
       PollutantCode: pollutantCode=='全部合计'? '' : pollutantCode,
@@ -879,6 +880,7 @@ export default class OverVerifyLstModal extends Component {
         EntCode: '',
         VerifyStatus: this.state.alarmDealTypeListCode,
         operationpersonnel: OperationPersonnel,
+        PollutantCodeList: this.state.pollutantCodeList,
         DGIMN: record.DGIMN,
       }
     })

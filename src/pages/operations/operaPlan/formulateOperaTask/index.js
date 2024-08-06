@@ -114,12 +114,14 @@ const Index = (props) => {
 
     const [editLoading, setEditLoading] = useState(false)
     const [projectCode, setProjectCode] = useState()
+    const [isSave, setIsSave] = useState(false)
 
 
     const editPlan = (record) => {
         setFormulateVisible(true)
         setFormulateTitle('编辑计划')
         setEditLoading(true)
+        setIsSave(record.status === '已保存')
         setProjectCode(record.projectCode)
         const pollType  = record?.pollutantType == '废气'? '2' : '1' 
         props.dispatch({ type: `${namespace}/updateState`, payload: { operationPlanInfoRefreshId: record.ID } });
@@ -185,6 +187,7 @@ const Index = (props) => {
             type: `${namespace}/UpdOperationPlan`,
             payload: { id: operationPlanInfoRefreshId, ...values, beginTime: values.beginTime && moment(values.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values.endTime && moment(values.endTime).format('YYYY-MM-DD 23:59:59') },
             callback: () => {
+                setIsSave(true)
                 initData(pageIndex, pageSize)
             }
         });
@@ -200,6 +203,9 @@ const Index = (props) => {
                 callback: (isSuccess, id) => {
                     setGenerateSubmitPlanLoading(false)
                     if (isSuccess) {
+                        if(type == 1){
+                            setIsSave(true)
+                        }
                         form2.resetFields()
                         setCheckAll(false)
                         setIndeterminate(false)
@@ -379,6 +385,7 @@ const Index = (props) => {
         setProjectCode();
         setCheckAll(false);
         setIndeterminate(false);
+        setIsSave(false)
         props.dispatch({
             type: `${namespace}/updateState`,
             payload: { xjPointList: [], jzPointList: [], operationPlanInfoRefreshType: '', operationPlanInfoRefreshId: '' },
@@ -454,7 +461,7 @@ const Index = (props) => {
                                 </Col>
                                 <Col span={12}>
                                     <Form.Item name='pollutantType' label='点位类型' rules={[{ required: true, message: '请选择点位类型！' }]}>
-                                        <Radio.Group onChange={(e) => {
+                                        <Radio.Group   disabled={isSave} onChange={(e) => {
                                             const pointTypeVal = e.target.value
                                             setPointType(pointTypeVal);
                                             setRecordType(pointTypeVal == 2 ? '1' : '7')
@@ -527,11 +534,13 @@ const Index = (props) => {
                             recordType={recordType}
                             entCode={form.getFieldValue('entID')}
                             isEdit
-                            delPlanCallback={() => {
+                            queryPlanCallback={(type,parFlag) => {
                                 setCheckAll(false)
                                 setIndeterminate(false)
                                 const data = form.getFieldsValue();
-                                getOperationPlanPointListRequest(data?.entID, data?.pollutantType)
+                                if(type==='del'){
+                                    getOperationPlanPointListRequest(data?.entID, data?.pollutantType) //所剩监测点
+                                }
                                 props.dispatch({
                                     type: `${namespace}/GetOperationPlanInfo`,
                                     payload: {

@@ -529,6 +529,12 @@ class index extends PureComponent {
           visible={this.state.detailVisible}
           onCancel={() => {
             this.setState({ detailVisible: false });
+            this.props.dispatch({
+              type: 'abnormalData/updateState',
+              payload: {
+                exceptionPointList:[]
+                }
+            });
           }}
         >
           <DetailsPage

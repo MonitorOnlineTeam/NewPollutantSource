@@ -266,6 +266,7 @@ class TaskRecord extends Component {
           pageSize: 20,
           total: 0,
           DGIMN: isHomeModal ? DGIMN : '',
+          pollutantType:this.props.pollutantType,
           ...par,
         },
       },

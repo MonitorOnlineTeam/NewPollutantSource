@@ -30,7 +30,7 @@ export default Model.extend({
       AttentionCode: undefined,
       RegionCode: undefined,
       PollutantType: '2',
-      PollutantList: [],
+      PollutantCodeList: [],
       Rate: 1,
       EntCode: '',
       OperationPersonnel: '',
@@ -49,7 +49,7 @@ export default Model.extend({
   effects: {
     *getDefectModel({ payload }, { call, put, update, select }) {
       //列表
-      const response = yield call(GetDefectModel, { ...payload });
+      const response = yield call(GetDefectModel, { ...payload,PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [], });
       if (response.IsSuccess) {
         yield update({
           tableDatas: response.Datas,

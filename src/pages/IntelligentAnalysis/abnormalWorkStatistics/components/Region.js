@@ -548,7 +548,7 @@ useImperativeHandle(refInstance,() => {
         bordered
         dataSource={tableDatas}
         columns={ abnormalTypes ==1? columns :alarmColumns }
-        scroll={{ y:props.hideBreadcrumb?clientHeight - 420: clientHeight - 370}}
+        scroll={{ y:clientHeight - 336}}
         pagination={false}
         size='small'
       />

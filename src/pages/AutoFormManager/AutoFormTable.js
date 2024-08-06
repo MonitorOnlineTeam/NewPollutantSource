@@ -493,6 +493,7 @@ class AutoFormTable extends PureComponent {
       resizable,
       noPaging,
       modalWidth,
+      operateNum,
     } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]['columns'] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]['checkboxOrRadio'] * 1 : 1;
@@ -593,6 +594,11 @@ class AutoFormTable extends PureComponent {
     // const showHandle = rowKey.length;
     // console.log("showHandle=",showHandle)
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
+
+    let parentElement = document.querySelector('.operateWrapper');
+    let childElements = parentElement?.querySelectorAll('a');
+    let childElementsLength =  (operateNum? operateNum : childElements?.length && childElements.length ) * 36
+    let num = 0;
     if (this._SELF_.btnEl.length || this.props.appendHandleRows) {
       let leftMenuWidth = config.isShowTabs && defaultSettings.layout === 'sidemenu' ? 255 : 0;
       const isFixed = scrollXWidth > window.innerWidth - 64 - 48 - leftMenuWidth ? 'right' : '';
@@ -600,13 +606,13 @@ class AutoFormTable extends PureComponent {
        this._SELF_.btnEl.filter(item=>item.type === 'view')[0]&&_columns.push({
         align: 'center',
         title: '操作',
-        width: 90,
+        width: childElementsLength?  childElementsLength : 90,
         fixed: isFixed,
         render: (text, record) => {
           const returnKey = keys[configId] && record[keys[configId][0]];
           return this._SELF_.btnEl.map((item, index) => {
           if (item.type === 'view') {
-            return <div>
+            return <div className='operateWrapper'>
               <Fragment key={item.type}>
                 <Tooltip title="详情">
                   <a
@@ -633,12 +639,12 @@ class AutoFormTable extends PureComponent {
         _columns.push({
           align: 'center',
           title: '操作',
-          width: 260,
-          fixed: isFixed,
+          width:  childElementsLength?  childElementsLength : 260,
+          fixed:  isFixed,
           render: (text, record) => {
             const returnKey = keys[configId] && record[keys[configId][0]];
             return this.props.onlyAppendHandleRows?  <div>{this.props.appendHandleRows && this.props.appendHandleRows(record, returnKey)} </div> :(
-              <div>
+              <div className='operateWrapper'>
                 {this._SELF_.btnEl.map((item, index) => {
                   // if (item.type === 'edit' && btnsAuthority.includes('edit')) {
                   if (item.type === 'edit') {

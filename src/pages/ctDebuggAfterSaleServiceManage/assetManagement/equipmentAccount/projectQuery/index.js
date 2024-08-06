@@ -115,19 +115,26 @@ const Index = (props) => {
   const { tableDatas, tableTotal, loadingConfirm, tableLoading, exportLoading, queryPar, entAndPointLoading, rojectPointRelationLoading, addProjectPointRelationLoading, checkPoint, addProjectEntRelationLoading, } = props;
 
   // const [editPermisPoint,setPermisEditPoint] = useState(false)
-  const [associaePermisPoint, setAssociaePermisPoint] = useState(false)
 
   useEffect(() => {
-    const buttonList = permissionButton(props.match.path)
-    buttonList.map(item => {
-      switch (item) {
-        case 'oprationPoint': setAssociaePermisPoint(true); break;
-        // case 'addPoint': setPermisEditPoint(true); break;
-      }
-    })
     onFinish(pageIndex, pageSize);
   }, []);
 
+
+  const [associaePermisPoint, setAssociaePermisPoint] = useState(false)
+  let currentUser = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser'));
+  let meunList = currentUser && sessionStorage.getItem(currentUser.UserName) && JSON.parse(sessionStorage.getItem(currentUser.UserName))
+  useEffect(() => {
+    if(meunList?.length){
+      const buttonList = permissionButton(props.match.path)
+      buttonList.map(item => {
+        switch (item) {
+          case 'oprationPoint': setAssociaePermisPoint(true); break;
+          // case 'addPoint': setPermisEditPoint(true); break;
+        }
+      })
+    }
+}, [meunList]);
 
   let columns = [
     {
@@ -297,7 +304,11 @@ const Index = (props) => {
           <Fragment> <Tooltip title="详情">
             <a onClick={() => detail(record)}  ><DetailIcon /></a>
           </Tooltip></Fragment>
-          {associaePermisPoint && <Fragment><Divider type="vertical" /><Tooltip title={"关联企业和监测点"} >  <a onClick={() => { associaePoint(record) }} ><PointIcon /></a></Tooltip></Fragment>}
+          {associaePermisPoint && <Fragment>
+            <Divider type="vertical" />
+            <Tooltip title={"关联企业和监测点"} > 
+             <a onClick={() => { associaePoint(record) }}>
+               <PointIcon /></a></Tooltip></Fragment>}
 
         </span>
       }
@@ -540,7 +551,7 @@ const Index = (props) => {
             resizable
             loading={tableLoading}
             bordered
-            scroll={{ y: expand ? 'calc(100vh - 408px)' : 'calc(100vh - 368px)' }}
+            scroll={{ y: expand ? 'calc(100vh - 392px)' : 'calc(100vh - 352px)' }}
             dataSource={tableDatas}
             columns={columns}
             pagination={{

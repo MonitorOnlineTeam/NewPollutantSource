@@ -10,6 +10,16 @@ const routes = [
   //   ],
   // },
   {
+    path: '/hrefLogin',
+    component: '../layouts/BlankLayout',
+    routes: [
+      {
+        path: '/hrefLogin',
+        component: './user/login/hrefLogin',
+      },
+    ],
+  },
+  {
     path: '/ControlCabin',
     component: '../layouts/ControlCabinLayout',
     routes: [

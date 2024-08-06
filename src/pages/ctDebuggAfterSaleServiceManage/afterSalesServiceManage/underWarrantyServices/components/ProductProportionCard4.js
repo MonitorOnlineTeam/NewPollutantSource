@@ -79,7 +79,7 @@ const ProductProportionCard4 = props => {
     let tempData = data.map(item => {
       return {
         ...item,
-        TimeRate: item.TimeRate.replace('%', '') * 1,
+        TimeRate: (item.TimeRate.replace('%', '') * 1).toFixed(2),
       };
     });
     // 创建一个副本，避免改变原数组
@@ -90,7 +90,7 @@ const ProductProportionCard4 = props => {
     let topFour = copyData.splice(0, 4);
 
     // 计算前四个元素的 TimeRate 总和
-    let topFourTotal = topFour.reduce((sum, current) => sum + current.TimeRate, 0).toFixed(2);
+    let topFourTotal = topFour.reduce((sum, current) => sum + Number(current.TimeRate), 0).toFixed(2);
 
     // 获取其他元素
     let otherData = copyData;
@@ -117,7 +117,7 @@ const ProductProportionCard4 = props => {
     let seriesData = chartData.map(item => {
       count += item.Times;
       return {
-        value: item.NumRate,
+        value: Number(item.NumRate).toFixed(2),
         name: item.ReasonName,
       };
     });

@@ -71,7 +71,7 @@ const pageUrl = {
 @Form.create({
   mapPropsToFields(props) {
     return {
-      PollutantList: Form.createFormField(props.overVerifyRateForm.PollutantList),
+      PollutantCodeList: Form.createFormField(props.overVerifyRateForm.PollutantCodeList),
       PollutantType: Form.createFormField(props.overVerifyRateForm.PollutantType), 
     };
   },
@@ -413,7 +413,7 @@ export default class OverVerifyLst extends Component {
           { checkedValues: res.map(item => item.PollutantCode), columns: newCloum },
           () => {
             this.updateQueryState({
-              PollutantList: this.state.checkedValues,
+              PollutantCodeList: this.state.checkedValues,
             });
             cb && cb();
           },
@@ -462,7 +462,7 @@ export default class OverVerifyLst extends Component {
     const { dispatch, overVerifyRateForm } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...overVerifyRateForm },
+      payload: { ...overVerifyRateForm},
     });
   };
 
@@ -667,13 +667,13 @@ export default class OverVerifyLst extends Component {
       payload: {
         overVerifyRateForm: {
           ...this.props.overVerifyRateForm,
-          PollutantList: checkedValues,
+          PollutantCodeList: checkedValues,
         },
       },
     });
   };
   entAlarmNum = (record,pollutantCode,status) => { //报警次数 弹框
-    const {overVerifyRateForm: {beginTime,  endTime, EntCode,PollutantList, RegionCode,  AttentionCode,  PollutantType, OperationPersonnel } } = this.props;
+    const {overVerifyRateForm: {beginTime,  endTime, EntCode,PollutantCodeList, RegionCode,  AttentionCode,  PollutantType, OperationPersonnel } } = this.props;
     this.setState({
       alarmNumVisible:true,
       PollutantCode:pollutantCode=='全部合计'? '' : pollutantCode,
@@ -695,6 +695,7 @@ export default class OverVerifyLst extends Component {
           EntCode:'',
           VerifyStatus:this.state.alarmDealTypeListCode,
           operationpersonnel:OperationPersonnel,
+          PollutantCodeList:this.props.overVerifyRateForm?.PollutantCodeList,
           DGIMN:record.DGIMN,
       }
   })
@@ -709,6 +710,7 @@ export default class OverVerifyLst extends Component {
          EntCode:enterpriseValue,
          Status:dealType,
          VerifyStatus: this.state.alarmDealTypeListCode,
+         PollutantCodeList:this.props.overVerifyRateForm?.PollutantCodeList,
       }
   })
   }
@@ -803,7 +805,7 @@ export default class OverVerifyLst extends Component {
                   </Form.Item>
                   </Row> 
                   <div style={{  marginTop: 10 }}>
-                  {getFieldDecorator('PollutantList', {
+                  {getFieldDecorator('PollutantCodeList', {
                     initialValue: checkedValues,
                   })(
                     <Checkbox.Group

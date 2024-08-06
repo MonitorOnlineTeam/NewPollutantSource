@@ -45,19 +45,18 @@ const Model = {
           //大屏
           if (payload.redirctUrl) {
             router.push(payload.redirctUrl);
+          }
+          if (!(response.Datas && response.Datas.Complexity)) {
+            //判断密码复杂程度
+            yield put({
+              type: 'changeLoginStatus',
+              payload: { status: 'error', type: 'account', message: '密码过于简单，请修改密码！' },
+            });
+            setTimeout(() => {
+              router.push('/user/changePassword');
+            }, 1500);
             return;
           }
-          // if (!(response.Datas && response.Datas.Complexity)) {
-          //   //判断密码复杂程度
-          //   yield put({
-          //     type: 'changeLoginStatus',
-          //     payload: { status: 'error', type: 'account', message: '密码过于简单，请修改密码！' },
-          //   });
-          //   setTimeout(() => {
-          //     router.push('/user/changePassword');
-          //   }, 1500);
-          //   return;
-          // }
           response.Datas.User_ID = response.Datas.UserId;
           let defaultNavigateUrl = '/user/login';
           let systemNavigateUrl = '/'; //之前首页需要用到的首页默认路径

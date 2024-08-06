@@ -564,6 +564,14 @@ const Index = (props) => {
     }
   }
 
+  useEffect(()=>{
+    if(!taskRecordVisible){
+      setTaskStatus()
+      setOperaStatus()
+      setCompleteTime()
+      setOperaTaskType()
+    }
+  },[taskRecordVisible])
   const [operatingInfoType, setOperatingInfoType] = useState()
   const [operatingStatus, setOperatingStatus] = useState(1)
   const [outputType, setOutputType] = useState(undefined)
@@ -807,7 +815,7 @@ const Index = (props) => {
         pollutantTypeCode={pollutantType}
       />
       <Modal
-        title={`工单执行情况`}
+        title={`工单执行情况 - ${pollutantType==2?'废气':'废水'}`}
         destroyOnClose
         wrapClassName='spreadOverModal'
         visible={taskRecordVisible}
@@ -823,6 +831,7 @@ const Index = (props) => {
           operaStatus={operaStatus}
           completeTime={completeTime}
           operaTaskType={operaTaskType}
+          pollutantType={pollutantType}
         />
       </Modal>
       <Modal

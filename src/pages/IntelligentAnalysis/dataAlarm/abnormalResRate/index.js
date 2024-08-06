@@ -972,6 +972,8 @@ class Index extends PureComponent {
           title={modelTitle}
           visible={this.state.visible}
           footer={false}
+          mask={false}
+          destroyOnClose
           wrapClassName="spreadOverModal"
           onCancel={() => {
             this.setState({ visible: false });
@@ -992,6 +994,7 @@ class Index extends PureComponent {
             loading={detailsLoading}
             dataSource={exceptionAlarmListForEntDataSource}
             columns={_detailsColumns}
+            rowKey={(record, index) => index}
           />
         </Modal>
         <Modal

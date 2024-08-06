@@ -464,6 +464,7 @@ export default class PointVerifyLst extends Component {
           EntCode:'',
           VerifyStatus:this.state.alarmDealTypeListCode,
           operationpersonnel:OperationPersonnel,
+          PollutantCodeList: this.props.PollutantCodeList,
           DGIMN:record.DGIMN,
       }
   })

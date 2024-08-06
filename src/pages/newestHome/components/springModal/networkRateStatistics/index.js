@@ -80,7 +80,7 @@ export default class EntTransmissionEfficiency extends Component {
       day: 7,
       pointTitle: '',
       passParame: '',
-      outputType:'',
+      outputType: '',
     };
 
     this.columns = [
@@ -363,6 +363,8 @@ export default class EntTransmissionEfficiency extends Component {
           name: '联网监测点',
           type: 'bar',
           stack: 'overlap',//堆叠效果(字符需要统一)
+          barWidth: '60%',
+          barMaxWidth: 48,
           // label: {
           // show: true,
           // position: 'insideRight'
@@ -427,9 +429,9 @@ export default class EntTransmissionEfficiency extends Component {
     });
   }
   typeChange = (e) => {
-    
+
     this.setState({
-      outputType: e.target && e.target.value==1? '' : this.state.outputType, //废水没有排口
+      outputType: e.target && e.target.value == 1 ? '' : this.state.outputType, //废水没有排口
       pollutantType: e.target ? e.target.value : e
     }, () => {
       this.getData()
@@ -455,7 +457,7 @@ export default class EntTransmissionEfficiency extends Component {
         PollutantType: this.state.pollutantType,
         ProviceCode: row.ProviceCode,
         NetworkingRateType: type,
-        OutputType:this.state.outputType,
+        OutputType: this.state.outputType,
       }
     })
   }
@@ -492,12 +494,14 @@ export default class EntTransmissionEfficiency extends Component {
       <Modal
         title={`实时联网率 ${passParame.ProviceName ? `-${passParame.ProviceName}` : ''}`}
         wrapClassName={wrapClassName || 'spreadOverModal'}
+        mask={false}
+        destroyOnClose
         visible={networkRateVisible}
-        onCancel={networkRateCancel}
+        onCancel={()=>{networkRateCancel&&networkRateCancel();this.setState({detailVisible:false})}}
         footer={null}
       >
 
-        {detailVisible && <DetailDataSecond  networkDetailCancel={() => { this.setState({ detailVisible: false, passParame: '' }) }} location={{ query: { p: passParame.ProviceCode, n: passParame.ProviceName, networkType: this.state.pollutantType,outputType: this.state.outputType } }} />}
+        {detailVisible && <DetailDataSecond networkDetailCancel={() => { this.setState({ detailVisible: false, passParame: '' }) }} location={{ query: { p: passParame.ProviceCode, n: passParame.ProviceName, networkType: this.state.pollutantType, outputType: this.state.outputType } }} />}
         {!detailVisible && networkRateVisible && <Card
           bordered={false}
           style={{ height: '100%' }}
@@ -512,7 +516,7 @@ export default class EntTransmissionEfficiency extends Component {
                       <Radio.Button value={'1'}>废水</Radio.Button>
                     </Radio.Group>
                   </Form.Item>
-                 { this.state.pollutantType == 2 && <Form.Item>
+                  {this.state.pollutantType == 2 && <Form.Item>
                     <Radio.Group onChange={this.outTypeChange} value={this.state.outputType}>
                       <Radio.Button value={''}>全部</Radio.Button>
                       <Radio.Button value={'0'}>排放口</Radio.Button>
@@ -557,6 +561,7 @@ export default class EntTransmissionEfficiency extends Component {
             title={this.state.pointTitle}
             visible={this.state.visible}
             width={'90%'}
+            destroyOnClose
             onCancel={() => {
               this.setState({
                 visible: false,

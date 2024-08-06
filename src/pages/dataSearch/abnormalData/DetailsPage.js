@@ -250,6 +250,7 @@ class DetailsPage extends PureComponent {
                 dataSource={exceptionPointList}
                 columns={_columns}
                 loading={loading}
+                rowKey={(record, index) => index}
               />
             </Card>
           </BreadcrumbWrapper>
@@ -271,6 +272,7 @@ class DetailsPage extends PureComponent {
               columns={_columns}
               loading={loading}
               scroll={{ y: 'calc(100vh - 380px)' }}
+              rowKey={(record, index) => index}
             />
           </div>
         )}

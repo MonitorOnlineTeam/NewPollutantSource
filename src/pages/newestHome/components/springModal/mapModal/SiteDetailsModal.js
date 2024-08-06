@@ -320,6 +320,7 @@ class SiteDetailsModal extends PureComponent {
         bodyStyle={{ paddingBottom: 0 }}
         // footer={this.renderModalFooter()}
         footer={null}
+        mask={false}
         open={this.props.siteDetailsVisible}
         onCancel={() => {
           this.props.dispatch({

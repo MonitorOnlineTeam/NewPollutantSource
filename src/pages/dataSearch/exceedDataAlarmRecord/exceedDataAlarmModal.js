@@ -416,7 +416,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     //行政区 报警次数
     AlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,alarmDealTypeListCode,operationpersonnel,DGIMN} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,alarmDealTypeListCode,operationpersonnel,DGIMN,pollutantCodeList} = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -445,7 +445,8 @@ class exceedDataAlarmModal extends PureComponent {
                 EntCode:'',
                 VerifyStatus:alarmDealTypeListCode,
                 operationpersonnel:operationpersonnel,
-                DGIMN:DGIMN
+                DGIMN:DGIMN,
+                PollutantCodeList: pollutantCodeList,
             }
         })
         
@@ -453,7 +454,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     //行政区 已核实报警次数
     AlreadyAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,alarmDealTypeListCode,operationpersonnel,DGIMN} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,alarmDealTypeListCode,operationpersonnel,DGIMN,pollutantCodeList} = this.state
         this.setState({
             DealType:'1',
             regVisibleAlready:true,
@@ -482,14 +483,15 @@ class exceedDataAlarmModal extends PureComponent {
                 EntCode:'',
                 VerifyStatus:alarmDealTypeListCode,
                 operationpersonnel:operationpersonnel,
-                DGIMN:DGIMN
+                DGIMN:DGIMN,
+                PollutantCodeList: pollutantCodeList,
             }
         })
         
     }
     //行政区 待核实报警次数
     StayAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,alarmDealTypeListCode,operationpersonnel,DGIMN} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,alarmDealTypeListCode,operationpersonnel,DGIMN,pollutantCodeList} = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -518,7 +520,8 @@ class exceedDataAlarmModal extends PureComponent {
                 EntCode:'',
                 VerifyStatus:alarmDealTypeListCode,
                 operationpersonnel: operationpersonnel,
-                DGIMN:DGIMN
+                DGIMN:DGIMN,
+                PollutantCodeList: pollutantCodeList,
             }
         })
         
@@ -580,6 +583,7 @@ class exceedDataAlarmModal extends PureComponent {
                 EntCode:entCode == undefined?'':entCode,
                 VerifyStatus:alarmDealTypeListCode,
                 operationpersonnel: operationpersonnel,
+                PollutantCodeList: this.state.pollutantCodeList,
                 DGIMN:DGIMN
             }
         })
@@ -1037,7 +1041,8 @@ class exceedDataAlarmModal extends PureComponent {
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
                 VerifyStatus:alarmDealTypeListCode,
                 DGIMN:DGIMN,
-                operationpersonnel:operationpersonnel
+                operationpersonnel:operationpersonnel,
+                PollutantCodeList: this.state.pollutantCodeList,
             }
         })
     }
@@ -1056,7 +1061,8 @@ class exceedDataAlarmModal extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:DealType=='2'?'':DealType,
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
-                VerifyStatus:alarmDealTypeListCode
+                VerifyStatus:alarmDealTypeListCode,
+                PollutantCodeList: this.state.pollutantCodeList,
             }
         })
     }
@@ -1079,7 +1085,8 @@ class exceedDataAlarmModal extends PureComponent {
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
                 VerifyStatus:alarmDealTypeListCode,
                 DGIMN:DGIMN,
-                operationpersonnel:operationpersonnel
+                operationpersonnel:operationpersonnel,
+                PollutantCodeList: this.state.pollutantCodeList,
             }
         })
     }
@@ -1099,7 +1106,8 @@ class exceedDataAlarmModal extends PureComponent {
                 Status:'1',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
                 VerifyStatus:alarmDealTypeListCode,
-                operationpersonnel:operationpersonnel
+                operationpersonnel:operationpersonnel,
+                PollutantCodeList: this.state.pollutantCodeList,
             }
         })
     }
@@ -1122,7 +1130,8 @@ class exceedDataAlarmModal extends PureComponent {
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
                 VerifyStatus:[],
                 DGIMN:DGIMN,
-                operationpersonnel:operationpersonnel
+                operationpersonnel:operationpersonnel,
+                PollutantCodeList: this.state.pollutantCodeList,
             }
         })
     }
@@ -1142,7 +1151,8 @@ class exceedDataAlarmModal extends PureComponent {
                 Status:'0',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
                 VerifyStatus:[],
-                operationpersonnel:operationpersonnel
+                operationpersonnel:operationpersonnel,
+                PollutantCodeList: this.state.pollutantCodeList,
             }
         })
     }
@@ -1161,7 +1171,8 @@ class exceedDataAlarmModal extends PureComponent {
                 Status:status,
                 EntCode:entCode,
                 VerifyStatus:[],
-                operationpersonnel:operationpersonnel
+                operationpersonnel:operationpersonnel,
+                PollutantCodeList: this.state.pollutantCodeList,
             }
         })
     }

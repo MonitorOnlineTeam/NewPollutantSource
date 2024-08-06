@@ -40,7 +40,7 @@ class Index extends Component {
 
     return (operationCompanyLoading ?
       <Spin size='small'>
-        <Select placeholder={placeholder ? placeholder : '请选择'} />
+        <Select style={{ width: '100%', ...style }} placeholder={placeholder ? placeholder : '请选择'} />
       </Spin>
       :
       <Select

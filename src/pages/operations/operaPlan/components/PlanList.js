@@ -183,8 +183,7 @@ const Index = (props) => {
                 type: `${namespace}/DelOperationPlanPoint`,
                 payload: { delIDList: idList },
                 callback: () => {
-                    props.delPlanCallback && props.delPlanCallback()
-                    setPageSize(1); setPageSize(20); onFinish(1, 20)
+                    setPageSize(1); setPageSize(20); onFinish(1, 20,'','del')
                 }
             });
         }
@@ -201,7 +200,7 @@ const Index = (props) => {
 
 
     const [tableLoading, setTableLoading] = useState(false)
-    const onFinish = (PageIndex, PageSize, queryPar) => {  //计划列表
+    const onFinish = (PageIndex, PageSize, queryPar,isDel) => {  //计划列表
         if (operationPlanInfoRefreshId) {
             const values = form.getFieldsValue();
             const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
@@ -221,7 +220,10 @@ const Index = (props) => {
                     ...par,
                 },
                 callback: () => {
-                    setTableLoading(false)
+                      setTableLoading(false)
+                      if(par.beginTime || par.pointName ||  par.recordType || isDel){
+                        props.queryPlanCallback && props.queryPlanCallback(isDel)
+                     }
                 }
             });
         }
@@ -269,9 +271,6 @@ const Index = (props) => {
                     <Option key={pointType == 2 ? 3 : 9} value={pointType == 2 ? 3 : 9}>校准</Option>
                 </Select>
             </Form.Item>
-            <Form.Item name='time' label={'日期'} style={{ marginBottom: 8 }}>
-                <RangePicker_ format="YYYY-MM-DD" />
-            </Form.Item>
         </>
     }
 
@@ -286,6 +285,9 @@ const Index = (props) => {
             onFinish={resDataHandle}
         >   
             {commonSearchComponents(type)}
+            <Form.Item name='time' label={'日期'} style={{ marginBottom: 8 }}>
+                    <RangePicker_ format="YYYY-MM-DD" />
+               </Form.Item>
             <Form.Item style={{ marginBottom: 4 }}>
                 <Space>
                     <Button type="primary" htmlType="submit" loading={tableLoading}>

@@ -2464,7 +2464,7 @@ export const API = {
     Export72HoursCommissioningTestReport:
       before + '/CommissioningTest/Export72HoursCommissioningTestReport', //导出72小时调试检测报告 word
     Export72HoursCommissioningTestPdfReport:
-      '/testPdfApi/rest/PollutantSourceApi/TaskFormApi/ImportRecord', //导出72小时调试检测报告 pdf
+      '/109Api/rest/PollutantSourceApi/TaskFormApi/ImportRecord', //导出72小时调试检测报告 pdf
     /*区域权限管理*/
     GetDebuggingAreaGroupList: before + '/DebuggingAreaAuthority/GetDebuggingAreaGroupList', //获取部门详细信息及层级关系
     AddOrUpdateDebuggingAreaGroupInfo:

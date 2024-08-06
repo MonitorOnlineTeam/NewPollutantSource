@@ -424,6 +424,8 @@ class index extends PureComponent {
   onTableClick = (RegionCode, ExceptionType, ResponseStatus, operationpersonnel) => {
     this.setState(
       {
+        visible: true,
+        pageIndex: 1,
         secondQueryCondition: {
           ...this.state.queryCondition,
           RegionCode: RegionCode,
@@ -431,8 +433,6 @@ class index extends PureComponent {
           ResponseStatus: ResponseStatus,
           OperationPersonnel: this.state.operationpersonnel,
         },
-        visible: true,
-        pageIndex: 1,
       },
       () => {
         this.getExceptionAlarmListForEnt();
@@ -647,7 +647,6 @@ class index extends PureComponent {
     if (secondQueryCondition.ResponseStatus == '0') {
       _detailsColumns = _detailsColumns.filter(item => item.dataIndex !== 'CompleteTime');
     }
-
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
         <Card>
@@ -787,6 +786,7 @@ class index extends PureComponent {
           title={modelTitle}
           visible={this.state.visible}
           footer={false}
+          destroyOnClose
           width={'90vw'}
           onCancel={() => {
             this.setState({ visible: false });
@@ -807,6 +807,7 @@ class index extends PureComponent {
             dataSource={exceptionAlarmListForEntDataSource}
             columns={_detailsColumns}
             scroll={{ y: 'calc(100vh - 380px)' }}
+            rowKey={(record, index) => index}
             pagination={{
               // defaultCurrent: 1,
               pageSize: this.state.pageSize,

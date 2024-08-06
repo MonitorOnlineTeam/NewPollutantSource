@@ -124,7 +124,7 @@ const Index = (props) => {
     const viewAll = (record) => {
         setVisible(true)
         setModalTitle(`${record.UseDepartment} - 车辆统计`)
-        setUseDepartment(record.UseDepartment)
+        setUseDepartment(record.UseDepartment=='合计'? '' : record.UseDepartment)
     }
     const getOption = () => {
         const xData = [], yData = [];

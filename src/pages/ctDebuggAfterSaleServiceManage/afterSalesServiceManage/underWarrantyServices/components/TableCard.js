@@ -137,7 +137,7 @@ const TableCard = props => {
             title: '次数',
             dataIndex: `Num${item.ID}`,
             key: `Num${item.ID}`,
-            width: 120,
+            width: 60,
             align: 'center',
             render: (text, record) => {
               return <TypeRenderComponents record={{ text: text, serviceAreaCode: item.ID, ...record }} />
@@ -147,14 +147,14 @@ const TableCard = props => {
             title: '次数占比',
             dataIndex: `NumRate${item.ID}`,
             key: `NumRate${item.ID}`,
-            width: 120,
+            width: 90,
             align: 'center',
           },
           {
             title: '时长',
             dataIndex: `Times${item.ID}`,
             key: `Times${item.ID}`,
-            width: 120,
+            width: 60,
             align: 'center',
             render: (text, record) => {
               return <TypeRenderComponents record={{ text: text, serviceAreaCode: item.ID, ...record }} />
@@ -164,7 +164,7 @@ const TableCard = props => {
             title: '时长占比',
             dataIndex: `TimeRate${item.ID}`,
             key: `TimeRate${item.ID}`,
-            width: 120,
+            width: 90,
             align: 'center',
           },
         ],
@@ -217,7 +217,7 @@ const TableCard = props => {
             title: '次数',
             dataIndex: 'SumNum',
             key: 'SumNum',
-            width: 120,
+            width: 60,
             align: 'center',
             fixed: 'left',
             render: (text, record) => {
@@ -228,7 +228,7 @@ const TableCard = props => {
             title: '次数占比',
             dataIndex: 'SumNumRate',
             key: 'SumNumRate',
-            width: 120,
+            width: 90,
             align: 'center',
             fixed: 'left',
           },
@@ -236,7 +236,7 @@ const TableCard = props => {
             title: '时长',
             dataIndex: 'SumTimes',
             key: 'SumTimes',
-            width: 120,
+            width: 60,
             align: 'center',
             fixed: 'left',
             render: (text, record) => {
@@ -247,7 +247,7 @@ const TableCard = props => {
             title: '时长占比',
             dataIndex: 'SumTimeRate',
             key: 'SumTimeRate',
-            width: 120,
+            width: 90,
             align: 'center',
             fixed: 'left',
           },
@@ -864,7 +864,7 @@ const TableCard = props => {
               </Form.Item>
             </Col>
           </Row>
-              <Form.Item name='pType'/>
+              <Form.Item hidden name='pType'/>
         </Form>
         <SdlTable
           loading={basicsLoading}

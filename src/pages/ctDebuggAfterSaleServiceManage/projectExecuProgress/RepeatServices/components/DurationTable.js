@@ -219,6 +219,9 @@ const DurationTable = props => {
             width: 120,
             fixed: 'left',
             align: 'center',
+            render: (text, record) => {
+              return <TypeRenderComponents record={{text:text, ...record }}  />
+            }
           },
           {
             title: '占比',

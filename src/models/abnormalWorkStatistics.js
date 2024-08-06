@@ -101,8 +101,8 @@ export default Model.extend({
       const result = yield call(services.cityAbnormalExceptionTaskList, payload);
       if (result.IsSuccess) {
         yield update({
-          cityAbnormalList: result.Datas,
-          cityDateCol: result.Datas[0] && result.Datas[0].datePick
+          cityAbnormalList: result?.Datas?.resList,
+          cityDateCol: result?.Datas?.colList,
         })
 
       } else {
