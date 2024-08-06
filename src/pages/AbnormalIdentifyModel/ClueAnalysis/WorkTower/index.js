@@ -124,6 +124,7 @@ const WorkTower = props => {
       type: 'AbnormalIdentifyModel/GetClueDatas',
       payload: {
         ...values,
+        warningTypeCode: values.warningTypeCode.toString(),
         beginTime:
           values.date && values.date[0] ? values.date[0].format('YYYY-MM-DD 00:00:00') : undefined,
         endTime:
@@ -209,6 +210,7 @@ const WorkTower = props => {
               layout="inline"
               initialValues={{
                 date: [moment().add(-1, 'months'), moment()],
+                warningTypeCode: [],
               }}
             >
               <Form.Item label="日期" name="date">

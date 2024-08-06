@@ -11,6 +11,8 @@ const dvaPropsData = ({ sysDashboard, loading }) => ({
   level: sysDashboard.level,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
+  regionInfo: sysDashboard.regionInfo,
+  entInfo: sysDashboard.entInfo,
   time: sysDashboard.time,
   loading: loading.effects[`sysDashboard/GetOperationEquipmentOverview`],
 });
@@ -23,7 +25,7 @@ const DeviceInfoCount = props => {
     exceptionCount: 0,
   });
 
-  const { dispatch, time, loading, level, regionCode, entCode } = props;
+  const { dispatch, time, loading, level, regionCode, entCode, regionInfo, entInfo } = props;
 
   useEffect(() => {
     getData();
@@ -47,6 +49,20 @@ const DeviceInfoCount = props => {
   const onOpenModal = () => {
     setOpen(true);
   };
+
+  let extraTitle = '',
+    modalParams = {};
+  if (level != 1 && (regionCode || entCode)) {
+    if (level == 2 && regionCode) {
+      extraTitle = `（${regionInfo.regionName}）`;
+      modalParams.regionCode = regionCode;
+    }
+    if (level == 3 && entCode) {
+      extraTitle = `（${regionInfo.regionName} - ${entInfo.entName}）`;
+      modalParams.regionCode = regionCode;
+      modalParams.entCode = entCode;
+    }
+  }
 
   return (
     <HomeCard title="设备运维总览" bodyStyle={{}} loading={loading}>
@@ -99,6 +115,7 @@ const DeviceInfoCount = props => {
       {open && (
         <OperatingInfo //运维信息总览
           // wrapClassName="fullScreenModal"
+          title={`设备运维总览${extraTitle}`}
           visible={open}
           type={'point'}
           onCancel={() => {
@@ -107,6 +124,7 @@ const DeviceInfoCount = props => {
           pollutantType={undefined}
           operatingStatus={undefined}
           outputType={0}
+          {...modalParams}
         />
       )}
     </HomeCard>

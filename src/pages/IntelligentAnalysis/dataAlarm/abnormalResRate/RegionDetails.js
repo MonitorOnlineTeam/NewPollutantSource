@@ -216,6 +216,7 @@ class RegionDetails extends PureComponent {
         //   }
         // },
       ],
+      EntCode: JSON.parse(this.props.location.query.queryCondition).EntCode
     };
   }
 
@@ -287,6 +288,7 @@ class RegionDetails extends PureComponent {
               allowClear
               style={{ width: 240 }}
               placeholder="请选择企业"
+              defaultValue={this.state.EntCode}
               onChange={value => {
                 this.setState({ EntCode: value });
               }}
@@ -315,17 +317,19 @@ class RegionDetails extends PureComponent {
             >
               导出
             </Button>
-            <Button
-              onClick={() => {
-                this.props.onBack
-                  ? this.props.onBack()
-                  : // router.push("/Intelligentanalysis/dataAlarm/abnormal")
-                    history.go(-1);
-              }}
-            >
-              <RollbackOutlined />
-              返回
-            </Button>
+            {!this.props.hideBack && (
+              <Button
+                onClick={() => {
+                  this.props.onBack
+                    ? this.props.onBack()
+                    : // router.push("/Intelligentanalysis/dataAlarm/abnormal")
+                      history.go(-1);
+                }}
+              >
+                <RollbackOutlined />
+                返回
+              </Button>
+            )}
           </Row>
           <SdlTable
             align="center"

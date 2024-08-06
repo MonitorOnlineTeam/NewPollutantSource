@@ -8,9 +8,7 @@ export async function getAlarmNotices(params) {
   //return { IsSuccess: false, Datas: [], Message: "" };
 }
 export async function getSystemConfigInfo() {
-
   const result = await get('/api/rest/PollutantSourceApi/ConfigureApi/GetSystemConfigInfo');
-
   return result;
 }
 //报警关联列表

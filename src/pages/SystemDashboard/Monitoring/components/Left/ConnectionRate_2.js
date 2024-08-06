@@ -190,6 +190,8 @@ const ConnectionRate = props => {
         networkRateCancel={() => {
           setOpen(false);
         }}
+        regionCode={regionCode}
+        entCode={entCode}
       />
     </HomeCard>
   );

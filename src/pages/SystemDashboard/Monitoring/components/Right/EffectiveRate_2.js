@@ -18,6 +18,8 @@ const dvaPropsData = ({ loading, sysDashboard }) => ({
   level: sysDashboard.level,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
+  regionInfo: sysDashboard.regionInfo,
+  entInfo: sysDashboard.entInfo,
   time: sysDashboard.time,
   loading: loading.effects['sysDashboard/GetEffectiveTransmissionRate'],
 });
@@ -31,7 +33,7 @@ const EffectiveRate_2 = props => {
   });
   const [open, setOpen] = useState(false);
 
-  const { dispatch, loading, time, level, regionCode, entCode } = props;
+  const { dispatch, loading, time, level, regionCode, entCode, regionInfo, entInfo } = props;
 
   useEffect(() => {
     getData();
@@ -186,6 +188,20 @@ const EffectiveRate_2 = props => {
     return option;
   };
 
+  let extraTitle = '',
+    modalParams = {};
+  if (level != 1 && (regionCode || entCode)) {
+    if (level == 2 && regionCode) {
+      extraTitle = `（${regionInfo.regionName}）`;
+      modalParams.regionCode = regionCode;
+    }
+    if (level == 3 && entCode) {
+      extraTitle = `（${regionInfo.regionName} - ${entInfo.entName}）`;
+      modalParams.regionCode = regionCode;
+      modalParams.entCode = entCode;
+    }
+  }
+
   return (
     <HomeCard title="有效传输率" bodyStyle={{}} loading={loading}>
       <div className={styles.EffectiveRateWrapper} onClick={onOpenModal}>
@@ -250,16 +266,18 @@ const EffectiveRate_2 = props => {
           </Col>
         </Row>
       </div>
-        <TransmissionefficiencyModal //有效传输率弹框
-          wrapClassName="fullScreenModal"
-          beginTime={time[0]}
-          endTime={time[1]}
-          TVisible={open}
-          TCancle={() => {
-            setOpen(false);
-          }}
-          // pollutantType={pollutantType}
-        />
+      <TransmissionefficiencyModal //有效传输率弹框
+        title={`有效传输率${extraTitle}`}
+        wrapClassName="fullScreenModal"
+        beginTime={time[0]}
+        endTime={time[1]}
+        TVisible={open}
+        TCancle={() => {
+          setOpen(false);
+        }}
+        {...modalParams}
+        // pollutantType={pollutantType}
+      />
     </HomeCard>
   );
 };

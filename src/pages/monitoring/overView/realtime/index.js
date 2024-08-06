@@ -333,6 +333,7 @@ class Realtime extends Component {
   // 获取表格数据
   getRealTimeDataView = () => {
     const { pointName, currentDataType, pollutantCode, time, dayTime, selectedStatus } = this.state;
+    const { regionCode, entCode } = this.props;
     let searchTime;
     // ? moment(this.state.time).format("YYYY-MM-DD HH:00:00") : undefined
     if (currentDataType === 'HourData') {
@@ -348,6 +349,8 @@ class Realtime extends Component {
       payload: {
         pageIndex: this.state.pageIndex,
         pageSize: 50,
+        regionCode,
+        entCode,
         pointName,
         dataType: currentDataType,
         pollutantTypes: pollutantCode,
@@ -493,7 +496,6 @@ class Realtime extends Component {
     const { dataLoading, columnLoading, hideBreadcrumb } = this.props;
     const _columns = columns.filter(item => item.show);
     const wrwList = columns.filter(itm => itm.wrw);
-    console.log('selectedStatus', selectedStatus);
     return (
       <BreadcrumbWrapper hideBreadcrumb={!!hideBreadcrumb}>
         <Card

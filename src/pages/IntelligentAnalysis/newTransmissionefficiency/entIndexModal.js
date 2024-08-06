@@ -88,12 +88,14 @@ export default class EntIndexModal extends Component {
     //   RegionCode:'',
     // });
     // this.getTableData();
+
+    
   }
   componentDidUpdate(props) {
     if (props.TVisible !== this.props.TVisible && this.props.TVisible) {
       this.updateState({
         pollutantType: this.state.PollutantType,
-        RegionCode: '',
+        RegionCode: props.regionCode || '',
       });
       this.setState(
         {
@@ -105,6 +107,15 @@ export default class EntIndexModal extends Component {
           this.getTableData();
         },
       );
+
+      if(props.entCode) {
+        this.setState({
+          level:2,
+          showDetails: true,
+          RegionCode: props.regionCode,
+          OperationPersonnel: '',
+        });
+      }
     }
   }
   updateState = payload => {
@@ -587,12 +598,12 @@ export default class EntIndexModal extends Component {
   render() {
     // console.log("props.pollutantType=",this.props.pollutantType)
     // console.log("state.pollutantType=",this.state.PollutantType)
-    const { TVisible, TCancle, TTVisible, wrapClassName } = this.props;
+    const { TVisible, TCancle, TTVisible, wrapClassName, title = '有效传输率' } = this.props;
     return (
       <div>
         <Modal
           centered
-          title="有效传输率"
+          title={title}
           open={TVisible}
           footer={null}
           mask={false}
@@ -604,6 +615,7 @@ export default class EntIndexModal extends Component {
             <QutPage
               hideBreadcrumb
               isModal={true}
+              entCode={this.props.entCode}
               location={{ query: { RegionCode: this.state.RegionCode } }}
               _pollutantType={this.state.PollutantType}
               onBack={() => {

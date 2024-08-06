@@ -13,6 +13,8 @@ const initializeState = {
   time: [moment().startOf('month'), moment()],
   regionCode: '',
   entCode: '',
+  regionInfo: {},
+  entInfo: {},
   level1MapData: [],
   level4MapData: [],
   levelOtherMapData: [],

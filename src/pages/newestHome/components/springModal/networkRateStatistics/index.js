@@ -22,7 +22,7 @@ import {
   Button,
   Select,
   Radio,
-  Spin
+  Spin,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -33,14 +33,14 @@ import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile, interceptTwo } from '@/utils/utils';
-import ButtonGroup_ from '@/components/ButtonGroup'
+import ButtonGroup_ from '@/components/ButtonGroup';
 import { routerRedux } from 'dva/router';
-import RegionList from '@/components/RegionList'
-import PageLoading from '@/components/PageLoading'
+import RegionList from '@/components/RegionList';
+import PageLoading from '@/components/PageLoading';
 
 // import { DualAxes } from '@ant-design/charts';
 import ReactEcharts from 'echarts-for-react';
-import DetailDataSecond from './detailDataSecond'
+import DetailDataSecond from './detailDataSecond';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -69,7 +69,7 @@ const pageUrl = {
   ProviceArr: networkRateStatistics.ProviceArr,
   ProviceNetArr: networkRateStatistics.ProviceNetArr,
   ProviceNoNetArr: networkRateStatistics.ProviceNoNetArr,
-  ProviceRate: networkRateStatistics.ProviceRate
+  ProviceRate: networkRateStatistics.ProviceRate,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -88,8 +88,8 @@ export default class EntTransmissionEfficiency extends Component {
         title: '序号',
         align: 'center',
         render: (text, record, index) => {
-          return index + 1
-        }
+          return index + 1;
+        },
       },
       {
         title: <span>省区</span>,
@@ -97,15 +97,20 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'ProviceName',
         align: 'center',
         render: (text, record) => {
-          return text === '全部合计' ? text : <a onClick={() => {
-            this.setState({
-              detailVisible: true,
-              passParame: record
-            })
-
-          }}>
-            {text}
-          </a>
+          return text === '全部合计' ? (
+            text
+          ) : (
+            <a
+              onClick={() => {
+                this.setState({
+                  detailVisible: true,
+                  passParame: record,
+                });
+              }}
+            >
+              {text}
+            </a>
+          );
         },
       },
       {
@@ -133,9 +138,15 @@ export default class EntTransmissionEfficiency extends Component {
         //     return result;
         // }
         render: (text, record) => {
-          return <Link onClick={() => { this.totalPoint(record) }}>
-            {text}
-          </Link>
+          return (
+            <Link
+              onClick={() => {
+                this.totalPoint(record);
+              }}
+            >
+              {text}
+            </Link>
+          );
         },
       },
       {
@@ -145,9 +156,15 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         sorter: (a, b) => a.NetworkingCount - b.NetworkingCount,
         render: (text, record) => {
-          return <Link onClick={() => { this.netWorkPoint(record) }}>
-            {text}
-          </Link>
+          return (
+            <Link
+              onClick={() => {
+                this.netWorkPoint(record);
+              }}
+            >
+              {text}
+            </Link>
+          );
         },
       },
       {
@@ -157,9 +174,15 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         sorter: (a, b) => a.OffLineCount - b.OffLineCount,
         render: (text, record) => {
-          return <Link onClick={() => { this.noNetWorkPoint(record) }}>
-            {text}
-          </Link>
+          return (
+            <Link
+              onClick={() => {
+                this.noNetWorkPoint(record);
+              }}
+            >
+              {text}
+            </Link>
+          );
         },
       },
       {
@@ -167,32 +190,30 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'NetworkingRate',
         key: 'NetworkingRate',
         align: 'center',
-        sorter: (a, b) => a.NetworkingRate.replace("%", "") - b.NetworkingRate.replace("%", ""),
+        sorter: (a, b) => a.NetworkingRate.replace('%', '') - b.NetworkingRate.replace('%', ''),
         render: (text, record) => {
           return (
             <div>
               <Progress
-                percent={text && text.replace("%", "")}
+                percent={text && text.replace('%', '')}
                 size="small"
                 style={{ width: '90%' }}
-                status='normal'
+                status="normal"
                 format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
               />
             </div>
           );
-        }
-
-      }
+        },
+      },
     ];
-
 
     this.pointCol = [
       {
         title: '序号',
         align: 'center',
         render: (text, record, index) => {
-          return index + 1
-        }
+          return index + 1;
+        },
       },
       {
         title: <span>省区</span>,
@@ -212,14 +233,14 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'EntName',
         align: 'center',
         render: (text, record) => {
-          return <span style={{ textAlign: 'left' }}> {text}</span>
+          return <span style={{ textAlign: 'left' }}> {text}</span>;
         },
       },
       {
         title: <span>监测点</span>,
         dataIndex: 'PointName',
         key: 'PointName',
-        align: 'center'
+        align: 'center',
       },
       {
         title: <span>监测点类型</span>,
@@ -239,12 +260,13 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'Status',
         align: 'center',
         render: (text, record) => {
-          return text == 1 ? <GlobalOutlined style={{ color: blue[5], fontSize: 16 }} /> : <GlobalOutlined style={{ fontSize: 16 }} />
-        }
-
-      }
-
-
+          return text == 1 ? (
+            <GlobalOutlined style={{ color: blue[5], fontSize: 16 }} />
+          ) : (
+            <GlobalOutlined style={{ fontSize: 16 }} />
+          );
+        },
+      },
     ];
   }
 
@@ -252,27 +274,29 @@ export default class EntTransmissionEfficiency extends Component {
     // this.initData();
   }
   componentDidUpdate(props) {
-    if (props.networkRateVisible !== this.props.networkRateVisible && this.props.networkRateVisible) {
+    if (
+      props.networkRateVisible !== this.props.networkRateVisible &&
+      this.props.networkRateVisible
+    ) {
       this.initData();
     }
   }
   initData = () => {
-
     const { dispatch, networkType } = this.props;
     this.typeChange(networkType);
   };
   loadChart = () => {
-
-    return <ReactEcharts
-      option={this.getOption()}
-      style={{ height: '300px', width: '100%' }}
-      className="echarts-for-echarts"
-      theme="my_theme"
-    />
-  }
+    return (
+      <ReactEcharts
+        option={this.getOption()}
+        style={{ height: '300px', width: '100%' }}
+        className="echarts-for-echarts"
+        theme="my_theme"
+      />
+    );
+  };
 
   getOption = () => {
-
     const { ProviceArr, ProviceNetArr, ProviceNoNetArr, ProviceRate } = this.props;
     var option;
     option = {
@@ -283,22 +307,23 @@ export default class EntTransmissionEfficiency extends Component {
         axisPointer: {
           type: 'shadow',
         },
-        formatter: function (params, ticket, callback) {
-
+        formatter: function(params, ticket, callback) {
           //x轴名称 params[0].name
           let name = params[0].name;
           //值
-          let value = ''
+          let value = '';
 
           params.map(item => {
-            value += `${item.marker} ${item.seriesName}: ${item.value}${item.seriesName === '联网率' ? '%' : ''}<br />`
-          })
+            value += `${item.marker} ${item.seriesName}: ${item.value}${
+              item.seriesName === '联网率' ? '%' : ''
+            }<br />`;
+          });
 
-          return name + '<br />' + value
-        }
+          return name + '<br />' + value;
+        },
       },
       legend: {
-        data: ['联网监测点', '未联网监测点', '联网率']
+        data: ['联网监测点', '未联网监测点', '联网率'],
       },
       grid: {
         left: 40,
@@ -306,19 +331,22 @@ export default class EntTransmissionEfficiency extends Component {
         bottom: 70,
       },
       splitLine: {
-        show: false //去掉网格线
+        show: false, //去掉网格线
       },
-      xAxis: [{
-        type: 'category',
-        data: ProviceArr,
-        axisTick: { //x轴 去掉刻度
-          show: false
+      xAxis: [
+        {
+          type: 'category',
+          data: ProviceArr,
+          axisTick: {
+            //x轴 去掉刻度
+            show: false,
+          },
+          axisLabel: {
+            interval: 0,
+            rotate: 30,
+          },
         },
-        axisLabel: {
-          interval: 0,
-          rotate: 30
-        }
-      }],
+      ],
       yAxis: [
         {
           type: 'value',
@@ -328,13 +356,14 @@ export default class EntTransmissionEfficiency extends Component {
           // interval: 40,
           axisLine: { show: false }, //y轴
           axisTick: { show: false },
-          splitLine: {  //x轴分割线
+          splitLine: {
+            //x轴分割线
             lineStyle: {
               type: 'dashed',
               color: '#e9e9e9',
-              width: 1
-            }
-          }
+              width: 1,
+            },
+          },
         },
         {
           type: 'value',
@@ -343,20 +372,20 @@ export default class EntTransmissionEfficiency extends Component {
           max: 100,
           // interval: 20,
           axisLabel: {
-            formatter: '{value} %'
+            formatter: '{value} %',
           },
           axisLine: { show: false }, //y轴
           axisTick: { show: false },
-          splitLine: {  //x轴分割线
+          splitLine: {
+            //x轴分割线
             show: false,
             // lineStyle: {
             //   type: 'dashed',
             //   color: '#e9e9e9',
             //   width: 1
             // }
-          }
+          },
         },
-
       ],
       series: [
         {
@@ -369,24 +398,24 @@ export default class EntTransmissionEfficiency extends Component {
           // show: true,
           // position: 'insideRight'
           // },
-          data: ProviceNetArr
+          data: ProviceNetArr,
         },
         {
           name: '未联网监测点',
           type: 'bar',
-          stack: 'overlap',//堆叠效果(字符需要统一)
-          data: ProviceNoNetArr
+          stack: 'overlap', //堆叠效果(字符需要统一)
+          data: ProviceNoNetArr,
         },
         {
           name: '联网率',
           type: 'line',
           yAxisIndex: 1,
-          data: ProviceRate
-        }
-      ]
+          data: ProviceRate,
+        },
+      ],
     };
     return option;
-  }
+  };
   //创建并获取模板   导出
   template = () => {
     const { dispatch } = this.props;
@@ -402,8 +431,9 @@ export default class EntTransmissionEfficiency extends Component {
       },
     });
   };
-  pointTemplate = () => {  //弹框  监测点列表导出
-    const { dispatch } = this.props;
+  pointTemplate = () => {
+    //弹框  监测点列表导出
+    const { dispatch, regionCode, entCode } = this.props;
     const { ProviceCode } = this.state;
     dispatch({
       type: pageUrl.exportPointData,
@@ -412,12 +442,14 @@ export default class EntTransmissionEfficiency extends Component {
         ProviceCode: ProviceCode,
         NetworkingRateType: this.state.networkingRateType,
         OutputType: this.state.outputType,
+        regionCode: regionCode,
+        entCode: entCode,
       },
       callback: data => {
         downloadFile(data);
       },
     });
-  }
+  };
   getData = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -425,32 +457,43 @@ export default class EntTransmissionEfficiency extends Component {
       payload: {
         PollutantType: this.state.pollutantType,
         OutputType: this.state.outputType,
+        regionCode: this.props.regionCode,
+        entCode: this.props.entCode,
+      },
+    }).then(() => {
+      // 如果查询企业信息，弹出监测点列表弹窗
+      if (this.props.entCode && this.props.tableDatas.length) {
+        this.totalPoint(this.props.tableDatas[0]);
       }
     });
-  }
-  typeChange = (e) => {
-
-    this.setState({
-      outputType: e.target && e.target.value == 1 ? '' : this.state.outputType, //废水没有排口
-      pollutantType: e.target ? e.target.value : e
-    }, () => {
-      this.getData()
-    })
-
-  }
-  outTypeChange = (e) => {
+  };
+  typeChange = e => {
+    this.setState(
+      {
+        outputType: e.target && e.target.value == 1 ? '' : this.state.outputType, //废水没有排口
+        pollutantType: e.target ? e.target.value : e,
+      },
+      () => {
+        this.getData();
+      },
+    );
+  };
+  outTypeChange = e => {
     const { dispatch } = this.props;
-    this.setState({
-      outputType: e.target ? e.target.value : e
-    }, () => {
-      this.getData()
-    })
-  }
+    this.setState(
+      {
+        outputType: e.target ? e.target.value : e,
+      },
+      () => {
+        this.getData();
+      },
+    );
+  };
   getPointDataFun = (row, type) => {
     const { dispatch } = this.props;
     this.setState({
-      networkingRateType: type
-    })
+      networkingRateType: type,
+    });
     dispatch({
       type: pageUrl.getPointData,
       payload: {
@@ -458,25 +501,39 @@ export default class EntTransmissionEfficiency extends Component {
         ProviceCode: row.ProviceCode,
         NetworkingRateType: type,
         OutputType: this.state.outputType,
-      }
-    })
-  }
+        entCode: this.props.entCode,
+      },
+    });
+  };
 
-  totalPoint = (row) => {
-    this.setState({ visible: true, pointTitle: `监测点总计-${row.ProviceName}`, ProviceCode: row.ProviceCode }, () => {
-      this.getPointDataFun(row, 1)
-    })
-  }
-  netWorkPoint = (row) => {
-    this.setState({ visible: true, pointTitle: `联网监测点-${row.ProviceName}`, ProviceCode: row.ProviceCode }, () => {
-      this.getPointDataFun(row, 2)
-    })
-  }
-  noNetWorkPoint = (row) => {
-    this.setState({ visible: true, pointTitle: `未联网监测点-${row.ProviceName}`, ProviceCode: row.ProviceCode }, () => {
-      this.getPointDataFun(row, 3)
-    })
-  }
+  totalPoint = row => {
+    this.setState(
+      { visible: true, pointTitle: `监测点总计-${row.ProviceName}`, ProviceCode: row.ProviceCode },
+      () => {
+        this.getPointDataFun(row, 1);
+      },
+    );
+  };
+  netWorkPoint = row => {
+    this.setState(
+      { visible: true, pointTitle: `联网监测点-${row.ProviceName}`, ProviceCode: row.ProviceCode },
+      () => {
+        this.getPointDataFun(row, 2);
+      },
+    );
+  };
+  noNetWorkPoint = row => {
+    this.setState(
+      {
+        visible: true,
+        pointTitle: `未联网监测点-${row.ProviceName}`,
+        ProviceCode: row.ProviceCode,
+      },
+      () => {
+        this.getPointDataFun(row, 3);
+      },
+    );
+  };
   render() {
     const {
       exloading,
@@ -487,7 +544,7 @@ export default class EntTransmissionEfficiency extends Component {
       pointList,
       networkRateVisible,
       networkRateCancel,
-      wrapClassName
+      wrapClassName,
     } = this.props;
     const { detailVisible, passParame } = this.state;
     return (
@@ -500,104 +557,130 @@ export default class EntTransmissionEfficiency extends Component {
         onCancel={()=>{networkRateCancel&&networkRateCancel();this.setState({detailVisible:false})}}
         footer={null}
       >
-
-        {detailVisible && <DetailDataSecond networkDetailCancel={() => { this.setState({ detailVisible: false, passParame: '' }) }} location={{ query: { p: passParame.ProviceCode, n: passParame.ProviceName, networkType: this.state.pollutantType, outputType: this.state.outputType } }} />}
-        {!detailVisible && networkRateVisible && <Card
-          bordered={false}
-          style={{ height: '100%' }}
-          title={
-            <>
-              <Form layout="inline">
-                <Row>
-                  <Form.Item>
-                    <Radio.Group onChange={this.typeChange} value={this.state.pollutantType}>
-                      <Radio.Button value={''}>全部</Radio.Button>
-                      <Radio.Button value={'2'}>废气</Radio.Button>
-                      <Radio.Button value={'1'}>废水</Radio.Button>
-                    </Radio.Group>
-                  </Form.Item>
-                  {this.state.pollutantType == 2 && <Form.Item>
-                    <Radio.Group onChange={this.outTypeChange} value={this.state.outputType}>
-                      <Radio.Button value={''}>全部</Radio.Button>
-                      <Radio.Button value={'0'}>排放口</Radio.Button>
-                      <Radio.Button value={'1'}>非排放口</Radio.Button>
-                    </Radio.Group>
-                  </Form.Item>}
-                  <Form.Item>
-                    <Button
-                      style={{ margin: '0 5px' }}
-                      icon={<ExportOutlined />}
-                      onClick={this.template}
-                      loading={exloading}
-                    >
-                      导出
-                </Button>
-                  </Form.Item>
-                </Row>
-                <Row style={{ paddingTop: 5 }}>
-                  <span style={{ color: red[5] }}>
-                    停运时段内的监测点不参与联网率的计算。联网率 = 联网监测点/总监测点数*100%
-              </span>
-                </Row>
-
-
-              </Form>
-            </>
-          }
-        >
-          <div>
-            {this.props.loading ? <Spin style={{ width: '100%', padding: '60px 0', textAlign: 'center' }} /> : this.loadChart()}
-            <SdlTable
-              rowKey={(record, index) => `complete${index}`}
-              loading={this.props.loading}
-              columns={this.columns}
-              dataSource={this.props.tableDatas}
-              pagination={false}
-              scroll={{ y: clientHeight - 626 }}
-            />
-          </div>
-
-          <Modal
-            title={this.state.pointTitle}
-            visible={this.state.visible}
-            width={'90%'}
-            destroyOnClose
-            onCancel={() => {
-              this.setState({
-                visible: false,
-              });
+        {detailVisible && (
+          <DetailDataSecond
+            networkDetailCancel={() => {
+              this.setState({ detailVisible: false, passParame: '' });
             }}
-            footer={null}
+            location={{
+              query: {
+                p: passParame.ProviceCode,
+                n: passParame.ProviceName,
+                networkType: this.state.pollutantType,
+                outputType: this.state.outputType,
+              },
+            }}
+          />
+        )}
+        {!detailVisible && networkRateVisible && (
+          <Card
+            bordered={false}
+            style={{ height: '100%' }}
+            title={
+              <>
+                <Form layout="inline">
+                  <Row>
+                    <Form.Item>
+                      <Radio.Group onChange={this.typeChange} value={this.state.pollutantType}>
+                        <Radio.Button value={''}>全部</Radio.Button>
+                        <Radio.Button value={'2'}>废气</Radio.Button>
+                        <Radio.Button value={'1'}>废水</Radio.Button>
+                      </Radio.Group>
+                    </Form.Item>
+                    {this.state.pollutantType == 2 && (
+                      <Form.Item>
+                        <Radio.Group onChange={this.outTypeChange} value={this.state.outputType}>
+                          <Radio.Button value={''}>全部</Radio.Button>
+                          <Radio.Button value={'0'}>排放口</Radio.Button>
+                          <Radio.Button value={'1'}>非排放口</Radio.Button>
+                        </Radio.Group>
+                      </Form.Item>
+                    )}
+                    <Form.Item>
+                      <Button
+                        style={{ margin: '0 5px' }}
+                        icon={<ExportOutlined />}
+                        onClick={this.template}
+                        loading={exloading}
+                      >
+                        导出
+                      </Button>
+                    </Form.Item>
+                  </Row>
+                  <Row style={{ paddingTop: 5 }}>
+                    <span style={{ color: red[5] }}>
+                      停运时段内的监测点不参与联网率的计算。联网率 = 联网监测点/总监测点数*100%
+                    </span>
+                  </Row>
+                </Form>
+              </>
+            }
           >
-            <>
-              <Row justify='space-between' style={{ paddingBottom: 10 }}>
-                <Form.Item style={{ marginBottom: 0 }}>
-                  <Button
-                    icon={<ExportOutlined />}
-                    onClick={this.pointTemplate}
-                    loading={exPointLoading}
-                  >
-                    导出
-                </Button>
-                </Form.Item>
-
-                <Form.Item style={{ marginBottom: 0 }}>
-                  <div style={{ display: 'inline-block' }}> <GlobalOutlined style={{ color: blue[5], paddingRight: 5, fontSize: 16 }} />已联网</div>
-                  <div style={{ display: 'inline-block', paddingLeft: 8 }}> <GlobalOutlined style={{ paddingRight: 5, fontSize: 16 }} />未联网 </div>
-                </Form.Item>
-              </Row>
+            <div>
+              {this.props.loading ? (
+                <Spin style={{ width: '100%', padding: '60px 0', textAlign: 'center' }} />
+              ) : (
+                this.loadChart()
+              )}
               <SdlTable
                 rowKey={(record, index) => `complete${index}`}
-                loading={pointLoading}
-                columns={this.pointCol}
-                dataSource={pointList}
+                loading={this.props.loading}
+                columns={this.columns}
+                dataSource={this.props.tableDatas}
                 pagination={false}
-                scroll={{ y: clientHeight - 400 }}
+                scroll={{ y: clientHeight - 626 }}
               />
-            </>
-          </Modal>
-        </Card >}
-      </Modal >
+            </div>
+
+            <Modal
+              title={this.state.pointTitle}
+              visible={this.state.visible}
+              width={'90%'}
+              onCancel={() => {
+                this.setState({
+                  visible: false,
+                });
+              }}
+              footer={null}
+            >
+              <>
+                <Row justify="space-between" style={{ paddingBottom: 10 }}>
+                  <Form.Item style={{ marginBottom: 0 }}>
+                    <Button
+                      icon={<ExportOutlined />}
+                      onClick={this.pointTemplate}
+                      loading={exPointLoading}
+                    >
+                      导出
+                    </Button>
+                  </Form.Item>
+
+                  <Form.Item style={{ marginBottom: 0 }}>
+                    <div style={{ display: 'inline-block' }}>
+                      {' '}
+                      <GlobalOutlined style={{ color: blue[5], paddingRight: 5, fontSize: 16 }} />
+                      已联网
+                    </div>
+                    <div style={{ display: 'inline-block', paddingLeft: 8 }}>
+                      {' '}
+                      <GlobalOutlined style={{ paddingRight: 5, fontSize: 16 }} />
+                      未联网{' '}
+                    </div>
+                  </Form.Item>
+                </Row>
+                <SdlTable
+                  rowKey={(record, index) => `complete${index}`}
+                  loading={pointLoading}
+                  columns={this.pointCol}
+                  dataSource={pointList}
+                  pagination={false}
+                  scroll={{ y: clientHeight - 400 }}
+                />
+              </>
+            </Modal>
+          </Card>
+        )}
+      </Modal>
     );
   }
 }

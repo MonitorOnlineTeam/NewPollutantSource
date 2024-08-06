@@ -12,6 +12,8 @@ const dvaPropsData = ({ sysDashboard, loading }) => ({
   level: sysDashboard.level,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
+  regionInfo: sysDashboard.regionInfo,
+  entInfo: sysDashboard.entInfo,
   time: sysDashboard.time,
   InspectionAndCalibration: sysDashboard.InspectionAndCalibration,
   loading: loading.effects[`sysDashboard/GetPlanOperationTaskCompleteRate`],
@@ -20,7 +22,17 @@ const dvaPropsData = ({ sysDashboard, loading }) => ({
 const ProjectExecution = props => {
   const [open, setOpen] = useState(false);
 
-  const { dispatch, time, loading, level, regionCode, entCode, InspectionAndCalibration } = props;
+  const {
+    dispatch,
+    time,
+    loading,
+    level,
+    regionCode,
+    entCode,
+    InspectionAndCalibration,
+    regionInfo,
+    entInfo,
+  } = props;
   const [date, setDate] = useState();
 
   useEffect(() => {
@@ -112,6 +124,20 @@ const ProjectExecution = props => {
     setOpen(true);
   };
 
+  let extraTitle = '',
+    modalParams = {};
+  if (level != 1 && (regionCode || entCode)) {
+    if (level == 2 && regionCode) {
+      extraTitle = `（${regionInfo.regionName}）`;
+      modalParams.regionCode = regionCode;
+    }
+    if (level == 3 && entCode) {
+      extraTitle = `（${regionInfo.regionName} - ${entInfo.entName}）`;
+      modalParams.regionCode = regionCode;
+      modalParams.entCode = entCode;
+    }
+  }
+
   return (
     <HomeCard title="巡检质量分析" bodyStyle={{}} loading={loading}>
       <Row style={{ height: '100%' }}>
@@ -162,6 +188,7 @@ const ProjectExecution = props => {
             setOpen(false);
           }}
           time={[moment(time[0]), moment(time[1])]}
+          {...modalParams}
         />
       )}
     </HomeCard>

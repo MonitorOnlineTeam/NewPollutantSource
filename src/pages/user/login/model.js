@@ -3,7 +3,7 @@ import router from 'umi/router';
 import Cookie from 'js-cookie';
 import { message } from 'antd';
 import { systemLogin, getFakeCaptcha, getSystemLoginConfigInfo, getToken } from './service';
-import { getPageQuery, setAuthority } from './utils/utils';
+import { getPageQuery, getFirstChildNavigateUrl } from './utils/utils';
 import configToken from '@/config';
 import moment from 'moment';
 
@@ -60,20 +60,24 @@ const Model = {
           response.Datas.User_ID = response.Datas.UserId;
           let defaultNavigateUrl = '/user/login';
           let systemNavigateUrl = '/'; //之前首页需要用到的首页默认路径
-          if (response.Datas.MenuDatas?.[0]) {
-            const sysList = response.Datas.MenuDatas[0]; //默认展示和选中第一个系统
+
+          let firstMenu = response.Datas.MenuDatas?.[0];
+          if (firstMenu) {
+            const sysList = firstMenu; //默认展示和选中第一个系统
             const meunList = sysList.children;
-            defaultNavigateUrl = meunList?.[0]?.NavigateUrl;
-            if (meunList?.[0]?.children?.[0]?.children?.[0]) {
-              //三级菜单
-              defaultNavigateUrl = meunList[0].children[0].children[0].NavigateUrl;
-            } else if (meunList?.[0]?.children?.[0]) {
-              //二级菜单
-              defaultNavigateUrl = meunList[0].children[0].NavigateUrl;
-            } else if (meunList?.[0]) {
-              //一级菜单
-              defaultNavigateUrl = meunList[0].NavigateUrl;
-            }
+            // defaultNavigateUrl = meunList?.[0]?.NavigateUrl;
+            // if (meunList?.[0]?.children?.[0]?.children?.[0]) {
+            //   //三级菜单
+            //   defaultNavigateUrl = meunList[0].children[0].children[0].NavigateUrl;
+            // } else if (meunList?.[0]?.children?.[0]) {
+            //   //二级菜单
+            //   defaultNavigateUrl = meunList[0].children[0].NavigateUrl;
+            // } else if (meunList?.[0]) {
+            //   //一级菜单
+            //   defaultNavigateUrl = meunList[0].NavigateUrl;
+            // }
+            defaultNavigateUrl = getFirstChildNavigateUrl(firstMenu);
+            console.log('defaultNavigateUrl', defaultNavigateUrl);
             //右上角系统列表
             const systemList = response.Datas.MenuDatas.map(item => ({
               ...item,
@@ -118,7 +122,7 @@ const Model = {
             if (configInfo.IsShowSysPage === '1') {
               router.push('/sysTypeMiddlePage');
             } else {
-              Cookie.set("sysName", sysList.name)
+              Cookie.set('sysName', sysList.name);
               // 找到系统默认污染物
               let matches = desc.match(/\(([^)]+)\)/);
               if (matches) {

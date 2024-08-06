@@ -164,11 +164,11 @@ export default Model.extend({
       if (result.IsSuccess) {
         // let SelectMenu = result.Datas.filter(item => item.TipsName.indexOf('ReactShow') > -1);
         let SelectMenu = result.Datas;
-        SelectMenu.unshift({
-          ID: '0',
-          Name: '全部',
-          TipsName: '全部',
-        });
+        // SelectMenu.unshift({
+        //   ID: '0',
+        //   Name: '全部',
+        //   TipsName: '全部',
+        // });
         yield update({
           SelectMenu: SelectMenu,
         });

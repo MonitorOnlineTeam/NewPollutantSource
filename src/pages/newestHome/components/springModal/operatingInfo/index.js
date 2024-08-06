@@ -50,10 +50,10 @@ const Index = (props) => {
 
  
 
-  const { type, pollutantType,operatingStatus } = props;
+  const { type, pollutantType,operatingStatus, title } = props;
   return (
     <Modal
-    title={type=='ent'? "运维企业" : "运维企业监测点"}
+    title={title ? title : type=='ent'? "运维企业" : "运维企业监测点"}
     wrapClassName='spreadOverModal'
     mask={false}
     visible={props.visible}

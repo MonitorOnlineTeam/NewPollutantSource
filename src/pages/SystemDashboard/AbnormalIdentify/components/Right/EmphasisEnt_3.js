@@ -164,7 +164,14 @@ const EmphasisEnt = props => {
         }}
         bodyStyle={{ padding: 0 }}
       >
-        {open && <IndustryRegionEntStatistics time={time} match={{ params: { dataType: 'point' } }} />}
+        {open && (
+          <IndustryRegionEntStatistics
+            time={time}
+            match={{ params: { dataType: 'point' } }}
+            regionCode={regionCode}
+            entCode={entCode}
+          />
+        )}
       </Modal>
     </HomeCard>
   );

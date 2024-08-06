@@ -11,12 +11,20 @@ const IndustryRegionEntStatistics = props => {
       params: { dataType },
     },
     time,
+    regionCode,
+    entCode,
+    DGIMN,
   } = props;
 
   useEffect(() => {}, []);
   return (
     <BreadcrumbWrapper>
-      <PageContent time={time} dataType={dataType} />
+      <PageContent
+        time={time}
+        dataType={dataType}
+        regionCode={regionCode}
+        entCode={entCode}
+      />
     </BreadcrumbWrapper>
   );
 };

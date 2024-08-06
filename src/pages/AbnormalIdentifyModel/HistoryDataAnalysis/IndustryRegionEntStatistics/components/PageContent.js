@@ -15,7 +15,7 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
 const PageContent = props => {
   const [form] = Form.useForm();
 
-  const { dispatch, loading, dataType, time } = props;
+  const { dispatch, loading, dataType, time, regionCode, entCode } = props;
 
   const [date, setDate] = useState(time || [moment().startOf('year'), moment()]); // 时间
   const [dataSource, setDataSource] = useState([]);
@@ -40,6 +40,8 @@ const PageContent = props => {
     dispatch({
       type: 'AbnormalIdentifyModel/GetExcepDataAnalysis',
       payload: {
+        regionCode,
+        entCode,
         beginTime: bTime,
         endTime: eTime,
         dataType: dataType,
@@ -343,7 +345,6 @@ const PageContent = props => {
 
   // 进入二级页面
   const onEnterSecondaryPage = row => {
-
     let typeName = '',
       params = {};
     switch (dataType) {

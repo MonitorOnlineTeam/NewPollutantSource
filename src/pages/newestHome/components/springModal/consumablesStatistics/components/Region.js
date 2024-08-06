@@ -140,6 +140,8 @@ const Index = (props) => {
       const par = {
         ...values,
         time:undefined,
+        regionCode: props.regionCode,
+        entCode: props.entCode,
         beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
         endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         pointType:1,

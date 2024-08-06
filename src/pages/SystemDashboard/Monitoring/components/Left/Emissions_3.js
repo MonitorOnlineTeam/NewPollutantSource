@@ -15,6 +15,8 @@ const dvaPropsData = ({ loading, sysDashboard }) => ({
   level: sysDashboard.level,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
+  regionInfo: sysDashboard.regionInfo,
+  entInfo: sysDashboard.entInfo,
   time: sysDashboard.time,
   loading: loading.effects['sysDashboard/GetEmissionsAnalysis'],
 });
@@ -28,7 +30,7 @@ const Emissions = props => {
   });
   const [open, setOpen] = useState(false);
 
-  const { dispatch, loading, time, level, regionCode, entCode } = props;
+  const { dispatch, loading, time, level, regionCode, entCode, regionInfo, entInfo } = props;
 
   useEffect(() => {
     getData();
@@ -200,6 +202,20 @@ const Emissions = props => {
     };
   };
 
+  let extraTitle = '',
+    modalParams = {};
+  if (level != 1 && (regionCode || entCode)) {
+    if (level == 2 && regionCode) {
+      extraTitle = `（${regionInfo.regionName}）`;
+      modalParams.regionCode = regionCode;
+    }
+    if (level == 3 && entCode) {
+      extraTitle = `（${regionInfo.regionName} - ${entInfo.entName}）`;
+      modalParams.regionCode = regionCode;
+      modalParams.entCode = entCode;
+    }
+  }
+
   return (
     <HomeCard title="排放量综合分析" style={{ minHeight: 310 }} loading={loading}>
       <Row style={{ marginTop: 16, padding: '0 20px' }} className={styles.center}>
@@ -231,7 +247,7 @@ const Emissions = props => {
       />
 
       <Modal
-        title="排放量综合分析"
+        title={`排放量综合分析${extraTitle}`}
         wrapClassName="fullScreenModal"
         open={open}
         destroyOnClose
@@ -241,7 +257,7 @@ const Emissions = props => {
         }}
         bodyStyle={{ padding: 0 }}
       >
-        <EmissionStatistical time={time} location={{ query: {} }} />
+        <EmissionStatistical {...modalParams} time={time} location={{ query: {} }} />
       </Modal>
     </HomeCard>
   );

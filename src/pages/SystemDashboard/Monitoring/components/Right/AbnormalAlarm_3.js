@@ -11,6 +11,8 @@ const dvaPropsData = ({ loading, sysDashboard }) => ({
   level: sysDashboard.level,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
+  regionInfo: sysDashboard.regionInfo,
+  entInfo: sysDashboard.entInfo,
   time: sysDashboard.time,
   loading: loading.effects['sysDashboard/GetExceptionDataAnalysis'],
 });
@@ -27,7 +29,7 @@ const AbnormalAlarm_3 = props => {
   });
   const [open, setOpen] = useState(false);
 
-  const { dispatch, loading, time, level, regionCode, entCode } = props;
+  const { dispatch, loading, time, level, regionCode, entCode, regionInfo, entInfo } = props;
 
   useEffect(() => {
     getData();
@@ -63,6 +65,21 @@ const AbnormalAlarm_3 = props => {
     });
     setOpen(true);
   };
+
+  let extraTitle = '',
+    modalParams = {};
+  if (level != 1 && (regionCode || entCode)) {
+    if (level == 2 && regionCode) {
+      extraTitle = `（${regionInfo.regionName}）`;
+      modalParams.regionCode = regionCode;
+    }
+    if (level == 3 && entCode) {
+      extraTitle = `（${regionInfo.regionName} - ${entInfo.entName}）`;
+      modalParams.regionCode = regionCode;
+      modalParams.regionName = regionInfo.regionName;
+      modalParams.entCode = entCode;
+    }
+  }
 
   return (
     <HomeCard title="异常数据分析" bodyStyle={{}} loading={loading}>
@@ -125,7 +142,7 @@ const AbnormalAlarm_3 = props => {
         </div>
       </div>
       <Modal
-        title="异常数据分析"
+        title={`异常数据分析${extraTitle}`}
         wrapClassName="fullScreenModal"
         open={open}
         destroyOnClose
@@ -134,14 +151,19 @@ const AbnormalAlarm_3 = props => {
           dispatch({
             type: 'abnormalData/updateState',
             payload: {
-              abnormalDataTime: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")],
+              abnormalDataTime: [
+                moment()
+                  .subtract(1, 'days')
+                  .startOf('day'),
+                moment().endOf('day'),
+              ],
             },
           });
           setOpen(false);
         }}
         bodyStyle={{ padding: 0 }}
       >
-        <AbnormalData hideBreadcrumb={true} location={{ query: {} }} />
+        <AbnormalData hideBreadcrumb={true} location={{ query: {} }} {...modalParams} />
       </Modal>
     </HomeCard>
   );

@@ -31,6 +31,7 @@ export default Model.extend({
         yield update({
           regTableDatas:result.Datas,
         })
+        callback && callback(result.Datas);
       }else{
         message.error(result.Message)
       }

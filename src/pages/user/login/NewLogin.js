@@ -168,6 +168,9 @@ class Login extends Component {
     <Alert
       style={{
         marginBottom: 24,
+        position: 'absolute',
+        top: 62,
+        left: 86,
       }}
       message={content}
       type="error"
