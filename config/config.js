@@ -17,7 +17,7 @@ import path from 'path';
 // const API_HOST = 'http://172.16.12.132:49011' //中石化 正式
 // const API_HOST = 'http://172.16.12.39:49003/'; // 234 运维测试
 const API_HOST = 'http://172.16.12.122:61005/'; //134 - 演示
-const API_HOST2 = 'http://172.16.12.109:61001/'; //调试服务导出PDF api
+const API_HOST_109 = 'http://172.16.12.109:61001/'; //调试服务导出PDF api
 const UPLOAD_HOST = 'http://172.16.12.39:49003/'; // 文件上传地址
 
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
