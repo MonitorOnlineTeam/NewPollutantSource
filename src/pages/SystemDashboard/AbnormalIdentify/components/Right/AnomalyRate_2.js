@@ -171,10 +171,11 @@ const AnomalyRate = props => {
       style={{ minHeight: 260, flex: 2 }}
       bodyStyle={{}}
       loading={loading}
+      onExtraClick={onOpenModal}
     >
       <div className={styles.CustomerSatisfactionWrapper}>
         <Row style={{ height: '100%' }}>
-          <Col span={8}>
+          <Col span={8} onClick={onOpenModal}>
             <ReactEcharts
               ref={echart => {
                 echart && setEcharts1(echart.echarts);

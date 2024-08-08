@@ -2,21 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal } from 'antd';
 import styles from '@/pages/SystemDashboard/styles.less';
-import HomeCard from '../HomeCard';
+import HomeCard from '@/pages/SystemDashboard/components/HomeCard.js';
 import ReactEcharts from 'echarts-for-react';
 import PlanWorkOrderStatistics from '@/pages/newestHome/components/springModal/planWorkOrderStatistics/index.js';
 import moment from 'moment';
 import ToggleRadio from '@/pages/SystemDashboard/components/ToggleRadio.js';
 import AbnormalDataAnalysis from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis';
 import QuestionTooltip from '@/components/QuestionTooltip';
+import DescriptionModal from '@/pages/SystemDashboard/components/DescriptionModal.js';
 
 const COLOR = ['#0FD4F9', '#066EE9', '#73DAA6', '#E9E87A', '#A339E6'];
 
-const dvaPropsData = ({ sysDashboard, loading }) => ({
+const dvaPropsData = ({ sysDashboard, loading, AbnormalIdentifyModel }) => ({
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
   time: sysDashboard.time,
-  typelList: sysDashboard.modalTypeList,
+  typeList: sysDashboard.modalTypeList,
+  modelTypeList: AbnormalIdentifyModel.modelTypeList,
   loading: loading.effects['sysDashboard/GetMapPointInfo'],
 });
 
@@ -24,26 +26,9 @@ const TypeCard = props => {
   const [open, setOpen] = useState(false);
   const [dataType, setDataType] = useState('Hours');
   const [echarts, setEcharts] = useState();
-  const [typeList, setTypeList] = useState([]);
-  const { dispatch, time, loading, typelList, entCode, regionCode } = props;
+  const { dispatch, time, loading, typeList, modelTypeList, entCode, regionCode } = props;
 
-  useEffect(() => {
-    GetMoldTypeLevelList();
-  }, []);
-
-  // 获取级别和分类
-  const GetMoldTypeLevelList = () => {
-    dispatch({
-      type: 'AbnormalIdentifyModel/GetMoldTypeLevelList',
-      payload: {
-        type: 1, // 过滤掉打标记和数据现象
-      },
-      callback: res => {
-        let typeList = res.type;
-        setTypeList(typeList);
-      },
-    });
-  };
+  useEffect(() => {}, []);
 
   const getOption = () => {
     if (!echarts) {
@@ -51,7 +36,7 @@ const TypeCard = props => {
     }
 
     let count = 0;
-    let seriesData = typelList.map(item => {
+    let seriesData = typeList.map(item => {
       count += item[dataType];
       return {
         value: item[dataType],
@@ -94,22 +79,20 @@ const TypeCard = props => {
       },
       series: [
         {
-          name: '校准质量分析',
+          name: '异常分类统计',
           type: 'pie',
-          roseType: 'area',
+          // roseType: 'area',
           // radius: [50, 250],
           radius: ['50%', '70%'],
           center: ['50%', '50%'],
-          // roseType: 'area',
           label: { show: false },
-
-          // itemStyle: {
-          //   borderRadius: 6,
-          //   borderColor: '#2998FF',
-          //   borderWidth: 2,
-          //   padding: 4,
-          // },
-          // padAngle: 4,
+          itemStyle: {
+            borderRadius: 10,
+            // borderColor: '#2998FF',
+            borderWidth: 2,
+            padding: 4,
+          },
+          padAngle: 1,
           data: seriesData,
         },
       ],
@@ -119,7 +102,6 @@ const TypeCard = props => {
   };
 
   const onOpenModal = () => {
-    debugger;
     setOpen(true);
   };
 
@@ -128,14 +110,16 @@ const TypeCard = props => {
       title={
         <>
           异常分类统计
-          <QuestionTooltip
+          <DescriptionModal type="type"/>
+
+          {/* <QuestionTooltip
             color="#073783"
             placement="right"
             overlayInnerStyle={{ width: 300 }}
             style={{ color: '#fff' }}
             content={
               <div style={{ fontWeight: 'bold', width: 300 }}>
-                {typeList.map((item, i) => {
+                {modelTypeList.map((item, i) => {
                   return (
                     <div key={i} style={{ marginBottom: i + 1 === typeList.length ? 0 : 10 }}>
                       <p>{item.ModelTypeName}包括：</p>
@@ -152,16 +136,15 @@ const TypeCard = props => {
                   );
                 })}
 
-                {/* <p>重点异常：影响数据质量，无法判断明显动机，非正常运行的。</p>
-                <p>一般异常：对数据质量影响较小，但仍需要解决的。</p>
-                <p>轻微异常：不影响数据质量，属于管理不规范的。 </p> */}
+               
               </div>
             }
-          />
+          /> */}
         </>
       }
       bodyStyle={{ position: 'relative' }}
       loading={loading}
+      onExtraClick={onOpenModal}
     >
       <ToggleRadio
         style={{ position: 'absolute', right: 20, top: 10, zIndex: 1 }}
@@ -182,9 +165,9 @@ const TypeCard = props => {
             onEvents={{ click: onOpenModal }}
           />
         </Col>
-        <Col span={11} className={styles.center}>
+        <Col span={11} className={styles.center} onClick={onOpenModal}>
           <Row className={styles.chartLegendWrapper}>
-            {typelList.map((item, index) => {
+            {typeList.map((item, index) => {
               return (
                 <Col span={24} className={styles.lengendItem}>
                   <div className={styles.label}>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Typography, Modal, Tooltip } from 'antd';
 import styles from '@/pages/SystemDashboard/styles.less';
-import HomeCard from '../HomeCard';
+import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactSeamlessScroll from 'rc-seamless-scroll';
 import moment from 'moment';
 import IndustryRegionEntStatistics from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/IndustryRegionEntStatistics';
@@ -61,6 +61,7 @@ const EmphasisEnt = props => {
       style={{ minHeight: 400, flex: 5 }}
       bodyStyle={{ height: 'calc(100% - 60px)' }}
       loading={loading}
+      onExtraClick={onOpenModal}
     >
       <Row className={styles.AfterSaleServiceWrapper} onClick={onOpenModal}>
         <Col span={24} style={{ height: '100%', cursor: 'pointer' }}>

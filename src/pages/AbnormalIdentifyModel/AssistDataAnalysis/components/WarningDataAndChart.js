@@ -217,6 +217,7 @@ const WarningDataAndChart = props => {
         isAsc: true,
         IsSupplyData: false,
         quotaType: props.quotaType,
+        ModelGuid: props.ModelGuid,
       },
       callback: res => {
         setAllTypeDataList(res);

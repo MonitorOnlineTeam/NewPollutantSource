@@ -12,7 +12,7 @@ import Cookie from 'js-cookie';
 import config from '@/config';
 import { message } from 'antd';
 import { router } from 'umi';
-import { getSysName,isOperaSystem } from '@/utils/utils';
+import { getSysName, isOperaSystem } from '@/utils/utils';
 import { GetOperationSetting } from '@/pages/systemManger/operationBasConfig/service';
 
 /**
@@ -97,7 +97,12 @@ export default Model.extend({
           );
         }
         yield update({
-          sysPollutantTypeList: sysPollutantTypeList,
+          sysPollutantTypeList: sysPollutantTypeList.filter(
+            item =>
+              item.ID !== '99dbc722-033f-481a-932a-3c6436e17245' &&
+              item.ID !== '0d4ad7f1-3a05-42ad-9860-c150ee8c270e' &&
+              item.ID !== '140496b1-ab85-474a-9278-3ca7c6df3f9b',
+          ),
         });
         callback && callback(sysPollutantTypeList);
       } else {
@@ -525,13 +530,15 @@ export default Model.extend({
   subscriptions: {
     socket({ dispatch }) {
       const pathname = history.location?.pathname;
-      if (pathname=== '/hrefLogin') {
-        return
+      if (pathname === '/hrefLogin') {
+        return;
       }
       if (pathname === '/') {
         window.configInfo = {};
-        let meunList = sessionStorage.getItem('menuDatas') ? JSON.parse(sessionStorage.getItem('menuDatas')) : []
-        router.push(meunList?.[0] ? meunList?.[0] : '/user/login')
+        let meunList = sessionStorage.getItem('menuDatas')
+          ? JSON.parse(sessionStorage.getItem('menuDatas'))
+          : [];
+        router.push(meunList?.[0] ? meunList?.[0] : '/user/login');
       }
       dispatch({
         type: 'getSystemConfigInfo',

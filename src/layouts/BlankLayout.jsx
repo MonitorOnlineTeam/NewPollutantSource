@@ -10,11 +10,6 @@ const Layout = ({ children, loading, dispatch }) => {
         clientHeight: document.body.clientHeight,
       },
     });
-     //获取行政区列表
-     dispatch({
-      type: 'autoForm/getRegions',
-      payload: { PointMark: '2', RegionCode: '' },
-    });
   }, []);
 
   if (loading) {

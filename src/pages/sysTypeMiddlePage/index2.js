@@ -59,6 +59,11 @@ const SysTypeMiddlePage = props => {
             '污染源监督核查系统是一个污染源监测设备运行合规性核查管理系统，辅助环保人员对监测设备的仪表、DAS、数采仪的数据一致性、量程一致性、参数一致性和设备运维工作的规范性和合规性进行核查，确保CEMS系统的整体性能和监测数据的准确性，为环境保护和企业的合规性运维提供有力支持。';
           featuresList = ['数据一致性核查', '参数一致性核查', '量程一致性核查', '合规性检查'];
           break;
+        case '污染源动态质控系统':
+          description =
+            '污染源动态质控系统将物联网与大数据结合，建立一套了信息化的监测数据质控体系。在传统 CEMS 的基础上搭配质控单元，实现了对污染源烟气设备的零点、量程、线性、响应时间、示值误差等技术指标的定期校验与远程检查。为提高数据质量提供信息化的手段，为设备质控管理提供有效抓手。';
+          featuresList = ['数据分析驾驶舱', '定时自动质控', '远程人工抽查', '异常动态质控'];
+          break;
       }
       return {
         ...item,
@@ -72,7 +77,7 @@ const SysTypeMiddlePage = props => {
       // if (true) {
       sessionStorage.setItem('isShowSelectSystem', 0);
       onSysItemClick(subSysList[0]);
-    } else if(subSysList.length) {
+    } else if (subSysList.length) {
       sessionStorage.setItem('isShowSelectSystem', 1);
       setLoading(false);
     }

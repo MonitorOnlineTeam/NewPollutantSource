@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal, Progress } from 'antd';
 import styles from '@/pages/SystemDashboard/styles.less';
-import HomeCard from '../HomeCard';
+import HomeCard from '@/pages/SystemDashboard/components/HomeCard.js';
 import ToggleRadio from '@/pages/SystemDashboard/components/ToggleRadio.js';
 import AbnormalDataAnalysis from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis';
 
@@ -34,6 +34,7 @@ const BehaviorAnalysis = props => {
       style={{ minHeight: 300, flex: 3 }}
       bodyStyle={{ height: 'calc(100% - 40px)' }}
       loading={loading}
+      onExtraClick={onOpenModal}
     >
       <div className={styles.BehaviorAnalysisWrapper}>
         <ToggleRadio

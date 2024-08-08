@@ -17,6 +17,7 @@ const WarningTableData = props => {
     title,
     isShowCluesList,
     showOnlyList,
+    ModelGuid,
   } = props;
 
   useEffect(() => {}, []);
@@ -33,7 +34,6 @@ const WarningTableData = props => {
     );
   };
 
-console.log('showOnlyList', showOnlyList)
   return (
     <Modal
       title={`监测数据 - ${title}`}
@@ -64,6 +64,7 @@ console.log('showOnlyList', showOnlyList)
               defaultShowType="data"
               quotaType={quotaType}
               DGIMN={DGIMN}
+              ModelGuid={ModelGuid}
               date={date}
               tableHeight="calc(100vh - 260px)"
               displayType="modal"

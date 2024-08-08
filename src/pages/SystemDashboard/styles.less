@@ -8,6 +8,55 @@
   src: url('/iconFont/youshebiaotihei.ttf') format('truetype'); /* 根据你的字体文件格式调整format */
 }
 
+.textDescModal {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .modalContent {
+    position: absolute;
+    // top: 20%;
+    width: 70vw;
+    max-width: 1000px;
+    background: url(./images/desc_bg.png) no-repeat;
+    background-size: 100% 100%;
+    padding: 14px;
+
+    .itemContent {
+      // background: url(./images/inner_bg.png) no-repeat;
+      // background-size: 100% 100%;
+      font-size: 14px;
+      background-color: rgb(2, 46, 84, 0.8);
+      border: 1px solid #02579f;
+      border-radius: 4px;
+      line-height: 26px;
+      padding: 10px;
+      height: 100%;
+      .descTitle {
+        border-left: 2px solid #5de9fe;
+        color: #5de9fe;
+        background: #004279;
+        padding-left: 10px;
+        font-size: 15px;
+      }
+
+      .desc {
+        color: #c8ebff;
+        margin-left: 20px;
+        padding: 4px 0;
+        font-size: 15px;
+      }
+    }
+  }
+}
+
 .dashboardPageWrapper {
   height: 100vh;
   width: 100vw;
@@ -251,6 +300,14 @@
           color: #fff;
           font-weight: 500;
           width: calc(100% - 140px);
+          display: inline-block;
+        }
+
+        .extra {
+          width: 100px;
+          height: 40px;
+          float: right;
+          cursor: pointer;
         }
       }
 
@@ -750,7 +807,7 @@
         padding: 2px 14px;
         font-weight: bold;
         margin-bottom: 4%;
-
+        align-items: center;
         &:last-child {
           margin-bottom: 0;
         }

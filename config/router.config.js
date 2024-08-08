@@ -1092,6 +1092,12 @@ const routes = [
                 path: '/platformconfig',
                 redirect: '/platformconfig/AEnterpriseTest',
               },
+              // 项目管理
+              {
+                name: 'projectManage',
+                path: '/platformconfig/projectManage',
+                component: './platformManager/projectManage',
+              },
               {
                 name: 'UnitInfoPage',
                 path:
@@ -1742,10 +1748,8 @@ const routes = [
               },
               {
                 name: 'operationPerson', //运维人员管理  详情
-                path:
-                  '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
-                component:
-                  './operations/operationEntManage/operationPerson/OperationPersonDetail',
+                path: '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
+                component: './operations/operationEntManage/operationPerson/OperationPersonDetail',
               },
               {
                 path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',

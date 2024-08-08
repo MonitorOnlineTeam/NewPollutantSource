@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import styles from '@/pages/SystemDashboard/styles.less';
-import HomeCard from '../HomeCard';
+import HomeCard from '@/pages/SystemDashboard/components/HomeCard.js';
 import moment from 'moment';
 import OperatingInfo from '@/pages/newestHome/components/springModal/operatingInfo';
 

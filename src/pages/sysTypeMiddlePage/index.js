@@ -48,6 +48,7 @@ class index extends PureComponent {
   };
 
   onSysItemClick = item => {
+    this.UpdateUserProject('');
     let url = item.Url ? new URL(item.Url) : item.Url;
     if (url && (url.protocol === 'http:' || url.protocol === 'https:')) {
       if (webConfig.middlePageOpenMode === 'single') {
@@ -62,6 +63,16 @@ class index extends PureComponent {
         window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`);
       }
     }
+  };
+
+  // 切换项目
+  UpdateUserProject = projectCode => {
+    dispatch({
+      type: 'projectManage/UpdateUserProject',
+      payload: {
+        projectCode,
+      },
+    });
   };
 
   onLoglout = () => {

@@ -168,22 +168,33 @@ const PointCluesStatistics = props => {
             <a
               onClick={() => {
                 let quotaType = '';
+                // 全部合计：0
                 if (reqParams.modelExcepLevel) {
-                  quotaType = 'level-' + reqParams.modelExcepLevel;
+                  quotaType =
+                    'level-' +
+                    (reqParams.modelExcepLevel.length > 1
+                      ? 0
+                      : reqParams.modelExcepLevel.toString());
                 }
                 if (reqParams.modelExcepType) {
-                  quotaType = 'type-' + reqParams.modelExcepLevel;
+                  quotaType =
+                    'type-' +
+                    (reqParams.modelExcepType.length > 1 ? 0 : reqParams.modelExcepType.toString());
                 }
                 if (reqParams.modelExcepAction) {
                   const list = ['RenweiHour', 'FaultHour', 'CEMSException', 'NormalMissHour'];
-                  quotaType = list[reqParams.modelExcepLevel - 1];
+                  quotaType =
+                    reqParams.modelExcepAction.length > 1
+                      ? list.toString()
+                      : list[reqParams.modelExcepAction - 1];
                 }
                 setCurrentHourData({
                   quotaType,
                   DGIMN: record.Key,
                   title: `(${record.ParentName}/${record.Name}) - 异常小时数`,
+                  ModelGuid: data.ModelGuid,
                 });
-                setIsModalOpen(true)
+                setIsModalOpen(true);
               }}
             >
               {text}
@@ -243,6 +254,7 @@ const PointCluesStatistics = props => {
         <WarningTableData
           open={isModalOpen}
           DGIMN={currentHourData.DGIMN}
+          ModelGuid={currentHourData.ModelGuid}
           quotaType={currentHourData.quotaType}
           date={reqParams.date}
           title={currentHourData.title}

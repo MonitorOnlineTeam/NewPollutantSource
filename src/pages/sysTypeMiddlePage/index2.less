@@ -91,10 +91,12 @@
     width: 100%;
     height: 110px;
     padding: 0 3%;
+    display: flex;
+    justify-content: center;
 
     ul {
       display: flex;
-      width: 94%;
+      // width: 94%;
       // background: #f7f9ff;
       box-shadow: 1px 8px 8px 0px rgba(0, 0, 0, 0.08);
       border-radius: 5px;
@@ -103,9 +105,12 @@
       z-index: 9;
       border-radius: 6px;
       background: #f7f9ff;
+      max-width: calc(94%);
+      overflow-y: auto;
     }
     li {
       // flex: 1;
+      min-width: 260px;
       transition: transform 0.2s;
       padding: 10px 14px;
       display: flex;
