@@ -110,8 +110,12 @@ const DescriptionModal = props => {
     return (
       <Row gutter={[8, 8]}>
         {modelTypeList.map((item, i) => {
+          let span = 8;
+          if (i + 1 === modelTypeList.length && (i + 1) % 3 !== 0) {
+            span = 8 * ((i + 1) % 3);
+          }
           return (
-            <Col span={8} key={i}>
+            <Col span={span} key={i}>
               <div className={styles.itemContent}>
                 <p className={styles.descTitle} style={{ marginBottom: 10 }}>
                   {item.ModelTypeName}
