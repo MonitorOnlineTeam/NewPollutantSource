@@ -38,25 +38,13 @@ const errorHandler = error => {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
     if (status === 401) {
-      // Cookie.set(configToken.cookieName, null);
-      // Cookie.set('currentUser', null);
-      // router.push('/user/login');
-
-      if (!isLoginTimeoutAlertShown) {
-        isLoginTimeoutAlertShown = true;
-        Cookie.set(configToken.cookieName, null);
-        Cookie.set('currentUser', null);
-        router.push('/user/login');
-        notification.error({
-          message: '登录超时，请重新登录！',
-        });
-        setTimeout(() => { isLoginTimeoutAlertShown = false; }, 3000); // 重置标志，避免长期禁止弹窗
-      }
-
+      Cookie.set(configToken.cookieName, null);
+      Cookie.set('currentUser', null);
+      router.push('/user/login');
       return {
         IsSuccess: false,
         Datas: {},
-        Message: '',
+        Message: '登录超时，请重新登录！',
       };
     }
     if (status === 403) {
