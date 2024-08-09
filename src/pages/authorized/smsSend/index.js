@@ -56,6 +56,8 @@ const Index = (props) => {
   const [form3] = Form.useForm();
 
 
+  const [title, setTitle] = useState()
+  const [formVisible, setFormVisible] = useState(false)
   const [sendLogVisible, setSendLogVisible] = useState(false)
 
 
@@ -72,6 +74,12 @@ const Index = (props) => {
 
   }, []);
 
+  useEffect(() => {
+    if(!formVisible){
+      form3.resetFields();
+    }
+
+  }, [formVisible]);
 
 
   const columns = [
@@ -143,7 +151,7 @@ const Index = (props) => {
       render: (text, record, index) => {
         return (<Fragment>
           <SettingPointPermissions record={record} onFinish={()=>{
-              onFinish(queryPar,pageIndex, pageSize);
+              onFinish(pageIndex, pageSize,queryPar);
           }} />
           <Divider type="vertical" />
           <Tooltip title="编辑">
@@ -162,8 +170,6 @@ const Index = (props) => {
     },
   ];
 
-  const [title, setTitle] = useState()
-  const [formVisible, setFormVisible] = useState(false)
 
   const addEdit = (title, record) => {
     setTitle(title)
@@ -479,6 +485,7 @@ const Index = (props) => {
           destroyOnClose
           wrapClassName={`spreadOverModal queryCriterTitleSty`}
           footer={null}
+          mask={false}
         >
           <div style={{ marginBottom: 8 }}>{searchComponents2()}</div>
           <SdlTable

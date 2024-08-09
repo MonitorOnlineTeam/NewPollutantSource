@@ -50,7 +50,7 @@ const { TextArea } = Input;
 const FormItem = Form.Item;
 const { Step } = Steps;
 // let SCREEN_HEIGHT = document.querySelector('body').offsetHeight - 250;
-let SCREEN_HEIGHT = "calc(100vh - 168px)";
+let SCREEN_HEIGHT = "calc(100vh - 128px)";
 @Form.create()
 @connect(({ task, loading, abnormalWorkStatistics }) => ({
     // isloading: loading.effects['task/GetTaskRecord'],
@@ -406,7 +406,7 @@ class EmergencyDetailInfo extends Component {
             payload: {
                 beginTime: beginTime,
                 endTime: endTime,
-                DGIMN: DGIMN,
+                DGIMN: DGIMN || this.props.taskInfo?.Datas?.[0]?.DGIMN,
                 taskID: row.TaskID,
             },
         })

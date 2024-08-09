@@ -36,8 +36,8 @@ const Calibration = props => {
         pLeve: level,
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
-        btime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
-        etime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
+        // btime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
+        // etime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
       },
     });
   };

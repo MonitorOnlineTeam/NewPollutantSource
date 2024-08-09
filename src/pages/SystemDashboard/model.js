@@ -288,13 +288,6 @@ export default Model.extend({
       }
 
     },
-
-
-
-
-
-
-
     // 监控地图
     *GetMapPointList({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.VisualKanbanApi.GetMapPointList, payload);

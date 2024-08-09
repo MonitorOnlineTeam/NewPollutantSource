@@ -19,7 +19,7 @@ const dvaPropsData = ({ sysDashboard, loading }) => ({
 const DeviceInfoCount = props => {
   const [open, setOpen] = useState(false);
   const [nums, setNums] = useState({
-      SumNum: 407,
+      SumNum: 0,
       QualifieRate: "00.00%",
       CompleteRectificationRate: "00.00%"
   });
@@ -37,8 +37,8 @@ const DeviceInfoCount = props => {
         pLeve:level,
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
-        btime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
-        etime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
+        // btime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
+        // etime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
       },
       callback: res => {
         setNums(res);
@@ -47,7 +47,7 @@ const DeviceInfoCount = props => {
   };
 
   const onOpenModal = () => {
-    setOpen(true);
+    // setOpen(true);
   };
  
   const boxSty = {
@@ -56,7 +56,7 @@ const DeviceInfoCount = props => {
     background: 'url(/SystemDashboard/supervision/hgl_box1.png) no-repeat',
     backgroundSize:'100% 100%',
     nameColr:'#C3E3FF',
-    cursor: 'pointer',
+    // cursor: 'pointer',
   }
   const boxSty2 = {
     width:136,
@@ -64,7 +64,7 @@ const DeviceInfoCount = props => {
     background: 'url(/SystemDashboard/supervision/hgl_box2.png) no-repeat',
     backgroundSize:'100% 100%',
     nameColr:'#C3F0FF',
-    cursor: 'pointer',
+    // cursor: 'pointer',
   }
   const textSty = {
     height: '100%',
@@ -72,7 +72,7 @@ const DeviceInfoCount = props => {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    cursor: 'pointer',
+    // cursor: 'pointer',
   }
   return (
     <HomeCard title="合格率分析" bodyStyle={{}} loading={loading} style={{minHeight:props.homeCardMinHight}}>

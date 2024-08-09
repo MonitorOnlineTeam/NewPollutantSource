@@ -1153,6 +1153,7 @@ class TaskRecord extends Component {
           destroyOnClose
           wrapClassName='spreadOverModal'
           footer={null}
+          mask={false}
           onCancel={() => {
             this.setState({ taskRecordDetailVisible: false })
           }}

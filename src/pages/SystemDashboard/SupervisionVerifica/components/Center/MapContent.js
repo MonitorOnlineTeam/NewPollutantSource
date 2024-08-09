@@ -18,7 +18,7 @@ const legendList = [
     value: '3',
   },
   {
-    name: '整改中',
+    name: '未核查',
     color: '#4699FF',
     value: '1',
   },
@@ -130,6 +130,9 @@ class MapContent extends PureComponent {
         const { level, pointInfoWindowVisible } = this.state;
         if ((level == 3 || level == 4) && pointInfoWindowVisible === false) {
           const position = marker.De.extData.position;
+          if(position.Status === '1'){ //未核查 
+            return;
+          }
           this.setState({
             open: true,
             rectificationing: position.Status == 1,
@@ -170,8 +173,8 @@ class MapContent extends PureComponent {
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
         pLeve: level,
-        btime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
-        etime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
+        // btime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
+        // etime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
       },
       callback: res => {
         this.handleMarkerDatas(res.list);
@@ -243,7 +246,7 @@ class MapContent extends PureComponent {
       case '2': // 核查不规范
         color = legendList[2].color;
         break;
-      case '1': // 整改中
+      case '1': // 未核查
         color = legendList[1].color;
         break;
     }
@@ -259,6 +262,7 @@ class MapContent extends PureComponent {
           borderRadius: '50%',
           textAlign: 'center',
           color: '#484020',
+          cursor: status === '1'? 'default' : 'pointer'
         }}
       ></div>
     );
@@ -499,7 +503,7 @@ class MapContent extends PureComponent {
                 }}
               >
                 <p style={{ color: '#4699FF', fontSize: 20 }}>{position['rectificationCount']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>整改中</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>未核查</p>
               </Col>
               <Col
                 span={8}

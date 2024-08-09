@@ -123,7 +123,7 @@ const SystemDashboardPageWrapper = props => {
       <div className={styles.leftContent}>
         <div className={styles.menuSelectContent}>
           {/* <div className={styles.selectedName}>统计周期</div> */}
-          <div className={`${styles.selectedName} ${styles.showList}`}>{timeLabel}</div>
+          {!props.noDate && <> <div className={`${styles.selectedName} ${styles.showList}`}>{timeLabel}</div>
           <ul>
             {dateRangeList.map(item => {
               return (
@@ -138,7 +138,7 @@ const SystemDashboardPageWrapper = props => {
                 </li>
               );
             })}
-          </ul>
+          </ul></>}
         </div>
         {sysList.length > 1 ? (
           <div className={styles.menuSelectContent}>

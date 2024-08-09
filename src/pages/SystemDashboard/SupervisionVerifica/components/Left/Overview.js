@@ -1,3 +1,11 @@
+/*
+ * @Author: outman0611 jia_anbo@163.com
+ * @Date: 2024-07-17 08:40:40
+ * @LastEditors: outman0611 jia_anbo@163.com
+ * @LastEditTime: 2024-08-07 09:17:26
+ * @FilePath: \merged_master\src\pages\SystemDashboard\SupervisionVerifica\components\Left\Overview.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
@@ -39,8 +47,8 @@ const DeviceInfoCount = props => {
         pLeve:level,
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
-        btime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
-        etime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
+        // btime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
+        // etime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
       },
       callback: res => {
         setNums(res);
@@ -54,7 +62,7 @@ const DeviceInfoCount = props => {
   const dataList = [
     { name: '排口数量', value: nums?.pointCount, iconUrl: '/SystemDashboard/supervision/zl_type1.png' },
     { name: '核查不规范', value: nums?.unqualifiedCount, iconUrl: '/SystemDashboard/supervision/zl_type2.png' },
-    { name: '整改中', value: nums?.rectificationCount, iconUrl: '/SystemDashboard/supervision/zl_type3.png' },
+    { name: '未核查', value: nums?.rectificationCount, iconUrl: '/SystemDashboard/supervision/zl_type3.png' },
     { name: '核查正常', value: nums?.qualifiedCount, iconUrl: '/SystemDashboard/supervision/zl_type4.png' }
   ]
   const valSty = {

@@ -78,7 +78,7 @@ const Index = (props) => {
 
     const commonSearchComponents = () => {
         return <> 
-        <Spin spinning={!!pointLoading} size='small' className='formItemSpinSty'>
+        {/* <Spin spinning={!!pointLoading} size='small' className='formItemSpinSty'>
             <Form.Item name='pointID' label='监测点' style={{ marginBottom: 8 }}>
                 <Select
                     mode="multiple"
@@ -91,10 +91,10 @@ const Index = (props) => {
                     {pointList.map(item => (<Option key={item.PointCode} value={item.PointCode}>{item.PointName}</Option>))}
                 </Select>
             </Form.Item>
-        </Spin>
-        {/* <Form.Item name='pointName' label='监测点'   style={{ marginBottom: 8 }}>
+        </Spin> */}
+         <Form.Item name='pointName' label='监测点'   style={{ marginBottom: 8 }}>
                     <Input placeholder='请输入' allowClear/>
-                </Form.Item> */}
+                </Form.Item> 
             <Form.Item name='recordType' label='计划内容' style={{ marginBottom: 8 }}>
                   <Select placeholder='请选择' allowClear style={{ width: 100 }}>
                         <Option key={pointType == 2 ? 1 : 7} value={pointType == 2 ? 1 : 7}>巡检</Option>
@@ -123,7 +123,7 @@ const Index = (props) => {
                         {
                             label: '计划列表',
                             key: '1',
-                            children: <PlanList type={3} pointType={pointType}  planContentOpera={[]} pointList={pointList}/>,
+                            children: <PlanList type={3} pointType={pointType} commonSearchComponents={() => commonSearchComponents()}  planContentOpera={[]} pointList={pointList}/>,
                         },
                         {
                             label: '计划日历',

@@ -167,6 +167,7 @@ const Index = (props) => {
             key: 'BeginTime',
             ellipsis: true,
             width: 'auto',
+            sorter: (a, b) => moment(a.BeginTime).valueOf() - moment(b.BeginTime).valueOf()
         },
         {
             title: '实际结束日期',
@@ -244,7 +245,7 @@ const Index = (props) => {
     const commonSearchComponents = (type) => {
         return <>
 
-            {planCalendarVisible ? <Spin spinning={!!pointLoading} size='small' className='formItemSpinSty'>
+            {/* {planCalendarVisible ? <Spin spinning={!!pointLoading} size='small' className='formItemSpinSty'>
                 <Form.Item name='pointID' label='监测点' style={{ marginBottom: 8 }}>
                     <Select
                         mode="multiple"
@@ -260,11 +261,11 @@ const Index = (props) => {
 
                 </Form.Item>
 
-            </Spin> :
+            </Spin> : */}
                 <Form.Item name='pointName' label='监测点'   style={{ marginBottom: 8 }}>
                     <Input placeholder='请输入' allowClear/>
                 </Form.Item>
-            }
+            {/* } */}
             <Form.Item name='recordType' label='计划内容' style={{ marginBottom: 8 }}>
                 <Select placeholder='请选择' allowClear style={{ width: 100 }}>
                     <Option key={pointType == 2 ? 1 : 7} value={pointType == 2 ? 1 : 7}>巡检</Option>

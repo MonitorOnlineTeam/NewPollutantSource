@@ -7,9 +7,31 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="version" content="0.03" />
   <title></title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <!-- <script src="/js/imouplayer.js"></script> -->
+  <script>
+    var version = document.getElementsByTagName('meta')['version'].content //缓存问题处理
+    var xhr = new XMLHttpRequest()
+    xhr.open('GET', "/pageInfo.json?t=" + Date.now(), true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4 && xhr.status == 200 || xhr.status == 304) {
+        if (xhr.responseText && JSON.parse(xhr.responseText).version !== version) {
+          // $(document).ready(function () {
+            if (window.location.href.indexOf("#reloaded") == -1) {
+              location.href = location.href + "#reloaded";
+              window.location.reload();
+            }
+          // })
+        }
+      }
+    };
+    xhr.send();
+  </script>
   <script src="/js/jquery.min.js"></script>
   <script src="/js/kriging.js"></script>
   <script src="/js/drawGrid.js"></script>

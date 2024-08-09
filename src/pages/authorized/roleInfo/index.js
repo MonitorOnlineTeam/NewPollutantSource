@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
- * @LastEditors: lzp
- * @LastEditTime: 2019-09-18 10:55:20
+ * @LastEditors: outman0611 jia_anbo@163.com
+ * @LastEditTime: 2024-08-06 17:21:57
  * @Description: 角色管理
  */
 import React, { Component, Fragment } from 'react';
@@ -667,6 +667,10 @@ class RoleIndex extends Component {
           if (res.IsSuccess) {
             message.success('修改成功');
             this.handleCancelMenu();
+            this.props.dispatch({
+              type: 'user/fetchCurrent',
+              payload: {},
+            });
           } else {
             message.error(res.Message);
           }

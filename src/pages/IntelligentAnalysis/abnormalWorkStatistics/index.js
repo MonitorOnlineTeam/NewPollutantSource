@@ -272,14 +272,14 @@ const Index = (props) => {
   return (
     <div  className={styles.abnormalWorkStatisticsSty}>
     <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb} >
-    {!responseModelDetail&&!clockAbnormalModelDetail?
+    {/* {!responseModelDetail&&!clockAbnormalModelDetail? */}
     <Card title={searchComponents()}>
       {showType==1?
        <Region  resRegionDetailModal={resRegionDetailModal} clockAbnormalRegionDetailModal={clockAbnormalRegionDetailModal}  isResponseModal={isResponseModal} isClockAbnormalModal={isResponseModal} ref={pchildref} {...props} /> : <Ent showType={showType} ref={pchildref}  pagination={pagination} {...props}/>}
    </Card>
-   :
-    <RegionDetail hideBreadcrumb responseModelDetail={responseModelDetail} clockAbnormalModelDetail={clockAbnormalModelDetail}  responseModelGoBack={responseModelGoBack}clockAbnormalModelGoBack={clockAbnormalModelGoBack}  location={query}/> //首页报警弹框
-    }
+   {/* :
+    <RegionDetail  responseModelDetail={responseModelDetail} clockAbnormalModelDetail={clockAbnormalModelDetail}  responseModelGoBack={responseModelGoBack}clockAbnormalModelGoBack={clockAbnormalModelGoBack}  location={query}/> //首页报警弹框
+    } */}
    </BreadcrumbWrapper>
         </div>
   );

@@ -761,7 +761,7 @@ const Index = (props) => {
         </Spin>
       }
       <Spin spinning={TaskPlanType == 1 ? operationPlanTaskLoading : operationTaskCompleteRateByDayLoading}> {/**近30日运维情况 */}
-        <div className={styles.planOpera} style={{ height: TaskPlanType == 1 ? 269 : 292 }}>
+        <div className={styles.planOpera} style={{ height: TaskPlanType == 2 ? 292 : 269 }}>
           <CardHeader title='近30日运维情况' isPopover />
           {planOperaEcharts}
         </div>

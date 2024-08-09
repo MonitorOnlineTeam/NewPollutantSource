@@ -61,9 +61,9 @@ const Index = (props) => {
 
   return (
     <div  className={styles.abnormalWorkStatisticsSty}>
-    <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
+    {/* <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}> */}
       <RegionDetail {...props}/>
-   </BreadcrumbWrapper>
+   {/* </BreadcrumbWrapper> */}
    
         </div>
   );

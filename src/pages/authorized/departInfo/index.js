@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
- * @LastEditors: lzp
- * @LastEditTime: 2019-09-18 10:55:12
+ * @LastEditors: outman0611 jia_anbo@163.com
+ * @LastEditTime: 2024-08-07 19:32:53
  * @Description: 部门管理
  */
 import React, { Component, Fragment } from 'react';
@@ -1035,7 +1035,8 @@ class DepartIndex extends Component {
       type: 'departinfo/getGroupRegionFilter',
       payload: {},
     });
-    this.props.dispatch({
+    !this.props.configInfo?.IsShowProjectRegion &&
+     this.props.dispatch({
       type: `ctCommon/GetLargeRegionList`,
       payload: {},
       callback: (res)=>{

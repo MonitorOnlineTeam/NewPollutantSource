@@ -313,7 +313,7 @@ const Index = (props) => {
                 dataSource={tableDatas}
                 columns={columns()}
                 align='center'
-                scroll={{ x: (dateCol?.length * 90 || 0) + 260, y: 'calc(100vh - 386px)' }}
+                scroll={{ x: (dateCol?.length * 90 || 0) + 260, y: 'calc(100vh - 373px)' }}
                 pagination={{
                     total: tableTotal,
                     pageSize: pageSize,

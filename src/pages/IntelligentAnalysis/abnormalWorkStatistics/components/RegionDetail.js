@@ -827,16 +827,12 @@ const Index = (props) => {
   cityColumnsPush(reponseNumColumns)
 
   return (<div>
-    <Card title={`
-        ${regionName} - 统计${queryPar && moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar && moment(queryPar.endTime).format('YYYY-MM-DD')}
-        内${abnormalTypes == 1 ? '打卡异常工单情况' : '报警响应超时工单情况'}
-        `}>
       <Form layout={'inline'} style={{ paddingBottom: 12 }} >
         <Form.Item>
           <Button icon={<ExportOutlined />} style={{ marginRight: '8px' }} loading={exportLoading} onClick={() => { exports() }}>
             导出
      </Button>
-          <Button onClick={() => { props.responseModelDetail ? props.responseModelGoBack() : props.clockAbnormalModelDetail ? props.clockAbnormalModelGoBack() : history.go(-1) }} icon={<RollbackOutlined />} >返回</Button>
+        {/* <Button onClick={() => { props.responseModelDetail ? props.responseModelGoBack() : props.clockAbnormalModelDetail ? props.clockAbnormalModelGoBack() : history.go(-1) }} icon={<RollbackOutlined />} >返回</Button>  */}
         </Form.Item>
       </Form>
       <SdlTable
@@ -848,7 +844,6 @@ const Index = (props) => {
         scroll={{ y: props.hideBreadcrumb ? clientHeight - 450 : clientHeight - 400 }}
         size='small'
       />
-    </Card>
     {/*工单异常  城市 详情 弹框*/}
     <Modal
       title={`${regName} - 统计${queryPar && moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar && moment(queryPar.endTime).format('YYYY-MM-DD')}
