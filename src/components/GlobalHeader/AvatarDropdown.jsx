@@ -48,7 +48,7 @@ class AvatarDropdown extends React.Component {
   };
 
   render() {
-    const { currentUser = {}, menu, changePwdVisible } = this.props;
+    const { currentUser = {}, menu, changePwdVisible, projectManage } = this.props;
     if (!menu) {
       return (
         <span className={`${styles.action} ${styles.account}`}>
@@ -74,9 +74,11 @@ class AvatarDropdown extends React.Component {
           修改密码
         </Menu.Item>
         <Menu.Divider /> */}
-        <Menu.Item key="project" id="AvatarMenu">
-          <SwitchProject />
-        </Menu.Item>
+        {projectManage?.length && (
+          <Menu.Item key="project" id="AvatarMenu">
+            <SwitchProject />
+          </Menu.Item>
+        )}
         <Menu.Item key="center">
           <UserOutlined />
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
@@ -114,6 +116,7 @@ class AvatarDropdown extends React.Component {
   }
 }
 
-export default connect(({ user }) => ({
+export default connect(({ user, projectManage }) => ({
   currentUser: user.currentUser,
+  projectList: projectManage.projectList,
 }))(AvatarDropdown);

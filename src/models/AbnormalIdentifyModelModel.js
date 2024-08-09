@@ -891,12 +891,11 @@ export default Model.extend({
     *GetMoldTypeLevelList({ payload, callback }, { call, select, update }) {
       const result = yield call(requestPost, API.AbnormalIdentifyModel.GetMoldTypeLevelList, {});
       if (result.IsSuccess) {
-        debugger
         callback && callback(result.Datas);
         yield update({
           modelTypeList: result.Datas.type,
           modelLevelList: result.Datas.level,
-        })
+        });
       }
     },
     // 获取任务列表
@@ -914,6 +913,24 @@ export default Model.extend({
         payload,
       );
       callback && callback(result);
+    },
+    // 获取排口分布数据
+    *GetPointInfoAnalysis({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetPointInfoAnalysis,
+        payload,
+      );
+      result.IsSuccess && callback && callback(result.Datas);
+    },
+    // 获取排污单位总览
+    *GetPwPointList({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetPwPointList,
+        payload,
+      );
+      result.IsSuccess && callback && callback(result);
     },
   },
 });

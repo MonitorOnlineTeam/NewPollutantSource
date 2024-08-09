@@ -1041,7 +1041,7 @@ class Index extends PureComponent {
       <PageLoading />
       :
       <Map
-        amapkey={config.amapkey}
+        amapkey={config.amapKey}
         mapStyle={config.mapStyle}
         events={this.amapEvents}
         version='1.4.19'

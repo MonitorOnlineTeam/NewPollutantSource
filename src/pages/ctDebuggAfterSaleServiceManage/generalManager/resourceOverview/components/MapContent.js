@@ -352,10 +352,8 @@ class Index extends PureComponent {
       } else { //备件库
         markersData = markersList.RegionStorehouseList
       }
-
     }
     return <Map
-      // amapkey={config.amapkey}
       amapkey={'1440c67033e5ede0f3a068605de5fb5f'}
       events={this.amapEvents}
       version='1.4.19'

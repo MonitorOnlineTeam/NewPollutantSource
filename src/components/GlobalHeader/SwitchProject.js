@@ -50,7 +50,6 @@ const ProjectManage = props => {
       },
     });
   };
-  console.log('currentProjectID', currentProjectID)
   return (
     <Select
       value={currentProjectID}

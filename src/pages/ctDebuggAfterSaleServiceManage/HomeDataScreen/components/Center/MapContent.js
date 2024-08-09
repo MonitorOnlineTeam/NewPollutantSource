@@ -617,7 +617,7 @@ class MapContent extends PureComponent {
           <Map
             resizeEnable={true}
             events={this.mapEvents}
-            amapkey={config.amapkey}
+            amapkey={config.amapKey}
             mapStyle={config.mapStyle}
             // center={mapCenter}
           >

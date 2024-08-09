@@ -1427,6 +1427,10 @@ export const API = {
     GetPointParamsRange: before + '/WarningV2/GetPointParamsRange',
     // 获取异常二级页面
     GetExcepInfoPageData: before + '/WarningV2/GetExcepInfoPageData',
+    // 获取排口分布数据
+    GetPointInfoAnalysis: before + '/WarningV2/GetPointInfoAnalysis',
+    // 获取排污单位总览
+    GetPwPointList: before + '/WarningV2/GetPwPointList',
 
     /*实时数据异常识别及管理*/
     //异常线索清单
