@@ -29,7 +29,7 @@ class BasicLayout extends Component {
   componentDidMount() {
     window.addEventListener('resize', this.onWindowResize);
     const { dispatch, configInfo } = this.props;
-    window.configInfo = {};
+    if (!window.configInfo) window.configInfo = {};
     // dispatch({
     //   type: 'global/getSystemConfigInfo',
     //   payload: {},
@@ -51,12 +51,12 @@ class BasicLayout extends Component {
         clientHeight: document.body.clientHeight,
       },
     });
-    const sysName = sessionStorage.getItem("sysName") || Cookie.get("sysName")
+    const sysName = sessionStorage.getItem('sysName') || Cookie.get('sysName');
     dispatch({
       type: 'global/updateState',
       payload: {
         clientHeight: document.body.clientHeight,
-        configInfo: { ...this.props.configInfo, IsOpera: isOperaSystem(sysName) }
+        configInfo: { ...this.props.configInfo, IsOpera: isOperaSystem(sysName) },
       },
     });
     dispatch({
@@ -122,21 +122,21 @@ class BasicLayout extends Component {
           alt="logo"
         />
       ) : (
-          <img src={`${configInfo.Logo}`} alt="logo" />
-        );
-    }
+        <img src={`${configInfo.Logo}`} alt="logo" />
+      );
+    };
 
     let userCookie = Cookie.get('currentUser');
     if (!userCookie) {
       router.push('/user/login');
     }
     let _settings = settings;
-    const sysName = sessionStorage.getItem("sysName") || Cookie.get("sysName")
+    const sysName = sessionStorage.getItem('sysName') || Cookie.get('sysName');
     if (sysName) {
       _settings.title = sysName;
     }
-    const isShowLogo = configInfo && configInfo.IsShowLogo === 'true'
-    const isScroll = !isShowLogo && _settings.title?.length > 14
+    const isShowLogo = configInfo && configInfo.IsShowLogo === 'true';
+    const isScroll = !isShowLogo && _settings.title?.length > 14;
     // const isLogoScroll = isShowLogo && _settings.title?.length > 11
 
     return (
@@ -175,18 +175,27 @@ class BasicLayout extends Component {
           {...this.props}
           {..._settings}
           menuHeaderRender={(logo, title, props) => {
-            return <>
-              {isShowLogo && logoRender()} {/*  || (isLogoScroll && styles.layoutSty2) 带logo的*/}
-              <a className={(isScroll && styles.layoutSty)} href={currentMenu?.[0]?.path}> <h1 style={{ width: isScroll && _settings.title?.length * 19 }} title={_settings.title}>{_settings.title}</h1></a>
-            </>
-          }
-          } //宝武 系统名称太长 添加滚动效果
+            return (
+              <>
+                {isShowLogo && logoRender()} {/*  || (isLogoScroll && styles.layoutSty2) 带logo的*/}
+                <a className={isScroll && styles.layoutSty} href={currentMenu?.[0]?.path}>
+                  {' '}
+                  <h1
+                    style={{ width: isScroll && _settings.title?.length * 19 }}
+                    title={_settings.title}
+                  >
+                    {_settings.title}
+                  </h1>
+                </a>
+              </>
+            );
+          }} //宝武 系统名称太长 添加滚动效果
         >
           {webConfig.isShowBreadcrumb ? (
             <div id="basicLayout">{children}</div>
           ) : (
-              <div id="notBreadcrumbLayout"> {children} </div>
-            )}
+            <div id="notBreadcrumbLayout"> {children} </div>
+          )}
         </ProLayout>
         {process.env.NODE_ENV === 'development' && (
           <SettingDrawer

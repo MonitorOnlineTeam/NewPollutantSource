@@ -532,7 +532,7 @@ export async function requestPost(url, params) {
       if (res.IsSuccess) {
         return res;
       } else {
-        message.error(res.Message);
+        res.Message && message.error(res.Message);
         return false;
       }
     })
