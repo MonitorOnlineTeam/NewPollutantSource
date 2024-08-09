@@ -2,15 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal } from 'antd';
 import styles from '@/pages/SystemDashboard/styles.less';
-import HomeCard from '../HomeCard';
+import HomeCard from '@/pages/SystemDashboard/components/HomeCard.js';
+import DescriptionModal from '@/pages/SystemDashboard/components/DescriptionModal.js';
 import ReactEcharts from 'echarts-for-react';
 import AbnormalDataAnalysis from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis';
 import ToggleRadio from '@/pages/SystemDashboard/components/ToggleRadio.js';
 import _ from 'lodash';
-import QuestionTooltip from '@/components/QuestionTooltip';
 
 let myChart;
-const dvaPropsData = ({ loading, sysDashboard }) => ({
+const dvaPropsData = ({ loading, sysDashboard, AbnormalIdentifyModel }) => ({
   time: sysDashboard.time,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
@@ -25,7 +25,10 @@ const LevelCard = props => {
 
   const { dispatch, loading, LevelList, entCode, regionCode, time } = props;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+  }, []);
+
+
 
   const onOpenModal = () => {
     setOpen(true);
@@ -201,24 +204,74 @@ const LevelCard = props => {
       title={
         <>
           异常分级统计
-          <QuestionTooltip
+          <DescriptionModal type="level"/>
+          {/* <QuestionTooltip
             color="#073783"
             placement="right"
             overlayInnerStyle={{ width: 394 }}
             style={{ color: '#fff' }}
             content={
               <div style={{ fontWeight: 'bold', width: 394 }}>
-                <p>严重异常：严重影响数据质量，动机定义明确，影响恶劣的。</p>
-                <p>重点异常：影响数据质量，无法判断明显动机，非正常运行的。</p>
-                <p>一般异常：对数据质量影响较小，但仍需要解决的。</p>
-                <p>轻微异常：不影响数据质量，属于管理不规范的。 </p>
+                <p style={{ marginTop: 10 }}>
+                  严重异常（严重影响数据质量，动机定义明确，影响恶劣的）
+                </p>
+                <div style={{ marginLeft: 20 }}>
+                  {modelLevelList
+                    ?.find(model => model.ModelTypeCode === '4')
+                    ?.ModelList.map((item, i) => {
+                      return (
+                        <p key={i}>
+                          {i + 1}. {item.ModelName}
+                        </p>
+                      );
+                    })}
+                </div>
+                <p style={{ marginTop: 10 }}>
+                  重点异常（影响数据质量，无法判断明显动机，非正常运行的）
+                </p>
+                <div style={{ marginLeft: 20 }}>
+                  {modelLevelList
+                    ?.find(model => model.ModelTypeCode === '3')
+                    ?.ModelList.map((item, i) => {
+                      return (
+                        <p key={i}>
+                          {i + 1}. {item.ModelName}
+                        </p>
+                      );
+                    })}
+                </div>
+                <p style={{ marginTop: 10 }}>一般异常（对数据质量影响较小，但仍需要解决的）</p>
+                <div style={{ marginLeft: 20 }}>
+                  {modelLevelList
+                    ?.find(model => model.ModelTypeCode === '2')
+                    ?.ModelList.map((item, i) => {
+                      return (
+                        <p key={i}>
+                          {i + 1}. {item.ModelName}
+                        </p>
+                      );
+                    })}
+                </div>
+                <p style={{ marginTop: 10 }}>轻微异常（不影响数据质量，属于管理不规范的）</p>
+                <div style={{ marginLeft: 20 }}>
+                  {modelLevelList
+                    ?.find(model => model.ModelTypeCode === '1')
+                    ?.ModelList.map((item, i) => {
+                      return (
+                        <p key={i}>
+                          {i + 1}. {item.ModelName}
+                        </p>
+                      );
+                    })}
+                </div>
               </div>
             }
-          />
+          /> */}
         </>
       }
       bodyStyle={{ position: 'relative' }}
       loading={loading}
+      onExtraClick={onOpenModal}
     >
       <ToggleRadio
         style={{ position: 'absolute', right: 20, top: 10, zIndex: 1 }}

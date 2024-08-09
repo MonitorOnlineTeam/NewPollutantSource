@@ -10,6 +10,7 @@ import AbnormalDataAnalysis from '../index';
 import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
 import WarningDataAndChart from '@/pages/AbnormalIdentifyModel/AssistDataAnalysis/components/WarningDataAndChart.js';
 import ExceptionProblem from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/ExceptionProblem';
+import DescriptionModal from '@/pages/SystemDashboard/components/DescriptionModal.js';
 
 const { Option } = Select;
 
@@ -617,7 +618,9 @@ const PageContent = props => {
 
     let listText = pageInfoData[excepType].list;
     let unit = rtnType === 'nums' ? '次' : '小时';
+    let allModelExcep = [];
     let column2 = listText.map((item, idx) => {
+      allModelExcep.push(idx + 1);
       return {
         title: `${item} （${unit}）`,
         dataIndex: item,
@@ -625,7 +628,7 @@ const PageContent = props => {
         sorter: (a, b) => a[item] - b[item],
         render: (text, record, index) => {
           // return <a onClick={() => onNumClick(record, idx)}>{text}</a>;
-          return <a onClick={() => onEnterSecondaryPage(record, idx)}>{text}</a>;
+          return <a onClick={() => onEnterSecondaryPage(record, [idx + 1], item)}>{text}</a>;
         },
       };
     });
@@ -638,6 +641,9 @@ const PageContent = props => {
         dataIndex: 'AllCount',
         key: 'AllCount',
         sorter: (a, b) => a.AllCount - b.AllCount,
+        render: (text, record, index) => {
+          return <a onClick={() => onEnterSecondaryPage(record, allModelExcep)}>{text}</a>;
+        },
       },
     ];
     return columns;
@@ -682,7 +688,7 @@ const PageContent = props => {
   };
 
   // 进入二级页面
-  const onEnterSecondaryPage = (row, index) => {
+  const onEnterSecondaryPage = (row, modelExcep, columnName) => {
     let typeName = '',
       params = {};
     switch (dataType) {
@@ -711,13 +717,13 @@ const PageContent = props => {
     }
     switch (excepType) {
       case 'level':
-        params.modelExcepLevel = index + 1;
+        params.modelExcepLevel = modelExcep;
         break;
       case 'type':
-        params.modelExcepType = index + 1;
+        params.modelExcepType = modelExcep;
         break;
       case 'action':
-        params.modelExcepAction = index + 1;
+        params.modelExcepAction = modelExcep;
         break;
       default:
         break;
@@ -725,7 +731,8 @@ const PageContent = props => {
     setLevel2Params(params);
     let bTime = moment(date[0]).format('YYYY-MM-DD');
     let eTime = moment(date[1]).format('YYYY-MM-DD');
-    setLevel2PageTitle(`${typeName}（${bTime} - ${eTime}）`);
+    let _columnName = columnName ? ' - ' + columnName : '';
+    setLevel2PageTitle(`${typeName}${_columnName}（${bTime} - ${eTime}）`);
     setLevel2PageOpen(true);
     // dgimn: '',
     // entCode: '',
@@ -848,7 +855,18 @@ const PageContent = props => {
               marginRight: 8,
             }}
             bodyStyle={{ padding: '10px 24px', height: 'calc(100% - 41px)' }}
-            title={<div className="innerCardTitle">异常数据{excepTypeName}分析</div>}
+            title={
+              <div className="innerCardTitle">
+                异常数据{excepTypeName}分析
+                {excepType !== 'action' && (
+                  <DescriptionModal
+                    type={excepType}
+                    style={{ color: '#000' }}
+                    contentStyle={{ color: '#fff' }}
+                  />
+                )}
+              </div>
+            }
           >
             <ReactEcharts
               option={getOption1()}

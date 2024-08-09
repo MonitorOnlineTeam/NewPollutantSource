@@ -2,7 +2,7 @@
  * @Author: outman0611 jia_anbo@163.com
  * @Date: 2024-07-17 08:40:40
  * @LastEditors: outman0611 jia_anbo@163.com
- * @LastEditTime: 2024-08-07 09:17:26
+ * @LastEditTime: 2024-08-09 11:48:57
  * @FilePath: \merged_master\src\pages\SystemDashboard\SupervisionVerifica\components\Left\Overview.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -14,6 +14,7 @@ import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import moment from 'moment';
 import OperatingInfo from '@/pages/newestHome/components/springModal/operatingInfo';
 import { Item } from 'gg-editor';
+import QuestionTooltip from '@/components/QuestionTooltip';
 
 let myChart;
 const dvaPropsData = ({ sysDashboard, loading }) => ({
@@ -31,7 +32,7 @@ const DeviceInfoCount = props => {
     pointCount: 0,
     qualifiedCount: 0,
     rectificationCount: 0,
-    unqualifiedCount: 0
+    unqualifiedCount: 0,
   });
 
   const { dispatch, time, loading, level, regionCode, entCode } = props;
@@ -44,7 +45,7 @@ const DeviceInfoCount = props => {
     dispatch({
       type: 'sysDashboard/GetSupervisionOverview',
       payload: {
-        pLeve:level,
+        pLeve: level,
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
         // btime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
@@ -72,28 +73,66 @@ const DeviceInfoCount = props => {
     background: 'linear-gradient(to bottom, #F6FAFC, #6CBAEC)',
     '-webkit-background-clip': 'text',
     '-webkit-text-fill-color': 'transparent',
-  }
+  };
   const nameSty = {
     fontWeight: 500,
-    color: '#C3F0FF'
-  }
-  const ImgComponents = ({ src }) => <img style={{ width: 53, height: 61 }} src={src} />
+    color: '#C3F0FF',
+  };
+  const ImgComponents = ({ src }) => <img style={{ width: 53, height: 61 }} src={src} />;
   return (
     <HomeCard title="监督核查总览" bodyStyle={{}} loading={loading} style={{ minHeight: 256 }}>
       <div style={{ width: '100%', height: '100%', padding: '16px 0' }}>
         <Row className={`${styles.SupervisionVerificaOverviewCard}`} onClick={onOpenModal}>
-          {dataList.map((item, index) => <Col span={12} style={{ padding: '16px 16px 0 16px' }}>
-            <Row align='middle' justify={index % 2 == 0 ? 'start' : 'end'}>
-              {index % 2 == 0 && <ImgComponents src={item.iconUrl} />}
-              <div style={{ minWidth: 70, paddingLeft: index % 2 == 0 && 10 }}>
-                <p style={{ ...nameSty }}>{item.name}</p>
-                <p style={{ ...valSty }}>{item.value}<span style={{ ...nameSty }}>个</span></p>
-              </div>
-              {index % 2 != 0 && <ImgComponents src={item.iconUrl} />}
-            </Row>
-          </Col>)}
-          <div style={{ position: 'absolute', left: 'calc(50% - 41px)', top: 'calc(50% - 28px)', textAlign: 'center' }}>
-            <div><span style={{ ...valSty, background: 'linear-gradient(to bottom, #F6FAFC, #0FAEFF)', fontSize: 32 }}>{nums?.entCount}</span> 家</div>
+          {dataList.map((item, index) => (
+            <Col span={12} style={{ padding: '16px 16px 0 16px' }}>
+              <Row align="middle" justify={index % 2 == 0 ? 'start' : 'end'}>
+                {index % 2 == 0 && <ImgComponents src={item.iconUrl} />}
+                <div style={{ minWidth: 70, paddingLeft: index % 2 == 0 && 10 }}>
+                  <p style={{ ...nameSty }}>
+                    {item.name}
+                    {item.name === '核查不规范' && (
+                      <QuestionTooltip
+                        color="#004279"
+                        placement="right"
+                        overlayInnerStyle={{ width: 500 }}
+                        style={{ color: '#c3f0ff' }}
+                        content={
+                          <p style={{ fontWeight: 'bold' }}>
+                            核查不规范包含：核查不规范未开始整改、整改中和整改完成的排口数量。
+                          </p>
+                        }
+                      />
+                    )}
+                  </p>
+                  <p style={{ ...valSty }}>
+                    {item.value}
+                    <span style={{ ...nameSty }}>个</span>
+                  </p>
+                </div>
+                {index % 2 != 0 && <ImgComponents src={item.iconUrl} />}
+              </Row>
+            </Col>
+          ))}
+          <div
+            style={{
+              position: 'absolute',
+              left: 'calc(50% - 41px)',
+              top: 'calc(50% - 28px)',
+              textAlign: 'center',
+            }}
+          >
+            <div>
+              <span
+                style={{
+                  ...valSty,
+                  background: 'linear-gradient(to bottom, #F6FAFC, #0FAEFF)',
+                  fontSize: 32,
+                }}
+              >
+                {nums?.entCount}
+              </span>{' '}
+              家
+            </div>
             <div style={{ ...nameSty }}>排污单位数量</div>
           </div>
         </Row>

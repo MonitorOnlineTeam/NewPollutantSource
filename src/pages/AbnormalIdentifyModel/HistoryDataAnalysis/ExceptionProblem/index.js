@@ -133,7 +133,7 @@ const ExceptionProblem = props => {
       },
       series: [
         {
-          name: '传输有效率',
+          name: '异常问题分布',
           type: 'pie',
           radius: [0, 80],
           // roseType: 'area',
@@ -308,7 +308,7 @@ const ExceptionProblem = props => {
     ];
     return columns;
   };
-
+  console.log('reqParams222', reqParams)
   return (
     <Modal
       title={title}

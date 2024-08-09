@@ -54,9 +54,9 @@ const ModelTable = props => {
           ) {
             if (
               item.PollutantCode === '基准氧含量' ||
-              item.PollutantCode === 'Flue' ||
-              item.PollutantCode === '备案基准氧含量' ||
-              item.PollutantCode === '备案烟道截面积'
+              item.PollutantCode === 'Flue'
+              // item.PollutantCode === '备案基准氧含量' ||
+              // item.PollutantCode === '备案烟道截面积'
             ) {
               return {
                 children: <b style={{ fontSize: 16 }}>{text}</b>,

@@ -25,6 +25,18 @@ const GlobalHeaderRight = props => {
     configInfo: { IsOpera },
   } = props;
   // console.log("changePwdVisible=",props);
+
+  // 切换项目
+  const UpdateUserProject = projectCode => {
+    props.dispatch({
+      type: 'projectManage/UpdateUserProject',
+      payload: {
+        projectCode,
+      },
+    });
+  };
+
+
   let className = styles.right;
 
   if (theme === 'dark' && layout === 'topmenu') {
@@ -62,6 +74,7 @@ const GlobalHeaderRight = props => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => {
+                UpdateUserProject(undefined);
                 let url = item.Url ? new URL(item.Url) : item.Url;
                 if (item.ID !== sessionStorage.getItem('sysMenuId')) {
                   if (url && (url.protocol === 'http:' || url.protocol === 'https:')) {
@@ -141,7 +154,6 @@ const GlobalHeaderRight = props => {
         overlayClassName={styles.expandPopSty}
         content={isFullscreen ? '退出全屏' : '全屏展示'}
       >
-        {' '}
         <span onClick={toggleFullscreen} style={{ cursor: 'pointer', paddingRight: 4 }}>
           {isFullscreen ? (
             <CompressOutlined style={{ color: '#fff' }} />

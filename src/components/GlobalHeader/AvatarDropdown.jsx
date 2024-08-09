@@ -8,12 +8,17 @@ import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import Cookie from 'js-cookie';
 import ChangePwdView from './ChangePwdView';
-import configToken from '@/config'
+import configToken from '@/config';
+import SwitchProject from './SwitchProject';
 
 class AvatarDropdown extends React.Component {
   onMenuClick = event => {
     const { key } = event;
     const { dispatch } = this.props;
+    debugger;
+    if (key === 'project') {
+      return;
+    }
     if (key === 'logout') {
       if (dispatch) {
         // Cookie.set(configToken.cookieName, null);
@@ -54,7 +59,7 @@ class AvatarDropdown extends React.Component {
     }
 
     const menuHeaderDropdown = (
-      <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick}>
+      <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick} selectable={false}>
         {/* <Menu.Item key="center">
           <Icon type="user" />
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
@@ -69,6 +74,9 @@ class AvatarDropdown extends React.Component {
           修改密码
         </Menu.Item>
         <Menu.Divider /> */}
+        <Menu.Item key="project" id="AvatarMenu">
+          <SwitchProject />
+        </Menu.Item>
         <Menu.Item key="center">
           <UserOutlined />
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
@@ -95,14 +103,14 @@ class AvatarDropdown extends React.Component {
         </div>
       </HeaderDropdown>
     ) : (
-        <Spin
-          size="small"
-          style={{
-            marginLeft: 8,
-            marginRight: 8,
-          }}
-        />
-      );
+      <Spin
+        size="small"
+        style={{
+          marginLeft: 8,
+          marginRight: 8,
+        }}
+      />
+    );
   }
 }
 

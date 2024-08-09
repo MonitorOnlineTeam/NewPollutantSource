@@ -29,6 +29,7 @@ class BasicLayout extends Component {
   componentDidMount() {
     window.addEventListener('resize', this.onWindowResize);
     const { dispatch, configInfo } = this.props;
+    window.configInfo = {};
     // dispatch({
     //   type: 'global/getSystemConfigInfo',
     //   payload: {},

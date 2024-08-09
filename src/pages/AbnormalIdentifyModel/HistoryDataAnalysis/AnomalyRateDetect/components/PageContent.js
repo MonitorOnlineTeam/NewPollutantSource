@@ -22,6 +22,7 @@ import WorkingAnalysis from '../index';
 import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
 import QuestionTooltip from '@/components/QuestionTooltip';
 import ExceptionProblem from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/ExceptionProblem';
+import PointCluesStatistics from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/ExceptionProblem/PointCluesStatistics.js';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   warningForm: AbnormalIdentifyModel.warningForm,
@@ -53,6 +54,8 @@ const PageContent = props => {
   const [level2PageOpen, setLevel2PageOpen] = useState(false);
   const [level2Params, setLevel2Params] = useState({});
   const [level2PageTitle, setLevel2PageTitle] = useState();
+  const [pointCluesModalOpen, setPointCluesModalOpen] = useState();
+  const [currentPointData, setCurrentPointData] = useState({});
 
   useEffect(() => {
     loadData();
@@ -573,6 +576,9 @@ const PageContent = props => {
   const getColumns2 = () => {
     const columns = [
       {
+        title: '序号',
+      },
+      {
         title: '异常场景',
         dataIndex: 'ModelName',
         key: 'ModelName',
@@ -599,6 +605,18 @@ const PageContent = props => {
         key: 'UniqueDGIMNCount',
         width: 160,
         sorter: (a, b) => a.UniqueDGIMNCount - b.UniqueDGIMNCount,
+        render: (text, record) => {
+          return (
+            <a
+              onClick={() => {
+                setPointCluesModalOpen(true);
+                setCurrentPointData(record);
+              }}
+            >
+              {text}
+            </a>
+          );
+        },
       },
     ];
     return columns;
@@ -866,6 +884,17 @@ const PageContent = props => {
           reqParams={level2Params}
           open={level2PageOpen}
           onCancel={() => setLevel2PageOpen(false)}
+        />
+      )}
+
+      {pointCluesModalOpen && (
+        <PointCluesStatistics
+          open={pointCluesModalOpen}
+          onCancel={() => setPointCluesModalOpen(false)}
+          data={currentPointData}
+          reqParams={{
+            date: date
+          }}
         />
       )}
     </div>

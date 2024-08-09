@@ -2303,6 +2303,15 @@ export const API = {
     /*运维基础配置*/
     GetOperationSetting: before + '/ConfigureApi/GetOperationSetting', //获取运维基础配置信息
     UpdOperationSetting: before + '/ConfigureApi/UpdOperationSetting', //设置运维基础配置
+     /*项目管理*/
+    GetUserProjectList: before + '/ProjectMonitorDataApi/GetUserProjectList', //获取项目
+    InsertProjectUser: before + '/ProjectMonitorDataApi/InsertProjectUser', // 保存项目关联用户
+    GetProjectUserList: before + '/ProjectMonitorDataApi/GetProjectUserList', // 获取已保存项目关联用户
+    InsertProjectUserPoint: before + '/ProjectMonitorDataApi/InsertProjectUserPoint', // 保存点位权限关联
+    GetProjectPointList: before + '/ProjectMonitorDataApi/GetProjectPointList', // 获取已保存点位权限
+    UpdateUserProject: before + '/ProjectMonitorDataApi/UpdateUserProject', // 切换项目
+    UpdateOrAddUserProject: before + '/ProjectMonitorDataApi/UpdateOrAddUserProject', // 编辑项目
+    GetUserProject: before + '/ProjectMonitorDataApi/GetUserProject', // 获取当前项目
   },
   /*********** 通用 ***********/
 

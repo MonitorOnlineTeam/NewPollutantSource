@@ -29,6 +29,12 @@ const SystemDashboardPageWrapper = props => {
         payload: {},
       });
 
+    //获取行政区列表
+    dispatch({
+      type: 'autoForm/getRegions',
+      payload: { PointMark: '2', RegionCode: '' },
+    });
+
     // 获取中间页
     dispatch({
       type: 'sysDashboard/GetSysList',
@@ -142,9 +148,7 @@ const SystemDashboardPageWrapper = props => {
         </div>
         {sysList.length > 1 ? (
           <div className={styles.menuSelectContent}>
-            <div className={`${styles.selectedName} ${styles.showList}`}>
-              {pageInfo.key}
-            </div>
+            <div className={`${styles.selectedName} ${styles.showList}`}>{pageInfo.key}</div>
             <ul>
               {sysList.map(item => {
                 return (

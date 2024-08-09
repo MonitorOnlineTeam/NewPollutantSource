@@ -64,6 +64,8 @@ export default Model.extend({
       type: 1,
     },
     pollutantDischargeGapQuery: {},
+    modelTypeList: [],
+    modelLevelList: [],
   },
   effects: {
     // 获取通用库模型列表
@@ -889,7 +891,12 @@ export default Model.extend({
     *GetMoldTypeLevelList({ payload, callback }, { call, select, update }) {
       const result = yield call(requestPost, API.AbnormalIdentifyModel.GetMoldTypeLevelList, {});
       if (result.IsSuccess) {
+        debugger
         callback && callback(result.Datas);
+        yield update({
+          modelTypeList: result.Datas.type,
+          modelLevelList: result.Datas.level,
+        })
       }
     },
     // 获取任务列表

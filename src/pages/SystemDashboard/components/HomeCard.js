@@ -14,6 +14,7 @@ const HomeCard = props => {
     bodyStyle,
     headerStyle,
     onClick,
+    onExtraClick,
     loading,
     onChange,
     timeTypes,
@@ -22,15 +23,13 @@ const HomeCard = props => {
   useEffect(() => {}, []);
 
   return (
-    <div
-      className={styles.homeCard}
-      style={{ ...style, cursor: onClick ? 'pointer' : 'default' }}
-    >
+    <div className={styles.homeCard} style={{ ...style, cursor: onClick ? 'pointer' : 'default' }}>
       <Spin spinning={!!loading} delay={200} style={{ display: 'flex' }}>
         <div className={styles.headerWrapper} style={headerStyle}>
           <div className={styles.title} onClick={() => onClick && onClick()}>
             {title}
           </div>
+          {onExtraClick && <div className={styles.extra} onClick={() => onExtraClick()}></div>}
         </div>
         <div className={styles.boxContent} style={bodyStyle}>
           {children}
