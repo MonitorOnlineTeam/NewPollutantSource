@@ -123,13 +123,13 @@ const Index = (props) => {
         setEditLoading(true)
         setIsSave(record.status === '已保存')
         setProjectCode(record.projectCode)
-        const pollType  = record?.pollutantType == '废气'? '2' : '1' 
+        const pollType = record?.pollutantType == '废气' ? '2' : '1'
         props.dispatch({ type: `${namespace}/updateState`, payload: { operationPlanInfoRefreshId: record.ID } });
         props.dispatch({
             type: `${namespace}/GetOperationPlanInfo`,
             payload: {
                 id: record.ID,
-                pollutantType:pollType,
+                pollutantType: pollType,
                 // pageIndex:1,
                 // pageSize:20,
             },
@@ -142,13 +142,14 @@ const Index = (props) => {
                     })
                     setPointType(data.PollutantType);
                     setRecordType(data.PollutantType == 2 ? '1' : '7')
+                    form2.setFieldsValue({ endTime: data.planInfoList?.[0] && moment(data.planInfoList[data.planInfoList.length - 1].EndTime) })
 
                     // props.dispatch({ type: `${namespace}/updateState`, payload: { xjPointList: data.xjList, jzPointList: data.jzList } });
 
                 }
             }
         });
-        getOperationPlanPointListRequest(record.entCode, pollType ,record.ID)
+        getOperationPlanPointListRequest(record.entCode, pollType, record.ID)
 
     }
     const delPlan = (record) => {
@@ -203,27 +204,25 @@ const Index = (props) => {
                 callback: (isSuccess, id) => {
                     setGenerateSubmitPlanLoading(false)
                     if (isSuccess) {
-                        if(type == 1){
+                        if (type == 1) {
                             setIsSave(true)
-                        }
-                        form2.resetFields()
-                        setCheckAll(false)
-                        setIndeterminate(false)
-                        props.dispatch({
-                            type: `${namespace}/updateState`,
-                            payload: { operationPlanInfoRefreshType: 1 }
-                        });
-                        par?.data && getOperationPlanPointListRequest(par.data.entID, par.data.pollutantType, id)
-                        if (type == 2) {
+                            form2.setFieldsValue({ pointID: [], intervalDays: '', beginTime: undefined })
+                            props.dispatch({
+                                type: `${namespace}/updateState`,
+                                payload: { operationPlanInfoRefreshType: 1 }
+                            });
+                            par?.data && getOperationPlanPointListRequest(par.data.entID, par.data.pollutantType, id,'isGenerate')
+                        }else {
                             setFormulateVisible(false)
                             props.dispatch({
                                 type: `${namespace}/updateState`,
                                 payload: { operationPlanInfoRefreshId: '' },
                             });
-                            setPageIndex(1)
-                            setPageSize(20)
-                            initData(1, 20);
                         }
+
+                        setPageIndex(1)
+                        setPageSize(20)
+                        initData(1, 20);
                     }
                 }
             });
@@ -233,7 +232,7 @@ const Index = (props) => {
             if (type == 1) { //生成计划
                 form2.validateFields().then((values2) => {
                     setGenerateSubmitPlanLoading(true)
-                    const operationPlanData =  operationPlanInfoParList?.[0] ? operationPlanInfoParList : operationPlanInfo
+                    const operationPlanData = operationPlanInfoParList?.[0] ? operationPlanInfoParList : operationPlanInfo
                     const addedPoint = operationPlanData?.[0] ? operationPlanData.map(item => ({ recordType: item.RecordType, intervalDays: item.IntervalDays, pointID: item.PointID, beginTime: item.BeginTime, endTime: item.EndTime })) : []
                     const addNewPoint = values2.pointID?.[0] ? values2.pointID.map(item => ({ recordType: recordType, ...values2, pointID: item, beginTime: values2.beginTime && moment(values2.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values2.endTime && moment(values2.endTime).format('YYYY-MM-DD 23:59:59') })) : []
                     const par = {
@@ -279,8 +278,9 @@ const Index = (props) => {
 
 
 
-    const getOperationPlanPointListRequest = (entCode, pollutantType, id) => {
-        form2.resetFields(); setCheckAll(false); setIndeterminate(false)
+    const getOperationPlanPointListRequest = (entCode, pollutantType, id,isGenerate) => {
+        !isGenerate && form2.resetFields();
+        setCheckAll(false); setIndeterminate(false)
         if (entCode && pollutantType) {
             props.dispatch({
                 type: `${namespace}/GetOperationPlanPointList`,
@@ -322,7 +322,7 @@ const Index = (props) => {
                 <Row gutter={[16, 16]}>
                     <Col span={6}>
                         <Form.Item name='intervalDays' label='间隔（天）' rules={[{ required: true, message: '请输入间隔天数！' }]}>
-                            <InputNumber style={{ width: '100%' }} placeholder='请输入' />
+                            <InputNumber min={1} step={1} style={{ width: '100%' }} placeholder='请输入' />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
@@ -461,7 +461,7 @@ const Index = (props) => {
                                 </Col>
                                 <Col span={12}>
                                     <Form.Item name='pollutantType' label='点位类型' rules={[{ required: true, message: '请选择点位类型！' }]}>
-                                        <Radio.Group   disabled={isSave} onChange={(e) => {
+                                        <Radio.Group disabled={isSave} onChange={(e) => {
                                             const pointTypeVal = e.target.value
                                             setPointType(pointTypeVal);
                                             setRecordType(pointTypeVal == 2 ? '1' : '7')
@@ -508,7 +508,7 @@ const Index = (props) => {
                             type='card'
                             onChange={(key) => {
                                 setRecordType(key)
-                                form2.resetFields()
+                                form2.setFieldsValue({ pointID: [], intervalDays: '', beginTime: undefined })
                                 setCheckAll(false)
                                 setIndeterminate(false)
                             }}
@@ -534,11 +534,11 @@ const Index = (props) => {
                             recordType={recordType}
                             entCode={form.getFieldValue('entID')}
                             isEdit
-                            queryPlanCallback={(type,parFlag) => {
+                            queryPlanCallback={(type, parFlag) => {
                                 setCheckAll(false)
                                 setIndeterminate(false)
                                 const data = form.getFieldsValue();
-                                if(type==='del'){
+                                if (type === 'del') {
                                     getOperationPlanPointListRequest(data?.entID, data?.pollutantType) //所剩监测点
                                 }
                                 props.dispatch({
@@ -546,7 +546,7 @@ const Index = (props) => {
                                     payload: {
                                         pollutantType: pointType,
                                         id: operationPlanInfoRefreshId,
-                                        type:'par',
+                                        type: 'par',
                                     },
                                     callback: (data) => {
                                         setOperationPlanInfoParList(data?.planInfoList)

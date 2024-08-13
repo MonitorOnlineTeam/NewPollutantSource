@@ -468,13 +468,13 @@ class index extends PureComponent {
     if (values.time && values.time[0]) {
       beginTime =
         values.dataType === 'HourData'
-          ? moment(values.time[0]).format('YYYY-MM-DD HH:00:00')
+          ? moment(values.time[0]).format('YYYY-MM-DD 00:00:00')
           : moment(values.time[0]).format('YYYY-MM-DD');
     }
     if (values.time && values.time[1]) {
       endTime =
         values.dataType === 'HourData'
-          ? moment(values.time[1]).format('YYYY-MM-DD HH:59:59')
+          ? moment(values.time[1]).format('YYYY-MM-DD 23:59:59')
           : moment(values.time[1]).format('YYYY-MM-DD');
     }
     this.props.dispatch({
@@ -526,13 +526,13 @@ class index extends PureComponent {
     if (values.time && values.time[0]) {
       beginTime =
         values.dataType === 'HourData'
-          ? moment(values.time[0]).format('YYYY-MM-DD HH:00:00')
+          ? moment(values.time[0]).format('YYYY-MM-DD 00:00:00')
           : moment(values.time[0]).format('YYYY-MM-DD');
     }
     if (values.time && values.time[1]) {
       endTime =
         values.dataType === 'HourData'
-          ? moment(values.time[1]).format('YYYY-MM-DD HH:59:59')
+          ? moment(values.time[1]).format('YYYY-MM-DD 23:59:59')
           : moment(values.time[1]).format('YYYY-MM-DD');
     }
     this.props.dispatch({
@@ -637,11 +637,11 @@ class index extends PureComponent {
     }
     let beginTime =
       queryCondition.dataType === 'HourData'
-        ? moment(queryCondition.beginTime).format('YYYY年MM月DD号HH时')
+        ? moment(queryCondition.beginTime).format('YYYY年MM月DD号')
         : moment(queryCondition.beginTime).format('YYYY年MM月DD号');
     let endTime =
       queryCondition.dataType === 'HourData'
-        ? moment(queryCondition.endTime).format('YYYY年MM月DD号HH时')
+        ? moment(queryCondition.endTime).format('YYYY年MM月DD号')
         : moment(queryCondition.endTime).format('YYYY年MM月DD号');
     let modelTitle = `${RegionName}${beginTime} - ${endTime}${showTypeText}`;
     if (secondQueryCondition.ResponseStatus == '0') {
@@ -678,12 +678,13 @@ class index extends PureComponent {
                 })( */}
                 {/* <RangePicker style={{ width: 200 }} allowClear={false} showTime={showTime} format={format} style={{ width: '100%' }} /> */}
                 <RangePicker_
+                  format='YYYY-MM-DD' 
                   allowClear={false}
                   onRef={ref => {
                     this.rangePicker = ref;
                   }}
                   dataType={this.props.form.getFieldValue('dataType')}
-                  style={{ width: '100%', marginRight: '10px' }}
+                  style={{ width: 231, marginRight: '10px' }}
                   dateValue={exceptionTime}
                   callback={(dates, dataType) => this.dateChange(dates, dataType)}
                 />

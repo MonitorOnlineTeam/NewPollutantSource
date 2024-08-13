@@ -52,7 +52,9 @@ class Index extends Component {
         />
         {dgimn && (
           <BreadcrumbWrapper titles={`【${title}】`}>
+            <div  style={{paddingTop:16}}>
             <MonitoringStandard DGIMN={dgimn} pollutantType={pollutantType}></MonitoringStandard>
+            </div>
           </BreadcrumbWrapper>
         )}
       </div>

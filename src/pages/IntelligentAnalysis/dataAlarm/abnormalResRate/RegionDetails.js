@@ -271,11 +271,11 @@ class RegionDetails extends PureComponent {
     const { columns, DGIMN, TaskID, queryCondition } = this.state;
     let beginTime =
       queryCondition.dataType === 'HourData'
-        ? moment(queryCondition.beginTime).format('YYYY-MM-DD HH时')
+        ? moment(queryCondition.beginTime).format('YYYY-MM-DD')
         : moment(queryCondition.beginTime).format('YYYY-MM-DD');
     let endTime =
       queryCondition.dataType === 'HourData'
-        ? moment(queryCondition.endTime).format('YYYY-MM-DD HH时')
+        ? moment(queryCondition.endTime).format('YYYY-MM-DD')
         : moment(queryCondition.endTime).format('YYYY-MM-DD');
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb} title="数据异常报警响应率详情">

@@ -237,7 +237,7 @@ const Index = (props) => {
       onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
     >
       <Form.Item label="异常时间" name="Time"  >
-        <RangePicker_ allowClear={false} style={{ width: 350 }} showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }} />
+        <RangePicker_ allowClear={false} style={{ width: 350 }} format='YYYY-MM-DD'/>
       </Form.Item>
       <Form.Item label="方法名称" name="MethodName" >
         <Input placeholder='请输入' allowClear style={{ width: 200 }} />
@@ -262,8 +262,8 @@ const Index = (props) => {
 
       props.getSystemExceptionList(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
         ...values,
-        Btime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        Etime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        Btime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD 00:00:00'),
+        Etime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD 23:59:59'),
         pageIndex: pageIndexs,
         pageSize: pageSizes,
         Time: undefined,
@@ -395,7 +395,7 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item label="登录时间" name="Time" style={{ marginBottom: 8, marginRight: 0 }} >
-            <RangePicker_ allowClear={false} style={{ width: '100%' }} showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }} />
+            <RangePicker_ allowClear={false} style={{ width: '100%' }} format='YYYY-MM-DD' />
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -430,8 +430,8 @@ const Index = (props) => {
 
       props.getSystemLongInLogs(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
         ...values,
-        Btime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        Etime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        Btime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD 00:00:00'),
+        Etime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD 23:59:59'),
         pageIndex: pageIndexs,
         pageSize: pageSizes,
         Time: undefined,
@@ -565,7 +565,7 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item label="操作时间" name="Time" style={{ marginBottom: 8 }} >
-            <RangePicker_ allowClear={false} style={{ width: '100%' }} showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }} />
+            <RangePicker_ allowClear={false} style={{ width: '100%' }}format='YYYY-MM-DD' />
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -608,8 +608,8 @@ const Index = (props) => {
 
       props.getUserOprationLogsList(par ? { ...par, pageIndex: pageIndexs, pageSize: pageSizes, } : {
         ...values,
-        Btime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        Etime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        Btime: values.Time && moment(values.Time[0]).format('YYYY-MM-DD 00:00:00'),
+        Etime: values.Time && moment(values.Time[1]).format('YYYY-MM-DD 23:59:59'),
         pageIndex: pageIndexs,
         pageSize: pageSizes,
         Time: undefined,

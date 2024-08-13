@@ -600,12 +600,12 @@ export default class OverVerifyLstModal extends Component {
   dateChange = (date, dataType) => {
     this.setState({
       beginTime: date[0].format('YYYY-MM-DD 00:00:00'),
-      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: date[1].format('YYYY-MM-DD 23:59:59'),
     })
     this.updateQueryState({
       dataType: dataType,
-      beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+      beginTime: date[0].format('YYYY-MM-DD 00:00:00'),
+      endTime: date[1].format('YYYY-MM-DD 23:59:59'),
     });
   };
   // 监测因子change
@@ -747,6 +747,7 @@ export default class OverVerifyLstModal extends Component {
                 <Form.Item>
                   日期查询：
                   <RangePicker_
+                   format='YYYY-MM-DD' 
                     onRef={this.onRef1}
                     allowClear={false}
                     dataType={dataType}
@@ -873,8 +874,8 @@ export default class OverVerifyLstModal extends Component {
         PollutantType: PollutantType,
         // DataType: record.dataType == '日'? 'DayData' : 'HourData',
         DataType: '',
-        BeginTime: moment(beginTime).format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: moment(endTime).format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: beginTime && moment(beginTime).format("YYYY-MM-DD 00:00:00"),
+        EndTime: endTime && moment(endTime).format("YYYY-MM-DD 23:59:59"),
         PollutantCode: pollutantCode=='全部合计'? '' : pollutantCode,
         Status: status == 2 ? '' : status,
         EntCode: '',

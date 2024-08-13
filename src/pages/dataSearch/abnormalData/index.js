@@ -207,13 +207,13 @@ class index extends PureComponent {
     if (values.time && values.time[0]) {
       beginTime =
         values.dataType === 'HourData'
-          ? moment(values.time[0]).format('YYYY-MM-DD HH:00:00')
+          ? moment(values.time[0]).format('YYYY-MM-DD 00:00:00')
           : moment(values.time[0]).format('YYYY-MM-DD');
     }
     if (values.time && values.time[1]) {
       endTime =
         values.dataType === 'HourData'
-          ? moment(values.time[1]).format('YYYY-MM-DD HH:59:59')
+          ? moment(values.time[1]).format('YYYY-MM-DD 23:59:59')
           : moment(values.time[1]).format('YYYY-MM-DD');
     }
     this.props
@@ -279,13 +279,13 @@ class index extends PureComponent {
     if (values.time && values.time[0]) {
       beginTime =
         values.dataType === 'HourData'
-          ? moment(values.time[0]).format('YYYY-MM-DD HH:00:00')
+          ? moment(values.time[0]).format('YYYY-MM-DD 00:00:00')
           : moment(values.time[0]).format('YYYY-MM-DD');
     }
     if (values.time && values.time[1]) {
       endTime =
         values.dataType === 'HourData'
-          ? moment(values.time[1]).format('YYYY-MM-DD HH:59:59')
+          ? moment(values.time[1]).format('YYYY-MM-DD 23:59:59')
           : moment(values.time[1]).format('YYYY-MM-DD');
     }
     this.props.dispatch({
@@ -365,11 +365,11 @@ class index extends PureComponent {
       JSON.parse(queryConditionDetail);
     let beginTime =
       queryConditionDetailParse.dataType === 'HourData'
-        ? moment(queryConditionDetailParse.beginTime).format('YYYY-MM-DD HH时')
+        ? moment(queryConditionDetailParse.beginTime).format('YYYY-MM-DD')
         : moment(queryConditionDetailParse.beginTime).format('YYYY-MM-DD');
     let endTime =
       queryConditionDetailParse.dataType === 'HourData'
-        ? moment(queryConditionDetailParse.endTime).format('YYYY-MM-DD HH时')
+        ? moment(queryConditionDetailParse.endTime).format('YYYY-MM-DD')
         : moment(queryConditionDetailParse.endTime).format('YYYY-MM-DD');
     let title = '';
     if (queryConditionDetailParse.ExceptionType == 3) {
@@ -415,6 +415,7 @@ class index extends PureComponent {
                     <RangePicker allowClear={false} showTime={showTime} format={format} style={{ width: '100%' }} />
                   )} */}
                   <RangePicker_
+                    format='YYYY-MM-DD' 
                     allowClear={false}
                     onRef={ref => {
                       this.rangePicker = ref;

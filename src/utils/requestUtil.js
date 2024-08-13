@@ -32,12 +32,14 @@ let isLoginTimeoutAlertShown = false;
 /**
  * 异常处理程序
  */
+let has401BeenNotified = false;
 const errorHandler = error => {
   const { response, data } = error;
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
-    if (status === 401) {
+    if (status === 401 && !has401BeenNotified ) {
+      has401BeenNotified = true;
       Cookie.set(configToken.cookieName, null);
       Cookie.set('currentUser', null);
       router.push('/user/login');

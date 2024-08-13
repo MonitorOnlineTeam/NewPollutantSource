@@ -142,16 +142,16 @@ const routes = [
         path: '/hometangy',
         component: './hometangy',
       },
-      // {
-      //   name: 'sysTypeMiddlePage',
-      //   path: '/sysTypeMiddlePage',
-      //   component: './sysTypeMiddlePage',
-      // },
       {
         name: 'sysTypeMiddlePage',
         path: '/sysTypeMiddlePage',
-        component: './sysTypeMiddlePage/index2.js',
+        component: './sysTypeMiddlePage',
       },
+      // {
+      //   name: 'sysTypeMiddlePage',
+      //   path: '/sysTypeMiddlePage',
+      //   component: './sysTypeMiddlePage/index2.js',
+      // },
       {
         name: 'sessionMiddlePage',
         path: '/sessionMiddlePage',
@@ -370,26 +370,26 @@ const routes = [
         ],
       },
       // 新登录
-      {
-        path: '/user/login',
-        component: '../layouts/UserLayout2',
-        routes: [
-          {
-            name: 'newLogin',
-            path: '/user/login',
-            component: './user/login/NewLogin',
-          },
-        ],
-      },
+      // {
+      //   path: '/user/login',
+      //   component: '../layouts/UserLayout2',
+      //   routes: [
+      //     {
+      //       name: 'newLogin',
+      //       path: '/user/login',
+      //       component: './user/login/NewLogin',
+      //     },
+      //   ],
+      // },
       {
         path: '/user',
         component: '../layouts/UserLayout',
         routes: [
-          // {
-          //   name: 'login',
-          //   path: '/user/login',
-          //   component: './user/login',
-          // },
+          {
+            name: 'login',
+            path: '/user/login',
+            component: './user/login',
+          },
           {
             name: 'register-result',
             path: '/user/register-result',

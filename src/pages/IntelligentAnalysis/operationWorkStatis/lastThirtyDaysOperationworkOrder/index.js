@@ -281,8 +281,8 @@ const Index = (props) => {
       const par = queryPar ? { ...queryPar, pointType: pointType } :
         {
           ...values,
-          beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-          endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+          beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+          endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
           time: undefined,
           pointType: pointType,
           pollutantType:pollutantType,
@@ -336,9 +336,7 @@ const Index = (props) => {
       }}
     >
       <Form.Item label="日期查询" name="time">
-        <RangePicker_ allowClear style={{ width: 350 }} showTime={{
-          defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-        }} />
+        <RangePicker_ allowClear style={{ width: 350 }} format='YYYY-MM-DD'/>
       </Form.Item>
       <Form.Item label="行政区" name="regionCode">
         <RegionList style={{ width: 170 }} placeholder='请输入'/>

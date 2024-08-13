@@ -455,7 +455,7 @@ export default class EntTransmissionEfficiency extends Component {
               <Row style={{ paddingBottom: 5 }}>
                 <Form.Item label="异常开始时间">
                   <RangePicker_
-                    style={{ width: '368px', marginRight: '10px' }}
+                    style={{ width: 230, marginRight: '10px' }}
                     dateValue={[moment(ExceptionBBtime), moment(ExceptionBEtime)]}
                     callback={(dates, dataType) => this.dateChange(dates, dataType)}
                     onRef={ref => {
@@ -465,7 +465,7 @@ export default class EntTransmissionEfficiency extends Component {
                 </Form.Item>
                 <Form.Item label="异常截止时间">
                   <RangePicker_
-                    style={{ width: '368px', marginRight: '10px' }}
+                    style={{ width: 230, marginRight: '10px' }}
                     dateValue={['', '']}
                     callback={(dates, dataType) => this.dateChange2(dates, dataType)}
                     onRef={ref => {
@@ -473,23 +473,23 @@ export default class EntTransmissionEfficiency extends Component {
                     }}
                   />
                 </Form.Item>
-              </Row>
-              <Form.Item label="行政区">
+                <Form.Item label="&nbsp;行政区">
                 <RegionList
-                  style={{ width: 165 }}
+                  style={{ width: 230 }}
                   changeRegion={this.changeRegion}
                   RegionCode={RegionCode}
                 />
               </Form.Item>
-              <Form.Item label="企业列表">
-                <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} style={{ width: 185 }} />
+              </Row>
+              <Form.Item label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;企业列表">
+                <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} style={{ width: 230 }} />
               </Form.Item>
-              <Form.Item label="监测点" style={{ paddingLeft: 10 }}>
+              <Form.Item label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;监测点" style={{ paddingLeft: 10 }}>
                 <Select
                   placeholder="监测点名称"
                   onChange={this.changePoint}
                   value={DGIMN ? DGIMN : undefined}
-                  style={{ width: 150 }}
+                  style={{ width: 230 }}
                 >
                   {this.pointChildren()}
                 </Select>
@@ -500,7 +500,7 @@ export default class EntTransmissionEfficiency extends Component {
                   placeholder="凭证状态"
                   onChange={this.statusChange}
                   value={Status ? Status : undefined}
-                  style={{ width: 150 }}
+                  style={{ width: 230 }}
                 >
                   <Option value="1">有凭证</Option>
                   <Option value="0">缺失凭证</Option>

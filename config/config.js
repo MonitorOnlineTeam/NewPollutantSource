@@ -15,8 +15,8 @@ import path from 'path';
 // const API_HOST = 'http://172.16.12.134:61003/';  // 运维正式
 // const API_HOST = 'http://172.16.12.91:61007/' //宝武集团 正式
 // const API_HOST = 'http://172.16.12.132:49011' //中石化 正式
-// const API_HOST = 'http://172.16.12.39:49003/'; // 234 运维测试
-const API_HOST = 'http://172.16.12.122:61005/'; //134 - 演示
+const API_HOST = 'http://172.16.12.39:49003/'; // 234 运维测试
+// const API_HOST = 'http://172.16.12.122:61005/'; //134 - 演示
 const API_HOST_109 = 'http://172.16.12.109:61001/'; //调试服务导出PDF api
 const UPLOAD_HOST = 'http://172.16.12.39:49003/'; // 文件上传地址
 

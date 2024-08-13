@@ -249,8 +249,9 @@ const Index = (props) => {
         ...values,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : 1,
         pageSize: pageSizes ? pageSizes : pageSize,
-        beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+        endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
+        time:undefined,
         company:values.company?values.company.toString() : '',
         role:values.role?values.role.toString() : '',
       })
@@ -333,9 +334,7 @@ const Index = (props) => {
           <Input placeholder='请输入' allowClear style={{ width: 200 }} />
         </Form.Item>
         <Form.Item label="发布时间" name="time" style={{ margin: '0 8px' }}>
-          <RangePicker allowClear style={{ width: 350 }} showTime={{
-            defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-          }} />
+          <RangePicker allowClear style={{ width: 240 }} format='YYYY-MM-DD' />
         </Form.Item>
         <Form.Item label="公告状态" name="status"  >
           <Select placeholder='请输入' allowClear style={{ width: 200 }}>
@@ -350,7 +349,7 @@ const Index = (props) => {
           <OperationCompanyList style={{ width: 200 }} mode='multiple'/>
         </Form.Item>
         <Form.Item label="查看公告角色" name="role" style={{ margin: '0 8px' }} >
-          <RoleList  style={{ width: 350 }} mode='multiple'/>
+          <RoleList  style={{ width: 240 }} mode='multiple'/>
         </Form.Item>
         <Form.Item style={{ marginLeft: 30, marginBottom:0 }}>
           <Button type="primary" htmlType='submit' style={{ marginRight: 8 }}>

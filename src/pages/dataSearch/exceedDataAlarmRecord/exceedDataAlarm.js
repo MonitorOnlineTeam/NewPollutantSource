@@ -147,8 +147,8 @@ class index extends PureComponent {
                         attentionCode: '',
                         PollutantType: outletValue == undefined ? '' : outletValue,
                         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                        BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                        EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                         PageSize: 20,
                         PageIndex: 1,
                         PollutantCodeList: this.props.pollutantCodeList.map(poll => poll.PollutantCode),
@@ -187,8 +187,8 @@ class index extends PureComponent {
                     attentionCode: attentionValue == undefined ? '' : attentionValue,
                     PollutantType: outletValue == undefined ? '' : outletValue,
                     DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                    BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                    EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                    BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                    EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                     PollutantCodeList: pollutantCodeList,
                     operationpersonnel: operationpersonnel,
                     regionLevel: this.state.regionLevel
@@ -203,8 +203,8 @@ class index extends PureComponent {
                     attentionCode: attentionValue == undefined ? '' : attentionValue,
                     PollutantType: outletValue == undefined ? '' : outletValue,
                     DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                    BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                    EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                    BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                    EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                     PollutantCodeList: pollutantCodeList,
                     operationpersonnel: operationpersonnel,
                     regionLevel: this.state.regionLevel
@@ -225,8 +225,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined ? '' : attentionValue,
                 PollutantType: outletValue == undefined ? '' : outletValue,
                 DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                 PageSize: 20,
                 PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
@@ -365,7 +365,7 @@ class index extends PureComponent {
                     <Radio.Button value="Day">日均</Radio.Button>
                 </Radio.Group>
 
-                <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
+                <RangePicker_ format='YYYY-MM-DD' allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
                     (dates, dataType) => {
                         this.setState({
                             time: dates
@@ -425,8 +425,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined ? '' : attentionValue,
                 PollutantType: outletValue == undefined ? '' : outletValue,
                 DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -443,7 +443,7 @@ class index extends PureComponent {
     }
     //行政区 已核实报警次数
     AlreadyAlarmNumHandle = (regionCode, PollutantCode, regionName) => {
-        const { regionValue, attentionValue, outletValue, dataType, time, alarmDealTypeListCode, operationpersonnel, DGIMN, pollutantCodeList} = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, alarmDealTypeListCode, operationpersonnel, DGIMN, pollutantCodeList } = this.state
         this.setState({
             DealType: '1',
             regVisibleAlready: true,
@@ -463,8 +463,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined ? '' : attentionValue,
                 PollutantType: outletValue == undefined ? '' : outletValue,
                 DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -480,7 +480,7 @@ class index extends PureComponent {
     }
     //行政区 待核实报警次数
     StayAlarmNumHandle = (regionCode, PollutantCode, regionName) => {
-        const { regionValue, attentionValue, outletValue, dataType, time, alarmDealTypeListCode, operationpersonnel, DGIMN, pollutantCodeList} = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, alarmDealTypeListCode, operationpersonnel, DGIMN, pollutantCodeList } = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -500,8 +500,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined ? '' : attentionValue,
                 PollutantType: outletValue == undefined ? '' : outletValue,
                 DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -517,7 +517,7 @@ class index extends PureComponent {
     }
     // 企业弹框
     EntAlarmHandle = (reCode, entCode, status, PollutantCode, entName, pointName, DGIMN) => {
-        const { attentionValue, outletValue, dataType, time, regionCode, alarmDealTypeListCode, operationpersonnel,pollutantCodeList } = this.state
+        const { attentionValue, outletValue, dataType, time, regionCode, alarmDealTypeListCode, operationpersonnel, pollutantCodeList } = this.state
         let deal = ''
         if (status == '') {
             deal = '核实情况'
@@ -556,8 +556,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined ? '' : attentionValue,
                 PollutantType: outletValue == undefined ? '' : outletValue,
                 DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                 //PageSize: 10,
                 // PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -566,7 +566,7 @@ class index extends PureComponent {
                 VerifyStatus: alarmDealTypeListCode,
                 DGIMN: DGIMN ? DGIMN : '',
                 operationpersonnel: operationpersonnel,
-                PollutantCodeList:pollutantCodeList,
+                PollutantCodeList: pollutantCodeList,
             }
         })
 
@@ -638,8 +638,8 @@ class index extends PureComponent {
                     attentionCode: attentionValue == undefined ? '' : attentionValue,
                     PollutantType: outletValue == undefined ? '' : outletValue,
                     DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                    BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                    EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                    BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                    EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                     //PageSize: 20,
                     //PageIndex: 1,
                     PollutantCodeList: pollutantCodeList,
@@ -904,10 +904,10 @@ class index extends PureComponent {
                 align: 'center',
                 fixed: fixed,
                 render: (text, record) => {
-                    const name = record.ProvinceName == '全部合计'? '全部合计': text
+                    const name = record.ProvinceName == '全部合计' ? '全部合计' : text
                     return {
                         props: { colSpan: record.ProvinceName == '全部合计' ? 2 : 1 },
-                        children: <a onClick={this.paneAdd.bind(this, name,record.ProvinceName == '全部合计'? this.state.regionValue : record.CityCode)}> {name} </a>
+                        children: <a onClick={this.paneAdd.bind(this, name, record.ProvinceName == '全部合计' ? this.state.regionValue : record.CityCode)}> {name} </a>
                     }
 
                 }
@@ -926,7 +926,7 @@ class index extends PureComponent {
                         dataIndex: col.PollutantCode + '_alarmCount',
                         key: col.PollutantCode + '_alarmCount',
                         render: (text, record) => {
-                            return <a onClick={this.AlarmNumHandle.bind(this,record.ProvinceName == '全部合计' ? this.state.regionCode : record.regionCode, col.PollutantCode, record.regionName)}>{text}</a>
+                            return <a onClick={this.AlarmNumHandle.bind(this, record.ProvinceName == '全部合计' ? this.state.regionCode : record.regionCode, col.PollutantCode, record.regionName)}>{text}</a>
                         }
                     },
                     {
@@ -937,7 +937,7 @@ class index extends PureComponent {
                         dataIndex: col.PollutantCode + '_respondedCount',
                         key: col.PollutantCode + '_respondedCount',
                         render: (text, record) => {
-                            return <a onClick={this.AlreadyAlarmNumHandle.bind(this, record.ProvinceName == '全部合计' ? this.state.regionCode :record.regionCode, col.PollutantCode, record.regionName)}>{text}</a>
+                            return <a onClick={this.AlreadyAlarmNumHandle.bind(this, record.ProvinceName == '全部合计' ? this.state.regionCode : record.regionCode, col.PollutantCode, record.regionName)}>{text}</a>
                         }
                     },
                     {
@@ -948,7 +948,7 @@ class index extends PureComponent {
                         dataIndex: col.PollutantCode + '_noRespondedCount',
                         key: col.PollutantCode + '_noRespondedCount',
                         render: (text, record) => {
-                            return <a onClick={this.StayAlarmNumHandle.bind(this,record.ProvinceName == '全部合计' ? this.state.regionCode : record.regionCode, col.PollutantCode, record.regionName)}>{text}</a>
+                            return <a onClick={this.StayAlarmNumHandle.bind(this, record.ProvinceName == '全部合计' ? this.state.regionCode : record.regionCode, col.PollutantCode, record.regionName)}>{text}</a>
                         }
                     },
                 ]
@@ -1013,7 +1013,7 @@ class index extends PureComponent {
     }
     //报警次数数据按钮查询信息
     AlertsButtonHandle = () => {
-        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel, DGIMN,pollutantCodeList } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel, DGIMN, pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1021,8 +1021,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined ? '' : attentionValue,
                 PollutantType: outletValue == undefined ? '' : outletValue,
                 DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -1038,7 +1038,7 @@ class index extends PureComponent {
     }
     //报警次数数据   导出
     ButtonHandleExpor = () => {
-        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel,pollutantCodeList } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel, pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1046,8 +1046,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined ? '' : attentionValue,
                 PollutantType: outletValue == undefined ? '' : outletValue,
                 DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                 PollutantCode: PollutantCode,
                 Status: DealType == '2' ? '' : DealType,
                 EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
@@ -1060,7 +1060,7 @@ class index extends PureComponent {
     //已核实报警按钮查询信息
     AlreadyButtonCountHandle = () => {
 
-        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel, DGIMN,pollutantCodeList } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel, DGIMN, pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1068,8 +1068,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined ? '' : attentionValue,
                 PollutantType: outletValue == undefined ? '' : outletValue,
                 DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -1084,7 +1084,7 @@ class index extends PureComponent {
     }
     //已核实报警   导出
     AlreadyButtonHandleExpor = () => {
-        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel,pollutantCodeList } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, alarmDealTypeListCode, operationpersonnel, pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1092,8 +1092,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined ? '' : attentionValue,
                 PollutantType: outletValue == undefined ? '' : outletValue,
                 DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                 PollutantCode: PollutantCode,
                 Status: '1',
                 EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
@@ -1105,7 +1105,7 @@ class index extends PureComponent {
     }
     ////待核实报警按钮查询信息
     StayButtonCountHandle = () => {
-        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, operationpersonnel, DGIMN,pollutantCodeList } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, operationpersonnel, DGIMN, pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1113,8 +1113,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined ? '' : attentionValue,
                 PollutantType: outletValue == undefined ? '' : outletValue,
                 DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -1129,7 +1129,7 @@ class index extends PureComponent {
     }
     //待核实报警   导出
     StayButtonHandleExpor = () => {
-        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, operationpersonnel,pollutantCodeList } = this.state
+        const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, operationpersonnel, pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1137,8 +1137,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined ? '' : attentionValue,
                 PollutantType: outletValue == undefined ? '' : outletValue,
                 DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                 PollutantCode: PollutantCode,
                 Status: '0',
                 EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
@@ -1149,7 +1149,7 @@ class index extends PureComponent {
         })
     }
     ButtonCountHandleExpor = () => {
-        const { attentionValue, outletValue, dataType, time, regionCode, PollutantCode, status, entCode, operationpersonnel,pollutantCodeList } = this.state
+        const { attentionValue, outletValue, dataType, time, regionCode, PollutantCode, status, entCode, operationpersonnel, pollutantCodeList } = this.state
         this.props.dispatch({
             type: pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1157,8 +1157,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined ? '' : attentionValue,
                 PollutantType: outletValue == undefined ? '' : outletValue,
                 DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                BeginTime: time[0] && moment(time[0]).format("YYYY-MM-DD 00:00:00"),
+                EndTime: time[1] && moment(time[1]).format("YYYY-MM-DD 23:59:59"),
                 PollutantCode: PollutantCode,
                 Status: status == "2" ? "" : status,
                 EntCode: entCode,
@@ -1326,9 +1326,9 @@ class index extends PureComponent {
                             }
                             sourc.push(obj)
                         })
-                        
+
                     }
-                    return <VerifyDetailsPop dataSource={sourc} remark={text}/>
+                    return <VerifyDetailsPop dataSource={sourc} remark={text} />
                 }
             },
         ]
@@ -1479,9 +1479,9 @@ class index extends PureComponent {
                             }
                             sourc.push(obj)
                         })
-                        
+
                     }
-                    return <VerifyDetailsPop dataSource={sourc} remark={text}/>
+                    return <VerifyDetailsPop dataSource={sourc} remark={text} />
                 }
             },
         ]
@@ -1622,9 +1622,9 @@ class index extends PureComponent {
                             }
                             sourc.push(obj)
                         })
-                        
+
                     }
-                    return <VerifyDetailsPop dataSource={sourc} remark={text}/>
+                    return <VerifyDetailsPop dataSource={sourc} remark={text} />
                 }
             },
         ]
@@ -1779,9 +1779,9 @@ class index extends PureComponent {
                             }
                             sourc.push(obj)
                         })
-                        
+
                     }
-                    return <VerifyDetailsPop dataSource={sourc} remark={text}/>
+                    return <VerifyDetailsPop dataSource={sourc} remark={text} />
                 }
             },
         ]

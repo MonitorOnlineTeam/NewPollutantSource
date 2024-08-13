@@ -618,7 +618,8 @@ const Index = (props) => {
                     }else{
                       const data = addEditPollutantTypeList.filter(item=>item.ID == val)
                       const name = data?.[0]?.Name
-                      const filterData = addEditEquipmentNameList.filter(item=>item.Name.includes(name))
+                      const filterData = addEditEquipmentNameList.filter(item=>item.Name?.replace('分析仪','') === name)
+                      console.log(filterData)
                       form2.setFieldsValue({EquipmentName:filterData?.[0]?.Name})
                     }
                   }}>

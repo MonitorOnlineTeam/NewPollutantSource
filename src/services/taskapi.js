@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-08-22 09:40:55
- * @LastEditors: lzp
- * @LastEditTime: 2019-09-18 11:09:14
+ * @LastEditors: outman0611 jia_anbo@163.com
+ * @LastEditTime: 2024-08-12 18:11:35
  * @Description: 运维记录表单api
  */
 import { post, get, authorpost } from '@/utils/request';
@@ -325,8 +325,8 @@ export async function GetOperationTaskList(params) {
         params: {
             ...params,
             TaskType: params?.TaskType?.toString() || '', 
-            CompleteTime: params.CompleteTime != undefined && params.CompleteTime != '' ? `${params.CompleteTime[0].format('YYYY-MM-DD HH:mm:ss')},${params.CompleteTime[1].format('YYYY-MM-DD HH:mm:ss')}` : '',
-            CreateTime: params.CreateTime != undefined && params.CreateTime != '' ? `${params.CreateTime[0].format('YYYY-MM-DD HH:mm:ss')},${params.CreateTime[1].format('YYYY-MM-DD HH:mm:ss')}` : '',
+            CompleteTime: params.CompleteTime != undefined && params.CompleteTime != '' ? `${params.CompleteTime[0].format('YYYY-MM-DD 00:00:00')},${params.CompleteTime[1].format('YYYY-MM-DD 23:59:59')}` : '',
+            CreateTime: params.CreateTime != undefined && params.CreateTime != '' ? `${params.CreateTime[0].format('YYYY-MM-DD 00:00:00')},${params.CreateTime[1].format('YYYY-MM-DD 23:59:59')}` : '',
         },
     };
     const result = await post(API.PredictiveMaintenanceApi.GetOperationTaskList, body.params, null);
@@ -337,8 +337,9 @@ export async function ExportOperationTaskList(params) {
     const body = {
         params: {
             ...params,
-            CompleteTime: params.CompleteTime ? `${params.CompleteTime[0].format('YYYY-MM-DD HH:mm:ss')},${params.CompleteTime[1].format('YYYY-MM-DD HH:mm:ss')}` : '',
-            CreateTime: params.CreateTime ? `${params.CreateTime[0].format('YYYY-MM-DD HH:mm:ss')},${params.CreateTime[1].format('YYYY-MM-DD HH:mm:ss')}` : '',
+            TaskType: params?.TaskType?.toString() || '', 
+            CompleteTime: params.CompleteTime != undefined && params.CompleteTime != '' ? `${params.CompleteTime[0].format('YYYY-MM-DD 00:00:00')},${params.CompleteTime[1].format('YYYY-MM-DD 23:59:59')}` : '',
+            CreateTime: params.CreateTime != undefined && params.CreateTime != '' ? `${params.CreateTime[0].format('YYYY-MM-DD 00:00:00')},${params.CreateTime[1].format('YYYY-MM-DD 23:59:59')}` : '',
         },
     };
     const result = await post(API.PredictiveMaintenanceApi.ExportOperationTaskList, body.params, null);

@@ -149,7 +149,7 @@ export default class Index extends Component {
                             }}
                             noDel={noDelFlag}
                             appendHandleRows={row => <Fragment>
-                                {!noDelFlag && <Divider type="vertical" />}
+                                <Divider type="vertical" />
                                 <Tooltip title="维护点信息">
                                     <a onClick={() => {
                                         this.goPointInfo(row);

@@ -189,7 +189,6 @@ import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
 
 
     render() {
-        console.log('this.props', this.props);
         const { configId, btnloading, btnloading1 } = this.props;
         const { DataWhere } = this.state;
         if (this.props.loading) {

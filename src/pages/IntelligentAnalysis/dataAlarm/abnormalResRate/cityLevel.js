@@ -330,10 +330,10 @@ class Index extends PureComponent {
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
-      beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
+      beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD 00:00:00") : moment(values.time[0]).format("YYYY-MM-DD 00:00:00")
     }
     if (values.time && values.time[1]) {
-      endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD HH:59:59") : moment(values.time[1]).format("YYYY-MM-DD")
+      endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD 23:59:59") : moment(values.time[1]).format("YYYY-MM-DD 23:59:59")
     }
     console.log(this.props.searchForm)
     this.props.dispatch({

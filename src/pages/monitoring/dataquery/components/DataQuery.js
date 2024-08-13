@@ -182,7 +182,7 @@ class DataQuery extends Component {
         this.children.onDataTypeChange(dataType, [moment().add(-1, 'day').startOf('day'), moment().endOf('hour')]);
         break;
       case "day":
-        this.children.onDataTypeChange(dataType, [moment().add(-30, 'day').startOf('day'), moment().endOf('day')]);
+        this.children.onDataTypeChange(dataType, [moment().add(-1, 'months').startOf('day'), moment().endOf('day')]);
 
     }
     // this.onResetPage();

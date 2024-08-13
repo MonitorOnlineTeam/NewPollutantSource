@@ -115,10 +115,10 @@ class index extends PureComponent {
     this.props.dispatch({
       type: pageUrl.ExportStopList,
       payload: {
-        BeginTime: Begintime[0] ? moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss') : null,
-        BeginTimeEnd: Begintime[1] ? moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss') : null,
-        EndTime: Endtime[0] ? moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss') : null,
-        EndTimeEnd: Endtime[1] ? moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss') : null,
+        BeginTime: Begintime[0] ? moment(Begintime[0]).format('YYYY-MM-DD 00:00:00') : null,
+        BeginTimeEnd: Begintime[1] ? moment(Begintime[1]).format('YYYY-MM-DD 23:59:59') : null,
+        EndTime: Endtime[0] ? moment(Endtime[0]).format('YYYY-MM-DD 00:00:00') : null,
+        EndTimeEnd: Endtime[1] ? moment(Endtime[1]).format('YYYY-MM-DD 23:59:59') : null,
         RegionCode: regionValue == undefined ? '' : regionValue,
         EntCode: entValue == undefined ? '' : entValue,
         DGIMN: isHomeModal ? DGIMN : pointValue == undefined ? '' : pointValue,
@@ -134,10 +134,10 @@ class index extends PureComponent {
     this.props.dispatch({
       type: pageUrl.GetStopList,
       payload: {
-        BeginTime: Begintime[0] ? moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss') : null,
-        BeginTimeEnd: Begintime[1] ? moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss') : null,
-        EndTime: Endtime[0] ? moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss') : null,
-        EndTimeEnd: Endtime[1] ? moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss') : null,
+        BeginTime: Begintime[0] ? moment(Begintime[0]).format('YYYY-MM-DD 00:00:00') : null,
+        BeginTimeEnd: Begintime[1] ? moment(Begintime[1]).format('YYYY-MM-DD 23:59:59') : null,
+        EndTime: Endtime[0] ? moment(Endtime[0]).format('YYYY-MM-DD 00:00:00') : null,
+        EndTimeEnd: Endtime[1] ? moment(Endtime[1]).format('YYYY-MM-DD 23:59:59') : null,
         RegionCode: regionValue == undefined ? '' : regionValue,
         EntCode: entValue == undefined ? '' : entValue,
         DGIMN: isHomeModal ? DGIMN : pointValue == undefined ? '' : pointValue,
@@ -219,10 +219,11 @@ class index extends PureComponent {
       <>
         <label style={{ fontSize: 14 }}>停运时间:</label>
         <RangePicker_
+          format='YYYY-MM-DD'
           onRef={this.onRef1}
           isVerification={true}
           dateValue={Begintime}
-          style={{ width: 400, minWidth: '200px', marginRight: 10, marginLeft: 10 }}
+          style={{ width: 230,marginRight: 10, marginLeft: 10 }}
           callback={(dates, dataType) => {
             this.setState({
               Begintime: dates,
@@ -280,7 +281,7 @@ class index extends PureComponent {
             <Select
               allowClear
               showSearch
-              style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+              style={{ width: 230, marginLeft: 10, marginRight: 10 }}
               placeholder="企业列表"
               maxTagCount={2}
               maxTagTextLength={5}

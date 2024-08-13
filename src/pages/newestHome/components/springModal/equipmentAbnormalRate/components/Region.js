@@ -98,8 +98,8 @@ const Index = (props) => {
     props.exportExecptionRateList({
       ...values,
       time: undefined,
-      beginTime: moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-      endTime: moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+      beginTime: moment(values.time[0]).format("YYYY-MM-DD 00:00:00"),
+      endTime: moment(values.time[1]).format("YYYY-MM-DD 23:59:59"),
       parameterCategory: values.parameterCategory ? values.parameterCategory.toString() : '',
       pointType: statisType,
       type:operationSetType,
@@ -160,8 +160,8 @@ const Index = (props) => {
       const par = {
         ...values,
         time: undefined,
-        beginTime: moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        endTime: moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        beginTime: moment(values.time[0]).format("YYYY-MM-DD 00:00:00"),
+        endTime: moment(values.time[1]).format("YYYY-MM-DD 23:59:59"),
         parameterCategory: values.parameterCategory ? values.parameterCategory.toString() : '',
         pointType: statisType,
         type:operationSetType,
@@ -245,7 +245,8 @@ const Index = (props) => {
         <Row>
           <Form.Item label='日期' name='time' style={{ paddingRight: '16px' }}>
             <RangePicker_ allowClear={false} style={{ width: '100%' }}
-              showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }} />
+                format='YYYY-MM-DD'
+               />
           </Form.Item>
           <Form.Item label='监测点类型' name='pollutantType' style={{ paddingRight: '16px' }}>
             <Select placeholder='请选择' style={{ width: 150 }} allowClear>

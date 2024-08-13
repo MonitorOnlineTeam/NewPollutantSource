@@ -235,7 +235,6 @@ class SearchWrapper extends Component {
     const { fieldName } = item;
     const format = dateFormat ? dateFormat : '';
 
-    console.log('format=', format);
 
     // switch (format) {
     //   case "YYYY-MM-DD HH:MM:SS":
@@ -257,7 +256,7 @@ class SearchWrapper extends Component {
 
     // return <RangePicker_ style={{ width: '100%' }} />
     if (format) {
-      return <RangePicker showTime style={{ width: '100%' }} format={format} />;
+      return <RangePicker showTime={format != 'YYYY-MM-DD 00:00:00'} style={{ width: '100%' }} format={format=='YYYY-MM-DD 00:00:00'? 'YYYY-MM-DD' : format } />; //YYYY-MM-DD 00:00:00 不展示时分秒 但传值带时分秒
     }
     return <RangePicker showTime style={{ width: '100%' }} />;
   };

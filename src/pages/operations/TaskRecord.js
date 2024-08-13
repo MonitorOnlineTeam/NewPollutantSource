@@ -845,11 +845,8 @@ class TaskRecord extends Component {
                       dateValue={gettasklistqueryparams.CreateTime}
                       style={{ width: '100%' }}
                       allowClear={true}
-                      format="YYYY-MM-DD HH:mm:ss"
+                      format="YYYY-MM-DD"
                       callback={(dates, type) => this.dateCallBack(dates, type, 'CreateTime')}
-                      showTime={{
-                        defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-                      }}
                     />
                   )}
                 </FormItem>
@@ -950,10 +947,7 @@ class TaskRecord extends Component {
                       isNoPanelChange
                       style={{ width: '100%' }}
                       dateValue={gettasklistqueryparams.CompleteTime}
-                      format="YYYY-MM-DD HH:mm:ss"
-                      showTime={{
-                        defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-                      }}
+                      format="YYYY-MM-DD"
                       callback={(dates, type) => this.dateCallBack(dates, type, 'CompleteTime')} allowClear />,
                   )}
                 </FormItem>

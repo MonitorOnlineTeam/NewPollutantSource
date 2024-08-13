@@ -80,8 +80,8 @@ const Index = (props) => {
       props.exportConsumablesRIHList({
         ...values,
         time:undefined,
-        beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        beginTime:moment(values.time[0]).format("YYYY-MM-DD 00:00:00"),
+        endTime:moment(values.time[1]).format("YYYY-MM-DD 23:59:59"),
         pointType:1,
     })
 
@@ -142,8 +142,8 @@ const Index = (props) => {
         time:undefined,
         regionCode: props.regionCode,
         entCode: props.entCode,
-        beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        beginTime:moment(values.time[0]).format("YYYY-MM-DD 00:00:00"),
+        endTime:moment(values.time[1]).format("YYYY-MM-DD 23:59:59"),
         pointType:1,
       }
         props.regGetConsumablesRIHList({ ...par  })
@@ -244,7 +244,9 @@ const Index = (props) => {
   >  
      <Form.Item label='日期' name='time'  style={{paddingRight:'16px'}}>
          <RangePicker allowClear={false} style={{width:'100%'}} 
-          showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
+            format='YYYY-MM-DD'
+          // showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
+          />
     </Form.Item> 
     <Form.Item label='监测点类型' name='pollutantType'  style={{paddingRight:'16px'}}>
         <Select placeholder='监测点类型' style={{width:150}}>     

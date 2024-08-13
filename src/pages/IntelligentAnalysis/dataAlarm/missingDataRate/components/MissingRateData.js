@@ -382,8 +382,8 @@ export default class EntTransmissionEfficiency extends Component {
   dateChange = (date, dataType) => {
     this.updateQueryState({
       // dataType:dataType,
-      beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+      beginTime: date[0] && date[0].format('YYYY-MM-DD 00:00:00'),
+      endTime:  date[1] && date[1].format('YYYY-MM-DD 23:59:59'),
     });
   }
   missingAlarmNum = (record, status) => { //缺失数据报警次数
@@ -424,7 +424,7 @@ export default class EntTransmissionEfficiency extends Component {
                 {level == 1 &&
                   <> <Form.Item>
                     日期查询：
-                <RangePicker_ allowClear={false} onRef={this.onRef1} dataType={''} style={{ minWidth: '200px', marginRight: '10px' }} dateValue={[moment(beginTime), moment(endTime)]}
+                <RangePicker_ format='YYYY-MM-DD'  allowClear={false} onRef={this.onRef1} dataType={''} style={{ minWidth: '200px', marginRight: '10px' }} dateValue={[moment(beginTime), moment(endTime)]}
                       callback={(dates, dataType) => this.dateChange(dates, dataType)} />
                   </Form.Item>
                     <Form.Item label='关注程度'>

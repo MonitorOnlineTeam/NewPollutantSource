@@ -107,8 +107,8 @@ const Index = (props) => {
           ...values,
           time:undefined,
           staticType:showType,
-          beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-          endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+          beginTime:moment(values.time[0]).format("YYYY-MM-DD 00:00:00"),
+          endTime:moment(values.time[1]).format("YYYY-MM-DD 23:59:59"),
           regionLevel: showType==1? 1 :undefined,
           exceptionType:exceptionType,
           pageIndex: pageIndexs? pageIndexs : 1,
@@ -173,8 +173,8 @@ const Index = (props) => {
 
     {showType==1? <Row  align='middle'>
       <Form.Item name='time' label='日期'>
-          <RangePicker allowClear={false}   style={{width:'100%'}} 
-             showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
+          <RangePicker allowClear={false}   style={{width:240}} 
+             format='YYYY-MM-DD'
            />
      </Form.Item>
       <Form.Item label = '监测点类型'  name='pollutantType' style={{padding:'0 8px'}} >
@@ -184,7 +184,7 @@ const Index = (props) => {
       </Select>
         </Form.Item>
        {!isResponseModal&&!isClockAbnormalModal&&<Form.Item label='异常类型' name='exceptionType'  style={{paddingRight:'8px'}}>
-            <Select style={{width:150}} placeholder='请选择'>
+            <Select placeholder='请选择'>
                 <Option value={1}>打卡异常</Option>
                 {/* <Option value={2}>报警响应超时率</Option> */}
             </Select>
@@ -208,12 +208,14 @@ const Index = (props) => {
       :
       <>
       <Row  align='middle'>
-      <Form.Item label='日期' name='time'  style={{paddingRight:'16px'}}>
-         <RangePicker style={{width:'100%'}} 
+      <Form.Item label='日期' name='time'  className='form_label_width_69' style={{paddingRight:'16px'}}>
+         <RangePicker  style={{width:240}} 
           allowClear={false}
-          showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
+          format='YYYY-MM-DD'
+          // showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
+          />
     </Form.Item> 
-     <Form.Item label='企业名称' name='entName' style={{paddingRight:'16px',width:350}}>
+     <Form.Item label='企业名称' name='entName' className='form_label_width_83' style={{paddingRight:'16px',width:350}}>
          <Input placeholder='请输入企业名称'  allowClear/>
        </Form.Item>
        <Form.Item label='行政区'  name='regionCode'   style={{paddingRight:'16px'}}>
@@ -222,13 +224,13 @@ const Index = (props) => {
        </Row>
        <Row style={{paddingTop:8}}>
        <Form.Item name='exceptionType'  label='异常类型' style={{paddingRight:'16px'}}>
-           <Select placeholder='请选择' style={{width:150}}>
+           <Select placeholder='请选择'  style={{width:240}}>
              <Option value={1}>打卡异常</Option>
              {/* <Option value={2}>报警响应超时率</Option> */}
            </Select>
        </Form.Item>
-       <Form.Item label='监测点类型' name='pollutantType'  style={{paddingRight:'16px'}}>
-        <Select placeholder='请选择' style={{width:150}} allowClear>
+       <Form.Item label='监测点类型' name='pollutantType' style={{paddingRight:'16px'}}>
+        <Select placeholder='请选择' style={{width:170}} allowClear>
            <Option value={2}>废气</Option>
            <Option value={1}>废水</Option>
            </Select>

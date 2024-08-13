@@ -213,9 +213,9 @@ const Index = (props) => {
       const values = await form.validateFields();
         props.getFaultFeedbackList({
           ...values,
-          time:undefined,
-          FaultBTime:values.Time? moment(values.Time[0]).format("YYYY-MM-DD HH:mm:ss") : undefined,
-          FaultETime:values.Time?moment(values.Time[1]).format("YYYY-MM-DD HH:mm:ss"): undefined,
+          Time:undefined,
+          FaultBTime:values.Time? moment(values.Time[0]).format("YYYY-MM-DD 00:00:00") : undefined,
+          FaultETime:values.Time? moment(values.Time[1]).format("YYYY-MM-DD 23:59:59"): undefined,
           pageIndex: pageIndex,
           pageSize: pageSize,
         })
@@ -229,9 +229,9 @@ const Index = (props) => {
     const values = await form.validateFields();
     props.exportFaultFeedback({
       ...values,
-      time:undefined,
-      FaultBTime:values.Time? moment(values.Time[0]).format("YYYY-MM-DD HH:mm:ss") : undefined,
-      FaultETime:values.Time?moment(values.Time[1]).format("YYYY-MM-DD HH:mm:ss"): undefined,
+      Time:undefined,
+      FaultBTime:values.Time? moment(values.Time[0]).format("YYYY-MM-DD 00:00:00") : undefined,
+      FaultETime:values.Time?moment(values.Time[1]).format("YYYY-MM-DD 23:59:59"): undefined,
     })
   
   }

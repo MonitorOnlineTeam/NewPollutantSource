@@ -138,10 +138,10 @@ class Test extends PureComponent {
 
   getTableData = () => {
     let values = this.props.form.getFieldsValue();
-    let ExceptionBBtime = values.time1 && values.time1.length ? moment(values.time1[0]).format('YYYY-MM-DD HH:00:00') : undefined;
-    let ExceptionBEtime = values.time1 && values.time1.length ? moment(values.time1[1]).format('YYYY-MM-DD HH:00:00') : undefined;
-    let ExceptionEBtime = values.time2 && values.time2.length ? moment(values.time2[0]).format('YYYY-MM-DD HH:00:00') : undefined;
-    let ExceptionEEtime = values.time2 && values.time2.length ? moment(values.time2[1]).format('YYYY-MM-DD HH:00:00') : undefined;
+    let ExceptionBBtime = values.time1 && values.time1.length ? moment(values.time1[0]).format('YYYY-MM-DD 00:00:00') : undefined;
+    let ExceptionBEtime = values.time1 && values.time1.length ? moment(values.time1[1]).format('YYYY-MM-DD 23:59:59') : undefined;
+    let ExceptionEBtime = values.time2 && values.time2.length ? moment(values.time2[0]).format('YYYY-MM-DD 00:00:00') : undefined;
+    let ExceptionEEtime = values.time2 && values.time2.length ? moment(values.time2[1]).format('YYYY-MM-DD 23:59:59') : undefined;
     this.props.dispatch({
       type: "entExceptionReported/getTableData",
       payload: {
@@ -192,14 +192,14 @@ class Test extends PureComponent {
                   {getFieldDecorator('time1', {
                     initialValue: [moment().subtract(1, 'month'), moment()]
                   })(
-                    <RangePicker showTime format="YYYY-MM-DD HH" />
+                    <RangePicker style={{ width: 240 }} format="YYYY-MM-DD" />
                   )}
                 </FormItem>
                 <FormItem label={<span>异常结束时间</span>}>
                   {getFieldDecorator('time2', {
                     // initialValue: [moment().subtract(1, 'month'), moment()]
                   })(
-                    <RangePicker showTime format="YYYY-MM-DD HH" />
+                    <RangePicker style={{ width: 240 }} format="YYYY-MM-DD" />
                   )}
                 </FormItem>
               </Row>
@@ -208,7 +208,7 @@ class Test extends PureComponent {
                   {getFieldDecorator('DataType', {
                     // initialValue: ["HourData"]
                   })(
-                    <Select mode="multiple" allowClear style={{ width: 314 }} placeholder="请选择异常数据类型">
+                    <Select mode="multiple" allowClear style={{ width: 240 }} placeholder="请选择异常数据类型">
                       <Option key="HourData" value="HourData">小时数据</Option>
                       <Option key="DayData" value="DayData">日均数据</Option>
                     </Select>

@@ -162,15 +162,17 @@ class SdlForm extends PureComponent {
 
   // 处理时间控件
   _rtnDateEl = item => {
+    const isStart = item.fullFieldName == 'dbo.T_Bas_TestCommonPoint.BeginTime';
+    const isEnd = item.fullFieldName == 'dbo.T_Bas_TestCommonPoint.EndTime';
     const { dateFormat = 'YYYY-MM-DD HH:mm:ss' } = item;
-    const format = dateFormat || 'YYYY-MM-DD HH:mm:ss';
+    const format = dateFormat.toUpperCase();
     if (format === 'YYYY-MM' || format === 'MM') {
       // 年月 、 月
       return <MonthPicker style={{ width: '100%' }} format={format} />;
     }
     if (format === 'YYYY') {
       // 年
-      return <DatePicker picker="year" format={format} style={{ width: '100%' }} />;
+      return <DatePicker format={format} style={{ width: '100%' }} />;
       // return <DatePicker
       //   mode="year"
       //   onPanelChange={(value, mode) => {
@@ -179,10 +181,30 @@ class SdlForm extends PureComponent {
       //   format={format} />
     }
     if (format === 'YYYY-MM-DD') {
-      return <DatePicker format={format} style={{ width: '100%' }} />;
+      return (
+        <DatePicker
+          format={format}
+          style={{ width: '100%' }}
+          disabledDate={
+            item.fullFieldName === 'dbo.T_Bas_CommonPoint.Col10' ? (current)=>current && current > moment().endOf('day') : null
+          }
+        />
+      ); //disabledDate 监测点监测设备安装日期选择范围显示/>
     }
     // 年-月-日 时:分:秒
-    return <DatePicker showTime format={format} style={{ width: '100%' }} />;
+    return (
+      <DatePicker
+        showTime={{
+          defaultValue: isStart
+            ? moment('00:00:00', 'HH:mm:ss')
+            : isEnd
+            ? moment('23:59:59', 'HH:mm:ss')
+            : moment(),
+        }}
+        format={'YYYY-MM-DD HH:mm:ss'}
+        style={{ width: '100%' }}
+      />
+    );
   };
 
   // 检验重复

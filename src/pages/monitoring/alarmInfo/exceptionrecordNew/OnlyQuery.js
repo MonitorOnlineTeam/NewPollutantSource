@@ -230,10 +230,10 @@ class index extends PureComponent {
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
-      beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
+      beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD 00:00:00") : moment(values.time[0]).format("YYYY-MM-DD 00:00:00")
     }
     if (values.time && values.time[1]) {
-      endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD HH:59:59") : moment(values.time[1]).format("YYYY-MM-DD")
+      endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD 23:59:59") : moment(values.time[1]).format("YYYY-MM-DD 23:59:59")
     }
     this.props.dispatch({
       type: "exceptionrecordNew/getExceptionAlarmListForRegion",
@@ -264,10 +264,10 @@ class index extends PureComponent {
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
-      beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
+      beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD 00:00:00") : moment(values.time[0]).format("YYYY-MM-DD 00:00:00")
     }
     if (values.time && values.time[1]) {
-      endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD HH:59:59") : moment(values.time[1]).format("YYYY-MM-DD")
+      endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD 23:59:59") : moment(values.time[1]).format("YYYY-MM-DD 23:59:59")
     }
     this.props.dispatch({
       type: "exceptionrecordNew/exportExceptionAlarm",
@@ -337,8 +337,8 @@ class index extends PureComponent {
         showTypeText = "超量程报警情况"
       }
     }
-    let beginTime = queryCondition.dataType === "HourData" ? moment(queryCondition.beginTime).format("YYYY年MM月DD号HH时") : moment(queryCondition.beginTime).format("YYYY年MM月DD号")
-    let endTime = queryCondition.dataType === "HourData" ? moment(queryCondition.endTime).format("YYYY年MM月DD号HH时") : moment(queryCondition.endTime).format("YYYY年MM月DD号")
+    let beginTime = queryCondition.dataType === "HourData" ? moment(queryCondition.beginTime).format("YYYY年MM月DD号") : moment(queryCondition.beginTime).format("YYYY年MM月DD号")
+    let endTime = queryCondition.dataType === "HourData" ? moment(queryCondition.endTime).format("YYYY年MM月DD号") : moment(queryCondition.endTime).format("YYYY年MM月DD号")
     let modelTitle = `${RegionName}${beginTime} - ${endTime}${showTypeText}`
     if (secondQueryCondition.ResponseStatus == "0") {
       _detailsColumns = _detailsColumns.filter(item => item.dataIndex !== "CompleteTime");
@@ -369,7 +369,7 @@ class index extends PureComponent {
                   initialValue: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")]
                 })( */}
                 {/* <RangePicker style={{ width: 200 }} allowClear={false} showTime={showTime} format={format} style={{ width: '100%' }} /> */}
-                <RangePicker_ allowClear={false} onRef={(ref) => {
+                <RangePicker_ format='YYYY-MM-DD'  allowClear={false} onRef={(ref) => {
                   this.rangePicker = ref;
                 }} dataType={this.props.form.getFieldValue("dataType")} style={{ width: "100%", marginRight: '10px' }} dateValue={exceptionTime}
                   callback={(dates, dataType) => this.dateChange(dates, dataType)} />

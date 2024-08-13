@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-08-16 09:48:47
- * @LastEditors: lzp
- * @LastEditTime: 2019-09-17 15:31:10
+ * @LastEditors: outman0611 jia_anbo@163.com
+ * @LastEditTime: 2024-08-12 17:56:23
  * @Description: 运维记录
  */
 import React, { Component } from 'react';
@@ -296,8 +296,8 @@ class OperationRecord extends Component {
       type: 'operationform/updateState',
       payload: {
         rangDate: date,
-        BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        EndTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        BeginTime: date[0].format('YYYY-MM-DD 00:00:00'),
+        EndTime: date[1].format('YYYY-MM-DD 23:59:59'),
         currentDate: [date[0], date[1]],
       },
     });
@@ -428,6 +428,7 @@ class OperationRecord extends Component {
                   })}
               </Select>
               <RangePicker_
+                format='YYYY-MM-DD'
                 style={{ width: 350, textAlign: 'left', marginRight: 10 }}
                 dateValue={currentDate}
                 allowClear={false}

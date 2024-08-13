@@ -104,8 +104,8 @@ const Index = (props) => {
       ...values,
       time: undefined,
       staticType: showType,
-      beginTime: moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-      endTime: moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+      beginTime: moment(values.time[0]).format("YYYY-MM-DD 00:00:00"),
+      endTime: moment(values.time[1]).format("YYYY-MM-DD 23:59:59"),
       outOrInside: outOrInside,
       regionLevel: showType == 1 ? 1 : undefined,
       pageIndex: undefined,
@@ -135,8 +135,8 @@ const Index = (props) => {
           entCode: values.entCode ? values.entCode : props.entCode,
           time: undefined,
           staticType: showType,
-          beginTime: moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-          endTime: moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+          beginTime: moment(values.time[0]).format("YYYY-MM-DD 00:00:00"),
+          endTime: moment(values.time[1]).format("YYYY-MM-DD 23:59:59"),
           outOrInside: outOrInside,
           regionLevel: showType == 1 ? 1 : undefined,
           homePageIndex: isPlanInspectionModal ? 1 : isPlanCalibrationModal ? 2 : undefined,
@@ -179,9 +179,10 @@ const Index = (props) => {
     >
       {showType == 1 ? <Row align='middle'>
         <Form.Item name='time' label='日期'>
-          <RangePicker style={{ width: '100%' }}
+          <RangePicker style={{ width: 240 }}
             allowClear={false}
-            showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
+            format='YYYY-MM-DD'
+            // showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
           />
         </Form.Item>
         {(isPlanCalibrationModal || isPlanInspectionModal || isActualCalibrationModal) && <Form.Item label='打卡状态' name='singinStatus' style={{ padding: '0 8px' }}>
@@ -215,9 +216,9 @@ const Index = (props) => {
         :
         <>
           <Row align='middle'>
-            <Form.Item label='日期' name='time' style={{ paddingRight: '16px' }}>
-              <RangePicker allowClear={false} style={{ width: '100%' }}
-                showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }} />
+            <Form.Item label='日期' name='time' style={{ paddingRight: '16px' }} className='form_label_width_83'>
+              <RangePicker allowClear={false} style={{ width: 240 }}
+                format='YYYY-MM-DD' />
             </Form.Item>
             <Form.Item label='企业名称' name='entName' style={{ paddingRight: '16px', width: 350 }}>
               <Input placeholder='请输入企业名称' allowClear />
@@ -228,7 +229,7 @@ const Index = (props) => {
           </Row>
           <Row style={{ paddingTop: 8 }}>
             <Form.Item label='监测点类型' name='pollutantType' style={{ paddingRight: '16px' }}>
-              <Select placeholder='监测点类型' style={{ width: 120 }}>
+              <Select placeholder='监测点类型'  style={{ width: 240 }}>
                 <Option value={2}>废气</Option>
                 <Option value={1}>废水</Option>
               </Select>

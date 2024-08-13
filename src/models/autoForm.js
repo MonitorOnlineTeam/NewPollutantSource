@@ -23,6 +23,7 @@ function formatDateFormat(format) {
       _format = 'YYYY-MM-01 00:00:00';
       break;
     case 'YYYY-MM-DD':
+    case 'YYYY-MM-DD 00:00:00':
       _format = 'YYYY-MM-DD 00:00:00';
       break;
     case 'YYYY-MM-DD HH':
@@ -49,9 +50,10 @@ function getQueryParams(state, payload) {
         const isArrMoment =
           Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
         let format = state.dateFormat[configId][key] || 'YYYY-MM-DD HH:mm:ss';
+        console.log(state.dateFormat[configId][key])
         let _format = formatDateFormat(format);
         if (isArrMoment) {
-          console.log('searchForm[key]=', searchForm[key]);
+          console.log(format,_format, 'searchForm[key]=', searchForm[key]);
           groupItem = [
             {
               Key: key,
@@ -60,7 +62,7 @@ function getQueryParams(state, payload) {
             },
             {
               Key: key,
-              Value: moment(searchForm[key].value[1]).format(_format),
+              Value: moment(searchForm[key].value[1]).format(_format=='YYYY-MM-DD 00:00:00'? 'YYYY-MM-DD 23:59:59': _format),
               Where: '$lte',
             },
           ];
@@ -98,15 +100,15 @@ function getQueryParams(state, payload) {
   const searchParams = payload.searchParams || [];
   group.length || searchParams.length
     ? (postData.ConditionWhere = JSON.stringify({
-        // group.length? postData.ConditionWhere = JSON.stringify({
-        rel: '$and',
-        group: [
-          {
-            rel: '$and',
-            group: [...group, ...searchParams],
-          },
-        ],
-      }))
+      // group.length? postData.ConditionWhere = JSON.stringify({
+      rel: '$and',
+      group: [
+        {
+          rel: '$and',
+          group: [...group, ...searchParams],
+        },
+      ],
+    }))
     : '';
 
   return postData;
@@ -237,9 +239,7 @@ export default Model.extend({
             }
             // 日期格式化
             if (item.DF_DATEFORMAT) {
-              dateFormat = {
-                [item.FullFieldNameVerticalBar]: item.DF_DATEFORMAT,
-              };
+              dateFormat[item.FullFieldNameVerticalBar] =  item.DF_DATEFORMAT;
             }
             return {
               type: item.DF_QUERY_CONTROL_TYPE,
@@ -471,8 +471,8 @@ export default Model.extend({
               item.DF_FOREIGN_TYPE === 2
                 ? `${item.FullFieldName}_Name`
                 : item.FOREIGH_DT_CONFIGID
-                ? item.FOREIGN_DF_NAME
-                : item.DF_NAME, // 判断是否是外键或表连接
+                  ? item.FOREIGN_DF_NAME
+                  : item.DF_NAME, // 判断是否是外键或表连接
             // configId: item.DT_CONFIG_ID,
             isHide: item.DF_HIDDEN,
             configId: item.FOREIGH_DT_CONFIGID,
