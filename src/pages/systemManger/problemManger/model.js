@@ -27,7 +27,7 @@ export default Model.extend({
           tableDatas:result.Datas?result.Datas : [],
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addOrUpdQuestionDetial({ payload,callback }, { call, put, update }) { //添加修改
@@ -36,7 +36,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     *getQuestionType({ payload,callback }, { call, put, update }) { //问题类别
@@ -46,7 +46,7 @@ export default Model.extend({
           callback&&callback(result.Datas)
          }
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *deleteQuestionDetial({ payload,callback }, { call, put, update }) { //删除
@@ -55,7 +55,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportTestPeport({ payload, callback }, { call, put, update }) { //检测报告 导出
@@ -64,7 +64,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     }, 
   },

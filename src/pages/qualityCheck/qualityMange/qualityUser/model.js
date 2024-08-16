@@ -19,7 +19,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ qualityUserList: result.Datas })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 删除运维人
@@ -29,7 +29,7 @@ export default Model.extend({
         message.success("删除成功");
         callback && callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 添加运维人
@@ -40,7 +40,7 @@ export default Model.extend({
         yield update({ handleUserModalVisible: false });
         yield put({ type: "getQualityUserList", payload: {} })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 修改运维人
@@ -51,7 +51,7 @@ export default Model.extend({
         yield update({ handleUserModalVisible: false });
         yield put({ type: "getQualityUserList", payload: {} })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取查看运维人
@@ -60,7 +60,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ viewUserData: result.Datas, handleUserModalVisible: edit ? true : false })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 删除运维人照片
@@ -68,7 +68,7 @@ export default Model.extend({
       const result = yield call(services.deletePhoto, payload);
       if (result.IsSuccess) {
       } else {
-        // message.error(result.Message)
+        // result.Message && message.error(result.Message)
       }
     },
     // 导出运维人
@@ -77,7 +77,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         downloadFile(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

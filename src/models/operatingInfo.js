@@ -28,7 +28,7 @@ export default Model.extend({
             tableTotal:result.Total,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportOperateRIHPointList({ payload,callback }, { call, put, update, select }) { //导出

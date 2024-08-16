@@ -40,7 +40,7 @@ export default Model.extend({
                 )
                 callback && callback()
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
             yield update(type==2? { tableLoading: false } : {  tableLoading2: false})
         },
@@ -50,7 +50,7 @@ export default Model.extend({
             if (result.IsSuccess) {
                 callback && callback(result.Datas)
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
             
         },
@@ -71,7 +71,7 @@ export default Model.extend({
             if (result.IsSuccess) {
                 callback && callback(result.Datas)
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
         },
         *SubmitProcessed({ payload, callback }, { call, put, update }) { // 客户满意度调查 处理
@@ -79,7 +79,7 @@ export default Model.extend({
             if (result.IsSuccess) {
                 callback && callback(result.Datas)
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
         },
         *SubmitRermination({ payload, callback }, { call, put, update }) { // 客户满意度调查 终止处理
@@ -87,7 +87,7 @@ export default Model.extend({
             if (result.IsSuccess) {
                 callback && callback(result.Datas)
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
         },
         *TransmitSurvey({ payload, callback }, { call, put, update }) { // 客户满意度 转发
@@ -95,7 +95,7 @@ export default Model.extend({
             if (result.IsSuccess) {
                 callback && callback(result.Datas)
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
         },
       

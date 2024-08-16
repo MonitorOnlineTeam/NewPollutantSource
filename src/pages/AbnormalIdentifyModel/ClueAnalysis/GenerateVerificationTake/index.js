@@ -514,6 +514,7 @@ const Index = props => {
           values.date && values.date[1] ? values.date[1].format('YYYY-MM-DD 23:59:59') : undefined,
         pageIndex: pageIndex,
         pageSize: pageSize,
+        IsReal: 1,
       },
       callback: res => {
         const falg = hasConsistentProperties(res.Datas, 'DGIMN', 'WarningName');
@@ -595,53 +596,53 @@ const Index = props => {
   // };
 
   useEffect(() => {
-  //   if (visible) {
-  //     modalForm.resetFields();
-  //     setSaveType();
-  //     setSiteVerificationPlanType(1);
-  //     setVerificationPlanType(1);
-  //     setCollapsekey('1');
-  //     dispatch({
-  //       type: 'AbnormalIdentifyModel/GetPreTakeFlagDatas',
-  //       payload: {},
-  //       callback: res => {
-  //         setPreTakeFlagDatas(res);
-  //       },
-  //     });
-  //     dispatch({
-  //       type: 'AbnormalIdentifyModel/GetCheckRoleDatas',
-  //       payload: {},
-  //       callback: res => {
-  //         const userList = res?.map(item => {
-  //           return {
-  //             label: item.QuestionName,
-  //             options: item?.Users?.map(chilItem => ({
-  //               label: chilItem.UserName,
-  //               value: chilItem.UserID,
-  //             })),
-  //           };
-  //         });
-  //         console.log(userList);
-  //         setCheckRoleDatas(userList);
-  //       },
-  //     });
-  //     dispatch({
-  //       type: 'AbnormalIdentifyModel/GetPlanDatas',
-  //       payload: {},
-  //       callback: res => {
-  //         setPlanDatas(res);
-  //       },
-  //     });
-  //   } else {
-  //     setSelectedRowKeys([]);
-  //     setSelectedRow([]);
-  //     setCollapsekey();
-  //     setPreTakeFlagDatas([]);
-  //     setCheckRoleDatas([]);
-  //     setPlanDatas([]);
-  //     initVerificationActionData();
-  //   }
-   if(!visible){
+    //   if (visible) {
+    //     modalForm.resetFields();
+    //     setSaveType();
+    //     setSiteVerificationPlanType(1);
+    //     setVerificationPlanType(1);
+    //     setCollapsekey('1');
+    //     dispatch({
+    //       type: 'AbnormalIdentifyModel/GetPreTakeFlagDatas',
+    //       payload: {},
+    //       callback: res => {
+    //         setPreTakeFlagDatas(res);
+    //       },
+    //     });
+    //     dispatch({
+    //       type: 'AbnormalIdentifyModel/GetCheckRoleDatas',
+    //       payload: {},
+    //       callback: res => {
+    //         const userList = res?.map(item => {
+    //           return {
+    //             label: item.QuestionName,
+    //             options: item?.Users?.map(chilItem => ({
+    //               label: chilItem.UserName,
+    //               value: chilItem.UserID,
+    //             })),
+    //           };
+    //         });
+    //         console.log(userList);
+    //         setCheckRoleDatas(userList);
+    //       },
+    //     });
+    //     dispatch({
+    //       type: 'AbnormalIdentifyModel/GetPlanDatas',
+    //       payload: {},
+    //       callback: res => {
+    //         setPlanDatas(res);
+    //       },
+    //     });
+    //   } else {
+    //     setSelectedRowKeys([]);
+    //     setSelectedRow([]);
+    //     setCollapsekey();
+    //     setPreTakeFlagDatas([]);
+    //     setCheckRoleDatas([]);
+    //     setPlanDatas([]);
+    //     initVerificationActionData();
+    //   }
+    if (!visible) {
       setSelectedRowKeys([]);
       setSelectedRow([]);
     }

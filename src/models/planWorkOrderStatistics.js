@@ -52,7 +52,7 @@ export default Model.extend({
           queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })    
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
@@ -66,7 +66,7 @@ export default Model.extend({
           queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })  
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *regPointGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区 省级 运维监测点
@@ -77,7 +77,7 @@ export default Model.extend({
           regPointTableDatas:result.Datas,
         })  
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     
@@ -92,7 +92,7 @@ export default Model.extend({
         })  
         callback && callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *cityDetailGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区市  计划外 市详情
@@ -104,7 +104,7 @@ export default Model.extend({
           queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })  
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *entOutsidePointGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //企业  计划外 监测点
@@ -115,7 +115,7 @@ export default Model.extend({
           entOutsidePointListDatas:result.Datas,
         })  
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportTaskWorkOrderList({ payload,callback }, { call, put, update }) { //企业 行政区 导出
@@ -186,7 +186,7 @@ export default Model.extend({
           queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })    
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
@@ -199,7 +199,7 @@ export default Model.extend({
           queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })    
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -213,7 +213,7 @@ export default Model.extend({
           queryPar:{...payload,entCode:undefined,entName:undefined,pointName:undefined},
         })  
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportActualTaskWorkOrderList({ payload,callback }, { call, put, update }) { // 导出

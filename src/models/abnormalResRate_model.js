@@ -27,7 +27,7 @@ export default Model.extend({
           attentionList: response.Datas,
         });
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // table数据-师一级
@@ -38,7 +38,7 @@ export default Model.extend({
           tableDataSource: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 导出-师一级
@@ -48,7 +48,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // table数据-城市一级
@@ -59,7 +59,7 @@ export default Model.extend({
           tableDataSource: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 导出-城市一级
@@ -69,7 +69,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // table数据-二级页面
@@ -80,7 +80,7 @@ export default Model.extend({
           secondTableDataSource: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 导出-师二级
@@ -90,7 +90,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 根据行政区查询企业
@@ -101,7 +101,7 @@ export default Model.extend({
           entByRegionList: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 

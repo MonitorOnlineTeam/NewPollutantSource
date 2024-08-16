@@ -33,7 +33,7 @@ export default Model.extend({
           tableDatas:result.Datas? result.Datas:[],
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -43,7 +43,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportEntAccountTypeList({ payload, callback }, { call, put, update }) { //导出

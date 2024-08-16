@@ -72,7 +72,7 @@ export default Model.extend({
           bottleDataList: [],
           gasData: [{}, {}, {}, {}],
         })
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 发送核查命令
@@ -111,7 +111,7 @@ export default Model.extend({
         // yield update({ QCAResultLoading: true })
       } else {
         yield update({ QCAResultLoading: false })
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取质控仪状态
@@ -179,7 +179,7 @@ export default Model.extend({
         //     Data: {},
         //   },
         // })
-        // message.error(result.Message)
+        // result.Message && message.error(result.Message)
       }
     },
     // 获取盲样核查浓度范围
@@ -188,7 +188,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

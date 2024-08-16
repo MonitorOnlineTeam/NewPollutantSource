@@ -24,7 +24,7 @@ export default Model.extend({
           tableDatas: result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getInspectorRectificationView({ payload, callback }, { call, put, update }) { //详情
@@ -32,7 +32,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportInspectorRectificationManage({ payload, callback }, { call, put, update }) { //导出
@@ -41,7 +41,7 @@ export default Model.extend({
         message.success(result.Message)
         downloadFile(`${result.Datas}`)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *updateRectificationStatus({ payload, callback }, { call, put, update }) { //修改状态

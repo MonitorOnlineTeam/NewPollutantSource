@@ -28,7 +28,7 @@ export default Model.extend({
             yield update({ dataSource: result.Datas,total:result.Datas.length, loading:false  })
             callback(result.Datas)
           } else {
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
           }
         },
   }

@@ -35,7 +35,7 @@ export default Model.extend({
         });
         callback && callback(response.Datas)
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 获取关注列表
@@ -47,7 +47,7 @@ export default Model.extend({
           GHGEchartsData: response.Datas,
         });
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 获取柱状图详细数据 - 表格数据
@@ -59,7 +59,7 @@ export default Model.extend({
           GHGChartData: response.Datas.ChartData,
         });
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 温室气体线性回归分析 - 图表数据
@@ -74,7 +74,7 @@ export default Model.extend({
           },
         });
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 月度排放量比较数据 - 图表数据
@@ -85,7 +85,7 @@ export default Model.extend({
           monthDischargeData: response.Datas,
         });
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 温室气体排放报告
@@ -96,7 +96,7 @@ export default Model.extend({
           CO2ReportList: response.Datas,
         });
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 温室气体排放报告
@@ -109,7 +109,7 @@ export default Model.extend({
         callback && callback();
         message.success('生成报表成功！')
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 获取缺省值码表
@@ -120,7 +120,7 @@ export default Model.extend({
           Dictionaries: response.Datas
         })
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 判断是否重复 - 是否可添加
@@ -129,7 +129,7 @@ export default Model.extend({
       if (response.IsSuccess) {
         callback && callback(response.Datas)
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 获取模板下载地址
@@ -138,7 +138,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         window.open('/api/' + result.Datas)
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
   },

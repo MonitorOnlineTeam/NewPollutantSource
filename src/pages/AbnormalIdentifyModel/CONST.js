@@ -115,6 +115,7 @@ export const getColorByName = {
 
 export const ModelNumberIdsDatas = {
   all: [],
+  history: [],
   // 波动范围异常分析：疑似篡改分析仪量程、疑似人为修改颗粒物斜率截距
   2.2: ['069ab699-428a-4f4b-8df7-915d6b4f3215', '5bfd23c7-03da-4f4b-a258-a9c618774ab9'],
   // 样气异常识别:疑似监测样品为空气,疑似监测样品混入氮气,疑似监测样品混入空气,疑似监测样品混入氧混合气

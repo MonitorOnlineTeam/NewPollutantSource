@@ -31,7 +31,7 @@ export default Model.extend({
           maxNum: result.Datas.MaxNum,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -41,7 +41,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *editSystemModel({ payload, callback }, { call, put, update }) { //修改
@@ -50,7 +50,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *delSystemModel({ payload, callback }, { call, put, update }) { //删除
@@ -59,7 +59,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getMonitoringTypeList({ payload, callback }, { call, put, update }) { //获取监测类别
@@ -67,7 +67,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ monitoringTypeList: result.Datas })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getManufacturerList({ payload, callback }, { call, put, update }) { //获取厂商列表
@@ -75,7 +75,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ manufacturerList: result.Datas && result.Datas.mlist ? result.Datas.mlist : [] })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getSystemModelNameList({ payload, callback }, { call, put, update }) { //获取系统名称列表
@@ -83,7 +83,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ systemModelNameList: result.Datas })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //导出
@@ -93,7 +93,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

@@ -32,7 +32,7 @@ export default Model.extend({
           systemModelListTotal: result.Total,
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //cems 监测设备 - 生产厂家(弹框) 
@@ -44,7 +44,7 @@ export default Model.extend({
           equipmentInfoListTotal: result.Total,
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //添加或修改监测点信息
@@ -54,7 +54,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //获取行业和监测点类型信息
@@ -63,7 +63,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //工艺类型
@@ -72,7 +72,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //获取监测点，系统信息，系统变更信息仪表信息，仪表变更信息
@@ -84,7 +84,7 @@ export default Model.extend({
         })
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //添加或修改系统型信息
@@ -94,7 +94,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //添加或修改系统更换记录
@@ -104,7 +104,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //添加或修改仪表信息
@@ -114,7 +114,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //添加或修改仪表更换记录
@@ -124,7 +124,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //监测点排序
@@ -134,7 +134,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //企业电子围栏半径 添加
@@ -144,7 +144,7 @@ export default Model.extend({
         message.success(result.Message)
         callback&&callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //企业电子围栏半径 获取
@@ -153,7 +153,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result?.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

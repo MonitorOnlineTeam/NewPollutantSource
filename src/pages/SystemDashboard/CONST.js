@@ -29,7 +29,41 @@ export const allSysList = [
     title: '污染源监督核查',
     ID: 'f4da6d42-4282-48de-88c4-c7c8434ebdb4',
   },
+  {
+    key: '动态质控',
+    value: '/SystemDashboard/QualityControl',
+    title: '污染源动态质控',
+    ID: '3e5dec12-e8af-4733-8954-29045e74c76e',
+  },
 ];
+
+// 解决经纬度一样时出现重叠的情况
+export const adjustDuplicateCoordinates = (data, fixedValue = 0.00004) => {
+  // 记录坐标出现次数的字典
+  const coordsCount = {};
+
+  // 遍历数据数组
+  data.forEach(item => {
+    const lat = item.position.latitude;
+    const long = item.position.longitude;
+    const key = `${lat},${long}`;
+
+    // 检查坐标是否已记录
+    if (coordsCount[key]) {
+      // 增加出现次数
+      coordsCount[key]++;
+      // 修改坐标值
+      item.position.latitude = (lat + coordsCount[key] * fixedValue).toFixed(6);
+      item.position.longitude = (long + coordsCount[key] * fixedValue).toFixed(6);
+    } else {
+      // 记录坐标首次出现
+      coordsCount[key] = 1;
+    }
+  });
+
+  // 返回修改后的数据
+  return data;
+};
 
 // [
 //   {

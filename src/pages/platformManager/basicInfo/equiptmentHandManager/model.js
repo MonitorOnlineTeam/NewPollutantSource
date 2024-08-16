@@ -22,7 +22,7 @@ export default Model.extend({
           tableLoading:false
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },

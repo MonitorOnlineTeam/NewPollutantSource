@@ -27,7 +27,7 @@ export default Model.extend({
           attentionList: response.Datas,
         });
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 根据企业类型查询监测因子
@@ -39,7 +39,7 @@ export default Model.extend({
         });
         callback && callback(response.Datas)
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 异常数据查询-师一级
@@ -50,7 +50,7 @@ export default Model.extend({
           exceptionAlarmDataSource: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 异常数据导出-师一级
@@ -60,7 +60,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
       // 异常数据查询-城市一级
@@ -71,7 +71,7 @@ export default Model.extend({
             exceptionAlarmDataSource: result.Datas
           })
         } else {
-          message.error(result.Message)
+          result.Message && message.error(result.Message)
         }
       },
       // 异常数据导出-城市一级
@@ -80,7 +80,7 @@ export default Model.extend({
         if (result.IsSuccess) {
           window.open(result.Datas)
         } else {
-          message.error(result.Message)
+          result.Message && message.error(result.Message)
         }
       },  
     // 异常数据报警-二级页面
@@ -91,7 +91,7 @@ export default Model.extend({
           exceptionAlarmListForEntDataSource: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 异常数据报警导出-师二级
@@ -101,7 +101,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 

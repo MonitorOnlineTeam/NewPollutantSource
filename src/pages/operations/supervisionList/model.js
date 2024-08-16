@@ -31,7 +31,7 @@ export default Model.extend({
           inspectorTypeItemListTotal: result.Total,
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //督查类别清单 添加or修改
@@ -41,7 +41,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -54,7 +54,7 @@ export default Model.extend({
           assessmentMethodList: result.Datas.AssessmentMethod ? result.Datas.AssessmentMethod : [],
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //督查类别清单 删除
@@ -64,7 +64,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //督查类别清单 更改状态
@@ -74,7 +74,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -89,7 +89,7 @@ export default Model.extend({
           inspectorTemplateListTotal: result.Total,
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 添加or修改
@@ -101,7 +101,7 @@ export default Model.extend({
          message.success(result.Message)
         callback()
        } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
        }
       }else{
       message.warning('模板数据不能为空')
@@ -114,7 +114,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 类别描述
@@ -126,7 +126,7 @@ export default Model.extend({
         });
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 更改模板状态
@@ -136,7 +136,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 督查模板详细
@@ -146,7 +146,7 @@ export default Model.extend({
         yield update({ inspectorTemplateView: result.Datas.rtnlist,  });
         callback(result.Datas.rtnlist)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

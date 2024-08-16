@@ -40,7 +40,7 @@ export default Model.extend({
             //       attentionList: response.Datas,
             //     });
             //   } else {
-            //     message.error(response.Message);
+            //     response.Message && message.error(response.Message);
             //   }
         },
         // 获取运维工单统计 表头
@@ -51,7 +51,7 @@ export default Model.extend({
                     taskStaticTitle: response.Datas,
                 });
             } else {
-                message.error(response.Message);
+                response.Message && message.error(response.Message);
             }
         },
         // 获取运维工单统计 数据
@@ -65,7 +65,7 @@ export default Model.extend({
                     taskStatic: response.Datas,
                 });
             } else {
-                message.error(response.Message);
+                response.Message && message.error(response.Message);
             }
         },
         // 区域 运维工单统计 表头    行政区运维工单统计标题栏
@@ -76,7 +76,7 @@ export default Model.extend({
                     regionTitle: response.Datas,
                 });
             } else {
-                message.error(response.Message);
+                response.Message && message.error(response.Message);
             }
         },
         // 区域 运维工单统计 数据    运维行政区工单统计
@@ -87,7 +87,7 @@ export default Model.extend({
                     regionTaskStatic: response.Datas,
                 });
             } else {
-                message.error(response.Message);
+                response.Message && message.error(response.Message);
             }
         },
         // 企业 运维工单统计 表头    运维企业工单统计标题栏
@@ -98,7 +98,7 @@ export default Model.extend({
                     enterpriseTitle: response.Datas,
                 });
             } else {
-                message.error(response.Message);
+                response.Message && message.error(response.Message);
             }
         },
         // 企业 运维工单统计 数据    运维企业工单统计
@@ -109,7 +109,7 @@ export default Model.extend({
                     enterpriseTaskStatic: response.Datas,
                 });
             } else {
-                message.error(response.Message);
+                response.Message && message.error(response.Message);
             }
         },
         // 排口（企业） 运维工单统计 表头    运维排口工单统计标题栏
@@ -120,7 +120,7 @@ export default Model.extend({
                     pointTitle: response.Datas,
                 });
             } else {
-                message.error(response.Message);
+                response.Message && message.error(response.Message);
             }
         },
         // 排口（企业） 运维工单统计 数据    运维企业工单统计
@@ -133,7 +133,7 @@ export default Model.extend({
                 });
                 callback();
             } else {
-                message.error(response.Message);
+                response.Message && message.error(response.Message);
             }
         },
     },

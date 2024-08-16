@@ -130,7 +130,7 @@ export default Model.extend({
             }
             yield update({  tableDatas: data,})
           } else {
-            message.error(result.Message); 
+            result.Message && message.error(result.Message); 
           }
           yield update({ tableLoading: false })
           break;
@@ -145,7 +145,7 @@ export default Model.extend({
            }
             yield update({ tableDatas2: data, })
           } else {
-            message.error(result.Message); 
+            result.Message && message.error(result.Message); 
           }
           yield update({ tableLoading2: false })
           break;
@@ -160,7 +160,7 @@ export default Model.extend({
            }
             yield update({ tableDatas3: data, })
           } else {
-            message.error(result.Message); 
+            result.Message && message.error(result.Message); 
           }
           yield update({ tableLoading3: false })
           break;
@@ -170,7 +170,7 @@ export default Model.extend({
             yield update({ taskDetailData: resData})
             callback&&callback(resData);
           } else {
-            message.error(result.Message); 
+            result.Message && message.error(result.Message); 
           }
           yield update({ taskDetailLoading: false })
           break;
@@ -180,7 +180,7 @@ export default Model.extend({
             const listData = data.filter(item=>item.XZ == '运维')
             yield update({contractTableAllData:listData, contractTableData: listData, })
           } else {
-            message.error(result.Message); 
+            result.Message && message.error(result.Message); 
           }
           yield update({  contractTableLoading: false, })
 
@@ -189,7 +189,7 @@ export default Model.extend({
           if (result.IsSuccess) {
             yield update({ taskTypeList: formatData(result.Datas), taskTypeListLoading: false, })
           } else {
-            message.error(result.Message); yield update({ taskTypeListLoading: false })
+            result.Message && message.error(result.Message); yield update({ taskTypeListLoading: false })
           }
           break; 
           case 'Z_CityInfo':  //任务所在区
@@ -216,7 +216,7 @@ export default Model.extend({
                 })
             yield update({ cityInfoList: cityData,})
           } else {
-            message.error(result.Message); 
+            result.Message && message.error(result.Message); 
           }
           yield update({ cityInfoListLoading: false })
           break;
@@ -227,7 +227,7 @@ export default Model.extend({
             })
             yield update({ pointList:payload.OTID? data.filter(item=>item.OTID == payload.OTID) :  data})
           } else {
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
           }
           yield update({  pointListLoading: false, })
           break;
@@ -238,7 +238,7 @@ export default Model.extend({
             })
             yield update({ operaUserList: data})
           } else {
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
           }
           yield update({  operaUserListLoading: false, })
           break;
@@ -249,7 +249,7 @@ export default Model.extend({
             })
             yield update({ operaDeviceList: data})
           } else {
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
           }
           yield update({  operaDeviceListLoading: false, })
           break;
@@ -262,7 +262,7 @@ export default Model.extend({
             yield update({ operaContantList:listData})
             callback&&callback(listData);
           } else {
-            message.error(result.Message); 
+            result.Message && message.error(result.Message); 
           }
           yield update({ operaContantListLoading: false })
           break;
@@ -326,14 +326,14 @@ export default Model.extend({
           if (result.IsSuccess && formatData(result.Datas,'operateFile') ) {
             callback&&callback(formatData(result.Datas,'operateData'));   
           } else {
-            message.error(result.Message); 
+            result.Message && message.error(result.Message); 
           }
           break;
           case 'AppendFile':  //添加文件
           if (result.IsSuccess && formatData(result.Datas,'operateFile') ) {
             callback&&callback(result.Datas,'operateFile');   
           } else {
-            message.error(result.Message); 
+            result.Message && message.error(result.Message); 
             callback&&callback(false);   
           }
           break;

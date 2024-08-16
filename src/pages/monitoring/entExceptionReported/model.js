@@ -22,7 +22,7 @@ export default Model.extend({
           tableDataSource: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 删除
@@ -32,7 +32,7 @@ export default Model.extend({
         message.success("删除成功");
         callback && callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 添加、编辑
@@ -43,7 +43,7 @@ export default Model.extend({
         yield update({ addExceptionModalVisible: false });
         callback && callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取编辑数据
@@ -52,7 +52,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ exceptionReportedData: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 

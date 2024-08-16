@@ -24,7 +24,7 @@ export default Model.extend({
           rankHourData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -51,7 +51,7 @@ export default Model.extend({
           dateTimeAllData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -287,7 +287,7 @@ export default Model.extend({
           legendData: payload.PollutantType === 2 ? valueInterval2 : valueInterval1,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

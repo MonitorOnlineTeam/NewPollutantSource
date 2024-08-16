@@ -460,7 +460,7 @@ export default Model.extend({
                 message.success(result.Message);
                 callback && callback(result.Datas);
             } else {
-                message.error(result.Message);
+                result.Message && message.error(result.Message);
             }
         },
         // 试剂更换表单

@@ -43,7 +43,7 @@ export default Model.extend({
       }
         callback(payload)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({tableLoading: false,tableLoading2:false, })
       }
     },
@@ -56,7 +56,7 @@ export default Model.extend({
         downloadFile(`${result.Datas}`)
       } else {
         yield update({  exportLoading:false, exportLoading2:false  })
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

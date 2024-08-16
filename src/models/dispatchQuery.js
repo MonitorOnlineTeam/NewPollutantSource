@@ -27,7 +27,7 @@ export default Model.extend({
         })
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getServiceDispatchTypeAndRecord({ payload,callback }, { call, put, update }) { //派单信息 服务填报内容 要加载的项
@@ -38,7 +38,7 @@ export default Model.extend({
         })
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getAcceptanceServiceRecord({ payload,callback }, { call, put, update }) { // 服务填报内容 详情内容
@@ -46,7 +46,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getPublicRecord({ payload,callback }, { call, put, update }) { // 服务填报内容 
@@ -54,7 +54,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getWorkRecord({ payload,callback }, { call, put, update }) { // 服务填报内容 工作记录
@@ -62,7 +62,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getInstallationPhotosRecord({ payload,callback }, { call, put, update }) { // 服务填报内容 安装照片
@@ -70,7 +70,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getParameterSettingsPhotoRecord({ payload,callback }, { call, put, update }) { // 服务填报内容 参数设置照片
@@ -78,7 +78,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getCooperateRecord({ payload,callback }, { call, put, update }) { // 服务填报内容 配合检查
@@ -86,7 +86,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getRepairRecord({ payload,callback }, { call, put, update }) { // 服务填报内容 维修记录
@@ -94,7 +94,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportServiceDispatch({ callback,payload }, { call, put, update, select }) { //导出

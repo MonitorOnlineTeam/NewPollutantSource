@@ -25,6 +25,7 @@ import {
   Tooltip,
   Spin,
   Tag,
+  Space,
 } from 'antd';
 import { connect } from 'dva';
 import $ from 'jquery';
@@ -1004,8 +1005,9 @@ class NavigationTree extends Component {
       });
       this.setLocalStorage(this.state.expandedKeys, this.state.selectedKeys);
     } else if (this.props.isMap === true && rtnList[0].IsEnt) {
-    } else {
+    } else if (!rtnList[0].IsEnt) {
       console.log('rtnKey2=', rtnList);
+
       // 更新到model
       this.props.dispatch({
         type: 'navigationtree/updateState',
@@ -1343,7 +1345,13 @@ class NavigationTree extends Component {
                       marginBottom: '2px',
                     }}
                   />
-                  正常
+                  <span
+                    style={{
+                      color: this.state.normalState ? '#34c066' : 'rgba(0,0,0,.85)',
+                    }}
+                  >
+                    正常
+                  </span>
                 </Badge>
               </Col>
               <Col span={1}></Col>
@@ -1369,7 +1377,13 @@ class NavigationTree extends Component {
                       marginBottom: '2px',
                     }}
                   />
-                  离线
+                  <span
+                    style={{
+                      color: this.state.offState ? '#999999' : 'rgba(0,0,0,.85)',
+                    }}
+                  >
+                    离线
+                  </span>
                 </Badge>
               </Col>
               <Col span={1}></Col>
@@ -1395,7 +1409,13 @@ class NavigationTree extends Component {
                       marginBottom: '2px',
                     }}
                   />
-                  超标
+                  <span
+                    style={{
+                      color: this.state.overState ? '#f04d4d' : 'rgba(0,0,0,.85)',
+                    }}
+                  >
+                    超标
+                  </span>
                 </Badge>
               </Col>
               <Col span={1}></Col>
@@ -1421,84 +1441,92 @@ class NavigationTree extends Component {
                       marginBottom: '2px',
                     }}
                   />
-                  异常
+                  <span
+                    style={{
+                      color: this.state.exceState ? '#e94' : 'rgba(0,0,0,.85)',
+                    }}
+                  >
+                    异常
+                  </span>
                 </Badge>
               </Col>
             </Row>
           </div>
-          {// 企业项目不显示行政区
-          !configInfo.IsSingleEnterprise && (
-            <RegionList
-              style={{ width: '100%', marginBottom: 10 }}
-              spinSty={{ top: -4 }}
-              changeRegion={this.changeRegion}
-              RegionCode={this.state.RegionCode}
-            />
-          )}
+          <Space direction="vertical">
+            {// 企业项目不显示行政区
+            !configInfo.IsSingleEnterprise && (
+              <RegionList
+                style={{ width: '100%' }}
+                spinSty={{ top: -4 }}
+                changeRegion={this.changeRegion}
+                RegionCode={this.state.RegionCode}
+              />
+            )}
 
-          {!this.props.polShow ? (
-            <SelectPollutantType
-              // mode="multiple"
-              {...SelectPollutantProps}
-              showDefaultValue={this.props.defaultPollutant === 'undefined'}
-              style={{ width: '100%', marginBottom: 10 }}
-              onChange={this.handleChange}
-            />
-          ) : (
-            ''
-          )}
-
-          {this.props.type == 'ent' ? (
-            <Select
-              style={{ width: '100%', marginBottom: 10  }}
-              onChange={this.handleChange}
-              allowClear
-              placeholder="请选择监测点类型"
-            >
-              <Option key={1} value={1}>
-                废水
-              </Option>
-              <Option key={2} value={2}>
-                废气
-              </Option>
-            </Select>
-          ) : null}
-
-          {showIndustry && (
-            <SearchSelect
-              placeholder="请选择行业"
-              style={{ width: '100%' }}
-              configId={'IndustryType'}
-              itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
-              itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
-              onChange={value => {
-                this.changeIndustryType(value);
-              }}
-            />
-          )}
-          <Search
-            placeholder="请输入关键字查询"
-            onChange={this.onChangeSearch}
-            style={{  width: '60%' }}
-          />
-          <Radio.Group
-            defaultValue={this.props.IsTree ? 'tree' : 'panel'}
-            buttonStyle="solid"
-            style={{  marginLeft: 15, cursor: 'pointer' }}
-            onChange={this.onRadioChange}
-          >
-            <Tooltip title="节点">
-              <Radio.Button value="tree">
-                {' '}
-                <TreeIcon></TreeIcon>
-              </Radio.Button>
-            </Tooltip>
-            <Tooltip title="面板">
-              <Radio.Button value="panel">
-                <PanelIcon></PanelIcon>
-              </Radio.Button>
-            </Tooltip>
-          </Radio.Group>
+            {!this.props.polShow ? (
+              <SelectPollutantType
+                // mode="multiple"
+                {...SelectPollutantProps}
+                showDefaultValue={this.props.defaultPollutant === 'undefined'}
+                style={{ width: '100%' }}
+                onChange={this.handleChange}
+              />
+            ) : (
+              ''
+            )}
+            {this.props.type == 'ent' ? (
+              <Select
+                style={{ width: '100%' }}
+                onChange={this.handleChange}
+                allowClear
+                placeholder="请选择监测点类型"
+              >
+                <Option key={1} value={1}>
+                  废水
+                </Option>
+                <Option key={2} value={2}>
+                  废气
+                </Option>
+              </Select>
+            ) : null}
+            {showIndustry && (
+              <SearchSelect
+                placeholder="请选择行业"
+                style={{ width: '100%' }}
+                configId={'IndustryType'}
+                itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
+                itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
+                onChange={value => {
+                  this.changeIndustryType(value);
+                }}
+              />
+            )}
+            <div>
+              <Search
+                placeholder="请输入关键字查询"
+                onChange={this.onChangeSearch}
+                style={{ width: '60%' }}
+              />
+              <Radio.Group
+                defaultValue={this.props.IsTree ? 'tree' : 'panel'}
+                buttonStyle="solid"
+                style={{ marginLeft: 15, cursor: 'pointer' }}
+                onChange={this.onRadioChange}
+              >
+                <Tooltip title="节点">
+                  <Radio.Button value="tree">
+                    {' '}
+                    <TreeIcon></TreeIcon>
+                  </Radio.Button>
+                </Tooltip>
+                <Tooltip title="面板">
+                  <Radio.Button value="panel">
+                    <PanelIcon></PanelIcon>
+                  </Radio.Button>
+                </Tooltip>
+              </Radio.Group>
+            </div>
+          </Space>
           <Divider />
           {this.state.treeVis ? (
             <div>

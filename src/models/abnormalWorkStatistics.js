@@ -49,7 +49,7 @@ export default Model.extend({
 
 
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -64,7 +64,7 @@ export default Model.extend({
         })
 
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *cityExceptionTaskList({ payload, callback }, { call, put, update }) { //行政区市 级别 第一级
@@ -79,7 +79,7 @@ export default Model.extend({
 
 
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ cityTableLoading: false })
       }
     },
@@ -92,7 +92,7 @@ export default Model.extend({
           queryPar: { ...payload, entCode: undefined, entName: undefined },
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -106,7 +106,7 @@ export default Model.extend({
         })
 
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getPointExceptionSignList({ payload, callback }, { call, put, update }) { //企业 打卡异常
@@ -129,7 +129,7 @@ export default Model.extend({
           getPointExceptionLoading: false
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ getPointExceptionLoading: false })
       }
     },

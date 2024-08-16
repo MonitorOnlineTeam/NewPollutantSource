@@ -34,7 +34,7 @@ export default Model.extend({
           tableLoading: false
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -44,7 +44,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *editEquipmentInfo({ payload, callback }, { call, put, update }) { //修改
@@ -53,7 +53,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *delEquipmentInfo({ payload, callback }, { call, put, update }) { //删除
@@ -62,7 +62,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getMonitoringTypeList({ payload, callback }, { call, put, update }) { //获取监测类别
@@ -70,7 +70,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ monitoringTypeList: result.Datas? result.Datas.mlist : []})
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getPollutantById({ payload, callback }, { call, put, update }) { //获取监测类型 查询时
@@ -80,7 +80,7 @@ export default Model.extend({
         if (result.IsSuccess) {
           yield update({ pollutantTypeList: result.Datas? result.Datas.plist : []})
         } else {
-          message.error(result.Message)
+          result.Message && message.error(result.Message)
         }
       } else {
         yield update({ pollutantTypeList: [] })
@@ -94,7 +94,7 @@ export default Model.extend({
         if (result.IsSuccess) {
           yield update({ addEditPollutantTypeList: result.Datas? result.Datas.plist : []})
         } else {
-          message.error(result.Message)
+          result.Message && message.error(result.Message)
         }
       } else {
         yield update({ addEditPollutantTypeList: [] })
@@ -107,7 +107,7 @@ export default Model.extend({
     //     if (result.IsSuccess) {
     //       yield update({ equipmentNameList: result.Datas? result.Datas.plist : []})
     //     } else {
-    //       message.error(result.Message)
+    //       result.Message && message.error(result.Message)
     //     }
     //   } else {
     //     yield update({ pollutantTypeList: [] })
@@ -119,7 +119,7 @@ export default Model.extend({
         if (result.IsSuccess) {
           yield update({ addEditEquipmentNameList: result.Datas? result.Datas.plist : []})
         } else {
-          message.error(result.Message)
+          result.Message && message.error(result.Message)
         }
       } else {
         yield update({ addEditPollutantTypeList: [] })
@@ -131,7 +131,7 @@ export default Model.extend({
         yield update({ manufacturerList: result.Datas? result.Datas.mlist:[] })
         callback(result.Datas? result.Datas.mlist:[])
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //导出
@@ -141,7 +141,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

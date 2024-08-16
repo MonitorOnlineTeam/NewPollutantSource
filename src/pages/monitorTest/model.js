@@ -23,7 +23,7 @@ export default Model.extend({
           chartData:result.Datas.Chart,
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

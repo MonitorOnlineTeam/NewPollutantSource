@@ -12,10 +12,22 @@ import configToken from '@/config';
 import SwitchProject from './SwitchProject';
 
 class AvatarDropdown extends React.Component {
+  componentDidMount() {
+    console.log('currentUser', this.props.currentUser);
+    this.GetUserProjectList();
+  }
+
+  // 获取项目列表
+  GetUserProjectList = () => {
+    this.props.dispatch({
+      type: 'projectManage/GetUserProjectList',
+      payload: {},
+    });
+  };
+
   onMenuClick = event => {
     const { key } = event;
     const { dispatch } = this.props;
-    debugger;
     if (key === 'project') {
       return;
     }
@@ -48,7 +60,7 @@ class AvatarDropdown extends React.Component {
   };
 
   render() {
-    const { currentUser = {}, menu, changePwdVisible, projectManage } = this.props;
+    const { currentUser = {}, menu, changePwdVisible, projectList } = this.props;
     if (!menu) {
       return (
         <span className={`${styles.action} ${styles.account}`}>
@@ -74,10 +86,14 @@ class AvatarDropdown extends React.Component {
           修改密码
         </Menu.Item>
         <Menu.Divider /> */}
-        {projectManage?.length && (
+        {// 只有“污染源异常数据识别系统"显示
+        projectList?.length &&
+        sessionStorage.getItem('sysMenuId') === 'f6eb76ab-ce0b-4cfb-8626-2e0ec4435ec3' ? (
           <Menu.Item key="project" id="AvatarMenu">
             <SwitchProject />
           </Menu.Item>
+        ) : (
+          ''
         )}
         <Menu.Item key="center">
           <UserOutlined />

@@ -476,7 +476,7 @@ class Realtime extends Component {
       : selectedStatus.filter(t => t !== tag);
     debugger;
     console.log('You are interested in: ', nextSelectedTags);
-    this.setState({ selectedStatus: nextSelectedTags }, () => {
+    this.setState({ selectedStatus: nextSelectedTags, pageIndex: 1 }, () => {
       this.getRealTimeDataView();
     });
   }

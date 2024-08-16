@@ -25,7 +25,7 @@ export default Model.extend({
           tableTotal: result.Total,
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 添加or修改
@@ -35,7 +35,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -46,7 +46,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //详情
@@ -55,7 +55,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({  tableDetailDatas: result.Datas?.length? result.Datas[0] : {},});
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

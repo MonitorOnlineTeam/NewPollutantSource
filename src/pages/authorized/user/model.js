@@ -261,7 +261,7 @@ export default Model.extend({
                     }
                 })
             } else {
-                // message.error(result.Message);
+                // result.Message && message.error(result.Message);
             }
         },
         * edit({ payload }, { call, update, put }) {
@@ -282,7 +282,7 @@ export default Model.extend({
                     }
                 })
             } else {
-                // message.error(result.Message);
+                // result.Message && message.error(result.Message);
             }
         },
          /*添加角色和部门**/

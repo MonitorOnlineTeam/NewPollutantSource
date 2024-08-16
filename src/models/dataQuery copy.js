@@ -519,7 +519,7 @@ export default Model.extend({
         window.open(result.Datas);
         message.success('导出成功');
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取数据获取率 - 详情污染物列表
@@ -530,7 +530,7 @@ export default Model.extend({
           pollutantList: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取数据
@@ -541,7 +541,7 @@ export default Model.extend({
           dataAuditDataSource: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取数据标识
@@ -551,7 +551,7 @@ export default Model.extend({
         message.success('修改成功');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 导出报表
@@ -561,7 +561,7 @@ export default Model.extend({
         message.success('导出成功');
         window.open(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 数据标记 - 获取数据
@@ -574,7 +574,7 @@ export default Model.extend({
           tagTableTotal: result.Total,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 数据标记 - 修改
@@ -584,7 +584,7 @@ export default Model.extend({
         message.success('修改成功');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 数据标记 - 导出
@@ -598,7 +598,7 @@ export default Model.extend({
         message.success('导出成功');
         window.open(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -611,7 +611,7 @@ export default Model.extend({
           CO2SumData: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

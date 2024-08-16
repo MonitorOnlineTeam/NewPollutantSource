@@ -38,7 +38,7 @@ export default Model.extend({
           attentionList: response.Datas,
         });
       } else {
-        message.error(response.Message);
+        response.Message && message.error(response.Message);
       }
     },
     // 根据查询类型获取table数据
@@ -71,7 +71,7 @@ export default Model.extend({
         });
       } else {
         yield update({ [loadingName]: false });
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 根据查询类型导出table数据
@@ -101,7 +101,7 @@ export default Model.extend({
         });
       } else {
         yield update({ [loadingName]: false });
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 根据查询类型获取对比table数据
@@ -134,7 +134,7 @@ export default Model.extend({
         });
       } else {
         yield update({ [loadingName]: false });
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 根据查询类型导出对比table数据
@@ -164,7 +164,7 @@ export default Model.extend({
         });
       } else {
         yield update({ [loadingName]: false });
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 废气、废水排放量同比
@@ -197,7 +197,7 @@ export default Model.extend({
         });
       } else {
         yield update({ [loadingName]: false });
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 废气、废水排放量环比
@@ -230,7 +230,7 @@ export default Model.extend({
         });
       } else {
         yield update({ [loadingName]: false });
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

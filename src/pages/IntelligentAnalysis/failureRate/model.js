@@ -391,7 +391,7 @@ export default Model.extend({
         }
         yield update({ airDayReportData,airDayReportloading: false })
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取实时报警数据 - wjq
@@ -403,7 +403,7 @@ export default Model.extend({
         })
         yield update({ alarmDataList })
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取故障率 - wjq
@@ -422,7 +422,7 @@ export default Model.extend({
         let GZRateX = result.Datas[0].dataList.map(item => moment(item.monitorTime).format("MM.DD"))
         yield update({ GZRateDataList: GZRateDataList, GZRateX })
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取超标率 - wjq
@@ -443,7 +443,7 @@ export default Model.extend({
         let CBRateX = result.Datas[0].dataList.map(item => moment(item.monitorTime).format("MM.DD"))
         yield update({ CBRateDataList, CBRateX })
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取超标率 - wjq
@@ -462,7 +462,7 @@ export default Model.extend({
         let YZRateX = result.Datas[0].dataList.map(item => moment(item.monitorTime).format("MM.DD"))
         yield update({ YZRateDataList, YZRateX })
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 传输有效率 - wjq
@@ -483,7 +483,7 @@ export default Model.extend({
         let CSYXRateX = result.Datas[0].dataList.map(item => moment(item.monitorTime).format("MM.DD"))
         yield update({ CSYXRateDataList, CSYXRateX })
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 

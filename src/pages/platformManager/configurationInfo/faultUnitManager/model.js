@@ -30,7 +30,7 @@ export default Model.extend({
           tableLoading:false
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
@@ -40,7 +40,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     *editFaultUnit({ payload,callback }, { call, put, update }) { //修改
@@ -49,7 +49,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     *delFaultUnit({ payload,callback }, { call, put, update }) { //删除
@@ -58,7 +58,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getTestingEquipmentList({ payload,callback }, { call, put, update }) { //获取监测类别
@@ -66,7 +66,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ equipmentTypeList:result.Datas})
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

@@ -401,7 +401,7 @@ export default Model.extend({
           },
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

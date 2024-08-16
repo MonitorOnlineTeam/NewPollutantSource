@@ -23,7 +23,7 @@ export default Model.extend({
           installEquipmentQueryPar: payload,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //设备安装审核信息 导出
@@ -33,7 +33,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //获取设备安装审核照片详细
@@ -44,7 +44,7 @@ export default Model.extend({
           installPhotoData:result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 安装照片审核
@@ -53,7 +53,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     
@@ -64,7 +64,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 

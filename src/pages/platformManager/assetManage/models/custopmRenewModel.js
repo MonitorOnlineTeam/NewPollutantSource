@@ -29,7 +29,7 @@ export default Model.extend({
         })
         callback&&callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -41,7 +41,7 @@ export default Model.extend({
           customerOrderUserList:result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getCustomerOrderPointEntList({ payload, callback }, { call, put, update }) { //获取客户订单企业与排口列表
@@ -49,7 +49,7 @@ export default Model.extend({
         if (result.IsSuccess) {
            callback(result.Datas)
         } else {
-          message.error(result.Message)
+          result.Message && message.error(result.Message)
         }
     
     },
@@ -59,7 +59,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *deleteCustomerOrder({ payload, callback }, { call, put, update }) { //删除客户订单
@@ -68,7 +68,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *renewOrder({ payload, callback }, { call, put, update }) { //客户订单 续费
@@ -77,7 +77,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getCustomerOrderInfoList({ payload, callback }, { call, put, update }) { //客户订单 详情
@@ -88,7 +88,7 @@ export default Model.extend({
           tableDetailDatas:result.Datas? result.Datas:[],
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *deleteCustomerOrderInfo({ payload, callback }, { call, put, update }) { //删除客户订单 详情
@@ -97,7 +97,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

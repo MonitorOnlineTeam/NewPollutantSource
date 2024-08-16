@@ -557,7 +557,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取实时数据一览表头
@@ -593,7 +593,7 @@ export default Model.extend({
           realtimeColumns: [...realtimeColumns, ...result.Datas],
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -605,7 +605,7 @@ export default Model.extend({
           entListByRegion: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -620,7 +620,7 @@ export default Model.extend({
           },
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

@@ -24,7 +24,7 @@ export default Model.extend({
           tableLoading:false,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *updateOperationUser({ payload,callback }, { call, put, update }) { //添加
@@ -33,7 +33,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },  
     *deleteOperationUser({ payload,callback }, { call, put, update }) { //删除
@@ -42,7 +42,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 

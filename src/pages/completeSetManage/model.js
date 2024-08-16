@@ -17,7 +17,7 @@ export default Model.extend({
           regionalList: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 添加、编辑专家信息
@@ -27,7 +27,7 @@ export default Model.extend({
         message.success('操作成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 刪除专家信息
@@ -37,7 +37,7 @@ export default Model.extend({
         message.success('刪除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 查询专家信息
@@ -60,7 +60,7 @@ export default Model.extend({
         });
         callback && callback(expertList, result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

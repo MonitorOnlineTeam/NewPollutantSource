@@ -361,7 +361,7 @@ export default Model.extend({
 
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 驳回
@@ -472,7 +472,7 @@ export default Model.extend({
         });
         callback && callback( result.Datas?.DataSource)
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getResponseList({ payload, callback }, { call, put, update }) { //报警响应及时
@@ -486,7 +486,7 @@ export default Model.extend({
           yield update({  alarmResTimelyResNumTableTotal: result.Total,alarmResTimelyResNumQueryPar: payload, });
         }
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportResponseList({ payload, callback }, { call, put, update }) { //报警响应及时 导出
@@ -496,7 +496,7 @@ export default Model.extend({
         downloadFile(`${result.Datas}`);
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getOperationPlanTaskList({ payload, callback }, { call, put, update }) { //近30日运维工单统计
@@ -513,7 +513,7 @@ export default Model.extend({
         callback && callback(result.Datas)
     
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
       payload.pointType==1?  yield update({operationPlanTaskTableLoading:false}) : payload.pointType==2? yield update({operationPlanTaskTableLoading2:false}) : yield update({operationPlanTaskTableLoading3:false})
 
@@ -525,7 +525,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
       payload.pointType==1?  yield update({exportOperationPlanTaskTableLoading:false}) : payload.pointType==2? yield update({exportOperationPlanTaskTableLoading2:false}) : yield update({exportOperationPlanTaskTableLoading3:false})
 

@@ -89,7 +89,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         payload.callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
       // const result = yield call(services.postAutoFromDataAdd, {
       //   ...payload,
@@ -105,7 +105,7 @@ export default Model.extend({
       //   });
       //   payload.callback(result);
       // } else {
-      //   message.error(result.Message);
+      //   result.Message && message.error(result.Message);
       // }
     },
     /** 更新报警表 */

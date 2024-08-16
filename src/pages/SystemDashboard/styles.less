@@ -55,6 +55,29 @@
       }
     }
   }
+
+  :global {
+    .ant-picker {
+      background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
+      border-color: #007bfd;
+      height: 26px;
+      line-height: 26px;
+      border-radius: 0;
+    }
+
+    .ant-picker-input > input {
+      color: #d1d1d1;
+      font-weight: bold;
+    }
+
+    .ant-picker-suffix {
+      color: #007bfd;
+    }
+
+    .ant-picker-content th {
+      color: #d1d1d1;
+    }
+  }
 }
 
 .dashboardPageWrapper {
@@ -168,6 +191,8 @@
         font-weight: bold;
         font-size: 15px;
         position: relative;
+     
+        padding: 0 20px;
 
         &:last-child {
           width: 140px;
@@ -673,23 +698,6 @@
             .ant-radio-button-wrapper-checked {
               background-color: #007bfd;
               font-weight: bold;
-            }
-
-            .ant-picker {
-              background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
-              border-color: #007bfd;
-              height: 26px;
-              line-height: 26px;
-              border-radius: 0;
-            }
-
-            .ant-picker-input > input {
-              color: #d1d1d1;
-              font-weight: bold;
-            }
-
-            .ant-picker-suffix {
-              color: #007bfd;
             }
           }
           // 搜索企业
@@ -1249,10 +1257,13 @@
 
 .datePickerPopup {
   // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
-  border: 1px solid rgb(0, 123, 253);
-  border-bottom: 0;
 
   :global {
+    .ant-picker-range-wrapper {
+      border: 1px solid rgb(0, 123, 253);
+      border-bottom: 0;
+    }
+
     .ant-picker-panel-container {
       background: rgb(9, 47, 97, 0.8);
     }
@@ -1267,8 +1278,15 @@
       border-color: rgb(0, 123, 253);
     }
 
-    .ant-picker-header button {
+    .ant-picker-header button,
+    .ant-picker-content th {
       color: #fff;
+    }
+
+    .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before,
+    .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before,
+    .ant-picker-cell-in-view.ant-picker-cell-in-range::before {
+      background: #1a90ff;
     }
 
     .ant-picker-header-view {

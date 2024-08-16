@@ -1,7 +1,6 @@
 import moment from 'moment';
 import Cookie from 'js-cookie';
 import Model from '@/utils/model';
-import { message } from 'antd';
 import { router } from 'umi';
 import config from '@/config';
 import { downloadFile, requestPost } from '@/utils/utils';

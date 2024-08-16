@@ -26,7 +26,7 @@ export default Model.extend({
           tableTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getCustomerOrderLogsDetail({ payload, callback }, { call, put, update }) { //客户订单日志  客户订单详细日志  详情
@@ -38,7 +38,7 @@ export default Model.extend({
           tableDetailTotal:result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   

@@ -45,7 +45,7 @@ export default Model.extend({
         callback && callback(result.Datas)
     
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
       payload.pointType==1?  yield update({tableLoading:false}) : payload.pointType==2? yield update({tableLoading2:false}) : payload.pointType==3? yield update({tableLoading3:false}) : yield update({tableLoading4:false})
 
@@ -58,7 +58,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
       payload.pointType==1?  yield update({exportLoading:false}) : payload.pointType==2? yield update({exportLoading2:false}) : yield update({exportLoading3:false})
 

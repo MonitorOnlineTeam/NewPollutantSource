@@ -28,7 +28,7 @@ export default Model.extend({
         yield update({
           Dictionaries: {}
         })
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 水泥排放量汇总
@@ -39,7 +39,7 @@ export default Model.extend({
           cementCO2Sum: response.Datas
         })
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 钢铁排放量汇总
@@ -50,7 +50,7 @@ export default Model.extend({
           steelCO2Sum: response.Datas
         })
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 计算排放量
@@ -59,7 +59,7 @@ export default Model.extend({
       if (response.IsSuccess) {
         callback && callback(response.Datas)
       } else {
-        // message.error(response.Message)
+        // response.Message && message.error(response.Message)
       }
     },
     // 下载导入模板
@@ -68,7 +68,7 @@ export default Model.extend({
       if (response.IsSuccess) {
         window.open('/upload' + response.Datas)
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 获取排放量合计
@@ -79,7 +79,7 @@ export default Model.extend({
           cementTableCO2Sum: response.Datas || 0
         })
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 判断是否重复 - 是否可添加
@@ -88,7 +88,7 @@ export default Model.extend({
       if (response.IsSuccess) {
         callback && callback(response.Datas)
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 获取不确定性默认数据
@@ -97,7 +97,7 @@ export default Model.extend({
       if (response.IsSuccess) {
         callback && callback(response.Datas)
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 不确定性计算公式
@@ -106,7 +106,7 @@ export default Model.extend({
       if (response.IsSuccess) {
         callback && callback(response.Datas)
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 获取机组列表
@@ -115,7 +115,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ unitInfoList: result.Datas })
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取企业列表
@@ -127,7 +127,7 @@ export default Model.extend({
         });
         callback && callback(response.Datas)
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 获取监测对比分析
@@ -144,7 +144,7 @@ export default Model.extend({
         }
 
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 获取监测数据线性回归分析报表
@@ -156,7 +156,7 @@ export default Model.extend({
         });
         callback && callback(response.Datas)
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
   },

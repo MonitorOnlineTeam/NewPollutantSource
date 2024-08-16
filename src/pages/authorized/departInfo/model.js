@@ -113,7 +113,7 @@ export default Model.extend({
         message.success(response.Message);
         callback();
       } else {
-        message.error(response.Message);
+        response.Message && message.error(response.Message);
         callback();
       }
     },
@@ -216,7 +216,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success(result.Message);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
       callback && callback(result.IsSuccess);
     },
@@ -338,7 +338,7 @@ export default Model.extend({
           showGroupRegionFilter: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 更新运维区域
@@ -348,7 +348,7 @@ export default Model.extend({
         message.success(result.Message);
         callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 审核流程 列表
@@ -359,7 +359,7 @@ export default Model.extend({
           userDepApproveInfoList: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 审核流程 添加or修改
@@ -369,7 +369,7 @@ export default Model.extend({
         message.success(result.Message);
         callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getUserList({ payload }, { call, put, update, select }) {
@@ -387,7 +387,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success(result.Message);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取省区
@@ -398,7 +398,7 @@ export default Model.extend({
           AllProvince: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 添加/编辑大区经理或省区经理
@@ -408,7 +408,7 @@ export default Model.extend({
         message.success('操作成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取大区下的所有经理详情
@@ -420,7 +420,7 @@ export default Model.extend({
           regionalList: result.Datas.regional,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除大区或省区经理
@@ -430,7 +430,7 @@ export default Model.extend({
         message.success('删除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //调试检测区域过滤 获取选中
@@ -439,7 +439,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 调试检测区域过滤 提交
@@ -449,7 +449,7 @@ export default Model.extend({
         message.success(result.Message);
         callback && callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //部门管理 设置运维小组
@@ -459,7 +459,7 @@ export default Model.extend({
         message.success(result.Message);
         callback && callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //部门管理 获取设置运维小组
@@ -471,7 +471,7 @@ export default Model.extend({
         });
         callback && callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //部门管理 部门排序
@@ -481,7 +481,7 @@ export default Model.extend({
         message.success(result.Message);
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

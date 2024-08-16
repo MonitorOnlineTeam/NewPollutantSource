@@ -27,7 +27,7 @@ export default Model.extend({
           regQueryPar: payload,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportKeyParameterQuestionList({ payload, callback }, { call, put, update }) { //关键参数核查整改信息列表 导出
@@ -36,7 +36,7 @@ export default Model.extend({
         message.success(result.Message)
         downloadFile(`${result.Datas}`)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *checkItemKeyParameterQuestion({ payload, callback }, { call, put, update }) { //关键参数核查整改
@@ -45,7 +45,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess);
       }
     },
@@ -54,7 +54,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({  parameterQuestionDetailList:  result.Datas&&result.Datas.Itemlist? result.Datas.Itemlist : [],  })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *updateKeyParameterQuestionStatus({ payload, callback }, { call, put, update }) { //通过或驳回关键参数核查整改
@@ -63,7 +63,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess);
       }
     },

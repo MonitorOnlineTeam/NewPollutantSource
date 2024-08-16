@@ -308,7 +308,7 @@ export default Model.extend({
         if (res.IsSuccess) {
           callback(res.Datas);
         } else {
-          message.error(res.Message);
+          res.Message && message.error(res.Message);
         }
       });
     },
@@ -319,7 +319,7 @@ export default Model.extend({
         if (res.IsSuccess) {
           callback(res.Datas);
         } else {
-          message.error(res.Message);
+          res.Message && message.error(res.Message);
         }
       });
     },

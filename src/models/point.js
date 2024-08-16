@@ -339,7 +339,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ monitoringTypeList: result.Datas });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getManufacturerList({ payload, callback }, { call, put, update }) {
@@ -349,7 +349,7 @@ export default Model.extend({
         yield update({ manufacturerList: result.Datas ? result.Datas.mlist : [] });
         callback(result.Datas ? result.Datas.mlist : []);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getSystemModelList({ payload, callback }, { call, put, update }) {
@@ -361,7 +361,7 @@ export default Model.extend({
           systemModelListTotal: result.Total,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getMonitoringTypeList2({ payload, callback }, { call, put, update }) {
@@ -370,7 +370,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ monitoringTypeList2: result.Datas ? result.Datas.mlist : [] });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getPollutantById({ payload, callback }, { call, put, update }) {
@@ -386,7 +386,7 @@ export default Model.extend({
           }
           callback && callback(result.Datas ? result.Datas.plist : []);
         } else {
-          message.error(result.Message);
+          result.Message && message.error(result.Message);
         }
       } else {
         yield update({ pollutantTypeList: [] });
@@ -400,7 +400,7 @@ export default Model.extend({
           yield update({ pollutantTypeList2: result.Datas ? result.Datas.plist : [] });
           callback(result.Datas ? result.Datas.plist : []);
         } else {
-          message.error(result.Message);
+          result.Message && message.error(result.Message);
         }
       } else {
         yield update({ pollutantTypeList2: [] });
@@ -415,7 +415,7 @@ export default Model.extend({
           equipmentInfoListTotal: result.Total,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getMonitoringCategoryType({ payload, callback }, { call, put, update }) {
@@ -426,7 +426,7 @@ export default Model.extend({
           pollutantTypeList2: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getPBList({ payload, callback }, { call, put, update }) {
@@ -435,7 +435,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ pbList: result.Datas });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *pointSort({ payload, callback }, { call, put, update }) {
@@ -445,7 +445,7 @@ export default Model.extend({
         message.success(result.Message);
         callback(result.IsSuccess);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
         callback(result.IsSuccess);
       }
     },
@@ -455,7 +455,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *addOrEditPointCoefficient({ payload, callback }, { call, put, update }) {
@@ -468,7 +468,7 @@ export default Model.extend({
         message.success(result.Message);
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getPointElectronicFenceInfo({ payload, callback }, { call, put, update }) {
@@ -477,7 +477,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *addOrUpdatePointElectronicFenceInfo({ payload, callback }, { call, put, update }) {
@@ -487,7 +487,7 @@ export default Model.extend({
         message.success(result.Message);
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *updatePointOprationStatus({ payload, callback }, { call, put, update }) {
@@ -497,7 +497,7 @@ export default Model.extend({
         message.success(result.Message);
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getOprationStatusList({ payload, callback }, { call, put, update }) {
@@ -510,7 +510,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *GetCraftByIndustry({ payload, callback }, { call, put, update }) {
@@ -520,7 +520,7 @@ export default Model.extend({
         yield update({ craftByIndustry: result.Datas });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *AddOrUptCraftByPoint({ payload, callback }, { call, put, update }) {
@@ -529,7 +529,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *GetCraftByPoint({ payload, callback }, { call, put, update }) {
@@ -538,7 +538,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *GetEquipmentParametersList({ payload, callback }, { call, put, update }) {
@@ -547,7 +547,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

@@ -188,7 +188,7 @@ export default Model.extend({
         })
         callback&&callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *regDetailGetExecptionRateList({ payload,callback }, { call, put, update }) { // 行政区详情
@@ -198,7 +198,7 @@ export default Model.extend({
           regDetailTableDatas:result.Datas,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *pointGetExecptionRateList({ payload,callback }, { call, put, update }) { // 监测点
@@ -209,7 +209,7 @@ export default Model.extend({
           pointTableQuery:payload,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     *exportExecptionRateList({ payload,callback }, { call, put, update }) { //导出

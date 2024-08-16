@@ -109,7 +109,7 @@ export default Model.extend({
       if (response.IsSuccess) {
         yield update({ industryBusinessList: response.Datas,  });
       }else{
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     *exportDaQuUserActivity({callback, payload }, { call, put, update, select }) {

@@ -154,7 +154,7 @@ export default Model.extend({
         })
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取标气
@@ -195,7 +195,7 @@ export default Model.extend({
         router.push('/qualityControl/qcaManager/instrumentManage')
         message.success('添加成功！')
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取质控仪数据
@@ -226,7 +226,7 @@ export default Model.extend({
           QCAGasRelation,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取CEMS列表
@@ -257,7 +257,7 @@ export default Model.extend({
         message.success('操作成功')
         success && success()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取自动质控信息
@@ -268,7 +268,7 @@ export default Model.extend({
           autoQCAInfo: result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 取消自动质控计划
@@ -283,7 +283,7 @@ export default Model.extend({
           },
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取企业达标率
@@ -305,7 +305,7 @@ export default Model.extend({
         // }
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取单个企业统计数据
@@ -317,7 +317,7 @@ export default Model.extend({
           entStaticDataList: result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取结果比对数据
@@ -346,7 +346,7 @@ export default Model.extend({
           chartMax: valueMax > standValMax ? valueMax : standValMax
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取结果比对时间下拉列表
@@ -357,7 +357,7 @@ export default Model.extend({
           resultContrastTimeList: result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     /**
@@ -383,7 +383,7 @@ export default Model.extend({
           },
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     /**
@@ -402,7 +402,7 @@ export default Model.extend({
           QCAStatusNameList: result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取结果比对时间下拉列表
@@ -413,7 +413,7 @@ export default Model.extend({
           resultContrastTimeList: result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取参数列表
@@ -424,7 +424,7 @@ export default Model.extend({
           paramsList: result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //  获取参数记录表格数据
@@ -452,7 +452,7 @@ export default Model.extend({
           },
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //  获取参数记录图表数据
@@ -485,7 +485,7 @@ export default Model.extend({
           },
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -502,7 +502,7 @@ export default Model.extend({
           },
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //  获取质控报警类型列表
@@ -513,7 +513,7 @@ export default Model.extend({
           AlarmTypeList: result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //  获取质控结果
@@ -524,7 +524,7 @@ export default Model.extend({
           QCAResult: result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取稳定时间
@@ -552,7 +552,7 @@ export default Model.extend({
           }
         }
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取质控流程图基础数据
@@ -618,7 +618,7 @@ export default Model.extend({
           })
         }
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取质控记录时间轴
@@ -646,7 +646,7 @@ export default Model.extend({
         router.push("/qualityControl/qcaManager/workPattern");
         message.success("添加成功")
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 工作模式列表
@@ -655,7 +655,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ workPatternList: result.Datas })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 工作模式列表
@@ -665,7 +665,7 @@ export default Model.extend({
         message.success('删除成功');
         yield put({ type: "getWorkPatternList" })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 工作模式编辑 - 数据
@@ -674,7 +674,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ workPatternEditData: result.Datas })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 工作模式编辑 - 保存
@@ -684,7 +684,7 @@ export default Model.extend({
         router.push("/qualityControl/qcaManager/workPattern");
         message.success("修改成功")
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 根据mn查询QCAMN
@@ -693,7 +693,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取标气下拉框
@@ -703,7 +703,7 @@ export default Model.extend({
         yield update({ gasSelectList: result.Datas })
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取标气瓶子对应关系设置列表
@@ -712,7 +712,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ gasJoinListData: result.Datas })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 编辑标气瓶子对应标气
@@ -721,7 +721,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 添加标气方案及详细数据
@@ -731,7 +731,7 @@ export default Model.extend({
         message.success('操作成功！');
         callback && callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取标气方案列表
@@ -742,7 +742,7 @@ export default Model.extend({
           gasProList: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取标气方案详情
@@ -751,7 +751,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 删除标气方案
@@ -760,7 +760,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success('删除成功');
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *_action({ payload, APIName, callback }, { call }) {
@@ -768,7 +768,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

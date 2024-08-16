@@ -34,7 +34,7 @@ export default Model.extend({
             maxNum: result.Datas.MaxNum,
           })
         } else {
-          message.error(result.Message)
+          result.Message && message.error(result.Message)
           yield update({ tableLoading: false })
         }
     },
@@ -44,7 +44,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *editSystemModel({ payload, callback }, { call, put, update }) { //修改
@@ -53,7 +53,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *delSystemModel({ payload, callback }, { call, put, update }) { //删除
@@ -62,7 +62,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getSystemModelNameList({ payload, callback }, { call, put, update }) { //获取系统名称下拉列表
@@ -70,7 +70,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ systemModelNameList: result.Datas })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getMonitorCategorySystemList({ payload, callback }, { call, put, update }) { //获取系统型号与系统类别关联信息
@@ -78,7 +78,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ monitorCategorySystemList: result.Datas?.list,associatedSystemList:result.Datas?.SystemList,associatedCategoryList:result.Datas?.CategoryList,  })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *updateMonitorCategorySystemStatus({ payload, callback }, { call, put, update }) { //更新系统型号与系统类别关联信息设备类别状态
@@ -87,7 +87,7 @@ export default Model.extend({
         message.success(result.Message)
         callback&&callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addMonitorCategorySystem({ payload, callback }, { call, put, update }) { //添加系统型号与系统类别关联
@@ -96,7 +96,7 @@ export default Model.extend({
         message.success(result.Message)
         callback&&callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *deleteMonitorCategorySystem({ payload, callback }, { call, put, update }) { //删除系统型号与系统类别关联
@@ -105,7 +105,7 @@ export default Model.extend({
         message.success(result.Message)
         callback&&callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

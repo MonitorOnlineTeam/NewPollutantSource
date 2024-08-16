@@ -120,7 +120,7 @@ export default Model.extend({
         });
         callback && callback(response.Datas);
       } else {
-        message.error(response.Message);
+        response.Message && message.error(response.Message);
       }
     },
   },

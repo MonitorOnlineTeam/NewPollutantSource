@@ -70,7 +70,7 @@ export default Model.extend({
           },
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({
           ysyvideoListParameters: {
             ...ysyvideoListParameters,
@@ -103,7 +103,7 @@ export default Model.extend({
           qcaurl: temprealurl,
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({
           qcaurl: temprealurl,
         });

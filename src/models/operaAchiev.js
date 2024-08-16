@@ -49,7 +49,7 @@ export default Model.extend({
         })
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
@@ -59,7 +59,7 @@ export default Model.extend({
         message.success(result.Message)
         callback&&callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     *getRecordCoefficientList({ payload,callback }, { call, put, update }) { //获取工单系数列表
@@ -70,7 +70,7 @@ export default Model.extend({
           recordCoefficientList:result.Datas,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
@@ -79,7 +79,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
@@ -89,7 +89,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     *deleteRecordCoefficient({ payload,callback }, { call, put, update }) { //删除工单系数
@@ -98,7 +98,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportPointCoefficient({ payload,callback }, { call, put, update }) { //导出所有排口监测点系数列表
@@ -107,7 +107,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
 
     },
@@ -121,7 +121,7 @@ export default Model.extend({
           personalPerformanceRateTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
       callback&&callback(result.IsSuccess)
@@ -132,7 +132,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getIndividualApportionmentList({ payload, callback }, { call, put, update }) { //个人分摊套数列表
@@ -144,7 +144,7 @@ export default Model.extend({
           individualApportionmentTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -154,7 +154,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getIndividualTaskInfo({ payload, callback }, { call, put, update }) { //获取个人工单详细
@@ -166,7 +166,7 @@ export default Model.extend({
           individualTaskTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -176,7 +176,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -189,7 +189,7 @@ export default Model.extend({
           personalPerformanceRateInfoTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -199,7 +199,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getOperationIntegralList({ payload, callback }, { call, put, update }) { //积分信息查询 汇总列表
@@ -211,7 +211,7 @@ export default Model.extend({
           integralQueryPar:payload,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getOperationIntegralInfoList({ payload, callback }, { call, put, update }) { //积分信息查询 汇总详情
@@ -222,7 +222,7 @@ export default Model.extend({
           integralInfoTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -234,7 +234,7 @@ export default Model.extend({
           integralInfoViewTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
       callback&&callback(result.IsSuccess)
     },  
@@ -247,7 +247,7 @@ export default Model.extend({
           integralDetailedQueryPar:payload,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
       callback&&callback(result.IsSuccess)
     },
@@ -259,7 +259,7 @@ export default Model.extend({
           integralGroupInfoTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
       callback&&callback(result.IsSuccess)
     },
@@ -269,7 +269,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     

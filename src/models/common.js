@@ -2,6 +2,8 @@ import { message } from 'antd';
 import * as services from '../services/commonApi';
 import config from '@/config';
 import Model from '@/utils/model';
+import { requestPost, requestGet } from '@/utils/utils';
+import { API } from '@config/API';
 
 export default Model.extend({
   namespace: 'common',
@@ -16,13 +18,14 @@ export default Model.extend({
     pollutantCode: [],
     industryTreeList: [],
     entAndPointList: [],
+    entAndPointNoFilterList: [],
     atmoStationList: [],
     entList: [],
     entLoading: true,
     noFilterEntList: [],
     noFilterEntLoading: false,
-    enableEntList:[], //启用的企业
-    enableEntLoading:false,
+    enableEntList: [], //启用的企业
+    enableEntLoading: false,
     attentionList: [],
     pointListByEntCode: [],
     pollutantListByDgimn: [],
@@ -41,12 +44,12 @@ export default Model.extend({
     ctProjectQueryPar: null,
     ctRegionList: [],
     allUser: [],
-        // 成套大区、省份
-        CtLargeRegionList: [],
-        CtProvinceList: [],
-        // 运维大区、省份
-        largeRegionList: [],
-        provinceList: [],
+    // 成套大区、省份
+    CtLargeRegionList: [],
+    CtProvinceList: [],
+    // 运维大区、省份
+    largeRegionList: [],
+    provinceList: [],
   },
 
   effects: {
@@ -69,7 +72,7 @@ export default Model.extend({
           entLoading: false,
         });
       } else {
-        message.error(response.Message);
+        response.Message && message.error(response.Message);
         yield update({ entList: [], entLoading: false });
       }
     },
@@ -84,7 +87,7 @@ export default Model.extend({
         });
         callback && callback(response.Datas);
       } else {
-        message.error(response.Message);
+        response.Message && message.error(response.Message);
         yield update({ noFilterEntList: [], noFilterEntLoading: false });
       }
     },
@@ -93,11 +96,10 @@ export default Model.extend({
       yield update({ enableEntLoading: true });
       const response = yield call(services.GetEntList, { ...payload });
       if (response.IsSuccess) {
-        yield update({enableEntList: response.Datas,});
+        yield update({ enableEntList: response.Datas });
       }
       callback && callback(response?.Datas);
-      yield update({  enableEntLoading: false });
-      
+      yield update({ enableEntLoading: false });
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
       //关注列表
@@ -196,7 +198,33 @@ export default Model.extend({
           entAndPointList: filterData,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
+      }
+    },
+    // 获取企业及排口
+    *GetEntAndPointNoFilter({ payload, callback }, { call, update }) {
+      const result = yield call(requestPost, API.CommonApi.GetEntAndPointNoFilter, payload);
+      if (result.IsSuccess) {
+        const filterData = result.Datas.filter(item => {
+          if (item.children.length) {
+            let children = item.children.map(itm => {
+              let obj = itm;
+              delete obj.children;
+              return { ...obj };
+            });
+            return {
+              ...item,
+              children,
+            };
+          }
+        });
+        callback && callback(filterData);
+        yield update({
+          // entAndPointList: result.Datas,
+          entAndPointNoFilterList: filterData,
+        });
+      } else {
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -236,7 +264,7 @@ export default Model.extend({
         });
         callback && callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -289,7 +317,7 @@ export default Model.extend({
         callback && callback(result.Datas);
       } else {
         errorCallback && errorCallback(result.Message);
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 记录日志
@@ -318,7 +346,7 @@ export default Model.extend({
           userTotal: result.Total,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 角色列表
@@ -329,7 +357,7 @@ export default Model.extend({
           roleList: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 运维人员 督查人员
@@ -343,7 +371,7 @@ export default Model.extend({
           operationUserList: result.Datas ? result.Datas.OperationUserList : [],
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
       callback && callback();
     },
@@ -356,7 +384,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas ? result.Datas.list : []);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 行政区 非过滤  联级选择下拉列表  防止loading重复刷新
@@ -368,7 +396,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas ? result.Datas.list : []);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 行政区 非过滤  联级选择下拉列表  防止loading重复刷新
@@ -380,7 +408,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas ? result.Datas.list : []);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 行政区 调试服务
@@ -392,7 +420,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas ? result.Datas.list : []);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 行政区 成套污染源管理
@@ -404,7 +432,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas ? result.Datas.list : []);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //成套获取 企业和监测点
@@ -417,7 +445,7 @@ export default Model.extend({
         });
         callback && callback(data);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getCTProjectList({ payload, callback }, { call, put, update }) {
@@ -431,7 +459,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //获取所有用户信息
@@ -444,7 +472,7 @@ export default Model.extend({
         });
         callback && callback(data);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *addSetUser({ payload, callback }, { call, put, update }) {
@@ -454,7 +482,7 @@ export default Model.extend({
         message.success(result.Message);
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -464,7 +492,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -500,7 +528,5 @@ export default Model.extend({
         callback && callback(_datas);
       }
     },
-
-
   },
 });

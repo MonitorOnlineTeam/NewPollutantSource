@@ -24,7 +24,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getrojectPointRelationList({ payload, callback }, { call, put, update }) { //获取项目与站点管理关系
@@ -32,7 +32,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback&&callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addProjectPointRelation({ payload, callback }, { call, put, update }) { //添加成套项目与站点关联关系
@@ -41,7 +41,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addProjectEntRelation({ payload, callback }, { call, put, update }) { //添加成套项目与企业关联关系
@@ -50,7 +50,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportCTProjectList({ callback, payload }, { call, put, update, select }) { //导出

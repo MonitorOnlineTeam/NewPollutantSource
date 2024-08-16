@@ -101,7 +101,7 @@ const Index = (props) => {
           props.onFinish && props.onFinish()
           callback()
         } else {
-          message.error(res.Message);
+          res.Message && message.error(res.Message);
         }
         setOkLoading(false)
       },

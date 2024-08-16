@@ -37,7 +37,7 @@ export default Model.extend({
           attentionList: response.Datas,
         });
       } else {
-        message.error(response.Message);
+        response.Message && message.error(response.Message);
       }
     },
     // 获取企业列表
@@ -48,7 +48,7 @@ export default Model.extend({
           entList: response.Datas,
         });
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // table title数据-一级
@@ -59,7 +59,7 @@ export default Model.extend({
           tableTitleData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -71,7 +71,7 @@ export default Model.extend({
           tableDataSource: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -81,7 +81,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         downloadFile(result.Datas)
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -93,7 +93,7 @@ export default Model.extend({
           secondTableTitleData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // table数据-二级
@@ -104,7 +104,7 @@ export default Model.extend({
           secondTableDataSource: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -114,7 +114,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         downloadFile(result.Datas)
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     
@@ -126,7 +126,7 @@ export default Model.extend({
           thirdTableTitleData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // table数据-三级
@@ -137,7 +137,7 @@ export default Model.extend({
           thirdTableDataSource: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -147,7 +147,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         downloadFile(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -159,7 +159,7 @@ export default Model.extend({
           fourTableTitleData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // table数据-四级
@@ -170,7 +170,7 @@ export default Model.extend({
           fourTableDataSource: result.Datas
         })
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -180,7 +180,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         downloadFile(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

@@ -30,7 +30,7 @@ export default Model.extend({
           tableLoading:false
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
@@ -40,7 +40,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     *deleteProjectInfo({ payload,callback }, { call, put, update }) { //删除
@@ -49,7 +49,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getProjectPointList({ payload,callback }, { call, put, update }) { //运维监测点信息
@@ -60,7 +60,7 @@ export default Model.extend({
           pointDatasTotal:result.Total,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportProjectInfoList({ callback,payload }, { call, put, update, select }) { //导出
@@ -89,7 +89,7 @@ export default Model.extend({
           sellerCompanyTotal:result.Total,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addOrUpdSellerCompany({ payload,callback }, { call, put, update }) { //添加卖房公司信息
@@ -98,7 +98,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *delSellerCompany({ payload,callback }, { call, put, update }) { //删除卖房公司信息
@@ -107,7 +107,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

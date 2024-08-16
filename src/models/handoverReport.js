@@ -26,7 +26,7 @@ export default Model.extend({
         callback && callback(result)
       } else {
         callback && callback(result)
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addOrUpdProjectReportInfo({ payload, callback }, { call, put, update }) { //编辑
@@ -35,7 +35,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportProjectReportList({ payload, callback }, { call, put, update }) { // 导出
@@ -44,7 +44,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

@@ -37,7 +37,7 @@ export default Model.extend({
           dutyPersonInfo: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getDutyTableList({ payload, callback }, { call, update, put, take, select }) {
@@ -48,7 +48,7 @@ export default Model.extend({
           dutyTableList: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *setCurrent({ payload }, { call, update, put, take, select }) {
@@ -57,7 +57,7 @@ export default Model.extend({
         localStorage.setItem("AlarmInfoCode", payload.AlarmInfoCode)
         // message.success("操作成功")
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取甄别数据
@@ -69,7 +69,7 @@ export default Model.extend({
           dutyOneData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取下拉数据 - 获取码表
@@ -80,7 +80,7 @@ export default Model.extend({
           dictionaryList: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 保存甄别数据
@@ -89,7 +89,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success('操作成功')
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取涉事企业
@@ -98,7 +98,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取敏感目标
@@ -107,7 +107,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 保存涉事企业和敏感点
@@ -124,7 +124,7 @@ export default Model.extend({
           }
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取保存的涉事企业及敏感
@@ -143,7 +143,7 @@ export default Model.extend({
         }
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 删除涉事企业及敏感点
@@ -160,7 +160,7 @@ export default Model.extend({
           }
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取步骤条
@@ -171,7 +171,7 @@ export default Model.extend({
           stepBarData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取数据
@@ -180,7 +180,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取保存后的数据
@@ -189,7 +189,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取保存后的数据
@@ -203,7 +203,7 @@ export default Model.extend({
         message.success("操作成功")
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取保存后的数据
@@ -213,7 +213,7 @@ export default Model.extend({
         message.success("删除成功")
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 启动预案
@@ -222,7 +222,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success("预案启动成功！")
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 采样保存
@@ -231,7 +231,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success("保存成功！")
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取保存后的table数据
@@ -240,7 +240,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 删除table行
@@ -249,7 +249,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success('删除成功');
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 结束
@@ -259,7 +259,7 @@ export default Model.extend({
         callback && callback();
         message.success('操作成功');
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取值班人员和值班领导的接口
@@ -271,7 +271,7 @@ export default Model.extend({
         })
         callback && callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 换班
@@ -281,7 +281,7 @@ export default Model.extend({
         message.success('操作成功！')
         callback && callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 

@@ -201,7 +201,7 @@ class AlarmRecordList extends Component {
                   selectedRowKeys: [],
                 })
               } else {
-                message.error(result.Message);
+                result.Message && message.error(result.Message);
               }
             },
           },

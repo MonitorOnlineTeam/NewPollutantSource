@@ -38,7 +38,7 @@ export default Model.extend({
           });
         }
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
         callback && callback({});
       }
       !payload.id ? yield update({ carTableLoading: false }) : null;
@@ -50,7 +50,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     /*人员管理 */
@@ -64,7 +64,7 @@ export default Model.extend({
           userQueryPar: payload,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *ExportUserList({ payload, callback }, { call, put, update }) {
@@ -74,7 +74,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -88,7 +88,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -103,7 +103,7 @@ export default Model.extend({
           provinceQueryPar: payload,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *ExportProvinceList({ payload, callback }, { call, put, update }) {
@@ -113,7 +113,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *GetManagerSelect({ payload, callback }, { call, put, update }) {
@@ -122,7 +122,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
         callback && callback([]);
       }
     },

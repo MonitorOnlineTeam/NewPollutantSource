@@ -32,7 +32,7 @@ export default Model.extend({
        }
         callback&&callback(data)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback&&callback([])
       }
     },
@@ -45,7 +45,7 @@ export default Model.extend({
           callback&&callback(result.Datas)
          }
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

@@ -26,7 +26,7 @@ export default Model.extend({
         })
         callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },

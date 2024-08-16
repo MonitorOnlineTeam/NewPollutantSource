@@ -48,7 +48,7 @@ class index extends PureComponent {
   };
 
   onSysItemClick = item => {
-    // this.UpdateUserProject('');
+    this.UpdateUserProject('');
     let url = item.Url ? new URL(item.Url) : item.Url;
     if (url && (url.protocol === 'http:' || url.protocol === 'https:')) {
       if (webConfig.middlePageOpenMode === 'single') {

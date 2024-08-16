@@ -267,7 +267,7 @@ class DepartIndex extends Component {
                                                             },
                                                         })
                                                     } else {
-                                                        message.error(res.Message);
+                                                        res.Message && message.error(res.Message);
                                                     }
                                                 },
                                             },
@@ -636,7 +636,7 @@ class DepartIndex extends Component {
                         message.success('成功');
                         this.handleCancel()
                     } else {
-                        message.error(res.Message);
+                        res.Message && message.error(res.Message);
                     }
                 },
             },
@@ -660,7 +660,7 @@ class DepartIndex extends Component {
                         message.success('成功');
                         this.handleCancel()
                     } else {
-                        message.error(res.Message);
+                        res.Message && message.error(res.Message);
                     }
                 },
             },
@@ -762,7 +762,7 @@ class DepartIndex extends Component {
                                     },
                                 })
                             } else {
-                                message.error(res.Message);
+                                res.Message && message.error(res.Message);
                             }
                         },
                     },

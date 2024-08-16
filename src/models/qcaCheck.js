@@ -50,7 +50,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ resTimeCheckTableData: result.Datas });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取污染物类型
@@ -73,7 +73,7 @@ export default Model.extend({
         yield update({ pollutantList: pollutantList, pollutantCode: pollutantCode });
         callback && callback(pollutantList);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取零点核查数据
@@ -94,7 +94,7 @@ export default Model.extend({
               },
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取污染物类型
@@ -103,7 +103,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ keyParameterList: result.Datas });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取质控日志
@@ -114,7 +114,7 @@ export default Model.extend({
           qcaLogDataList: result.Datas.recordList,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取质控过程
@@ -134,7 +134,7 @@ export default Model.extend({
           },
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取量程核查数据
@@ -155,7 +155,7 @@ export default Model.extend({
               },
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取盲样核查数据
@@ -175,7 +175,7 @@ export default Model.extend({
               },
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取示值误差核查数据
@@ -195,7 +195,7 @@ export default Model.extend({
               },
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取线性核查数据
@@ -213,7 +213,7 @@ export default Model.extend({
           // }
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 核查导出
@@ -222,7 +222,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         downloadFile(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

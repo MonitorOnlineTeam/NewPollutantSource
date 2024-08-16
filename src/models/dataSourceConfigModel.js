@@ -45,7 +45,7 @@ export default Model.extend({
                     messageStatus: result.Datas
                 })
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
         },
         //数据源基础信息修改

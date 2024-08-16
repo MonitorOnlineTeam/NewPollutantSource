@@ -26,7 +26,7 @@ export default Model.extend({
           tableTotal:result.Total,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *ExportSignInAndOffsiteSign({ payload,callback }, { call, put, update }) { //签到考勤查询信息 导出
@@ -35,7 +35,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *GetSignInType({ payload,callback }, { call, put, update }) { //工作类型
@@ -43,7 +43,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     

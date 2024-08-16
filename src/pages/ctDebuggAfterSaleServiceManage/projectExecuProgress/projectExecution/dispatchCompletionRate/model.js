@@ -40,7 +40,7 @@ export default Model.extend({
         payload.pointType == 1?  yield update({ tableLoading: false }) : yield update({ incompleteLoading: false })
 
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
   },
   *ExportCTServiceDispatchRateList({ callback, payload }, { call, put, update, select }) { //派单完成率 导出

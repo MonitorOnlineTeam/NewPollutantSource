@@ -273,7 +273,7 @@ const PageContent = props => {
 
   const getOption3 = () => {
     let seriesName0 = barType === 'rate' ? '传输有效率无效占比' : '传输有效率无效数据个数',
-      seriesName1 = barType === 'rate' ? '模型识别疑似异常率' : '模型识别异常数据个数',
+      seriesName1 = barType === 'rate' ? '模型识别疑似异常占比' : '模型识别异常数据个数',
       seriesData0 = [],
       seriesData1 = [],
       xData = [];
@@ -532,7 +532,7 @@ const PageContent = props => {
           {
             title: (
               <span>
-                疑似异常率
+                疑似异常占比
                 <QuestionTooltip content="异常时长 / 运行时长 * 100%" />
               </span>
             ),
@@ -816,7 +816,7 @@ const PageContent = props => {
           marginTop: 8,
         }}
         bodyStyle={{ padding: '10px 24px', height: 'calc(100% - 41px)' }}
-        title={<div className="innerCardTitle">{dataTypeName}疑似异常率分析</div>}
+        title={<div className="innerCardTitle">{dataTypeName}疑似异常占比分析</div>}
         extra={
           <Radio.Group
             size="small"
@@ -843,7 +843,7 @@ const PageContent = props => {
       <Card
         style={{ marginTop: 8 }}
         bodyStyle={{ padding: '10px 24px' }}
-        title={<div className="innerCardTitle">{dataTypeName}疑似异常率分析</div>}
+        title={<div className="innerCardTitle">{dataTypeName}疑似异常占比分析</div>}
       >
         <SdlTable
           loading={loading}

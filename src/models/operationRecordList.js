@@ -22,7 +22,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({taskTypeList: result.Datas,})
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getOperationRecordListByDGIMN({ payload, callback }, { call, put, update }) { //列表
@@ -37,7 +37,7 @@ export default Model.extend({
         callback(result.Datas&&result.Datas.ColumnList&&result.Datas.ColumnList[0] ? result.Datas.ColumnList[0] : [])
       
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportOperationRecordListByDGIMN({ payload, callback }, { call, put, update }) { // 导出
@@ -46,7 +46,7 @@ export default Model.extend({
         message.success('下载成功')
         downloadFile(`${result.Datas}`)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

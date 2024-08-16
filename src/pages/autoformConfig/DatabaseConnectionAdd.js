@@ -113,7 +113,7 @@ class DatabaseConnectionAdd extends Component {
                                 that.handleOk();
                             }
                             else {
-                                message.error(result.Message);
+                                result.Message && message.error(result.Message);
                             }
                         }
                     },

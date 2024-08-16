@@ -73,7 +73,7 @@ const Index = props => {
   const buttonList = permissionButton(props.match.path);
   console.log('buttonList', buttonList);
   const isAll =
-    buttonList.includes('checkOpe') || buttonList.includes('checkExpert') ? false : true;
+    buttonList.includes('checkOpe') && buttonList.includes('checkExpert') ? true : false;
   const routerType = buttonList.includes('checkOpe')
     ? 1
     : buttonList.includes('checkExpert')
@@ -234,6 +234,17 @@ const Index = props => {
   // 查询数据
   const onFinish = (pageIndex, pageSize) => {
     const values = form.getFieldsValue();
+
+    let CheckStatus = values.CheckStatus;
+    if (!CheckStatus) {
+      if (isAll) {
+        CheckStatus = '1,2,3';
+      } else if (routerType) {
+        CheckStatus = '2,3';
+      } else {
+        CheckStatus = '1,3';
+      }
+    }
     props.dispatch({
       type: 'AbnormalIdentifyModel/GetCheckedList',
       payload: {
@@ -243,17 +254,18 @@ const Index = props => {
         endTime: values.date ? values.date[1].format('YYYY-MM-DD HH:mm:ss') : undefined,
         pageIndex: pageIndex,
         pageSize: pageSize,
+        CheckStatus: CheckStatus,
       },
       callback: res => {
-        let data = [];
-        if (isAll) {
-          data = res.Datas;
-        } else {
-          data =
-            routerType == 1
-              ? res.Datas?.filter(item => item.Status == 1 || item.Status == 2)
-              : res.Datas?.filter(item => item.Status == 1 || item.Status == 3);
-        }
+        let data = res.Datas;
+        // if (isAll) {
+        //   data = res.Datas;
+        // } else {
+        //   data =
+        //     routerType == 1
+        //       ? res.Datas?.filter(item => item.Status == 1 || item.Status == 2)
+        //       : res.Datas?.filter(item => item.Status == 1 || item.Status == 3);
+        // }
 
         setDataSource(data);
         setTotal(res.Total);

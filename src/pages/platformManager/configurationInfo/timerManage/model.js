@@ -29,7 +29,7 @@ export default Model.extend({
           tableLoading:false
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
@@ -39,7 +39,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     *editOnlineTimerManage({ payload,callback }, { call, put, update }) { //修改
@@ -48,7 +48,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     *delOnlineTimerManage({ payload,callback }, { call, put, update }) { //删除
@@ -57,7 +57,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 

@@ -120,7 +120,7 @@ export default Model.extend({
                 payload.callback()
             }
             else {
-                message.error(result.Message);
+                result.Message && message.error(result.Message);
             }
         },
         //修改数据
@@ -131,7 +131,7 @@ export default Model.extend({
                     storehouseList: result.Datas?.DataSource,
                 });
             }else {
-                message.error(result.Message);
+                result.Message && message.error(result.Message);
             }
         },
         // *GetMonitoringTypeList({ payload, callback }, { call, put, update }) { //获取设备类型
@@ -139,7 +139,7 @@ export default Model.extend({
         //     if (result.IsSuccess) {
         //       yield update({ monitoringTypeList: result.Datas })
         //     } else {
-        //       message.error(result.Message)
+        //       result.Message && message.error(result.Message)
         //     }
         //   },   
     },

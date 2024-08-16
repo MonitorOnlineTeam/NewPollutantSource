@@ -302,7 +302,7 @@ const CluesDetails = props => {
     return (
       <div
         className={styles.PageWrapper}
-        style={{ height: height ? height : isShowBack ? '100%' : 'calc(100vh - 92px)' }}
+        style={{ height: height ? height : isShowBack ? '100%' : 'calc(100vh - 68px)' }}
       >
         <Card
           title="线索详情"
@@ -457,6 +457,7 @@ const CluesDetails = props => {
             CompareDGIMN={warningInfo.CompareDGIMN}
             ComparePointName={`${warningInfo.CompareEntNmae} - ${warningInfo.ComparePointName}`}
             visible={dataModalVisible}
+            warningInfo={warningInfo}
             // date={warningDataDate}
             // warningDate={warningDate}
             // wrapClassName={isShowBack ? 'spreadOverModal' : 'fullScreenModal'}

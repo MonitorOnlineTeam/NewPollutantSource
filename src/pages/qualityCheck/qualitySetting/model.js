@@ -55,7 +55,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ tableDatas: result.Datas,tableLoading:false,total:result.Datas.length,isSaveFlag:false  })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
@@ -66,7 +66,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
        // 质控核查 质控核查设置 删除
@@ -78,7 +78,7 @@ export default Model.extend({
           yield update({ issueLoading:true })
           callback(result.IsSuccess)
         } else {
-          message.error(result.Message)
+          result.Message && message.error(result.Message)
         }
       },
        // 质控核查 质控核查设置 删除 没下发之前的删除
@@ -90,7 +90,7 @@ export default Model.extend({
           yield update({ tableLoading:false })
           callback(result.IsSuccess)
         } else {
-          message.error(result.Message)
+          result.Message && message.error(result.Message)
         }
       },
          // 质控核查 质控核查设置 下发
@@ -103,7 +103,7 @@ export default Model.extend({
             callback(result.IsSuccess)
           } else {
             yield update({ issueLoading:false })
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
           }
         },
 

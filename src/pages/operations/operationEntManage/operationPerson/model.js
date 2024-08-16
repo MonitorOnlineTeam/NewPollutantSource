@@ -40,7 +40,7 @@ export default Model.extend({
           duplicateList:response.Datas
         });
       }else{
-        message.error(response.Message);
+        response.Message && message.error(response.Message);
       }
     },
     *deleteOperationMaintenancePersonnel({ payload,callback }, { call, put, update, select }) {

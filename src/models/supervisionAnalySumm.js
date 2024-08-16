@@ -26,7 +26,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ inspectorCodeList: result.Datas, })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }  
     },
     *getInspectorSummaryList({ payload, callback }, { call, put, update }) { //列表 督查总结
@@ -35,7 +35,7 @@ export default Model.extend({
         yield update({ inspectorSummaryList: result.Datas, })
         callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportInspectorSummaryList({ payload, callback }, { call, put, update }) { //导出 督查总结
@@ -44,7 +44,7 @@ export default Model.extend({
         message.success(result.Message)
         downloadFile(`${result.Datas}`)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getInspectorSummaryForRegionList({ payload, callback }, { call, put, update }) { //列表 督查总结-按行政区
@@ -53,7 +53,7 @@ export default Model.extend({
         yield update({ inspectorSummaryList: result.Datas, })
         callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportInspectorSummaryForRegion({ payload, callback }, { call, put, update }) { //导出 督查总结-按行政区
@@ -62,7 +62,7 @@ export default Model.extend({
         message.success(result.Message)
         downloadFile(`${result.Datas}`)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getRemoteSummaryList({ payload, callback }, { call, put, update }) { //列表 关键参数
@@ -71,7 +71,7 @@ export default Model.extend({
         yield update({ remoteSummaryList: result.Datas,remoteSummaryTotal:result.Total })
         callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportRemoteSummaryList({ payload, callback }, { call, put, update }) { //导出 关键参数
@@ -80,7 +80,7 @@ export default Model.extend({
         message.success(result.Message)
         downloadFile(`${result.Datas}`)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getOperationManageSummaryList({ payload, callback }, { call, put, update }) { //列表 全系统督查汇总 
@@ -89,7 +89,7 @@ export default Model.extend({
         yield update({ operationManageSummaryList: result.Datas,operationManageSummaryTotal:result.Total })
         callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportOperationManageSummaryList({ payload, callback }, { call, put, update }) { //导出 全系统督查汇总 
@@ -98,7 +98,7 @@ export default Model.extend({
         message.success(result.Message)
         downloadFile(payload.InspectorType == 1 || payload.InspectorType == 2? `${result.Datas}` : `/upload${result.Datas}`)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

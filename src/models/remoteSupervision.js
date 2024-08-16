@@ -43,7 +43,7 @@ export default Model.extend({
         payload.isForward ? yield update({ forwardTableData: result.Datas, forwardTableTotal: result.Total, forwardTableLoading: false }) : yield update({ tableData: result.Datas, tableTotal: result.Total, tableLoading: false, regQueryPar: payload });
       } else {
         payload.isForward ? yield update({ forwardTableLoading: false }) : yield update({ tableLoading: false });
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //导出
@@ -53,7 +53,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //获取数据 添加参数列表
@@ -96,7 +96,7 @@ export default Model.extend({
       } else {
         yield update({ addDataConsistencyData: [], addParconsistencyData: [], addRealTimeData: [], });
         callback([], [], [], null)
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //获取量程数据一致性详情
@@ -106,7 +106,7 @@ export default Model.extend({
         yield update({ consistencyCheckDetail: result.Datas });
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //获取数据 核查人员编辑时
@@ -115,7 +115,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback&&callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //添加或修改数据一致性核查
@@ -124,7 +124,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success(result.Message)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
       callback(result.Datas)
     },
@@ -135,7 +135,7 @@ export default Model.extend({
     //     message.success(result.Message)
     //     callback(result.Datas)
     //   } else {
-    //     message.error(result.Message)
+    //     result.Message && message.error(result.Message)
     //   }
     // },
 
@@ -145,7 +145,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -156,7 +156,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //数据一致性检查 自动判断
@@ -165,7 +165,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //参数一致性检查 自动判断
@@ -174,7 +174,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //删除
@@ -183,7 +183,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //下发
@@ -192,7 +192,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //关键参数核查 保存 新
@@ -202,7 +202,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success(result.Message)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //关键参数核查 可申请工单站点
@@ -214,7 +214,7 @@ export default Model.extend({
           remoteInspectorPointTotal: result.Total,
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //关键参数核查 手工申请工单
@@ -224,7 +224,7 @@ export default Model.extend({
         message.success(result.Message)
         callback && callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //关键参数核查 转发工单
@@ -234,7 +234,7 @@ export default Model.extend({
         callback && message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //添加或修改数据一致性核查
@@ -244,7 +244,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

@@ -37,7 +37,7 @@ export default Model.extend({
           AQIMonthData: result.Datas
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     /*月份首要污染物分析**/
@@ -53,7 +53,7 @@ export default Model.extend({
           PrimaryData: result.Datas
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     /*月站点平均值分析**/
@@ -69,7 +69,7 @@ export default Model.extend({
           MonthAvgData: result.Datas
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取同比环比数据
@@ -80,7 +80,7 @@ export default Model.extend({
           yearAndChainData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取污染日历数据
@@ -91,7 +91,7 @@ export default Model.extend({
           calendarData: [...result.Datas]
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取气象图数据
@@ -102,7 +102,7 @@ export default Model.extend({
           weatherAnalysisData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 

@@ -67,7 +67,7 @@ export default Model.extend({
         message.success("添加成功！");
       }
       else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
 
     },
@@ -223,7 +223,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
 
     },
@@ -240,7 +240,7 @@ export default Model.extend({
         message.success("操作成功！");
       }
       else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -257,7 +257,7 @@ export default Model.extend({
         payload.callback()
       }
       else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

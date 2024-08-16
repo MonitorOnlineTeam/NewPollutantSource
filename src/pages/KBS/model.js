@@ -18,7 +18,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ KBSData: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 更新下载和查看次数
@@ -27,7 +27,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 

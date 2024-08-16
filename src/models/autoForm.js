@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-18 17:25:58
+ * @Last Modified time: 2024-08-12 17:12:40
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -49,6 +49,8 @@ function getQueryParams(state, payload) {
         const isMoment = moment.isMoment(searchForm[key].value);
         const isArrMoment =
           Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
+          console.log('dateFormat', state.dateFormat)
+          console.log('state.dateFormat[configId][key]', state.dateFormat[configId][key])
         let format = state.dateFormat[configId][key] || 'YYYY-MM-DD HH:mm:ss';
         console.log(state.dateFormat[configId][key])
         let _format = formatDateFormat(format);
@@ -302,7 +304,8 @@ export default Model.extend({
           uploadType: item.DF_UpType,
           uploadNumber: item.DF_UpNum,
         }));
-
+        debugger
+        console.log('dateFormat222', dateFormat)
         // 主键
         const keys = result.Datas.Keys.map(item => item.FullFieldName);
         // let keys = {
@@ -314,6 +317,7 @@ export default Model.extend({
         yield put({
           type: 'saveConfigIdList',
         });
+
         yield update({
           searchForm: {
             ...state.searchForm,
@@ -408,7 +412,7 @@ export default Model.extend({
         });
         payload.callback && payload.callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -429,7 +433,7 @@ export default Model.extend({
         }
         payload.callback && payload.callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -445,7 +449,7 @@ export default Model.extend({
           },
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getFormDatas({ payload, callback }, { call, select, update, put }) {
@@ -455,7 +459,7 @@ export default Model.extend({
       if (result.IsSuccess && result.Datas.length) {
         callback(result.Datas[0]);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取详情页面配置
@@ -488,7 +492,7 @@ export default Model.extend({
           },
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -623,7 +627,7 @@ export default Model.extend({
         message.success('删除成功！');
       } else {
         // message.error(result.Datas);
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 校验重复
