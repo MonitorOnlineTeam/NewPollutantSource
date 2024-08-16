@@ -7,7 +7,7 @@ import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { DetailIcon } from '@/utils/icon';
-
+import VirtualTable from '@/components/VirtualTable';
 const dvaPropsData = ({ loading, reportsAndViews, common }) => ({
   underWarrantyServicesData: reportsAndViews.underWarrantyServicesData,
   // TimeoutServiceReason: timeoutServices.TimeoutServiceReason, // 超时服务原因
@@ -115,14 +115,14 @@ const TableCard = props => {
   const typeClick = (record) => {
     setIsModalOpen(true);
     form.setFieldsValue({
-      pType:type,
+      pType: type,
       serviceAreaCode: record.serviceAreaCode,
-      time:record.btime && record.etime ?  [moment(record.btime), moment(record.etime)] :  [moment(date).startOf('year'), moment(date).endOf('year')],
+      time: record.btime && record.etime ? [moment(record.btime), moment(record.etime)] : [moment(date).startOf('year'), moment(date).endOf('year')],
       questionID: record.QuestionID,
     });
     setTimeout(() => {
       handleTableChange(1, 20);
-    },200)
+    }, 200)
   }
   const TypeRenderComponents = ({ record }) => {
     return <a onClick={() => typeClick(record)}>{record?.text || record?.text == 0 ? record.text : ''}</a>
@@ -135,7 +135,7 @@ const TableCard = props => {
         children: [
           {
             title: '次数',
-            dataIndex: `Num${item.ID}`,
+            code: `Num${item.ID}`,
             key: `Num${item.ID}`,
             width: 60,
             align: 'center',
@@ -145,14 +145,14 @@ const TableCard = props => {
           },
           {
             title: '次数占比',
-            dataIndex: `NumRate${item.ID}`,
+            code: `NumRate${item.ID}`,
             key: `NumRate${item.ID}`,
             width: 90,
             align: 'center',
           },
           {
             title: '时长',
-            dataIndex: `Times${item.ID}`,
+            code: `Times${item.ID}`,
             key: `Times${item.ID}`,
             width: 60,
             align: 'center',
@@ -162,7 +162,7 @@ const TableCard = props => {
           },
           {
             title: '时长占比',
-            dataIndex: `TimeRate${item.ID}`,
+            code: `TimeRate${item.ID}`,
             key: `TimeRate${item.ID}`,
             width: 90,
             align: 'center',
@@ -171,51 +171,62 @@ const TableCard = props => {
       };
     });
     return [
-      {
-        title: '年度',
-        dataIndex: 'year',
-        key: 'year',
-        width: 80,
-        fixed: 'left',
-        className: styles.bg_white,
-        render: (text, record, index) => {
-          return {
-            children: text,
-            props: { rowSpan: record.count > 0 ? record.count + 1 : record.count },
-          };
-        },
-      },
+      // {
+      //   title: '年度',
+      //   code: 'year',
+      //   key: 'year',
+      //   width: 80,
+      //   lock: true,
+        // className: styles.bg_white,
+        // getSpanRect(value) {
+        //   return 10
+        // },
+        // features: { autoRowSpan: (aa,bb,row1,row2)=>{
+        //   console.log(aa,bb,row1,row2,111111111111)
+        // }} 
+        // render: (text, record, index) => {
+        //   return { rowSpan: record.count > 0 ? record.count + 1 : record.count };
+        // },
+      // },
       {
         title: '序号',
-        dataIndex: 'sort',
+        code: 'sort',
         key: 'sort',
-        fixed: 'left',
-        render: (text, record, index) => {
-          return {
-            children: text,
-            props: { colSpan: text === '总计' ? 2 : 1 },
-          };
+        width: 54,
+        lock: true,
+        getCellProps: (text, record, index) => {
+          return { colSpan: text === '总计' ? 2 : 1 };
         },
+        // render: (text, record, index) => {
+        //   return {
+        //     children: text,
+        //     props: { colSpan: text === '总计' ? 2 : 1 },
+        //   };
+        // },
       },
       {
         title: type === 1 ? '服务产品类别' : '服务原因',
-        dataIndex: 'ReasonName',
+        code: 'ReasonName',
         key: 'ReasonName',
         width: 200,
-        fixed: 'left',
-        render: (text, record, index) => {
-          return {
-            children: text,
-            props: { colSpan: text === '总计' ? 0 : 1 },
-          };
+        lock: true,
+        getCellProps: (text, record, index) => {
+          return { colSpan: text === '总计' ? 0 : 1 };
         },
+        // render: (text, record, index) => {
+        //   return {
+        //     children: text,
+        //     props: { colSpan: text === '总计' ? 0 : 1 },
+        //   };
+        // },
       },
       {
         title: '总计',
+        lock: true,
         children: [
           {
             title: '次数',
-            dataIndex: 'SumNum',
+            code: 'SumNum',
             key: 'SumNum',
             width: 60,
             align: 'center',
@@ -226,7 +237,7 @@ const TableCard = props => {
           },
           {
             title: '次数占比',
-            dataIndex: 'SumNumRate',
+            code: 'SumNumRate',
             key: 'SumNumRate',
             width: 90,
             align: 'center',
@@ -234,7 +245,7 @@ const TableCard = props => {
           },
           {
             title: '时长',
-            dataIndex: 'SumTimes',
+            code: 'SumTimes',
             key: 'SumTimes',
             width: 60,
             align: 'center',
@@ -245,7 +256,7 @@ const TableCard = props => {
           },
           {
             title: '时长占比',
-            dataIndex: 'SumTimeRate',
+            code: 'SumTimeRate',
             key: 'SumTimeRate',
             width: 90,
             align: 'center',
@@ -700,7 +711,7 @@ const TableCard = props => {
       bodyStyle={{ paddingBottom: 10 }}
       loading={loading}
     >
-      <SdlTable
+      {/* <SdlTable
         dataSource={TableList}
         columns={getColumns()}
         align="center"
@@ -708,8 +719,11 @@ const TableCard = props => {
           y: 500,
         }}
         pagination={false}
+      />  */}
+      <VirtualTable
+        dataSource={TableList}
+        columns={getColumns()}
       />
-
       <Modal
         title={`${moment(date).format('YYYY年')}质保内服务统计（${
           type === 1 ? '按产品类别' : '按服务原因'
@@ -729,7 +743,7 @@ const TableCard = props => {
           form={form}
           layout="inline"
           initialValues={{
-            solveStatus:'',
+            solveStatus: '',
           }}
           autoComplete="off"
         >
@@ -793,37 +807,37 @@ const TableCard = props => {
                   </Select>
                 </Form.Item>
               </Col>
-                 <Col span={6}>
-                 <Form.Item name="solveStatus" label="是否解决">
-                   <Radio.Group>
-                     <Radio value={''}>全部</Radio>
-                     <Radio value={1}>是</Radio>
-                     <Radio value={0}>否</Radio>
-                   </Radio.Group>
-                 </Form.Item>
-               </Col>
-               </>
-           :
-           <Col span={6}>
-           <Form.Item name="questionID" label="服务原因">
-             <Select
-               placeholder="请选择服务原因"
-               style={{ width: '100%' }}
-               allowClear
-               showSearch
-               optionFilterProp="children"
-             >
-               {WarrantyAnalysis?.[0] && WarrantyAnalysis.map(item => {
-                 return (
-                   <Option value={item.QuestionID} key={item.QuestionID} data-childList={item.QuestionID}>
-                     {item.ReasonName}
-                   </Option>
-                 );
-               })}
-             </Select>
-           </Form.Item>
-         </Col>
-          }
+              <Col span={6}>
+                <Form.Item name="solveStatus" label="是否解决">
+                  <Radio.Group>
+                    <Radio value={''}>全部</Radio>
+                    <Radio value={1}>是</Radio>
+                    <Radio value={0}>否</Radio>
+                  </Radio.Group>
+                </Form.Item>
+              </Col>
+            </>
+              :
+              <Col span={6}>
+                <Form.Item name="questionID" label="服务原因">
+                  <Select
+                    placeholder="请选择服务原因"
+                    style={{ width: '100%' }}
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                  >
+                    {WarrantyAnalysis?.[0] && WarrantyAnalysis.map(item => {
+                      return (
+                        <Option value={item.QuestionID} key={item.QuestionID} data-childList={item.QuestionID}>
+                          {item.ReasonName}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+            }
             <Col span={6}>
               <Form.Item name="time" label="离开现场时间" >
                 <RangePicker_
@@ -864,7 +878,7 @@ const TableCard = props => {
               </Form.Item>
             </Col>
           </Row>
-              <Form.Item hidden name='pType'/>
+          <Form.Item hidden name='pType' />
         </Form>
         <SdlTable
           loading={basicsLoading}
