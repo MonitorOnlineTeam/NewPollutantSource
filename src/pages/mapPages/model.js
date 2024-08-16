@@ -40,7 +40,7 @@ export default Model.extend({
           pollutantTypeCountList: result.Datas.countList,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取监测点infoWindow数据
@@ -53,7 +53,7 @@ export default Model.extend({
           infoWindowData: data
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取污染物
@@ -172,7 +172,7 @@ export default Model.extend({
           }
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取点位气泡图表数据
@@ -280,7 +280,7 @@ export default Model.extend({
           markersEntList
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取特征污染物数据
@@ -293,7 +293,7 @@ export default Model.extend({
 
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取多媒体会议树
@@ -329,7 +329,7 @@ export default Model.extend({
         //   multimediaConferenceTreeData: data
         // })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

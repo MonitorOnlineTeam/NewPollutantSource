@@ -13,7 +13,7 @@ export default Model.extend({
     *GetLargeRegionList({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.GetCtLargeRegionList, { ...payload });
       if (!result.IsSuccess) {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
       callback && callback(result.Datas)
     },

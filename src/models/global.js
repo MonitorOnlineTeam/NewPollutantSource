@@ -96,20 +96,20 @@ export default Model.extend({
             item => item.Name.indexOf('Autoform') === -1,
           );
         }
-        yield update({
-          sysPollutantTypeList: sysPollutantTypeList,
-        });
         // yield update({
-        //   sysPollutantTypeList: sysPollutantTypeList.filter(
-        //     item =>
-        //       item.ID !== '99dbc722-033f-481a-932a-3c6436e17245' &&
-        //       item.ID !== '0d4ad7f1-3a05-42ad-9860-c150ee8c270e' &&
-        //       item.ID !== '140496b1-ab85-474a-9278-3ca7c6df3f9b',
-        //   ),
+        //   sysPollutantTypeList: sysPollutantTypeList,
         // });
+        yield update({
+          sysPollutantTypeList: sysPollutantTypeList.filter(
+            item =>
+              item.ID !== '99dbc722-033f-481a-932a-3c6436e17245' &&
+              item.ID !== '0d4ad7f1-3a05-42ad-9860-c150ee8c270e' &&
+              item.ID !== '140496b1-ab85-474a-9278-3ca7c6df3f9b',
+          ),
+        });
         callback && callback(sysPollutantTypeList);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getOperationSetting({ payload, callback }, { call, put, update }) {
@@ -120,7 +120,7 @@ export default Model.extend({
           operationSettingInfo: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取按钮权限

@@ -51,7 +51,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取工作台消息
@@ -63,7 +63,7 @@ export default Model.extend({
         });
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 结束任务
@@ -73,7 +73,7 @@ export default Model.extend({
         message.success('操作成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 手动申请任务
@@ -83,7 +83,7 @@ export default Model.extend({
         message.success('操作成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 添加或编辑回访客户
@@ -107,7 +107,7 @@ export default Model.extend({
         }
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取所有客户
@@ -119,7 +119,7 @@ export default Model.extend({
         });
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取维护的客户
@@ -131,7 +131,7 @@ export default Model.extend({
         });
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 添加编辑客户
@@ -142,7 +142,7 @@ export default Model.extend({
 
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取已配置的省区和大区
@@ -154,7 +154,7 @@ export default Model.extend({
         });
         callback && callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除客户
@@ -164,7 +164,7 @@ export default Model.extend({
         message.success('删除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 查询回访客户记录
@@ -173,7 +173,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除回访客户记录
@@ -183,7 +183,7 @@ export default Model.extend({
         message.success('删除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 添加、编辑人员培训记录
@@ -206,7 +206,7 @@ export default Model.extend({
         }
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 查询人员培训记录
@@ -215,7 +215,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 人员培训记录 - 导出
@@ -225,7 +225,7 @@ export default Model.extend({
         message.success('导出成功！');
         window.open(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除培训记录
@@ -235,7 +235,7 @@ export default Model.extend({
         message.success('删除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 根据省份获取办事处列表
@@ -247,7 +247,7 @@ export default Model.extend({
         });
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 添加、编辑办事处检查
@@ -270,7 +270,7 @@ export default Model.extend({
         }
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取办事处检查提交记录
@@ -279,7 +279,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除办事处检查记录
@@ -289,7 +289,7 @@ export default Model.extend({
         message.success('删除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 添加或编辑现场工作/其它工作/其他部门工作记录
@@ -299,7 +299,7 @@ export default Model.extend({
         message.success('操作成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 查询现场工作/其它工作/其他部门工作记录
@@ -308,7 +308,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除现场工作/其它工作/其他部门工作记录
@@ -318,7 +318,7 @@ export default Model.extend({
         message.success('删除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 导出任务单记录
@@ -328,7 +328,7 @@ export default Model.extend({
         message.success('导出成功！');
         window.open(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 导出任务单记录
@@ -339,7 +339,7 @@ export default Model.extend({
           allUser: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 添加、编辑检查考勤和日志记录
@@ -361,7 +361,7 @@ export default Model.extend({
         }
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 查询检查考勤和日志提交记录
@@ -370,7 +370,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除 检查考勤和日志记录
@@ -380,7 +380,7 @@ export default Model.extend({
         message.success('删除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 根据考勤和日志记录ID获取数据
@@ -396,7 +396,7 @@ export default Model.extend({
         });
         callback && callback(datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取统计数据
@@ -405,7 +405,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 导出统计数据
@@ -415,7 +415,7 @@ export default Model.extend({
         message.success('导出成功！');
         window.open(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取 现场工作/其它工作/其他部门工作统计
@@ -424,7 +424,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 导出 现场工作/其它工作/其他部门工作统计
@@ -434,7 +434,7 @@ export default Model.extend({
         message.success('导出成功！');
         window.open(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取行业
@@ -445,7 +445,7 @@ export default Model.extend({
           IndustryList: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取项目
@@ -454,7 +454,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 提交应收账款催收
@@ -476,7 +476,7 @@ export default Model.extend({
         // }
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除应收账款催收记录
@@ -486,7 +486,7 @@ export default Model.extend({
         message.success('删除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 查询应收账款催收记录
@@ -495,7 +495,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 查询应收账款催收统计
@@ -504,7 +504,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 查询应收账款催收统计
@@ -523,7 +523,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取大区经理或省区经理
@@ -535,7 +535,7 @@ export default Model.extend({
         });
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 转发任务单
@@ -554,7 +554,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 待办中心 监督核查
@@ -566,7 +566,7 @@ export default Model.extend({
         });
         callback && callback(result.Total);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 数据报警列表
@@ -579,7 +579,7 @@ export default Model.extend({
         });
         callback && callback(result.Total);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除数据报警
@@ -589,7 +589,7 @@ export default Model.extend({
         message.success('删除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除所有数据报警
@@ -599,7 +599,7 @@ export default Model.extend({
         message.success('删除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除合同到期、项目执行等
@@ -609,7 +609,7 @@ export default Model.extend({
         message.success('删除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除所有  合同到期、标气有效期报警等
@@ -619,7 +619,7 @@ export default Model.extend({
         message.success('删除成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //获取工作台快捷导航列表 以及 可添加菜单列表
@@ -670,7 +670,7 @@ export default Model.extend({
         });
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 添加快捷菜单
@@ -680,7 +680,7 @@ export default Model.extend({
         message.success('添加成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 动态加载工作台模块
@@ -689,7 +689,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //项目执行、合同到期等
@@ -753,7 +753,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success(result.Message);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
       callback && callback(result.Datas);
     },

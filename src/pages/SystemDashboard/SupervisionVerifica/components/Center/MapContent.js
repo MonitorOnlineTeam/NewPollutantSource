@@ -10,6 +10,7 @@ import RemoteSupervision from '@/pages/operations/remoteSupervision';
 import SupervisionManager from '@/pages/operations/supervisionManager';
 import CruxParSupervisionRectifica from '@/pages/operations/cruxParSupervisionRectifica3.0';
 import SuperviseRectification from '@/pages/operations/superviseRectification';
+import { adjustDuplicateCoordinates } from '@/pages/SystemDashboard/CONST.js';
 
 const legendList = [
   {
@@ -88,9 +89,7 @@ class MapContent extends PureComponent {
     // markers事件
     this.markersEvents = {
       created: allMarkers => {
-        console.log(
-          '高德地图 Marker 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
-        );
+        aMap.setFitView(allMarkers);
       },
       clickable: true,
       mouseover: (MapsOption, marker) => {
@@ -221,17 +220,18 @@ class MapContent extends PureComponent {
         });
         break;
     }
+    markersList = adjustDuplicateCoordinates(markersList);
     this.setState(
       {
         markersList: markersList,
       },
       () => {
-        const timer = setInterval(() => {
-          if (aMap) {
-            aMap.setFitView();
-            clearInterval(timer);
-          }
-        }, 0);
+        // const timer = setInterval(() => {
+        //   if (aMap) {
+        //     aMap.setFitView();
+        //     clearInterval(timer);
+        //   }
+        // }, 0);
       },
     );
   };

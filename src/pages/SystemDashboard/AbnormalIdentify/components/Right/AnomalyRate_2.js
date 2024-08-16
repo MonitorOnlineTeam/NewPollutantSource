@@ -58,7 +58,7 @@ const AnomalyRate = props => {
                 color: '#fff',
               },
               name: {
-                fontSize: 13,
+                fontSize: 12,
                 color: '#bfbfbf',
                 padding: [8, 0, 0, 0],
                 fontWeight: 'bold',
@@ -167,7 +167,7 @@ const AnomalyRate = props => {
 
   return (
     <HomeCard
-      title="疑似异常率分析"
+      title="疑似异常占比分析"
       style={{ minHeight: 260, flex: 2 }}
       bodyStyle={{}}
       loading={loading}
@@ -180,7 +180,7 @@ const AnomalyRate = props => {
               ref={echart => {
                 echart && setEcharts1(echart.echarts);
               }}
-              option={getOption(1, modalRates.ExcepRate, '疑似异常率')}
+              option={getOption(1, modalRates.ExcepRate, '疑似异常占比')}
               lazyUpdate={true}
               style={{ height: '100%', width: '100%' }}
               onEvents={{ click: onOpenModal }}
@@ -210,7 +210,7 @@ const AnomalyRate = props => {
         </Row>
       </div>
       <Modal
-        title={`异常率诊断分析`}
+        title={`异常占比诊断分析`}
         wrapClassName="fullScreenModal"
         open={open}
         destroyOnClose

@@ -26,7 +26,7 @@ export default Model.extend({
          })
          callback&&callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *ExportQuestion({ payload,callback }, { call, put, update }) { //问题库 导出
@@ -35,7 +35,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *GetQuestionTemplate({ payload,callback }, { call, put, update }) { //获取问题库导入模板
@@ -44,7 +44,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     
@@ -54,7 +54,7 @@ export default Model.extend({
         message.success(result.Message);
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -64,7 +64,7 @@ export default Model.extend({
         message.success(result.Message);
         callback&&callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 

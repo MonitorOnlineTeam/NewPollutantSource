@@ -40,7 +40,7 @@ export default Model.extend({
         })
       }
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({  taskTableLoading: true, tableLoading:false})
       }
     },
@@ -50,7 +50,7 @@ export default Model.extend({
         message.success(result.Message)
         downloadFile(`${result.Datas}`)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *deleteKeyParameterCheck({ payload, callback }, { call, put, update }) { //删除关键参数核查信息
@@ -59,7 +59,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess);
       }
     },
@@ -69,7 +69,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess);
       }
     },
@@ -78,7 +78,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ checkDetailData: result.Datas&&result.Datas.Itemlist? result.Datas.Itemlist : [],   })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *checkItemKeyParameter({ payload, callback }, { call, put, update }) { //核查
@@ -87,7 +87,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess);
       }
     },
@@ -97,7 +97,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess);
       }
     },
@@ -107,7 +107,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess);
       }
     },
@@ -117,7 +117,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess);
       }
     },

@@ -195,7 +195,7 @@ export default Model.extend({
           CheckMenu: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     /*给角色添加菜单权限（可批量）**/
@@ -216,7 +216,7 @@ export default Model.extend({
         message.success(result.Message);
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getSetRegOrAppRoleId({ payload, callback }, { call, put, update }) {
@@ -232,7 +232,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

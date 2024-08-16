@@ -259,7 +259,7 @@ export default Model.extend({
           showAlarmState: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getEnterpriseList({ payload }, { call, update }) {
@@ -292,7 +292,7 @@ export default Model.extend({
         message.success(result.Message);
         callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

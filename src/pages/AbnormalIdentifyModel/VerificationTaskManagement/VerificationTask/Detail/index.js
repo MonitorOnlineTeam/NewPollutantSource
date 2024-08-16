@@ -169,9 +169,9 @@ const Index = props => {
             <Tooltip title="查看">
               <a
                 onClick={e => {
-                //   router.push(
-                //     `/AbnormalIdentifyModel/CluesList/CluesDetails/${record.ModelWarningGuid}?checkId=${record.ModelCheckedGuid}`,
-                //   );
+                  //   router.push(
+                  //     `/AbnormalIdentifyModel/CluesList/CluesDetails/${record.ModelWarningGuid}?checkId=${record.ModelCheckedGuid}`,
+                  //   );
                   setCluesDetailsProps(record);
                 }}
               >
@@ -392,7 +392,7 @@ const Index = props => {
                   <Row>
                     <Col span={6}>
                       <Form.Item label="核查状态">
-                        {checkStatus[dataSource?.checkInfo?.StatusName]}
+                        {checkStatus[(dataSource?.checkInfo?.StatusName)]}
                       </Form.Item>
                     </Col>
                     <Col span={6}>
@@ -552,7 +552,7 @@ const Index = props => {
             setCluesDetailsProps();
           }}
           bodyStyle={{
-            height: 'calc(100vh - 63px)',
+            height: 'calc(100vh - 40px)',
             overflowY: 'auto',
             backgroundColor: '#f0f2f5',
             padding: 12,
@@ -606,7 +606,8 @@ const Index = props => {
               <Form.Item
                 name="flag"
                 label="专家意见"
-                rules={[{ required: true, message: '请选择标记!' }]}
+                labelCol={{ flex: '90px' }}
+                rules={[{ required: false, message: '请选择标记!' }]}
               >
                 <Cascader
                   showSearch
@@ -622,6 +623,7 @@ const Index = props => {
             <Form.Item
               label="核查结论"
               name="checkedDes"
+              labelCol={{ flex: '90px' }}
               rules={[{ required: true, message: '请输入核查结论!' }]}
             >
               <Input.TextArea placeholder="请输入" />

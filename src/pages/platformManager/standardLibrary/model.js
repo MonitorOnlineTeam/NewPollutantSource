@@ -19,7 +19,7 @@ export default Model.extend({
         message.success("操作成功");
         yield put({ type: "autoForm/getAutoFormData" })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 添加标准库
@@ -30,7 +30,7 @@ export default Model.extend({
         router.push("/platformconfig/StandardLibrary")
         // yield put({ type: "autoForm/getAutoFormData" })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 编辑标准库 - 获取数据
@@ -47,7 +47,7 @@ export default Model.extend({
           libraryEditData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 编辑标准库 - 保存
@@ -57,7 +57,7 @@ export default Model.extend({
         message.success("修改成功");
         router.push("/platformconfig/StandardLibrary")
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }
   },

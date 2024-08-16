@@ -167,7 +167,7 @@ export default Model.extend({
           mapMarkersList: markers,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取首页运行分析
@@ -316,7 +316,7 @@ export default Model.extend({
           entMapMarkersList: markers,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取首页企业运行分析
@@ -339,7 +339,7 @@ export default Model.extend({
         // yield update({});
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取异常线索统计下钻数据
@@ -349,7 +349,7 @@ export default Model.extend({
         // yield update({});
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取超标率下钻数据
@@ -359,7 +359,7 @@ export default Model.extend({
         // yield update({});
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取运行状态分布下钻数据
@@ -369,7 +369,7 @@ export default Model.extend({
         // yield update({});
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取数据质量分析下钻数据
@@ -379,7 +379,7 @@ export default Model.extend({
         // yield update({});
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 

@@ -149,7 +149,7 @@ class EditPollutant extends Component {
                   this.props.oncancel();
                   message.success('编辑成功', 1);
                 } else {
-                  message.error(res.Message);
+                  res.Message && message.error(res.Message);
                 }
               },
             },

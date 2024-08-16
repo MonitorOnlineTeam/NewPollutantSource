@@ -29,7 +29,7 @@ export default Model.extend({
           queryPar: payload
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //导出关键参数核查整改信息
@@ -39,7 +39,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -51,7 +51,7 @@ export default Model.extend({
           detailList: result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //数据一致性核查整改
@@ -61,7 +61,7 @@ export default Model.extend({
         message.success(result.Message)
         callback && callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //量程一致性核查整改
@@ -72,7 +72,7 @@ export default Model.extend({
         message.success(result.Message)
         callback && callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //参数一致性核查整改
@@ -82,7 +82,7 @@ export default Model.extend({
         message.success(result.Message)
         callback && callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //数据量程一致性核查整改 单位
@@ -91,7 +91,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 

@@ -27,7 +27,7 @@ export default Model.extend({
           tableLoading: false
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -37,7 +37,7 @@ export default Model.extend({
         yield update({  operationInfoList: result.Datas, })
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback()
       }
     },
@@ -46,7 +46,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addOrEditInspectorOperation({ payload, callback }, { call, put, update }) { //添加或修改督查模板
@@ -55,7 +55,7 @@ export default Model.extend({
         !payload.saveType&&message.success(result.Message)
         callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess)
       }
     },
@@ -64,7 +64,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportInspectorOperationManage({ payload, callback }, { call, put, update }) { //导出
@@ -73,7 +73,7 @@ export default Model.extend({
         message.success(result.Message)
         downloadFile(`${result.Datas}`)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *deleteInspectorOperation({ payload, callback }, { call, put, update }) { //删除
@@ -82,7 +82,7 @@ export default Model.extend({
         message.success(result.Message)
         callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *pushInspectorOperation({ payload, callback }, { call, put, update }) { //整改推送
@@ -91,7 +91,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess);
       }
     },

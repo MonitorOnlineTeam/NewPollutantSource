@@ -220,6 +220,12 @@ const routes = [
             path: '/SystemDashboard/Monitoring',
             component: './SystemDashboard/Monitoring',
           },
+          {
+            // 质控
+            name: 'Monitoring',
+            path: '/SystemDashboard/QualityControl',
+            component: './SystemDashboard/QualityControl',
+          },
         ],
       },
       // appoperation

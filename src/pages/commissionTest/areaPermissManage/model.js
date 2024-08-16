@@ -39,7 +39,7 @@ export default Model.extend({
             if (result.IsSuccess) {
                 yield update({ allUser: result.Datas });
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
 
         },
@@ -49,7 +49,7 @@ export default Model.extend({
                 callback && callback(result.Datas)
                 
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
                 callback && callback(result.Datas)
             }
           
@@ -61,7 +61,7 @@ export default Model.extend({
             if (result.IsSuccess) {
                 message.success(result.Message)
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
             callback && callback(result.IsSuccess)
         },
@@ -73,7 +73,7 @@ export default Model.extend({
             callback(result.Datas)
         } else {
             callback(result.Datas)
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
         }
           
        },

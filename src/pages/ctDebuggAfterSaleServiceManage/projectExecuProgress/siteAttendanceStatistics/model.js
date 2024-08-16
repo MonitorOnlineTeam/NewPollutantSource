@@ -26,7 +26,7 @@ export default Model.extend({
           tableTotal:result.Total,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *ExportSignInAnalysis({ payload,callback }, { call, put, update }) { //现场工作时长信息 导出
@@ -47,7 +47,7 @@ export default Model.extend({
           detailQueryPar:payload,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *ExportSignInAnalysisInfo({ callback,payload }, { call, put, update, select }) { //现场工作时长详情信息 导出
@@ -56,7 +56,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${response.Datas}`);
       } else {
-        message.error(response.Message);
+        response.Message && message.error(response.Message);
       }
     },
 

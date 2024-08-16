@@ -615,7 +615,8 @@ const Index = props => {
             verificationPlanType: 1,
             isSceneCheck: 1,
             checkResult: 1,
-            checkUserId: locationPar?.operationUser,
+            // checkUserId: locationPar?.operationUser,
+            checkUserId: selectedRow?.OpeUserId,
           }}
         >
           <Row>
@@ -653,7 +654,7 @@ const Index = props => {
             <Form.Item
               name="preTakeFlag"
               label="专家意见"
-              rules={[{ required: true, message: '请选择标记!' }]}
+              rules={[{ required: false, message: '请选择标记!' }]}
             >
               <Cascader
                 showSearch
@@ -1027,7 +1028,6 @@ const Index = props => {
   if (props.isShowModal) {
     return getPageContent(true);
   }
-
   return (
     <div>
       <Modal
@@ -1037,7 +1037,8 @@ const Index = props => {
         mask={false}
         className={styles.generateVerificationTakeModal}
         {...props}
-        footer={getFooterBtns}
+        footer={getFooterBtns()}
+        bodyStyle={{height: 'calc(100% - 90px)'}}
       >
         {getPageContent(false)}
       </Modal>

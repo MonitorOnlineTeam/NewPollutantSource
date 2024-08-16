@@ -20,7 +20,7 @@ export default Model.extend({
           siteData: result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取仪器信息table数据
@@ -29,7 +29,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ pointInstrumentList: result.Datas })
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取污染物信息
@@ -38,7 +38,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ pollutantByDgimnList: result.Datas.filter(item => item.IsUse === "1") })
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

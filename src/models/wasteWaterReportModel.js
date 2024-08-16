@@ -101,7 +101,7 @@ export default Model.extend({
         let data = _.sortBy(result.Datas, function (o) { return o.SortCode; });
         callback && callback(data)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

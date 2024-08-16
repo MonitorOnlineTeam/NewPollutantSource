@@ -64,7 +64,7 @@ export default Model.extend({
         }]
         yield update({ operationDataSource: data });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -81,7 +81,7 @@ export default Model.extend({
            ]
         yield update({ operaOrderData: data });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -102,7 +102,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ planOperaList: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *GetPlanOperationTaskCompleteRateByDay({ payload, callback }, { call, put, update }) {  //近30日运维情况 固定到天
@@ -123,7 +123,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ planCompleteList: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *GetExceptionSignTaskRate({ payload, callback }, { call, put, update }) { //异常打卡统计
@@ -131,7 +131,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ exceptionSignTaskRateList: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *GetEffectiveTransmissionRateList({ payload, callback }, { call, put, update }) { //传输有效率
@@ -139,7 +139,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ effectiveTransmissionList: result.Datas.dataList ? result.Datas.dataList : [] });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *GetAlarmResponse({ payload, callback }, { call, put, update }) { //数据报警响应统计
@@ -148,7 +148,7 @@ export default Model.extend({
         let item = result.Datas;
         yield update({ dataAlarmResData: [item.overTimeRate, item.missRate, item.exceptionRate, item.operationRate] });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *GetConsumablesList({ payload, callback }, { call, put, update }) { //耗材统计
@@ -156,7 +156,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ consumablesList: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *GetOpertionExceptionList({ payload, callback }, { call, put, update }) { //异常设备统计
@@ -164,7 +164,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ opertionExceptionList: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -194,7 +194,7 @@ export default Model.extend({
         }
         callback(markers)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //地图 获取监测点infoWindow数据
@@ -204,7 +204,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield put({ type: "getInfoWindowPollutantList", payload: payload, pollutantList: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //地图 获取监测点infoWindow数据
@@ -240,7 +240,7 @@ export default Model.extend({
           }
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

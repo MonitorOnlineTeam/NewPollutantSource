@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-24 14:34:23
+ * @Last Modified time: 2024-08-14 16:36:32
  * @Description：线索列表
  */
 
@@ -68,8 +68,8 @@ const CluesList = props => {
     showMode,
     tableProps = {},
   } = props;
-  // const modelNumber = props.match.params.modelNumber;
-  const modelNumber = 'all';
+  const modelNumber = props.match.params.modelNumber;
+  // const modelNumber = 'all';
   const [modelList, setModelList] = useState([]);
   const [levelList, setLevelList] = useState([]);
   const [typeList, setTypeList] = useState([]);
@@ -112,6 +112,7 @@ const CluesList = props => {
   //   });
   // }, [modelNumber]);
   useEffect(() => {
+    form.setFieldsValue({ ...warningForm[modelNumber] });
     GetMoldTypeLevelList();
     GetModelList();
     onFinish();
@@ -343,6 +344,14 @@ const CluesList = props => {
       return;
     }
     console.log('values', values);
+
+    // 判断查询实时还是历史数据
+    let IsReal = undefined; // 全部
+    if (location.pathname === '/AbnormalIdentifyModel/CluesList/all') {
+      IsReal = 1; // 实时
+    } else if (location.pathname === '/AbnormalIdentifyModel/CluesList/history') {
+      IsReal = 0; // 历史
+    }
     props.dispatch({
       type: 'AbnormalIdentifyModel/GetWarningList',
       payload: {
@@ -355,6 +364,7 @@ const CluesList = props => {
         beginTime: values.date ? values.date[0]?.format('YYYY-MM-DD HH:mm:ss') : undefined,
         endTime: values.date ? values.date[1]?.format('YYYY-MM-DD HH:mm:ss') : undefined,
         date1: undefined,
+        IsReal: IsReal,
         WarningBeginTime: values.date1
           ? values.date1[0]?.startOf('day').format('YYYY-MM-DD HH:mm:ss')
           : undefined,
@@ -469,6 +479,8 @@ const CluesList = props => {
     let actionTreeProps = getTreePorps(modelList);
     let levelTreeProps = getTreePorps(levelList);
     let typeTreeProps = getTreePorps(typeList);
+
+    console.log('modelNumber', modelNumber);
     return (
       <Card className={styles.warningWrapper} {...cardProps}>
         <Form
@@ -759,7 +771,7 @@ const CluesList = props => {
             setCluesDetailsProps();
           }}
           bodyStyle={{
-            height: 'calc(100vh - 63px)',
+            height: 'calc(100vh - 40px)',
             overflowY: 'auto',
             backgroundColor: '#f0f2f5',
             padding: 12,

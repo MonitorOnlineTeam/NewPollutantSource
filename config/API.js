@@ -97,6 +97,8 @@ export const API = {
   CommonApi: {
     // 获取企业+排口
     GetEntAndPoint: before + '/EnterpriseApi/GetEntAndPoint',
+    // 获取企业+排口（不走权限过滤）
+    GetEntAndPointNoFilter: before + '/EnterpriseApi/GetEntAndPointNoFilter',
     // 获取系统污染物
     GetPollutantTypeList: before + '/MonitorPollutantApi/GetPollutantTypeList',
     // 根据mn号获取站点下的所有污染物因子
@@ -2318,6 +2320,7 @@ export const API = {
     UpdateUserProject: before + '/ProjectMonitorDataApi/UpdateUserProject', // 切换项目
     UpdateOrAddUserProject: before + '/ProjectMonitorDataApi/UpdateOrAddUserProject', // 编辑项目
     GetUserProject: before + '/ProjectMonitorDataApi/GetUserProject', // 获取当前项目
+    DeleteUserProject: before + '/ProjectMonitorDataApi/DeleteUserProject', // 删除项目
   },
   /*********** 通用 ***********/
 

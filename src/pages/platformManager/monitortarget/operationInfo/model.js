@@ -25,7 +25,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ tableDatas:result.Datas,tableTotal:result.Total,tableLoading:false  })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
@@ -35,7 +35,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *deleteOperationPoint({ payload,callback }, { call, put, update }) { //删除
@@ -44,7 +44,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *projectNumList({ payload,callback }, { call, put, update }) { //项目编号列表
@@ -52,7 +52,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ projectTableDatas:result.Datas, })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getEntPointList({ payload,callback }, { call, put, update }) { //企业运维信息列表
@@ -60,7 +60,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ entPointList:result.Datas, })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportEntProjectRelationList({ callback,payload }, { call, put, update, select }) {//导出

@@ -26,7 +26,7 @@ export default Model.extend({
         callback && callback(result)
       } else {
         callback && callback(result)
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addAgreementTransfer({ payload, callback }, { call, put, update }) { //添加
@@ -35,7 +35,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *deleteAgreementTransfer({ callback, payload }, { call, put, update, select }) { //删除
@@ -44,7 +44,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

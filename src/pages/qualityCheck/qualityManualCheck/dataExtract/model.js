@@ -25,7 +25,7 @@ export default Model.extend({
         callback && callback()
         // yield update({ bottleDataList: result.Datas, gasData: gasData })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

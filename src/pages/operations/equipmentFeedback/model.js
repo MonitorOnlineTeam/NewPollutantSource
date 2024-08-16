@@ -21,7 +21,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({faultFeedbackList: result.Datas,tableTotal:result.Total });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
    //编辑
@@ -31,7 +31,7 @@ export default Model.extend({
       message.success(result.Message)
       callback()
     } else {
-      message.error(result.Message)
+      result.Message && message.error(result.Message)
     }
   },
   //导出
@@ -41,7 +41,7 @@ export default Model.extend({
       downloadFile(result.Datas);
       message.success(result.Message)
     } else {
-      message.error(result.Message)
+      result.Message && message.error(result.Message)
     }
   }, 
 
@@ -51,7 +51,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({entList: result.Datas?result.Datas.entList :[] });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

@@ -320,7 +320,7 @@ class Index extends Component {
                             }
                           });
                         } else {
-                          message.error(res.Message);
+                          res.Message && message.error(res.Message);
                         }
                       },
                     });
@@ -628,7 +628,7 @@ class Index extends Component {
           message.success(res.Message);
           this.handleCancel();
         } else {
-          message.error(res.Message);
+          res.Message && message.error(res.Message);
         }
       },
     });
@@ -663,7 +663,7 @@ class Index extends Component {
                 }
               });
             } else {
-              message.error(res.Message);
+              res.Message && message.error(res.Message);
             }
           },
         });

@@ -19,7 +19,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
 
@@ -29,7 +29,7 @@ export default Model.extend({
         message.success(result.Message)
         callback&&callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     

@@ -51,7 +51,7 @@ export default Model.extend({
             yield update({ tableDatas: result.Datas,tableLoading:false,total:result.Datas.length  })
           } else {
             yield update({ tableLoading:false})
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
           }
         },
         //详情列表
@@ -63,7 +63,7 @@ export default Model.extend({
             callback(result.Datas)
           } else {
             yield update({ getDetailsLoading:false})
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
           }
         },
     //  添加 or 更新
@@ -73,7 +73,7 @@ export default Model.extend({
             message.success(result.Message)
             callback()
           } else {
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
           }
         },
         
@@ -88,7 +88,7 @@ export default Model.extend({
         callback()
       } else {
         yield update({ applyLoading: false  })
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
         
@@ -99,7 +99,7 @@ export default Model.extend({
                 message.success(result.Message)
                 callback()
               } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
               }
             },
         

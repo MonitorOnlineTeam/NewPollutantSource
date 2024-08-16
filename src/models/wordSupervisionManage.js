@@ -21,7 +21,7 @@ export default Model.extend({
         callback && callback();
         message.success('操作成功！');
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 办事处删除
@@ -31,7 +31,7 @@ export default Model.extend({
         callback && callback();
         message.success('删除成功！');
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取办事处人员(已经选过的办事处用户不会出现)
@@ -42,7 +42,7 @@ export default Model.extend({
           allUserByOffice: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 绑定办事处人员
@@ -52,7 +52,7 @@ export default Model.extend({
         message.success('操作成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取已绑定的办事处用户
@@ -61,7 +61,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取所有经理
@@ -72,7 +72,7 @@ export default Model.extend({
           allManager: result.Datas
         })
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 办事处设置经理
@@ -82,7 +82,7 @@ export default Model.extend({
         message.success('设置成功！');
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

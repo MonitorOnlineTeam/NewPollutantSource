@@ -197,7 +197,7 @@ export default Model.extend({
           }
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取点位气泡图表数据
@@ -350,7 +350,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield put({ type: "getInfoWindowPollutantList", payload: payload, pollutantList: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取监测点infoWindow数据
@@ -387,7 +387,7 @@ export default Model.extend({
           }
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

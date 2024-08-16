@@ -19,7 +19,7 @@ export default Model.extend({
           attentionList: response.Datas,
         });
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 获取表格数据
@@ -30,7 +30,7 @@ export default Model.extend({
           tableDataSource: response.Datas,
         });
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 导出表格数据
@@ -39,7 +39,7 @@ export default Model.extend({
       if (response.IsSuccess) {
         downloadFile(response.Datas);
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
 

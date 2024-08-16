@@ -28,7 +28,7 @@ export default Model.extend({
           tableLoading:false
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
@@ -38,7 +38,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
 
@@ -50,7 +50,7 @@ export default Model.extend({
           pointDatasTotal:result.Total,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportProjectInfoList({ callback,payload }, { call, put, update, select }) { //导出

@@ -470,7 +470,7 @@ export default Model.extend({
         // });
       } else {
         callback && callback([]);
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 重置报警记录form
@@ -507,7 +507,7 @@ export default Model.extend({
           modelList: modelList,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 模型状态开启关闭
@@ -517,7 +517,7 @@ export default Model.extend({
         message.success('操作成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取报警及核实信息（上、下部分）
@@ -526,7 +526,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取模型快照数据
@@ -535,7 +535,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        // message.error(result.Message);
+        // result.Message && message.error(result.Message);
       }
     },
     // 获取点位参数配置
@@ -564,7 +564,7 @@ export default Model.extend({
         message.success('操作成功！');
         callback && callback();
       } else {
-        // message.error(result.Message);
+        // result.Message && message.error(result.Message);
       }
     },
     // 获取模型基础信息和参数配置
@@ -588,7 +588,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 保存模型基础信息和参数配置
@@ -598,7 +598,7 @@ export default Model.extend({
         callback && callback();
         message.success('保存成功！');
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 保存已关联排口
@@ -608,7 +608,7 @@ export default Model.extend({
         message.success('保存成功！');
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取已关联排口
@@ -620,7 +620,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取报警数据
@@ -632,7 +632,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取报警数据
@@ -641,7 +641,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 导出报警关联数据
@@ -651,7 +651,7 @@ export default Model.extend({
         message.success('导出成功！');
         window.open(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取直方图数据
@@ -660,7 +660,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取相关系数图数据
@@ -669,7 +669,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 根据企业获取排口
@@ -678,7 +678,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取模型精度版本列表
@@ -687,7 +687,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取模型精度数据
@@ -696,7 +696,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 报警统计 - 线索信息统计
@@ -706,7 +706,7 @@ export default Model.extend({
         callback && callback(result.Datas);
       } else {
         errorCallback && errorCallback();
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 报警统计 - 统计核实、异常原因
@@ -716,7 +716,7 @@ export default Model.extend({
         callback && callback(result.Datas);
       } else {
         errorCallback && errorCallback();
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 报警统计 - 核实次数及企业及模型执行率
@@ -726,7 +726,7 @@ export default Model.extend({
         callback && callback(result.Datas);
       } else {
         errorCallback && errorCallback();
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 报警统计 - 已选择行统计
@@ -736,7 +736,7 @@ export default Model.extend({
         callback && callback(result.Datas);
       } else {
         errorCallback && errorCallback();
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 线索信息统计
@@ -745,7 +745,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取全企业波动范围
@@ -754,7 +754,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 全企业波动范围 - 导出
@@ -764,7 +764,7 @@ export default Model.extend({
         message.success('导出成功！');
         window.open(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 场景模型分析报告 - 导出
@@ -774,7 +774,7 @@ export default Model.extend({
         message.success('导出成功！');
         downloadFile(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 场景模型分析报告 - 全模型导出
@@ -784,7 +784,7 @@ export default Model.extend({
         message.success('导出成功！');
         downloadFile(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 场景模型分析 - 导出
@@ -795,7 +795,7 @@ export default Model.extend({
         downloadFile(result.Datas);
         // window.open(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 根据企业获取排口
@@ -804,7 +804,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 首页 - 数据统计分析
@@ -813,7 +813,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 首页 - 线索核实情况和企业排名
@@ -822,7 +822,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 首页 - 线索统计
@@ -831,7 +831,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 重新生成正常范围
@@ -841,7 +841,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 我的待办数据
@@ -850,7 +850,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 我的已办
@@ -859,7 +859,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 复核详情
@@ -868,7 +868,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 报警核实
@@ -878,7 +878,7 @@ export default Model.extend({
         message.success('操作成功!');
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取行业
@@ -887,7 +887,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 模型重新运行
@@ -898,7 +898,7 @@ export default Model.extend({
         callback && callback(result.Datas);
       } else {
         yield update({ runState: false });
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取模型运行状态
@@ -910,7 +910,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

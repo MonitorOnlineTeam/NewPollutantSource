@@ -32,7 +32,7 @@ export default Model.extend({
         yield update({ tableDatas: result.Datas, tableLoading: false, total: result.Datas.length })
       } else {
         yield update({ tableDatas: [], tableLoading: false, total: 0 })
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -42,7 +42,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         downloadFile(`${result.Datas}`)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

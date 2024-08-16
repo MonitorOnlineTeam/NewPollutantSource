@@ -26,7 +26,7 @@ export default Model.extend({
         })
         callback && callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *get72TestRecordType({ payload, callback }, { call, put, update }) { //右侧tab栏
@@ -35,7 +35,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ testRecordType: payload.PointCode ? result.Datas : [], })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ testRecordType: [], })
       }
     },
@@ -53,7 +53,7 @@ export default Model.extend({
 
         callback(data, defaultPollCode)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -66,7 +66,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -76,7 +76,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addPMReferenceCalibrationRecord({ payload, callback }, { call, put, update }) { //提交 暂存
@@ -85,7 +85,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess)
       }
     },
@@ -96,7 +96,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -115,7 +115,7 @@ export default Model.extend({
 
         callback(data, defaultDateCode)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getGasReferenceMethodAccuracyRecord({ payload, callback }, { call, put, update }) { //获取
@@ -124,7 +124,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addGasReferenceMethodAccuracyInfo({ payload, callback }, { call, put, update }) { //初始添加
@@ -133,7 +133,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addGasReferenceMethodAccuracyRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
@@ -143,7 +143,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess)
       }
     },
@@ -154,7 +154,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *importDataNew({ payload, callback }, { call, put, update }) { //导入
@@ -164,7 +164,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     /*** 气态污染物CEMS示值误差和系统响应时间检测表单 ***/
@@ -174,7 +174,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addGasIndicationErrorSystemResponseRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
@@ -184,7 +184,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess)
       }
     },
@@ -195,7 +195,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     /*** 速度场系数表单 ***/
@@ -205,7 +205,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addVelocityFieldCheckingRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
@@ -215,7 +215,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess)
       }
     },
@@ -226,7 +226,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -237,7 +237,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addTemperatureCheckingRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
@@ -247,7 +247,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess)
       }
     },
@@ -258,7 +258,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     /*** 湿度CMS准确度检测表单 ***/
@@ -268,7 +268,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addHumidityCheckingRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
@@ -278,7 +278,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess)
       }
     },
@@ -289,7 +289,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     /*** 气态污染物CEMS（含氧量）零点和量程漂移检测 ***/
@@ -299,7 +299,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addGasZeroRangeInfoRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
@@ -309,7 +309,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess)
       }
     },
@@ -320,7 +320,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     /*** 颗粒物CEMS零点和量程漂移检测  ***/
@@ -330,7 +330,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addPMZeroRangeRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
@@ -340,7 +340,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         callback(result.IsSuccess)
       }
     },
@@ -351,7 +351,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -364,7 +364,7 @@ export default Model.extend({
         downloadFile(payload.ExportType==1? result.Datas : `/109Api${result.Datas}`);
         callback()
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
         callback()
       }
     },
@@ -375,7 +375,7 @@ export default Model.extend({
         callback(result.Datas)
       } else {
         callback([])
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 

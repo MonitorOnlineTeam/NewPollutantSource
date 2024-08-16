@@ -73,7 +73,7 @@ export default Model.extend({
                 message.success("保存成功")
             }
             else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
             payload.callback();
         },

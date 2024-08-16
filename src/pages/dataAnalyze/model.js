@@ -98,7 +98,7 @@ export default Model.extend({
           defaultPollutant: defaultValue
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取图表及表格数据
@@ -121,7 +121,7 @@ export default Model.extend({
           })
         }
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 导出
@@ -131,7 +131,7 @@ export default Model.extend({
         downloadFile(result.Datas);
         message.success("导出成功")
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取系统污染物
@@ -168,7 +168,7 @@ export default Model.extend({
           dataGainRateColumn: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取数据获取率 - table数据
@@ -182,7 +182,7 @@ export default Model.extend({
         })
         callback && callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取数据获取率 - 详情污染物列表
@@ -193,7 +193,7 @@ export default Model.extend({
           pollutantlist: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取数据获取率 - 详情数据
@@ -204,7 +204,7 @@ export default Model.extend({
           chartAndTableData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取报表数据
@@ -215,7 +215,7 @@ export default Model.extend({
           reportTableData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 导出
@@ -225,7 +225,7 @@ export default Model.extend({
         downloadFile(result.Datas);
         message.success("导出成功")
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取综合指数报表数据
@@ -237,7 +237,7 @@ export default Model.extend({
           compositeIndexDataSource: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -249,7 +249,7 @@ export default Model.extend({
         message.success("导出成功")
         downloadFile(result.Datas);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取综合指数范围报表数据
@@ -260,7 +260,7 @@ export default Model.extend({
           compositeRangeDataSource: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取综合指数范围同比报表数据
@@ -271,7 +271,7 @@ export default Model.extend({
           compositeyoyRangeDataSource: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 导出 - 综合指数范围同比报表数据
@@ -281,7 +281,7 @@ export default Model.extend({
         message.success("导出成功")
         downloadFile(result.Datas);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 导出综合指数报表
@@ -291,7 +291,7 @@ export default Model.extend({
         message.success("导出成功")
         downloadFile(result.Datas);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取综合指数对比报表数据
@@ -302,7 +302,7 @@ export default Model.extend({
           compositeContrastDataSource: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 导出综合指数对比报表数据
@@ -312,7 +312,7 @@ export default Model.extend({
         message.success("导出成功")
         downloadFile(result.Datas);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -324,7 +324,7 @@ export default Model.extend({
           excellentDaysReportData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 优良天数报表 - 导出
@@ -334,7 +334,7 @@ export default Model.extend({
         message.success("导出成功")
         downloadFile(result.Datas);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取空气质量日排名 - 数据
@@ -345,7 +345,7 @@ export default Model.extend({
           airDayRank: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 优良天数报表 - 导出
@@ -355,7 +355,7 @@ export default Model.extend({
         message.success("导出成功")
         downloadFile(result.Datas);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取累计综合空气质量排名 - 数据
@@ -366,7 +366,7 @@ export default Model.extend({
           addUpAirDayRank: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 累计综合空气质量排名 - 导出
@@ -376,7 +376,7 @@ export default Model.extend({
         message.success("导出成功")
         downloadFile(result.Datas);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 站点平均值对比分析 - 数据
@@ -387,7 +387,7 @@ export default Model.extend({
           compareWaterTableData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取监测同比分析数据 - 功率相关
@@ -402,7 +402,7 @@ export default Model.extend({
           },
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取电能环比
@@ -413,7 +413,7 @@ export default Model.extend({
           electricChainData: result.Datas.ESequential
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取电能趋势
@@ -424,7 +424,7 @@ export default Model.extend({
           electricTrendData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

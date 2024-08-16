@@ -1,6 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Card, Transfer, Button, Modal, Divider, Spin, Table, TreeSelect } from 'antd';
+import {
+  Form,
+  Input,
+  Card,
+  Transfer,
+  Button,
+  Modal,
+  Divider,
+  Spin,
+  Table,
+  Tooltip,
+  Popconfirm,
+  message,
+} from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SdlTable from '@/components/SdlTable';
 import difference from 'lodash/difference';
@@ -110,9 +123,10 @@ const dvaPropsData = ({ projectManage, loading }) => ({
   pollutantLoading: loading.effects['common/getPollutantTypeList'],
   queryLoading: loading.effects['projectManage/GetUserProjectList'],
   userModalLoading: loading.effects['projectManage/getAllUser'],
+  getEntAndPointLoading: loading.effects['common/GetEntAndPointNoFilter'],
   pointModalLoading:
     loading.effects[
-      'projectManage/getEntAndPointList' ||
+      'common/entAndPointNoFilterList' ||
         'projectManage/GetProjectPointList' ||
         'common/getPollutantTypeList'
     ],
@@ -131,6 +145,7 @@ const ProjectManage = props => {
   const [entAndPointList, setEntAndPointList] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedPointLoading, setSelectedPointLoading] = useState(true);
+  const [entLoading, setEntLoading] = useState(true);
 
   const {
     dispatch,
@@ -140,7 +155,7 @@ const ProjectManage = props => {
     userModalLoading,
     pointModalLoading,
     pollutantLoading,
-    clientHeight,
+    getEntAndPointLoading,
   } = props;
 
   useEffect(() => {
@@ -165,11 +180,7 @@ const ProjectManage = props => {
 
   // 关联用户
   const onUserTransferChange = (nextTargetKeys, direction, moveKeys) => {
-    console.log('nextTargetKeys', nextTargetKeys);
-    console.log('direction:', direction);
-    console.log('moveKeys:', moveKeys);
     setUserTargetKeys(nextTargetKeys);
-    // return;
     dispatch({
       type: 'projectManage/InsertProjectUser',
       payload: {
@@ -206,6 +217,7 @@ const ProjectManage = props => {
       },
       callback: res => {
         callback();
+        message.success('操作成功！');
       },
     });
   };
@@ -233,15 +245,17 @@ const ProjectManage = props => {
 
   // 获取企业及排口
   const getEntAndPointList = () => {
+    setEntLoading(true);
     const values = pointForm.getFieldsValue();
     dispatch({
-      type: 'common/getEntAndPointList',
+      type: 'common/GetEntAndPointNoFilter',
       payload: {
         ...values,
         Status: [],
       },
       callback: res => {
         setEntAndPointList(res);
+        setEntLoading(false);
       },
     });
   };
@@ -249,7 +263,6 @@ const ProjectManage = props => {
   // 编辑项目信息
   const onUpdateProjectInfo = () => {
     editForm.validateFields().then(values => {
-      console.log('values', values);
       dispatch({
         type: 'projectManage/UpdateOrAddUserProject',
         payload: {
@@ -262,6 +275,19 @@ const ProjectManage = props => {
           GetUserProjectList();
         },
       });
+    });
+  };
+
+  // 删除项目
+  const onDelete = record => {
+    dispatch({
+      type: 'projectManage/DeleteUserProject',
+      payload: {
+        ID: record.ID,
+      },
+      callback: res => {
+        GetUserProjectList();
+      },
     });
   };
 
@@ -301,7 +327,19 @@ const ProjectManage = props => {
               编辑
             </a>
             <Divider type="vertical" />
-            <a>删除</a>
+            <Tooltip title="删除">
+              <Popconfirm
+                placement="left"
+                title="确认是否删除?"
+                onConfirm={() => {
+                  onDelete(record);
+                }}
+                okText="是"
+                cancelText="否"
+              >
+                <a>删除</a>
+              </Popconfirm>
+            </Tooltip>
             <Divider type="vertical" />
             <a
               onClick={() => {
@@ -327,7 +365,7 @@ const ProjectManage = props => {
       },
     },
   ];
-
+  console.log('getEntAndPointLoading', getEntAndPointLoading);
   return (
     <BreadcrumbWrapper>
       <Card>
@@ -349,166 +387,170 @@ const ProjectManage = props => {
           </Form.Item>
         </Form>
         <SdlTable loading={queryLoading} dataSource={projectList} columns={columns} />
-      </Card>
-      <Modal
-        title={`${current.ProjectName} - 编辑`}
-        open={isEditModalOpen}
-        onCancel={() => {
-          setIsEditModalOpen(false);
-        }}
-        onOk={onUpdateProjectInfo}
-      >
-        <Form
-          name="searchForm"
-          form={editForm}
-          // layout="inline"
-          initialValues={{}}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="项目名称"
-            name="ProjectName"
-            rules={[{ required: true, message: '请输入项目名称!' }]}
-          >
-            <Input placeholder="请输入项目名称" />
-          </Form.Item>
-          <Form.Item
-            label="项目描述"
-            name="Remark"
-            rules={[{ required: true, message: '请输入项目描述!' }]}
-          >
-            <Input placeholder="请输入项目描述" />
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      <Modal
-        title={`${current.ProjectName} - 分配用户`}
-        open={isUserModalOpen}
-        destroyOnClose="true"
-        onCancel={() => {
-          setIsUserModalOpen(false);
-        }}
-        width={'70%'}
-        footer={null}
-      >
-        <Spin spinning={userModalLoading}>
-          <TableTransfer
-            rowKey={record => record.User_ID}
-            titles={['待分配用户', '已分配用户']}
-            dataSource={allUser}
-            targetKeys={userTargetKeys}
-            showSearch={true}
-            onChange={onUserTransferChange}
-            filterOption={(inputValue, item) =>
-              (item.User_Name && item.User_Name.indexOf(inputValue) !== -1) ||
-              (item.User_Account && item.User_Account.indexOf(inputValue) !== -1) ||
-              (item.Phone && item.Phone.indexOf(inputValue) !== -1)
-            }
-            leftColumns={leftTableColumns}
-            rightColumns={rightTableColumns}
-            style={{ width: '100%' }}
-            // tableChange={this.tableChange}
-            // pageNumber={this.state.pageNumber}
-            // pageSize={this.state.pageSize}
-          />
-        </Spin>
-      </Modal>
-      {isPointModalOpen && (
         <Modal
-          title={`${current.ProjectName} - 设置点位访问权限`}
-          open={isPointModalOpen}
-          destroyOnClose={true}
+          title={`${current.ProjectName} - 编辑`}
+          open={isEditModalOpen}
           onCancel={() => {
-            setIsPointModalOpen(false);
-            pointForm.resetFields();
+            setIsEditModalOpen(false);
           }}
-          width={1100}
-          footer={null}
-          bodyStyle={{
-            overflowY: 'auto',
-            height: 704,
-          }}
+          onOk={onUpdateProjectInfo}
         >
-          <div>
-            <Form
-              name="searchForm"
-              form={pointForm}
-              layout="inline"
-              initialValues={{}}
-              autoComplete="off"
+          <Form
+            name="searchForm"
+            form={editForm}
+            // layout="inline"
+            initialValues={{}}
+            autoComplete="off"
+          >
+            <Form.Item
+              label="项目名称"
+              name="ProjectName"
+              rules={[{ required: true, message: '请输入项目名称!' }]}
             >
-              <Form.Item label="" name="PollutantTypes">
-                <SelectPollutantType
-                  loading={pollutantLoading}
-                  showType="radio"
-                  initCallback={value => {
-                    if (isPointModalOpen) {
-                      debugger;
-                      pointForm.setFieldsValue({ PollutantTypes: value });
+              <Input placeholder="请输入项目名称" />
+            </Form.Item>
+            <Form.Item
+              label="项目描述"
+              name="Remark"
+              rules={[{ required: true, message: '请输入项目描述!' }]}
+            >
+              <Input placeholder="请输入项目描述" />
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        {isUserModalOpen && (
+          <Modal
+            title={`${current.ProjectName} - 分配用户`}
+            open={isUserModalOpen}
+            destroyOnClose="true"
+            onCancel={() => {
+              setIsUserModalOpen(false);
+            }}
+            width={'70%'}
+            footer={null}
+          >
+            <Spin spinning={userModalLoading}>
+              <TableTransfer
+                rowKey={record => record.User_ID}
+                titles={['待分配用户', '已分配用户']}
+                dataSource={allUser}
+                targetKeys={userTargetKeys}
+                showSearch={true}
+                onChange={onUserTransferChange}
+                filterOption={(inputValue, item) =>
+                  (item.User_Name && item.User_Name.indexOf(inputValue) !== -1) ||
+                  (item.User_Account && item.User_Account.indexOf(inputValue) !== -1) ||
+                  (item.Phone && item.Phone.indexOf(inputValue) !== -1)
+                }
+                leftColumns={leftTableColumns}
+                rightColumns={rightTableColumns}
+                style={{ width: '100%' }}
+                // tableChange={this.tableChange}
+                // pageNumber={this.state.pageNumber}
+                // pageSize={this.state.pageSize}
+              />
+            </Spin>
+          </Modal>
+        )}
+
+        {isPointModalOpen && (
+          <Modal
+            title={`${current.ProjectName} - 设置点位访问权限`}
+            open={isPointModalOpen}
+            destroyOnClose={true}
+            onCancel={() => {
+              setIsPointModalOpen(false);
+              setSelectedPointLoading(true);
+              pointForm.resetFields();
+              setEntAndPointList([]);
+            }}
+            width={1100}
+            footer={null}
+            bodyStyle={{
+              overflowY: 'auto',
+              height: 704,
+            }}
+          >
+            <div>
+              <Form
+                name="searchForm"
+                form={pointForm}
+                layout="inline"
+                initialValues={{}}
+                autoComplete="off"
+              >
+                <Form.Item label="" name="PollutantTypes">
+                  <SelectPollutantType
+                    loading={pollutantLoading}
+                    showType="radio"
+                    initCallback={value => {
+                      console.log('isPointModalOpen', isPointModalOpen);
+                      if (isPointModalOpen) {
+                        pointForm.setFieldsValue({ PollutantTypes: value });
+                        getEntAndPointList();
+                        GetProjectPointList();
+                      }
+                    }}
+                    onChange={e => {
+                      pointForm.setFieldsValue({ PollutantTypes: e.target.value });
                       getEntAndPointList();
                       GetProjectPointList();
-                    }
-                  }}
-                  onChange={e => {
-                    pointForm.setFieldsValue({ PollutantTypes: e.target.value });
-                    getEntAndPointList();
-                    GetProjectPointList();
-                  }}
-                />
-              </Form.Item>
-              <Form.Item label="" name="RegionCode">
-                <RegionList
-                  noFilter
-                  style={{ width: 140 }}
-                  onChange={value => {
-                    pointForm.setFieldsValue({ RegionCode: value });
-                    getEntAndPointList();
-                  }}
-                />
-              </Form.Item>
-              <Form.Item label="" name="Name">
-                <Input style={{ width: 200 }} allowClear placeholder="请输入企业名称" />
-              </Form.Item>
-              <Form.Item>
-                <Button
-                  type="primary"
-                  // loading={this.props.CheckPointLoading}
-                  onClick={getEntAndPointList}
-                >
-                  查询
-                </Button>
-              </Form.Item>
-            </Form>
-            {selectedPointLoading || pointModalLoading ? (
-              <div className="center">
-                <Spin spinning={true}></Spin>
-              </div>
-            ) : (
-              <>
-                {console.log('pointCheckedKes', pointCheckedKes)}
-                {entAndPointList.length > 0 && (
-                  <TreeTransfer
-                    key="key"
-                    treeData={entAndPointList}
-                    checkedKeys={[...pointCheckedKes]}
-                    targetKeysChange={(key, type, callback) => {
-                      // this.setState({ checkedKeys: key }, () => {
-                      //   this.handleDataOK(type == 1 ? 1 : 2, callback);
-                      // })
-                      console.log('key', key);
-                      console.log('type', type);
-                      // console.log('callback', callback);
-                      setPointCheckedKes(key);
-                      InsertProjectUserPoint(key, type, callback);
                     }}
                   />
-                )}
-              </>
-            )}
-          </div>
-        </Modal>
-      )}
+                </Form.Item>
+                <Form.Item label="" name="RegionCode">
+                  <RegionList
+                    noFilter
+                    style={{ width: 140 }}
+                    onChange={value => {
+                      pointForm.setFieldsValue({ RegionCode: value });
+                      getEntAndPointList();
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item label="" name="Name">
+                  <Input style={{ width: 200 }} allowClear placeholder="请输入企业名称" />
+                </Form.Item>
+                <Form.Item style={{ marginLeft: -16 }}>
+                  <Button
+                    type="primary"
+                    loading={getEntAndPointLoading}
+                    onClick={getEntAndPointList}
+                  >
+                    查询
+                  </Button>
+                </Form.Item>
+              </Form>
+              {(selectedPointLoading || pointModalLoading) && entLoading ? (
+                <div className="center">
+                  <Spin spinning={true}></Spin>
+                </div>
+              ) : !entLoading ? (
+                <TreeTransfer
+                  key="key"
+                  treeData={entAndPointList}
+                  checkedKeys={[...pointCheckedKes]}
+                  targetKeysChange={(key, type, callback) => {
+                    // this.setState({ checkedKeys: key }, () => {
+                    //   this.handleDataOK(type == 1 ? 1 : 2, callback);
+                    // })
+                    console.log('key', key);
+                    console.log('type', type);
+                    // console.log('callback', callback);
+                    setPointCheckedKes(key);
+                    InsertProjectUserPoint(key, type, callback);
+                  }}
+                />
+              ) : (
+                <div className="center">
+                  <Spin spinning={true}></Spin>
+                </div>
+              )}
+            </div>
+          </Modal>
+        )}
+      </Card>
     </BreadcrumbWrapper>
   );
 };

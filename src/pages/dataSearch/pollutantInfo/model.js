@@ -42,7 +42,7 @@ export default Model.extend({
           systemModelTableTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -63,7 +63,7 @@ export default Model.extend({
           verificationTableTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportVerificationItemOfPoint({ payload }, { call, put, update, select }) { //导出 数据核查
@@ -83,7 +83,7 @@ export default Model.extend({
           monitorParamTableTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportMonitorPointParamOfPoint({ payload }, { call, put, update, select }) { //导出 设备参数
@@ -104,7 +104,7 @@ export default Model.extend({
         })
         callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportPointInfoList({ payload }, { call, put, update, select }) { //导出 监测点信息
@@ -135,7 +135,7 @@ export default Model.extend({
 
       } else {
         !payload.EntID?   yield update({ projectRelationLoading:false }) : yield update({ historyProjectRelationLoading:false })
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportEntProjectRelationList({ payload }, { call, put, update, select }) { //导出 运维信息
@@ -155,7 +155,7 @@ export default Model.extend({
           entListTableTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportEntInfoList({ payload }, { call, put, update, select }) { //导出 企业信息
@@ -180,7 +180,7 @@ export default Model.extend({
         })
         callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportEquipmentParametersOfPont({ payload }, { call, put, update, select }) { //导出 设备信息
@@ -209,7 +209,7 @@ export default Model.extend({
           yield update({ pollutantTypeList: data})
           callback(data)
         } else {
-          message.error(result.Message)
+          result.Message && message.error(result.Message)
           yield update({ pollutantTypeList: []})
         }
     },

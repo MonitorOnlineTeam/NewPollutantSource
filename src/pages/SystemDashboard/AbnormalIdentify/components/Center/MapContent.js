@@ -7,6 +7,7 @@ import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Radio, Space, Spin, Tooltip, Col, Row, Descriptions } from 'antd';
 import moment from 'moment';
 import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
+import { adjustDuplicateCoordinates } from '@/pages/SystemDashboard/CONST.js';
 
 const legendList = [
   {
@@ -116,9 +117,7 @@ class MapContent extends PureComponent {
     // markers事件
     this.markersEvents = {
       created: allMarkers => {
-        console.log(
-          '高德地图 Marker 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
-        );
+        aMap.setFitView(allMarkers);
       },
       clickable: true,
       mouseover: (MapsOption, marker) => {
@@ -227,7 +226,7 @@ class MapContent extends PureComponent {
     // aMap.clearMap();
     // const { level1MapData, level4MapData, levelOtherMapData } = this.props;
     console.log('mapData', mapData);
-    const { level, selectedLegend, currentPointList } = this.state;
+    const { level, selectedLegend, allMarkers } = this.state;
     let markersList = [];
     switch (level) {
       case 1: // 行政区
@@ -254,22 +253,24 @@ class MapContent extends PureComponent {
               latitude: item.PoinLatitudetName,
               longitude: item.Longitude,
             },
-            zIndex: item.Level
+            zIndex: item.Level,
           };
         });
         break;
     }
+    markersList = adjustDuplicateCoordinates(markersList, 0.00002);
     this.setState(
       {
         markersList: markersList,
       },
       () => {
-        const timer = setInterval(() => {
-          if (aMap) {
-            aMap.setFitView();
-            clearInterval(timer);
-          }
-        }, 0);
+        // const timer = setInterval(() => {
+        //   if (aMap) {
+        //     console.log('allMarkers', allMarkers)
+        //     aMap.setFitView(allMarkers);
+        //     clearInterval(timer);
+        //   }
+        // }, 0);
       },
     );
   };
@@ -858,7 +859,7 @@ class MapContent extends PureComponent {
               visible={hoverTitleShow}
               position={hoverTitleLngLat}
               autoMove
-              offset={false ? [10, -5] : [4, -10]}
+              offset={false ? [10, -5] : [2, -10]}
               className={styles.titleInfoWindow}
             >
               <div style={{ whiteSpace: 'nowrap' }}>企业名称：{hoverEntTitle}</div>

@@ -35,6 +35,7 @@ export default Model.extend({
     *InsertProjectUser({ payload }, { call, update }) {
       const result = yield call(requestPost, `${API.SystemManageApi.InsertProjectUser}`, payload);
       if (result.IsSuccess) {
+        message.success('操作成功')
       }
     },
     // 获取已保存关联用户
@@ -58,7 +59,7 @@ export default Model.extend({
     // 获取已保存关联点位权限
     *GetProjectPointList({ payload, callback }, { call, update }) {
       const result = yield call(requestPost, `${API.SystemManageApi.GetProjectPointList}`, payload);
-      callback(result);
+      callback && callback(result);
     },
     // 切换项目
     *UpdateUserProject({ payload, callback }, { call, update }) {
@@ -67,7 +68,7 @@ export default Model.extend({
         yield update({
           currentProjectID: payload.projectCode,
         });
-        callback();
+        callback && callback();
       }
     },
     // 编辑项目
@@ -89,6 +90,14 @@ export default Model.extend({
         yield update({
           currentProjectID: result.Datas,
         });
+      }
+    },
+    // 删除项目
+    *DeleteUserProject({ payload, callback }, { call, update }) {
+      const result = yield call(requestPost, `${API.SystemManageApi.DeleteUserProject}`, payload);
+      if (result.IsSuccess) {
+        callback();
+        message.success('删除成功');
       }
     },
   },

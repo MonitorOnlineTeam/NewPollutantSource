@@ -23,7 +23,7 @@ export default Model.extend({
           tableDatas:result.Datas?result.Datas : [],
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *ExportPGZXPointStatusList({ payload, callback }, { call, select, update }) { //导出

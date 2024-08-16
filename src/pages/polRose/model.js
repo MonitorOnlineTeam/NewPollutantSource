@@ -24,7 +24,7 @@ export default Model.extend({
           PollutantList: result.Datas,
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     /*获取玫瑰图**/
@@ -40,7 +40,7 @@ export default Model.extend({
         RoleData: result.Datas,
       });
     } else {
-      message.error(result.Message)
+      result.Message && message.error(result.Message)
     }
   }
   }

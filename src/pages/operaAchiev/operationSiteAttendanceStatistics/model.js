@@ -58,7 +58,7 @@ export default Model.extend({
             break;
         }
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
         payload.pointType == 1 ?
           yield update({ tableLoading: false }) :
@@ -93,7 +93,7 @@ export default Model.extend({
         if (result.IsSuccess) {
           callback&&callback(result.Datas)
         } else {
-         message.error(result.Message)
+         result.Message && message.error(result.Message)
        }
     }
 

@@ -280,7 +280,7 @@ class RoleIndex extends Component {
                               payload: {},
                             });
                           } else {
-                            message.error(res.Message);
+                            res.Message && message.error(res.Message);
                           }
                         },
                       },
@@ -672,7 +672,7 @@ class RoleIndex extends Component {
               payload: {},
             });
           } else {
-            message.error(res.Message);
+            res.Message && message.error(res.Message);
           }
         },
       },

@@ -21,7 +21,7 @@ export default Model.extend({
           entByRegionAndAttList: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取日报表数据
@@ -32,7 +32,7 @@ export default Model.extend({
           dayReportTableData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

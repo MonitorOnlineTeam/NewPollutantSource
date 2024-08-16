@@ -33,7 +33,7 @@ export default Model.extend({
         })
         callback && callback(result.Datas);
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *regDetailGetFailureRateList({ payload,callback }, { call, put, update }) { // 行政区详情
@@ -43,7 +43,7 @@ export default Model.extend({
           regDetailTableDatas:result.Datas,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *pointGetFailureRateList({ payload,callback }, { call, put, update }) { // 监测点
@@ -53,7 +53,7 @@ export default Model.extend({
           pointTableDatas:result.Datas,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     *exportFailureRateList({ payload,callback }, { call, put, update }) { //导出

@@ -33,7 +33,7 @@ export default Model.extend({
           TestEntTableTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -54,7 +54,7 @@ export default Model.extend({
           testPointTableTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportTestPointList({ payload }, { call, put, update, select }) { //导出 调试站点信息
@@ -74,7 +74,7 @@ export default Model.extend({
           testPointEquipmentTableTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportTestPointEquipmentList({ payload }, { call, put, update, select }) { //导出 调试站点CEMS设备信息
@@ -94,7 +94,7 @@ export default Model.extend({
           testPointSystemTableTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportTestPointSystemList({ payload }, { call, put, update, select }) { //导出 调试站点CEMS型号信息
@@ -114,7 +114,7 @@ export default Model.extend({
           testPointParamTableTotal: result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportTestPointParamList({ payload }, { call, put, update, select }) { //导出 调试站点参比仪器设备信息

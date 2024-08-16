@@ -5,6 +5,7 @@ import styles from '@/pages/SystemDashboard/styles.less';
 import config from '@/config';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Radio, Space, Spin, Select, Col, Row } from 'antd';
+import { adjustDuplicateCoordinates } from '@/pages/SystemDashboard/CONST.js';
 import SiteDetailsModal from '@/pages/newestHome/components/springModal/mapModal/SiteDetailsModal';
 
 const legendList = [
@@ -91,9 +92,7 @@ class MapContent extends PureComponent {
     // markers事件
     this.markersEvents = {
       created: allMarkers => {
-        console.log(
-          '高德地图 Marker 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
-        );
+        aMap.setFitView(allMarkers);
       },
       clickable: true,
       mouseover: (MapsOption, marker) => {
@@ -221,17 +220,18 @@ class MapContent extends PureComponent {
         });
         break;
     }
+    markersList = adjustDuplicateCoordinates(markersList);
     this.setState(
       {
         markersList: markersList,
       },
       () => {
-        const timer = setInterval(() => {
-          if (aMap) {
-            aMap.setFitView();
-            clearInterval(timer);
-          }
-        }, 0);
+        // const timer = setInterval(() => {
+        //   if (aMap) {
+        //     aMap.setFitView();
+        //     clearInterval(timer);
+        //   }
+        // }, 0);
       },
     );
   };
@@ -810,7 +810,7 @@ class MapContent extends PureComponent {
               visible={hoverTitleShow}
               position={hoverTitleLngLat}
               autoMove
-              offset={false ? [10, -5] : [4, -10]}
+              offset={false ? [10, -5] : [0, -10]}
               className={styles.titleInfoWindow}
             >
               <div style={{ whiteSpace: 'nowrap' }}>企业名称：{hoverEntTitle}</div>

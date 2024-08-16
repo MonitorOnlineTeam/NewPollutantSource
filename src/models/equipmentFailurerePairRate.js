@@ -35,7 +35,7 @@ export default Model.extend({
         })
         callback && callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *regDetailGetRepairRateList({ payload,callback }, { call, put, update }) { // 行政区详情
@@ -46,7 +46,7 @@ export default Model.extend({
           regDetailTableTotal:result.Total,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *pointGetRepairRateList({ payload,callback }, { call, put, update }) { // 监测点
@@ -57,7 +57,7 @@ export default Model.extend({
           pointTableTotal:result.Total,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     *exportRepairRateList({ payload,callback }, { call, put, update }) { //导出

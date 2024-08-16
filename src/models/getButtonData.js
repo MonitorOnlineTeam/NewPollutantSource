@@ -87,7 +87,7 @@ export default Model.extend({
             if (result.IsSuccess) {
                 message.success(result.Message)
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
         },
 
@@ -105,7 +105,7 @@ export default Model.extend({
             if (result.IsSuccess) {
                 message.success(result.Message)
             }else{
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
         },
         

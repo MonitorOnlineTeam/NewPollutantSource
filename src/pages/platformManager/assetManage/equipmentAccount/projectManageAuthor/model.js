@@ -25,7 +25,7 @@ export default Model.extend({
           tableDatas:result.Datas? result.Datas:[],
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *addProjectAuthor({ payload, callback }, { call, put, update }) { //分配项目权限
@@ -34,7 +34,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getAddProjectAuthorList({ payload, callback }, { call, put, update }) { //获取当前人员未分配的项目权限
@@ -45,7 +45,7 @@ export default Model.extend({
           projectAuthorList:result.Datas? result.Datas.map(item=>{return {...item,}}):[],
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *deleteProjectAuthor({ payload, callback }, { call, put, update }) { //删除项目权限
@@ -54,7 +54,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getUserList({ payload, callback }, { call, put, update }) { //角色列表
@@ -63,7 +63,7 @@ export default Model.extend({
         yield update({ userList: result.Datas? result.Datas : []})
         callback&&callback( result.Datas? result.Datas[0] : null)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
    

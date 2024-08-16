@@ -607,7 +607,7 @@ export default class UserAuthority extends Component {
             callback()
             // this.handleCancel();
           } else {
-            message.error(res.Message);
+            res.Message && message.error(res.Message);
           }
           setTimeout(()=>{
             this.setState({okLoading:false,})

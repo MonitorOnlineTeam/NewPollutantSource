@@ -30,7 +30,7 @@ export default Model.extend({
           queryPar:payload,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *deleteSystemException({ payload,callback }, { call, put, update }) { //异常日志 删除
@@ -39,7 +39,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getSystemLongInLogs({ payload,callback }, { call, put, update }) { //登录日志 列表
@@ -51,7 +51,7 @@ export default Model.extend({
           queryPar2:payload,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *deleteSystemLongInLogs({ payload,callback }, { call, put, update }) { //登录日志 删除
@@ -60,7 +60,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getUserOprationLogsList({ payload,callback }, { call, put, update }) { //操作日志 列表
@@ -72,7 +72,7 @@ export default Model.extend({
           queryPar3:payload,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *deleteUserOprationLogs({ payload,callback }, { call, put, update }) { //操作日志 删除
@@ -81,7 +81,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

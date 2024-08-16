@@ -42,7 +42,7 @@ export default Model.extend({
         callback && callback(result.Datas)
     
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
       payload.staticType==1?  yield update({tableLoading:false}) : payload.staticType==2? yield update({tableLoading2:false}) : payload.staticType==3? yield update({tableLoading3:false}) : yield update({tableLoading4:false})
 
@@ -55,7 +55,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
       payload.staticType==1?  yield update({exportLoading:false}) : payload.staticType==2? yield update({exportLoading2:false}) : yield update({exportLoading3:false})
 

@@ -31,7 +31,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({taskTypeList: result.Datas,})
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getOperationRecordAnalyList({ payload, callback }, { call, put, update }) { //列表
@@ -53,7 +53,7 @@ export default Model.extend({
       }
         callback(result.Datas&&result.Datas.ColumnList&&result.Datas.ColumnList[0] ? result.Datas.ColumnList[0] : [],payload)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading2: false, tableLoading:false, })
       }
     },
@@ -67,7 +67,7 @@ export default Model.extend({
           accountDetailCol:result.Datas[0]&&result.Datas[0].datePick
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportOperationRecordAnalyList({ payload, callback }, { call, put, update }) { // 运维分析列表 导出
@@ -79,7 +79,7 @@ export default Model.extend({
         downloadFile(`${result.Datas}`)
       } else {
         yield update({  exportLoading2:false, exportLoading:false  })
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportOperationRecordAnalyInfoList({ payload, callback }, { call, put, update }) { //运维分析详情列表 导出
@@ -88,7 +88,7 @@ export default Model.extend({
         message.success(result.Message)
         downloadFile(`${result.Datas}`)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

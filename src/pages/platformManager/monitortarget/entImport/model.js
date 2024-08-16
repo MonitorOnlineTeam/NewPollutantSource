@@ -20,7 +20,7 @@ export default Model.extend({
             message.success(response.Message)
             callback(response)
       }else{
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       } 
     }
     

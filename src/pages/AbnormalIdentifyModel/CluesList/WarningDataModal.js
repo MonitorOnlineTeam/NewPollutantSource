@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-14 10:37:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-17 15:30:17
+ * @Last Modified time: 2024-08-15 18:10:09
  * @Description: 报警数据 - 弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -21,6 +21,7 @@ const WarningData = props => {
     onCancel,
     visible,
     // DGIMN,
+    warningInfo,
     date,
     PointName,
     wrapClassName,
@@ -78,6 +79,7 @@ const WarningData = props => {
         pointInfo={{
           EntName: PointName?.split(' - ')[0],
           PointName: PointName?.split(' - ')[1],
+          OpeUserId: warningInfo.OpeUserId
         }}
         dataChartParams={{
           describe,

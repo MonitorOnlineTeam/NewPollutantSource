@@ -46,7 +46,7 @@ export default Model.extend({
           attentionList: response.Datas,
         });
       } else {
-        message.error(response.Message);
+        response.Message && message.error(response.Message);
       }
     },
     // xinjiang根据企业类型查询监测因子
@@ -58,7 +58,7 @@ export default Model.extend({
         });
         callback && callback(response.Datas);
       } else {
-        message.error(response.Message);
+        response.Message && message.error(response.Message);
       }
     },
     // 根据企业类型查询监测因子
@@ -70,7 +70,7 @@ export default Model.extend({
         });
         callback && callback(response.Datas);
       } else {
-        message.error(response.Message);
+        response.Message && message.error(response.Message);
       }
     },
     *getEntByRegion({ payload }, { call, put, update, select }) {
@@ -95,7 +95,7 @@ export default Model.extend({
           column: result.Datas.column,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 超标报警处置率-二级
@@ -107,7 +107,7 @@ export default Model.extend({
           alarmManagementRateDetailcolumn: result.Datas.column,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 超标报警处置率导出-师一级
@@ -119,7 +119,7 @@ export default Model.extend({
         callback(result.Datas);
         yield update({ alarmManagementRateExportLoading: false });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
         yield update({ alarmManagementRateExportLoading: false });
       }
     },
@@ -132,7 +132,7 @@ export default Model.extend({
         callback(result.Datas);
         yield update({ alarmManagementRateDetailExportLoading: false });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
         yield update({ alarmManagementRateDetailExportLoading: false });
       }
     },

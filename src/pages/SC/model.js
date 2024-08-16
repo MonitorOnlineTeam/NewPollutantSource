@@ -40,7 +40,7 @@ export default Model.extend({
           columns: pollutants,
         });
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
     // 获取监控实时数据
@@ -56,7 +56,7 @@ export default Model.extend({
           ]
         })
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
     },
   },

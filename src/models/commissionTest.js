@@ -23,7 +23,7 @@ export default Model.extend({
                 yield update({ manufacturerList: result.Datas ? result.Datas.mlist : [] })
                 callback && callback(result.Datas ? result.Datas.mlist : [])
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
         },
         *getPollutantById({ payload, callback }, { call, put, update }) { //获取监测类型
@@ -32,7 +32,7 @@ export default Model.extend({
             if (result.IsSuccess) {
                 payload.type==1?    yield update({ pollutantTypeList2: result.Datas ? result.Datas : [] }) :  yield update({ pollutantTypeList: result.Datas ? result.Datas : [] }) 
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
 
         },
@@ -41,7 +41,7 @@ export default Model.extend({
             if (result.IsSuccess) {
                 yield update({ systemModelNameList: result.Datas })
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
         },
     }

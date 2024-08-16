@@ -26,7 +26,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 验证摄像头是否存在
@@ -35,7 +35,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取摄像头列表
@@ -53,7 +53,7 @@ export default Model.extend({
           })
         }
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 删除单个设备
@@ -63,7 +63,7 @@ export default Model.extend({
         message.success("删除成功！")
         callback && callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取编辑数据
@@ -74,7 +74,7 @@ export default Model.extend({
           videoManagerEditData: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取编辑数据
@@ -83,7 +83,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback();
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取乐橙云KitToken
@@ -92,7 +92,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取视频接入方式
@@ -103,7 +103,7 @@ export default Model.extend({
           VideoType: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取实时视频地址
@@ -114,7 +114,7 @@ export default Model.extend({
           HKLiveVideoUrl: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取海康历史视频地址
@@ -126,7 +126,7 @@ export default Model.extend({
           backData: result.Datas ? result.Datas.list : []
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 海康云台操作
@@ -139,7 +139,7 @@ export default Model.extend({
           message.error("错误码：" + result.Datas.code + "，错误信息" + result.Datas.msg)
         }
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 

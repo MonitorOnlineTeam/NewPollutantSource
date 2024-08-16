@@ -179,7 +179,7 @@ class Index extends Component {
                         })
                     }
                     else {
-                        message.error(result.Message)
+                        result.Message && message.error(result.Message)
                     }
                 },
             },

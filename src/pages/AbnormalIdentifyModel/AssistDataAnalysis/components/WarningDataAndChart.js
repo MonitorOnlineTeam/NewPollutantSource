@@ -80,6 +80,9 @@ const WarningDataAndChart = props => {
   const RWGYText = ModalTypeNameConversion('人为干预');
   const GZText = ModalTypeNameConversion('故障原因');
 
+//   let tempSelectedNames = [];
+// let legendSelected = {};
+
   const legendList = [
     {
       text: RWGYText,
@@ -1248,7 +1251,8 @@ const WarningDataAndChart = props => {
     let series = option.series;
     let firstIndex = _.values(selected).findIndex(item => item === true);
     let markIndex = series.findIndex(item => item.markLine || item.markPoint || item.markArea);
-    if (firstIndex > -1 && firstIndex !== markIndex) {
+    console.log('markIndex', markIndex)
+    if (firstIndex > -1 && markIndex > -1 && firstIndex !== markIndex) {
       //
       series[firstIndex].markLine = series[markIndex].markLine;
       series[firstIndex].markPoint = series[markIndex].markPoint;
@@ -1538,6 +1542,7 @@ const WarningDataAndChart = props => {
           </Spin>
         )}
         {props.displayType == 'modal' && pointInfo && buttonList.includes('UpdateDataScript') && (
+        // {true && (
           <Button
             type="primary"
             onClick={() => {
@@ -1623,7 +1628,7 @@ const WarningDataAndChart = props => {
       ) : (
         <Row justify="center" style={{ width: '100%' }}>
           <div className="example">
-            <Spin tip="Loading..." />
+            <Spin tip="加载中..." />
           </div>
         </Row>
       )}
@@ -1692,7 +1697,7 @@ const WarningDataAndChart = props => {
           </Space>
         </Row>
       </Modal>
-
+        {console.log('pointInfo', pointInfo)}
       {isModalOpenDataFlag && (
         <UpdateDataFlag
           pointInfo={pointInfo}

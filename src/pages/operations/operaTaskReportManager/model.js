@@ -25,7 +25,7 @@ export default Model.extend({
           queryPar: payload,
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 生成报告
@@ -35,7 +35,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   }

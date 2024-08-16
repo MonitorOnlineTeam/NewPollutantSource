@@ -33,7 +33,7 @@ export default Model.extend({
           tableDatas:result.Datas? result.Datas:[],
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getStatePointList({ payload, callback }, { call, put, update }) { //弹框
@@ -45,7 +45,7 @@ export default Model.extend({
           tableDetailTotal:result.Total,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *operationStatePoint({ payload, callback }, { call, put, update }) { //操作
@@ -54,7 +54,7 @@ export default Model.extend({
           message.success(result.Message)
           callback()
         } else {
-          message.error(result.Message)
+          result.Message && message.error(result.Message)
         }
     
     },
@@ -64,7 +64,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getEntStateList({ payload, callback }, { call, put, update }) { //匹配企业
@@ -74,7 +74,7 @@ export default Model.extend({
           entStateList:result.Datas,
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *getPointStateList({ payload, callback }, { call, put, update }) { //匹配监测点
@@ -82,7 +82,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *exportPointStateRelationList({ payload, callback }, { call, put, update }) { //导出

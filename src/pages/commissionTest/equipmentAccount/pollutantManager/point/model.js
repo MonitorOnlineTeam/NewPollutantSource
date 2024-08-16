@@ -24,7 +24,7 @@ export default Model.extend({
           systemModelListTotal: result.Total,
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //cems 监测设备 - 生产厂家(弹框) 
@@ -36,7 +36,7 @@ export default Model.extend({
           equipmentInfoListTotal: result.Total,
         });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //参比仪器 - 生产厂家(弹框) 
@@ -49,7 +49,7 @@ export default Model.extend({
           paramInfoList: result.Datas ? result.Datas.mlist : [],
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading: false })
       }
     },
@@ -59,7 +59,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //操作站点CEMS参数信息 
@@ -68,7 +68,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //获取参比仪器信息
@@ -77,7 +77,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //操作站点参比仪器信息 
@@ -86,7 +86,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //添加或修改调试检测排口
@@ -96,7 +96,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

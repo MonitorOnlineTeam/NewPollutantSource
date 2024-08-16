@@ -12,7 +12,7 @@ const ProjectManage = props => {
   const { dispatch, projectList, currentProjectID } = props;
 
   useEffect(() => {
-    GetUserProjectList();
+    // GetUserProjectList();
     GetUserProject();
   }, []);
 

@@ -37,7 +37,7 @@ export default Model.extend({
             yield update({ tableDatas: result.Datas,tableLoading: false})
           } else {
             yield update({ tableLoading: false})
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
           }
         },
      // 报警类型
@@ -56,7 +56,7 @@ export default Model.extend({
        callback(result.Datas)
       } else {
         yield update({ alarmTypeLoading: false})
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // },
@@ -67,7 +67,7 @@ export default Model.extend({
           if (result.IsSuccess) {
             downloadFile(`/upload${result.Datas}`)
           } else {
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
           }
         },
   }

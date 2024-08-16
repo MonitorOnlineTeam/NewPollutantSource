@@ -19,7 +19,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //收费服务 导出
@@ -29,7 +29,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 成套节点服务
@@ -38,7 +38,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //成套节点服务 导出
@@ -48,7 +48,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 赠送服务
@@ -57,7 +57,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //赠送服务 导出
@@ -67,7 +67,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 配合检查
@@ -76,7 +76,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //配合检查 导出
@@ -86,7 +86,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 配合其它工作
@@ -95,7 +95,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //配合其它工作 导出
@@ -105,7 +105,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //服务明细
@@ -118,7 +118,7 @@ export default Model.extend({
           serviceDispatchForAnalysisQueryPar: payload,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     //服务明细 导出
@@ -128,7 +128,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 

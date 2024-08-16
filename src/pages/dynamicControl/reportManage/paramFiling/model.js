@@ -57,7 +57,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ tableDatas: result.Datas,tableLoading:false,total:result.Datas.length,isSaveFlag:false,editingKey:""  })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
@@ -68,7 +68,7 @@ export default Model.extend({
         message.success(result.Message)
         callback(result.IsSuccess)
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
        //  删除
@@ -78,7 +78,7 @@ export default Model.extend({
           message.success(result.Message)
           callback(result.IsSuccess)
         } else {
-          message.error(result.Message)
+          result.Message && message.error(result.Message)
         }
       },
     //  参数列表
@@ -89,7 +89,7 @@ export default Model.extend({
       yield update({ getParaCodeList: result.Datas,isParaCode:true})
       callback(result.Datas)
     } else {
-      message.error(result.Message)
+      result.Message && message.error(result.Message)
     }
   },
          // 备案
@@ -100,7 +100,7 @@ export default Model.extend({
             message.success(result.Message)
             callback(result.IsSuccess)
           } else {
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
           }
         },
          // 仪器列表
@@ -117,7 +117,7 @@ export default Model.extend({
             yield update({ pollutantlist: result.Datas ,instruListParams:{...instruListParams, PollutantCodeList:PollutantCodeList },ispollut:true})
             callback(result.IsSuccess)
           } else {
-            message.error(result.Message)
+            result.Message && message.error(result.Message)
           }
         },
         

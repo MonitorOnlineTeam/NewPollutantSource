@@ -18,7 +18,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback(result.Datas)
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *saveData({ payload,callback }, { call, put, update }) { //保存
@@ -27,7 +27,7 @@ export default Model.extend({
         message.success(result.Message)
         callback()
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
 

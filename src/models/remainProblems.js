@@ -41,7 +41,7 @@ export default Model.extend({
         )
         callback && callback()
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
       yield update(type == 2 ? { tableLoading: false } : { tableLoading2: false })
     }, 

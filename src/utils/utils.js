@@ -522,8 +522,8 @@ export function getSysName(systemName) {
 // 根据系统名称判断是不是运维系统
 export function isOperaSystem(systemName) {
   const { NODE_ENV } = process.env;
-  // systemName === '技术服务智慧管理平台'  || systemName === '重点环境风险监管平台环境在线设备远程运维系统' ||  systemName=== '污染源安装调试系统' || systemName==='智慧运维管理平台' || systemName==='污染源监测安装调试系统' || NODE_ENV === 'production' && systemName==='污染源监测安装调试系统' 
-  return /运维/.test(systemName) || /安装调试/.test(systemName)  ||  /服务智慧/.test(systemName) 
+  // systemName === '技术服务智慧管理平台'  || systemName === '重点环境风险监管平台环境在线设备远程运维系统' ||  systemName=== '污染源安装调试系统' || systemName==='智慧运维管理平台' || systemName==='污染源监测安装调试系统' || NODE_ENV === 'production' && systemName==='污染源监测安装调试系统'
+  return /运维/.test(systemName) || /安装调试/.test(systemName) || /服务智慧/.test(systemName);
 }
 import { post, get } from '@/utils/request';
 export async function requestPost(url, params) {
@@ -547,7 +547,7 @@ export async function requestGet(url, params) {
       if (res.IsSuccess) {
         return res;
       } else {
-        message.error(res.Message);
+        res.Message && message.error(res.Message);
         return false;
       }
     })

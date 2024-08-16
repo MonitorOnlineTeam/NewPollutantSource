@@ -22,7 +22,7 @@ export default Model.extend({
         message.success('添加成功');
         callback && callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 更新排口
@@ -32,7 +32,7 @@ export default Model.extend({
         message.success('修改成功');
         callback && callback(result);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取仪器信息table数据
@@ -41,7 +41,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ pointInstrumentList: result.Datas });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取仪器下拉列表
@@ -50,7 +50,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ instrumentSelectList: result.Datas });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取仪器厂商列表
@@ -59,7 +59,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ factorySelectList: result.Datas });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取仪器分析方法
@@ -68,7 +68,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ methodSelectList: result.Datas });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取监测项目
@@ -77,7 +77,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ monitorItem: result.Datas });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 保存监测项目
@@ -93,7 +93,7 @@ export default Model.extend({
           },
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除监测项目
@@ -108,7 +108,7 @@ export default Model.extend({
           },
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取机组列表
@@ -117,7 +117,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ unitInfoList: result.Datas });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 添加机组
@@ -126,7 +126,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 删除机组
@@ -135,7 +135,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 修改机组
@@ -144,7 +144,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback();
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

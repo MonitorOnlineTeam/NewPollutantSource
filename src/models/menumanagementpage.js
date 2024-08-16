@@ -53,7 +53,7 @@ export default Model.extend({
                 localStorage.removeItem('_IsRequest_MenuData')
                 message.success(result.Message)
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
         },
         //修改
@@ -77,7 +77,7 @@ export default Model.extend({
                 localStorage.removeItem('_IsRequest_MenuData')
                 message.success(result.Message)
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
         },
         //删除
@@ -91,7 +91,7 @@ export default Model.extend({
                 localStorage.removeItem('_IsRequest_MenuData')
                 message.success(result.Message)
             } else {
-                message.error(result.Message)
+                result.Message && message.error(result.Message)
             }
         },
     }

@@ -21,7 +21,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ flowTableData: result.Datas });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     *getVisualizationChartList({ callback, payload }, { call, update, put, take, select }) {
@@ -104,7 +104,7 @@ export default Model.extend({
         });
         callback(visualizaData);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
         yield update({ visLoading: false });
       }
     },

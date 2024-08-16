@@ -97,7 +97,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         // yield update({ level: result.Datas, LEVEL: result.Datas, INIT_LEVEL: result.Datas });
       } else {
-        // message.error(result.Message)
+        // result.Message && message.error(result.Message)
       }
     },
     // 获取企业和监测点信息
@@ -156,7 +156,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ monitoringData: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取运行分析
@@ -172,7 +172,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ runAndAnalysisData: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取报警响应情况
@@ -188,7 +188,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ alarmResponseData: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 运维分析 - 任务统计数据
@@ -204,7 +204,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ taskStatisticsData: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 运维分析 - 任务分类统计
@@ -220,7 +220,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ operationAnalysis: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 水平衡差数据
@@ -236,7 +236,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ diffHorizontalData: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -278,7 +278,7 @@ export default Model.extend({
           ],
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
 
@@ -304,7 +304,7 @@ export default Model.extend({
         })
         // yield update({ officeList });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 点击师 - 改变RegionCode - 左右联动
@@ -342,7 +342,7 @@ export default Model.extend({
           officeUserList: result.Datas
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取办事处备品备件信息
@@ -355,7 +355,7 @@ export default Model.extend({
           officeVisible: true
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取监测点infoWindow数据
@@ -366,7 +366,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield put({ type: "getInfoWindowPollutantList", payload: payload, pollutantList: result.Datas });
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取监测点infoWindow数据
@@ -401,7 +401,7 @@ export default Model.extend({
           }
         })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 超标率下钻
@@ -426,7 +426,7 @@ export default Model.extend({
         })
       } else {
         yield update({ drillDownLoading: false })
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 传输有效率下钻
@@ -453,7 +453,7 @@ export default Model.extend({
         yield update({
           drillDownLoading: false,
         })
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //获取任务分类统计下钻
@@ -484,7 +484,7 @@ export default Model.extend({
         })
       } else {
         yield update({ drillDownLoading: false })
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取任务统计下钻
@@ -513,7 +513,7 @@ export default Model.extend({
         })
       } else {
         yield update({ drillDownLoading: false })
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取报警响应下钻
@@ -542,7 +542,7 @@ export default Model.extend({
         })
       } else {
         yield update({ drillDownLoading: false })
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     // 获取行政区与师的关系
@@ -551,7 +551,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({ monitorRegionDivision: result.Datas })
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     //

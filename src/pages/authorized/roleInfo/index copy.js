@@ -309,7 +309,7 @@ class RoleIndex extends Component {
                                                             },
                                                         })
                                                     } else {
-                                                        message.error(res.Message);
+                                                        res.Message && message.error(res.Message);
                                                     }
                                                 },
                                             },

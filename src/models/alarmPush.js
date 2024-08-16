@@ -78,7 +78,7 @@ export default Model.extend({
       if (response.IsSuccess) {
         message.success(response.Message)
       } else {
-        message.error(response.Message)
+        response.Message && message.error(response.Message)
       }
       callback()
     },

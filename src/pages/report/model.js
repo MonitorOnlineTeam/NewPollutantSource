@@ -175,7 +175,7 @@ export default Model.extend({
           },
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -262,7 +262,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         result.Datas && downloadFile(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 汇总报表导出
@@ -272,7 +272,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         result.Datas && downloadFile(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 数据上报报表
@@ -298,7 +298,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         result.Datas && downloadFile(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取企业及排口
@@ -333,7 +333,7 @@ export default Model.extend({
           },
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -350,7 +350,7 @@ export default Model.extend({
           smokeReportData: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 烟气报表导出
@@ -364,7 +364,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         downloadFile(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -396,7 +396,7 @@ export default Model.extend({
         });
         callback && callback(result.Datas);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
 
@@ -408,7 +408,7 @@ export default Model.extend({
           entByRegionAndAttList: result.Datas,
         });
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
     // 获取烟气报表表头
@@ -420,7 +420,7 @@ export default Model.extend({
         });
         callback && callback(data);
       } else {
-        message.error(result.Message);
+        result.Message && message.error(result.Message);
       }
     },
   },

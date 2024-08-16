@@ -38,7 +38,7 @@ export default Model.extend({
           regTableDatas:result.Datas,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *regDetailGetConsumablesRIHList({ payload,callback }, { call, put, update }) { //耗材统计 行政区详情
@@ -48,7 +48,7 @@ export default Model.extend({
           regDetailTableDatas:result.Datas,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
     *pointGetConsumablesRIHList({ payload,callback }, { call, put, update }) { //耗材统计 监测点
@@ -58,7 +58,7 @@ export default Model.extend({
           pointTableDatas:result.Datas,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     }, 
     *summaryGetConsumablesRIHList({ payload,callback }, { call, put, update }) { //耗材统计 备品备件 汇总
@@ -69,7 +69,7 @@ export default Model.extend({
           summaryTableTotal:result.Total,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },   
     *detailedGetConsumablesRIHList({ payload,callback }, { call, put, update }) { //耗材统计 备品备件 明细
@@ -80,7 +80,7 @@ export default Model.extend({
           detailedTableTotal:result.Total,
         })
       }else{
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },   
     *exportConsumablesRIHList({ payload,callback }, { call, put, update }) { //行政区 导出

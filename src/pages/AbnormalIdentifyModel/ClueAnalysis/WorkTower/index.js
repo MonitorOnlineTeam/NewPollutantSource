@@ -27,6 +27,8 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import EntAtmoList from '@/components/EntAtmoList';
+import RegionList from '@/components/RegionList';
+import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import { transformData } from '@/pages/AbnormalIdentifyModel/CONST.js';
 import { router } from 'umi';
 import { useHistory } from 'react-router-dom';
@@ -132,6 +134,7 @@ const WorkTower = props => {
         date: undefined,
         pageIndex: pageIndex,
         pageSize: pageSize,
+        IsReal: 1, // 只查询实时数据
       },
       callback: res => {
         setDataSource(res.Datas.showWarnings);
@@ -205,7 +208,8 @@ const WorkTower = props => {
           bodyStyle={{ background: '#edeff2' }}
           title={
             <Form
-              name="basic"
+              name="searchForm"
+              // name="basic"
               form={form}
               layout="inline"
               initialValues={{
@@ -221,9 +225,29 @@ const WorkTower = props => {
                   style={{ width: 250 }}
                 />
               </Form.Item>
+              <Form.Item label="行业" name="IndustryType">
+                <SearchSelect
+                  placeholder="排口所属行业"
+                  style={{ width: 130 }}
+                  configId={'IndustryType'}
+                  itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
+                  itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
+                />
+              </Form.Item>
+              <Form.Item label="行政区" name="RegionCode">
+                <RegionList
+                  noFilter
+                  style={{ width: 140 }}
+                  onChange={value => {
+                    form.setFieldsValue({ entCode: undefined, dgimn: undefined });
+                    setPointList([]);
+                  }}
+                />
+              </Form.Item>
               {/* <Spin spinning={!!entListLoading} size="small"> */}
               <Form.Item label="企业" name="entCode">
                 <EntAtmoList
+                  regionCode={form.getFieldValue('RegionCode')}
                   style={{ width: 200 }}
                   onChange={value => {
                     if (!value) {

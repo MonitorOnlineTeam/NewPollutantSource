@@ -19,7 +19,7 @@ export default Model.extend({
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
       } else {
-        message.error(result.Message)
+        result.Message && message.error(result.Message)
       }
     },
   },

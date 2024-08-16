@@ -6,8 +6,11 @@ import styles from '../styles.less';
 import AvatarDropdown from '@/components/GlobalHeader/AvatarDropdown.jsx';
 import FullscreenToggle from './FullscreenToggle';
 import { allSysList, dateRangeList } from '../CONST';
+import CustomTimeModal from './CustomTimeModal';
+import moment from 'moment';
 
 const dvaPropsData = ({ loading, sysDashboard, user }) => ({
+  time: sysDashboard.time,
   timeLabel: sysDashboard.timeLabel,
   currentMenu: user.currentMenu,
 });
@@ -18,8 +21,9 @@ const SystemDashboardPageWrapper = props => {
   const [sysList, setSysList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [current, setCurrent] = useState({});
+  const [customTimeModalOpen, setCustomTimeModalOpen] = useState(false);
 
-  const { dispatch, timeLabel, children, pageName, currentMenu } = props;
+  const { dispatch, timeLabel, children, pageName, currentMenu, time } = props;
 
   useEffect(() => {
     pageName === '智慧运维' &&
@@ -123,28 +127,58 @@ const SystemDashboardPageWrapper = props => {
     });
   };
 
+  // 切换项目
+  const UpdateUserProject = projectCode => {
+    dispatch({
+      type: 'projectManage/UpdateUserProject',
+      payload: {
+        projectCode,
+      },
+    });
+  };
+
   return (
     <div className={`${styles.dashboardPageWrapper} ${styles.operationWrapper}`} ref={containerRef}>
       <header className={styles.header}>{pageInfo.title}</header>
       <div className={styles.leftContent}>
         <div className={styles.menuSelectContent}>
           {/* <div className={styles.selectedName}>统计周期</div> */}
-          {!props.noDate && <> <div className={`${styles.selectedName} ${styles.showList}`}>{timeLabel}</div>
-          <ul>
-            {dateRangeList.map(item => {
-              return (
+          {!props.noDate && (
+            <>
+              <div className={`${styles.selectedName} ${styles.showList}`}>
+                {timeLabel !== '自定义' ? (
+                  timeLabel
+                ) : (
+                  <p className="textOverflow" style={{ fontSize: 12 }}>{`${moment(time[0]).format(
+                    'YYYY/MM/DD',
+                  )}-${moment(time[1]).format('YYYY/MM/DD')}`}</p>
+                )}
+              </div>
+              <ul>
+                {dateRangeList.map(item => {
+                  return (
+                    <li
+                      className={timeLabel === item.key ? styles.active : ''}
+                      key={item.key}
+                      onClick={() => {
+                        onChangeDateTime(item);
+                      }}
+                    >
+                      {item.key}
+                    </li>
+                  );
+                })}
                 <li
-                  className={timeLabel === item.key ? styles.active : ''}
-                  key={item.key}
+                  className={timeLabel === '自定义' ? styles.active : ''}
                   onClick={() => {
-                    onChangeDateTime(item);
+                    setCustomTimeModalOpen(true);
                   }}
                 >
-                  {item.key}
+                  自定义
                 </li>
-              );
-            })}
-          </ul></>}
+              </ul>
+            </>
+          )}
         </div>
         {sysList.length > 1 ? (
           <div className={styles.menuSelectContent}>
@@ -159,6 +193,7 @@ const SystemDashboardPageWrapper = props => {
                       // window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item.data)}`);
                       if (current !== item.key) {
                         setCurrent(item.key);
+                        UpdateUserProject(undefined);
                         router.push(`/sessionMiddlePage?sysInfo=${JSON.stringify(item.data)}`);
                       }
                     }}
@@ -192,6 +227,15 @@ const SystemDashboardPageWrapper = props => {
           {children}
         </Row>
       </main>
+
+      <CustomTimeModal
+        open={customTimeModalOpen}
+        onCancel={() => setCustomTimeModalOpen(false)}
+        onDateChange={data => {
+          onChangeDateTime(data);
+          setCustomTimeModalOpen(false);
+        }}
+      />
     </div>
   );
 };
