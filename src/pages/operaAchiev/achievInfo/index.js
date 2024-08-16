@@ -40,7 +40,10 @@ const dvaPropsData = ({ loading, operaAchiev, global }) => ({
   tableLoading2: loading.effects[`${namespace}/getPersonalPerformanceRateInfoList`],
   exportLoading2: loading.effects[`${namespace}/exportPersonalPerformanceRateInfo`],
   updatePersonaLoading: loading.effects[`${namespace}/updatePersonalPerformanceRateInfo`],
-  clientHeight: global.clientHeight,
+  tableTotal3: operaAchiev.personalPerformanceRateByProjectTotal,
+  tableDatas3: operaAchiev.personalPerformanceRateByProjectList,
+  tableLoading3: loading.effects[`${namespace}/GetPersonalPerformanceRateByProjectList`],
+  exportLoading3: loading.effects[`${namespace}/ExportPersonalPerformanceRateByProjectList`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -83,6 +86,18 @@ const dvaDispatch = (dispatch) => {
         callback: callback,
       })
     },
+    GetPersonalPerformanceRateByProjectList: (payload) => { //项目绩效 列表
+      dispatch({
+        type: `${namespace}/GetPersonalPerformanceRateByProjectList`,
+        payload: payload,
+      })
+    },
+    ExportPersonalPerformanceRateByProjectList: (payload) => { //项目绩效 导出
+      dispatch({
+        type: `${namespace}/ExportPersonalPerformanceRateByProjectList`,
+        payload: payload
+      })
+    },
   }
 }
 
@@ -90,14 +105,16 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
+  const [form3] = Form.useForm();
   const [editForm] = Form.useForm();
 
 
-  const { clientHeight, tableTotal, tableDatas, tableLoading, exportLoading, tableTotal2, tableDatas2, tableLoading2, exportLoading2, } = props;
+  const { clientHeight, tableTotal, tableDatas, tableLoading, exportLoading, tableTotal2, tableDatas2, tableLoading2, exportLoading2, tableTotal3, tableDatas3, tableLoading3, exportLoading3, } = props;
 
   useEffect(() => {
     onFinish(pageIndex, pageSize)
     onFinish2(pageIndex2, pageSize2, 'initData')
+    onFinish3(pageIndex3, pageSize3, 'initData')
 
   }, [])
 
@@ -145,6 +162,7 @@ const Index = (props) => {
     {
       title: '非驻厂',
       align: 'center',
+      width: 180,
       children: [
         {
           title: '污染源气绩效套数',
@@ -165,6 +183,7 @@ const Index = (props) => {
     {
       title: '驻厂',
       align: 'center',
+      width: 180,
       children: [
         {
           title: '污染源气绩效套数',
@@ -335,7 +354,7 @@ const Index = (props) => {
           <Fragment>
             <Tooltip title="修改">
               <a onClick={() => { edit(record) }} style={{ paddingRight: 12 }}>  <EditOutlined style={{ fontSize: 16 }} /></a>
-            </Tooltip> 
+            </Tooltip>
             <Tooltip title="详情">
               <a onClick={() => { detail(record, 'isDetailed') }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
             </Tooltip>
@@ -343,6 +362,70 @@ const Index = (props) => {
         </span>
       }
     },
+  ];
+  const columns3 = [
+    {
+      title: '序号',
+      align: 'center',
+      render: (text, record, index) => {
+        return (index + 1) + (pageIndex3 - 1) * pageSize3;
+      }
+    },
+    {
+      title: '区域',
+      dataIndex: 'LargeRegion',
+      key: 'LargeRegion',
+      align: 'center',
+      width:'auto',
+      render: (text, record, index) => rowSpanFun(text, record)
+    },
+    {
+      title: '运维项目号',
+      dataIndex: 'ProjectCode',
+      key: 'ProjectCode',
+      align: 'center',
+      width:'auto',
+      render: (text, record, index) => rowSpanFun(text, record)
+    },
+    {
+      title: '企业名称',
+      dataIndex: 'EntName',
+      key: 'EntName',
+      align: 'center',
+      width:'auto',
+      render: (text, record, index) => rowSpanFun(text, record)
+    },
+    {
+      title: '总人数',
+      dataIndex: 'SumPercentage',
+      key: 'SumPercentage',
+      align: 'center',
+      width:100,
+      render: (text, record, index) => rowSpanFun(text, record)
+    },
+    {
+      title: '姓名',
+      dataIndex: 'UserName',
+      key: 'UserName',
+      align: 'center',
+      width:100,
+    },
+    {
+      title: '员工编号',
+      dataIndex: 'UserAccount',
+      key: 'UserAccount',
+      align: 'center',
+      width:100,
+
+    },
+    {
+      title: '人员占比',
+      dataIndex: 'Percentage',
+      key: 'Percentage',
+      align: 'center',
+      width:100,
+    },
+
   ];
   const onFinish = async (pageIndexs, pageSizes, sortPar) => {  //查询
     try {
@@ -376,6 +459,20 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
+  const onFinish3 = async (pageIndexs, pageSizes, initData) => {  //查询 项目绩效
+    try {
+      const values = await form3.validateFields();
+      const par = {
+        ...values,
+        pageIndex: pageIndexs,
+        pageSize: pageSizes,
+        Month: initData ? moment().add(-1, 'M').format("YYYY-MM-01 00:00:00") : values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
+      }
+      props.GetPersonalPerformanceRateByProjectList({ ...par })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
   const [sortField, setSortField] = useState('')
   const [pageSize, setPageSize] = useState(20)
   const [pageIndex, setPageIndex] = useState(1)
@@ -395,7 +492,14 @@ const Index = (props) => {
     onFinish2(PageIndex, PageSize)
 
   }
+  const [pageSize3, setPageSize3] = useState(20)
+  const [pageIndex3, setPageIndex3] = useState(1)
+  const handleTableChange3 = (PageIndex, PageSize) => { //项目绩效 分页
+    setPageIndex3(PageIndex)
+    setPageSize3(PageSize)
+    onFinish3(PageIndex, PageSize)
 
+  }
   const [visible, setVisible] = useState(false)
   const [title, setTitle] = useState(null)
   const [detailPar, setDetailPar] = useState(null)
@@ -431,7 +535,7 @@ const Index = (props) => {
 
   const editOk = () => {
     editForm.validateFields().then((values) => {
-      props.updatePersonalPerformanceRateInfo({ ...values },()=>{
+      props.updatePersonalPerformanceRateInfo({ ...values }, () => {
         setEditVisible(false)
         onFinish2(pageIndex2, pageSize2)
       })
@@ -457,7 +561,14 @@ const Index = (props) => {
     }
     props.exportPersonalPerformanceRateInfo({ ...par })
   };
-
+  const exports3 = () => {
+    const values = form3.getFieldsValue();
+    const par = {
+      ...values,
+      Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
+    }
+    props.ExportPersonalPerformanceRateByProjectList({ ...par })
+  };
 
   const searchComponents = () => {
     return <Form
@@ -540,20 +651,62 @@ const Index = (props) => {
       </Row>
     </Form>
   }
+  const searchComponents3 = () => {
+    return <Form
+      name="advanced_search2"
+      form={form3}
+      onFinish={() => { setPageIndex3(1); onFinish3(1, pageSize2) }}
+      initialValues={{
+        Month: moment().add(-1, 'M'),
+      }}
+    >
+
+      <Row>
+        <Form.Item label='统计月份' name='Month' className='form_label_width_69'>
+          <DatePicker picker="month" allowClear={false} style={{ width: 195 }} />
+        </Form.Item>
+        <Form.Item label='员工编号' name='UserAccount'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+        <Form.Item label='姓名' name='UserName'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+      </Row>
+      <Row>
+        <Form.Item label='项目号' name='ProjectNum' className='form_label_width_69'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+        <Form.Item label='企业名称' name='EntName'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+        <Form.Item style={{ marginBottom: 0 }}>
+          <Button type="primary" htmlType="submit" loading={tableLoading3}>
+            查询
+      </Button>
+          <Button style={{ margin: '0 8px', }} htmlType='reset'  >
+            重置
+         </Button>
+          <Button icon={<ExportOutlined />} loading={exportLoading3} onClick={() => { exports3() }}>
+            导出
+         </Button>
+        </Form.Item>
+      </Row>
+    </Form>
+  }
   return (
     <div className={styles.achievQuerySty}>
       <BreadcrumbWrapper>
         <Tabs tabPosition='left' style={{ marginTop: 16 }}>
           <TabPane tab="绩效汇总" key="1">
-            <Card title={searchComponents()} bodyStyle={{paddingBottom:14}}>
+            <Card title={searchComponents()} bodyStyle={{ paddingBottom: 12 }}>
 
               <SdlTable
                 loading={tableLoading}
                 bordered
                 dataSource={tableDatas}
                 columns={columns}
+                scroll={{ y: 'calc(100vh - 336px)' }}
                 onChange={handleTableChange}
-                scroll={{y:'calc(100vh - 370px)'}}
                 pagination={{
                   total: tableTotal,
                   pageSize: pageSize,
@@ -566,13 +719,13 @@ const Index = (props) => {
             </Card>
           </TabPane>
           <TabPane tab='绩效明细' key="2">
-            <Card title={searchComponents2()} bodyStyle={{paddingBottom:14}}>
+            <Card title={searchComponents2()} bodyStyle={{ paddingBottom: 12 }}>
               <SdlTable
                 loading={tableLoading2}
                 bordered
                 dataSource={tableDatas2}
                 columns={columns2}
-                scroll={{ y: clientHeight - 410 }}
+                scroll={{ y: 'calc(100vh - 324px)' }}
                 rowClassName={{}}
                 pagination={false}
               />
@@ -586,6 +739,30 @@ const Index = (props) => {
                 showSizeChanger
                 showQuickJumper
                 onChange={handleTableChange2}
+              />}
+            </Row>
+          </TabPane>
+          <TabPane tab='项目绩效' key="3">
+            <Card title={searchComponents3()} bodyStyle={{ paddingBottom: 12 }}>
+              <SdlTable
+                loading={tableLoading3}
+                bordered
+                dataSource={tableDatas3}
+                columns={columns3}
+                scroll={{ x: 880, y: 'calc(100vh - 324px)' }}
+                rowClassName={{}}
+                pagination={false}
+              />
+            </Card>
+            <Row style={{ margin: '0 24px' }} justify='end'>
+              {tableTotal3 > 0 && <Pagination
+                size='small'
+                total={tableTotal3}
+                pageSize={pageSize3}
+                current={pageIndex3}
+                showSizeChanger
+                showQuickJumper
+                onChange={handleTableChange3}
               />}
             </Row>
           </TabPane>
@@ -632,13 +809,13 @@ const Index = (props) => {
             <Form.Item label='巡检周期系数' name='RecordCoefficient' rules={[{ required: true, message: '请输入巡检周期系数' }]}>
               <InputNumber placeholder='请输入' allowClear={true} step='0.01' />
             </Form.Item>
-            <Form.Item label='个人分摊套数/点位数' name='OrderExecutionRatio'  rules={[{ required: true, message: '请输入个人分摊套数/点位数' }]}>
+            <Form.Item label='个人分摊套数/点位数' name='OrderExecutionRatio' rules={[{ required: true, message: '请输入个人分摊套数/点位数' }]}>
               <InputNumber placeholder='请输入' allowClear={true} step='0.001' />
             </Form.Item>
-            <Form.Item label='执行比例/工单完成比例' name='ExecutionRatio'  rules={[{ required: true, message: '请输入执行比例/工单完成比例' }]}>
+            <Form.Item label='执行比例/工单完成比例' name='ExecutionRatio' rules={[{ required: true, message: '请输入执行比例/工单完成比例' }]}>
               <InputNumber placeholder='请输入' allowClear={true} step='0.001' />
             </Form.Item>
-            <Form.Item label='修改原因' name='UpdateCause'  rules={[{ required: true, message: '请输入修改原因' }]}>
+            <Form.Item label='修改原因' name='UpdateCause' rules={[{ required: true, message: '请输入修改原因' }]}>
               <TextArea placeholder='请输入' allowClear={true} />
             </Form.Item>
             <Form.Item hidden name='ID'></Form.Item>

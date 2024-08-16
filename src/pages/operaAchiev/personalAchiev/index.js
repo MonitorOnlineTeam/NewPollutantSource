@@ -4,7 +4,7 @@
  * 创建时间：2022.05.17
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Tabs,Pagination, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Tabs, Pagination, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
 import { connect } from "dva";
@@ -38,7 +38,10 @@ const dvaPropsData = ({ loading, operaAchiev, global }) => ({
   tableDatas2: operaAchiev.personalPerformanceRateInfoList,
   tableLoading2: loading.effects[`${namespace}/getPersonalPerformanceRateInfoList`],
   exportLoading2: loading.effects[`${namespace}/exportPersonalPerformanceRateInfo`],
-  clientHeight:global.clientHeight
+  tableTotal3: operaAchiev.personalPerformanceRateByProjectTotal,
+  tableDatas3: operaAchiev.personalPerformanceRateByProjectList,
+  tableLoading3: loading.effects[`${namespace}/GetPersonalPerformanceRateByProjectList`],
+  exportLoading3: loading.effects[`${namespace}/ExportPersonalPerformanceRateByProjectList`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -73,6 +76,18 @@ const dvaDispatch = (dispatch) => {
         payload: payload
       })
     },
+    GetPersonalPerformanceRateByProjectList: (payload) => { //项目绩效 列表
+      dispatch({
+        type: `${namespace}/GetPersonalPerformanceRateByProjectList`,
+        payload: payload,
+      })
+    },
+    ExportPersonalPerformanceRateByProjectList: (payload) => { //项目绩效 导出
+      dispatch({
+        type: `${namespace}/ExportPersonalPerformanceRateByProjectList`,
+        payload: payload
+      })
+    },
   }
 }
 
@@ -80,12 +95,14 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
+  const [form3] = Form.useForm();
 
-  const {clientHeight, tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, } = props;
+  const { clientHeight, tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, tableTotal3, tableDatas3, tableLoading3, exportLoading3, } = props;
 
   useEffect(() => {
-    onFinish(pageIndex,pageSize)
-    onFinish2(pageIndex2,pageSize2,'initData') //initData tab没切换之前获取不到form2
+    onFinish(pageIndex, pageSize)
+    onFinish2(pageIndex2, pageSize2, 'initData') //initData tab没切换之前获取不到form2
+    onFinish3(pageIndex3, pageSize3, 'initData') //initData tab没切换之前获取不到form3
     userId = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserId;
   }, [])
 
@@ -94,7 +111,7 @@ const Index = (props) => {
       title: '序号',
       align: 'center',
       render: (text, record, index) => {
-        return (index + 1) + (pageIndex-1)*pageSize;
+        return (index + 1) + (pageIndex - 1) * pageSize;
       }
     },
     {
@@ -114,7 +131,7 @@ const Index = (props) => {
       dataIndex: 'businessAttribute',
       key: 'businessAttribute',
       align: 'center',
-      width:150,
+      width: 150,
       ellipsis: true,
     },
     {
@@ -127,20 +144,21 @@ const Index = (props) => {
     {
       title: '非驻厂',
       align: 'center',
+      width: 180,
       children: [
         {
           title: '污染源气绩效套数',
           dataIndex: 'GasPerformance',
           key: 'GasPerformance',
           align: 'center',
-          sorter:true,
+          sorter: true,
         },
         {
           title: '污染源水绩效套数',
           dataIndex: 'WaterPerformance',
           key: 'WaterPerformance',
           align: 'center',
-          sorter:true,
+          sorter: true,
         },
       ]
     },
@@ -153,20 +171,21 @@ const Index = (props) => {
     {
       title: '驻厂',
       align: 'center',
+      width: 180,
       children: [
         {
           title: '污染源气绩效套数',
           dataIndex: 'GasPerformanceZ',
           key: 'GasPerformanceZ',
           align: 'center',
-          sorter:true,
+          sorter: true,
         },
         {
           title: '污染源水绩效套数',
           dataIndex: 'WaterPerformanceZ',
           key: 'WaterPerformanceZ',
           align: 'center',
-          sorter:true,
+          sorter: true,
         },
       ]
     },
@@ -187,10 +206,10 @@ const Index = (props) => {
     },
   ];
 
-  const rowSpanFun = (value,record) =>{
+  const rowSpanFun = (value, record) => {
     let obj = {
       children: <div>{value}</div>,
-      props: { rowSpan: record.Count},
+      props: { rowSpan: record.Count },
     };
     return obj;
   }
@@ -200,78 +219,78 @@ const Index = (props) => {
       dataIndex: 'RegionName',
       key: 'RegionName',
       align: 'center',
-      render:(text, record, index)=>rowSpanFun(text, record)
+      render: (text, record, index) => rowSpanFun(text, record)
     },
     {
       title: '地级市',
       dataIndex: 'CityName',
       key: 'CityName',
       align: 'center',
-      render:(text, record, index)=>rowSpanFun(text, record)
+      render: (text, record, index) => rowSpanFun(text, record)
     },
     {
       title: '运维项目号',
       dataIndex: 'ProjectCode',
       key: 'ProjectCode',
       align: 'center',
-      render:(text, record, index)=>rowSpanFun(text, record)
+      render: (text, record, index) => rowSpanFun(text, record)
     },
     {
       title: '项目名称',
       dataIndex: 'ProjectName',
       key: 'ProjectName',
       align: 'center',
-      width:160,
-      render:(text, record, index)=>rowSpanFun(text, record)
+      width: 160,
+      render: (text, record, index) => rowSpanFun(text, record)
     },
     {
       title: '企业名称',
       dataIndex: 'EntName',
       key: 'EntName',
       align: 'center',
-      render:(text, record, index)=>rowSpanFun(text, record)
+      render: (text, record, index) => rowSpanFun(text, record)
     },
     {
       title: '点位名称',
       dataIndex: 'PointName',
       key: 'PointName',
       align: 'center',
-      render:(text, record, index)=>rowSpanFun(text, record)
+      render: (text, record, index) => rowSpanFun(text, record)
     },
     {
       title: 'MN号',
       dataIndex: 'DGIMN',
       key: 'DGIMN',
       align: 'center',
-      render:(text, record, index)=>rowSpanFun(text, record)
+      render: (text, record, index) => rowSpanFun(text, record)
     },
     {
       title: '分类',
       dataIndex: 'PollutantTypeName',
       key: 'PollutantTypeName',
       align: 'center',
-      render:(text, record, index)=>rowSpanFun(text, record)
+      render: (text, record, index) => rowSpanFun(text, record)
     },
     {
       title: '设备类别系数',
       dataIndex: 'PointCoefficient',
       key: 'PointCoefficient',
       align: 'center',
-      render:(text, record, index)=>rowSpanFun(text, record)
+      render: (text, record, index) => rowSpanFun(text, record)
     },
     {
       title: '巡检周期',
       dataIndex: 'InspectionTypeName',
       key: 'InspectionTypeName',
       align: 'center',
-      render:(text, record, index)=>rowSpanFun(text, record)
+      render: (text, record, index) => rowSpanFun(text, record)
     },
     {
       title: '巡检周期系数',
       dataIndex: 'RecordCoefficient',
       key: 'RecordCoefficientx',
       align: 'center',
-      render:(text, record, index)=>rowSpanFun(text, record)
+      render: (text, record, index) => rowSpanFun(text, record)
     },
     {
       title: '实际运维人员',
@@ -290,14 +309,14 @@ const Index = (props) => {
       dataIndex: 'OrderExecutionRatio',
       key: 'OrderExecutionRatio',
       align: 'center',
-      width:160,
+      width: 160,
     },
     {
       title: '执行比例/工单完成比例',
       dataIndex: 'ExecutionRatio',
       key: 'ExecutionRatio',
       align: 'center',
-      width:180,
+      width: 180,
     },
     {
       title: '绩效套数',
@@ -312,14 +331,78 @@ const Index = (props) => {
         return <span>
           <Fragment>
             <Tooltip title="详情">
-              <a onClick={() => { detail(record,'isDetailed') }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
+              <a onClick={() => { detail(record, 'isDetailed') }}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
             </Tooltip>
           </Fragment>
         </span>
       }
     },
   ];
-  const onFinish = async (pageIndexs,pageSizes,sortPar) => {  //查询 绩效汇总
+  const columns3 = [
+    {
+      title: '序号',
+      align: 'center',
+      render: (text, record, index) => {
+        return (index + 1) + (pageIndex3 - 1) * pageSize3;
+      }
+    },
+    {
+      title: '区域',
+      dataIndex: 'LargeRegion',
+      key: 'LargeRegion',
+      align: 'center',
+      width:'auto',
+      render: (text, record, index) => rowSpanFun(text, record)
+    },
+    {
+      title: '运维项目号',
+      dataIndex: 'ProjectCode',
+      key: 'ProjectCode',
+      align: 'center',
+      width:'auto',
+      render: (text, record, index) => rowSpanFun(text, record)
+    },
+    {
+      title: '企业名称',
+      dataIndex: 'EntName',
+      key: 'EntName',
+      align: 'center',
+      width:'auto',
+      render: (text, record, index) => rowSpanFun(text, record)
+    },
+    {
+      title: '总人数',
+      dataIndex: 'SumPercentage',
+      key: 'SumPercentage',
+      align: 'center',
+      width:100,
+      render: (text, record, index) => rowSpanFun(text, record)
+    },
+    {
+      title: '姓名',
+      dataIndex: 'UserName',
+      key: 'UserName',
+      align: 'center',
+      width:100,
+    },
+    {
+      title: '员工编号',
+      dataIndex: 'UserAccount',
+      key: 'UserAccount',
+      align: 'center',
+      width:100,
+
+    },
+    {
+      title: '人员占比',
+      dataIndex: 'Percentage',
+      key: 'Percentage',
+      align: 'center',
+      width:100,
+    },
+
+  ];
+  const onFinish = async (pageIndexs, pageSizes, sortPar) => {  //查询 绩效汇总
     try {
       const values = await form.validateFields();
       setPageIndex(pageIndexs)
@@ -330,21 +413,21 @@ const Index = (props) => {
         Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
         UserId: userId,
       }
-      props.getPersonalPerformanceRateList({ ...par },(isSuccess)=>{
-        isSuccess&&setSortField(sortPar? sortPar : '')
+      props.getPersonalPerformanceRateList({ ...par }, (isSuccess) => {
+        isSuccess && setSortField(sortPar ? sortPar : '')
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
-  const onFinish2 = async (pageIndexs,pageSizes,initData) => {  //查询 绩效明细
+  const onFinish2 = async (pageIndexs, pageSizes, initData) => {  //查询 绩效明细
     try {
       const values = await form2.validateFields();
       const par = {
         ...values,
         pageIndex: pageIndexs,
         pageSize: pageSizes,
-        Month:initData?  moment().add(-1, 'M').format("YYYY-MM-01 00:00:00") : values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
+        Month: initData ? moment().add(-1, 'M').format("YYYY-MM-01 00:00:00") : values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
         UserId: userId,
       }
       props.getPersonalPerformanceRateInfoList({ ...par })
@@ -352,16 +435,30 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
-
-  const [sortField,setSortField] = useState('')
+  const onFinish3 = async (pageIndexs, pageSizes, initData) => {  //查询 项目绩效
+    try {
+      const values = await form3.validateFields();
+      const par = {
+        ...values,
+        pageIndex: pageIndexs,
+        pageSize: pageSizes,
+        Month: initData ? moment().add(-1, 'M').format("YYYY-MM-01 00:00:00") : values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
+        UserId: userId,
+      }
+      props.GetPersonalPerformanceRateByProjectList({ ...par })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+  const [sortField, setSortField] = useState('')
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSize, setPageSize] = useState(20)
   const handleTableChange = (pagination, filters, sorter) => { //绩效汇总 分页
-    const sortPar = sorter.order? `${sorter.field},${sorter.order==='ascend'? 1 : 0}` : '';
-    const pageIndex = sortPar == sortField? pagination.current : 1 ;
+    const sortPar = sorter.order ? `${sorter.field},${sorter.order === 'ascend' ? 1 : 0}` : '';
+    const pageIndex = sortPar == sortField ? pagination.current : 1;
     setPageIndex(pageIndex)
     setPageSize(pagination.pageSize)
-    onFinish(pageIndex, pagination.pageSize,sortPar)
+    onFinish(pageIndex, pagination.pageSize, sortPar)
 
   }
 
@@ -374,7 +471,14 @@ const Index = (props) => {
 
   }
 
+  const [pageSize3, setPageSize3] = useState(20)
+  const [pageIndex3, setPageIndex3] = useState(1)
+  const handleTableChange3 = (PageIndex, PageSize) => { //项目绩效 分页
+    setPageIndex3(PageIndex)
+    setPageSize3(PageSize)
+    onFinish3(PageIndex, PageSize)
 
+  }
   const [visible, setVisible] = useState(false)
   const [title, setTitle] = useState(null)
   const [detailPar, setDetailPar] = useState(null)
@@ -396,7 +500,7 @@ const Index = (props) => {
       ...values,
       UserId: userId,
       Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
-      Sort:sortField,
+      Sort: sortField,
     }
     props.exportPersonalPerformanceRate({ ...par })
   };
@@ -411,13 +515,22 @@ const Index = (props) => {
     props.exportPersonalPerformanceRateInfo({ ...par })
   };
 
+  const exports3 = () => {
+    const values = form3.getFieldsValue();
+    const par = {
+      ...values,
+      UserId: userId,
+      Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
+    }
+    props.ExportPersonalPerformanceRateByProjectList({ ...par })
+  };
 
   const searchComponents = () => {
     return <Form
       name="advanced_search"
       form={form}
       layout='inline'
-      onFinish={() => {onFinish(1,pageSize,sortField) }}
+      onFinish={() => { onFinish(1, pageSize, sortField) }}
       initialValues={{
         Month: moment().add(-1, 'M'),
       }}
@@ -446,7 +559,7 @@ const Index = (props) => {
     return <Form
       name="advanced_search2"
       form={form2}
-      onFinish={() => {setPageIndex2(1); onFinish2(1, pageSize2) }}
+      onFinish={() => { setPageIndex2(1); onFinish2(1, pageSize2) }}
       initialValues={{
         Month: moment().add(-1, 'M'),
       }}
@@ -454,7 +567,7 @@ const Index = (props) => {
 
       <Row>
         <Form.Item label='统计月份' name='Month' className='form2ItemWidth'>
-          <DatePicker picker="month" allowClear={false} style={{ width: 200 }} />
+          <DatePicker picker="month" allowClear={false} style={{ width: 195 }} />
         </Form.Item>
         <Form.Item label='员工编号' name='UserAccount'>
           <Input placeholder='请输入' allowClear={true} />
@@ -464,8 +577,8 @@ const Index = (props) => {
         </Form.Item>
       </Row>
       <Row>
-        <Form.Item label='运维项目号' name='ProjectNum'  className='form2ItemWidth'>
-          <Input placeholder='请输入' allowClear={true}/>
+        <Form.Item label='运维项目号' name='ProjectNum' className='form2ItemWidth'>
+          <Input placeholder='请输入' allowClear={true} />
         </Form.Item>
         <Form.Item label='企业名称' name='EntName'>
           <Input placeholder='请输入' allowClear={true} />
@@ -487,6 +600,48 @@ const Index = (props) => {
       </Row>
     </Form>
   }
+  const searchComponents3 = () => {
+    return <Form
+      name="advanced_search2"
+      form={form3}
+      onFinish={() => { setPageIndex3(1); onFinish3(1, pageSize2) }}
+      initialValues={{
+        Month: moment().add(-1, 'M'),
+      }}
+    >
+
+      <Row>
+        <Form.Item label='统计月份' name='Month' className='form_label_width_69'>
+          <DatePicker picker="month" allowClear={false} style={{ width: 195 }} />
+        </Form.Item>
+        <Form.Item label='员工编号' name='UserAccount'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+        <Form.Item label='姓名' name='UserName'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+      </Row>
+      <Row>
+        <Form.Item label='项目号' name='ProjectNum' className='form_label_width_69'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+        <Form.Item label='企业名称' name='EntName'>
+          <Input placeholder='请输入' allowClear={true} />
+        </Form.Item>
+        <Form.Item style={{ marginBottom: 0 }}>
+          <Button type="primary" htmlType="submit" loading={tableLoading3}>
+            查询
+      </Button>
+          <Button style={{ margin: '0 8px', }} htmlType='reset'  >
+            重置
+         </Button>
+          <Button icon={<ExportOutlined />} loading={exportLoading3} onClick={() => { exports3() }}>
+            导出
+         </Button>
+        </Form.Item>
+      </Row>
+    </Form>
+  }
   return (
     <div className={styles.achievQuerySty}>
       <BreadcrumbWrapper>
@@ -499,7 +654,8 @@ const Index = (props) => {
                 bordered
                 dataSource={tableDatas}
                 columns={columns}
-                onChange = {handleTableChange}
+                scroll={{ y: 'calc(100vh - 336px)' }}
+                onChange={handleTableChange}
                 pagination={{
                   total: tableTotal,
                   pageSize: pageSize,
@@ -519,22 +675,46 @@ const Index = (props) => {
                 bordered
                 dataSource={tableDatas2}
                 columns={columns2}
-                scroll={{ y: clientHeight - 440 }}
+                scroll={{ y: 'calc(100vh - 324px)' }}
                 rowClassName={{}}
                 pagination={false}
               />
             </Card>
-            <Row style={{margin:'16px 24px 0 0 '}} justify='end'>
-             {tableTotal2 >0&&<Pagination 
-                  size='small'
-                  total= {tableTotal2}
-                  pageSize= {pageSize2}
-                  current= {pageIndex2}
-                  showSizeChanger
-                  showQuickJumper
-                  onChange= {handleTableChange2}
-           />}
-           </Row>
+            <Row style={{ margin: '16px 24px 0 0 ' }} justify='end'>
+              {tableTotal2 > 0 && <Pagination
+                size='small'
+                total={tableTotal2}
+                pageSize={pageSize2}
+                current={pageIndex2}
+                showSizeChanger
+                showQuickJumper
+                onChange={handleTableChange2}
+              />}
+            </Row>
+          </TabPane>
+          <TabPane tab='项目绩效' key="3">
+            <Card title={searchComponents3()} bodyStyle={{ paddingBottom: 12 }}>
+              <SdlTable
+                loading={tableLoading3}
+                bordered
+                dataSource={tableDatas3}
+                columns={columns3}
+                scroll={{ x: 880, y: 'calc(100vh - 324px)' }}
+                rowClassName={{}}
+                pagination={false}
+              />
+            </Card>
+            <Row style={{ margin: '0 24px' }} justify='end'>
+              {tableTotal3 > 0 && <Pagination
+                size='small'
+                total={tableTotal3}
+                pageSize={pageSize3}
+                current={pageIndex3}
+                showSizeChanger
+                showQuickJumper
+                onChange={handleTableChange3}
+              />}
+            </Row>
           </TabPane>
         </Tabs>
         {/* <Card title={searchComponents()}>

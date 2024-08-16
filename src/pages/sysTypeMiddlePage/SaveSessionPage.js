@@ -32,7 +32,9 @@ class SaveSessionPage extends PureComponent {
       },
       callback: response => {
         let defaultNavigateUrl =
-          response.Datas[0].children && response.Datas[0].children.length
+            response.Datas[0].children?.[0]?.children?.[0]
+            ? response.Datas[0].children[0].children[0].NavigateUrl
+            : response.Datas[0].children && response.Datas[0].children.length
             ? response.Datas[0].children[0].NavigateUrl
             : response.Datas[0].NavigateUrl;
 

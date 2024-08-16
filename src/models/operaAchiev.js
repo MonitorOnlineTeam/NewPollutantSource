@@ -6,7 +6,8 @@ import Model from '@/utils/model';
 import { message } from 'antd';
 import { router } from 'umi';
 import config from '@/config'
-import { downloadFile } from '@/utils/utils';
+import { downloadFile, requestPost } from '@/utils/utils';
+import { API } from '@config/API';
 
 export default Model.extend({
   namespace: 'operaAchiev', 
@@ -35,6 +36,8 @@ export default Model.extend({
     integralDetailedQueryPar:{},
     integralGroupInfoList: [],
     integralGroupInfoTotal: 0,
+    personalPerformanceRateByProjectList: [],
+    personalPerformanceRateByProjectTotal: 0,
   },
   effects: {
     *getPointCoefficientList({ payload,callback }, { call, put, update }) { //获取所有排口监测点系数列表
@@ -270,6 +273,24 @@ export default Model.extend({
       }
     }, 
     
+    *GetPersonalPerformanceRateByProjectList({ payload, callback }, { call, put, update }) { //项目绩效
+      yield update({ tableLoading: true })
+      const result = yield call(requestPost, API.PerformanceApi.GetPersonalPerformanceRateByProjectList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          personalPerformanceRateByProjectList: result.Datas,
+          personalPerformanceRateByProjectTotal: result.Total,
+        })
+      }
+    },
+    *ExportPersonalPerformanceRateByProjectList({ payload }, { call, put, update, select }) { //项目绩效 导出
+      const result = yield call(requestPost, API.PerformanceApi.ExportPersonalPerformanceRateByProjectList, payload);
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      }
+    },
+
   } 
 
 })

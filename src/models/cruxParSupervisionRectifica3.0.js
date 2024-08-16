@@ -66,6 +66,7 @@ export default Model.extend({
     },
     //量程一致性核查整改
     *updZGRangeCheck({ payload, callback }, { call, update, select, put }) {
+      console.log(payload)
       const result = yield call(services.UpdZGRangeCheck, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)

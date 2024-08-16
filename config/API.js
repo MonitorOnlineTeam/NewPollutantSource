@@ -2251,6 +2251,8 @@ export const API = {
     UpdatePersonalPerformanceRateInfo:
       before + '/AchievementsApi/UpdatePersonalPerformanceRateInfo', //更新工作总量绩效
     ImportOperationIntegral: before + '/AchievementsApi/ImportOperationIntegral', //导入积分明细信息
+    GetPersonalPerformanceRateByProjectList: before + '/AchievementsApi/GetPersonalPerformanceRateByProjectList', //项目绩效查询
+    ExportPersonalPerformanceRateByProjectList: before + '/AchievementsApi/ExportPersonalPerformanceRateByProjectList', //项目绩效 导出
     /*工单系数清单*/
     GetWorkOrderTypeCoefficientList:
       before + '/PerformanceCoefficientApi/GetWorkOrderTypeCoefficientList', //获取工单系数信息

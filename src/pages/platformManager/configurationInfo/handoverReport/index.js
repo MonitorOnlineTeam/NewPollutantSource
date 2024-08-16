@@ -147,6 +147,20 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '省区',
+      dataIndex: 'provinceName',
+      key: 'provinceName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
+      title: '省区经理',
+      dataIndex: 'provinceManagerName',
+      key: 'provinceManagerName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '运维合同起始日期',
       dataIndex: 'BeginTime',
       key: 'BeginTime',
@@ -521,7 +535,6 @@ const Index = (props) => {
             bordered
             dataSource={tableDatas}
             columns={editPermis ? columns : columns.filter(item => item.title != '操作')}
-            scroll={{ y: 'calc(100vh - 304px)' }}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,

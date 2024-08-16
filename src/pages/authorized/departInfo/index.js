@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611 jia_anbo@163.com
- * @LastEditTime: 2024-08-07 19:32:53
+ * @LastEditTime: 2024-08-13 17:36:03
  * @Description: 部门管理
  */
 import React, { Component, Fragment } from 'react';
@@ -1271,8 +1271,8 @@ class DepartIndex extends Component {
   };
 
   handleRegionOK = e => {
-    console.log('regioncode=', this.state.checkedKey);
-    console.log('selectedRowKeys=', this.state.selectedRowKeys.key);
+    // console.log('用来回显的参数:', this.state.checkedKey);
+    // console.log('真正的参数:', this.state.postCheckedKeys);
     this.props.dispatch({
       type: 'departinfo/insertregionbyuser',
       payload: {
@@ -1281,7 +1281,7 @@ class DepartIndex extends Component {
         UserGroup_ID: this.state.selectedRowKeys.key,
         callback: res => {
           if (res.IsSuccess) {
-            message.success('成功');
+            message.success('操作成功！');
             this.handleCancel();
           } else {
             message.error(res.Message);

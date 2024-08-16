@@ -196,7 +196,7 @@ class SdlTable extends PureComponent {
         return col.width || 150;
       }
       if (title.indexOf('序号') != -1) {
-        return col.width || 60;
+        return col.width || 54;
       }
       if (
         title.indexOf('风向') != -1 ||

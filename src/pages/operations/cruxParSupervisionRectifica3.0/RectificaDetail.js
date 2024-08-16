@@ -845,11 +845,13 @@ const Index = (props) => {
     }
   }
   const rectificationOk = async () => { //运维人员整改提交 或 核查人员核查提交
+    const values = await rangform.validateFields();
     if (rectificationType == 1) {
       try {
         const values = await rangform.validateFields();
         props.updZGRangeCheck({
           ...values,
+          rangeRemark: rectificationData.RangeRemark,
           // rangeStatus: manualVal?.toString(),
         }, (isSuccess) => {
           if (isSuccess) {
@@ -865,6 +867,7 @@ const Index = (props) => {
         const values = await dataform.validateFields();
         props.updZGCouCheck({
           ...values,
+          couRemrak: rectificationData.CouRemrak,
           // couStatus: manualVal?.toString(),
         }, (isSuccess) => {
           if (isSuccess) {
@@ -878,9 +881,9 @@ const Index = (props) => {
     } else {
       try {
         const values = await parform.validateFields();
-        console.log(values)
         props.updZGParamCheck({
           ...values,
+          remark: rectificationData.Remark,
         }, (isSuccess) => {
           if (isSuccess) {
             setRectificationVisible(false)
@@ -1036,7 +1039,10 @@ const Index = (props) => {
 
 
 
-  const rejectOrPassZGCheckRequest = (type, record, data) => {
+  const rejectOrPassZGCheckRequest = (type, record, data) => {  
+    // case 1:   reamrkData ={ operationRangeRemark: rectificationData.OperationRangeRemark}; break;
+    // case 2:   reamrkData ={ operationDataRemark: rectificationData.OperationDataRemark}; break;
+    // case 3:   reamrkData ={ operationReamrk: rectificationData.OperationReamrk}; break;
     if (type == 1) {
       props.updZGRangeCheck({
         pollutantCode: record.PollutantCode,
@@ -1055,6 +1061,8 @@ const Index = (props) => {
         rangeAutoStatus: record.RangeAutoStatus,
         rangeStatus: record.RangeStatus,   
         special: record.Special, 
+        operationRangeRemark: record.OperationRangeRemark, 
+        rangeRemark: record.RangeRemark, 
         id: record.ID,
         zgid: record.ZGID,
         ...data,
@@ -1077,9 +1085,11 @@ const Index = (props) => {
         couFile: record.CouFileList?.[0]?.FileUuid,
         couAutoStatus: record.CouAutoStatus,
         couStatus : record.CouStatus,
+        couType: record.CouType,
+        operationDataRemark: record.OperationDataRemark, 
+        couRemrak: record.CouRemrak,
         id: record.ID,
         zgid: record.ZGID,
-        couType: record.CouType,
         ...data,
       }, (isSuccess) => {
         if (isSuccess) {
@@ -1101,6 +1111,8 @@ const Index = (props) => {
         traceabilityFile: record.TraceabilityFileList?.[0]?.FileUuid,
         autoUniformity: record.AutoUniformity,
         uniformity: record.Uniformity,
+        operationReamrk: record.OperationReamrk,
+        remark: record.Remark,
         id: record.ID,
         zgid: record.ZGID,
         ...data,
@@ -1156,7 +1168,7 @@ const Index = (props) => {
   }
 
   const passOk = (type, record, status) => { //通过
-    rejectOrPassZGCheckRequest(type, record, { status: status })
+    // rejectOrPassZGCheckRequest(type, record, { status: status })
   }
 
   if (rectificaDetailType == 3) {

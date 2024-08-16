@@ -3179,7 +3179,7 @@ const Index = (props) => {
             <Row >
               <Form.Item label='核查日期' name='time'>
                 {/* <DatePicker allowClear={false} picker="day" /> */}
-                <RangePicker_ format='YYYY-MM-DD' allowClear={false} showTime={false} style={{ marginLeft: 0, width: 407 }} />
+                <RangePicker_ format='YYYY-MM-DD' showTime={false} style={{ marginLeft: 0, width: 407 }} />
               </Form.Item>
               <Form.Item label='核查结果' name='CheckStatus' className='checkSty'>
                 <Select placeholder='请选择' allowClear style={{ marginLeft: 0, width: 200 }}>

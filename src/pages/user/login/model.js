@@ -18,6 +18,7 @@ const Model = {
   effects: {
     *login({ payload, callback }, { call, put, select, take }) {
       // const configInfo = yield select(state => state.global.configInfo)
+      yield put({ type: 'changeLoginLoading', payload: { loginLoading: true } });
       const response = yield call(systemLogin, {
         ...payload,
         MenuId: '0', //子系统ID 固定  污染源在线监控
@@ -32,7 +33,6 @@ const Model = {
           message: response.Message,
         },
       });
-      yield put({ type: 'changeLoginLoading', payload: { loginLoading: true } });
       if (response.IsSuccess) {
         // 后台新框架获取token 正常登录
         const tokenResponse = yield call(getToken, {

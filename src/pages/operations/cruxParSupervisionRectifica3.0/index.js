@@ -401,6 +401,7 @@ const Index = (props) => {
         visible={rectificaDetailVisible}
         title={rectificaDetailType == 1 ? '核查整改' : rectificaDetailType == 2 ? '整改' : '整改详情'}
         footer={null}
+        mask={false}
         wrapClassName='spreadOverModal'
         onCancel={() => { setRectificaDetailVisible(false); rectificaDetailType != 3 && infoData?.Status !== '整改已完成' && onFinish(pageIndex, pageSize); }}
         destroyOnClose

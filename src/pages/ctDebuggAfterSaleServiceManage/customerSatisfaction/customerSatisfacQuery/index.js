@@ -475,8 +475,8 @@ const Index = (props) => {
       const par = queryPar ? { ...queryPar, PageIndex: PageIndex, PageSize: PageSize, } : {
         ...values,
         processingStatus: isHome ? 2 : values.processingStatus,
-        bTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
-        eTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
+        bTime: values.time?.[0] && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+        eTime: values.time?.[1] && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
         pageIndex: PageIndex,
         pageSize: PageSize,
