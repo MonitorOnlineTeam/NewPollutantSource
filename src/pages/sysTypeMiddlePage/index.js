@@ -67,7 +67,7 @@ class index extends PureComponent {
 
   // 切换项目
   UpdateUserProject = projectCode => {
-    dispatch({
+    this.props.dispatch({
       type: 'projectManage/UpdateUserProject',
       payload: {
         projectCode,

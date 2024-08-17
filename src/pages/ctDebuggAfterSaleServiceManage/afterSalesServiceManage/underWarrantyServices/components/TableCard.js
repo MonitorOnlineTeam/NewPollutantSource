@@ -127,8 +127,48 @@ const TableCard = props => {
   const TypeRenderComponents = ({ record }) => {
     return <a onClick={() => typeClick(record)}>{record?.text || record?.text == 0 ? record.text : ''}</a>
   }
-  //
+
+
+
+
   const getColumns = () => {
+    const  transformMergeArray = (arr, key) =>{
+      return arr.reduce((acc, curr) => {
+        // 查找具有相同 key 的现有对象
+        const existingObj = acc.find(obj => obj[key] === curr[key]);
+  
+        if (existingObj) {
+          // 如果找到了相同的属性，将当前对象添加到 children 数组中
+          existingObj.children = existingObj.children || [];
+          existingObj.children.push(curr);
+        } else {
+          // 如果没有找到相同的 key，则创建一个新的对象，并将其添加到结果数组中
+          // 注意这里我们不将当前对象添加到 children 数组中
+          acc.push({
+            ...curr,
+            title: curr[key],
+            children: []
+          });
+        }
+  
+        return acc;
+      }, []);
+    }
+    const transformed  = transformMergeArray(TableList, 'year');
+    let lastTop = 0
+    const rectMap = new Map()
+    transformed.forEach((d, index) => {
+
+      rectMap.set(d.year, {
+        left: 0,
+        right: 1,
+        top: lastTop,
+        bottom: lastTop + (d.children?.length + 1),
+      })
+      lastTop += (d.children?.length + 1)
+    })
+    console.log(rectMap)
+    //
     let columnList = ColumnList.map(item => {
       return {
         title: item.LargeRegion,
@@ -170,24 +210,19 @@ const TableCard = props => {
         ],
       };
     });
+
     return [
-      // {
-      //   title: '年度',
-      //   code: 'year',
-      //   key: 'year',
-      //   width: 80,
-      //   lock: true,
-        // className: styles.bg_white,
-        // getSpanRect(value) {
-        //   return 10
-        // },
-        // features: { autoRowSpan: (aa,bb,row1,row2)=>{
-        //   console.log(aa,bb,row1,row2,111111111111)
-        // }} 
-        // render: (text, record, index) => {
-        //   return { rowSpan: record.count > 0 ? record.count + 1 : record.count };
-        // },
-      // },
+      {
+        title: '年度',
+        code: 'year',
+        key: 'year',
+        width: 80,
+        lock: true,
+        getSpanRect(value) {
+          console.log(value)
+          return rectMap.get(value)
+        },
+      },
       {
         title: '序号',
         code: 'sort',
