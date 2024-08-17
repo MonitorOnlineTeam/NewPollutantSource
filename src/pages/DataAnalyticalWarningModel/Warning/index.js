@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-15 15:14:20
+ * @Last Modified time: 2024-08-16 17:08:20
  * @Description：报警记录
  */
 
@@ -422,7 +422,7 @@ const WarningRecord = props => {
           {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
           <Form.Item label="企业" name="EntCode">
             <EntAtmoList
-              noFilter
+              // noFilter
               style={{ width: 200 }}
               onChange={value => {
                 if (!value) {

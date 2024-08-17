@@ -66,6 +66,11 @@ export default Model.extend({
     pollutantDischargeGapQuery: {},
     modelTypeList: [],
     modelLevelList: [],
+    workTowerForm: {
+      // 工作台form
+      date: [moment().add(-1, 'months'), moment()],
+      warningTypeCode: [],
+    },
   },
   effects: {
     // 获取通用库模型列表
@@ -925,12 +930,23 @@ export default Model.extend({
     },
     // 获取排污单位总览
     *GetPwPointList({ payload, callback }, { call, select, update }) {
-      const result = yield call(
-        requestPost,
-        API.AbnormalIdentifyModel.GetPwPointList,
-        payload,
-      );
+      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetPwPointList, payload);
       result.IsSuccess && callback && callback(result);
+    },
+    // 重置工作台form
+    *onResetWorkTowerForm({ payload }, { call, select, update }) {
+      let state = yield select(state => state.AbnormalIdentifyModel);
+      yield update({
+        workTowerForm: {
+          date: [moment().add(-1, 'months'), moment()],
+          warningTypeCode: [],
+        },
+        workTowerData: {
+          ...state.workTowerData,
+          pageIndex: 1,
+          pageSize: 12,
+        },
+      });
     },
   },
 });

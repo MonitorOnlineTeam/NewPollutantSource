@@ -48,6 +48,7 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   generateVerificationTakeData: AbnormalIdentifyModel.generateVerificationTakeData,
   workTowerData: AbnormalIdentifyModel.workTowerData,
   queryPar: AbnormalIdentifyModel.workTowerQueryPar,
+  workTowerForm: AbnormalIdentifyModel.workTowerForm,
 });
 
 const WorkTower = props => {
@@ -62,6 +63,7 @@ const WorkTower = props => {
     workTowerData: { pageIndex, pageSize, type },
     queryPar,
     modelListLoading,
+    workTowerForm,
   } = props;
   const [pointList, setPointList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
@@ -213,8 +215,43 @@ const WorkTower = props => {
               form={form}
               layout="inline"
               initialValues={{
-                date: [moment().add(-1, 'months'), moment()],
-                warningTypeCode: [],
+                ...workTowerForm,
+              }}
+              onValuesChange={(changedFields, allFields) => {
+                let entCode = allFields.entCode;
+                let dgimn = allFields.dgimn;
+
+                // 行政区联动企业
+                if (changedFields.hasOwnProperty('RegionCode')) {
+                  form.setFieldsValue({ entCode: undefined, dgimn: undefined });
+                  entCode = undefined;
+                  dgimn = undefined;
+                  setPointList([]);
+                }
+
+                // 企业联动排口
+                if (changedFields.hasOwnProperty('entCode')) {
+                  if (!changedFields.entCode) {
+                    form.setFieldsValue({ dgimn: undefined });
+                    setPointList([]);
+                    dgimn = undefined;
+                  } else {
+                    form.setFieldsValue({ dgimn: undefined });
+                    getPointList(changedFields.entCode);
+                  }
+                }
+
+                dispatch({
+                  type: 'AbnormalIdentifyModel/updateState',
+                  payload: {
+                    workTowerForm: {
+                      ...workTowerForm,
+                      ...changedFields,
+                      entCode,
+                      dgimn,
+                    },
+                  },
+                });
               }}
             >
               <Form.Item label="日期" name="date">
@@ -238,10 +275,9 @@ const WorkTower = props => {
                 <RegionList
                   noFilter
                   style={{ width: 140 }}
-                  onChange={value => {
-                    form.setFieldsValue({ entCode: undefined, dgimn: undefined });
-                    setPointList([]);
-                  }}
+                  // onChange={value => {
+                  //   // form.setFieldsValue({ entCode: undefined, dgimn: undefined });
+                  // }}
                 />
               </Form.Item>
               {/* <Spin spinning={!!entListLoading} size="small"> */}
@@ -249,15 +285,15 @@ const WorkTower = props => {
                 <EntAtmoList
                   regionCode={form.getFieldValue('RegionCode')}
                   style={{ width: 200 }}
-                  onChange={value => {
-                    if (!value) {
-                      form.setFieldsValue({ dgimn: undefined });
-                      setPointList([]);
-                    } else {
-                      form.setFieldsValue({ dgimn: undefined });
-                      getPointList(value);
-                    }
-                  }}
+                  // onChange={value => {
+                  //   if (!value) {
+                  //     form.setFieldsValue({ dgimn: undefined });
+                  //     setPointList([]);
+                  //   } else {
+                  //     form.setFieldsValue({ dgimn: undefined });
+                  //     getPointList(value);
+                  //   }
+                  // }}
                   placeholder="请选择"
                 />
               </Form.Item>
@@ -299,8 +335,14 @@ const WorkTower = props => {
                   </Button>
                   <Button
                     onClick={() => {
-                      form.resetFields();
-                      onTableChange(1, 12);
+                      // form.resetFields();
+                      dispatch({
+                        type: 'AbnormalIdentifyModel/onResetWorkTowerForm',
+                        payload: {},
+                      }).then(() => {
+                        form.resetFields();
+                        onTableChange(1, 12);
+                      });
                     }}
                   >
                     重置
