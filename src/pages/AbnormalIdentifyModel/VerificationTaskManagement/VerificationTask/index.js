@@ -239,12 +239,13 @@ const Index = props => {
     if (!CheckStatus) {
       if (isAll) {
         CheckStatus = '1,2,3';
-      } else if (routerType) {
+      } else if (routerType == 2) {
         CheckStatus = '2,3';
       } else {
         CheckStatus = '1,3';
       }
     }
+
     props.dispatch({
       type: 'AbnormalIdentifyModel/GetCheckedList',
       payload: {

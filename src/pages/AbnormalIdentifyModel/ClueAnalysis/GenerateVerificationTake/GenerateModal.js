@@ -143,6 +143,12 @@ const Index = props => {
         width: 200,
         align: 'center',
         ellipsis: true,
+        filters: planDatas.map(item => ({
+          text: item.PlanName,
+          value: item.PlanName,
+        })),
+        filterSearch: true,
+        onFilter: (value, record) => record.PlanName.startsWith(value),
       },
       {
         title: '创建人',
@@ -455,7 +461,8 @@ const Index = props => {
           <Form.Item
             name={`${dataIndex}_${record.PlanItemCode}`}
             style={{ margin: 0 }}
-            rules={[{ required: title === '图片' ? false : true, message: `请输入${title}!` }]}
+            // rules={[{ required: title === '图片' ? false : true, message: `请输入${title}!` }]}
+            rules={[{ required: title === '核查内容' ? true : false, message: `请输入${title}!` }]}
           >
             {inputNode}
           </Form.Item>
@@ -617,6 +624,7 @@ const Index = props => {
             checkResult: 1,
             // checkUserId: locationPar?.operationUser,
             checkUserId: selectedRow?.OpeUserId,
+            isSavePlan: 2,
           }}
         >
           <Row>
@@ -884,12 +892,18 @@ const Index = props => {
                             const editorContent = editor?.root?.innerHTML;
                             const contentVal =
                               editorContent && editorContent.replaceAll(/<p>|[</p>]/g, '').trim();
-                            if (!contentVal || contentVal === 'br') {
-                              return Promise.reject(new Error('请输入核查方案!'));
-                            } else {
-                              modalForm.setFieldsValue({ planContent: editorContent });
-                              return Promise.resolve();
+                            // if (!contentVal || contentVal === 'br') {
+                            //   return Promise.reject(new Error('请输入核查方案!'));
+                            // } else {
+                            //   modalForm.setFieldsValue({ planContent: editorContent });
+                            //   return Promise.resolve();
+                            // }
+                            let planContent = editorContent;
+                            if (contentVal === 'br') {
+                              planContent = '';
                             }
+                            modalForm.setFieldsValue({ planContent: planContent });
+                            return Promise.resolve();
                           },
                         },
                       ]}
@@ -1038,7 +1052,7 @@ const Index = props => {
         className={styles.generateVerificationTakeModal}
         {...props}
         footer={getFooterBtns()}
-        bodyStyle={{height: 'calc(100% - 90px)'}}
+        bodyStyle={{ height: 'calc(100% - 90px)' }}
       >
         {getPageContent(false)}
       </Modal>

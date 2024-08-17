@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-18 10:36:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-14 09:10:49
+ * @Last Modified time: 2024-08-16 15:06:32
  * @Description：模型异常特征 - 多图例折线图
  */
 import React, { useState, useEffect } from 'react';
@@ -20,6 +20,7 @@ const ModelChartMultiple = props => {
   const [DGIMNs, setDGIMNs] = useState([]);
   const [pollutantCodes, setPollutantCodes] = useState([]);
   const [PointNames, setPointNames] = useState([]);
+  const [pollutantNames, setPollutantNames] = useState([]);
   const [date, setDate] = useState([]);
   const [moreModalVisible, setMoreModalVisible] = useState(false);
 
@@ -31,9 +32,10 @@ const ModelChartMultiple = props => {
     const { data, title } = chartData;
 
     // 多Y轴（同一现场借用其他合格监测设备数据，引用错误、虚假的原始信号值 ）
-    let isMultipleYAxis =
-      WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402' ||
-      WarningTypeCode === 'f021147d-e7c6-4c1d-9634-1d814ff9880a';
+    let isMultipleYAxis = true;
+    // let isMultipleYAxis =
+    //   WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402' ||
+    //   WarningTypeCode === 'f021147d-e7c6-4c1d-9634-1d814ff9880a';
 
     let yAxisData = isMultipleYAxis
       ? []
@@ -112,17 +114,20 @@ const ModelChartMultiple = props => {
     let DGIMNs = [],
       pollutantCodes = [],
       date = [],
-      PointNames = [];
+      PointNames = [], pollutantNames = [];
     chartData.data.map(item => {
       DGIMNs.push(item.DGIMN);
       pollutantCodes.push(item.pollutantCode);
       PointNames.push(item.PointName);
+      pollutantNames.push(item.pollutantName);
       date = [item.date[0], item.date.slice(-1)[0]];
     });
-    if (_.uniq(DGIMNs).length > 1) {
-      setDGIMNs(DGIMNs);
+    // if (_.uniq(DGIMNs).length > 1) {
+    if (true) {
+      setDGIMNs(_.uniq(DGIMNs));
       setPollutantCodes(pollutantCodes);
       setPointNames(_.uniq(PointNames));
+      setPollutantNames(_.uniq(pollutantNames));
       setDate(date);
       setMoreModalVisible(true);
       console.log('DGIMNs', _.uniq(DGIMNs));
@@ -134,8 +139,11 @@ const ModelChartMultiple = props => {
   return (
     <>
       <div className={styles.chartBox}>
-        <Tooltip title="点击放大图表" onClick={() => onShowMoreDataModal()}>
-          <div style={{ height: 34, width: '100%', position: 'absolute', zIndex: 1 }}></div>
+        <Tooltip title="点击放大图表">
+          <div
+            style={{ height: 34, width: '100%', position: 'absolute', zIndex: 1 }}
+            onClick={() => onShowMoreDataModal()}
+          ></div>
         </Tooltip>
         {/* {chartData.trend && <span className={styles.trend}>趋势相似度 {chartData.trend}</span>} */}
         <ReactEcharts
@@ -145,14 +153,12 @@ const ModelChartMultiple = props => {
           // onEvents={onEvents}
         />
       </div>
-      {
-        console.log('moreModalVisible', moreModalVisible)
-      }
       {moreModalVisible && (
         <ModelChartMultipleMore
           title={chartData.title}
           visible={moreModalVisible}
           PointNames={PointNames}
+          pollutantNames={pollutantNames}
           WarningTypeCode={WarningTypeCode}
           params={{
             DGIMNs: DGIMNs,

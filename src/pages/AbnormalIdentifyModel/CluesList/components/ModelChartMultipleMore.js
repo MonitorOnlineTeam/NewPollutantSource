@@ -23,6 +23,7 @@ const ModelChartMultipleBig = props => {
     params,
     WarningTypeCode,
     PointNames,
+    pollutantNames,
     loading,
   } = props;
   const { date, DGIMNs, pollutantCodes } = params;
@@ -32,7 +33,6 @@ const ModelChartMultipleBig = props => {
     form.setFieldsValue({ date: [moment(date[0]), moment(date[1])] });
     GetAllTypeDataListForModel2();
   }, [DGIMNs]);
-
   // 获取数据
   const GetAllTypeDataListForModel2 = () => {
     const values = form.getFieldsValue();
@@ -48,10 +48,14 @@ const ModelChartMultipleBig = props => {
         IsSupplyData: false,
       },
       callback: res => {
-        let xAxis = [];
-        let seriesData = DGIMNs.map((item, index) => {
-          xAxis = res[item].map(itm => itm.MonitorTime);
-          return res[item].map(itm => itm[pollutantCodes[index]]);
+        console.log('res', res);
+        let xAxis = res.map(itm => itm.MonitorTime);
+        // let seriesData = DGIMNs.map((item, index) => {
+        //   xAxis = res[item].map(itm => itm.MonitorTime);
+        //   return res[item].map(itm => itm[pollutantCodes[index]]);
+        // });
+        let seriesData = pollutantCodes.map(item => {
+          return res.map(itm => itm[item]);
         });
         setSeriesData(seriesData);
         setxAxisData(xAxis);
@@ -61,9 +65,10 @@ const ModelChartMultipleBig = props => {
 
   const getOption = () => {
     // 多Y轴（同一现场借用其他合格监测设备数据，引用错误、虚假的原始信号值 ）
-    let isMultipleYAxis =
-      WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402' ||
-      WarningTypeCode === 'f021147d-e7c6-4c1d-9634-1d814ff9880a';
+    // let isMultipleYAxis =
+    //   WarningTypeCode === 'ab2bf5ec-3ade-43fc-a720-c8fd92ede402' ||
+    //   WarningTypeCode === 'f021147d-e7c6-4c1d-9634-1d814ff9880a';
+    let isMultipleYAxis = true;
 
     let yAxisData = isMultipleYAxis
       ? []
@@ -79,7 +84,7 @@ const ModelChartMultipleBig = props => {
         };
         yAxisData.push({
           type: 'value',
-          name: PointNames[index],
+          name: pollutantNames[index],
           alignTicks: true,
           nameLocation: 'middle',
           nameGap: 35,
@@ -90,7 +95,7 @@ const ModelChartMultipleBig = props => {
         });
       }
       return {
-        name: PointNames[index],
+        name: pollutantNames[index],
         data: item,
         type: 'line',
         ...yAxisIndex,
