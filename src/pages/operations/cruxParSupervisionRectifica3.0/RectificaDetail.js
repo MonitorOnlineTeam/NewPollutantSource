@@ -1040,9 +1040,6 @@ const Index = (props) => {
 
 
   const rejectOrPassZGCheckRequest = (type, record, data) => {  
-    // case 1:   reamrkData ={ operationRangeRemark: rectificationData.OperationRangeRemark}; break;
-    // case 2:   reamrkData ={ operationDataRemark: rectificationData.OperationDataRemark}; break;
-    // case 3:   reamrkData ={ operationReamrk: rectificationData.OperationReamrk}; break;
     if (type == 1) {
       props.updZGRangeCheck({
         pollutantCode: record.PollutantCode,
@@ -1168,7 +1165,7 @@ const Index = (props) => {
   }
 
   const passOk = (type, record, status) => { //通过
-    // rejectOrPassZGCheckRequest(type, record, { status: status })
+    rejectOrPassZGCheckRequest(type, record, { status: status })
   }
 
   if (rectificaDetailType == 3) {

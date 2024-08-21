@@ -41,6 +41,7 @@ class DataQuery extends Component {
       displayName: '查看数据',
       // rangeDate: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
       format: 'YYYY-MM-DD HH',
+      format2: 'YYYY-MM-DD',
       selectDisplay: false,
       // selectP: '',
       dgimn: '',
@@ -582,7 +583,7 @@ class DataQuery extends Component {
                         style={{ width: 360 }}
                         dateValue={dateValue}
                         dataType={dataType}
-                        format={this.state.format}
+                        format={dataType=='realtime' || dataType=='minute'? this.state.format : this.state.format2}
                         onRef={this.onRef1}
                         isVerification={isVerification !== undefined ? isVerification : true}
                         mode={mode}
@@ -593,7 +594,7 @@ class DataQuery extends Component {
                           this.dateCallbackDataQuery(dates, dataType)
                         }
                         allowClear={false}
-                        showTime={{ format: 'HH' }}
+                        showTime={dataType=='realtime' || dataType=='minute' && { format: 'HH' }}
                       />
                       //     :
                       // <RangePicker_ style={{ width: 360 }} dateValue={dateValue}

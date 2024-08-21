@@ -9,7 +9,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import {
-  Select
+  Select,
+  Spin
 } from 'antd'
 import { connect } from 'dva';
 const Option = Select.Option;
@@ -20,7 +21,9 @@ const Option = Select.Option;
 class SearchSelect extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading:false
+    };
     this._SELF_ = {
       defaultPlaceholder: "请选择",
     }
@@ -30,10 +33,16 @@ class SearchSelect extends Component {
     const { dispatch, configId, data } = this.props;
     console.log("configId=", configId)
     if (configId) {
+      this.setState({loading:true})
+      // this.props.loadingChange && this.props.loadingChange(true)
       !data.length && dispatch({
         type: 'autoForm/getConfigIdList',
         payload: {
           configId: configId
+        },
+        callback:()=>{
+          this.setState({loading:false})
+          this.props.loadingChange && this.props.loadingChange(false) //loading状态传给父组件
         }
       })
     }
@@ -42,6 +51,8 @@ class SearchSelect extends Component {
     const { configId, configIdList, itemValue, itemName, data } = this.props;
     const dataSource = data.length ? data : (configIdList[configId] || []);
     return (
+      this.state.loading? <Spin size='small' spinning={this.state.loading}><Select placeholder='请选择' {...this.props}/></Spin>
+    :
       <Select
         allowClear
         showSearch

@@ -21,6 +21,8 @@ import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import LargeRegionList from '@/pages/ctDebuggAfterSaleServiceManage/components/largeRegionList';
+import { virtualTransMergeMap } from '@/pages/ctDebuggAfterSaleServiceManage/utils/utils';
+import VirtualTable from '@/components/VirtualTable';
 
 const dvaPropsData = ({ loading, oneResolutRate }) => ({
   disposableRateList: oneResolutRate.disposableRateList,
@@ -130,7 +132,7 @@ const Index = props => {
         children: [ 
           {
             title: '总次数',
-            dataIndex: `count${item.ID}`,
+            code: `count${item.ID}`,
             key: `count${item.ID}`,
             width: 120,
             align: 'center',
@@ -140,7 +142,7 @@ const Index = props => {
           },
           {
             title: '已解决次数',
-            dataIndex: `solveCount${item.ID}`,
+            code: `solveCount${item.ID}`,
             key: `solveCount${item.ID}`,
             width: 120,
             align: 'center',
@@ -150,7 +152,7 @@ const Index = props => {
           },
           {
             title: '未解决次数',
-            dataIndex: `notSolveCount${item.ID}`,
+            code: `notSolveCount${item.ID}`,
             key: `notSolveCount${item.ID}`,
             width: 120,
             align: 'center',
@@ -160,7 +162,7 @@ const Index = props => {
           },
           {
             title: '一次解决率',
-            dataIndex: `rate${item.ID}`,
+            code: `rate${item.ID}`,
             key: `rate${item.ID}`,
             width: 120,
             align: 'center',
@@ -168,89 +170,100 @@ const Index = props => {
         ],
       };
     }) : [];
+    const rectMap = virtualTransMergeMap(disposableRateList?.TableList, 'year');
     return [
       {
         title: '年度',
-        dataIndex: 'year',
+        code: 'year',
         key: 'year',
         width: 80,
-        fixed: 'left',
-        className: styles.bg_white,
-        render: (text, record, index) => {
-          return {
-            children: text,
-            props: { rowSpan: record.count > 0 ? record.count + 1 : record.count },
-          };
+        lock: true,
+        getSpanRect(value) {
+          return rectMap.get(value)
         },
+        // fixed: 'left',
+        // className: styles.bg_white,
+        // render: (text, record, index) => {
+        //   return {
+        //     children: text,
+        //     props: { rowSpan: record.count > 0 ? record.count + 1 : record.count },
+        //   };
+        // },
       },
       {
         title: '序号',
-        dataIndex: 'sort',
+        code: 'sort',
         key: 'sort',
-        fixed: 'left',
-        render: (text, record, index) => {
-          return {
-            children: text,
-            props: { colSpan: text === '总计' ? 2 : 1 },
-          };
-        },
+        lock: true,
+        getCellProps: (text, record, index) => ({colSpan: text === '总计' ? 0 : 1 })
+        // fixed: 'left',
+        // render: (text, record, index) => {
+        //   return {
+        //     children: text,
+        //     props: { colSpan: text === '总计' ? 2 : 1 },
+        //   };
+        // },
       },
       {
         title: '服务产品类别',
-        dataIndex: 'reasonName',
+        code: 'reasonName',
         key: 'reasonName',
         width: 200,
-        fixed: 'left',
-        render: (text, record, index) => {
-          return {
-            children: text,
-            props: { colSpan: text === '总计' ? 0 : 1 },
-          };
-        },
+        lock: true,
+        getCellProps: (text, record, index) => ({colSpan: text === '总计' ? 0 : 1 })
+        // fixed: 'left',
+        // render: (text, record, index) => {
+        //   return {
+        //     children: text,
+        //     props: { colSpan: text === '总计' ? 0 : 1 },
+        //   };
+        // },
       },
       {
         title: '总计',
+        lock: true,
+        // fixed: 'left',
         children: [
           {
             title: '总次数',
-            dataIndex: 'allCount',
+            code: 'allCount',
             key: 'allCount',
             width: 120,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
             render: (text, record) => {
               return <TypeRenderComponents record={{text:text,solveStatus:'',  ...record }}  />
             }
           },
           {
             title: '已解决次数',
-            dataIndex: 'allSolveCount',
+            code: 'allSolveCount',
             key: 'allSolveCount',
             width: 120,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
             render: (text, record) => {
               return <TypeRenderComponents record={{text:text,solveStatus:1, ...record}}  />
             }
           },
           {
             title: '未解决次数',
-            dataIndex: 'allNotSolveCount',
+            code: 'allNotSolveCount',
             key: 'allNotSolveCount',
             width: 120,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
             render: (text, record) => {
               return <TypeRenderComponents record={{text:text,solveStatus:0, ...record}}  />
             }
           },
           {
             title: '一次解决率',
-            dataIndex: 'allRate',
+            code: 'allRate',
             key: 'allRate',
             width: 120,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
           },
         ],
       },
@@ -385,14 +398,15 @@ const Index = props => {
       bodyStyle={{ paddingBottom: 10 }}
       loading={loading}
     >
-      <SdlTable
+      <VirtualTable
         dataSource={disposableRateList?.TableList || []}
         columns={getColumns()}
-        align="center"
-        scroll={{
-          y: 500,
-        }}
-        pagination={false}
+        className={'first_white'}
+        // align="center"
+        // scroll={{
+        //   y: 500,
+        // }}
+        // pagination={false}
       />
 
       <Modal

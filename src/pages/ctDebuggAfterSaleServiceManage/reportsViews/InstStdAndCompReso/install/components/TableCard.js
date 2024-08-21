@@ -13,6 +13,8 @@ import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import InstallEquipment from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment';
+import { virtualTransMergeMap } from '@/pages/ctDebuggAfterSaleServiceManage/utils/utils';
+import VirtualTable from '@/components/VirtualTable';
 
 const dvaPropsData = ({ loading, reportsAndViews }) => ({
   installPageData: reportsAndViews.installPageData,
@@ -64,7 +66,7 @@ const TableCard = props => {
         children: [
           {
             title: '优秀',
-            dataIndex: `Excellent${item.ID}`,
+            code: `Excellent${item.ID}`,
             key: `Excellent${item.ID}`,
             width: 100,
             align: 'center',
@@ -74,7 +76,7 @@ const TableCard = props => {
           },
           {
             title: '合格',
-            dataIndex: `Qualified${item.ID}`,
+            code: `Qualified${item.ID}`,
             key: `Qualified${item.ID}`,
             width: 100,
             align: 'center',
@@ -84,7 +86,7 @@ const TableCard = props => {
           },
           {
             title: '不合格',
-            dataIndex: `Unqualified${item.ID}`,
+            code: `Unqualified${item.ID}`,
             key: `Unqualified${item.ID}`,
             width: 100,
             align: 'center',
@@ -94,7 +96,7 @@ const TableCard = props => {
           },
           {
             title: '无照片',
-            dataIndex: `NoPhotos${item.ID}`,
+            code: `NoPhotos${item.ID}`,
             key: `NoPhotos${item.ID}`,
             width: 100,
             align: 'center',
@@ -114,7 +116,7 @@ const TableCard = props => {
           },
           {
             title: '达标率',
-            dataIndex: `Rate${item.ID}`,
+            code: `Rate${item.ID}`,
             key: `Rate${item.ID}`,
             width: 100,
             align: 'center',
@@ -122,107 +124,119 @@ const TableCard = props => {
         ],
       };
     });
+
+    const rectMap = virtualTransMergeMap(TableList, 'year');
+
     return [
       {
         title: '年度',
-        dataIndex: 'year',
+        code: 'year',
         key: 'year',
         width: 80,
-        fixed: 'left',
-        className: styles.bg_white,
-        render: (text, record, index) => {
-          return {
-            children: text,
-            props: { rowSpan: record.count > 0 ? record.count + 1 : record.count },
-          };
+        lock: true,
+        getSpanRect(value) {
+          return rectMap.get(value)
         },
+        // fixed: 'left',
+        // className: styles.bg_white,
+        // render: (text, record, index) => {
+        //   return {
+        //     children: text,
+        //     props: { rowSpan: record.count > 0 ? record.count + 1 : record.count },
+        //   };
+        // },
       },
       {
         title: '序号',
-        dataIndex: 'sort',
+        code: 'sort',
         key: 'sort',
-        fixed: 'left',
-        render: (text, record, index) => {
-          return {
-            children: text,
-            props: { colSpan: text === '总计' ? 2 : 1 },
-          };
-        },
+        lock: true,
+        getCellProps: (text, record, index) => ({colSpan: text === '总计' ? 2 : 1 }),
+        // fixed: 'left',
+        // render: (text, record, index) => {
+        //   return {
+        //     children: text,
+        //     props: { colSpan: text === '总计' ? 2 : 1 },
+        //   };
+        // },
       },
       {
         title: '安装设备型号',
-        dataIndex: 'CategoryName',
+        code: 'CategoryName',
         key: 'CategoryName',
         width: 200,
-        fixed: 'left',
-        render: (text, record, index) => {
-          return {
-            children: text,
-            props: { colSpan: text === '总计' ? 0 : 1 },
-          };
-        },
+        lock: true,
+        getCellProps: (text, record, index) => ({colSpan: text === '总计' ? 0 : 1 }),
+        // fixed: 'left',
+        // render: (text, record, index) => {
+        //   return {
+        //     children: text,
+        //     props: { colSpan: text === '总计' ? 0 : 1 },
+        //   };
+        // },
       },
       {
         title: '总计（安装套数）',
+        lock:true,
         children: [
           {
             title: '优秀',
-            dataIndex: 'Excellent',
+            code: 'Excellent',
             key: 'Excellent',
             width: 100,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
             render:(text,record)=>{
               return <TypeRenderComponents data={{auditResults:1,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
             }
           },
           {
             title: '合格',
-            dataIndex: 'Qualified',
+            code: 'Qualified',
             key: 'Qualified',
             width: 100,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
             render:(text,record)=>{
               return <TypeRenderComponents data={{auditResults:2,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
             }
           },
           {
             title: '不合格',
-            dataIndex: 'Unqualified',
+            code: 'Unqualified',
             key: 'Unqualified',
             width: 100,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
             render:(text,record)=>{
               return <TypeRenderComponents data={{auditResults:3,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
             }
           },
           {
             title: '无照片',
-            dataIndex: 'NoPhotos',
+            code: 'NoPhotos',
             key: 'NoPhotos',
             width: 100,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
             render:(text,record)=>{
               return <TypeRenderComponents data={{auditResults:4,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
             }
           },
           {
             title: '/',
-            dataIndex: `NoNeed`,
+            code: `NoNeed`,
             key: `NoNeed`,
             width: 100,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
             render:(text,record)=>{
               return <TypeRenderComponents data={{auditResults:5,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
             }
           },
           {
             title: '达标率',
-            dataIndex: `Rate`,
+            code: `Rate`,
             key: `Rate`,
             width: 100,
             fixed: 'left',
@@ -278,14 +292,15 @@ const TableCard = props => {
       bodyStyle={{ paddingBottom: 10 }}
       loading={loading}
     >
-      <SdlTable
+      <VirtualTable
         dataSource={TableList}
         columns={getColumns()}
-        align="center"
-        scroll={{
-          y: 500,
-        }}
-        pagination={false}
+        className={'first_white'}
+        // align="center"
+        // scroll={{
+        //   y: 500,
+        // }}
+        // pagination={false}
       />
       {isModalOpen && (
         <Modal

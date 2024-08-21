@@ -7,6 +7,7 @@ import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { DetailIcon } from '@/utils/icon';
+import { virtualTransMergeMap } from '@/pages/ctDebuggAfterSaleServiceManage/utils/utils';
 import VirtualTable from '@/components/VirtualTable';
 const dvaPropsData = ({ loading, reportsAndViews, common }) => ({
   underWarrantyServicesData: reportsAndViews.underWarrantyServicesData,
@@ -129,46 +130,15 @@ const TableCard = props => {
   }
 
 
-
+ const getCellPropsFun = (index,colSpan) =>{
+  return {
+    ...colSpan,  
+    // style: { background: index % 2 != 0 && '#f0f2f5' }
+   };
+ }
 
   const getColumns = () => {
-    const  transformMergeArray = (arr, key) =>{
-      return arr.reduce((acc, curr) => {
-        // 查找具有相同 key 的现有对象
-        const existingObj = acc.find(obj => obj[key] === curr[key]);
-  
-        if (existingObj) {
-          // 如果找到了相同的属性，将当前对象添加到 children 数组中
-          existingObj.children = existingObj.children || [];
-          existingObj.children.push(curr);
-        } else {
-          // 如果没有找到相同的 key，则创建一个新的对象，并将其添加到结果数组中
-          // 注意这里我们不将当前对象添加到 children 数组中
-          acc.push({
-            ...curr,
-            title: curr[key],
-            children: []
-          });
-        }
-  
-        return acc;
-      }, []);
-    }
-    const transformed  = transformMergeArray(TableList, 'year');
-    let lastTop = 0
-    const rectMap = new Map()
-    transformed.forEach((d, index) => {
-
-      rectMap.set(d.year, {
-        left: 0,
-        right: 1,
-        top: lastTop,
-        bottom: lastTop + (d.children?.length + 1),
-      })
-      lastTop += (d.children?.length + 1)
-    })
-    console.log(rectMap)
-    //
+    const rectMap = virtualTransMergeMap(TableList, 'year');
     let columnList = ColumnList.map(item => {
       return {
         title: item.LargeRegion,
@@ -179,6 +149,7 @@ const TableCard = props => {
             key: `Num${item.ID}`,
             width: 60,
             align: 'center',
+            getCellProps: (text, record, index) => getCellPropsFun(index),
             render: (text, record) => {
               return <TypeRenderComponents record={{ text: text, serviceAreaCode: item.ID, ...record }} />
             }
@@ -218,10 +189,17 @@ const TableCard = props => {
         key: 'year',
         width: 80,
         lock: true,
+        // fixed: 'left',
         getSpanRect(value) {
-          console.log(value)
           return rectMap.get(value)
         },
+        // className: styles.bg_white,
+        // render: (text, record, index) => {
+        //   return {
+        //     children: text,
+        //     props: { rowSpan: record.count > 0 ? record.count + 1 : record.count },
+        //   };
+        // },
       },
       {
         title: '序号',
@@ -229,9 +207,8 @@ const TableCard = props => {
         key: 'sort',
         width: 54,
         lock: true,
-        getCellProps: (text, record, index) => {
-          return { colSpan: text === '总计' ? 2 : 1 };
-        },
+        // fixed: 'left',
+        getCellProps: (text, record, index) => getCellPropsFun(index,{colSpan: text === '总计' ? 2 : 1,})
         // render: (text, record, index) => {
         //   return {
         //     children: text,
@@ -245,9 +222,8 @@ const TableCard = props => {
         key: 'ReasonName',
         width: 200,
         lock: true,
-        getCellProps: (text, record, index) => {
-          return { colSpan: text === '总计' ? 0 : 1 };
-        },
+        // fixed: 'left',
+        getCellProps: (text, record, index) => getCellPropsFun(index,{colSpan: text === '总计' ? 0 : 1,})
         // render: (text, record, index) => {
         //   return {
         //     children: text,
@@ -265,7 +241,8 @@ const TableCard = props => {
             key: 'SumNum',
             width: 60,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
+            // getCellProps: (text, record, index) => getCellPropsFun(index),
             render: (text, record) => {
               return <TypeRenderComponents record={{ text: text, ...record }} />
             }
@@ -276,7 +253,8 @@ const TableCard = props => {
             key: 'SumNumRate',
             width: 90,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
+            // getCellProps: (text, record, index) => getCellPropsFun(index),
           },
           {
             title: '时长',
@@ -284,7 +262,8 @@ const TableCard = props => {
             key: 'SumTimes',
             width: 60,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
+            // getCellProps: (text, record, index) => getCellPropsFun(index),
             render: (text, record) => {
               return <TypeRenderComponents record={{ text: text, ...record }} />
             }
@@ -295,7 +274,8 @@ const TableCard = props => {
             key: 'SumTimeRate',
             width: 90,
             align: 'center',
-            fixed: 'left',
+            // fixed: 'left',
+            // getCellProps: (text, record, index) => getCellPropsFun(index),
           },
         ],
       },
@@ -758,6 +738,7 @@ const TableCard = props => {
       <VirtualTable
         dataSource={TableList}
         columns={getColumns()}
+        className={'first_white'}
       />
       <Modal
         title={`${moment(date).format('YYYY年')}质保内服务统计（${

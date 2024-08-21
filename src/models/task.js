@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-08-22 09:39:19
- * @LastEditors: lzp
- * @LastEditTime: 2019-09-18 11:12:33
+ * @LastEditors: outman0611 jia_anbo@163.com
+ * @LastEditTime: 2024-08-21 17:41:31
  * @Description: 任务详情、运维单详情
  */
 // 任务详情、运维单详情
@@ -402,7 +402,7 @@ export default Model.extend({
             payload,
         }, { call, update, select }) {
             const { gettasklistqueryparams } = yield select(_ => _.task);
-            const result = yield call(GetOperationTaskList, gettasklistqueryparams);
+            const result = yield call(GetOperationTaskList, {...gettasklistqueryparams});
             if (result.IsSuccess) {
                 yield update({
                     gettasklistqueryparams: {

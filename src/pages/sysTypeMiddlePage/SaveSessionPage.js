@@ -1,3 +1,11 @@
+/*
+ * @Author: outman0611 jia_anbo@163.com
+ * @Date: 2024-08-06 09:36:37
+ * @LastEditors: outman0611 jia_anbo@163.com
+ * @LastEditTime: 2024-08-21 09:44:37
+ * @FilePath: \merged_master\src\pages\sysTypeMiddlePage\SaveSessionPage.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import React, { PureComponent } from 'react';
 import PageLoading from '@/components/PageLoading';
 import { connect } from 'dva';
@@ -65,6 +73,7 @@ class SaveSessionPage extends PureComponent {
             return meunArr;
           };
           const meunList = meunData(response);
+          console.log(response)
           sessionStorage.setItem('menuDatas', meunList?.length > 0 ? JSON.stringify(meunList) : '');
           sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl)
           router.push(defaultNavigateUrl)

@@ -1,0 +1,51 @@
+.virtualTableWrapper{
+    --line-height: 1.5715;
+    --font-size: 13px;
+    --row-height: 32px;
+    --header-row-height: 36px;
+    --cell-padding: 10px 8px;
+
+        
+    --cell-border-vertical: var(--cell-border);
+    // --cell-border-vertical: 0;
+    // --cell-border-horizontal:0;
+    --header-cell-border-vertical: var(--cell-border);
+    --lock-shadow: rgba(0, 0, 0, 0.2) 0 0 10px 0px;
+    --border-color: #f0f0f0;
+    --color: rgba(0, 0, 0, 0.85);
+    // --bgcolor: transparent;
+    --hover-bgcolor: #e6f7ff;
+    --highlight-bgcolor: #fafafa;
+    --header-color: rgba(0, 0, 0, 0.85);
+    --header-bgcolor: #fafafa;
+    --header-hover-bgcolor: var(--table-th-bg, #ebecf0);
+    --header-highlight-bgcolor: #f5f5f5;
+    --lock-shadow:  10px 0 8px -8px rgba(0,0,0,.28);
+    
+    td {
+      text-align: center;
+      transition: background 0.3s;
+    }
+  
+    th {
+      text-align: center;
+      font-weight: 500;
+    }
+
+    // tr:nth-child(even){
+    //     & {
+    //         td{
+    //             background-color: var(--table-td-gray, #f0f2f5);
+    //       }
+    //     }
+    //  }  
+
+}
+.first_white  :global {
+    tbody{
+      td.first{
+       background-color: #fff !important;
+      }
+    }
+  }
+

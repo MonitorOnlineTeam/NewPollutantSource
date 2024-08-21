@@ -88,6 +88,7 @@ class TaskRecord extends Component {
       forwardRemark: null,
       rejectPermis: false,
       forwardPermis: false,
+      taskTypeListLoading: true
     };
     this._SELF_ = {
       configId: 'TaskRecord',
@@ -123,6 +124,11 @@ class TaskRecord extends Component {
         this.LoadData();
       })
     }
+    // dispatch({
+    //   type: 'operations/getOperationCompanyList',
+    //   payload: {},
+    // });
+
   }
   componentDidUpdate(prevProps, prevState) {
     if (this.props.match?.params?.type !== prevProps.match?.params?.type) {
@@ -132,21 +138,32 @@ class TaskRecord extends Component {
     if (this.props.DGIMN !== prevProps.DGIMN) {
       this.getVideoList();
     }
+
+    if (this.props.match?.params?.type !== prevProps.match?.params?.type || this.state.taskTypeListLoading !== prevState.taskTypeListLoading) {
+      if (!this.state.taskTypeListLoading) {
+        const taskTypeList = this.props.match?.params?.type?.split('=')?.[1]?.split(',')
+        this.props.form.setFieldsValue({
+          TaskTypeList: taskTypeList || undefined,
+        })
+      }
+
+    }
+
   }
 
-  getPar = () =>{
-    const par = this.props.match?.params?.type.split('=')
-      this.setState({
-        expand: true
-      }, () => {
-        if(par[0] && par[1]){
-         if (par[0] === 'taskform') {
+  getPar = () => {
+    const par = this.props.match?.params?.type?.split('=')
+    this.setState({
+      expand: true
+    }, () => {
+      if (par[0] && par[1]) {
+        if (par[0] === 'taskform') {
           this.LoadData({ TaskFrom: par[1] });
-         }else{
+        } else {
           this.LoadData({ TaskTypeList: par[1].split(',') });
         }
       }
-      })
+    })
   }
 
   /** 时间控件回调 */
@@ -222,7 +239,7 @@ class TaskRecord extends Component {
           TaskStatusList: baseReportSearchForm.TaskStatusList != undefined ? baseReportSearchForm.TaskStatusList : '',
           OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
           TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
-          TaskTypeList: baseReportSearchForm.TaskTypeList != undefined ? baseReportSearchForm.TaskTypeList  : '',
+          TaskTypeList: baseReportSearchForm.TaskTypeList != undefined ? baseReportSearchForm.TaskTypeList : '',
           ApproveStatus: baseReportSearchForm.ApproveStatus != undefined ? baseReportSearchForm.ApproveStatus : '',//审批状态
           CompleteTime: baseReportSearchForm.CompleteTime,
           CreateTime: baseReportSearchForm.CreateTime,
@@ -266,7 +283,7 @@ class TaskRecord extends Component {
           pageSize: 20,
           total: 0,
           DGIMN: isHomeModal ? DGIMN : '',
-          pollutantType:this.props.pollutantType,
+          pollutantType: this.props.pollutantType,
           ...par,
         },
       },
@@ -275,18 +292,13 @@ class TaskRecord extends Component {
       CompleteTime: completeTime,
       CreateTime: isWorkExecue ? '' : [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
       TaskFrom: par?.TaskFrom || undefined,
-      TaskTypeList: par?.TaskTypeList || undefined,
+      // TaskTypeList:  par?.TaskTypeList || undefined,
     })
     dispatch({ type: `abnormalWorkStatistics/updateState`, payload: { entAbnormalNumVisible: false, }, })
 
     dispatch({
       type: 'task/GetOperationTaskList',
     });
-    dispatch({
-      type: 'operations/getOperationCompanyList',
-      payload: {},
-    });
-
   }
 
   /** 分页 */
@@ -307,7 +319,7 @@ class TaskRecord extends Component {
           TaskStatusList: baseReportSearchForm.TaskStatusList != undefined ? baseReportSearchForm.TaskStatusList : '',
           OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
           TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
-          TaskTypeList: baseReportSearchForm.TaskTypeList != undefined ? baseReportSearchForm.TaskTypeList  : '',
+          TaskTypeList: baseReportSearchForm.TaskTypeList != undefined ? baseReportSearchForm.TaskTypeList : '',
           CompleteTime: baseReportSearchForm.CompleteTime,
           CreateTime: baseReportSearchForm.CreateTime,
           pageIndex,
@@ -338,7 +350,7 @@ class TaskRecord extends Component {
           TaskStatusList: baseReportSearchForm.TaskStatusList != undefined ? baseReportSearchForm.TaskStatusList : '',
           OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
           TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
-          TaskTypeList: baseReportSearchForm.TaskTypeList != undefined ? baseReportSearchForm.TaskTypeList  : '',
+          TaskTypeList: baseReportSearchForm.TaskTypeList != undefined ? baseReportSearchForm.TaskTypeList : '',
           CompleteTime: baseReportSearchForm.CompleteTime,
           CreateTime: baseReportSearchForm.CreateTime,
           EntCode: baseReportSearchForm.EntCode,
@@ -963,15 +975,17 @@ class TaskRecord extends Component {
               </Col>
               <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                 <FormItem {...formLayout} label="任务类型" style={{ width: '100%' }}>
-                  {getFieldDecorator(this.props.match?.params?.type?  'TaskTypeList' : 'TaskType', {
-                    initialValue:  this.props.match?.params?.type?  gettasklistqueryparams.TaskTypeList || undefined : gettasklistqueryparams.TaskType || undefined,
+                  {getFieldDecorator(this.props.match?.params?.type ? 'TaskTypeList' : 'TaskType', {
+                    initialValue: this.props.match?.params?.type ? (!this.state.taskTypeListLoading && gettasklistqueryparams.TaskTypeList || undefined) : gettasklistqueryparams.TaskType || undefined,
                   })(
                     <SearchSelect
-                      mode={this.props.match?.params?.type? 'multiple' : '-'}
+                      mode={this.props.match?.params?.type ? 'multiple' : '-'}
                       style={{ width: '100%' }}
                       configId="RecordTypes"
                       itemName="dbo.T_Cod_RecordTypes.PollutantTypeName"
                       itemValue="dbo.T_Cod_RecordTypes.ID"
+                      disabled
+                      loadingChange={(status) => { this.setState({ taskTypeListLoading: status }) }}
                     />,
                   )}
                 </FormItem>
@@ -1048,7 +1062,7 @@ class TaskRecord extends Component {
             }}
             columns={columns}
             // scroll={{ y: isHomeModal? this.props.clientHeight - 480 :null }}
-            scroll={this.props.isWorkExecue? {y: this.state.expand ? "calc(100vh - 408px)" : "calc(100vh - 312px)"  } : { y: this.state.expand ? "calc(100vh - 434px)" : this.props.tableHeight || undefined }}
+            scroll={this.props.isWorkExecue ? { y: this.state.expand ? "calc(100vh - 408px)" : "calc(100vh - 312px)" } : { y: this.state.expand ? "calc(100vh - 434px)" : this.props.tableHeight || undefined }}
           />
         </Card>
         <Modal
