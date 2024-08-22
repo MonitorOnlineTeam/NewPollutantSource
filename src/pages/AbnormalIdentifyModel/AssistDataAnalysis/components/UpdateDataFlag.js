@@ -24,7 +24,27 @@ const UpdateDataFlag = props => {
       callback: res => {
         setStepsList(res);
         let currentIndex = res.findIndex(item => item.StatusName === '');
-        setCurrent(currentIndex);
+        setCurrent(currentIndex > -1 ? currentIndex : 0);
+      },
+    });
+  };
+
+  // 获取核实详情
+  const GetCheckedView = (id) => {
+    dispatch({
+      type: 'AbnormalIdentifyModel/GetCheckedView',
+      payload: { id, type: 1 },
+    });
+  };
+
+  // 更新线索列表标识
+  const updateCluesListTag = () => {
+    dispatch({
+      type: 'AbnormalIdentifyModel/updateState',
+      payload: {
+        cluesListTag: Math.random()
+          .toString(36)
+          .slice(-6),
       },
     });
   };
@@ -65,9 +85,11 @@ const UpdateDataFlag = props => {
                     isShowModal={true}
                     selectedRowKeys={item.warningGuidList}
                     selectedRow={pointInfo}
-                    onFinish={() => {
+                    onFinish={(id) => {
                       getRealWarningList();
-                      message.success('操作成功！');
+                      GetCheckedView(id);  // 刷新核实信息
+                      updateCluesListTag(); // 刷新线索列表标识
+                      // message.success('操作成功！');
                     }}
                   />
                 )}

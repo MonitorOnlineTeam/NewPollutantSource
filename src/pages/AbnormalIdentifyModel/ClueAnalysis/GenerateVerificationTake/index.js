@@ -1089,7 +1089,7 @@ const Index = props => {
               setCluesDetailsProps();
             }}
             bodyStyle={{
-              height: 'calc(100vh - 63px)',
+              height: 'calc(100vh - 40px)',
               overflowY: 'auto',
               backgroundColor: '#f0f2f5',
               padding: 12,

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-18 10:36:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-08-16 15:06:32
+ * @Last Modified time: 2024-08-22 14:58:33
  * @Description：模型异常特征 - 多图例折线图
  */
 import React, { useState, useEffect } from 'react';
@@ -42,20 +42,23 @@ const ModelChartMultiple = props => {
       : {
           type: 'value',
         };
-
     let seriesData = data.map((item, index) => {
       let yAxisIndex = {};
       if (isMultipleYAxis) {
         yAxisIndex = {
           yAxisIndex: index,
         };
+
         yAxisData.push({
           type: 'value',
           name: item.PointName || item.pollutantName,
           nameLocation: 'middle',
           nameGap: 35,
-          alignTicks: true,
+          // alignTicks: true,
           // nameLocation: 'end',
+          splitLine: {
+            show: false,
+          },
           axisLine: {
             show: true,
           },
@@ -97,8 +100,9 @@ const ModelChartMultiple = props => {
         type: 'category',
         data: xAxisData,
         splitLine: {
-          show: true,
+          show: false,
         },
+        
       },
       yAxis: yAxisData,
       series: seriesData,
@@ -145,7 +149,7 @@ const ModelChartMultiple = props => {
             onClick={() => onShowMoreDataModal()}
           ></div>
         </Tooltip>
-        {/* {chartData.trend && <span className={styles.trend}>趋势相似度 {chartData.trend}</span>} */}
+        {chartData.trend && <span className={styles.trend}>趋势相似度 {chartData.trend}</span>}
         <ReactEcharts
           option={getOption()}
           lazyUpdate

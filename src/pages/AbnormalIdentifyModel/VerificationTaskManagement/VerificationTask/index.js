@@ -314,9 +314,9 @@ const Index = props => {
   return (
     <div className={styles.verificationTakeWrapper}>
       <BreadcrumbWrapper>
-        <Card style={{ paddingBottom: 24 }}>
+        <Card size="small">
           <Form
-            name="basic"
+            name="searchForm"
             form={form}
             layout="inline"
             initialValues={{
@@ -439,7 +439,7 @@ const Index = props => {
             columns={getColumns()}
             dataSource={dataSource}
             loading={queryLoading}
-            scroll={{ y: isAll ? 'calc(100vh - 326px)' : 'calc(100vh - 410px)' }}
+            scroll={{ y: isAll ? 'calc(100vh - 330px)' : 'calc(100vh - 410px)' }}
             pagination={{
               showSizeChanger: true,
               showQuickJumper: true,

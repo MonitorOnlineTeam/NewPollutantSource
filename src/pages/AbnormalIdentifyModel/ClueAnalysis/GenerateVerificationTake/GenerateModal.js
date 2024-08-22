@@ -28,25 +28,17 @@ import {
   Col,
 } from 'antd';
 import styles from '../../styles.less';
-import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import SdlTable from '@/components/SdlTable';
-import moment from 'moment';
-import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import RegionList from '@/components/RegionList';
-import EntAtmoList from '@/components/EntAtmoList';
-import { DetailIcon } from '@/utils/icon';
-import { router } from 'umi';
+import QuestionTooltip from '@/components/QuestionTooltip';
 import { PlusOutlined, RollbackOutlined } from '@ant-design/icons';
 import cuid from 'cuid';
 import Cookie from 'js-cookie';
-import { ModelNumberIdsDatas, ModalNameConversion } from '../../CONST';
 import { Resizable, ResizableBox } from 'react-resizable';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import { API } from '@config/API';
 import { cookieName, uploadPrefix } from '@/config';
 import ImageView from '@/components/ImageView';
-import CluesDetails from '@/pages/AbnormalIdentifyModel/CluesList/CluesDetails.js';
+import moment from 'moment';
 const { Panel } = Collapse;
 // 自定义文字大小
 let fontSize = ['12px', '14px', '16px', '18px', '20px', '24px', '36px'];
@@ -353,6 +345,17 @@ const Index = props => {
           return;
         }
       }
+
+      // 处理暂定发出线索时间
+      let StopBeginTime = undefined,
+        StopEndTime = undefined;
+      if (modalValues.stopTime) {
+        StopBeginTime = moment().format('YYYY-MM-DD HH:mm:ss');
+        StopEndTime = moment()
+          .add(1, modalValues.stopTime)
+          .format('YYYY-MM-DD HH:mm:ss');
+      }
+
       const parData = {
         planAction: type,
         createUserId: currentUser?.User_ID,
@@ -366,6 +369,8 @@ const Index = props => {
         checkConclusion: modalValues.checkConclusion,
         checkReason: modalValues.checkReason,
         checkUserId: modalValues.checkUserId,
+        StopBeginTime,
+        StopEndTime,
         checkPlan:
           siteVerificationPlanType == 1
             ? {
@@ -393,7 +398,7 @@ const Index = props => {
         payload: { ...parData },
         callback: res => {
           props.onCancel && props.onCancel();
-          props.onFinish && props.onFinish();
+          props.onFinish && props.onFinish(res);
         },
       });
     };
@@ -626,6 +631,7 @@ const Index = props => {
             checkUserId: selectedRow?.OpeUserId,
             isSavePlan: 2,
           }}
+          labelCol={{ flex: '120px' }}
         >
           <Row>
             <Col span={8}>
@@ -920,7 +926,7 @@ const Index = props => {
                         marginRight: 4,
                         backgroundColor: '#3888ff',
                       }}
-                    ></span>{' '}
+                    ></span>
                     核查动作
                   </Row>
                   <Table
@@ -952,9 +958,28 @@ const Index = props => {
           ) : (
             <>
               <Form.Item
+                name="stopTime"
+                label={
+                  <span>
+                    暂停发出线索
+                    <QuestionTooltip
+                      content="已知发生问题的原因暂无法解决的情况"
+                      style={{ marginLeft: 2 }}
+                    />
+                  </span>
+                }
+                // rules={[{ required: true, message: '请选择核查人!' }]}
+              >
+                <Select style={{ width: 300 }} placeholder="请选择暂停时间" allowClear>
+                  <Option value={'week'}>一周</Option>
+                  <Option value={'month'}>一个月</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item
                 name="checkResult"
                 label="核查结果与线索是否符合"
                 rules={[{ required: true, message: '请选择核查结果与线索是否符合!' }]}
+                labelCol={{ flex: '180px' }}
               >
                 <Radio.Group>
                   <Radio value={1}>符合</Radio>

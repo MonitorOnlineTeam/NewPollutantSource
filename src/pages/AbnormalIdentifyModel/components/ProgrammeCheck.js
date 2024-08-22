@@ -8,25 +8,26 @@ import cuid from 'cuid';
 import ImageView from '@/components/ImageView';
 import styles from '@/pages/AbnormalIdentifyModel/styles.less';
 
-const dvaPropsData = ({ loading }) => ({
+const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
+  checkedInfo: AbnormalIdentifyModel.checkedInfo,
   queryLoading: loading.effects['AbnormalIdentifyModel/GetCheckedView'],
 });
 
 const ProgrammeCheck = props => {
-  const { dispatch, id, queryLoading } = props;
+  const { dispatch, id, queryLoading, checkedInfo } = props;
 
   useEffect(() => {
     loadData();
   }, []);
 
-  const [dataSource, setDataSource] = useState();
+  // const [dataSource, setDataSource] = useState();
   const loadData = () => {
     dispatch({
       type: 'AbnormalIdentifyModel/GetCheckedView',
       payload: { id,type:1 },
-      callback: res => {
-        setDataSource(res);
-      },
+      // callback: res => {
+      //   setDataSource(res);
+      // },
     });
   };
 
@@ -82,7 +83,7 @@ const ProgrammeCheck = props => {
     待确认: <Tag color="processing">待确认</Tag>,
     待核查: <Tag color="error">待核查</Tag>,
   };
-  const isRectificationRecord = dataSource?.checkInfo?.IsRectificationRecord == 1; //需要现场核查
+  const isRectificationRecord = checkedInfo?.checkInfo?.IsRectificationRecord == 1; //需要现场核查
   return (
     <Card
       title={<span style={{ fontWeight: 'bold' }}>方案及核查信息</span>}
@@ -96,30 +97,30 @@ const ProgrammeCheck = props => {
             <Row>
               <Col span={6}>
                 <Form.Item label="核查状态">
-                  {checkStatus[(dataSource?.checkInfo?.StatusName)] || (
+                  {checkStatus[(checkedInfo?.checkInfo?.StatusName)] || (
                     <Tag color="volcano">待核查</Tag>
                   )}
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item   className='checkedDesLabel' label="核查结论">{dataSource?.checkInfo?.CheckedDes || '-'}</Form.Item>
+                <Form.Item   className='checkedDesLabel' label="核查结论">{checkedInfo?.checkInfo?.CheckedDes || '-'}</Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label="核查人">{dataSource?.checkInfo?.CheckUserName || '-'}</Form.Item>
+                <Form.Item label="核查人">{checkedInfo?.checkInfo?.CheckUserName || '-'}</Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label="核查时间">{dataSource?.checkInfo?.CheckedTime || '-'}</Form.Item>
+                <Form.Item label="核查时间">{checkedInfo?.checkInfo?.CheckedTime || '-'}</Form.Item>
               </Col>
             </Row>
             {isRectificationRecord == 1 ? <div><Form.Item label="方案及核查信息" className="programmeLabel">
               <div
                 dangerouslySetInnerHTML={{
-                  __html: dataSource?.Plan?.ContentBody || '<span>-</span>',
+                  __html: checkedInfo?.Plan?.ContentBody || '<span>-</span>',
                 }}
               ></div>
             </Form.Item>
               <Form  id='checkAction' layout="vertical">
-                {dataSource?.Plan?.PlanItem.length ? (
+                {checkedInfo?.Plan?.PlanItem.length ? (
                   <div style={{ fontSize: 16, fontWeight: 'bold', padding: '12px 0 10px 69px' }}>
                     核查动作
                   </div>
@@ -127,7 +128,7 @@ const ProgrammeCheck = props => {
                     ''
                   )}
                 <div style={{ paddingLeft: 112 }}>
-                  {dataSource?.Plan?.PlanItem.map((item, index) => {
+                  {checkedInfo?.Plan?.PlanItem.map((item, index) => {
                     return (
                       <div style={{ paddingBottom: 12 }}>
                         <Form.Item label={`${index + 1}.${item.QTitle}`}>{item.QContent}</Form.Item>
@@ -155,10 +156,10 @@ const ProgrammeCheck = props => {
               : 
               <>
                 <Form.Item label="核查结果与线索是否符合"  >
-                  {dataSource?.checkInfo?.CheckedResult}
+                  {checkedInfo?.checkInfo?.CheckedResult}
                 </Form.Item>
                 <Form.Item label="核查原因" className='programmeLabel2' >
-                  <div dangerouslySetInnerHTML={{ __html: dataSource?.checkInfo?.UntruthReason }}></div>
+                  <div dangerouslySetInnerHTML={{ __html: checkedInfo?.checkInfo?.UntruthReason }}></div>
                 </Form.Item>
               </>
             }

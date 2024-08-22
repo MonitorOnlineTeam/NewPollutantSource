@@ -49,16 +49,26 @@ const ModelChartMultipleBig = props => {
       },
       callback: res => {
         console.log('res', res);
-        let xAxis = res.map(itm => itm.MonitorTime);
+        // let xAxis = res.map(itm => itm.MonitorTime);
         // let seriesData = DGIMNs.map((item, index) => {
         //   xAxis = res[item].map(itm => itm.MonitorTime);
         //   return res[item].map(itm => itm[pollutantCodes[index]]);
         // });
-        let seriesData = pollutantCodes.map(item => {
-          return res.map(itm => itm[item]);
+
+        let seriesData = [],
+          xData = [];
+        pollutantCodes.map((item, index) => {
+          // return res.map(itm => itm[item]);
+          seriesData[index] = [];
+          res.map(itm => {
+            if (itm[item] !== '-') {
+              seriesData[index].push(itm[item]);
+              index === 0 && xData.push(itm.MonitorTime);
+            }
+          });
         });
         setSeriesData(seriesData);
-        setxAxisData(xAxis);
+        setxAxisData(xData);
       },
     });
   };
@@ -82,13 +92,17 @@ const ModelChartMultipleBig = props => {
         yAxisIndex = {
           yAxisIndex: index,
         };
+
         yAxisData.push({
           type: 'value',
           name: pollutantNames[index],
-          alignTicks: true,
+          //alignTicks: true,
           nameLocation: 'middle',
           nameGap: 35,
           // nameLocation: 'end',
+          splitLine: {
+            show: false,
+          },
           axisLine: {
             show: true,
           },
@@ -143,7 +157,7 @@ const ModelChartMultipleBig = props => {
         type: 'category',
         data: xAxisData,
         splitLine: {
-          show: true,
+          show: false,
         },
       },
       yAxis: yAxisData,
@@ -190,6 +204,7 @@ const ModelChartMultipleBig = props => {
           showLoading={loading}
           option={getOption()}
           lazyUpdate
+          notMerge
           style={{ height: 'calc(100vh - 240px)', width: '100%', marginTop: '30px' }}
         />
       ) : (
