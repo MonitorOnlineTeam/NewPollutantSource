@@ -63,18 +63,23 @@ const Index = (props) => {
 
   },[]);
 
-  const [type,setType] = useState('wasteGas')
+ const pollutantCode = Number(sessionStorage.getItem('sysPollutantCodes'));
 
- const [selectkey,SetSelectkey] = useState('wasteGas')
-
-
- const tabList = [
-  {text:'废气',val:"wasteGas"},
-  {text:'废水',val:"wasteWater"},
+ let tabList = [
+  {text:'废气',val:2},
+  {text:'废水',val:1},
   // {text:'空气站',val:"air"},
   // {text:'地表水',val:"surfaceWater"},
   // {text:'厂界',val:"actoryBoundary"},
 ]
+if(pollutantCode){
+  tabList = tabList?.filter(item=>item.val==pollutantCode)
+}
+
+const [type,setType] = useState(tabList?.[0]?.val)
+
+const [selectkey,SetSelectkey] = useState(tabList?.[0]?.val)
+
  const tabClick = (val) =>{
   SetSelectkey(val)
   setTimeout(()=>{
@@ -84,8 +89,8 @@ const Index = (props) => {
 }
 
 const typeObj={
-  wasteWater:<WasteWater/>,
-  wasteGas:<WasteGas/>,
+  1:<WasteWater/>,
+  2:<WasteGas/>,
   surfaceWater:<SurfaceWater/>,
   air:<Air/>,
   actoryBoundary:<ActoryBoundary/>
@@ -93,11 +98,11 @@ const typeObj={
   return (
     <div>
     <div className={styles.homeContent}>
-      <div className={styles.headerTabSty}>
+      {tabList?.length>1 && <div className={styles.headerTabSty}>
          {tabList.map(item=>{
            return <span  key={item.val}  className={selectkey === item.val? `${styles.selectSty}` : `${styles.normalSty}` }  onClick={()=>{tabClick(item.val)}}>{item.text}</span>
          })}
-       </div>
+       </div>}
      { typeObj[type]}
      </div>
     </div>

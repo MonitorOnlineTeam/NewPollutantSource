@@ -41,7 +41,7 @@ export default Model.extend({
   subscriptions: {},
   effects: {
     *GetEntByRegion({ payload }, { call, put, update, select }) {
-      const result = yield call(GetEntByRegion, payload, null);
+      const result = yield call(GetEntByRegion, {...payload,PollutantType:sessionStorage.getItem('sysPollutantCodes')} , null);
       if (result.IsSuccess) {
         yield update({
           priseList: result.Datas,

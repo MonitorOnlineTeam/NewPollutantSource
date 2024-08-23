@@ -29,7 +29,7 @@ export default Model.extend({
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
       AttentionCode: undefined,
       RegionCode: undefined,
-      PollutantType: '2',
+      PollutantType: Number(sessionStorage.getItem('sysPollutantCodes')) || 2,
       PollutantCodeList: [],
       Rate: 1,
       EntCode: '',

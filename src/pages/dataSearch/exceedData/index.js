@@ -37,6 +37,7 @@ import style from '@/pages/dataSearch/tableClass.less'
 import point from '@/models/point';
 import { toDecimal3 } from '@/utils/utils';
 import RegionList from '@/components/RegionList';
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -82,7 +83,7 @@ class index extends PureComponent {
     constructor(props) {
         super(props);
         this.newTabIndex = 0;
-        
+        this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
         this.state = {
             // regionValue: '',
             // attentionValue: '',
@@ -92,7 +93,7 @@ class index extends PureComponent {
             visibleEnt:false,
             time: props.time || [moment().add(-1, "day").startOf('day'), moment().endOf('day')],
             dataType: "Hour",
-            entType:'2',
+            entType: this.pollutantType  || 2,
             pollutionWaterList:[],
             pollutionGasList:[],
             activeKey:'1',
@@ -868,14 +869,34 @@ class index extends PureComponent {
                     }
 
                 </Form.Item>
-                <Form.Item label="企业类型" >
+                <Form.Item label="企业类型"  hidden={this.pollutantType}>
                     {
                         getFieldDecorator('outlet', {
-                            initialValue: '2'
+                            initialValue: this.pollutantType || 2
                         })(
-                            <Select
-                                style={{ width: 200,}}
-                                //defaultValue={'1'}
+                            // <Select
+                            //     style={{ width: 200,}}
+                            //     //defaultValue={'1'}
+                            //     placeholder="企业类型"
+                            //     maxTagCount={2}
+                            //     maxTagTextLength={5}
+                            //     maxTagPlaceholder="..."
+                            //     onChange={(value) => {
+                            //         this.props.dispatch({
+                            //             type: pageUrl.GetPollutantByType,
+                            //             payload: {
+                            //                 type: value
+                            //             }
+                            //         })
+                            //         this.setState({
+                            //             entType:value
+                            //         })
+                            //     }}>
+                            //     <Option value="2">废气</Option>
+                            //     <Option value="1">废水</Option>
+                            // </Select>
+                            <SelectPollutantType 
+                               style={{ width: 200,}}
                                 placeholder="企业类型"
                                 maxTagCount={2}
                                 maxTagTextLength={5}
@@ -890,10 +911,8 @@ class index extends PureComponent {
                                     this.setState({
                                         entType:value
                                     })
-                                }}>
-                                <Option value="2">废气</Option>
-                                <Option value="1">废水</Option>
-                            </Select>
+                                }}
+                            />
                         )
                     }
 
@@ -1395,7 +1414,7 @@ class index extends PureComponent {
             onEdit={this.onEdit}
             onTabClick={this.onTabClick}
             >
-                <TabPane tab={this.state.entType == '1' ? '废水' : '废气'} key='1' closable={false}>
+                <TabPane tab={this.state.entType == 1 ? '废水' : '废气'} key={1} closable={false}>
                     {
                             <SdlTable columns={columns} dataSource={ExceedDataList}
                             scroll={{ x: scrollWith }}

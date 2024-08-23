@@ -10,6 +10,7 @@ import moment from 'moment';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList';
+import SelectPollutantType from '@/components/SelectPollutantType';
 import Modal from 'antd/lib/modal/Modal';
 import DetailsPage from './DetailsPage';
 import styles from './index.less';
@@ -50,11 +51,12 @@ const { RangePicker } = DatePicker;
     });
   },
 })
-class index extends PureComponent {
+class Index extends PureComponent {
+  pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || 2;
   state = {
     showTime: true,
     format: 'YYYY-MM-DD HH',
-    pollutantType: '2',
+    pollutantType: this.pollutantType,
     checkedValues: [],
     operationpersonnel: '',
     queryCondition: {},
@@ -462,23 +464,31 @@ class index extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={4}>
+              <Col md={4} style={{display:this.pollutantType&&'none'}}>
                 <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
                   {getFieldDecorator('PollutantType', {
-                    initialValue: '2',
+                    initialValue: this.pollutantType,
                   })(
-                    <Select
-                      placeholder="请选择企业类型"
-                      onChange={value => {
-                        this.setState({ pollutantType: value }, () => {
-                          this.getPollutantByType(true);
-                        });
-                      }}
-                    >
-                      <Option value="2">废气</Option>
-                      <Option value="1">废水</Option>
-                      <Option value="5">空气站</Option>
-                    </Select>,
+                    // <Select
+                    //   placeholder="请选择企业类型"
+                    //   onChange={value => {
+                    //     this.setState({ pollutantType: value }, () => {
+                    //       this.getPollutantByType(true);
+                    //     });
+                    //   }}
+                    // >
+                    //   <Option value="2">废气</Option>
+                    //   <Option value="1">废水</Option>
+                    //   <Option value="5">空气站</Option>
+                    // </Select>
+                     <SelectPollutantType
+                     placeholder="请选择企业类型"
+                     onChange={value => {
+                       this.setState({ pollutantType: value }, () => {
+                         this.getPollutantByType(true);
+                       });
+                     }}
+                     />
                   )}
                 </FormItem>
               </Col>
@@ -574,4 +584,4 @@ class index extends PureComponent {
   }
 }
 
-export default index;
+export default Index;

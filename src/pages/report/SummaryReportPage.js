@@ -548,7 +548,7 @@ class SummaryReportPage extends PureComponent {
                     )}
                   </FormItem>
                 </Col>
-                <Col sm={24} md={3}>
+                <Col sm={24} md={3} style={{ display:sessionStorage.getItem('sysPollutantCodes') && 'none' }}>
                   <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                     {getFieldDecorator('PollutantSourceType', {
                       // initialValue: defaultSearchForm.PollutantSourceType,

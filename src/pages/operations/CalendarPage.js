@@ -32,6 +32,7 @@ import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatist
 class CalendarPage extends PureComponent {
   constructor(props) {
     super(props);
+    this.pollutantType = sessionStorage.getItem('sysPollutantCodes'),
     this.state = {
       date: moment(),
       mode: "month",
@@ -348,7 +349,8 @@ class CalendarPage extends PureComponent {
       payload: {
         ...this.state.currentClickTagParams,
         pageIndex: this.state.modalTableCurrent,
-        pageSize: 10
+        pageSize: 10,
+        pollutantType:this.pollutantType,
       }
     })
   }
@@ -360,7 +362,8 @@ class CalendarPage extends PureComponent {
       type: 'operations/getCalendarInfo',
       payload: {
         Mode: mode,
-        CalendarDate: date.format('YYYY-MM-01 00:00:00')
+        CalendarDate: date.format('YYYY-MM-01 00:00:00'),
+        pollutantType:this.pollutantType,
       }
     })
   }
@@ -513,6 +516,7 @@ class CalendarPage extends PureComponent {
         pageSize: abnormalForm.pageSize,
         IsQueryAllUser: true,
         IsPaging: true,
+        pollutantType:this.pollutantType,
         ...payload
       }
     })

@@ -114,12 +114,13 @@ class NavigationTree extends Component {
   constructor(props) {
     super(props);
     this.defaultKey = 0;
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'))
     this.state = {
       EntAndPoint: [],
       dataList: [],
       visible: true,
       Name: '',
-      PollutantTypes: this.props.checkpPol
+      PollutantTypes: this.props.configInfo?.IsOpera && this.pollutantType ? this.pollutantType : this.props.checkpPol
         ? this.props.checkpPol
         : this.props.defaultPollutant === 'undefined'
         ? 'undefined'

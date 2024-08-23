@@ -22,6 +22,7 @@ import PageLoading from '@/components/PageLoading'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import EntAtmoList from '@/components/EntAtmoList'
 import EntType from '@/components/EntType'
+import SelectPollutantType from '@/components/SelectPollutantType';
 import OperationInspectoUserList from '@/components/OperationInspectoUserList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import cuid from 'cuid';
@@ -167,7 +168,8 @@ const Index = (props) => {
 
   const [tableForm] = Form.useForm();
 
-
+  const pollutantTypeCode = Number(sessionStorage.getItem('sysPollutantCodes'));
+  
   const [fromVisible, setFromVisible] = useState(false)
 
 
@@ -702,7 +704,7 @@ const Index = (props) => {
       setType('add')
       setSubmitFlag(false)
       setPushFlag(false)
-      setPollutantType("2");
+      setPollutantType(pollutantTypeCode || 2);
       setDeviceInfoList([])
       form2.resetFields();
       tableForm.resetFields();
@@ -731,9 +733,9 @@ const Index = (props) => {
         ETime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
         InspectorType: inspectorType,
+        pollutantType : pollutantTypeCode,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
         pageSize: pageSizes ? pageSizes : pageSize,
-        apiName: props.queryApiName,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -749,6 +751,7 @@ const Index = (props) => {
       time: undefined,
       InspectorType: inspectorType,
       apiName: props.exportApiName,
+      pollutantType : pollutantTypeCode,
     })
   }
   const formatData = (data, type) => {
@@ -884,7 +887,7 @@ const Index = (props) => {
 
   const [pointList2, setPointList2] = useState([])
   const [pointLoading2, setPointLoading2] = useState(false)
-  const [pollutantType, setPollutantType] = useState("2")
+  const [pollutantType, setPollutantType] = useState(pollutantTypeCode || 2)
   const [deviceInfoList, setDeviceInfoList] = useState([]) //设备信息
   const onAddEditValuesChange = (hangedValues, allValues) => { //添加修改时的监测类型请求
     if (Object.keys(hangedValues).join() == 'EntCode') {
@@ -1793,7 +1796,7 @@ const Index = (props) => {
             name="basic"
             form={form2}
             initialValues={{
-              PollutantType: '2',
+              PollutantType: pollutantType,
               InspectorDate: moment(),
             }}
             onValuesChange={onAddEditValuesChange}
@@ -1802,9 +1805,10 @@ const Index = (props) => {
             <div className={'essentialInfoSty'}>
               <TitleComponents text='基本信息' />
               <Row>
-                <Col span={12}>
-                  <Form.Item label="行业" name="PollutantType" >
-                    <EntType disabled={type == 'add' ? false : true} placeholder='请选择' allowClear={false} />
+                <Col span={12} style={{display:pollutantTypeCode&&'none'}}>
+                  <Form.Item label="行业" name="PollutantType">
+                    {/* <EntType disabled={type == 'add' ? false : true} placeholder='请选择' allowClear={false} /> */}
+                    <SelectPollutantType  disabled={type == 'add' ? false : true} placeholder='请选择' allowClear={false} />
                   </Form.Item>
                 </Col>
                 <Col span={12}>

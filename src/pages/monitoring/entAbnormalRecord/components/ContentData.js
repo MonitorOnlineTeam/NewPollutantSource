@@ -81,7 +81,7 @@ const pageUrl = {
 export default class EntTransmissionEfficiency extends Component {
   constructor(props) {
     super(props);
-
+    this.pollutantType = sessionStorage.getItem('sysPollutantCodes');
     this.state = {
       entVisible: false,
       entName: '',
@@ -242,6 +242,7 @@ export default class EntTransmissionEfficiency extends Component {
       RegionCode: '',
       EntCode: '',
       Status: '',
+      pollutantType:this.pollutantType,
     });
     this.child.onDataValueChange([
       moment()

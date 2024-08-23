@@ -19,6 +19,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import RecordForm from '@/pages/operations/recordForm'
 import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -108,10 +109,10 @@ const Index = (props) => {
 
   const { taskTypeLoading, taskTypeList, tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, recordAnalyListQueryPar, accountTableDatas, accountTableTotal, accountTableLoading, accountDetailQueryPar, accountDetailCol,accountExportLoading, } = props;
 
-
+  const pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || 2
 
   useEffect(() => {
-    pollutantTypeChange(2)
+    pollutantTypeChange(pollutantType)
     onFinish()
   }, []);
 
@@ -250,7 +251,7 @@ const Index = (props) => {
       layout='inline'
       initialValues={{
         time: [moment(new Date()).add(-7, 'day'), moment()],
-        PollutantType: 2,
+        PollutantType: pollutantType,
       }}
       className={styles["ant-advanced-search-form"]}
       onFinish={() => { onFinish() }}
@@ -261,11 +262,12 @@ const Index = (props) => {
           style={{ width: 240 }}
         />
       </Form.Item>
-        <Form.Item label='监测点类型' name='PollutantType'>
-          <Select placeholder='请选择'  onChange={pollutantTypeChange} style={{ width: 150 }}>
+        <Form.Item label='监测点类型' name='PollutantType' hidden={pollutantType} >
+          {/* <Select placeholder='请选择'  onChange={pollutantTypeChange} style={{ width: 150 }}>
             <Option key={2} value={2} >废气</Option>
             <Option key={1} value={1} >废水</Option>
-          </Select>
+          </Select> */}
+          <SelectPollutantType onChange={pollutantTypeChange} style={{ width: 150 }}/>
         </Form.Item>
         <Spin spinning={taskTypeLoading} size='small'>
           <Form.Item label='运维内容' name='content'>

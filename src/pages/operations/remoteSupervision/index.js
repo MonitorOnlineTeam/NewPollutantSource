@@ -239,7 +239,10 @@ const Index = (props) => {
   const [form3] = Form.useForm(); //添加编辑表单   参数一致性核查表
   const [commonForm] = Form.useForm();
 
+  const pollutantType = sessionStorage.getItem('sysPollutantCodes');
+
   const [dates, setDates] = useState([]);
+  
   const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading, editLoading, tableInfo, exportLoading, forwardTableLoading, forwardTableData, forwardOkLoading, regQueryPar, getRemoteInspectorPointLoading, remoteInspectorPointList, addRemoteInspectorPointLoading, forwardTableTotal, importDataLoading,par } = props;
 
   const [tabType, setTabType] = useState('1')
@@ -642,6 +645,7 @@ const Index = (props) => {
       beginTime: regQueryPar.BeginTime,
       endTime: regQueryPar.EndTime,
       isForward: 1,
+      pollutantType:pollutantType,
       pageIndex: pageIndex,
       pageSize: pageSize,
     })
@@ -788,6 +792,7 @@ const Index = (props) => {
     props.getRemoteInspectorPointList({
       beginTime: moment().startOf('month').format('YYYY-MM-DD HH:mm:ss'),
       endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+      pollutantType:pollutantType,
     })
   }
   const requestTaskOk = async () => {
@@ -1198,6 +1203,7 @@ const Index = (props) => {
         time: undefined,
         BeginTime: values.time ? moment(values.time[0]).format("YYYY-MM-DD 00:00:00") : undefined,
         EndTime: values.time ? moment(values.time[1]).format("YYYY-MM-DD 23:59:59") : undefined,
+        pollutantType:pollutantType,
         pageIndex: pageIndex,
         pageSize: pageSize,
       })
@@ -1214,6 +1220,8 @@ const Index = (props) => {
       month: undefined,
       BeginTime: values.month ? moment(values.month[0]).format("YYYY-MM-DD 00:00:00") : undefined,
       EndTime: values.month ? moment(values.month[1]).format("YYYY-MM-DD 23:59:59") : undefined,
+      pollutantType:pollutantType,
+
     })
   }
   const resetData = () => {
@@ -3468,6 +3476,7 @@ const Index = (props) => {
       <Modal //转发任务单
         visible={forwardTaskVisible}
         footer={null}
+        mask={false}
         title={searchTaskComponents()}
         wrapClassName='spreadOverModal'
         onCancel={() => { setForwardTaskVisible(false) }}
@@ -3520,9 +3529,9 @@ const Index = (props) => {
           form={requestTaskForm}
           name="advanced_search3"
         >
-          <Spin spinning={getRemoteInspectorPointLoading} size='small' style={{ top: -4 }}>
+          <Spin spinning={getRemoteInspectorPointLoading} size='small' className='formItemSpinSty'>
             <Form.Item label='监测点' name='DGIMN' rules={[{ required: !isCheckUser, message: '请选择监测点' }]}>
-              <Select placeholder='请选择' showSearch optionFilterProp="children"  >
+              <Select placeholder='请选择' showSearch optionFilterProp="children">
                 {remoteInspectorPointList.map(item => {
                   return <Option key={item.DGIMN} value={item.DGIMN} >
                     {`${item.ParentName} - ${item.PointName}`}

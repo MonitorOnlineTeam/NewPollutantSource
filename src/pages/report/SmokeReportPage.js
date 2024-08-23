@@ -177,7 +177,7 @@ class SmokeReportPage extends PureComponent {
       <DatePickerTool
         allowClear={false}
         picker={reportType}
-        style={{ width: '100%' }}
+        style={{ width: 200 }}
         callback={this.dateOnchange}
       />
     );
@@ -578,7 +578,7 @@ class SmokeReportPage extends PureComponent {
               >
                 {this.pointList()}
               </Select>
-              <FormItem {...formLayout} label="监测日期" style={{ width: 250, marginTop: -6 }}>
+              <FormItem {...formLayout} label="监测日期" style={{ marginTop: -6 }}>
                 {getFieldDecorator('time', {
                   initialValue:
                     this.props.match.params.reportType === 'day'

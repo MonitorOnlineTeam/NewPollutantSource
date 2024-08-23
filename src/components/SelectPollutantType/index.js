@@ -1,14 +1,15 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { Radio, Select, Spin } from 'antd';
 import { connect } from 'dva';
 
 const { Option } = Select;
 
-@connect(({ common, loading }) => {
+@connect(({ common, loading,gl }) => {
   return {
     loading: loading.effects['common/getPollutantTypeList'],
     pollutantTypelist: common.pollutantTypelist,
     defaultPollutantCode: common.defaultPollutantCode,
+    configInfo: global.configInfo,
   };
 })
 class SelectPollutantType extends PureComponent {
@@ -30,7 +31,6 @@ class SelectPollutantType extends PureComponent {
   }
 
   getData = () => {
-    console.log('filterPollutantType', this.props.filterPollutantType);
     this.props.dispatch({
       type: 'common/getPollutantTypeList',
       payload: {
@@ -53,11 +53,11 @@ class SelectPollutantType extends PureComponent {
   };
 
   render() {
-    const { loading, showType, showAll } = this.props;
+    const { loading, showType, showAll, configInfo: { IsOpera }, } = this.props;
     const { pollutantTypelist, defaultPollutantCode } = this.state;
-    return (
-      <Spin spinning={false}>
-        {showType === 'radio' ? (
+    const noShow = IsOpera && pollutantTypelist?.length <=1 //运维项目 单个污染物不用显示
+    return (<div  style={{display: noShow && 'none'}}>
+        {showType === 'radio' ? <Spin size='small' spinning={loading} style={{height:32}}> (
           <Radio.Group defaultValue={defaultPollutantCode} {...this.props}>
             {pollutantTypelist.map(item => {
               return (
@@ -67,11 +67,12 @@ class SelectPollutantType extends PureComponent {
               );
             })}
           </Radio.Group>
-        ) : (
+        ) </Spin> : (
           <Select
             placeholder="请选择污染物类型"
             defaultValue={this.props.showDefaultValue ? defaultPollutantCode : undefined}
             {...this.props}
+             value={noShow? defaultPollutantCode : this.props.value}
           >
             {pollutantTypelist.map(item => {
               return (
@@ -82,9 +83,8 @@ class SelectPollutantType extends PureComponent {
             })}
           </Select>
         )}
-      </Spin>
+       </div>
     );
-    return null;
   }
 }
 

@@ -36,7 +36,7 @@ const dvaPropsData =  ({ loading,equipmentFeedback,global,common }) => ({
   clientHeight: global.clientHeight,
   tableTotal:global.tableTotal,
   entList:equipmentFeedback.entList,
-  entLoading:loading.effects['common/getFaultFeedbackEntPoint'],
+  entLoading:loading.effects[`${namespace}/getFaultFeedbackEntPoint`],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -86,11 +86,11 @@ const Index = (props) => {
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
   const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,tableTotal } = props; 
-  
+  const pollutantType = sessionStorage.getItem('sysPollutantCodes');
   
   useEffect(() => {
     onFinish(pageIndex,pageSize);
-    props.getFaultFeedbackEntPoint({})
+    props.getFaultFeedbackEntPoint({PollutantType:pollutantType })
   },[]);
 
 
@@ -216,6 +216,7 @@ const Index = (props) => {
           Time:undefined,
           FaultBTime:values.Time? moment(values.Time[0]).format("YYYY-MM-DD 00:00:00") : undefined,
           FaultETime:values.Time? moment(values.Time[1]).format("YYYY-MM-DD 23:59:59"): undefined,
+          pollutantType : pollutantType,
           pageIndex: pageIndex,
           pageSize: pageSize,
         })
@@ -232,6 +233,7 @@ const Index = (props) => {
       Time:undefined,
       FaultBTime:values.Time? moment(values.Time[0]).format("YYYY-MM-DD 00:00:00") : undefined,
       FaultETime:values.Time?moment(values.Time[1]).format("YYYY-MM-DD 23:59:59"): undefined,
+      pollutantType : pollutantType,
     })
   
   }
@@ -298,7 +300,7 @@ const Index = (props) => {
           <Select placeholder='请选择' allowClear >
           {
             entList&&entList.map(item => {
-              return <Option key={item.ParentCode} value={item.ParentCode} >{item.ParentName}</Option>
+              return <Option key={item.EntCode} value={item.EntCode} >{item.EntName}</Option>
             })
           } 
            </Select> 

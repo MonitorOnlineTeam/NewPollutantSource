@@ -10,6 +10,7 @@ import moment from 'moment';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList';
+import SelectPollutantType from '@/components/SelectPollutantType';
 import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
 
 const FormItem = Form.Item;
@@ -63,6 +64,7 @@ const { RangePicker } = DatePicker;
 //   },
 // })
 class Index extends PureComponent {
+  pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
   state = {
     showTime: true,
     format: 'YYYY-MM-DD HH',
@@ -127,7 +129,7 @@ class Index extends PureComponent {
                 } else {
                   router.push(
                     `/Intelligentanalysis/dataAlarm/abnormal/cityLevel?regionCode=${
-                      record.RegionCode ? record.RegionCode : ''
+                    record.RegionCode ? record.RegionCode : ''
                     }`,
                   );
                 }
@@ -787,31 +789,31 @@ class Index extends PureComponent {
         secondQueryCondition.ExceptionType == '1'
           ? '零值'
           : secondQueryCondition.ExceptionType == '2'
-          ? '超量程'
-          : secondQueryCondition.ExceptionType == '3'
-          ? '恒定值'
-          : '全部合计'
-      }待响应报警情况`;
+            ? '超量程'
+            : secondQueryCondition.ExceptionType == '3'
+              ? '恒定值'
+              : '全部合计'
+        }待响应报警情况`;
     } else if (secondQueryCondition.ResponseStatus == '1') {
       showTypeText = `${
         secondQueryCondition.ExceptionType == '1'
           ? '零值'
           : secondQueryCondition.ExceptionType == '2'
-          ? '超量程'
-          : secondQueryCondition.ExceptionType == '3'
-          ? '恒定值'
-          : '全部合计'
-      }已响应报警情况`;
+            ? '超量程'
+            : secondQueryCondition.ExceptionType == '3'
+              ? '恒定值'
+              : '全部合计'
+        }已响应报警情况`;
     } else {
       showTypeText = `${
         secondQueryCondition.ExceptionType == '1'
           ? '零值'
           : secondQueryCondition.ExceptionType == '2'
-          ? '超量程'
-          : secondQueryCondition.ExceptionType == '3'
-          ? '恒定值'
-          : '全部合计'
-      }报警情况`;
+            ? '超量程'
+            : secondQueryCondition.ExceptionType == '3'
+              ? '恒定值'
+              : '全部合计'
+        }报警情况`;
     }
     let beginTime =
       queryCondition.dataType === 'HourData'
@@ -872,7 +874,7 @@ class Index extends PureComponent {
               </Form.Item> */}
               <FormItem label="日期查询">
                 <RangePicker_
-                  format='YYYY-MM-DD' 
+                  format='YYYY-MM-DD'
                   allowClear={false}
                   onRef={ref => {
                     this.rangePicker = ref;
@@ -883,9 +885,9 @@ class Index extends PureComponent {
                     !this.props.searchForm.PollutantType
                       ? exceptionTime
                       : [
-                          moment(this.props.searchForm.beginTime),
-                          moment(this.props.searchForm.endTime),
-                        ]
+                        moment(this.props.searchForm.beginTime),
+                        moment(this.props.searchForm.endTime),
+                      ]
                   }
                   callback={(dates, dataType) => this.dateChange(dates, dataType)}
                 />
@@ -922,20 +924,26 @@ class Index extends PureComponent {
                 )}
               </FormItem>
 
-              <FormItem label="企业类型">
+              <FormItem label="企业类型" hidden={this.pollutantType}>
                 {getFieldDecorator('PollutantType', {
-                  initialValue: this.props.defaultPollutantCode || '2',
+                  initialValue: this.props.defaultPollutantCode || this.pollutantType? this.pollutantType : 2,
                 })(
-                  <Select
+                  // <Select
+                  //   style={{ width: 231 }}
+                  //   placeholder="请选择企业类型"
+                  //   onChange={value => {
+                  //     this.setState({ pollutantType: value }, () => { });
+                  //   }}
+                  // >
+                  //   <Option value="2">废气</Option>
+                  //   <Option value="1">废水</Option>
+                  // </Select>
+                  <SelectPollutantType
                     style={{ width: 231 }}
                     placeholder="请选择企业类型"
                     onChange={value => {
-                      this.setState({ pollutantType: value }, () => {});
-                    }}
-                  >
-                    <Option value="2">废气</Option>
-                    <Option value="1">废水</Option>
-                  </Select>,
+                      this.setState({ pollutantType: value }, () => { });
+                    }} />
                 )}
               </FormItem>
 

@@ -34,6 +34,7 @@ import config from '@/config';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
 import RegionList from '@/components/RegionList';
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -61,7 +62,7 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
 export default class EntTransmissionEfficiency extends Component {
   constructor(props) {
     super(props);
-
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
     this.state = {};
 
     this.columns = [
@@ -142,7 +143,7 @@ export default class EntTransmissionEfficiency extends Component {
       PageSize: 20,
       PageIndex: 1,
       OperationPersonnel: '',
-      PollutantType: Atmosphere ? '5' : undefined,
+      PollutantType: Atmosphere ? '5' : this.pollutantType || undefined,
     });
     // this.child.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment()])
 
@@ -483,8 +484,8 @@ export default class EntTransmissionEfficiency extends Component {
 
                 {!Atmosphere ? (
                   <Row>
-                    <Form.Item label="企业类型">
-                      <Select
+                    <Form.Item label="企业类型" hidden={this.pollutantType}>
+                      {/* <Select
                         allowClear
                         placeholder="企业类型"
                         onChange={this.typeChange}
@@ -493,7 +494,14 @@ export default class EntTransmissionEfficiency extends Component {
                       >
                         <Option value="2">废气</Option>
                         <Option value="1">废水</Option>
-                      </Select>
+                      </Select> */}
+                      <SelectPollutantType
+                        allowClear
+                        placeholder="企业类型"
+                        onChange={this.typeChange}
+                        value={PollutantType ? PollutantType : undefined}
+                        style={{ width: 200 }}
+                  />
                     </Form.Item>
                     <Form.Item label="企业列表">
                       <Select

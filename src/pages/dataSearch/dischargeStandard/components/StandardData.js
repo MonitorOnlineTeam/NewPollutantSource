@@ -30,6 +30,7 @@ import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
 import { blue, red } from '@ant-design/colors';
 import RegionList from '@/components/RegionList';
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -60,7 +61,7 @@ const pageUrl = {
 export default class Index extends Component {
   constructor(props) {
     super(props);
-
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || 2;
     this.state = {
       columns: [],
     };
@@ -117,7 +118,7 @@ export default class Index extends Component {
       EntCode: '',
       RegionCode: '',
       PollutantCode: '',
-      PollutantType: '2',
+      PollutantType: this.pollutantType,
     });
     setTimeout(() => {
       this.getTableData();
@@ -342,8 +343,8 @@ export default class Index extends Component {
                   {this.attentchildren()}
                 </Select>
               </Form.Item>
-              <Form.Item label="企业类型">
-                <Select
+              <Form.Item label="企业类型" hidden={this.pollutantType}>
+                {/* <Select
                   // allowClear
                   placeholder="企业类型"
                   onChange={this.typeChange}
@@ -352,7 +353,13 @@ export default class Index extends Component {
                 >
                   <Option value="2">废气</Option>
                   <Option value="1">废水</Option>
-                </Select>
+                </Select> */}
+                 <SelectPollutantType
+                  placeholder="企业类型"
+                  onChange={this.typeChange}
+                  value={PollutantType}
+                  style={{ width: 170 }}
+                />
               </Form.Item>
               <Form.Item label="企业列表">
                 <Select

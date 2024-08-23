@@ -71,9 +71,6 @@ const Index = (props) => {
   },[]);
 
   
-  useEffect(()=>{
-    onFinish();
-  },[showType])
 
   const exports = async  () => {
     const values = await form.validateFields();

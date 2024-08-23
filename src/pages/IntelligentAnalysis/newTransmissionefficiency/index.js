@@ -29,7 +29,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import styles from './style.less';
-import { downloadFile,interceptTwo } from '@/utils/utils';
+import { downloadFile, interceptTwo } from '@/utils/utils';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 const { Search } = Input;
@@ -37,6 +37,7 @@ const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const monthFormat = 'YYYY-MM';
 import RegionList from '@/components/RegionList'
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
@@ -56,13 +57,13 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   pollutantType: newtransmissionefficiency.pollutantType,
   assessment: newtransmissionefficiency.assessment,
   RegionCode: newtransmissionefficiency.RegionCode,
-  operationpersonnel:newtransmissionefficiency.operationpersonnel,
+  operationpersonnel: newtransmissionefficiency.operationpersonnel,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
   constructor(props) {
     super(props);
-
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
     this.state = {
       beginTime: moment(new Date()).subtract(1, 'months'),
       endTime: moment(new Date()),
@@ -79,6 +80,7 @@ export default class EntTransmissionEfficiency extends Component {
   componentWillMount() {
     this.updateState({
       RegionCode: '',
+      pollutantType: this.pollutantType || undefined,
     });
     this.getTableData();
     this.props.dispatch({
@@ -100,7 +102,7 @@ export default class EntTransmissionEfficiency extends Component {
   getTableData = () => {
     this.props.dispatch({
       type: pageUrl.getData,
-      payload:{regionLevel:1}
+      payload: { regionLevel: 1, }
     });
   };
 
@@ -161,7 +163,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   typeChange = value => {
     this.updateState({
-      pollutantType: value? value : '',
+      pollutantType: value ? value : undefined,
     });
   };
 
@@ -173,12 +175,12 @@ export default class EntTransmissionEfficiency extends Component {
 
   changeRegion = value => {
     this.updateState({
-      RegionCode: value? value : '',
+      RegionCode: value ? value : '',
     });
   };
-  changePperation=(value)=>{
+  changePperation = (value) => {
     this.updateState({
-      operationpersonnel:  value? value:'',
+      operationpersonnel: value ? value : '',
     });
   }
 
@@ -191,7 +193,7 @@ export default class EntTransmissionEfficiency extends Component {
     dispatch({
       type: 'newtransmissionefficiency/exportTransmissionEfficiencyForRegion',
       payload: {
-        regionLevel:1,
+        regionLevel: 1,
         callback: data => {
           downloadFile(data);
         },
@@ -209,7 +211,7 @@ export default class EntTransmissionEfficiency extends Component {
   queryClick = () => {
     this.props.dispatch({
       type: pageUrl.getData,
-      payload:{regionLevel:1}
+      payload: { regionLevel: 1 }
     });
   };
 
@@ -227,26 +229,28 @@ export default class EntTransmissionEfficiency extends Component {
   //         tabName: "有效传输率 - 详情"
   //     }
   // })
-  interceptTwo=(value)=>{
+  interceptTwo = (value) => {
     const data = value.toString();
-    const result = data.substring(0,data.indexOf(".")+3)
+    const result = data.substring(0, data.indexOf(".") + 3)
     return result;
   }
   render() {
     const { eName } = this.state;
-    const { regionList, exRegionloading, RegionCode ,operationpersonnel} = this.props;
+    const { regionList, exRegionloading, RegionCode, operationpersonnel } = this.props;
     const columns = [
       {
         title: <span style={{ fontWeight: 'normal' }}>行政区</span>,
         dataIndex: 'RegionName',
         key: 'RegionName',
         align: 'center',
-        render: (text, record) => { 
-             return  <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/cityLevel',query:{
-                        RegionCode: record.RegionCode
-                      }}}>
-                          {text}
-                    </Link>         
+        render: (text, record) => {
+          return <Link to={{
+            pathname: '/Intelligentanalysis/transmissionefficiency/cityLevel', query: {
+              RegionCode: record.RegionCode
+            }
+          }}>
+            {text}
+          </Link>
         },
       },
       {
@@ -257,8 +261,8 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-         return <span>{text}</span>;
-         
+          return <span>{text}</span>;
+
         },
       },
       {
@@ -280,7 +284,7 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '10%',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           }
           if (record.AvgEffectiveRate <= text) {
@@ -310,7 +314,7 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '10%',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           }
           if (record.AvgTransmissionRate <= text) {
@@ -332,7 +336,7 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           }
           // 红色：#f5222d 绿色：#52c41a
@@ -344,7 +348,7 @@ export default class EntTransmissionEfficiency extends Component {
                   successPercent={percent}
                   percent={percent}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{ width: '90%' }}
                   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
                 />
               </div>
@@ -357,7 +361,7 @@ export default class EntTransmissionEfficiency extends Component {
                 percent={percent}
                 status="exception"
                 size="small"
-                style={{width:'90%'}}
+                style={{ width: '90%' }}
                 format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
               />
             </div>
@@ -371,10 +375,10 @@ export default class EntTransmissionEfficiency extends Component {
         width: 145,
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
-          }else{
-          return <span>{text}</span>
+          } else {
+            return <span>{text}</span>
           }
         },
       },
@@ -386,7 +390,7 @@ export default class EntTransmissionEfficiency extends Component {
           bordered={false}
           title={
             <>
-              <Form layout="inline"> 
+              <Form layout="inline">
                 <Form.Item>
                   查询时间：
                   {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
@@ -397,24 +401,31 @@ export default class EntTransmissionEfficiency extends Component {
                     allowClear={false}
                   />
                 </Form.Item>
-                <Form.Item>
-                  <Select
+                <Form.Item hidden={this.pollutantType}>
+                  {/* <Select
                     placeholder="请选择排口类型"
                     onChange={this.typeChange}
-                    value={this.props.pollutantType?this.props.pollutantType : undefined }
-                    style={{ width: 200, marginLeft: 10 }}
+                    value={this.props.pollutantType ? this.props.pollutantType : undefined}
+                    style={{ width: 200 }}
                     allowClear
                   >
                     <Option value="2">废气</Option>
-                    <Option value="1">废水</Option>           
-                  </Select>
+                    <Option value="1">废水</Option>
+                  </Select> */}
+                  <SelectPollutantType
+                    placeholder="请选择排口类型"
+                    onChange={this.typeChange}
+                    value={this.props.pollutantType}
+                    style={{ width: 200 }}
+                    allowClear
+                  />
                 </Form.Item>
                 <Form.Item>
                   <Select
                     placeholder="请选择考核类型"
                     onChange={this.asseChange}
                     value={this.props.assessment}
-                    style={{ width: 200, marginLeft: 10 }}
+                    style={{ width: 200 }}
                   >
                     <Option value="2">全部考核</Option>
                     <Option value="1">国家考核</Option>
@@ -430,9 +441,9 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     {this.children()}
                   </Select> */}
-                   <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
+                  <RegionList style={{ width: 200 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined} />
                 </Form.Item>
-               {/*  <Form.Item>
+                {/*  <Form.Item>
                 <Select
                   allowClear
                   style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -495,9 +506,9 @@ export default class EntTransmissionEfficiency extends Component {
                 />
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
                   {' '}
-                   {`<90%未达标`}
+                  {`<90%未达标`}
                 </span>
-                <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算昨日的有效传输率，每月4号和10号重新计算上个月的有效传输率</span>
+                <span style={{ color: '#f5222d', fontSize: 14, paddingLeft: 15 }}>每日凌晨计算昨日的有效传输率，每月4号和10号重新计算上个月的有效传输率</span>
               </div>
             </>
           }
@@ -535,7 +546,7 @@ export default class EntTransmissionEfficiency extends Component {
                 >
                   {this.children()}
                 </Select> */}
-                <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
+                <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined} />
               </Form.Item>
               <Form.Item>
                 <RangePicker_

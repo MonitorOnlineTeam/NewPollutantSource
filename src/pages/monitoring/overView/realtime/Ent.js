@@ -443,7 +443,7 @@ class Index extends Component {
             <>
               <Row>
                 <SelectPollutantType
-                  style={{ float: 'left', marginRight: 10 }}
+                  style={{ float: 'left', marginRight: 10}}
                   showType="radio"
                   value={this.state.pollutantCode}
                   onlyShowEnt

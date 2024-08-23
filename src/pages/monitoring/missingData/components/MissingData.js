@@ -35,6 +35,7 @@ import ButtonGroup_ from '@/components/ButtonGroup'
 import { routerRedux } from 'dva/router';
 import RegionList from '@/components/RegionList'
 import MissDataSecond from '../missDataSecond'
+import SelectPollutantType from '@/components/SelectPollutantType';
 import styles from '../style.less'
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -61,7 +62,7 @@ const pageUrl = {
 export default class EntTransmissionEfficiency extends Component {
   constructor(props) {
     super(props);
-
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
     this.state = {
       missingAlarmVisible: false,
       alarmNumRegionCode: '',
@@ -213,6 +214,7 @@ export default class EntTransmissionEfficiency extends Component {
       // RegionCode:query.,
       EntType: types === 'ent' ? "1" : "2",
       OperationPersonnel: '',
+      PollutantType:  this.pollutantType || undefined,
     } :
       query && query.queryPar && JSON.parse(query.queryPar)
     );
@@ -468,8 +470,8 @@ export default class EntTransmissionEfficiency extends Component {
                     </Select>
                   </Form.Item>
 
-                  <Form.Item label='企业类型'>
-                    <Select
+                  <Form.Item label='企业类型' hidden={this.pollutantType}>
+                    {/* <Select
                       allowClear
                       placeholder="企业类型"
                       onChange={this.typeChange}
@@ -478,7 +480,14 @@ export default class EntTransmissionEfficiency extends Component {
                     >
                       <Option value="2">废气</Option>
                       <Option value="1">废水</Option>
-                    </Select>
+                    </Select> */}
+                    <SelectPollutantType
+                      allowClear
+                      placeholder="企业类型"
+                      onChange={this.typeChange}
+                      value={PollutantType ? PollutantType : undefined}
+                      style={{ width: 231 }}
+                    />
                   </Form.Item>
                 </>}
                 <Form.Item>

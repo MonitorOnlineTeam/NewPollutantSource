@@ -468,8 +468,8 @@ class DateReportPage extends PureComponent {
                     )}
                   </FormItem>
                 </Col>
-                <Col xxl={4} md={4} xs={24}>
-                  <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
+                <Col xxl={4} md={4} xs={24} style={{ display:sessionStorage.getItem('sysPollutantCodes') && 'none' }}>
+                  <FormItem {...formLayout} label="类型" style={{ width: '100%'}}>
                     {getFieldDecorator('PollutantSourceType', {
                       initialValue: pollutantTypeList.length
                         ? pollutantTypeList[0].pollutantTypeCode

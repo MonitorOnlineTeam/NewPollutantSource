@@ -26,7 +26,6 @@ import { connect } from 'dva';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-
 import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading';
 import { routerRedux } from 'dva/router';
@@ -65,6 +64,7 @@ class index extends PureComponent {
   constructor(props) {
     super(props);
     this.newTabIndex = 0;
+    this.pollutantType = sessionStorage.getItem('sysPollutantCodes');
     this.state = {
       Begintime: [
         moment(
@@ -123,6 +123,7 @@ class index extends PureComponent {
         EntCode: entValue == undefined ? '' : entValue,
         DGIMN: isHomeModal ? DGIMN : pointValue == undefined ? '' : pointValue,
         Status: voucher == undefined ? '' : voucher,
+        pollutantType:this.pollutantType,
       },
     });
   };
@@ -142,6 +143,7 @@ class index extends PureComponent {
         EntCode: entValue == undefined ? '' : entValue,
         DGIMN: isHomeModal ? DGIMN : pointValue == undefined ? '' : pointValue,
         Status: voucher == undefined ? '' : voucher,
+        pollutantType:this.pollutantType,
         PageSize: 20,
         PageIndex: 1,
       },
@@ -376,6 +378,7 @@ class index extends PureComponent {
         EntCode: entValue == undefined ? '' : entValue,
         DGIMN: isHomeModal ? DGIMN : pointValue == undefined ? '' : pointValue,
         Status: voucher == undefined ? '' : voucher,
+        pollutantType:this.pollutantType,
         PageSize: PageSize == 0 ? 20 : PageSize,
         PageIndex: PageIndex == 0 ? 1 : PageIndex,
       },

@@ -22,6 +22,6 @@ export async function ExportFaultFeedback(params) {
 
 //设备故障反馈 企业下拉列表
 export async function GetFaultFeedbackEntPoint(params) {
-  const result = await post(API.CommonApi.GetEntByRegion, {EntCode:params.entCode}, null);
+  const result = await post(API.CommonApi.GetEntByRegion, params, null);
   return result;
 }

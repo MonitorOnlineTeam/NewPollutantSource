@@ -23,7 +23,7 @@ import MissingDataRateModal from './springModal/missingDataRate/MissingDataRateM
 import AbnormalAlarmRateModal from './springModal/abnormalAlarmRate'
 import OperationalExpiraModal from './springModal/operationalExpiration'
 import OverVerifyLstModal from '@/pages/IntelligentAnalysis/dataAlarm/overVerifyRate/components/OverVerifyLstModal'
-import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/EntIndexModal'
+import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/entIndexModal'
 import NetworkRateStatisticsModal from './springModal/networkRateStatistics'
 // import AlarmResponseTimeoutRateModal from './springModal/abnormalWorkStatistics'
 import AlarmResponseTimelyRateModal from './springModal/alarmResponseTimelyRateModal'

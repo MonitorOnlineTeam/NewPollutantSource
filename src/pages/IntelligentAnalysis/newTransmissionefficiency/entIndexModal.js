@@ -39,6 +39,7 @@ const { Option } = Select;
 const monthFormat = 'YYYY-MM';
 import QutPage from '@/pages/IntelligentAnalysis/newTransmissionefficiency/qutPage';
 import RegionList from '@/components/RegionList';
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
@@ -64,7 +65,7 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
 export default class EntIndexModal extends Component {
   constructor(props) {
     super(props);
-
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
     this.state = {
       EnterpriseCode: '',
       EnterpriseName: '',
@@ -75,7 +76,7 @@ export default class EntIndexModal extends Component {
       effectiveVisible: false,
       effectiveLoading: false,
       TTVisible: false,
-      PollutantType: props.pollutantType,
+      PollutantType: this.pollutantType || 2,
       beginTime: props.beginTime,
       endTime: props.endTime,
       level: 1,
@@ -470,24 +471,31 @@ export default class EntIndexModal extends Component {
                     allowClear={false}
                   />
                 </Form.Item>
-                <Form.Item>
-                  <Select
+                <Form.Item hidden={this.pollutantType}>
+                  {/* <Select
                     allowClear
                     placeholder="请选择企业类型"
                     onChange={this.typeChange}
                     value={this.state.PollutantType}
-                    style={{ width: 200, marginLeft: 10 }}
+                    style={{ width: 200 }}
                   >
                     <Option value="2">废气</Option>
                     <Option value="1">废水</Option>
-                  </Select>
+                  </Select> */}
+                  <SelectPollutantType
+                    placeholder="请选择排口类型"
+                    onChange={this.typeChange}
+                    value={this.state.PollutantType}
+                    style={{ width: 200 }}
+                    allowClear
+                  />
                 </Form.Item>
                 <Form.Item>
                   <Select
                     placeholder="请选择考核类型"
                     onChange={this.asseChange}
                     value={this.props.assessment}
-                    style={{ width: 200, marginLeft: 10 }}
+                    style={{ width: 200 }}
                   >
                     {/* <Option value="1">国家考核</Option>
                     <Option value="2">兵团考核</Option> */}
@@ -497,7 +505,7 @@ export default class EntIndexModal extends Component {
                 </Form.Item>
                 <Form.Item>
                   <RegionList
-                    style={{ width: 200, marginLeft: 10 }}
+                    style={{ width: 200 }}
                     changeRegion={this.changeRegion}
                     RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}
                   />

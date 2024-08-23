@@ -40,6 +40,7 @@ export default Model.extend({
     *GetStopList({ payload }, { call, put, update, select }) {
 
         const body = {
+          ...payload,
           BeginTime: payload.BeginTime,
           BeginTimeEnd: payload.BeginTimeEnd,
           EndTime: payload.EndTime,
@@ -71,6 +72,7 @@ export default Model.extend({
     *ExportStopList({ payload }, { call, put, update, select }) {
 
       const body = {
+        ...payload,
         BeginTime: payload.BeginTime,
         BeginTimeEnd: payload.BeginTimeEnd,
         EndTime: payload.EndTime,

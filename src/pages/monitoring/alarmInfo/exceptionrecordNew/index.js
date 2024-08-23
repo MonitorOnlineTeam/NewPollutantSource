@@ -10,6 +10,7 @@ import moment from 'moment';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList';
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -53,6 +54,7 @@ const { RangePicker } = DatePicker;
   },
 })
 class index extends PureComponent {
+  pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
   state = {
     showTime: true,
     format: 'YYYY-MM-DD HH',
@@ -723,14 +725,15 @@ class index extends PureComponent {
                   </Select>,
                 )}
               </FormItem>
-              <FormItem label="企业类型">
+              <FormItem label="企业类型" hidden={this.pollutantType}>
                 {getFieldDecorator('PollutantType', {
-                  initialValue: '2',
+                  initialValue: this.pollutantType || 2,
                 })(
-                  <Select style={{ width: 231 }} placeholder="请选择企业类型">
-                    <Option value="2">废气</Option>
-                    <Option value="1">废水</Option>
-                  </Select>,
+                  // <Select style={{ width: 231 }} placeholder="请选择企业类型">
+                  //   <Option value="2">废气</Option>
+                  //   <Option value="1">废水</Option>
+                  // </Select>
+                 <SelectPollutantType style={{ width: 231 }} placeholder="请选择企业类型" />
                 )}
               </FormItem>
               {/* <Form.Item label="运维状态">

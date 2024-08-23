@@ -33,6 +33,7 @@ import config from '@/config'
 import { downloadFile, interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import RegionList from '@/components/RegionList'
+import SelectPollutantType from '@/components/SelectPollutantType';
 import MissDataSecond from '@/pages/monitoring/missingData/missDataSecond'
 import styles from '@/pages/monitoring/missingData/style.less'
 
@@ -62,7 +63,7 @@ const pageUrl = {
 export default class EntTransmissionEfficiency extends Component {
   constructor(props) {
     super(props);
-
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
     this.state = {
       missingAlarmVisible: false,
       alarmNumRegionCode: '',
@@ -93,7 +94,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'xiangyingCount',
         align: 'center',
         render: (text, record) => {
-          return <a onClick={() => { this.missingAlarmNum(record,'1') }}>{text} </a>
+          return <a onClick={() => { this.missingAlarmNum(record, '1') }}>{text} </a>
         }
       },
       {
@@ -102,7 +103,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'weixiangyingCount',
         align: 'center',
         render: (text, record) => {
-          return <a onClick={() => { this.missingAlarmNum(record,'0') }}>{text} </a>
+          return <a onClick={() => { this.missingAlarmNum(record, '0') }}>{text} </a>
         }
       },
       {
@@ -116,7 +117,7 @@ export default class EntTransmissionEfficiency extends Component {
 
       },
     ];
-    this.columns=[
+    this.columns = [
       {
         title: <span>行政区</span>,
         dataIndex: 'regionName',
@@ -132,20 +133,20 @@ export default class EntTransmissionEfficiency extends Component {
           //     {text}
           //   </Link>
           // } else {
-            return this.props.types === 'ent' ? //一级页面
-              <Link to={{
-                pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/ent/citylevel',
-                query: { regionCode: record.regionCode, queryPar: JSON.stringify({...queryPar,regionLevel:2,staticType:1} ) }
-              }} >
-                {text}
-              </Link>
-              :
-              <Link to={{
-                pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/air/citylevel',
-                query: { regionCode: record.regionCode, queryPar: JSON.stringify({...queryPar,regionLevel:2,staticType:1}) }
-              }} >
-                {text}
-              </Link>
+          return this.props.types === 'ent' ? //一级页面
+            <Link to={{
+              pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/ent/citylevel',
+              query: { regionCode: record.regionCode, queryPar: JSON.stringify({ ...queryPar, regionLevel: 2, staticType: 1 }) }
+            }} >
+              {text}
+            </Link>
+            :
+            <Link to={{
+              pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/air/citylevel',
+              query: { regionCode: record.regionCode, queryPar: JSON.stringify({ ...queryPar, regionLevel: 2, staticType: 1 }) }
+            }} >
+              {text}
+            </Link>
 
           // }
 
@@ -153,7 +154,7 @@ export default class EntTransmissionEfficiency extends Component {
       },
       ...this.commonCol
     ]
-    this.columns2=[
+    this.columns2 = [
       // {
       //   title: <span>行政区</span>,
       //   dataIndex: 'regionName',
@@ -189,36 +190,37 @@ export default class EntTransmissionEfficiency extends Component {
       //   },
       // },
       {
-      title: '省',
-      dataIndex: 'ProvinceName',
-      key: 'ProvinceName',
-      align: 'center',
-      render: (text, record, index) => {
-        if (text == '全部合计') {
-          return { props: { colSpan: 0 }, };
-        }
-        return text;
+        title: '省',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
+        align: 'center',
+        render: (text, record, index) => {
+          if (text == '全部合计') {
+            return { props: { colSpan: 0 }, };
+          }
+          return text;
+        },
       },
-    },
-    {
-      title: '市',
-      dataIndex: 'CityName',
-      key: 'CityName',
-      align: 'center',
-      render: (text, record) => {
-        const { queryPar } = this.props;
-        return  { props: { colSpan: record.ProvinceName == '全部合计' ? 2 : 1 },
-        children: <Link to={{
-        pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-        query: { regionCode: record.regionCode ? record.regionCode : queryPar.RegionCode , queryPar: JSON.stringify({...queryPar}) }
-      }} >
-        {record.ProvinceName == '全部合计' ? '全部合计' : text}
-      </Link>
-     }
-    }
-    },
-    ...this.commonCol
-   ]
+      {
+        title: '市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
+        render: (text, record) => {
+          const { queryPar } = this.props;
+          return {
+            props: { colSpan: record.ProvinceName == '全部合计' ? 2 : 1 },
+            children: <Link to={{
+              pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+              query: { regionCode: record.regionCode ? record.regionCode : queryPar.RegionCode, queryPar: JSON.stringify({ ...queryPar }) }
+            }} >
+              {record.ProvinceName == '全部合计' ? '全部合计' : text}
+            </Link>
+          }
+        }
+      },
+      ...this.commonCol
+    ]
   }
 
   componentDidMount() {
@@ -235,6 +237,7 @@ export default class EntTransmissionEfficiency extends Component {
       EntType: types === 'ent' ? "1" : "2",
       ...query,
       RegionCode: location.query.regionCode,
+      PollutantType: this.pollutantType || undefined,
     });
 
 
@@ -266,7 +269,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar, level } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar, regionLevel: level,staticType:1 },
+      payload: { ...queryPar, regionLevel: level, staticType: 1 },
     });
   };
 
@@ -331,7 +334,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar, level } = this.props;
     dispatch({
       type: 'MissingRateData/exportDefectDataSummary',
-      payload: { ...queryPar, regionLevel: level,staticType:1  },
+      payload: { ...queryPar, regionLevel: level, staticType: 1 },
       callback: data => {
         downloadFile(`${data}`);
       },
@@ -383,7 +386,7 @@ export default class EntTransmissionEfficiency extends Component {
     this.updateQueryState({
       // dataType:dataType,
       beginTime: date[0] && date[0].format('YYYY-MM-DD 00:00:00'),
-      endTime:  date[1] && date[1].format('YYYY-MM-DD 23:59:59'),
+      endTime: date[1] && date[1].format('YYYY-MM-DD 23:59:59'),
     });
   }
   missingAlarmNum = (record, status) => { //缺失数据报警次数
@@ -391,7 +394,7 @@ export default class EntTransmissionEfficiency extends Component {
       missingAlarmVisible: true,
       regionName: record.regionName,
       alarmNumRegionCode: record.regionCode,
-      status: status? status : '',
+      status: status ? status : '',
     })
   }
   render() {
@@ -424,7 +427,7 @@ export default class EntTransmissionEfficiency extends Component {
                 {level == 1 &&
                   <> <Form.Item>
                     日期查询：
-                <RangePicker_ format='YYYY-MM-DD'  allowClear={false} onRef={this.onRef1} dataType={''} style={{ minWidth: '200px', marginRight: '10px' }} dateValue={[moment(beginTime), moment(endTime)]}
+                <RangePicker_ format='YYYY-MM-DD' allowClear={false} onRef={this.onRef1} dataType={''} style={{ minWidth: '200px', marginRight: '10px' }} dateValue={[moment(beginTime), moment(endTime)]}
                       callback={(dates, dataType) => this.dateChange(dates, dataType)} />
                   </Form.Item>
                     <Form.Item label='关注程度'>
@@ -455,9 +458,9 @@ export default class EntTransmissionEfficiency extends Component {
                     <Form.Item label='行政区'>
                       <RegionList style={{ width: 165 }} changeRegion={this.changeRegion} RegionCode={RegionCode} />
                     </Form.Item>
-                    {type === 'ent' ? <Form.Item label='企业类型'>
-                      <Select
-                        allowClea
+                    {type === 'ent' ? <Form.Item label='企业类型' hidden={this.pollutantType}>
+                      {/* <Select
+                        allowClear
                         placeholder="企业类型"
                         onChange={this.typeChange}
                         value={PollutantType ? PollutantType : undefined}
@@ -466,7 +469,14 @@ export default class EntTransmissionEfficiency extends Component {
                         <Option value="2">废气</Option>
                         <Option value="1">废水</Option>
 
-                      </Select>
+                      </Select> */}
+                      <SelectPollutantType
+                        allowClear
+                        placeholder="企业类型"
+                        onChange={this.typeChange}
+                        value={PollutantType ? PollutantType : undefined}
+                        style={{ width: 100 }}
+                      />
                     </Form.Item> : null}
                   </>
                 }
@@ -497,7 +507,7 @@ export default class EntTransmissionEfficiency extends Component {
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
-            columns={level == 1? this.columns : this.columns2}
+            columns={level == 1 ? this.columns : this.columns2}
             dataSource={this.props.tableDatas}
             pagination={false}
           />
@@ -511,7 +521,7 @@ export default class EntTransmissionEfficiency extends Component {
           onCancel={() => { this.setState({ missingAlarmVisible: false }) }}
           className={styles.missDetailSty}
         >
-          <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, Status: this.state.status,staticType:3 }) } }} />
+          <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, Status: this.state.status, staticType: 3 }) } }} />
         </Modal>
       </Card>
     );

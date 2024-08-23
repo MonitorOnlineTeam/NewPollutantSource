@@ -19,6 +19,7 @@ import styles from "./style.less"
 import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
+import SelectPollutantType from '@/components/SelectPollutantType';
 import Region from './components/Region'
 import Ent from './components/Ent'
 import RegionDetail from './regionDetail'
@@ -63,6 +64,7 @@ const Index = (props) => {
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
   const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,queryPar,isResponseModal,isClockAbnormalModal } = props; 
+  const pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
   
   
   useEffect(() => {
@@ -165,24 +167,25 @@ const Index = (props) => {
     name="advanced_search"
     onFinish={()=>{onFinish()}}
     initialValues={{
-      exceptionType:1,
-      pollutantType:isResponseModal||isClockAbnormalModal? props.pollutantTypes : undefined,
+      exceptionType: 1,
+      pollutantType: pollutantType ? pollutantType : isResponseModal||isClockAbnormalModal? props.pollutantTypes : undefined,
       time: isResponseModal||isClockAbnormalModal? props.time : [moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).add(-1, 'day').endOf('day')]
     }}
   >  
 
     {showType==1? <Row  align='middle'>
-      <Form.Item name='time' label='日期'>
+      <Form.Item name='time' label='日期' style={{paddingRight:8}}>
           <RangePicker allowClear={false}   style={{width:240}} 
              format='YYYY-MM-DD'
            />
      </Form.Item>
-      <Form.Item label = '监测点类型'  name='pollutantType' style={{padding:'0 8px'}} >
-          <Select placeholder='请选择' style={{width:120}} allowClear>
-            <Option value={2}>废气</Option>
-            <Option value={1}>废水</Option> 
-      </Select>
-        </Form.Item>
+       <Form.Item label='监测点类型' name='pollutantType' hidden={pollutantType} style={{paddingRight:8}}>
+              {/* <Select placeholder='请选择' style={{ width: 120 }}>
+               <Option value={2}>废气</Option>
+               <Option value={1}>废水</Option>
+               </Select> */}
+              <SelectPollutantType placeholder='请选择' style={{ width: 120 }} />
+      </Form.Item>
        {!isResponseModal&&!isClockAbnormalModal&&<Form.Item label='异常类型' name='exceptionType'  style={{paddingRight:'8px'}}>
             <Select placeholder='请选择'>
                 <Option value={1}>打卡异常</Option>
@@ -193,7 +196,7 @@ const Index = (props) => {
      <Button  type="primary" htmlType='submit' >
           查询
      </Button>
-     <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 17px 0 8px',}} onClick={()=>{ exports()} }>
+     <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
             导出
      </Button> 
      
@@ -208,39 +211,39 @@ const Index = (props) => {
       :
       <>
       <Row  align='middle'>
-      <Form.Item label='日期' name='time'  className='form_label_width_69' style={{paddingRight:'16px'}}>
+      <Form.Item label='日期' name='time'  className='form_label_width_69' style={{paddingRight:8}}>
          <RangePicker  style={{width:240}} 
           allowClear={false}
           format='YYYY-MM-DD'
           // showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
           />
     </Form.Item> 
-     <Form.Item label='企业名称' name='entName' className='form_label_width_83' style={{paddingRight:'16px',width:350}}>
+     <Form.Item label='企业名称' name='entName' style={{paddingRight:8,width:350}}>
          <Input placeholder='请输入企业名称'  allowClear/>
        </Form.Item>
-       <Form.Item label='行政区'  name='regionCode'   style={{paddingRight:'16px'}}>
+       <Form.Item label='行政区'  name='regionCode'   style={{paddingRight:8}}>
           <RegionList style={{width:170}}/>
        </Form.Item>
        </Row>
-       <Row style={{paddingTop:8}}>
-       <Form.Item name='exceptionType'  label='异常类型' style={{paddingRight:'16px'}}>
+       <Row>
+       <Form.Item name='exceptionType'  label='异常类型' style={{paddingRight:8}}>
            <Select placeholder='请选择'  style={{width:240}}>
              <Option value={1}>打卡异常</Option>
              {/* <Option value={2}>报警响应超时率</Option> */}
            </Select>
        </Form.Item>
-       <Form.Item label='监测点类型' name='pollutantType' style={{paddingRight:'16px'}}>
-        <Select placeholder='请选择' style={{width:170}} allowClear>
-           <Option value={2}>废气</Option>
-           <Option value={1}>废水</Option>
-           </Select>
-       </Form.Item>
-
+       <Form.Item label='监测点类型' name='pollutantType' hidden={pollutantType} style={{paddingRight:8}}>
+          {/* <Select placeholder='请选择' style={{ width: 120 }}>
+            <Option value={2}>废气</Option>
+            <Option value={1}>废水</Option>
+          </Select> */}
+          <SelectPollutantType placeholder='请选择' style={{ width: 120 }} />
+        </Form.Item>
        <Form.Item>
     <Button  type="primary" htmlType='submit' >
          查询
     </Button>
-    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 17px 0 8px',}} onClick={()=>{ exports()} }>
+    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
            导出
     </Button> 
     

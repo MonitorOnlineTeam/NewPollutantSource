@@ -91,6 +91,7 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
+  const pollutantType = sessionStorage.getItem('sysPollutantCodes');
 
   const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading, queryPar,par } = props;
 
@@ -242,6 +243,7 @@ const Index = (props) => {
         endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
         time2: undefined,
+        pollutantType : pollutantType,
         pageIndex: pageIndexs,
         pageSize: pageSizes,
       })
@@ -252,6 +254,7 @@ const Index = (props) => {
   const exports = async () => { //导出
     props.exportZGCheckList({
       ...queryPar,
+      pollutantType : pollutantType,
       pageIndex:undefined,
       pageSize:undefined,
     })

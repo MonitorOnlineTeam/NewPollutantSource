@@ -19,6 +19,7 @@ import styles from "./style.less"
 import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
+import SelectPollutantType from '@/components/SelectPollutantType';
 import Region from './components/Region'
 import Ent from './components/Ent'
 import PlanWorkOrderStatisticsDay from '@/pages/Intelligentanalysis/planWorkOrderStatisticsDay'
@@ -81,7 +82,7 @@ const Index = (props) => {
   const [showType, setShowType] = useState(props.showType || '1')
   const [dates, setDates] = useState([]);
   const { tableDatas, tableTotal, loadingConfirm, pointDatas, tableLoading, exportLoading, exportActualRegLoading, queryPar, isPlanCalibrationModal, isPlanInspectionModal, isActualCalibrationModal, operationSettingInfo: { TaskPlanType } } = props;
-
+  const pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
   useEffect(() => {
     if (TaskPlanType == 1) {
       onFinish();
@@ -124,11 +125,10 @@ const Index = (props) => {
 
 
   const [outOrInside, setOutOrInside] = useState(1)
-  const onFinish = async () => {  //查询
+  const onFinish = async () => {  //查询 
     try {
       const values = await form.validateFields();
       if (values.time[1].diff(values.time[0], 'days') <= 90) {
-
         let par = {
           ...values,
           regionCode: values.regionCode ? values.regionCode : props.regionCode,
@@ -171,31 +171,32 @@ const Index = (props) => {
       name="advanced_search"
       onFinish={onFinish}
       initialValues={{
-        pollutantType: isPlanCalibrationModal || isPlanInspectionModal || isActualCalibrationModal ? props.pollutantTypes : 2,
+        pollutantType: pollutantType ? pollutantType : isPlanCalibrationModal || isPlanInspectionModal || isActualCalibrationModal ? props.pollutantTypes : 2,
         abnormalType: 1,
         time: props.time || [moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')],
         regionCode: props.regionCode
       }}
     >
       {showType == 1 ? <Row align='middle'>
-        <Form.Item name='time' label='日期'>
+        <Form.Item name='time' label='日期' style={{paddingRight:8}}>
           <RangePicker style={{ width: 240 }}
             allowClear={false}
             format='YYYY-MM-DD'
-            // showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
+          // showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
           />
         </Form.Item>
-        {(isPlanCalibrationModal || isPlanInspectionModal || isActualCalibrationModal) && <Form.Item label='打卡状态' name='singinStatus' style={{ padding: '0 8px' }}>
+        {(isPlanCalibrationModal || isPlanInspectionModal || isActualCalibrationModal) && <Form.Item label='打卡状态' name='singinStatus'  style={{paddingRight:8}}>
           <Select placeholder='请选择' style={{ width: 120 }} allowClear>
             <Option value={1}>正常</Option>
             <Option value={2}>异常</Option>
           </Select>
         </Form.Item>}
-        <Form.Item label='监测点类型' name='pollutantType' style={{ padding: '0 8px' }}>
-          <Select placeholder='请选择' style={{ width: 120 }}>
+        <Form.Item label='监测点类型' name='pollutantType' hidden={pollutantType} style={{paddingRight:8}}>
+          {/* <Select placeholder='请选择' style={{ width: 120 }}>
             <Option value={2}>废气</Option>
             <Option value={1}>废水</Option>
-          </Select>
+          </Select> */}
+          <SelectPollutantType placeholder='请选择' style={{ width: 120 }} />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType='submit' >
@@ -216,32 +217,32 @@ const Index = (props) => {
         :
         <>
           <Row align='middle'>
-            <Form.Item label='日期' name='time' style={{ paddingRight: '16px' }} className='form_label_width_83'>
+            <Form.Item label='日期' name='time' style={{ paddingRight: 8 }} className='form_label_width_83'>
               <RangePicker allowClear={false} style={{ width: 240 }}
                 format='YYYY-MM-DD' />
             </Form.Item>
-            <Form.Item label='企业名称' name='entName' style={{ paddingRight: '16px', width: 350 }}>
+            <Form.Item label='企业名称' name='entName' style={{ paddingRight: 8, width: 350 }}>
               <Input placeholder='请输入企业名称' allowClear />
             </Form.Item>
-            <Form.Item label='行政区' name='regionCode' style={{ paddingRight: '16px' }}>
+            <Form.Item label='行政区' name='regionCode' style={{ paddingRight: 8 }}>
               <RegionList style={{ width: 165 }} />
             </Form.Item>
           </Row>
           <Row style={{ paddingTop: 8 }}>
-            <Form.Item label='监测点类型' name='pollutantType' style={{ paddingRight: '16px' }}>
-              <Select placeholder='监测点类型'  style={{ width: 240 }}>
-                <Option value={2}>废气</Option>
-                <Option value={1}>废水</Option>
-              </Select>
+            <Form.Item label='监测点类型' name='pollutantType' style={{paddingRight:8}} hidden={pollutantType}>
+              {/* <Select placeholder='请选择' style={{ width: 120 }}>
+               <Option value={2}>废气</Option>
+               <Option value={1}>废水</Option>
+               </Select> */}
+              <SelectPollutantType placeholder='请选择' style={{ width: 120 }} />
             </Form.Item>
-
             <Form.Item>
               <Button type="primary" htmlType='submit' >
                 查询
-    </Button>
+             </Button>
               <Button icon={<ExportOutlined />} loading={exportLoading} style={{ margin: '0 8px', }} onClick={() => { exports() }}>
                 导出
-    </Button>
+              </Button>
 
             </Form.Item>
 
@@ -258,19 +259,22 @@ const Index = (props) => {
 
   }
   return (<>
-    {TaskPlanType == 1 ? <div className={styles.planWorkOrderStatisticsSty}>
-      <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
-        <Card title={searchComponents()}>
-          {showType == 1 ?
-            <Region pollutantType={form.getFieldValue('pollutantType')} isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} isActualCalibrationModal={isActualCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref} sortRate={sortRate} />
-            : <Ent pollutantType={form.getFieldValue('pollutantType')} parentCallback={parentCallback} sortRate={sortRate} />}
-        </Card>
-      </BreadcrumbWrapper>
-    </div>
-      :
-      <PlanWorkOrderStatisticsDay />
+    {TaskPlanType &&
+      <div>
+        {TaskPlanType == 1 ? <div className={styles.planWorkOrderStatisticsSty}>
+          <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
+            <Card title={searchComponents()}>
+              {showType == 1 ?
+                <Region pollutantType={form.getFieldValue('pollutantType')} isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} isActualCalibrationModal={isActualCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref} sortRate={sortRate} />
+                : <Ent pollutantType={form.getFieldValue('pollutantType')} parentCallback={parentCallback} sortRate={sortRate} />}
+            </Card>
+          </BreadcrumbWrapper>
+        </div>
+          :
+          <PlanWorkOrderStatisticsDay />
+        }
+      </div>
     }
-  </>
-  );
+  </>);
 };
 export default connect(dvaPropsData, dvaDispatch)(Index);

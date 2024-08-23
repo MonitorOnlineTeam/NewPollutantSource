@@ -105,6 +105,8 @@ const Index = (props) => {
 
   const inspectorType = path === '/operations/superviseRectification' ? 1 : 2; // 是否为现场督查 1 现场 2 远程  
 
+  const pollutantType = sessionStorage.getItem('sysPollutantCodes');
+
   const [form] = Form.useForm();
 
 
@@ -274,6 +276,7 @@ const Index = (props) => {
         BTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         ETime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
+        pollutantType,
         // InspectorType: inspectorType,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
         pageSize: pageSizes ? pageSizes : pageSize,
@@ -290,6 +293,7 @@ const Index = (props) => {
       BTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
       ETime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
       time: undefined,
+      pollutantType,
       // InspectorType: inspectorType,
     })
   }

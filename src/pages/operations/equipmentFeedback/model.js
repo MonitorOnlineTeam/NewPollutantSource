@@ -1,3 +1,11 @@
+/*
+ * @Author: outman0611 jia_anbo@163.com
+ * @Date: 2024-08-16 18:00:07
+ * @LastEditors: outman0611 jia_anbo@163.com
+ * @LastEditTime: 2024-08-22 16:19:56
+ * @FilePath: \merged_master\src\pages\operations\equipmentFeedback\model.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import moment from 'moment';
 import * as services from './service';
 import Cookie from 'js-cookie';
@@ -49,7 +57,7 @@ export default Model.extend({
     *getFaultFeedbackEntPoint({   payload,callback }, { call, update, select, put }) {
       const result = yield call(services.GetFaultFeedbackEntPoint, { ... payload });
       if (result.IsSuccess) {
-        yield update({entList: result.Datas?result.Datas.entList :[] });
+        yield update({entList: result.Datas?result.Datas :[] });
       } else {
         result.Message && message.error(result.Message)
       }

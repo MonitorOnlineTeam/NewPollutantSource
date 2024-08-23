@@ -35,6 +35,7 @@ import EntAtmoList from '@/components/EntAtmoList'
 import VerifyDetailsPop from '@/pages/dataSearch/exceedDataAlarmRecord/VerifyDetailsPop'
 import { uploadPrefix } from '@/config'
 import styles from '../index.less'
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -90,7 +91,7 @@ const pageUrl = {
 export default class OverVerifyLst extends Component {
   constructor(props) {
     super(props);
-
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
     this.state = {
       checkedValues: [],
       columns: [],
@@ -779,8 +780,8 @@ export default class OverVerifyLst extends Component {
                 <Form.Item label="行政区">
                   <RegionList style={{ width: 165 }} changeRegion={this.changeRegion} RegionCode={RegionCode} />
                 </Form.Item>
-                <Form.Item label="企业类型">
-                  <Select
+                <Form.Item label="企业类型" hidden={this.pollutantType}>
+                  {/* <Select
                     placeholder="企业类型"
                     onChange={this.typeChange}
                     value={PollutantType}
@@ -788,7 +789,13 @@ export default class OverVerifyLst extends Component {
                   >
                     <Option value="2">废气</Option>
                     <Option value="1">废水</Option>
-                  </Select>
+                  </Select> */}
+                  <SelectPollutantType
+                    placeholder="企业类型"
+                    onChange={this.typeChange}
+                    value={PollutantType}
+                    style={{ width: 100 }}
+                  />
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" loading={this.props.loading} onClick={this.queryClick}>

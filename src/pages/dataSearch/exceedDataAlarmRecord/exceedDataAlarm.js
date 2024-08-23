@@ -37,6 +37,7 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 import RegionList from '@/components/RegionList'
 import { uploadPrefix } from '@/config'
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 
 const pageUrl = {
@@ -76,7 +77,8 @@ const pageUrl = {
 class index extends PureComponent {
     constructor(props) {
         super(props);
-        this.newTabIndex = 0
+        this.newTabIndex = 0;
+        this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
         this.state = {
             regionCode: '',
             //////////////
@@ -84,10 +86,10 @@ class index extends PureComponent {
             time: [moment().add(-24, "hour"), moment()],
             activeKey: '1',
             panes: [],
-            entType: '2',
+            entType: this.pollutantType || 2,
             regionValue: '',
             attentionValue: '',
-            outletValue: '2',
+            outletValue: this.pollutantType || 2,
             operationpersonnel: '',
             regVisible: false,
             regVisibleAlready: false,
@@ -325,7 +327,7 @@ class index extends PureComponent {
                     {this.attention()}
                 </Select>
 
-                <Select
+                {/* <Select
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                     placeholder="排口类型"
                     maxTagCount={2}
@@ -353,7 +355,33 @@ class index extends PureComponent {
                     <Option value="2">废气</Option>
                     <Option value="1">废水</Option>
 
-                </Select>
+                </Select> */}
+                <SelectPollutantType 
+                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                    placeholder="排口类型"
+                    maxTagCount={2}
+                    maxTagTextLength={5}
+                    defaultValue={this.state.entType}
+                    maxTagPlaceholder="..."
+                    onChange={(value) => {
+                        //获取监测因子列表
+                        this.props.dispatch({
+                            type: pageUrl.GetPollutantCodeList,
+                            payload: {
+                                PollutantType: value
+                            }
+                        }).then(() => {
+                            if (this.props.pollutantCodeList.length > 0) {
+                                this.setState({
+                                    pollutantCodeList: this.props.pollutantCodeList.map(poll => poll.PollutantCode)
+                                })
+                            }
+                        })
+                        this.setState({
+                            outletValue: value,
+                        })
+                    }}
+                />
                 <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
                     this.setState({
                         dataType: e.target.value,
@@ -965,7 +993,7 @@ class index extends PureComponent {
                 activeKey={this.state.activeKey}
                 onEdit={this.onEdit}
             >
-                <TabPane tab={this.state.entType == '1' ? '废水' : '废气'} key={'1'} closable={false}>
+                <TabPane tab={this.state.entType == 1 ? '废水' : '废气'} key={1} closable={false}>
                     <SdlTable columns={columns} dataSource={AlarmList}
                         loading={loading}
                         // pagination={{
