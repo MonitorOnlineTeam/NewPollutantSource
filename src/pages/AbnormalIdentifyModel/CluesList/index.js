@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-08-14 16:36:32
+ * @Last Modified time: 2024-08-22 15:49:23
  * @Description：线索列表
  */
 
@@ -21,6 +21,7 @@ import {
   Tooltip,
   message,
   Tag,
+  Popconfirm,
 } from 'antd';
 import styles from '../styles.less';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
@@ -35,6 +36,7 @@ import { ModelNumberIdsDatas, ModalNameConversion, transformData } from '../CONS
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import CluesDetails from './CluesDetails';
 import { isArray } from 'lodash';
+import Cookie from 'js-cookie';
 const { SHOW_PARENT } = TreeSelect;
 
 const textStyle = {
@@ -46,6 +48,7 @@ const textStyle = {
 };
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
+  cluesListTag: AbnormalIdentifyModel.cluesListTag,
   warningForm: AbnormalIdentifyModel.warningForm,
   modelMenuNumber: AbnormalIdentifyModel.modelMenuNumber,
   // modelList: AbnormalIdentifyModel.modelList,
@@ -67,6 +70,7 @@ const CluesList = props => {
     entListLoading,
     showMode,
     tableProps = {},
+    cluesListTag,
   } = props;
   const modelNumber = props.match.params.modelNumber;
   // const modelNumber = 'all';
@@ -78,6 +82,7 @@ const CluesList = props => {
   const [pointList, setPointList] = useState([]);
   const [total, setTotal] = useState(0);
   const [cluesDetailsProps, setCluesDetailsProps] = useState();
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   console.log('warningForm', warningForm);
   // useEffect(() => {
@@ -117,6 +122,11 @@ const CluesList = props => {
     GetModelList();
     onFinish();
   }, [modelNumber]);
+
+  useEffect(() => {
+    // 标识改变后重新加载数据（深层弹窗操作后，要刷新列表时使用）
+    cluesListTag && onFinish();
+  }, [cluesListTag]);
 
   useEffect(() => {
     form.setFieldsValue({ ...warningForm[modelNumber] });
@@ -379,7 +389,7 @@ const CluesList = props => {
         setDataSource(res.Datas.finalResult);
         setWarningTypeCounts(_.sortBy(res.Datas.warningTypeCounts, item => -item.Count));
         setTotal(res.Total);
-
+        setSelectedRowKeys([]);
         // 设置滚动条高度，定位到点击详情的行号
         let currentForm = warningForm[modelNumber];
         // if (currentForm.scrollTop !== undefined && currentForm.rowKey) {
@@ -414,7 +424,7 @@ const CluesList = props => {
           ...warningForm[modelNumber],
         });
       }
-      onTableChange(1, 20);
+      onTableChange(1, 100);
     });
   };
 
@@ -456,6 +466,21 @@ const CluesList = props => {
     });
   };
 
+  // 删除线索
+  const onDelWarningModel = () => {
+    debugger;
+    dispatch({
+      type: 'AbnormalIdentifyModel/DelWarningModel',
+      payload: {
+        ModelGuid: selectedRowKeys,
+      },
+      callback: res => {
+        message.success('删除成功！');
+        onFinish();
+      },
+    });
+  };
+
   const getTreePorps = data => {
     const tProps = {
       treeData: data,
@@ -474,13 +499,26 @@ const CluesList = props => {
     return tProps;
   };
 
+  const rowSelection = {
+    type: 'checkbox',
+    selectedRowKeys: selectedRowKeys,
+    onChange: (newSelectedRowKeys, selectedRows) => {
+      setSelectedRowKeys(newSelectedRowKeys);
+    },
+  };
+
   const getPageContent = () => {
     let cardProps = showMode === 'modal' ? { bordered: false, bodyStyle: { padding: 0 } } : {};
     let actionTreeProps = getTreePorps(modelList);
     let levelTreeProps = getTreePorps(levelList);
     let typeTreeProps = getTreePorps(typeList);
 
-    console.log('modelNumber', modelNumber);
+    const userCookie = Cookie.get('currentUser');
+    let isSystem = false;
+    if (userCookie) {
+      isSystem = JSON.parse(userCookie).User_ID === '48f3889c-af8d-401f-ada2-c383031af92d';
+    }
+
     return (
       <Card className={styles.warningWrapper} {...cardProps}>
         <Form
@@ -664,7 +702,7 @@ const CluesList = props => {
                 type="primary"
                 loading={queryLoading}
                 onClick={() => {
-                  onTableChange(1, 20);
+                  onTableChange(1, 100);
                   // onFinish();
                 }}
               >
@@ -689,10 +727,24 @@ const CluesList = props => {
                   重置
                 </Button>
               )}
+              {// 超级管理员显示
+              isSystem && (
+                <Popconfirm
+                  title="确认是否删除?"
+                  onConfirm={onDelWarningModel}
+                  // okText="Yes"
+                  // cancelText="No"
+                >
+                  <Button type="primary" disabled={!selectedRowKeys.length} danger>
+                    删除线索
+                  </Button>
+                </Popconfirm>
+              )}
             </Space>
           </Form.Item>
         </Form>
         <SdlTable
+          rowSelection={isSystem ? rowSelection : false}
           resizable
           rowKey="ModelWarningGuid"
           align="center"
@@ -744,7 +796,7 @@ const CluesList = props => {
                               ...props.warningForm[modelNumber],
                               warningTypeCode: item.WarningType,
                               pageIndex: 1,
-                              pageSize: 20,
+                              pageSize: 100,
                             },
                           },
                         },
@@ -781,6 +833,7 @@ const CluesList = props => {
             <CluesDetails
               // showMode={showMode}
               hideBreadcrumb={true}
+              // selectedClusInfo={cluesDetailsProps}
               match={{
                 params: {
                   id: cluesDetailsProps.ModelWarningGuid,

@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-08-12 17:12:40
+ * @Last Modified time: 2024-08-22 16:19:44
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -205,7 +205,8 @@ export default Model.extend({
       if (result.IsSuccess) {
         const configId = result.Datas.ConfigId;
         const columns = result.Datas.ColumnFields.filter(
-          itm => itm.FOREIGH_DT_CONFIGID === '' && itm.DF_WIDTH !== '0',
+          // itm => itm.FOREIGH_DT_CONFIGID === '' && itm.DF_WIDTH !== '0',
+          itm => !itm.FOREIGH_DT_CONFIGID && itm.DF_WIDTH !== '0',
         ).map((item, index) => ({
           title: item.DF_NAME_CN,
           dataIndex: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : item.FullFieldName,

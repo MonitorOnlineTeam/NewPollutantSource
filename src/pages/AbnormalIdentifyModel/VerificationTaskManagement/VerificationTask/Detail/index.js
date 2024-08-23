@@ -42,6 +42,7 @@ import cuid from 'cuid';
 import ImageView from '@/components/ImageView';
 import CustomUpload from './CustomUpload';
 import CluesDetails from '@/pages/AbnormalIdentifyModel/CluesList/CluesDetails.js';
+import QuestionTooltip from '@/components/QuestionTooltip';
 
 import Cookie from 'js-cookie';
 import { API } from '@config/API';
@@ -196,7 +197,7 @@ const Index = props => {
         setDataSource(res);
         if (type == 1) {
           //待核查
-          res?.Plan?.PlanItem.map(item => {
+          res?.Plan?.PlanItem[0]?.map(item => {
             form.setFieldsValue({
               [`reContent_${item.ID}`]: item.ReContent,
               [`reAttachment_${item.ID}`]: item.ReAttachment?.AttachID,
@@ -222,7 +223,7 @@ const Index = props => {
     const parData = {
       stype: type,
       modelCheckedGuid: id,
-      planItems: dataSource?.Plan?.PlanItem.map(item => {
+      planItems: dataSource?.Plan?.PlanItem[0]?.map(item => {
         return {
           modelPlanItemGuid: item.ID,
           reContent: values[`reContent_${item.ID}`] ? values[`reContent_${item.ID}`] : '',
@@ -243,11 +244,24 @@ const Index = props => {
   const [checkVisible, setCheckVisible] = useState(false);
   const checkOk = async () => {
     const values = await form2.validateFields();
+
+    // 处理暂定发出线索时间
+    let StopBeginTime = undefined,
+      StopEndTime = undefined;
+    if (modalValues.stopTime) {
+      StopBeginTime = moment().format('YYYY-MM-DD HH:mm:ss');
+      StopEndTime = moment()
+        .add(1, modalValues.stopTime)
+        .format('YYYY-MM-DD HH:mm:ss');
+    }
+
     props.dispatch({
       type: 'AbnormalIdentifyModel/CheckConfirm',
       payload: {
         modelCheckedGuid: id,
         ...values,
+        StopBeginTime,
+        StopEndTime,
         flag: values.flag?.length ? values.flag[values.flag.length - 1] : undefined,
       },
       callback: res => {
@@ -413,7 +427,6 @@ const Index = props => {
                   </Row>
                   {isRectificationRecord == 1 ? (
                     <>
-                      {' '}
                       <Form.Item label="方案及核查信息" className="programmeLabel">
                         <div
                           dangerouslySetInnerHTML={{ __html: dataSource?.Plan?.ContentBody }}
@@ -426,7 +439,7 @@ const Index = props => {
                           核查动作
                         </div>
                         <div style={{ paddingLeft: 112 }}>
-                          {dataSource?.Plan?.PlanItem.map((item, index) => {
+                          {dataSource?.Plan?.PlanItem[0]?.map((item, index) => {
                             const cuids = item.ReAttachment?.AttachID
                               ? item.ReAttachment.AttachID
                               : cuid();
@@ -442,6 +455,7 @@ const Index = props => {
                                 <Form.Item label={`${index + 1}.${item.QTitle}`}>
                                   {item.QContent}
                                 </Form.Item>
+                                {/* {item.QContent} */}
                                 {item.QAttachment?.ImgList?.[0] && (
                                   <div>
                                     <SeeUploadComponents item={item.QAttachment?.ImgList} />
@@ -524,16 +538,27 @@ const Index = props => {
                           </Button>
                         </Space>
                       ) : (
-                        <Button
-                          type="primary"
-                          loading={saveLoading}
-                          onClick={() => {
-                            setCheckVisible(true);
-                            form2.resetFields();
-                          }}
-                        >
-                          核查
-                        </Button>
+                        <Space>
+                          {/* <Button
+                            type="primary"
+                            danger
+                            onClick={() => {
+                            
+                            }}
+                          >
+                            打回
+                          </Button> */}
+                          <Button
+                            type="primary"
+                            loading={saveLoading}
+                            onClick={() => {
+                              setCheckVisible(true);
+                              form2.resetFields();
+                            }}
+                          >
+                            核查
+                          </Button>
+                        </Space>
                       )}
                     </Row>
                   )}
@@ -590,6 +615,7 @@ const Index = props => {
             <Form.Item
               name="checkedResult"
               label="与线索是否符合"
+              labelCol={{ flex: '130px' }}
               rules={[{ required: true, message: '请选择与线索是否符合!' }]}
             >
               <Radio.Group>
@@ -597,6 +623,25 @@ const Index = props => {
                 <Radio value={2}>部分符合</Radio>
                 <Radio value={3}>不符合</Radio>
               </Radio.Group>
+            </Form.Item>
+            <Form.Item
+              name="stopTime"
+              label={
+                <span>
+                  暂停发出线索
+                  <QuestionTooltip
+                    content="已知发生问题的原因暂无法解决的情况"
+                    style={{ marginLeft: 2 }}
+                  />
+                </span>
+              }
+              labelCol={{ flex: '120px' }}
+              // rules={[{ required: true, message: '请选择核查人!' }]}
+            >
+              <Select style={{ width: '100%' }} placeholder="请选择暂停时间" allowClear>
+                <Option value={1}>一周</Option>
+                <Option value={2}>一个月</Option>
+              </Select>
             </Form.Item>
             <Spin
               spinning={!!preTakeFlagDatasLoading}
@@ -606,7 +651,7 @@ const Index = props => {
               <Form.Item
                 name="flag"
                 label="专家意见"
-                labelCol={{ flex: '90px' }}
+                labelCol={{ flex: '120px' }}
                 rules={[{ required: false, message: '请选择标记!' }]}
               >
                 <Cascader
@@ -623,7 +668,7 @@ const Index = props => {
             <Form.Item
               label="核查结论"
               name="checkedDes"
-              labelCol={{ flex: '90px' }}
+              labelCol={{ flex: '120px' }}
               rules={[{ required: true, message: '请输入核查结论!' }]}
             >
               <Input.TextArea placeholder="请输入" />

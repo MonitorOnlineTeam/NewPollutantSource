@@ -2,7 +2,7 @@
  * @Author: JiaQi 
  * @Date: 2022-11-24 17:12:44 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2022-11-28 10:23:11
+ * @Last Modified time: 2024-08-20 14:00:49
  * @Description: 报警记录查询页面
  */
 import React, { PureComponent } from 'react'

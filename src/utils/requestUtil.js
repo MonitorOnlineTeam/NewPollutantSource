@@ -49,6 +49,7 @@ const errorHandler = error => {
         router.push('/user/login');
         notification.error({
           message: '登录超时，请重新登录！',
+          duration: 3,
         });
         setTimeout(() => { isLoginTimeoutAlertShown = false; }, 3000); // 重置标志，避免长期禁止弹窗
       }

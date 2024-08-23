@@ -21,7 +21,7 @@ import styles from '../../styles.less';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { RightOutlined } from '@ant-design/icons';
-import { getColorByName, ModalTypeNameConversion } from '../../CONST';
+import { getColorByName, ModalTypeNameConversion, getPollutantNameByCode } from '../../CONST';
 import TableText from '@/components/TableText';
 import moment from 'moment';
 import UpdateDataFlag from './UpdateDataFlag';
@@ -75,13 +75,11 @@ const WarningDataAndChart = props => {
   const [isModalOpenDataFlag, setIsModalOpenDataFlag] = useState(false);
 
   const buttonList = permissionButton(location.pathname);
-  console.log('location', location);
-  console.log('buttonList', buttonList);
   const RWGYText = ModalTypeNameConversion('人为干预');
   const GZText = ModalTypeNameConversion('故障原因');
 
-//   let tempSelectedNames = [];
-// let legendSelected = {};
+  //   let tempSelectedNames = [];
+  // let legendSelected = {};
 
   const legendList = [
     {
@@ -196,6 +194,24 @@ const WarningDataAndChart = props => {
         legend[item] = true;
       }
     });
+
+    /**
+     * 如果和报警污染物匹配不上的话，则全部选中，并加上报警的污染物
+     */
+    const allFalse = Object.values(legend).every(value => value === false);
+    // 如果所有属性值都是 false，则将它们全部转换为 true
+    if (allFalse) {
+      Object.keys(legend).forEach(key => {
+        legend[key] = true;
+      });
+
+      // 加上报警的污染物
+      defaultChartSelected.map(item => {
+        if (getPollutantNameByCode[item]) {
+          legend[getPollutantNameByCode[item]] = true;
+        }
+      });
+    }
     legendSelected = legend;
   };
 
@@ -1251,7 +1267,7 @@ const WarningDataAndChart = props => {
     let series = option.series;
     let firstIndex = _.values(selected).findIndex(item => item === true);
     let markIndex = series.findIndex(item => item.markLine || item.markPoint || item.markArea);
-    console.log('markIndex', markIndex)
+    console.log('markIndex', markIndex);
     if (firstIndex > -1 && markIndex > -1 && firstIndex !== markIndex) {
       //
       series[firstIndex].markLine = series[markIndex].markLine;
@@ -1542,7 +1558,7 @@ const WarningDataAndChart = props => {
           </Spin>
         )}
         {props.displayType == 'modal' && pointInfo && buttonList.includes('UpdateDataScript') && (
-        // {true && (
+          // {true && (
           <Button
             type="primary"
             onClick={() => {
@@ -1697,7 +1713,6 @@ const WarningDataAndChart = props => {
           </Space>
         </Row>
       </Modal>
-        {console.log('pointInfo', pointInfo)}
       {isModalOpenDataFlag && (
         <UpdateDataFlag
           pointInfo={pointInfo}
@@ -1708,8 +1723,6 @@ const WarningDataAndChart = props => {
           }}
         />
       )}
-
-      {console.log('props', props)}
     </>
   );
 };

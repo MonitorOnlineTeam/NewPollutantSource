@@ -22,7 +22,7 @@ function initWarningForm() {
       warningTypeCode: [],
       level: [],
       types: [],
-      pageSize: 20,
+      pageSize: 100,
       pageIndex: 1,
     };
   }
@@ -71,6 +71,7 @@ export default Model.extend({
       date: [moment().add(-1, 'months'), moment()],
       warningTypeCode: [],
     },
+    checkedInfo: {},
   },
   effects: {
     // 获取通用库模型列表
@@ -298,7 +299,7 @@ export default Model.extend({
             warningTypeCode: [],
             level: [],
             types: [],
-            pageSize: 20,
+            pageSize: 100,
             pageIndex: 1,
           },
         },
@@ -729,6 +730,9 @@ export default Model.extend({
       // 获取待核查任务、已核查任务详情
       const result = yield call(services.GetCheckedView, payload);
       if (result.IsSuccess) {
+        yield update({
+          checkedInfo: result.Datas,
+        });
         callback && callback(result.Datas);
       } else {
         result.Message && message.error(result.Message);
@@ -947,6 +951,11 @@ export default Model.extend({
           pageSize: 12,
         },
       });
+    },
+    // 删除线索
+    *DelWarningModel({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestPost, API.AbnormalIdentifyModel.DelWarningModel, payload);
+      result.IsSuccess && callback(result);
     },
   },
 });

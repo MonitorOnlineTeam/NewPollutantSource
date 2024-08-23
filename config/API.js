@@ -1433,6 +1433,8 @@ export const API = {
     GetPointInfoAnalysis: before + '/WarningV2/GetPointInfoAnalysis',
     // 获取排污单位总览
     GetPwPointList: before + '/WarningV2/GetPwPointList',
+    // 删除报警及任务单关联
+    DelWarningModel: before + '/WarningV2/DelWarningModel',
 
     /*实时数据异常识别及管理*/
     //异常线索清单
