@@ -1438,6 +1438,8 @@ export const API = {
     GetPwPointList: before + '/WarningV2/GetPwPointList',
     // 删除报警及任务单关联
     DelWarningModel: before + '/WarningV2/DelWarningModel',
+    // 核查打回
+    RepulseCheck: before + '/Clue/RepulseCheck',
 
     /*实时数据异常识别及管理*/
     //异常线索清单

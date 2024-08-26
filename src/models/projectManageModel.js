@@ -14,12 +14,23 @@ export default Model.extend({
   effects: {
     // 获取所有项目
     *GetUserProjectList({ payload, callback }, { call, select, update }) {
-      const result = yield call(requestPost, `${API.SystemManageApi.GetUserProjectList}`, payload);
-      if (result.IsSuccess) {
-        callback && callback(result.Datas);
+      if (configInfo.IsOpenAQI === '1') {
+        callback && callback([]);
         yield update({
-          projectList: result.Datas,
+          projectList: [],
         });
+      } else {
+        const result = yield call(
+          requestPost,
+          `${API.SystemManageApi.GetUserProjectList}`,
+          payload,
+        );
+        if (result.IsSuccess) {
+          callback && callback(result.Datas);
+          yield update({
+            projectList: result.Datas,
+          });
+        }
       }
     },
     //  获取所有用户
@@ -35,7 +46,7 @@ export default Model.extend({
     *InsertProjectUser({ payload }, { call, update }) {
       const result = yield call(requestPost, `${API.SystemManageApi.InsertProjectUser}`, payload);
       if (result.IsSuccess) {
-        message.success('操作成功')
+        message.success('操作成功');
       }
     },
     // 获取已保存关联用户

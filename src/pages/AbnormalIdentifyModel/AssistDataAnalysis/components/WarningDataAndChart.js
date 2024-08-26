@@ -1212,7 +1212,6 @@ const WarningDataAndChart = props => {
         xAxisIndex: 0,
       };
     }
-    console.log('option', option);
     return option;
   };
 
@@ -1256,7 +1255,6 @@ const WarningDataAndChart = props => {
         show: selected[item.name],
       };
     });
-    console.log('yData', yData);
     // 计算图表左右边距
     let grid = option.grid[0];
     let yAxisSelectedLength = _.values(selected).filter(item => item === true).length;
@@ -1267,7 +1265,6 @@ const WarningDataAndChart = props => {
     let series = option.series;
     let firstIndex = _.values(selected).findIndex(item => item === true);
     let markIndex = series.findIndex(item => item.markLine || item.markPoint || item.markArea);
-    console.log('markIndex', markIndex);
     if (firstIndex > -1 && markIndex > -1 && firstIndex !== markIndex) {
       //
       series[firstIndex].markLine = series[markIndex].markLine;
@@ -1416,7 +1413,6 @@ const WarningDataAndChart = props => {
       />
     );
   }, [allTypeDataList, legendSelected]);
-  console.log('legendSelected', legendSelected);
 
   // 图例点击
   const onClickLegend = (data, checked) => {
