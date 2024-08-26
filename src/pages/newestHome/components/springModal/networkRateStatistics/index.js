@@ -583,8 +583,8 @@ export default class EntTransmissionEfficiency extends Component {
                     <Form.Item>
                       <Radio.Group onChange={this.typeChange} value={this.state.pollutantType}>
                         <Radio.Button value={''}>全部</Radio.Button>
-                        <Radio.Button value={'2'}>废气</Radio.Button>
-                        <Radio.Button value={'1'}>废水</Radio.Button>
+                        <Radio.Button value={2}>废气</Radio.Button>
+                        <Radio.Button value={1}>废水</Radio.Button>
                       </Radio.Group>
                     </Form.Item>
                     {this.state.pollutantType == 2 && (

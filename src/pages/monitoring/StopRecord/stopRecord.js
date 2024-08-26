@@ -64,7 +64,7 @@ class index extends PureComponent {
   constructor(props) {
     super(props);
     this.newTabIndex = 0;
-    this.pollutantType = sessionStorage.getItem('sysPollutantCodes');
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined;
     this.state = {
       Begintime: [
         moment(

@@ -1,7 +1,8 @@
-/**
- * 功  能：远程督查
- * 创建人：jab
- * 创建时间：2021.3.16
+/*
+ * @Author: outman0611
+ * @Date: 2024-06-11 14:29:31
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-08-26 10:35:39
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Timeline } from 'antd';
@@ -239,7 +240,7 @@ const Index = (props) => {
   const [form3] = Form.useForm(); //添加编辑表单   参数一致性核查表
   const [commonForm] = Form.useForm();
 
-  const pollutantType = sessionStorage.getItem('sysPollutantCodes');
+  const pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined;
 
   const [dates, setDates] = useState([]);
   

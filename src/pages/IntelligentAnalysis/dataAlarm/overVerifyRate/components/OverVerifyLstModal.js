@@ -464,7 +464,7 @@ export default class OverVerifyLstModal extends Component {
     //获取核实结果
     dispatch({
       type: pageUrl.GetOverToExamineOperation,
-      payload: { PollutantType: '' },
+      payload: { PollutantType: type, },
       callback: (data) => {
         if (data.length > 0) {
           this.setState({

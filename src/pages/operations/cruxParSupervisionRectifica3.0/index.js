@@ -91,7 +91,7 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const pollutantType = sessionStorage.getItem('sysPollutantCodes');
+  const pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined;
 
   const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading, queryPar,par } = props;
 
@@ -406,12 +406,12 @@ const Index = (props) => {
         footer={null}
         mask={false}
         wrapClassName='spreadOverModal'
-        onCancel={() => { setRectificaDetailVisible(false); rectificaDetailType != 3 && infoData?.Status !== '整改已完成' && onFinish(pageIndex, pageSize); }}
+        onCancel={() => { setRectificaDetailVisible(false); }}// rectificaDetailType != 3 && infoData?.Status !== '整改已完成' && onFinish(pageIndex, pageSize);
         destroyOnClose
         zIndex={666}
         className={styles.rectificaDetailSty}
       >
-        <RectificaDetail id={rectificaDetailId} rectificaDetailType={rectificaDetailType} infoData={infoData} />
+        <RectificaDetail id={rectificaDetailId} rectificaDetailType={rectificaDetailType} infoData={infoData} onFinish={()=>onFinish(pageIndex, pageSize)}/>
       </Modal>
     </div>
   );

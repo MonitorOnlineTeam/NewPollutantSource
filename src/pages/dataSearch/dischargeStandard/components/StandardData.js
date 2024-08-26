@@ -61,7 +61,7 @@ const pageUrl = {
 export default class Index extends Component {
   constructor(props) {
     super(props);
-    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || 2;
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
     this.state = {
       columns: [],
     };
@@ -118,7 +118,7 @@ export default class Index extends Component {
       EntCode: '',
       RegionCode: '',
       PollutantCode: '',
-      PollutantType: this.pollutantType,
+      PollutantType: this.pollutantType || 2,
     });
     setTimeout(() => {
       this.getTableData();

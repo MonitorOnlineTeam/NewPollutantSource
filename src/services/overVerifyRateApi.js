@@ -1,9 +1,15 @@
+/*
+ * @Author: outman0611
+ * @Date: 2024-06-07 16:48:56
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-08-26 17:37:57
+ */
 import { post } from '@/utils/request';
 import { API } from '@config/API';
 
 // 根据企业类型查询监测因子
 export async function GetPollutantByType(params) {
-  const result = post(API.CommonApi.GetPollutantCodeList, params);
+  const result = post(API.CommonApi.GetPollutantCodeList, {...params,pollutantType:Number(sessionStorage.getItem('sysPollutantCodes')) || params.pollutantType});
   return result;
 }
 

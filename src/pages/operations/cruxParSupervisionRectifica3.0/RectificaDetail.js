@@ -857,6 +857,7 @@ const Index = (props) => {
           if (isSuccess) {
             setRectificationVisible(false)
             props.getZGCheckInfoList({ id: id })
+            props.onFinish && props.onFinish()
           }
         })
       } catch (errorInfo) {
@@ -873,6 +874,7 @@ const Index = (props) => {
           if (isSuccess) {
             setRectificationVisible(false)
             props.getZGCheckInfoList({ id: id })
+            props.onFinish && props.onFinish()
           }
         })
       } catch (errorInfo) {
@@ -888,6 +890,7 @@ const Index = (props) => {
           if (isSuccess) {
             setRectificationVisible(false)
             props.getZGCheckInfoList({ id: id })
+            props.onFinish && props.onFinish()
           }
         })
       } catch (errorInfo) {
@@ -1068,6 +1071,7 @@ const Index = (props) => {
           setRejectVisible(false)
           setPopVisble(false)
           props.getZGCheckInfoList({ id: id })
+          props.onFinish && props.onFinish()
         }
       })
     } else if (type == 2) {
@@ -1093,6 +1097,7 @@ const Index = (props) => {
           setRejectVisible(false)
           setPopVisble(false)
           props.getZGCheckInfoList({ id: id })
+          props.onFinish && props.onFinish()
         }
       })
     } else {
@@ -1118,6 +1123,7 @@ const Index = (props) => {
           setRejectVisible(false)
           setPopVisble(false)
           props.getZGCheckInfoList({ id: id })
+          props.onFinish && props.onFinish()
         }
       })
     }

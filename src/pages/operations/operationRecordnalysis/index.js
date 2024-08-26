@@ -109,7 +109,7 @@ const Index = (props) => {
 
   const { taskTypeLoading, taskTypeList, tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, recordAnalyListQueryPar, accountTableDatas, accountTableTotal, accountTableLoading, accountDetailQueryPar, accountDetailCol,accountExportLoading, } = props;
 
-  const pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || 2
+  const pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined
 
   useEffect(() => {
     pollutantTypeChange(pollutantType)
@@ -251,7 +251,7 @@ const Index = (props) => {
       layout='inline'
       initialValues={{
         time: [moment(new Date()).add(-7, 'day'), moment()],
-        PollutantType: pollutantType,
+        PollutantType: pollutantType || 2,
       }}
       className={styles["ant-advanced-search-form"]}
       onFinish={() => { onFinish() }}

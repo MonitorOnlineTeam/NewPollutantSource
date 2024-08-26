@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-08-16 09:48:47
- * @LastEditors: outman0611 jia_anbo@163.com
- * @LastEditTime: 2024-08-12 17:56:23
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-08-23 16:34:19
  * @Description: 运维记录
  */
 import React, { Component } from 'react';
@@ -454,10 +454,10 @@ class OperationRecord extends Component {
           <Card.Grid
             style={{
               width: '100%',
-              height: !this.props.isHomeModal ? 'calc(100vh - 270px)' : 'calc(100vh - 210px)',
+              height: 'calc(100vh - 210px)',
               overflow: 'auto',
               marginBottom: 10,
-              paddingBottom: 44,
+              paddingBottom: 24,
               ...this.props.style,
             }}
           >

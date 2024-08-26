@@ -30,7 +30,7 @@ export default Model.extend({
   effects: {
     // 根据企业获取排口
     *getPointByEntCode({ payload, callback }, { call, update }) {
-      const result = yield call(services.getPointByEntCode, {...payload,PollutantTypeCode:sessionStorage.getItem('sysPollutantCodes') });
+      const result = yield call(services.getPointByEntCode, {...payload,PollutantTypeCode:sessionStorage.getItem('sysPollutantCodes') || payload.PollutantTypeCode });
       if (result.IsSuccess) {
         callback(result.Datas)
       }

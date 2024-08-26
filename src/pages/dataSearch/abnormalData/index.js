@@ -52,11 +52,10 @@ const { RangePicker } = DatePicker;
   },
 })
 class Index extends PureComponent {
-  pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || 2;
+  pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
   state = {
     showTime: true,
     format: 'YYYY-MM-DD HH',
-    pollutantType: this.pollutantType,
     checkedValues: [],
     operationpersonnel: '',
     queryCondition: {},
@@ -177,7 +176,7 @@ class Index extends PureComponent {
     // 根据企业类型查询监测因子
     this.getPollutantByType(false, () => {
       this.getExceptionList(true);
-    });
+    },this.pollutantType);
 
     if (this.props.regionCode) {
       this.props.form.setFieldsValue({ RegionCode: this.props.regionCode });
@@ -185,11 +184,11 @@ class Index extends PureComponent {
   }
 
   // 根据企业类型查询监测因子
-  getPollutantByType = (reload, cb) => {
+  getPollutantByType = (reload, cb, type) => {
     this.props.dispatch({
       type: 'abnormalData/getPollutantByType',
       payload: {
-        type: this.props.form.getFieldValue('PollutantType'),
+        type: type,
       },
       callback: res => {
         this.setState({ checkedValues: res.map(item => item.PollutantCode) }, () => {
@@ -467,7 +466,7 @@ class Index extends PureComponent {
               <Col md={4} style={{display:this.pollutantType&&'none'}}>
                 <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
                   {getFieldDecorator('PollutantType', {
-                    initialValue: this.pollutantType,
+                    initialValue: this.pollutantType  || 2,
                   })(
                     // <Select
                     //   placeholder="请选择企业类型"
@@ -484,9 +483,7 @@ class Index extends PureComponent {
                      <SelectPollutantType
                      placeholder="请选择企业类型"
                      onChange={value => {
-                       this.setState({ pollutantType: value }, () => {
-                         this.getPollutantByType(true);
-                       });
+                      this.getPollutantByType(true,false,value);
                      }}
                      />
                   )}

@@ -211,7 +211,7 @@ export default class EntTransmissionEfficiency extends Component {
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantTypeCode:"1",
+      PollutantTypeCode:1,
       ModelType: "All"
     });
     setTimeout(() => {

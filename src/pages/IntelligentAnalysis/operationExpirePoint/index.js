@@ -15,6 +15,7 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
+import SelectPollutantType from '@/components/SelectPollutantType';
 import moment from 'moment'
 import styles from "./style.less" 
 const { Option } = Select;
@@ -287,11 +288,12 @@ const Index = (props) => {
   >  
          <Row> 
          <Form.Item name='' label=''  style={{  marginRight: 8,}} >
-             <Radio.Group onChange={onChange} defaultValue={props.pollutantTypes?props.pollutantTypes:''}>
+              <Radio.Group onChange={onChange} defaultValue={props.pollutantTypes?props.pollutantTypes:''}>
                 <Radio.Button value="">全部</Radio.Button>
-                <Radio.Button value="2">废气</Radio.Button>
-                <Radio.Button value="1">废水</Radio.Button>
+                <Radio.Button value={2}>废气</Radio.Button>
+                <Radio.Button value={1}>废水</Radio.Button>
              </Radio.Group>
+             {/* <SelectPollutantType onChange={onChange} defaultValue={props.pollutantTypes?props.pollutantTypes:''}/> */}
           </Form.Item>
           <Form.Item name=''  label='' >
            <Button icon={<ExportOutlined />} loading={exportLoading} onClick={()=>{ exports()} }>

@@ -105,7 +105,7 @@ const Index = (props) => {
 
   const inspectorType = path === '/operations/superviseRectification' ? 1 : 2; // 是否为现场督查 1 现场 2 远程  
 
-  const pollutantType = sessionStorage.getItem('sysPollutantCodes');
+  const pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined;
 
   const [form] = Form.useForm();
 

@@ -783,7 +783,7 @@ class Index extends PureComponent {
             <div className={styles.desc} style={{borderBottom:ShowMapData? '1px dashed #ccc':'none'}}>
               <div className={styles['desc-l']}>
                 <h3>站点信息</h3>
-                <p className='textOverflow' style={{ width: 160 }} title={infoWindowData.regionCityName}>区域：{infoWindowData.regionCityName}</p>
+                <p className='textOverflow' style={{ width: 160 }} title={infoWindowData.regionName}>区域：{infoWindowData.regionName}</p>
                 <p>经度：{currentClickObj.Longitude}</p>
                 <p>纬度：{currentClickObj.Latitude}</p>
               </div>

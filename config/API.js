@@ -959,6 +959,9 @@ export const API = {
     ExportEquipmentFaultFeedbackList: before + '/EquipmentFailure/ExportEquipmentFaultFeedbackList', //导出设备故障反馈信息
     UpdateEquipmentFaultFeedbackStatus:
       before + '/EquipmentFailure/UpdateEquipmentFaultFeedbackStatus', //更新设备故障反馈信息
+    /*企业异常记录*/
+    ExportExceptionReportList: before + '/ExceptionApi/ExportExceptionReportList', //获取企业异常记录
+    GetExceptionReportedView: before + '/ExceptionDataApi/GetExceptionReportedView', //获取企业异常记录详情
   },
   // 电力Api
   ElectricEnergyApi: {

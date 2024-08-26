@@ -217,7 +217,7 @@ const Index = (props) => {
         :
         <>
           <Row align='middle'>
-            <Form.Item label='日期' name='time' style={{ paddingRight: 8 }} className='form_label_width_83'>
+            <Form.Item label='日期' name='time' style={{ paddingRight: 8 }} className={!pollutantType && 'form_label_width_83'}>
               <RangePicker allowClear={false} style={{ width: 240 }}
                 format='YYYY-MM-DD' />
             </Form.Item>

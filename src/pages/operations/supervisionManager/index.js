@@ -48,7 +48,7 @@ const dvaPropsData = ({ loading, supervisionManager, global, common, point, auto
   userLoading: loading.effects[`common/getUserList`],
   entLoading: common.noFilterEntLoading,
   clientHeight: global.clientHeight,
-  monitoringTypeList: point.monitoringTypeList,
+  // monitoringTypeList: point.monitoringTypeList,
   systemModelList: point.systemModelList,
   loadingSystemModel: loading.effects[`point/getSystemModelList`] || false,
   systemModelListTotal: point.systemModelListTotal,
@@ -81,12 +81,12 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    getMonitoringTypeList: (payload) => {
-      dispatch({
-        type: `point/getMonitoringTypeList`, //获取监测类别
-        payload: payload,
-      })
-    },
+    // getMonitoringTypeList: (payload) => {
+    //   dispatch({
+    //     type: `point/getMonitoringTypeList`, //获取监测类别
+    //     payload: payload,
+    //   })
+    // },
     getSystemModelList: (payload) => { //列表 系统型号
       dispatch({
         type: `point/getSystemModelList`,
@@ -168,12 +168,12 @@ const Index = (props) => {
 
   const [tableForm] = Form.useForm();
 
-  const pollutantTypeCode = Number(sessionStorage.getItem('sysPollutantCodes'));
+  const pollutantTypeCode = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined;
   
   const [fromVisible, setFromVisible] = useState(false)
 
 
-  const [type, setType] = useState()
+  const [type, setType] = useState('add')
   const [submitFlag, setSubmitFlag] = useState(false)
   const [pushFlag, setPushFlag] = useState(false)
 
@@ -194,7 +194,7 @@ const Index = (props) => {
 
   useEffect(() => {
     const buttonList = permissionButton(props.match.path)
-    console.log(buttonList)
+
 
     buttonList.map(item=>{
       switch (item){
@@ -206,7 +206,7 @@ const Index = (props) => {
     if (par) {
       form.setFieldsValue({ EntCode:par?.EntCode,time:par?.time })
       setPointLoading(true)
-      props.getPointByEntCode({ EntCode: par?.EntCode }, (res) => {
+      props.getPointByEntCode({ EntCode: par?.EntCode,PollutantTypeCode:pollutantTypeCode }, (res) => {
         setPointList(res)
         setPointLoading(false)
         form.setFieldsValue({ DGIMN:par?.DGIMN })
@@ -221,10 +221,10 @@ const Index = (props) => {
   const initData = () => {
     onFinish()
     setTimeout(() => {
-      props.getInspectorOperationInfoList({ ID: '', InspectorType: inspectorType, PollutantType: "2" }, (data) => {
+      props.getInspectorOperationInfoList({ ID: '', InspectorType: inspectorType, PollutantType: pollutantType || 2 }, (data) => {
         foramtProblemFilesList(data)
       })
-      props.getMonitoringTypeList({})
+      // props.getMonitoringTypeList({})
     })
   }
 
@@ -496,24 +496,24 @@ const Index = (props) => {
           setDetailLoading(false)
         }
         if (echoData) {
-          const pollType = echoData.PollutantType;
+          const pollType = Number(echoData.PollutantType) || undefined;
           setPollutantType(pollType)
 
           setDefaultEvaluate(echoData.Evaluate ? echoData.Evaluate : undefined)//评价默认值
 
           setDeviceInfoList(echoData.MonitorPointEquipmentList)
-
           form2.setFieldsValue({
             ...echoData,
             EntCode: undefined,
             DGIMN: undefined,
+            PollutantType:pollType,
             RegionCode: echoData.RegionCode.split(","),
             PollutantCode: echoData.PollutantCode.split(","),
             InspectorDate: moment(echoData.InspectorDate),
           })
 
-          setGaschoiceData(echoData.GasManufacturerName ? echoData.GasManufacturerName : undefined)
-          setPmchoiceData(echoData.PMManufacturerName ? echoData.PMManufacturerName : undefined)
+          // setGaschoiceData(echoData.GasManufacturerName ? echoData.GasManufacturerName : undefined)
+          // setPmchoiceData(echoData.PMManufacturerName ? echoData.PMManufacturerName : undefined)
 
           setDetailLoading(false)
           getEntList(pollType, () => { //单独获取企业填写的值
@@ -523,7 +523,7 @@ const Index = (props) => {
 
           })
           setPointLoading2(true)
-          props.getPointByEntCode({ EntCode: echoData.EntCode }, (res) => { //单独获取监测点填写的值
+          props.getPointByEntCode({ EntCode: echoData.EntCode,PollutantTypeCode:pollType }, (res) => { //单独获取监测点填写的值
             setPointList2(res)
             setPointLoading2(false)
             form2.setFieldsValue({
@@ -658,7 +658,7 @@ const Index = (props) => {
   const [entList, setEntList] = useState([])
   const getEntList = (pollutantType, callback) => {
     setEntLoading2(true)
-    props.getEntNoFilterList({ RegionCode: '', PollutantType: pollutantType }, (data) => {
+    props.getEntNoFilterList({ RegionCode: '',PollutantType: pollutantType}, (data) => {
       setEntList(data)
       setEntLoading2(false);
       callback && callback();
@@ -698,30 +698,30 @@ const Index = (props) => {
     setFilesCuidList3(filesCuidObj3)
     setFilesList3(filesListObj3)
   }
-  const add = () => {
-    setFromVisible(true)
-    setTimeout(() => {
+  useEffect(()=>{
+    if(!fromVisible){
       setType('add')
-      setSubmitFlag(false)
-      setPushFlag(false)
       setPollutantType(pollutantTypeCode || 2);
       setDeviceInfoList([])
       form2.resetFields();
       tableForm.resetFields();
       form2.setFieldsValue({ Inspector: userCookie && JSON.parse(userCookie).UserId })
-      setGaschoiceData(null);//清空生产商的值
-      setPmchoiceData(null);
-      setEvaluate(null); //评价
       setFilesList0([])
       setFilesCuid0(cuid())
-      setTimeout(() => {
-        props.getInspectorOperationInfoList({ ID: '', InspectorType: inspectorType, PollutantType: "2" }, (data) => {
+      setSubmitFlag(false)
+      setSubmitFlag(false)
+      setPushFlag(false)
+      // setEvaluate(null); //评价
+      // setGaschoiceData(null);//清空生产商的值
+      // setPmchoiceData(null);
+    }
+  },[fromVisible])
+  const add = () => {
+    setFromVisible(true)
+    props.getInspectorOperationInfoList({ ID: '', InspectorType: inspectorType, PollutantType: pollutantTypeCode || 2 }, (data) => {
           foramtProblemFilesList(data)
-        })
-        getEntList(2);
-      }, 100);
-
-    })
+          })
+    getEntList(pollutantTypeCode || 2);
   };
   const onFinish = async (pageIndexs, pageSizes) => {  //查询
     try {
@@ -876,7 +876,7 @@ const Index = (props) => {
         return;
       }
       setPointLoading(true)
-      props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
+      props.getPointByEntCode({ EntCode: hangedValues.EntCode,PollutantTypeCode:pollutantTypeCode  }, (res) => {
         setPointList(res)
         setPointLoading(false)
         form.setFieldsValue({ DGIMN: undefined })
@@ -897,7 +897,7 @@ const Index = (props) => {
         return;
       }
       setPointLoading2(true)
-      props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
+      props.getPointByEntCode({ EntCode: hangedValues.EntCode,PollutantTypeCode:pollutantType  }, (res) => {
         const data = res.filter(item => item.PollutantType == form2.getFieldValue('PollutantType'))
         setPointList2(data)
         setPointLoading2(false)
@@ -907,13 +907,13 @@ const Index = (props) => {
 
     if (Object.keys(hangedValues).join() == 'PollutantType') {
       getEntList(hangedValues.PollutantType)
-      form2.resetFields();
+      // form2.resetFields();
       form2.setFieldsValue({ PollutantType: hangedValues.PollutantType, Inspector: userCookie && JSON.parse(userCookie).UserId });
       tableForm.resetFields();
       setPollutantType(hangedValues.PollutantType)
-      setGaschoiceData(null);//清空生产商的值
-      setPmchoiceData(null);
-      setEvaluate(null); //评价
+      // setGaschoiceData(null);//清空生产商的值
+      // setPmchoiceData(null);
+      // setEvaluate(null); //评价
 
       props.getInspectorOperationInfoList({ ID: '', InspectorType: inspectorType, PollutantType: hangedValues.PollutantType, }, (data) => {
         foramtProblemFilesList(data)
@@ -1048,68 +1048,68 @@ const Index = (props) => {
   }
 
 
-  const generatorCol = [
-    {
-      title: '设备厂家',
-      dataIndex: 'ManufacturerName',
-      key: 'ManufacturerName',
-      align: 'center',
-    },
-    {
-      title: '系统名称',
-      dataIndex: 'SystemName',
-      key: 'SystemName',
-      align: 'center',
-    },
-    {
-      title: '系统型号',
-      dataIndex: 'SystemModel',
-      key: 'SystemModel',
-      align: 'center',
-    },
-    {
-      title: '监测类别',
-      dataIndex: 'MonitoringType',
-      key: 'MonitoringType',
-      align: 'center',
-    },
-    {
-      title: '操作',
-      dataIndex: 'x',
-      key: 'x',
-      align: 'center',
-      render: (text, record) => {
-        return <Button type='primary' size='small' onClick={() => { generatorColChoice(record) }}> 选择 </Button>
-      }
-    },
+  // const generatorCol = [
+  //   {
+  //     title: '设备厂家',
+  //     dataIndex: 'ManufacturerName',
+  //     key: 'ManufacturerName',
+  //     align: 'center',
+  //   },
+  //   {
+  //     title: '系统名称',
+  //     dataIndex: 'SystemName',
+  //     key: 'SystemName',
+  //     align: 'center',
+  //   },
+  //   {
+  //     title: '系统型号',
+  //     dataIndex: 'SystemModel',
+  //     key: 'SystemModel',
+  //     align: 'center',
+  //   },
+  //   {
+  //     title: '监测类别',
+  //     dataIndex: 'MonitoringType',
+  //     key: 'MonitoringType',
+  //     align: 'center',
+  //   },
+  //   {
+  //     title: '操作',
+  //     dataIndex: 'x',
+  //     key: 'x',
+  //     align: 'center',
+  //     render: (text, record) => {
+  //       return <Button type='primary' size='small' onClick={() => { generatorColChoice(record) }}> 选择 </Button>
+  //     }
+  //   },
 
-  ]
+  // ]
 
-  const generatorColChoice = (record) => {
-    if (popVisible) {
-      form2.setFieldsValue({ GasManufacturer: record.ManufacturerID, GasEquipment: record.SystemModel });
-      setGaschoiceData(record.ManufacturerName)
-      setPopVisible(false)
-    } else {//颗粒物
-      form2.setFieldsValue({ PMManufacturer: record.ManufacturerID, PMEquipment: record.SystemModel });
-      setPmchoiceData(record.ManufacturerName)
-      setPmPopVisible(false)
-    }
+  // const generatorColChoice = (record) => {
+  //   if (popVisible) {
+  //     form2.setFieldsValue({ GasManufacturer: record.ManufacturerID, GasEquipment: record.SystemModel });
+  //     setGaschoiceData(record.ManufacturerName)
+  //     setPopVisible(false)
+  //   } else {//颗粒物
+  //     form2.setFieldsValue({ PMManufacturer: record.ManufacturerID, PMEquipment: record.SystemModel });
+  //     setPmchoiceData(record.ManufacturerName)
+  //     setPmPopVisible(false)
+  //   }
 
-  }
+  // }
 
-  const [gaschoiceData, setGaschoiceData] = useState()
-  const [pmchoiceData, setPmchoiceData] = useState()
+  // const [gaschoiceData, setGaschoiceData] = useState()
+  // const [pmchoiceData, setPmchoiceData] = useState()
 
-  const onClearChoice = (value) => {
-    form2.setFieldsValue({ GasManufacturer: value, GasEquipment: '' });
-    setGaschoiceData(value)
-  }
+  // const onClearChoice = (value) => {
+  //   form2.setFieldsValue({ GasManufacturer: value, GasEquipment: '' });
+  //   setGaschoiceData(value)
+  // }
 
-  const onPmClearChoice = (value) => {
-    form2.setFieldsValue({ PMManufacturer: value, PMEquipment: '' });
-    setPmchoiceData(value)
-  }
+  // const onPmClearChoice = (value) => {
+  //   form2.setFieldsValue({ PMManufacturer: value, PMEquipment: '' });
+  //   setPmchoiceData(value)
+  // }
   const [pageIndex2, setPageIndex2] = useState(1)
   const [pageSize2, setPageSize2] = useState(10)
   const onFinish3 = async (pageIndex2, pageSize2) => { //生成商弹出框 查询
@@ -1146,70 +1146,70 @@ const Index = (props) => {
   const { monitoringTypeList } = props;
 
   const manufacturerList = operationInfoList && operationInfoList.EquipmentManufacturerList || [];
-  const selectPopover = (type) => {
-    return <Popover
-      title=""
-      trigger="click"
-      visible={type === 'pm' ? pmPopVisible : popVisible}
-      onVisibleChange={(visible) => { type === 'pm' ? setPmPopVisible(visible) : setPopVisible(visible) }}
-      placement={"right"}
-      getPopupContainer={trigger => trigger.parentNode}
-      content={
-        <Form
-          form={form3}
-          name="advanced_search3"
-          onFinish={() => { onFinish3(pageIndex2, pageSize2) }}
-          initialValues={{
-            ManufacturerId: manufacturerList[0] && manufacturerList[0].ID,
-          }}
-        >
-          <Row>
-            <Form.Item style={{ marginRight: 8 }} name='ManufacturerID' >
-              <Select placeholder='请选择设备厂家' showSearch allowClear filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}>
-                {
-                  manufacturerList[0] && manufacturerList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
-                  })
-                }
-              </Select>
-            </Form.Item>
-            <Form.Item style={{ marginRight: 8 }} name="SystemModel">
-              <Input allowClear placeholder="请输入系统型号" />
-            </Form.Item>
-            <Form.Item style={{ marginRight: 8 }} name="MonitoringType">
-              <Select allowClear placeholder="请选择监测类别">
-                {
-                  monitoringTypeList[0] && monitoringTypeList.map(item => {
-                    return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
-                  })
-                }
-              </Select>
+  // const selectPopover = (type) => {
+  //   return <Popover
+  //     title=""
+  //     trigger="click"
+  //     visible={type === 'pm' ? pmPopVisible : popVisible}
+  //     onVisibleChange={(visible) => { type === 'pm' ? setPmPopVisible(visible) : setPopVisible(visible) }}
+  //     placement={"right"}
+  //     getPopupContainer={trigger => trigger.parentNode}
+  //     content={
+  //       <Form
+  //         form={form3}
+  //         name="advanced_search3"
+  //         onFinish={() => { onFinish3(pageIndex2, pageSize2) }}
+  //         initialValues={{
+  //           ManufacturerId: manufacturerList[0] && manufacturerList[0].ID,
+  //         }}
+  //       >
+  //         <Row>
+  //           <Form.Item style={{ marginRight: 8 }} name='ManufacturerID' >
+  //             <Select placeholder='请选择设备厂家' showSearch allowClear filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}>
+  //               {
+  //                 manufacturerList[0] && manufacturerList.map(item => {
+  //                   return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
+  //                 })
+  //               }
+  //             </Select>
+  //           </Form.Item>
+  //           <Form.Item style={{ marginRight: 8 }} name="SystemModel">
+  //             <Input allowClear placeholder="请输入系统型号" />
+  //           </Form.Item>
+  //           <Form.Item style={{ marginRight: 8 }} name="MonitoringType">
+  //             <Select allowClear placeholder="请选择监测类别">
+  //               {
+  //                 monitoringTypeList[0] && monitoringTypeList.map(item => {
+  //                   return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+  //                 })
+  //               }
+  //             </Select>
 
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType='submit'>
-                查询
-             </Button>
-            </Form.Item>
-          </Row>
-          <SdlTable scroll={{ y: 'calc(100vh - 550px)' }} style={{ width: 800 }}
-            loading={props.loadingSystemModel} bordered dataSource={systemModelList} columns={generatorCol}
-            pagination={{
-              total: props.systemModelListTotal,
-              pageSize: pageSize2,
-              current: pageIndex2,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              onChange: handleTableChange2,
-            }}
-          />
-        </Form>
-      }
-    >
-      <Select onChange={type === 'pm' ? onPmClearChoice : onClearChoice} allowClear showSearch={false} value={type === 'pm' ? pmchoiceData : gaschoiceData} dropdownClassName={'popSelectSty'} placeholder="请选择">
-      </Select>
-    </Popover>
-  }
+  //           </Form.Item>
+  //           <Form.Item>
+  //             <Button type="primary" htmlType='submit'>
+  //               查询
+  //            </Button>
+  //           </Form.Item>
+  //         </Row>
+  //         <SdlTable scroll={{ y: 'calc(100vh - 550px)' }} style={{ width: 800 }}
+  //           loading={props.loadingSystemModel} bordered dataSource={systemModelList} columns={generatorCol}
+  //           pagination={{
+  //             total: props.systemModelListTotal,
+  //             pageSize: pageSize2,
+  //             current: pageIndex2,
+  //             showSizeChanger: true,
+  //             showQuickJumper: true,
+  //             onChange: handleTableChange2,
+  //           }}
+  //         />
+  //       </Form>
+  //     }
+  //   >
+  //     <Select onChange={type === 'pm' ? onPmClearChoice : onClearChoice} allowClear showSearch={false} value={type === 'pm' ? pmchoiceData : gaschoiceData} dropdownClassName={'popSelectSty'} placeholder="请选择">
+  //     </Select>
+  //   </Popover>
+  // }
   const renderContent = (value, row, index) => {
     const obj = {
       children: value,
@@ -1307,7 +1307,7 @@ const Index = (props) => {
   ]
 
 
-  const [evaluate, setEvaluate] = useState(null);
+  // const [evaluate, setEvaluate] = useState(null);
   const supervisionCol2 = [{
     title: <span style={{ fontWeight: 'bold', fontSize: 14 }}>
       {operationInfoList.importanProblemList && operationInfoList.importanProblemList[0] && operationInfoList.importanProblemList[0].Title}
@@ -1807,8 +1807,8 @@ const Index = (props) => {
               <Row>
                 <Col span={12} style={{display:pollutantTypeCode&&'none'}}>
                   <Form.Item label="行业" name="PollutantType">
-                    {/* <EntType disabled={type == 'add' ? false : true} placeholder='请选择' allowClear={false} /> */}
-                    <SelectPollutantType  disabled={type == 'add' ? false : true} placeholder='请选择' allowClear={false} />
+                    <EntType disabled={type == 'add' ? false : true} placeholder='请选择' allowClear={false} />
+                    {/* <SelectPollutantType  disabled={type == 'add' ? false : true} placeholder='请选择' allowClear={false} /> */}
                   </Form.Item>
                 </Col>
                 <Col span={12}>

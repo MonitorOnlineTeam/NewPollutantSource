@@ -926,7 +926,7 @@ class Index extends PureComponent {
 
               <FormItem label="企业类型" hidden={this.pollutantType}>
                 {getFieldDecorator('PollutantType', {
-                  initialValue: this.props.defaultPollutantCode || this.pollutantType? this.pollutantType : 2,
+                  initialValue: this.props.defaultPollutantCode || (this.pollutantType? this.pollutantType : 2),
                 })(
                   // <Select
                   //   style={{ width: 231 }}

@@ -90,7 +90,7 @@ const Index = (props) => {
   
   useEffect(() => {
     onFinish(pageIndex,pageSize);
-    props.getFaultFeedbackEntPoint({PollutantType:pollutantType })
+    props.getFaultFeedbackEntPoint({})
   },[]);
 
 
@@ -216,7 +216,7 @@ const Index = (props) => {
           Time:undefined,
           FaultBTime:values.Time? moment(values.Time[0]).format("YYYY-MM-DD 00:00:00") : undefined,
           FaultETime:values.Time? moment(values.Time[1]).format("YYYY-MM-DD 23:59:59"): undefined,
-          pollutantType : pollutantType,
+          // pollutantType : pollutantType,
           pageIndex: pageIndex,
           pageSize: pageSize,
         })
@@ -233,7 +233,7 @@ const Index = (props) => {
       Time:undefined,
       FaultBTime:values.Time? moment(values.Time[0]).format("YYYY-MM-DD 00:00:00") : undefined,
       FaultETime:values.Time?moment(values.Time[1]).format("YYYY-MM-DD 23:59:59"): undefined,
-      pollutantType : pollutantType,
+      // pollutantType : pollutantType,
     })
   
   }

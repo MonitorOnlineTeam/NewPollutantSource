@@ -208,7 +208,7 @@ class EditPollutant extends Component {
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="报警连续计数">
                     {getFieldDecorator('AlarmContinuityCount', {
                       initialValue: 1,
-                    })(<InputNumber min={0} max={10000} step={1} />)}
+                    })(<InputNumber min={0} max={24} step={1} />)}
                   </FormItem>
                 </Col>
               </Row>
@@ -274,14 +274,14 @@ class EditPollutant extends Component {
                   <FormItem labelCol={{ span: 9 }} wrapperCol={{ span: 12 }} label="零值计数">
                     {getFieldDecorator('ZeroContinuityCount', {
                       initialValue: 1,
-                    })(<InputNumber min={0} max={100000} step={1} />)}
+                    })(<InputNumber min={0} max={24} step={1} />)}
                   </FormItem>
                 </Col>
                 <Col span={8}>
                   <FormItem labelCol={{ span: 9 }} wrapperCol={{ span: 12 }} label="恒定值计数">
                     {getFieldDecorator('SerialContinuityCount', {
                       initialValue: 2,
-                    })(<InputNumber min={0} max={100000} step={1} />)}
+                    })(<InputNumber min={0} max={24} step={1} />)}
                   </FormItem>
                 </Col>
               </Row>
@@ -304,7 +304,7 @@ class EditPollutant extends Component {
                   <FormItem labelCol={{ span: 9 }} wrapperCol={{ span: 12 }} label="超量程计数">
                     {getFieldDecorator('OverrunContinuityCount', {
                       initialValue: 1,
-                    })(<InputNumber min={0} max={100000} step={1} />)}
+                    })(<InputNumber min={0} max={24} step={1} />)}
                   </FormItem>
                 </Col>
               </Row>

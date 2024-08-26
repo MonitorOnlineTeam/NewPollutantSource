@@ -362,7 +362,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
               {types==='ent'?
                 <Form.Item label={'企业类型'}>
-                 <EntType allowClear={false} typeChange={this.typeChange}  PollutantType={PollutantTypeCode.join()} />
+                 <EntType allowClear={false} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
                 </Form.Item>
                 :
                 null

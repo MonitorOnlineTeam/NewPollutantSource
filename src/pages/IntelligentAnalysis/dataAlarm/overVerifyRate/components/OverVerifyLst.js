@@ -73,7 +73,7 @@ const pageUrl = {
   mapPropsToFields(props) {
     return {
       PollutantCodeList: Form.createFormField(props.overVerifyRateForm.PollutantCodeList),
-      PollutantType: Form.createFormField(props.overVerifyRateForm.PollutantType),
+      // PollutantType: Form.createFormField(props.overVerifyRateForm.PollutantType),
     };
   },
   onFieldsChange(props, fields) {
@@ -253,7 +253,7 @@ export default class OverVerifyLst extends Component {
   componentDidMount() {
     this.initData();
     // 根据企业类型查询监测因子
-    this.getPollutantByType(this.props.pollutantByType, this.getExceptionList);
+    this.getPollutantByType(this.pollutantType || 2, this.getExceptionList);
   }
   // 根据企业类型查询监测因子
   getPollutantByType = (val, cb) => {
@@ -431,6 +431,7 @@ export default class OverVerifyLst extends Component {
     this.updateQueryState({
       RegionCode: level == 2 ? query && query.regionCode : '',
       regionLevel: level,
+      PollutantType: this.pollutantType || 2
     });
     setTimeout(() => {
       this.getTableData();
@@ -438,7 +439,7 @@ export default class OverVerifyLst extends Component {
     //获取核实结果
     dispatch({
       type: pageUrl.GetOverToExamineOperation,
-      payload: { PollutantType: '' },
+      payload: { PollutantType: this.pollutantType },
       callback: (data) => {
         if (data.length > 0) {
           this.setState({

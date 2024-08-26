@@ -12,6 +12,7 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SelectPollutantType from '@/components/SelectPollutantType';
+import EntType from '@/components/EntType'
 
 import styles from './styles.less';
 
@@ -57,7 +58,7 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const pollutantTypeCode = Number(sessionStorage.getItem('sysPollutantCodes'));
+  const pollutantTypeCode = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined;
 
   const { time, pollutantType, resNumTableTotal, regQueryPar, resNumQueryPar } = props;
 
@@ -270,7 +271,7 @@ const Index = (props) => {
       layout='inline'
       onFinish={() => { onFinish(1) }}
       initialValues={{
-        pollutantType: pollutantType,
+        pollutantType: pollutantType,  // || pollutantTypeCode
         time: time ? time : [moment().add(-30, 'd'), moment()],
         exceptionType: [],
       }}
@@ -278,12 +279,9 @@ const Index = (props) => {
       <Form.Item name='time' label='日期'>
         <RangePicker_ format='YYYY-MM-DD' allowClear={false} />
       </Form.Item>
-      <Form.Item label='监测点类型' name='pollutantType' hidden={pollutantTypeCode}>
-        {/* <Select placeholder='请选择' style={{ width: 120 }} allowClear>
-          <Option value={'2'}>废气</Option>
-          <Option value={'1'}>废水</Option>
-        </Select> */}
-        <SelectPollutantType placeholder='请选择' style={{ width: 120 }} allowClear/>
+      <Form.Item label='监测点类型' name='pollutantType'>  {/*  hidden={pollutantTypeCode}*/}
+        <EntType placeholder='请选择' style={{ width: 120 }} allowClear/>
+        {/* <SelectPollutantType placeholder='请选择' style={{ width: 120 }} allowClear/> */}
       </Form.Item>
       <Form.Item label='报警类型' name='exceptionType'>
         <Select style={{ width: 220 }} placeholder='请选择' allowClear mode="multiple" maxTagCount={2} maxTagPlaceholder="...">
@@ -343,7 +341,6 @@ const Index = (props) => {
         beginTime: values.time && moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
-        pollutantType: pollutantType,
       } : { ...regQueryPar, pointType: 2, regionCode: regionCode },
       () => {
         type == 1 ? setRegExportLoading(false) : setCityExportLoading(false);

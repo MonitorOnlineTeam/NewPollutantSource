@@ -223,7 +223,7 @@ export default class EntTransmissionEfficiency extends Component {
     //  types==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  })
     isReg && dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' }, });//获取关注列表
     const regCode = isReg ? queryPar.RegionCode : query.regionCode;
-    this.getTableData(regCode, isReg ? 1 : 2);
+    this.getTableData(regCode, isReg ? 1 : 2, this.pollutantType);
     this.setState({regCode:regCode, regLevel:isReg ? 1 : 2})
 
   };
@@ -236,12 +236,12 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
 
-  getTableData = (regCode, regionLevel) => {
+  getTableData = (regCode, regionLevel,pollutantType) => {
     const { dispatch, queryPar, query } = this.props;
     const par = regionLevel == 1 ? queryPar : query && query.queryPar && JSON.parse(query.queryPar)
     dispatch({
       type: pageUrl.getData,
-      payload: { ...par, RegionCode: regCode, regionLevel: regionLevel,staticType:1},
+      payload: { ...par, RegionCode: regCode, regionLevel: regionLevel,staticType:1,PollutantType:pollutantType || par.PollutantType},
     });
   };
 
