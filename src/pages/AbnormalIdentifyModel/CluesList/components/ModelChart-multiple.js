@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-18 10:36:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-08-22 14:58:33
+ * @Last Modified time: 2024-08-22 16:58:56
  * @Description：模型异常特征 - 多图例折线图
  */
 import React, { useState, useEffect } from 'react';
@@ -102,7 +102,6 @@ const ModelChartMultiple = props => {
         splitLine: {
           show: false,
         },
-        
       },
       yAxis: yAxisData,
       series: seriesData,
@@ -118,7 +117,8 @@ const ModelChartMultiple = props => {
     let DGIMNs = [],
       pollutantCodes = [],
       date = [],
-      PointNames = [], pollutantNames = [];
+      PointNames = [],
+      pollutantNames = [];
     chartData.data.map(item => {
       DGIMNs.push(item.DGIMN);
       pollutantCodes.push(item.pollutantCode);
@@ -139,7 +139,6 @@ const ModelChartMultiple = props => {
       console.log('date', date);
     }
   };
-  console.log('chartData', chartData);
   return (
     <>
       <div className={styles.chartBox}>
@@ -159,7 +158,8 @@ const ModelChartMultiple = props => {
       </div>
       {moreModalVisible && (
         <ModelChartMultipleMore
-          title={chartData.title}
+          title={`${chartData.title}`}
+          trend={chartData.trend}
           visible={moreModalVisible}
           PointNames={PointNames}
           pollutantNames={pollutantNames}

@@ -244,7 +244,6 @@ export default Model.extend({
             }
           });
         });
-        console.log('data', data);
         yield update({
           DataPhenomenaChartList: {
             MonitorTimeList,
@@ -338,7 +337,6 @@ export default Model.extend({
             }
           });
         }
-        console.log('data', data);
         callback && callback(data);
       } else {
         result.Message && message.error(result.Message);
@@ -730,10 +728,30 @@ export default Model.extend({
       // 获取待核查任务、已核查任务详情
       const result = yield call(services.GetCheckedView, payload);
       if (result.IsSuccess) {
+        let newResult = result.Datas || {};
+
+        // 区分打回与待填写的核查动作
+        if (newResult.Plan) {
+          let data = newResult?.Plan?.PlanItem || [];
+          const planItem = data.filter(item => item.Flag); // 是否是待填写
+          const groupedData = {};
+          data.forEach(item => {
+            if (!item.Flag) {
+              if (!groupedData[item.TableType]) {
+                groupedData[item.TableType] = [];
+              }
+              groupedData[item.TableType].push(item);
+            }
+          });
+          const oldPlanItem = Object.values(groupedData);
+
+          newResult.Plan.oldPlanItem = oldPlanItem;
+          newResult.Plan.PlanItem = planItem;
+        }
         yield update({
-          checkedInfo: result.Datas,
+          checkedInfo: newResult,
         });
-        callback && callback(result.Datas);
+        callback && callback(newResult);
       } else {
         result.Message && message.error(result.Message);
       }
@@ -955,6 +973,11 @@ export default Model.extend({
     // 删除线索
     *DelWarningModel({ payload, callback }, { call, select, update }) {
       const result = yield call(requestPost, API.AbnormalIdentifyModel.DelWarningModel, payload);
+      result.IsSuccess && callback(result);
+    },
+    // 核查打回
+    *RepulseCheck({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestPost, API.AbnormalIdentifyModel.RepulseCheck, payload);
       result.IsSuccess && callback(result);
     },
   },

@@ -1,12 +1,15 @@
 /*
-*方案及核查信息
-*/
+ *方案及核查信息
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Card, Row, Col, Form, Input, Upload, Tag, Skeleton } from 'antd';
+import { Card, Row, Col, Form, Input, Upload, Tag, Skeleton, Collapse } from 'antd';
 import cuid from 'cuid';
 import ImageView from '@/components/ImageView';
 import styles from '@/pages/AbnormalIdentifyModel/styles.less';
+
+const { Panel } = Collapse;
+
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   checkedInfo: AbnormalIdentifyModel.checkedInfo,
@@ -24,7 +27,7 @@ const ProgrammeCheck = props => {
   const loadData = () => {
     dispatch({
       type: 'AbnormalIdentifyModel/GetCheckedView',
-      payload: { id,type:1 },
+      payload: { id, type: 1 },
       // callback: res => {
       //   setDataSource(res);
       // },
@@ -93,40 +96,91 @@ const ProgrammeCheck = props => {
       {queryLoading ? (
         <Skeleton paragraph={{ rows: 4 }} />
       ) : (
-          <>
-            <Row>
-              <Col span={6}>
-                <Form.Item label="核查状态">
-                  {checkStatus[(checkedInfo?.checkInfo?.StatusName)] || (
-                    <Tag color="volcano">待核查</Tag>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item   className='checkedDesLabel' label="核查结论">{checkedInfo?.checkInfo?.CheckedDes || '-'}</Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item label="核查人">{checkedInfo?.checkInfo?.CheckUserName || '-'}</Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item label="核查时间">{checkedInfo?.checkInfo?.CheckedTime || '-'}</Form.Item>
-              </Col>
-            </Row>
-            {isRectificationRecord == 1 ? <div><Form.Item label="方案及核查信息" className="programmeLabel">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: checkedInfo?.Plan?.ContentBody || '<span>-</span>',
-                }}
-              ></div>
-            </Form.Item>
-              <Form  id='checkAction' layout="vertical">
+        <>
+          <Row>
+            <Col span={6}>
+              <Form.Item label="核查状态">
+                {checkStatus[(checkedInfo?.checkInfo?.StatusName)] || (
+                  <Tag color="volcano">待核查</Tag>
+                )}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item className="checkedDesLabel" label="核查结论">
+                {checkedInfo?.checkInfo?.CheckedDes || '-'}
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="核查人">{checkedInfo?.checkInfo?.CheckUserName || '-'}</Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="核查时间">{checkedInfo?.checkInfo?.CheckedTime || '-'}</Form.Item>
+            </Col>
+          </Row>
+          {isRectificationRecord == 1 ? (
+            <div>
+              <Form.Item label="方案及核查信息" className="programmeLabel">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: checkedInfo?.Plan?.ContentBody || '<span>-</span>',
+                  }}
+                ></div>
+              </Form.Item>
+              <Form id="checkAction" layout="vertical">
+                <div style={{ fontSize: 16, fontWeight: 'bold', padding: '12px 0 10px 69px' }}>
+                  <Collapse>
+                    {checkedInfo?.Plan?.oldPlanItem?.map((oldPlan, index) => {
+                      return (
+                        <Panel
+                          header={
+                            <p>
+                              {`${oldPlan[0].RepulseUserName}在${oldPlan[0].RepulseTime}`}{' '}
+                              <Tag color="error">打回</Tag>
+                            </p>
+                          }
+                          key={index}
+                        >
+                          {oldPlan.map(item => {
+                            return (
+                              <div style={{ paddingBottom: 12 }}>
+                                <Form.Item label={`${index + 1}.${item.QTitle}`}>
+                                  {item.QContent}
+                                </Form.Item>
+                                {item.QAttachment?.ImgList?.[0] && (
+                                  <div>
+                                    <SeeUploadComponents item={item.QAttachment?.ImgList} />
+                                  </div>
+                                )}
+                                <Row>
+                                  {item.ReContent && (
+                                    <Col span={12} style={{ paddingRight: 8 }}>
+                                      <Form.Item label="核查结果：">{item.ReContent}</Form.Item>
+                                    </Col>
+                                  )}
+                                  {item.ReAttachment?.ImgList?.[0] && (
+                                    <Col span={12}>
+                                      <div style={{ marginTop: 30 }}>
+                                        <SeeUploadComponents item={item.ReAttachment.ImgList} />
+                                      </div>
+                                    </Col>
+                                  )}
+                                </Row>
+                              </div>
+                            );
+                          })}
+                        </Panel>
+                      );
+                    })}
+                  </Collapse>
+                </div>
+
                 {checkedInfo?.Plan?.PlanItem.length ? (
                   <div style={{ fontSize: 16, fontWeight: 'bold', padding: '12px 0 10px 69px' }}>
                     核查动作
                   </div>
                 ) : (
-                    ''
-                  )}
+                  ''
+                )}
                 <div style={{ paddingLeft: 112 }}>
                   {checkedInfo?.Plan?.PlanItem.map((item, index) => {
                     return (
@@ -138,14 +192,18 @@ const ProgrammeCheck = props => {
                           </div>
                         )}
                         <Row>
-                         {item.ReContent&&<Col span={12} style={{ paddingRight: 8 }}>
-                            <Form.Item label="填写核查结果">{item.ReContent}</Form.Item>
-                          </Col>}
-                         {item.ReAttachment?.ImgList?.[0]&&<Col span={12}>
-                            <div style={{ marginTop: 30 }}>
-                              <SeeUploadComponents item={item.ReAttachment.ImgList} />
-                            </div>
-                          </Col>}
+                          {item.ReContent && (
+                            <Col span={12} style={{ paddingRight: 8 }}>
+                              <Form.Item label="填写核查结果">{item.ReContent}</Form.Item>
+                            </Col>
+                          )}
+                          {item.ReAttachment?.ImgList?.[0] && (
+                            <Col span={12}>
+                              <div style={{ marginTop: 30 }}>
+                                <SeeUploadComponents item={item.ReAttachment.ImgList} />
+                              </div>
+                            </Col>
+                          )}
                         </Row>
                       </div>
                     );
@@ -153,18 +211,20 @@ const ProgrammeCheck = props => {
                 </div>
               </Form>
             </div>
-              : 
-              <>
-                <Form.Item label="核查结果与线索是否符合"  >
-                  {checkedInfo?.checkInfo?.CheckedResult}
-                </Form.Item>
-                <Form.Item label="核查原因" className='programmeLabel2' >
-                  <div dangerouslySetInnerHTML={{ __html: checkedInfo?.checkInfo?.UntruthReason }}></div>
-                </Form.Item>
-              </>
-            }
-          </>
-        )}
+          ) : (
+            <>
+              <Form.Item label="核查结果与线索是否符合">
+                {checkedInfo?.checkInfo?.CheckedResult}
+              </Form.Item>
+              <Form.Item label="核查原因" className="programmeLabel2">
+                <div
+                  dangerouslySetInnerHTML={{ __html: checkedInfo?.checkInfo?.UntruthReason }}
+                ></div>
+              </Form.Item>
+            </>
+          )}
+        </>
+      )}
       <ImageView
         isOpen={previewVisible}
         images={imgUrlList?.length ? imgUrlList : []}

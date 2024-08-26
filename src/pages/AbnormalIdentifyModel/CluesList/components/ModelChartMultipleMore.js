@@ -25,6 +25,7 @@ const ModelChartMultipleBig = props => {
     PointNames,
     pollutantNames,
     loading,
+    trend,
   } = props;
   const { date, DGIMNs, pollutantCodes } = params;
   // const [visible, setVisible] = useState([]);
@@ -36,7 +37,6 @@ const ModelChartMultipleBig = props => {
   // 获取数据
   const GetAllTypeDataListForModel2 = () => {
     const values = form.getFieldsValue();
-    console.log('values', values);
     dispatch({
       type: 'AbnormalIdentifyModel/GetAllTypeDataListForModel2',
       payload: {
@@ -48,7 +48,6 @@ const ModelChartMultipleBig = props => {
         IsSupplyData: false,
       },
       callback: res => {
-        console.log('res', res);
         // let xAxis = res.map(itm => itm.MonitorTime);
         // let seriesData = DGIMNs.map((item, index) => {
         //   xAxis = res[item].map(itm => itm.MonitorTime);
@@ -116,10 +115,11 @@ const ModelChartMultipleBig = props => {
       };
     });
 
+    let _title = title.replace(/\([^()]*\)/g, '');
     return {
       color: ['#5470c6', '#91cc75'],
       title: {
-        text: title,
+        text: _title,
         left: 'center',
       },
       legend: {
@@ -171,7 +171,7 @@ const ModelChartMultipleBig = props => {
 
   return (
     <Modal
-      title={title}
+      title={`${title}（趋势相似度${trend}）`}
       destroyOnClose
       wrapClassName={'fullScreenModal'}
       open={visible}

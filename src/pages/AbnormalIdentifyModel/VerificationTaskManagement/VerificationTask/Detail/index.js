@@ -46,6 +46,7 @@ import QuestionTooltip from '@/components/QuestionTooltip';
 
 import Cookie from 'js-cookie';
 import { API } from '@config/API';
+const { Panel } = Collapse;
 
 const textStyle = {
   width: '100%',
@@ -66,6 +67,7 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
 const Index = props => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
+  const [modalForm] = Form.useForm();
 
   const {
     dispatch,
@@ -84,6 +86,57 @@ const Index = props => {
   const [dataSource, setDataSource] = useState([]);
   const [preTakeFlagDatas, setPreTakeFlagDatas] = useState([]); //专家意见
   const [cluesDetailsProps, setCluesDetailsProps] = useState();
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+  const [filesList, setFilesList] = useState({});
+
+  const [files, setFiles] = useState();
+  const [filesCuidList, setFilesCuidList] = useState({});
+  const [fileVisible, setFileVisible] = useState(false);
+
+  const EditableCell = ({
+    editing,
+    dataIndex,
+    title,
+    inputType,
+    record,
+    index,
+    name,
+    children,
+    ...restProps
+  }) => {
+    let inputNode =
+      title === '图片' ? (
+        <div style={{ textAlign: 'center' }}>
+          <a
+            onClick={() => {
+              setFileVisible(true);
+              setFiles(`QAttachment_${record.ID}`);
+            }}
+          >
+            {filesList[`QAttachment_${record.ID}`] && filesList[`QAttachment_${record.ID}`][0]
+              ? '查看图片'
+              : '上传图片'}
+          </a>
+        </div>
+      ) : (
+        <Input.TextArea placeholder={`请输入`} />
+      );
+    return (
+      <td {...restProps}>
+        {editing ? (
+          <Form.Item
+            name={`${dataIndex}_${record.ID}`}
+            style={{ margin: 0 }}
+            rules={[{ required: title === '核查内容' ? true : false, message: `请输入${title}!` }]}
+          >
+            {inputNode}
+          </Form.Item>
+        ) : (
+          children
+        )}
+      </td>
+    );
+  };
 
   useEffect(() => {
     initData();
@@ -197,7 +250,7 @@ const Index = props => {
         setDataSource(res);
         if (type == 1) {
           //待核查
-          res?.Plan?.PlanItem[0]?.map(item => {
+          res?.Plan?.PlanItem?.map(item => {
             form.setFieldsValue({
               [`reContent_${item.ID}`]: item.ReContent,
               [`reAttachment_${item.ID}`]: item.ReAttachment?.AttachID,
@@ -223,7 +276,7 @@ const Index = props => {
     const parData = {
       stype: type,
       modelCheckedGuid: id,
-      planItems: dataSource?.Plan?.PlanItem[0]?.map(item => {
+      planItems: dataSource?.Plan?.PlanItem?.map(item => {
         return {
           modelPlanItemGuid: item.ID,
           reContent: values[`reContent_${item.ID}`] ? values[`reContent_${item.ID}`] : '',
@@ -241,6 +294,251 @@ const Index = props => {
       },
     });
   };
+
+  // ------------ 打回start
+
+  //  打回点击
+  const onRejectBtnClick = () => {
+    let data = dataSource.Plan.PlanItem;
+    setVerificationActionData(data);
+    if (data?.[0]) {
+      data.map(item => {
+        modalForm.setFieldsValue({
+          [`QTitle_${item.ID}`]: item.QTitle,
+          [`QContent_${item.ID}`]: item.QContent,
+          [`QAttachment_${item.ID}`]: item.QAttachment && item.QAttachment.AttachUuid,
+        });
+      });
+      //图片回显
+      const uploadList = {},
+        uploadCuid = {};
+      data.map(item => {
+        const attachmentFilesList = [];
+        item.QAttachment.ImgList.map((img, index) => {
+          attachmentFilesList.push({
+            uid: index,
+            name: item.QAttachment.ImgNameList[index],
+            status: 'done',
+            url: '/' + img,
+          });
+        });
+        uploadList[`QAttachment_${item.ID}`] = attachmentFilesList;
+        uploadCuid[`QAttachment_${item.ID}`] = item.QAttachment.AttachUuid
+          ? item.QAttachment.AttachUuid
+          : cuid();
+      });
+      setFilesList({ ...uploadList });
+      setFilesCuidList({ ...uploadCuid });
+    }
+    setIsRejectModalOpen(true);
+  };
+
+  // 核查打回
+  const onReject = () => {
+    modalForm
+      .validateFields()
+      .then(values => {
+        let planItems = verificationActionData.map(item => {
+          const planItemCode = item.type === 'add' ? '' : item.ID;
+          return {
+            planItemCode: planItemCode,
+            planItemContent: values[`QTitle_${item.ID}`],
+            planItemDesc: values[`QContent_${item.ID}`],
+            planItemAttachment: values[`QAttachment_${item.ID}`],
+          };
+        });
+        // console.log('planItems', planItems);
+        // return;
+        props.dispatch({
+          type: 'AbnormalIdentifyModel/RepulseCheck',
+          payload: {
+            modelCheckedGuid: id,
+            planItems: planItems,
+          },
+          callback: res => {
+            message.success('操作成功');
+            history.go(-1);
+          },
+        });
+      })
+      .catch(errorInfo => {
+        console.log('Failed:', errorInfo);
+      });
+  };
+
+  const getVerificationActionColumns = () => {
+    return [
+      {
+        title: '序号',
+        dataIndex: 'index',
+        key: 'index',
+        width: 80,
+        ellipsis: true,
+        align: 'center',
+        render: (text, record, index) => {
+          return index + 1;
+        },
+      },
+      {
+        title: '核查内容',
+        dataIndex: 'QTitle',
+        key: 'QTitle',
+        width: 'auto',
+        align: 'center',
+        ellipsis: true,
+        editable: true,
+      },
+      {
+        title: '描述',
+        dataIndex: 'QContent',
+        key: 'QContent',
+        width: 'auto',
+        align: 'center',
+        ellipsis: true,
+        editable: true,
+      },
+      {
+        title: '图片',
+        dataIndex: 'QAttachment',
+        key: 'QAttachment',
+        width: 120,
+        align: 'center',
+        ellipsis: true,
+        editable: true,
+      },
+      {
+        title: '操作',
+        dataIndex: 'operation',
+        align: 'center',
+        width: 100,
+        render: (_, record) => {
+          return (
+            <span
+              onClick={() => {
+                verificationActionColumnsCancel(record);
+              }}
+            >
+              <a>删除</a>
+            </span>
+          );
+        },
+      },
+    ];
+  };
+
+  const verificationActionColumns = getVerificationActionColumns().map((col, index) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: record => ({
+        record,
+        index: index,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: true,
+      }),
+    };
+  });
+
+  const [verificationActionData, setVerificationActionData] = useState([]);
+  const verificationActionAdd = () => {
+    //添加核查动作
+    const initCode = cuid();
+    const newData = {
+      type: 'add',
+      ID: initCode,
+      QTitle: '',
+      QContent: '',
+    };
+    //图片
+    setFilesList({ ...filesList, [`QAttachment_${initCode}`]: [] });
+    setFilesCuidList({ ...filesCuidList, [`QAttachment_${initCode}`]: initCode });
+    setVerificationActionData([...verificationActionData, newData]);
+  };
+  const verificationActionColumnsCancel = record => {
+    const dataSource = [...verificationActionData];
+    let newData = dataSource.filter(item => item.ID !== record.ID);
+    setVerificationActionData(newData);
+  };
+
+  const filesCuid = () => {
+    for (var key in filesCuidList) {
+      if (key == files) {
+        return filesCuidList[key];
+      }
+    }
+  };
+  const uploadProps = {
+    //图片上传
+    action: API.UploadApi.UploadPicture,
+    headers: { Cookie: null, Authorization: 'Bearer ' + Cookie.get(cookieName) },
+    accept: 'image/*',
+    data: {
+      FileUuid: filesCuid(),
+      FileActualType: '0',
+    },
+    listType: 'picture-card',
+    beforeUpload: file => {
+      const fileType = file?.type; //获取文件类型 type  image/*
+      if (!/^image/g.test(fileType)) {
+        message.error(`请上传图片格式文件!`);
+        return false;
+      }
+    },
+    onChange(info) {
+      const fileList = [];
+      info.fileList.map(item => {
+        if (item.response && item.response.IsSuccess) {
+          //刚上传的
+          fileList.push({ ...item, url: `/${item.response.Datas}` });
+        } else if (!item.response) {
+          fileList.push({ ...item });
+        }
+      });
+      if (info.file.status === 'uploading') {
+        setFilesList({ ...filesList, [files]: fileList });
+      }
+      if (
+        info.file.status === 'done' ||
+        info.file.status === 'removed' ||
+        info.file.status === 'error'
+      ) {
+        setFilesList({ ...filesList, [files]: fileList });
+        if (info.file.status === 'done') {
+          if (info.file?.response?.IsSuccess) {
+            modalForm.setFieldsValue({ [files]: filesCuid() });
+            message.success('上传成功！');
+          } else {
+            message.error(info.file?.response?.Message);
+          }
+        }
+        info.file.status === 'error' &&
+          message.error(
+            `${info.file.name}${
+              info.file && info.file.response && info.file.response.Message
+                ? info.file.response.Message
+                : '上传失败'
+            }`,
+          );
+      }
+    },
+    onRemove: file => {
+      if (!file.error) {
+        dispatch({
+          type: 'autoForm/deleteAttach',
+          payload: {
+            Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
+          },
+        });
+      }
+    },
+    fileList: filesList[files],
+  };
+
+  // ------------ 打回end
+
   const [checkVisible, setCheckVisible] = useState(false);
   const checkOk = async () => {
     const values = await form2.validateFields();
@@ -248,10 +546,10 @@ const Index = props => {
     // 处理暂定发出线索时间
     let StopBeginTime = undefined,
       StopEndTime = undefined;
-    if (modalValues.stopTime) {
+    if (values.stopTime) {
       StopBeginTime = moment().format('YYYY-MM-DD HH:mm:ss');
       StopEndTime = moment()
-        .add(1, modalValues.stopTime)
+        .add(1, values.stopTime)
         .format('YYYY-MM-DD HH:mm:ss');
     }
 
@@ -433,13 +731,96 @@ const Index = props => {
                         ></div>
                       </Form.Item>
                       <Form name="checkAction" form={form} layout="vertical">
+                        {dataSource?.Plan?.oldPlanItem?.length ? (
+                          <div
+                            style={{
+                              fontSize: 16,
+                              fontWeight: 'bold',
+                              padding: '12px 0 10px 69px',
+                            }}
+                          >
+                            <Collapse>
+                              {dataSource?.Plan?.oldPlanItem?.map((oldPlan, idx) => {
+                                return (
+                                  <Panel
+                                    header={
+                                      <p>
+                                        {`${oldPlan[0].RepulseUserName}在${oldPlan[0].RepulseTime}`}{' '}
+                                        <Tag color="error">打回</Tag>
+                                      </p>
+                                    }
+                                    key={idx}
+                                  >
+                                    {oldPlan.map((item, index) => {
+                                      const cuids = item.ReAttachment?.AttachID
+                                        ? item.ReAttachment.AttachID
+                                        : cuid();
+                                      const fileList = item.ReAttachment?.ImgList?.map(item => {
+                                        return {
+                                          uid: cuids,
+                                          status: 'done',
+                                          url: `/${item}`,
+                                        };
+                                      });
+                                      return (
+                                        <div style={{ paddingBottom: 12 }}>
+                                          {item.QContent?.trim() ? (
+                                            <Form.Item label={`${index + 1}.${item.QTitle}`}>
+                                              {item.QContent}
+                                            </Form.Item>
+                                          ) : (
+                                            <span style={{ marginTop: 10 }}>{`${index + 1}.${
+                                              item.QTitle
+                                            }`}</span>
+                                          )}
+                                          {item.QAttachment?.ImgList?.[0] && (
+                                            <div>
+                                              <SeeUploadComponents
+                                                item={item.QAttachment?.ImgList}
+                                              />
+                                            </div>
+                                          )}
+                                          <Row>
+                                            <Col span={12} style={{ paddingRight: 8 }}>
+                                              <Form.Item
+                                                label="核查结果："
+                                                name={`reContent_${item.ID}`}
+                                                initialValue={item.ReContent}
+                                              >
+                                                <Input.TextArea
+                                                  disabled
+                                                  rows={3}
+                                                  placeholder="请填写核查结果"
+                                                  style={{ color: 'rgba(0, 0, 0, 0.85)' }}
+                                                />
+                                              </Form.Item>
+                                            </Col>
+                                            <Col span={12}>
+                                              <div style={{ marginTop: 30 }}>
+                                                <SeeUploadComponents
+                                                  item={item.ReAttachment?.ImgList}
+                                                />
+                                              </div>
+                                            </Col>
+                                          </Row>
+                                        </div>
+                                      );
+                                    })}
+                                  </Panel>
+                                );
+                              })}
+                            </Collapse>
+                          </div>
+                        ) : (
+                          ''
+                        )}
                         <div
                           style={{ fontSize: 16, fontWeight: 'bold', padding: '12px 0 10px 69px' }}
                         >
                           核查动作
                         </div>
                         <div style={{ paddingLeft: 112 }}>
-                          {dataSource?.Plan?.PlanItem[0]?.map((item, index) => {
+                          {dataSource?.Plan?.PlanItem?.map((item, index) => {
                             const cuids = item.ReAttachment?.AttachID
                               ? item.ReAttachment.AttachID
                               : cuid();
@@ -452,10 +833,15 @@ const Index = props => {
                             });
                             return (
                               <div style={{ paddingBottom: 12 }}>
-                                <Form.Item label={`${index + 1}.${item.QTitle}`}>
-                                  {item.QContent}
-                                </Form.Item>
-                                {/* {item.QContent} */}
+                                {item.QContent?.trim() ? (
+                                  <Form.Item label={`${index + 1}.${item.QTitle}`}>
+                                    {item.QContent}
+                                  </Form.Item>
+                                ) : (
+                                  <span style={{ marginTop: 10 }}>{`${index + 1}.${
+                                    item.QTitle
+                                  }`}</span>
+                                )}
                                 {item.QAttachment?.ImgList?.[0] && (
                                   <div>
                                     <SeeUploadComponents item={item.QAttachment?.ImgList} />
@@ -464,19 +850,26 @@ const Index = props => {
                                 <Row>
                                   <Col span={type == 1 ? 16 : 12} style={{ paddingRight: 8 }}>
                                     <Form.Item
-                                      label="填写核查结果"
+                                      label="核查结果："
                                       name={`reContent_${item.ID}`}
                                       rules={[
                                         {
                                           required: type == 1 ? true : false,
-                                          message: `请输入核查结果!`,
+                                          message: `请填写核查结果!`,
                                         },
                                       ]}
+                                      initialValue={item.ReContent}
                                     >
                                       {type == 1 ? (
-                                        <Input.TextArea rows={4} placeholder="请输入" />
+                                        <Input.TextArea rows={4} placeholder="请填写核查结果" />
                                       ) : (
-                                        item.ReContent
+                                        // item.ReContent
+                                        <Input.TextArea
+                                          disabled
+                                          rows={3}
+                                          placeholder="请填写核查结果"
+                                          style={{ color: 'rgba(0, 0, 0, 0.85)' }}
+                                        />
                                       )}
                                     </Form.Item>
                                   </Col>
@@ -539,15 +932,15 @@ const Index = props => {
                         </Space>
                       ) : (
                         <Space>
-                          {/* <Button
+                          <Button
                             type="primary"
                             danger
                             onClick={() => {
-                            
+                              onRejectBtnClick();
                             }}
                           >
                             打回
-                          </Button> */}
+                          </Button>
                           <Button
                             type="primary"
                             loading={saveLoading}
@@ -611,7 +1004,19 @@ const Index = props => {
           }}
           onOk={checkOk}
         >
-          <Form name="check" form={form2}>
+          <Form name="check" form={form2} labelCol={{ flex: '130px' }}>
+            <Form.Item
+              name="isRectify"
+              label="是否需要整改"
+              labelCol={{ flex: '130px' }}
+              rules={[{ required: true, message: '请选择是否需要整改!' }]}
+              initialValue={0}
+            >
+              <Radio.Group>
+                <Radio value={1}>是</Radio>
+                <Radio value={0}>否</Radio>
+              </Radio.Group>
+            </Form.Item>
             <Form.Item
               name="checkedResult"
               label="与线索是否符合"
@@ -635,7 +1040,6 @@ const Index = props => {
                   />
                 </span>
               }
-              labelCol={{ flex: '120px' }}
               // rules={[{ required: true, message: '请选择核查人!' }]}
             >
               <Select style={{ width: '100%' }} placeholder="请选择暂停时间" allowClear>
@@ -651,7 +1055,6 @@ const Index = props => {
               <Form.Item
                 name="flag"
                 label="专家意见"
-                labelCol={{ flex: '120px' }}
                 rules={[{ required: false, message: '请选择标记!' }]}
               >
                 <Cascader
@@ -668,12 +1071,80 @@ const Index = props => {
             <Form.Item
               label="核查结论"
               name="checkedDes"
-              labelCol={{ flex: '120px' }}
               rules={[{ required: true, message: '请输入核查结论!' }]}
             >
               <Input.TextArea placeholder="请输入" />
             </Form.Item>
           </Form>
+        </Modal>
+        <Modal
+          title="打回"
+          confirmLoading={checkConfirmLoading}
+          open={isRejectModalOpen}
+          onCancel={() => {
+            setIsRejectModalOpen(false);
+          }}
+          onOk={onReject}
+          width={800}
+          bodyStyle={{ padding: '12px 24px' }}
+        >
+          <Form name="basic2" form={modalForm} initialValues={{}} labelCol={{ flex: '120px' }}>
+            <Row align="middle" style={{ marginBottom: 6 }}>
+              <span
+                style={{
+                  display: 'inline-block',
+                  height: 14,
+                  width: 4,
+                  marginRight: 4,
+                  backgroundColor: '#3888ff',
+                }}
+              ></span>
+              核查动作
+            </Row>
+            <Table
+              components={{
+                body: {
+                  cell: EditableCell,
+                },
+              }}
+              bordered
+              dataSource={verificationActionData}
+              columns={verificationActionColumns}
+              scroll={{ x: 680, y: 'hidden' }}
+              pagination={false}
+              size="small"
+              className={'verificationActionTableSty'}
+            />
+            <Button
+              style={{ margin: '10px 0 15px 0' }}
+              type="dashed"
+              block
+              icon={<PlusOutlined />}
+              onClick={() => verificationActionAdd()}
+            >
+              新增
+            </Button>
+          </Form>
+        </Modal>
+        <Modal
+          title="上传图片"
+          open={fileVisible}
+          onOk={() => {
+            setFileVisible(false);
+          }}
+          destroyOnClose
+          onCancel={() => {
+            setFileVisible(false);
+          }}
+          width={'50%'}
+          footer={null}
+        >
+          <Upload {...uploadProps} style={{ width: '100%' }}>
+            <div>
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>上传</div>
+            </div>
+          </Upload>
         </Modal>
         <ImageView
           isOpen={previewVisible}

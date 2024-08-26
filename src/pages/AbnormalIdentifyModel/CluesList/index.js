@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-08-22 15:49:23
+ * @Last Modified time: 2024-08-23 17:09:47
  * @Description：线索列表
  */
 
@@ -467,12 +467,12 @@ const CluesList = props => {
   };
 
   // 删除线索
-  const onDelWarningModel = () => {
-    debugger;
+  const onDelWarningModel = IsDeleteWarning => {
     dispatch({
       type: 'AbnormalIdentifyModel/DelWarningModel',
       payload: {
         ModelGuid: selectedRowKeys,
+        IsDeleteWarning,
       },
       callback: res => {
         message.success('删除成功！');
@@ -729,16 +729,28 @@ const CluesList = props => {
               )}
               {// 超级管理员显示
               isSystem && (
-                <Popconfirm
-                  title="确认是否删除?"
-                  onConfirm={onDelWarningModel}
-                  // okText="Yes"
-                  // cancelText="No"
-                >
-                  <Button type="primary" disabled={!selectedRowKeys.length} danger>
-                    删除线索
-                  </Button>
-                </Popconfirm>
+                <>
+                  <Popconfirm
+                    title="确认是否删除?"
+                    onConfirm={() => onDelWarningModel(true)}
+                    // okText="Yes"
+                    // cancelText="No"
+                  >
+                    <Button type="primary" disabled={!selectedRowKeys.length} danger>
+                      删除线索
+                    </Button>
+                  </Popconfirm>
+                  <Popconfirm
+                    title="确认是否删除?"
+                    onConfirm={() => onDelWarningModel(false)}
+                    // okText="Yes"
+                    // cancelText="No"
+                  >
+                    <Button type="primary" disabled={!selectedRowKeys.length} danger>
+                      删除核查任务
+                    </Button>
+                  </Popconfirm>
+                </>
               )}
             </Space>
           </Form.Item>
