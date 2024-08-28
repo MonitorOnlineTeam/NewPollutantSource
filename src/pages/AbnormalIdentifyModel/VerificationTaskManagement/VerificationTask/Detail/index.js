@@ -372,7 +372,7 @@ const Index = props => {
         title: '序号',
         dataIndex: 'index',
         key: 'index',
-        width: 80,
+        width: 60,
         ellipsis: true,
         align: 'center',
         render: (text, record, index) => {
@@ -401,7 +401,7 @@ const Index = props => {
         title: '图片',
         dataIndex: 'QAttachment',
         key: 'QAttachment',
-        width: 120,
+        width: 100,
         align: 'center',
         ellipsis: true,
         editable: true,
@@ -410,7 +410,7 @@ const Index = props => {
         title: '操作',
         dataIndex: 'operation',
         align: 'center',
-        width: 100,
+        width: 80,
         render: (_, record) => {
           return (
             <span
@@ -993,7 +993,6 @@ const Index = props => {
             />
           )}
         </Modal>
-        ;
         <Modal
           title="核实"
           confirmLoading={checkConfirmLoading}
@@ -1006,7 +1005,7 @@ const Index = props => {
         >
           <Form name="check" form={form2} labelCol={{ flex: '130px' }}>
             <Form.Item
-              name="isRectify"
+              name="IsRectificationRecord"
               label="是否需要整改"
               labelCol={{ flex: '130px' }}
               rules={[{ required: true, message: '请选择是否需要整改!' }]}
@@ -1085,7 +1084,7 @@ const Index = props => {
             setIsRejectModalOpen(false);
           }}
           onOk={onReject}
-          width={800}
+          width={900}
           bodyStyle={{ padding: '12px 24px' }}
         >
           <Form name="basic2" form={modalForm} initialValues={{}} labelCol={{ flex: '120px' }}>

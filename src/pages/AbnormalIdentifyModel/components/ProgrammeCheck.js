@@ -1,15 +1,14 @@
 /*
- *方案及核查信息
+ *方案、核查及整改信息
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Card, Row, Col, Form, Input, Upload, Tag, Skeleton, Collapse } from 'antd';
+import { Card, Row, Col, Form, Input, Upload, Tag, Skeleton, Collapse, Divider, Descriptions } from 'antd';
 import cuid from 'cuid';
 import ImageView from '@/components/ImageView';
 import styles from '@/pages/AbnormalIdentifyModel/styles.less';
 
 const { Panel } = Collapse;
-
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   checkedInfo: AbnormalIdentifyModel.checkedInfo,
@@ -17,11 +16,27 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
 });
 
 const ProgrammeCheck = props => {
-  const { dispatch, id, queryLoading, checkedInfo } = props;
+  const { dispatch, id, queryLoading, checkedInfo, warningInfo } = props;
+  const [rectFileList, setRectFileList] = useState([]);
 
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (warningInfo.RectificationMaterial && warningInfo.RectificationMaterial.length) {
+      rectFileList = warningInfo.RectificationMaterial.map((item, index) => {
+        return {
+          uid: index,
+          index: index,
+          status: 'done',
+          url: '/' + item,
+        };
+      });
+    }
+
+    setRectFileList(rectFileList);
+  }, [warningInfo]);
 
   // const [dataSource, setDataSource] = useState();
   const loadData = () => {
@@ -223,8 +238,62 @@ const ProgrammeCheck = props => {
               </Form.Item>
             </>
           )}
+
+          <Divider style={{ marginTop: 10 }} />
+          {/* 整改详情 */}
+          <Descriptions column={4}>
+            <Descriptions.Item label="是否需要整改">
+              <Tag
+                color={
+                  warningInfo.IsRect === 1 // 需整改
+                    ? 'orange'
+                    : 'success' //不用整改
+                }
+              >
+                {warningInfo.IsRect === 1 ? '需整改' : '不用整改'}
+              </Tag>
+            </Descriptions.Item>
+            {warningInfo.IsRect === 1 && (
+              <>
+                <Descriptions.Item label="整改状态">
+                  {warningInfo.RectificationStatus === '1' && <Tag color="orange">待整改</Tag>}
+                  {warningInfo.RectificationStatus === '2' && <Tag color="orange">待复核</Tag>}
+                  {warningInfo.RectificationStatus === '3' && <Tag color="success">整改完成</Tag>}
+                </Descriptions.Item>
+                <Descriptions.Item label="整改人">
+                  {warningInfo.RectificationUserName || '-'}
+                </Descriptions.Item>
+                <Descriptions.Item span={1} label="整改时间">
+                  {warningInfo.CompleteTime || '-'}
+                </Descriptions.Item>
+                <Descriptions.Item span={4} label="整改描述">
+                  {warningInfo.RectificationDes || '-'}
+                </Descriptions.Item>
+                <Descriptions.Item span={4} label="整改材料">
+                  {rectFileList.length ? (
+                    <Upload
+                      listType="picture-card"
+                      fileList={rectFileList}
+                      showUploadList={{ showPreviewIcon: true, showRemoveIcon: false }}
+                      onPreview={file => {
+                        // setIsOpen(true);
+                        // setImageIndex(file.index);
+                        // setImages(rectFileList);
+                        setImgUrlList(rectFileList);
+                        setPhotoIndex(file.index);
+                        setPreviewVisible(true);
+                      }}
+                    />
+                  ) : (
+                    '-'
+                  )}
+                </Descriptions.Item>
+              </>
+            )}
+          </Descriptions>
         </>
       )}
+
       <ImageView
         isOpen={previewVisible}
         images={imgUrlList?.length ? imgUrlList : []}

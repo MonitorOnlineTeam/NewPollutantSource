@@ -13,7 +13,7 @@ import {
   Button,
   Space,
   Select,
-  Badge,
+  Typography,
   Divider,
   Input,
   Radio,
@@ -40,6 +40,7 @@ import { cookieName, uploadPrefix } from '@/config';
 import ImageView from '@/components/ImageView';
 import moment from 'moment';
 const { Panel } = Collapse;
+const { Text } = Typography;
 // 自定义文字大小
 let fontSize = ['12px', '14px', '16px', '18px', '20px', '24px', '36px'];
 Quill.imports['attributors/style/size'].whitelist = fontSize;
@@ -74,6 +75,7 @@ const Index = props => {
     selectedRowKeys,
     selectedRow,
   } = props;
+
   const currentUser = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser'));
   const [planPopVisible, setPlanPopVisible] = useState(false);
   const [collapsekey, setCollapsekey] = useState();
@@ -664,24 +666,37 @@ const Index = props => {
               </Form.Item>
             </Col>
           </Row>
-          <Spin spinning={!!preTakeFlagDatasLoading} size="small" style={{ width: 440, top: -6 }}>
-            <Form.Item
-              name="preTakeFlag"
-              label="专家意见"
-              rules={[{ required: false, message: '请选择标记!' }]}
-            >
-              <Cascader
-                showSearch
-                filterOption={(input, option) =>
-                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
-                style={{ width: 300 }}
-                fieldNames={{ label: 'FlagName', value: 'FlagCode', children: 'ChildrenFlags' }}
-                options={preTakeFlagDatas}
-                placeholder="请选择标记"
-              />
-            </Form.Item>
-          </Spin>
+          <Row>
+            <Col span={8}>
+              <Spin
+                spinning={!!preTakeFlagDatasLoading}
+                size="small"
+                style={{ width: 440, top: -6 }}
+              >
+                <Form.Item
+                  name="preTakeFlag"
+                  label="专家意见"
+                  rules={[{ required: false, message: '请选择标记!' }]}
+                >
+                  <Cascader
+                    showSearch
+                    filterOption={(input, option) =>
+                      option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    style={{ width: 300 }}
+                    fieldNames={{ label: 'FlagName', value: 'FlagCode', children: 'ChildrenFlags' }}
+                    options={preTakeFlagDatas}
+                    placeholder="请选择标记"
+                  />
+                </Form.Item>
+              </Spin>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="场景类别">
+                <Text>{selectedRow.WarningName}</Text>
+              </Form.Item>
+            </Col>
+          </Row>
           {siteVerificationPlanType == 1 ? (
             <>
               <Spin spinning={!!checkRoleDatasLoading} size="small" style={{ width: 440, top: -6 }}>

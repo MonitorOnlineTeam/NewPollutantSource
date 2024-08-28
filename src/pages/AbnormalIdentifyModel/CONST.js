@@ -109,8 +109,8 @@ export const getColorByName = {
   烟气静压: '#ff9f7f',
   // 烟气湿度: '#c23531',
   烟气湿度: '#13c2c2',
-  流速: '#c4ccd3',
-  流量: '#61a0a8',
+  流速: '#61a0a8',
+  流量: '#c4ccd3',
 };
 
 export const ModelNumberIdsDatas = {

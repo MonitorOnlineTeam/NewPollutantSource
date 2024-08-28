@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-08-23 17:09:47
+ * @Last Modified time: 2024-08-28 11:48:39
  * @Description：线索列表
  */
 
@@ -595,7 +595,8 @@ const CluesList = props => {
           </Form.Item>
           <Form.Item label="行政区" name="regionCode">
             <RegionList
-              noFilter
+              // noFilter
+              // multiple
               style={{ width: 140 }}
               onChange={value => {
                 form.setFieldsValue({ EntCode: undefined, DGIMN: undefined });
@@ -695,7 +696,44 @@ const CluesList = props => {
           <Form.Item label="线索内容" name="WarningContent">
             <Input placeholder="线索内容" style={{ width: 240 }} />
           </Form.Item>
-
+          <Form.Item label="核查结果" name="CheckedResult">
+            <Select
+              placeholder="请选择核查结果"
+              showSearch
+              allowClear
+              optionFilterProp="children"
+              style={{ width: 150 }}
+            >
+              <Option key={1} value={1}>
+                符合
+              </Option>
+              <Option key={2} value={2}>
+                部分符合
+              </Option>
+              <Option key={3} value={3}>
+                不符合
+              </Option>
+            </Select>
+          </Form.Item>
+          <Form.Item label="核查状态" name="Status">
+            <Select
+              placeholder="请选择核查状态"
+              showSearch
+              allowClear
+              optionFilterProp="children"
+              style={{ width: 150 }}
+            >
+              <Option key={1} value={1}>
+                待核查
+              </Option>
+              <Option key={2} value={2}>
+                待确认
+              </Option>
+              <Option key={3} value={3}>
+                已完成
+              </Option>
+            </Select>
+          </Form.Item>
           <Form.Item>
             <Space>
               <Button
@@ -730,24 +768,14 @@ const CluesList = props => {
               {// 超级管理员显示
               isSystem && (
                 <>
-                  <Popconfirm
-                    title="确认是否删除?"
-                    onConfirm={() => onDelWarningModel(true)}
-                    // okText="Yes"
-                    // cancelText="No"
-                  >
+                  <Popconfirm title="确认是否删除?" onConfirm={() => onDelWarningModel(true)}>
                     <Button type="primary" disabled={!selectedRowKeys.length} danger>
                       删除线索
                     </Button>
                   </Popconfirm>
-                  <Popconfirm
-                    title="确认是否删除?"
-                    onConfirm={() => onDelWarningModel(false)}
-                    // okText="Yes"
-                    // cancelText="No"
-                  >
+                  <Popconfirm title="确认是否删除?" onConfirm={() => onDelWarningModel(false)}>
                     <Button type="primary" disabled={!selectedRowKeys.length} danger>
-                      删除核查任务
+                      删除核查/整改任务
                     </Button>
                   </Popconfirm>
                 </>

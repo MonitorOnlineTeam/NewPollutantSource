@@ -605,6 +605,7 @@ const WarningDataAndChart = props => {
         itemStyle: {
           color: getColorByName[selectedNames[index]],
         },
+        showSymbol: true,
         symbol: (value, params) => {
           // 污染物flag非正常，显示三角
           let { dataIndex, seriesId } = params;
@@ -1199,7 +1200,7 @@ const WarningDataAndChart = props => {
       // ],
       xAxis: {
         type: 'category',
-        boundaryGap: false,
+        // boundaryGap: false,
         data: xAxisData,
       },
       yAxis: yxisData,
@@ -1212,6 +1213,8 @@ const WarningDataAndChart = props => {
         xAxisIndex: 0,
       };
     }
+
+    // console.log('option', option)
     return option;
   };
 

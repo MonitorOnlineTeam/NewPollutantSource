@@ -437,7 +437,7 @@ const CluesDetails = props => {
               : ''}
           </Row>
         </Card>
-        <ProgrammeCheck id={checkId} />
+        <ProgrammeCheck id={checkId} warningInfo={warningInfo} />
 
         {/* 查看附件弹窗 */}
         <ImageView

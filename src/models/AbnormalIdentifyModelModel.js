@@ -270,6 +270,7 @@ export default Model.extend({
       let currentForm = state.warningForm[payload.modelNumber];
       const result = yield call(services.GetWarningList, {
         ...payload,
+        regionCode: payload.regionCode ? payload.regionCode.toString() : undefined,
         pageSize: currentForm.pageSize,
         pageIndex: currentForm.pageIndex,
       });
@@ -980,5 +981,15 @@ export default Model.extend({
       const result = yield call(requestPost, API.AbnormalIdentifyModel.RepulseCheck, payload);
       result.IsSuccess && callback(result);
     },
+    // 获取整改单列表
+    *GetCheckedRectificationList({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetCheckedRectificationList, payload);
+      result.IsSuccess && callback(result);
+    },
+    // // 获取整改单列表
+    // *GetCheckedRectificationList({ payload, callback }, { call, select, update }) {
+    //   const result = yield call(requestPost, API.AbnormalIdentifyModel.GetCheckedRectificationList, payload);
+    //   result.IsSuccess && callback(result);
+    // },
   },
 });

@@ -95,7 +95,7 @@ const ModelChartMultipleBig = props => {
         yAxisData.push({
           type: 'value',
           name: pollutantNames[index],
-          //alignTicks: true,
+          alignTicks: true,
           nameLocation: 'middle',
           nameGap: 35,
           // nameLocation: 'end',

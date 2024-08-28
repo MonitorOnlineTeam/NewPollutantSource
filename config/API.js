@@ -1438,6 +1438,30 @@ export const API = {
     GetPwPointList: before + '/WarningV2/GetPwPointList',
     // 删除报警及任务单关联
     DelWarningModel: before + '/WarningV2/DelWarningModel',
+
+    // 整改复核列表
+    GetCheckedRectificationList: before + '/WarningV2/GetCheckedRectificationList',
+    // 整改详情
+    GetCheckedRectificationApprovals: before + '/WarningV2/GetCheckedRectificationApprovals',
+    // 复核提交
+    CheckedRectification: before + '/WarningV2/CheckedRectification',
+    /*整改率*/
+    GetModelWarningCheckedRectificationForRegion:
+      before + '/WarningV2/GetModelWarningCheckedRectificationForRegion', //行政区 列表
+    GetModelWarningCheckedRectificationForCity:
+      before + '/WarningV2/GetModelWarningCheckedRectificationForCity', //市 列表
+    GetModelWarningCheckedRectificationForEnt:
+      before + '/WarningV2/GetModelWarningCheckedRectificationForEnt', //企业 列表
+    GetModelWarningCheckedRectificationForPoint:
+      before + '/WarningV2/GetModelWarningCheckedRectificationForPoint', //监测点 列表
+    GetCheckedRectificationApprovals: before + '/WarningV2/GetCheckedRectificationApprovals', //整改详情
+    ExportModelWarningCheckedRectificationForRegion:
+      before + '/WarningV2/ExportModelWarningCheckedRectificationForRegion', //行政区 导出
+    ExportModelWarningCheckedRectificationForCity:
+      before + '/WarningV2/ExportModelWarningCheckedRectificationForCity', //市 导出
+    ExportModelWarningCheckedRectificationForEnt:
+      before + '/WarningV2/ExportModelWarningCheckedRectificationForEnt', //企业 导出
+
     // 核查打回
     RepulseCheck: before + '/Clue/RepulseCheck',
 
@@ -2260,8 +2284,10 @@ export const API = {
     UpdatePersonalPerformanceRateInfo:
       before + '/AchievementsApi/UpdatePersonalPerformanceRateInfo', //更新工作总量绩效
     ImportOperationIntegral: before + '/AchievementsApi/ImportOperationIntegral', //导入积分明细信息
-    GetPersonalPerformanceRateByProjectList: before + '/AchievementsApi/GetPersonalPerformanceRateByProjectList', //项目绩效查询
-    ExportPersonalPerformanceRateByProjectList: before + '/AchievementsApi/ExportPersonalPerformanceRateByProjectList', //项目绩效 导出
+    GetPersonalPerformanceRateByProjectList:
+      before + '/AchievementsApi/GetPersonalPerformanceRateByProjectList', //项目绩效查询
+    ExportPersonalPerformanceRateByProjectList:
+      before + '/AchievementsApi/ExportPersonalPerformanceRateByProjectList', //项目绩效 导出
     /*工单系数清单*/
     GetWorkOrderTypeCoefficientList:
       before + '/PerformanceCoefficientApi/GetWorkOrderTypeCoefficientList', //获取工单系数信息
@@ -2318,7 +2344,7 @@ export const API = {
     /*运维基础配置*/
     GetOperationSetting: before + '/ConfigureApi/GetOperationSetting', //获取运维基础配置信息
     UpdOperationSetting: before + '/ConfigureApi/UpdOperationSetting', //设置运维基础配置
-     /*项目管理*/
+    /*项目管理*/
     GetUserProjectList: before + '/ProjectMonitorDataApi/GetUserProjectList', //获取项目
     InsertProjectUser: before + '/ProjectMonitorDataApi/InsertProjectUser', // 保存项目关联用户
     GetProjectUserList: before + '/ProjectMonitorDataApi/GetProjectUserList', // 获取已保存项目关联用户

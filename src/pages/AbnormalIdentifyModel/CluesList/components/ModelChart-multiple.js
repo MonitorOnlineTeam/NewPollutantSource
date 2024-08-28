@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-18 10:36:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-08-22 16:58:56
+ * @Last Modified time: 2024-08-28 09:24:48
  * @Description：模型异常特征 - 多图例折线图
  */
 import React, { useState, useEffect } from 'react';
@@ -54,7 +54,7 @@ const ModelChartMultiple = props => {
           name: item.PointName || item.pollutantName,
           nameLocation: 'middle',
           nameGap: 35,
-          // alignTicks: true,
+          alignTicks: true,
           // nameLocation: 'end',
           splitLine: {
             show: false,

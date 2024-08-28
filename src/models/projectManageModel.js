@@ -14,7 +14,7 @@ export default Model.extend({
   effects: {
     // 获取所有项目
     *GetUserProjectList({ payload, callback }, { call, select, update }) {
-      if (configInfo.IsOpenAQI === '1') {
+      if (configInfo.IsOpera) {
         callback && callback([]);
         yield update({
           projectList: [],
