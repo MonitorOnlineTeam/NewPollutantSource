@@ -65,7 +65,6 @@ const RecordAndManagement = props => {
       endTime: values.time
         ? moment(values.time[1])
             .endOf('weeks')
-            .add(1, 'day')
             .format('YYYY-MM-DD 23:59:59')
         : undefined,
     };
@@ -303,11 +302,11 @@ const RecordAndManagement = props => {
                 isQualify: 0,
                 time: [
                   moment()
-                    .subtract(1, 'month')
-                    .startOf('months'),
+                    .subtract(1, 'week')
+                    .startOf('weeks'),
                   moment()
-                    .subtract(1, 'month')
-                    .endOf('months'),
+                    .subtract(1, 'week')
+                    .endOf('weeks'),
                 ],
               }}
               autoComplete="off"

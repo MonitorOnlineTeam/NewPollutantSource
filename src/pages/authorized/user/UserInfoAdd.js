@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
- * @LastEditors: lzp
- * @LastEditTime: 2019-09-18 10:56:26
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-08-28 15:19:05
  * @Description: 用户添加
  */
 import React, { Component } from 'react';
@@ -28,12 +28,13 @@ const {
 const { TreeNode } = Tree;
 
 
-@connect(({ userinfo, loading }) => ({
+@connect(({ userinfo, loading, global }) => ({
     treeDataLoading: loading.effects['userinfo/getdepartmenttree'],
     RolesTreeDataLoading: loading.effects['userinfo/getrolestree'],
     treeData: userinfo.DepartTree,
     RolesTreeData: userinfo.RolesTree,
     btnisloading: loading.effects['userinfo/add'],
+    configInfo: global.configInfo,
 }))
 @Form.create()
 export default class UserInfoAdd extends Component {
@@ -97,14 +98,21 @@ export default class UserInfoAdd extends Component {
     };
 
     onChecks = checkedKeys => {
-        this.setState({ checkedKeys });
-        const leafTree = [];
-        checkedKeys.map(item => {
-            if (this.state.leafTreeDatas.indexOf(item) != -1) {
-                leafTree.push(item);
-            }
-        });
-        this.setState({ checkedKeysSel: leafTree });
+        if(this.props.configInfo.IsOpera){//运维
+            let checkedData = checkedKeys.checked;
+            this.setState({checkedKeys: checkedData,checkedKeysSel: checkedData });
+        }else{
+            this.setState({ checkedKeys });
+            const leafTree = [];
+            checkedKeys.map(item => {
+                if (this.state.leafTreeDatas.indexOf(item) != -1) {
+                    leafTree.push(item);
+                }
+            });
+            this.setState({ checkedKeysSel: leafTree });
+        }
+
+        
     };
 
     onSelects = (selectedKeys, info) => {
@@ -370,6 +378,7 @@ export default class UserInfoAdd extends Component {
                                                 selectedKeys={this.state.selectedKeys}
                                                 autoExpandParent
                                                 defaultExpandAll
+                                                checkStrictly={this.props.configInfo.IsOpera}
                                             >
                                                 {this.renderTreeNodes(this.props.treeData)}
                                             </Tree>

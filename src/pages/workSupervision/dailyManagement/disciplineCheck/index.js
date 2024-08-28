@@ -82,7 +82,7 @@ const DisciplineCheck = props => {
           .format('YYYY-MM-DD HH:mm:ss'),
         endTime: moment(values.time[1])
           .endOf('weeks')
-          .add(1, 'day')
+          // .add(1, 'day')
           .format('YYYY-MM-DD 23:59:59'),
         dataType: 0,
         systemType: systemType,

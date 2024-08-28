@@ -191,6 +191,15 @@ class SdlForm extends PureComponent {
         />
       ); //disabledDate 监测点监测设备安装日期选择范围显示/>
     }
+    if (format === 'YYYY-MM-DD HH') {
+      return (
+        <DatePicker
+          format={format}
+          showTime={{ format: 'HH' }}
+          style={{ width: '100%' }}
+        />
+      );
+    }
     // 年-月-日 时:分:秒
     return (
       <DatePicker
@@ -421,9 +430,9 @@ class SdlForm extends PureComponent {
             : { fileList: [] };
           element = (
             <SdlUpload
+              {...fileListProps}
               {...this.props}
               accept={item.uploadType}
-              {...fileListProps}
               cuid={uid}
               uploadSuccess={cuid => {
                 setFieldsValue({ cuid: cuid });

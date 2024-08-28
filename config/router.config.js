@@ -1697,6 +1697,14 @@ const routes = [
               //   component: "./operations/operationRecord"
               // },
               {
+                path: '/operations/taskRecord1',
+                redirect: '/operations/calendar/index',
+              },
+              {
+                path: '/operations/taskRecord2',
+                redirect: '/operations/calendar/index',
+              },
+              {
                 path: '/operations/taskRecord',
                 name: 'taskRecord',
                 component: './operations/TaskRecord',
@@ -1706,6 +1714,7 @@ const routes = [
                 name: 'taskRecord',
                 component: './operations/TaskRecord',
               },
+              
               {
                 path: '/operations/taskRecord/details/:TaskID/:DGIMN',
                 name: 'taskRecordDetail',

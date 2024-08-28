@@ -1,7 +1,7 @@
 /*
  * @Author: jab
  * @Date: 2024
- * @LastEditors: outman0611 jia_anbo@163.com
+ * @LastEditors: outman0611
  * @Description: 运维台账 合并运维日志和运维记录
  */
 import React, { Component } from 'react';
@@ -52,7 +52,7 @@ class Index extends Component {
             }
           }}
         />
-        <BreadcrumbWrapper title={breadTitle} hideBreadcrumb={this.props.hideBreadcrumb}>
+        <BreadcrumbWrapper  hideBreadcrumb={this.props.hideBreadcrumb}>
            {dgimn && <>
            <div style={{position:'absolute',right:0,zIndex:10,lineHeight:'65px'}}>
             <Radio.Group

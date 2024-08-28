@@ -12,7 +12,7 @@ import {
   DelIcon,EditIcon
 } from '@/utils/icon';
 import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
-
+import moment from 'moment'
 @connect(({ loading, autoForm }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
     autoForm,
@@ -120,7 +120,8 @@ import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
           dispatch({
             type: 'operationsysmanage/addoutputstop',
             payload: {
-              FormData: formData,
+              // FormData:formData,
+              FormData: {...formData,BeginTime:moment(formData.BeginTime).format('YYYY-MM-DD HH:00:00'),EndTime:moment(formData.EndTime).format('YYYY-MM-DD HH:59:59')},
               callback: result => {
                   if (result.IsSuccess) {
                       this.setState({
@@ -161,7 +162,8 @@ import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
           dispatch({
             type: 'operationsysmanage/editoutputstop',
             payload: {
-              FormData: formData,
+              // FormData:formData,
+              FormData: {...formData,BeginTime:moment(formData.BeginTime).format('YYYY-MM-DD HH:00:00'),EndTime:moment(formData.EndTime).format('YYYY-MM-DD HH:59:59')},
               callback: result => {
                   if (result.IsSuccess) {
                       this.setState({

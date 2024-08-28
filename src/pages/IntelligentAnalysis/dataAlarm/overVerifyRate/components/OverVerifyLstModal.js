@@ -97,7 +97,7 @@ const pageUrl = {
 export default class OverVerifyLstModal extends Component {
   constructor(props) {
     super(props);
-    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined;
     this.state = {
       checkedValues: [],
       columns: [],

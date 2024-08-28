@@ -110,7 +110,7 @@ class TaskRecord extends Component {
     //   },
     // })
     // const buttonList = permissionButton(this.props.match.path)
-    const buttonList = permissionButton('/operations/taskRecord')
+    const buttonList = permissionButton(this.props.location?.pathname || '/operations/taskRecord')
     buttonList.map(item => {
       switch (item) {
         case 'reject': this.setState({ rejectPermis: true }); break;

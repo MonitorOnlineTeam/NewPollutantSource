@@ -988,7 +988,7 @@ class EmergencyDetailInfo extends Component {
                                 />)
                             }
                         </Card>
-                        {isExistTask && taskInfo.Datas[0].TaskFromText == '手动创建' && taskInfo.Datas[0].OperationEnt == '雪迪龙' && <Card title={<span style={{ fontWeight: '900' }}>审批记录</span>} style={{ marginTop: 8, }}>
+                        {isExistTask && taskInfo.Datas[0].TaskFromText == '手动创建' && taskInfo.Datas[0].OperationEnt == '雪迪龙' &&  this.props.taskInfo.Datas[0].appList?.[0] && <Card title={<span style={{ fontWeight: '900' }}>审批记录</span>} style={{ marginTop: 8, }}>
                             <Table
                                 size='small'
                                 bordered

@@ -153,7 +153,7 @@ class index extends PureComponent {
         this.props.dispatch({
             type: pageUrl.GetPollutantByType,
             payload: {
-                type:'2'
+                type:this.pollutantType || 2
             },
         }).then(()=>{
             // console.log(this.props.PollutantByType)

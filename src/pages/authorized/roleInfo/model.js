@@ -179,7 +179,7 @@ export default Model.extend({
       const result = yield call(getrolemenutree, { ...payload });
       if (result.IsSuccess) {
         let newData = removeEmptyChildren(result.Datas);
-        console.log('newData', newData);
+        // console.log('newData', newData);
         yield update({
           MenuTree: removeEmptyChildren(result.Datas),
         });
