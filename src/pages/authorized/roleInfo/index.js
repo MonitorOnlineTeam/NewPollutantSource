@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-08-30 14:39:54
+ * @LastEditTime: 2024-08-30 15:01:30
  * @Description: 角色管理
  */
 import React, { Component, Fragment } from 'react';
@@ -924,7 +924,7 @@ class RoleIndex extends Component {
         this.setState({
           selectButton: selectedRowsKey,
         });
-        //this.state.selectButton 是所有的返回来的id  包含菜单id和权限按钮id 我不懂 但我大受震撼
+        // this.state.selectButton 是所有的返回来的id  包含菜单id和权限按钮id 我不懂 但我大受震撼
         // let btnState = this.findDifferentElements(this.state.selectButton, selectedRowsKey); //筛选出选中的权限按钮  因为返回来的菜单id和权限按钮id在一起   第一次操作的时候
         // if (btnState?.[0] && btnState.length > 1) {
         //   console.log(btnState, '00000')

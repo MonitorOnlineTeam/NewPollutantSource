@@ -257,7 +257,7 @@ const OfficeCheck = props => {
           pagination={false}
         />
       </Card>
-      {isModalOpen && (
+      {isModalOpen && ( //应完成任务数量详情
         <TaskCompletionRecord
           time={form.getFieldValue('time')}
           regionCode={regionCode}

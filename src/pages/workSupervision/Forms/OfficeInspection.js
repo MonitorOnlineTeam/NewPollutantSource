@@ -343,7 +343,7 @@ const OfficeInspection = props => {
                   //   });
                   // }}
                 >
-                  {provinceList.map(item => {
+                  {provinceList?.map(item => {
                     return (
                       <Option value={item.RegionCode} key={item.RegionCode}>
                         {item.RegionName}

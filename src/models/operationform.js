@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-08-16 10:41:55
- * @LastEditors: lzp
- * @LastEditTime: 2019-09-18 11:11:59
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-08-30 16:51:58
  * @Description: 运维记录相关接口
  */
 import Model from '@/utils/model';
@@ -35,6 +35,7 @@ export default Model.extend({
       moment().endOf('day'),
     ],
     breadTitle: '运维日志',
+    maintenanceSelectValue:null,
     // mainSelectDate:''
   },
   subscriptions: {
