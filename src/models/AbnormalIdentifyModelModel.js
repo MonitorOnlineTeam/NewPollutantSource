@@ -277,6 +277,12 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result);
       } else {
+        callback &&
+          callback({
+            IsSuccess: false,
+            Datas: [],
+            Total: 0,
+          });
         result.Message && message.error(result.Message);
       }
     },
@@ -983,7 +989,11 @@ export default Model.extend({
     },
     // 获取整改单列表
     *GetCheckedRectificationList({ payload, callback }, { call, select, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetCheckedRectificationList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetCheckedRectificationList,
+        payload,
+      );
       result.IsSuccess && callback(result);
     },
     // // 获取整改单列表

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'dva';
 import {
   Form,
@@ -73,7 +73,7 @@ const RectificationTask = props => {
           setRectificaInfo(data);
           let _fileList = [];
           if (data.FileList) {
-            _fileList = data.FileList.map((item, index) => {
+            _fileList = data.FileList?.ImgList?.map((item, index) => {
               return {
                 uid: index,
                 index: index,
@@ -116,7 +116,6 @@ const RectificationTask = props => {
   };
 
   const handleTimeLineItem = data => {
-    // data.ApprovalStatusName
     return (
       <Timeline.Item>
         <div className={dataAnalyticalWarningModelSty.processTitle}>
@@ -127,10 +126,10 @@ const RectificationTask = props => {
         {data.ApprovalRemarks || data.FileList.length ? (
           <div className={dataAnalyticalWarningModelSty.processContent}>
             <p>{data.ApprovalRemarks}</p>
-            {data.FileList.length ? (
+            {data.FileList?.ImgList?.length ? (
               <Upload
                 listType="picture-card"
-                fileList={data.FileList.map((item, index) => {
+                fileList={data.FileList?.ImgList?.map((item, index) => {
                   return {
                     uid: index,
                     index: index,
@@ -141,7 +140,7 @@ const RectificationTask = props => {
                 showUploadList={{ showPreviewIcon: true, showRemoveIcon: false }}
                 onPreview={file => {
                   setViewFileList(
-                    data.FileList.map((item, index) => {
+                    data.FileList?.ImgList?.map((item, index) => {
                       return {
                         uid: index,
                         index: index,
@@ -164,6 +163,16 @@ const RectificationTask = props => {
       </Timeline.Item>
     );
   };
+
+  const renderTimeline = useMemo(() => {
+    return (
+      <Timeline style={{ marginTop: 20 }}>
+        {processData.map(item => {
+          return handleTimeLineItem(item);
+        })}
+      </Timeline>
+    );
+  }, [processData]);
 
   const getColumns = () => {
     return [
@@ -332,14 +341,7 @@ const RectificationTask = props => {
           pagination={false}
         />
       </Card>
-      <Card title="处理流程">
-        <Timeline style={{ marginTop: 20 }}>
-          {processData.map(item => {
-            return handleTimeLineItem(item);
-          })}
-        </Timeline>
-      </Card>
-      {console.log('isAuditOpen', isAuditOpen)}
+      <Card title="处理流程">{renderTimeline}</Card>
       {/* 复核弹窗 */}
       <Modal
         title="复核"
