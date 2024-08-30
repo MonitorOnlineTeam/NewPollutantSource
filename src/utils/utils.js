@@ -525,6 +525,16 @@ export function isOperaSystem(systemName) {
   // systemName === '技术服务智慧管理平台'  || systemName === '重点环境风险监管平台环境在线设备远程运维系统' ||  systemName=== '污染源安装调试系统' || systemName==='智慧运维管理平台' || systemName==='污染源监测安装调试系统' || NODE_ENV === 'production' && systemName==='污染源监测安装调试系统'
   return /运维/.test(systemName) || /安装调试/.test(systemName) || /服务智慧/.test(systemName);
 }
+
+export function isSystem() {
+  const userCookie = Cookie.get('currentUser');
+  let isSystem = false;
+  if (userCookie) {
+    isSystem = JSON.parse(userCookie).User_ID === '48f3889c-af8d-401f-ada2-c383031af92d';
+  }
+  return isSystem;
+}
+
 import { post, get } from '@/utils/request';
 export async function requestPost(url, params) {
   return post(url, params)

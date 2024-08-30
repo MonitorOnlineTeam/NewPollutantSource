@@ -601,6 +601,8 @@ export const API = {
     AddSetLongInAppRole: before + '/RoleApi/AddSetLongInAppRole', //设置允许登录的APP角色
     GetSetRoleId: before + '/RoleApi/GetSetRoleId', //获取行政区获取点位角色信息
     AddSetRole: before + '/RoleApi/AddSetRole', //设置行政区获取点位角色
+    GetSetExpertRoleId: before + '/RoleApi/GetSetExpertRoleId', //获取设置过业务专家的角色
+    AddSetExpertRole: before + '/RoleApi/AddSetExpertRole', // 设置业务专家角色
 
     // 获取部门详细信息及层级关系
     GetDepInfoByTree: before + '/DepartmentApi/GetDepInfoByTree',
@@ -1262,6 +1264,10 @@ export const API = {
 
     // 核查打回
     RepulseCheck: before + '/Clue/RepulseCheck',
+
+
+    // 排放口数据来源
+    GetPointDataBy: before + '/WarningV2/GetPointDataBy',
 
     /*实时数据异常识别及管理*/
     //异常线索清单

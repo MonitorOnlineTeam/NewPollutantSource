@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-08-28 11:48:39
+ * @Last Modified time: 2024-08-29 15:35:29
  * @Description：线索列表
  */
 
@@ -31,12 +31,14 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList';
 import EntAtmoList from '@/components/EntAtmoList';
 import { DetailIcon } from '@/utils/icon';
-import { router } from 'umi';
+import { isSystem } from '@/utils/utils';
 import { ModelNumberIdsDatas, ModalNameConversion, transformData } from '../CONST';
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import CluesDetails from './CluesDetails';
 import { isArray } from 'lodash';
 import Cookie from 'js-cookie';
+import { UpOutlined, DownOutlined } from '@ant-design/icons';
+
 const { SHOW_PARENT } = TreeSelect;
 
 const textStyle = {
@@ -73,6 +75,7 @@ const CluesList = props => {
     cluesListTag,
   } = props;
   const modelNumber = props.match.params.modelNumber;
+  // const _isSystem = isSystem();
   // const modelNumber = 'all';
   const [modelList, setModelList] = useState([]);
   const [levelList, setLevelList] = useState([]);
@@ -83,8 +86,8 @@ const CluesList = props => {
   const [total, setTotal] = useState(0);
   const [cluesDetailsProps, setCluesDetailsProps] = useState();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [expand, setExpand] = useState(showMode === 'modal');
 
-  console.log('warningForm', warningForm);
   // useEffect(() => {
   //   // getModelIdsByModelNumber(false);
   //   // handleLocationParams();
@@ -276,10 +279,28 @@ const CluesList = props => {
         },
       },
       {
+        title: '核查结果',
+        dataIndex: 'CheckedResult',
+        key: 'CheckedResult',
+        width: 120,
+        render: (text, record) => {
+          switch (text) {
+            case '1':
+              return '符合';
+            case '2':
+              return '部分符合';
+            case '3':
+              return '不符合';
+            default:
+              return '-';
+          }
+        },
+      },
+      {
         title: '核实结论',
         dataIndex: 'CheckedDes',
         key: 'CheckedDes',
-        width: 120,
+        width: 200,
         render: (text, record) => {
           if (text) {
             return (
@@ -289,6 +310,24 @@ const CluesList = props => {
             );
           }
           return '-';
+        },
+      },
+      {
+        title: '核实状态',
+        dataIndex: 'StatusName',
+        key: 'StatusName',
+        width: 120,
+        render: (text, record) => {
+          switch (record.Status) {
+            case 1:
+              return <Tag color="volcano">待核查</Tag>;
+            case 2:
+              return <Tag color="processing">待确认</Tag>;
+            case 3:
+              return <Tag color="success">核查完成</Tag>;
+            default:
+              return '-';
+          }
         },
       },
       {
@@ -513,22 +552,22 @@ const CluesList = props => {
     let levelTreeProps = getTreePorps(levelList);
     let typeTreeProps = getTreePorps(typeList);
 
-    const userCookie = Cookie.get('currentUser');
-    let isSystem = false;
-    if (userCookie) {
-      isSystem = JSON.parse(userCookie).User_ID === '48f3889c-af8d-401f-ada2-c383031af92d';
+    // 处理行政区初始化值
+    let regionCode = warningForm[modelNumber].regionCode;
+    if (regionCode) {
+      regionCode = Array.isArray(regionCode) ? regionCode : [regionCode];
     }
-
     return (
       <Card className={styles.warningWrapper} {...cardProps}>
         <Form
           name="searchForm"
           form={form}
           layout="inline"
+          // className={styles.cluesSearchForm}
           // style={{ padding: '10px 0' }}
           initialValues={{
             ...warningForm[modelNumber],
-            // regionCode: warningForm[modelNumber].regionCode || undefined,
+            regionCode: regionCode,
           }}
           autoComplete="off"
           // onValuesChange={onValuesChange}
@@ -555,13 +594,14 @@ const CluesList = props => {
               },
             });
           }}
+          // labelCol={{ flex: '200px'}}
         >
           <Form.Item label="发现线索日期" name="date">
             <RangePicker_
               // allowClear={false}
               dataType="day"
               format="YYYY-MM-DD"
-              style={{ width: 250 }}
+              // style={{ width: 250 }}
             />
           </Form.Item>
           <Form.Item label="数据异常日期" name="date1">
@@ -572,7 +612,11 @@ const CluesList = props => {
               style={{ width: 250 }}
             />
           </Form.Item>
-          <Form.Item label="污染物" name="PollutantCode">
+          <Form.Item
+            label="污染物"
+            name="PollutantCode"
+            style={{ display: expand ? 'inline-block' : 'none' }}
+          >
             <Select
               placeholder="请选择污染物"
               showSearch
@@ -593,11 +637,29 @@ const CluesList = props => {
               </Option>
             </Select>
           </Form.Item>
+          <Form.Item
+            label="行业"
+            name="IndustryType"
+            style={{ display: expand ? 'inline-block' : 'none' }}
+          >
+            <SearchSelect
+              placeholder="排口所属行业"
+              style={{ width: 130 }}
+              configId={'IndustryType'}
+              itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
+              itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
+            />
+          </Form.Item>
           <Form.Item label="行政区" name="regionCode">
             <RegionList
               // noFilter
               // multiple
-              style={{ width: 140 }}
+              treeCheckable={true}
+              showCheckedStrategy={SHOW_PARENT}
+              maxTagCount={2}
+              maxTagTextLength={5}
+              maxTagPlaceholder="..."
+              style={{ width: 240 }}
               onChange={value => {
                 form.setFieldsValue({ EntCode: undefined, DGIMN: undefined });
                 dispatch({
@@ -623,7 +685,11 @@ const CluesList = props => {
               {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
               <Form.Item label="企业" name="EntCode">
                 <EntAtmoList
-                  regionCode={form.getFieldValue('regionCode')}
+                  regionCode={
+                    form.getFieldValue('regionCode')
+                      ? form.getFieldValue('regionCode').toString()
+                      : undefined
+                  }
                   style={{ width: 200 }}
                   onChange={value => {
                     if (!value) {
@@ -661,21 +727,17 @@ const CluesList = props => {
               </Spin>
             </>
           }
-          <Form.Item label="行业" name="IndustryType">
-            <SearchSelect
-              placeholder="排口所属行业"
-              style={{ width: 130 }}
-              configId={'IndustryType'}
-              itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
-              itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
-            />
-          </Form.Item>
+
           <Spin spinning={modelListLoading} size="small">
             <Form.Item label="场景类别" name="warningTypeCode">
               <TreeSelect {...actionTreeProps} allowClear showSearch treeNodeFilterProp="label" />
             </Form.Item>
           </Spin>
-          <Form.Item label="异常级别" name="level">
+          <Form.Item
+            label="异常级别"
+            name="level"
+            style={{ display: expand ? 'inline-block' : 'none' }}
+          >
             <TreeSelect
               {...levelTreeProps}
               fieldNames={{ label: 'ModelName', value: 'ModelGuid', children: 'ModelList' }}
@@ -684,7 +746,11 @@ const CluesList = props => {
               treeNodeFilterProp="label"
             />
           </Form.Item>
-          <Form.Item label="异常分类" name="types">
+          <Form.Item
+            label="异常分类"
+            name="types"
+            style={{ display: expand ? 'inline-block' : 'none' }}
+          >
             <TreeSelect
               {...typeTreeProps}
               fieldNames={{ label: 'ModelName', value: 'ModelGuid', children: 'ModelList' }}
@@ -693,16 +759,13 @@ const CluesList = props => {
               treeNodeFilterProp="label"
             />
           </Form.Item>
-          <Form.Item label="线索内容" name="WarningContent">
-            <Input placeholder="线索内容" style={{ width: 240 }} />
-          </Form.Item>
-          <Form.Item label="核查结果" name="CheckedResult">
+          <Form.Item label="核查结果" name="CheckedResultCode">
             <Select
               placeholder="请选择核查结果"
               showSearch
               allowClear
               optionFilterProp="children"
-              style={{ width: 150 }}
+              style={{ width: 130 }}
             >
               <Option key={1} value={1}>
                 符合
@@ -715,13 +778,13 @@ const CluesList = props => {
               </Option>
             </Select>
           </Form.Item>
-          <Form.Item label="核查状态" name="Status">
+          <Form.Item label="核查状态" name="CheckedStatus">
             <Select
               placeholder="请选择核查状态"
               showSearch
               allowClear
               optionFilterProp="children"
-              style={{ width: 150 }}
+              style={{ width: 130 }}
             >
               <Option key={1} value={1}>
                 待核查
@@ -733,6 +796,9 @@ const CluesList = props => {
                 已完成
               </Option>
             </Select>
+          </Form.Item>
+          <Form.Item label="线索内容" name="WarningContent">
+            <Input placeholder="线索内容" style={{ width: 240 }} />
           </Form.Item>
           <Form.Item>
             <Space>
@@ -766,7 +832,7 @@ const CluesList = props => {
                 </Button>
               )}
               {// 超级管理员显示
-              isSystem && (
+              isSystem() && (
                 <>
                   <Popconfirm title="确认是否删除?" onConfirm={() => onDelWarningModel(true)}>
                     <Button type="primary" disabled={!selectedRowKeys.length} danger>
@@ -780,6 +846,21 @@ const CluesList = props => {
                   </Popconfirm>
                 </>
               )}
+              <a
+                onClick={() => {
+                  setExpand(!expand);
+                }}
+              >
+                {expand ? (
+                  <>
+                    收起 <UpOutlined />
+                  </>
+                ) : (
+                  <>
+                    展开 <DownOutlined />
+                  </>
+                )}
+              </a>
             </Space>
           </Form.Item>
         </Form>

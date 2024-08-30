@@ -81,6 +81,7 @@ const Index = props => {
     : undefined; // 1:运维人员  2:业务专家
   const [pointList, setPointList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
+  const [checkRoleDatas, setCheckRoleDatas] = useState([]);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
@@ -91,6 +92,7 @@ const Index = props => {
     } else {
       onTableChange(1, 20);
     }
+    GetCheckRoleDatas();
   }, []);
 
   const history = useHistory();
@@ -119,6 +121,25 @@ const Index = props => {
     history.listen(handleRouteChange);
   }, [history]);
 
+  // 获取核查人列表
+  const GetCheckRoleDatas = () => {
+    dispatch({
+      type: 'AbnormalIdentifyModel/GetCheckRoleDatas',
+      payload: {},
+      callback: res => {
+        const userList = res?.map(item => {
+          return {
+            label: item.QuestionName,
+            options: item?.Users?.map(chilItem => ({
+              label: chilItem.UserName,
+              value: chilItem.UserID,
+            })),
+          };
+        });
+        setCheckRoleDatas(userList);
+      },
+    });
+  };
   const getColumns = () => {
     return [
       {
@@ -193,6 +214,41 @@ const Index = props => {
         key: 'StatusName',
         width: 120,
         ellipsis: true,
+      },
+      {
+        title: '核查结果',
+        dataIndex: 'CheckedResult',
+        key: 'CheckedResult',
+        width: 120,
+        ellipsis: true,
+        render: (text, record) => {
+          switch (text) {
+            case '1':
+              return '符合';
+            case '2':
+              return '部分符合';
+            case '3':
+              return '不符合';
+            default:
+              return '-';
+          }
+        },
+      },
+      {
+        title: '核查结论',
+        dataIndex: 'CheckedDes',
+        key: 'CheckedDes',
+        width: 200,
+        render: (text, record) => {
+          if (text) {
+            return (
+              <Tooltip title={text}>
+                <span style={textStyle}>{text}</span>
+              </Tooltip>
+            );
+          }
+          return '-';
+        },
       },
       {
         title: '操作',
@@ -324,102 +380,136 @@ const Index = props => {
               // CheckStatus: routerType == 2 && !isAll ? 3 : undefined,
             }}
           >
-            <Form.Item label="日期" name="date">
-              <RangePicker_
-                allowClear={false}
-                dataType="day"
-                format="YYYY-MM-DD"
-                style={{ width: 250 }}
-              />
-            </Form.Item>
-            {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
-            <Form.Item label="企业" name="entCode">
-              <EntAtmoList
-                style={{ width: 200 }}
-                onChange={value => {
-                  if (!value) {
-                    form.setFieldsValue({ dgimn: undefined });
-                  } else {
-                    form.setFieldsValue({ dgimn: undefined });
-                    getPointList(value);
-                  }
-                }}
-              />
-            </Form.Item>
-            {/* </Spin> */}
-            <Spin spinning={!!pointListLoading} size="small">
-              <Form.Item label="监测点名称" name="dgimn">
+            <Row>
+              <Form.Item label="日期" name="date">
+                <RangePicker_
+                  allowClear={false}
+                  dataType="day"
+                  format="YYYY-MM-DD"
+                  style={{ width: 250 }}
+                />
+              </Form.Item>
+              {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
+              <Form.Item label="企业" name="entCode">
+                <EntAtmoList
+                  style={{ width: 220 }}
+                  onChange={value => {
+                    if (!value) {
+                      form.setFieldsValue({ dgimn: undefined });
+                    } else {
+                      form.setFieldsValue({ dgimn: undefined });
+                      getPointList(value);
+                    }
+                  }}
+                />
+              </Form.Item>
+              {/* </Spin> */}
+              <Spin spinning={!!pointListLoading} size="small">
+                <Form.Item label="监测点名称" name="dgimn">
+                  <Select
+                    placeholder="请选择"
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    style={{ width: 200 }}
+                  >
+                    {pointList.map(item => {
+                      return (
+                        <Option key={item.DGIMN} value={item.DGIMN}>
+                          {item.PointName}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Spin>
+              <Form.Item label="核查状态" name="CheckStatus">
+                {isAll ? (
+                  <Select placeholder="请选择" style={{ width: 140 }} allowClear>
+                    <Option key={1} value={1}>
+                      待核查
+                    </Option>
+                    <Option key={2} value={2}>
+                      待确认
+                    </Option>
+                    <Option key={3} value={3}>
+                      已完成
+                    </Option>
+                  </Select>
+                ) : routerType == 2 ? (
+                  <Select placeholder="请选择" style={{ width: 140 }} allowClear>
+                    <Option key={2} value={2}>
+                      待确认
+                    </Option>
+                    <Option key={3} value={3}>
+                      已完成
+                    </Option>
+                  </Select>
+                ) : (
+                  <Select placeholder="请选择" style={{ width: 140 }} allowClear>
+                    <Option key={1} value={1}>
+                      待核查
+                    </Option>
+                    <Option key={3} value={3}>
+                      已完成
+                    </Option>
+                  </Select>
+                )}
+              </Form.Item>
+            </Row>
+            <Row>
+              <Form.Item label="核查结果" name="CheckResultCode">
                 <Select
-                  placeholder="请选择"
+                  placeholder="请选择核查结果"
                   showSearch
                   allowClear
                   optionFilterProp="children"
-                  style={{ width: 150 }}
+                  style={{ width: 140 }}
                 >
-                  {pointList.map(item => {
-                    return (
-                      <Option key={item.DGIMN} value={item.DGIMN}>
-                        {item.PointName}
-                      </Option>
-                    );
-                  })}
+                  <Option key={1} value={1}>
+                    符合
+                  </Option>
+                  <Option key={2} value={2}>
+                    部分符合
+                  </Option>
+                  <Option key={3} value={3}>
+                    不符合
+                  </Option>
                 </Select>
               </Form.Item>
-            </Spin>
-            <Form.Item label="核查状态" name="CheckStatus">
-              {isAll ? (
-                <Select placeholder="请选择" style={{ width: 120 }} allowClear>
-                  <Option key={1} value={1}>
-                    待核查
-                  </Option>
-                  <Option key={2} value={2}>
-                    待确认
-                  </Option>
-                  <Option key={3} value={3}>
-                    已完成
-                  </Option>
-                </Select>
-              ) : routerType == 2 ? (
-                <Select placeholder="请选择" style={{ width: 120 }} allowClear>
-                  <Option key={2} value={2}>
-                    待确认
-                  </Option>
-                  <Option key={3} value={3}>
-                    已完成
-                  </Option>
-                </Select>
-              ) : (
-                <Select placeholder="请选择" style={{ width: 120 }} allowClear>
-                  <Option key={1} value={1}>
-                    待核查
-                  </Option>
-                  <Option key={3} value={3}>
-                    已完成
-                  </Option>
-                </Select>
-              )}
-            </Form.Item>
-            <Form.Item>
-              <Space>
-                <Button
-                  type="primary"
-                  loading={queryLoading}
-                  onClick={() => {
-                    onTableChange(1, 20);
-                  }}
-                >
-                  查询
-                </Button>
-                <Button
-                  onClick={() => {
-                    form.resetFields();
-                    onTableChange(1, 20);
-                  }}
-                >
-                  重置
-                </Button>
-              </Space>
-            </Form.Item>
+              <Form.Item name="CheckedUser" label="核查人">
+                <Select
+                  options={checkRoleDatas?.[0] ? checkRoleDatas : []}
+                  style={{ width: 200 }}
+                  placeholder="请选择"
+                  showSearch
+                  filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  }
+                />
+              </Form.Item>
+              <Form.Item>
+                <Space>
+                  <Button
+                    type="primary"
+                    loading={queryLoading}
+                    onClick={() => {
+                      onTableChange(1, 20);
+                    }}
+                  >
+                    查询
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      form.resetFields();
+                      onTableChange(1, 20);
+                    }}
+                  >
+                    重置
+                  </Button>
+                </Space>
+              </Form.Item>
+            </Row>
           </Form>
         </Card>
 
@@ -439,7 +529,7 @@ const Index = props => {
             columns={getColumns()}
             dataSource={dataSource}
             loading={queryLoading}
-            scroll={{ y: isAll ? 'calc(100vh - 330px)' : 'calc(100vh - 410px)' }}
+            // scroll={{ y: isAll ? 'calc(100vh - 330px)' : 'calc(100vh - 410px)' }}
             pagination={{
               showSizeChanger: true,
               showQuickJumper: true,
