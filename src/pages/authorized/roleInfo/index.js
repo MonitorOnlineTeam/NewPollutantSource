@@ -40,6 +40,7 @@ import {
   Select,
   Pagination,
   Empty,
+  Space,
 } from 'antd';
 import MonitorContent from '@/components/MonitorContent';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
@@ -49,6 +50,7 @@ import difference from 'lodash/difference';
 import NewAlarmPushRel from '@/pages/authorized/departInfo/NewAlarmPushRel';
 import { permissionButton } from '@/utils/utils';
 import TreeTransferSingle from '@/components/TreeTransferSingle';
+import { isSystem } from '@/utils/utils';
 
 const { Search } = Input;
 const { TreeNode } = TreeSelect;
@@ -763,6 +765,7 @@ class RoleIndex extends Component {
       payload: { type: type },
     });
   };
+
   settingRoleOk = (roleIdChecked, state, callback) => {
     this.props.dispatch({
       type: 'roleinfo/addSetRegOrAppRole',
@@ -861,26 +864,33 @@ class RoleIndex extends Component {
         {
           <BreadcrumbWrapper>
             <Card bordered={false}>
-              <Button type="primary" onClick={this.showModal}>
-                新增
-              </Button>
-              {this.state.settingRolePermis && (
-                <Button
-                  type="primary"
-                  onClick={() => this.settingRole(1, '设置行政区获取点位角色')}
-                  style={{ margin: '0 8px' }}
-                >
-                  设置行政区获取点位角色
+              <Space>
+                <Button type="primary" onClick={this.showModal}>
+                  新增
                 </Button>
-              )}
-              {this.state.settingAppRolePermis && (
-                <Button
-                  type="primary"
-                  onClick={() => this.settingRole(2, '设置允许登录运维APP角色')}
-                >
-                  设置允许登录运维APP角色
-                </Button>
-              )}
+                {this.state.settingRolePermis && (
+                  <Button
+                    type="primary"
+                    onClick={() => this.settingRole(1, '设置行政区获取点位角色')}
+                  >
+                    设置行政区获取点位角色
+                  </Button>
+                )}
+                {this.state.settingAppRolePermis && (
+                  <Button
+                    type="primary"
+                    onClick={() => this.settingRole(2, '设置允许登录运维APP角色')}
+                  >
+                    设置允许登录运维APP角色
+                  </Button>
+                )}
+                {// 超级管理员显示
+                isSystem() && (
+                  <Button type="primary" onClick={() => this.settingRole(3, '设置业务专家角色')}>
+                    设置业务专家角色
+                  </Button>
+                )}
+              </Space>
               {/* <Button
                                 onClick={this.showUserModal}
                                 style={{ marginLeft: "10px" }}

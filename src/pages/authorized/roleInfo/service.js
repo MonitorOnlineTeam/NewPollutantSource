@@ -159,3 +159,13 @@ export async function addSetRole(params) {
   const result = post(API.AssetManagementApi.AddSetRole, params);
   return result;
 }
+//获取设置过业务专家的角色
+export async function GetSetExpertRoleId(params) {
+  const result = post(API.AuthorityApi.GetSetExpertRoleId, params);
+  return result;
+}
+//设置业务专家角色
+export async function AddSetExpertRole(params) {
+  const result = post(API.AuthorityApi.AddSetExpertRole, params);
+  return result;
+}

@@ -17,6 +17,8 @@ import {
   getSetLongInAppRoleId,
   addSetRole,
   getSetRoleId,
+  GetSetExpertRoleId,
+  AddSetExpertRole,
 } from './service';
 import { message } from 'antd';
 
@@ -208,7 +210,21 @@ export default Model.extend({
     *addSetRegOrAppRole({ payload, callback }, { call, put, update }) {
       //设置角色 1行政区 2运维App
       yield update({ tableLoading: true });
-      const result = yield call(payload.type == 1 ? addSetRole : addSetLongInAppRole, {
+
+      let serviceApi = '';
+      switch (payload.type) {
+        case 1: // 1行政区
+          serviceApi = addSetRole;
+          break;
+        case 2: // 2运维App
+          serviceApi = addSetLongInAppRole;
+          break;
+        case 3: // 3业务专家
+          serviceApi = AddSetExpertRole;
+          break;
+      }
+
+      const result = yield call(serviceApi, {
         ...payload,
         type: undefined,
       });
@@ -220,9 +236,22 @@ export default Model.extend({
       }
     },
     *getSetRegOrAppRoleId({ payload, callback }, { call, put, update }) {
-      //获取设置角色 1行政区 2运维App
+      //获取设置角色 1行政区 2运维App 3业务专家
       yield update({ tableLoading: true });
-      const result = yield call(payload.type == 1 ? getSetRoleId : getSetLongInAppRoleId, {
+
+      let serviceApi = '';
+      switch (payload.type) {
+        case 1: // 1行政区
+          serviceApi = getSetRoleId;
+          break;
+        case 2: // 2运维App
+          serviceApi = getSetLongInAppRoleId;
+          break;
+        case 3: // 3业务专家
+          serviceApi = GetSetExpertRoleId;
+          break;
+      }
+      const result = yield call(serviceApi, {
         ...payload,
         type: undefined,
       });

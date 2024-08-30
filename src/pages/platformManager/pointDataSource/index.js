@@ -20,10 +20,10 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import EntAtmoList from '@/components/EntAtmoList';
 import SdlTable from '@/components/SdlTable';
 import { DetailIcon } from '@/utils/icon';
-import { requestPost, requestGet } from '@/utils/utils';
 import { API } from '@config/API';
-import DetailsModal from './DetailsModal';
 import moment from 'moment';
+import RegionList from '@/components/RegionList';
+import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 
 const textStyle = {
   width: '100%',
@@ -38,7 +38,7 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   pointListLoading: loading.effects['AbnormalIdentifyModel/GetNoFilterPointByEntCode'],
 });
 
-const RectificationTask = props => {
+const PointDataSource = props => {
   const [form] = Form.useForm();
 
   const { dispatch, pointListLoading, queryLoading } = props;
@@ -56,26 +56,20 @@ const RectificationTask = props => {
   // 获取页面数据
   const getPageData = (_pageIndex, _pageSize) => {
     const values = form.getFieldsValue();
-    let bTime = moment(values.date[0]).format('YYYY-MM-DD 00:00:00');
-    let eTime = moment(values.date[1]).format('YYYY-MM-DD 23:59:59');
     setLoading(true);
     dispatch({
       type: 'AbnormalIdentifyModel/GenericPostRequest',
-      url: API.AbnormalIdentifyModel.GetCheckedRectificationList,
+      url: API.AbnormalIdentifyModel.GetPointDataBy,
       payload: {
-        IsExpert: true,
         ...values,
-        isComplete: values.isComplete || '1,2,3',
-        date: undefined,
-        bTime,
-        eTime,
+        // isComplete: values.isComplete || '1,2,3',
         pageIndex: _pageIndex || pageIndex,
         pageSize: _pageSize || pageSize,
       },
       callback: res => {
         setDataSource(res.Datas);
         setLoading(false);
-        setTotal(res.total);
+        setTotal(res.Total);
       },
     });
   };
@@ -106,90 +100,82 @@ const RectificationTask = props => {
         },
       },
       {
+        title: '行政区',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        width: 160,
+        ellipsis: true,
+      },
+      {
         title: '企业',
-        dataIndex: 'EntName',
-        key: 'EntName',
-        width: 200,
+        dataIndex: 'ParentName',
+        key: 'ParentName',
+        width: 220,
         ellipsis: true,
       },
       {
         title: '排口',
         dataIndex: 'PointName',
         key: 'PointName',
-        width: 200,
+        width: 220,
         ellipsis: true,
       },
       {
-        title: '整改发起日期',
-        dataIndex: 'CreateTime',
-        key: 'CreateTime',
+        title: '数据来源',
+        dataIndex: 'DataBy',
+        key: 'DataBy',
+        ellipsis: true,
+        render: text => {
+          return text == 1 ? '直传' : '第三方';
+        },
+      },
+      {
+        title: '经度',
+        dataIndex: 'Longitude',
+        key: 'Longitude',
+        width: 120,
+        ellipsis: true,
+      },
+      {
+        title: '维度',
+        dataIndex: 'Latitude',
+        key: 'Latitude',
+        ellipsis: true,
+      },
+      {
+        title: '所属行业',
+        dataIndex: 'IndustryTypeName',
+        key: 'IndustryTypeName',
+        ellipsis: true,
+      },
+      {
+        title: '验收日期',
+        dataIndex: 'YSDate',
+        key: 'YSDate',
         width: 160,
         ellipsis: true,
-        sorter: (a, b) => moment(a.CreateTime).valueOf() - moment(b.CreateTime).valueOf(),
+        render: text => {
+          return text || '-';
+        },
+        // sorter: (a, b) => moment(a.CreateTime).valueOf() - moment(b.CreateTime).valueOf(),
       },
       {
-        title: '整改人',
-        dataIndex: 'RectificationUserName',
-        key: 'RectificationUserName',
-        width: 140,
+        title: '基准氧含量',
+        dataIndex: 'AirCoefficient',
+        key: 'AirCoefficient',
         ellipsis: true,
       },
       {
-        title: '整改结论',
-        dataIndex: 'CheckedDes',
-        key: 'CheckedDes',
-        width: 200,
-        render: (text, record) => {
-          if (text) {
-            return (
-              <Tooltip title={text}>
-                <span style={textStyle}>{text}</span>
-              </Tooltip>
-            );
-          }
-          return '-';
-        },
-      },
-      {
-        title: '整改状态',
-        dataIndex: 'RectificationStatusName',
-        key: 'RectificationStatusName',
-        width: 140,
+        title: '烟道截面积',
+        dataIndex: 'FlueCoefficient',
+        key: 'FlueCoefficient',
         ellipsis: true,
-        render: (text, row) => {
-          return (
-            <Tag
-              color={
-                row.RectificationStatus == 3
-                  ? 'success'
-                  : row.RectificationStatus == 2
-                  ? 'orange'
-                  : 'volcano'
-              }
-            >
-              {text}
-            </Tag>
-          );
-        },
       },
       {
-        title: '操作',
-        key: 'handle',
-        width: 60,
-        render: (text, record) => {
-          return (
-            <Tooltip title="查看">
-              <a
-                onClick={e => {
-                  setCurrentRow(record);
-                  setIsDetailsOpen(true);
-                }}
-              >
-                <DetailIcon />
-              </a>
-            </Tooltip>
-          );
-        },
+        title: '当地大气压',
+        dataIndex: 'Atmos',
+        key: 'Atmos',
+        ellipsis: true,
       },
     ];
   };
@@ -218,15 +204,15 @@ const RectificationTask = props => {
             }}
             autoComplete="off"
           >
-            <Form.Item label="日期" name="date">
-              <RangePicker_
-                allowClear={false}
-                dataType="day"
-                format="YYYY-MM-DD"
-                style={{ width: 250 }}
+            <Form.Item label="行政区" name="regionCode">
+              <RegionList
+                style={{ width: 180 }}
+                onChange={value => {
+                  form.setFieldsValue({ EntCode: undefined, DGIMN: undefined });
+                  setPointList([]);
+                }}
               />
             </Form.Item>
-
             <Form.Item label="企业" name="EntCode">
               <EntAtmoList
                 regionCode={form.getFieldValue('regionCode')}
@@ -243,7 +229,7 @@ const RectificationTask = props => {
               />
             </Form.Item>
             <Spin spinning={!!pointListLoading} size="small" style={{ background: '#fff' }}>
-              <Form.Item label="监测点名称" name="DGIMN">
+              <Form.Item label="监测点" name="DGIMN">
                 <Select
                   placeholder="请选择"
                   showSearch
@@ -261,7 +247,16 @@ const RectificationTask = props => {
                 </Select>
               </Form.Item>
             </Spin>
-            <Form.Item label="整改状态" name="isComplete">
+            <Form.Item label="行业" name="IndustryType">
+              <SearchSelect
+                placeholder="排口所属行业"
+                style={{ width: 130 }}
+                configId={'IndustryType'}
+                itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
+                itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
+              />
+            </Form.Item>
+            <Form.Item label="数据来源" name="DataBy">
               <Select
                 placeholder="请选择"
                 showSearch
@@ -270,13 +265,10 @@ const RectificationTask = props => {
                 style={{ width: 150 }}
               >
                 <Option key={1} value={1}>
-                  待整改
+                  直传
                 </Option>
                 <Option key={2} value={2}>
-                  待复核
-                </Option>
-                <Option key={3} value={3}>
-                  整改完成
+                  第三方
                 </Option>
               </Select>
             </Form.Item>
@@ -294,6 +286,7 @@ const RectificationTask = props => {
                 <Button
                   onClick={() => {
                     form.resetFields();
+                    onTableChange(1, 20);
                   }}
                 >
                   重置
@@ -322,19 +315,8 @@ const RectificationTask = props => {
           }}
         />
       </Card>
-      {/* 详情 */}
-      <DetailsModal
-        currentRow={currentRow}
-        open={isDetailsOpen}
-        onCancel={() => {
-          setIsDetailsOpen(false);
-        }}
-        onHandleSuccess={() => {
-          getPageData();
-        }}
-      />
     </BreadcrumbWrapper>
   );
 };
 
-export default connect(dvaPropsData)(RectificationTask);
+export default connect(dvaPropsData)(PointDataSource);

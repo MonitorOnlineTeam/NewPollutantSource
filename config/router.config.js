@@ -132,11 +132,6 @@ const routes = [
         path: '/homepage',
         component: './home',
       },
-      // {
-      //   name: 'homepage',
-      //   path: '/homepage',
-      //   component: './home',
-      // },
       {
         name: 'hometangy',
         path: '/hometangy',
@@ -1227,6 +1222,12 @@ const routes = [
                 path: '/platformconfig/monitoringstandard',
                 component: './platformManager/monitoringstandard',
               },
+              //排口数据来源
+              {
+                name: 'pointDataSource',
+                path: '/platformconfig/pointDataSource',
+                component: './platformManager/pointDataSource',
+              },
               {
                 //视频管理
                 name: 'videomanager',
@@ -1714,7 +1715,7 @@ const routes = [
                 name: 'taskRecord',
                 component: './operations/TaskRecord',
               },
-              
+
               {
                 path: '/operations/taskRecord/details/:TaskID/:DGIMN',
                 name: 'taskRecordDetail',
@@ -4369,6 +4370,18 @@ const routes = [
                       './AbnormalIdentifyModel/VerificationTaskManagement/VerificationTask/Detail',
                   },
                 ],
+              },
+              {
+                // 整改复核列表
+                name: 'FluctuateRange',
+                path: '/AbnormalIdentifyModel/RectificationTask',
+                component: './AbnormalIdentifyModel/RectificationTask',
+              },
+              {
+                // 整改率
+                name: 'FluctuateRange',
+                path: '/AbnormalIdentifyModel/rectificaRate',
+                component: './AbnormalIdentifyModel/RectificationTask/rectificaRate',
               },
               {
                 // 热电行业数据波动范围
