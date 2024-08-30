@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-08-30 14:18:30
+ * @LastEditTime: 2024-08-30 14:39:54
  * @Description: 角色管理
  */
 import React, { Component, Fragment } from 'react';
@@ -486,12 +486,11 @@ class RoleIndex extends Component {
           if (record.Menu_Button.length !== 0) {
             return (
               <span>
-                {// item.State=="1"?"#2db7f5":"#DEDEDE"
+                {
                   record.Menu_Button.map(item => {
                     // if (this.state.buttonState.find(cc => cc.ID == item.ID) == undefined) {
                     //   this.state.buttonState.push({ ID: item.ID, State: item.State }); //将没有选中的也添加进去 之前就是这样写 导致展开保存其他按钮权限就会丢失 不懂为什么这么获取
                     // }
-                    
                     // 查找当前点击的权限按钮项
                     const findItemById = (id) => {
                       return this.state.buttonState.find(findtItem => findtItem.ID === id);
@@ -506,16 +505,12 @@ class RoleIndex extends Component {
                         key={item.ID}
                         onClick={e => {
                           // if (this.state.buttonState.length == 0) {
-                          // this.state.selectButton.push(item.ID);//把菜单id和权限按钮id分开 把这个注释了 这么写问题太多了
+                          // this.state.selectButton.push(item.ID);//把菜单id和权限按钮id分开  这么写问题太多了
                           // this.state.buttonState.find(cc => cc.ID == item.ID).State = '1';
                           // } else 
                           if (findItemById(item.ID).State == '0') { //未选中
-                            // console.log('未选中')
-                            // this.state.selectButton.push(item.ID);
                             findItemById(item.ID).State = '1'; //改变被选中按钮的状态 改为选中 蓝色
                           } else { //之前选中了
-                             // console.log('选中过')
-                            // this.state.selectButton.splice(index, 1);
                             findItemById(item.ID).State = '0';  //改变被选中按钮的状态 改为未选中 置灰
                           }
                           this.setState({
@@ -751,15 +746,15 @@ class RoleIndex extends Component {
   };
 
   addRight = () => {
-    console.log('菜单id：', this.state.selectButton); //菜单权限列表
+  
     let buttonAuthority = this.state.buttonState.filter(item => item.State == 1); //按钮权限
     if (buttonAuthority?.[0]) {
       buttonAuthority = buttonAuthority.map(item => item.ID);
     }
-    console.log('权限按钮：',buttonAuthority); //菜单按钮权限列表
+    //  console.log('菜单id：', this.state.selectButton); //菜单权限列表
+    //  console.log('权限按钮：',buttonAuthority); //菜单按钮权限列表
     let menuIDArr = [...this.state.selectButton, ...buttonAuthority];
-    menuIDArr = menuIDArr.filter((item, index) => menuIDArr.indexOf(item) === index); //数组去重 编辑只操作权限按钮会重复 获取的时候没处理 在这处理了 
-    console.log('所有的id：',menuIDArr); //菜单按钮权限列表
+        menuIDArr = menuIDArr.filter((item, index) => menuIDArr.indexOf(item) === index); //数组去重 编辑只操作权限按钮会重复 获取的时候没处理 在这处理了 
     this.props.dispatch({
       type: 'roleinfo/insertmenubyroleid',
       payload: {

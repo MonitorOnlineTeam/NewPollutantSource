@@ -566,6 +566,7 @@ class TaskRecord extends Component {
         this.setState({
           taskForwardVisible: false,
         })
+        this.LoadData(this.props.gettasklistqueryparams);
       }
     });
 
@@ -1191,7 +1192,7 @@ class TaskRecord extends Component {
             <UserList onChange={(value) => { this.setState({ forwardToUserId: value }) }} />
           </FormItem>
           <FormItem label="备注" style={{ width: '100%', }}>
-            <Input.TextArea placeholder='请输入' onChange={(e) => { this.setState({ forwardRemark: e.target.value }) }} />
+            <Input.TextArea placeholder='请输入' onBlur={(e) => { this.setState({ forwardRemark: e.target.value }) }} />
           </FormItem>
         </Modal>
       </BreadcrumbWrapper>
