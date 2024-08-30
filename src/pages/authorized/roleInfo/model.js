@@ -19,7 +19,8 @@ import {
   getSetRoleId,
 } from './service';
 import { message } from 'antd';
-
+import { downloadFile, requestPost } from '@/utils/utils';
+import { API } from '@config/API';
 // 递归函数返回一个新的数组，并删除空的 children 属性
 function removeEmptyChildren(arr) {
   return arr.map(item => {
@@ -32,6 +33,28 @@ function removeEmptyChildren(arr) {
     }
     return newItem;
   });
+}
+function collectMenuButtons(objArray) {
+  const menuButtons = [];
+
+  // 递归函数用来遍历对象数组
+  function traverse(data) {
+      if (Array.isArray(data)) { // 如果当前项是数组
+          data.forEach(item => {
+              traverse(item); // 继续递归
+          });
+      } else if (typeof data === 'object' && data !== null) { // 如果当前项是对象
+          if (Array.isArray(data.Menu_Button)) { // 检查是否有Menu_Button数组
+              menuButtons.push(...data.Menu_Button); // 合并Menu_Button数组
+          }
+          if (data.children) { // 如果有children属性，则继续递归
+              traverse(data.children);
+          }
+      }
+  }
+
+  traverse(objArray); // 从顶层对象数组开始递归
+  return menuButtons; // 返回收集到的所有Menu_Button对象数组
 }
 
 /*
@@ -175,14 +198,16 @@ export default Model.extend({
       }
     },
     /*获取菜单列表层级关系**/
-    *getrolemenutree({ payload }, { call, update }) {
+    *getrolemenutree({ payload,callback }, { call, update }) {
       const result = yield call(getrolemenutree, { ...payload });
       if (result.IsSuccess) {
         let newData = removeEmptyChildren(result.Datas);
         // console.log('newData', newData);
+        // console.log(collectMenuButtons(newData))
         yield update({
           MenuTree: removeEmptyChildren(result.Datas),
         });
+        callback && callback(collectMenuButtons(newData)) //所有的权限按钮
       }
     },
     /*获取当前角色的菜单**/
@@ -235,6 +260,28 @@ export default Model.extend({
         result.Message && message.error(result.Message);
       }
     },
+    *GetRolePushInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost,API.AssetManagementApi.GetRolePushInfo, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    *UpdPushInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost,API.AssetManagementApi.UpdPushInfo, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+      }
+      callback && callback(result.IsSuccess);
+    },
+
+
+
+
+
+
+
+
+
   },
   reducers: {},
 });

@@ -436,6 +436,7 @@ export default class Index extends PureComponent {
                     <Option value="1">废水</Option>
                   </Select> */}
                   <SelectPollutantType
+                    singleHidden
                     allowClear
                     placeholder="企业类型"
                     onChange={this.typeChange}

@@ -733,7 +733,7 @@ class index extends PureComponent {
                   //   <Option value="2">废气</Option>
                   //   <Option value="1">废水</Option>
                   // </Select>
-                 <SelectPollutantType style={{ width: 231 }} placeholder="请选择企业类型" />
+                 <SelectPollutantType singleHidden style={{ width: 231 }} placeholder="请选择企业类型" />
                 )}
               </FormItem>
               {/* <Form.Item label="运维状态">

@@ -184,7 +184,7 @@ const Index = (props) => {
                <Option value={2}>废气</Option>
                <Option value={1}>废水</Option>
                </Select> */}
-              <SelectPollutantType placeholder='请选择' style={{ width: 120 }} />
+              <SelectPollutantType singleHidden placeholder='请选择' style={{ width: 120 }} />
       </Form.Item>
        {!isResponseModal&&!isClockAbnormalModal&&<Form.Item label='异常类型' name='exceptionType'  style={{paddingRight:'8px'}}>
             <Select placeholder='请选择'>
@@ -237,7 +237,7 @@ const Index = (props) => {
             <Option value={2}>废气</Option>
             <Option value={1}>废水</Option>
           </Select> */}
-          <SelectPollutantType placeholder='请选择' style={{ width: 120 }} />
+          <SelectPollutantType singleHidden placeholder='请选择' style={{ width: 120 }} />
         </Form.Item>
        <Form.Item>
     <Button  type="primary" htmlType='submit' >

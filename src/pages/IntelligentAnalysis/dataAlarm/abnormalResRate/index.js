@@ -939,6 +939,7 @@ class Index extends PureComponent {
                   //   <Option value="1">废水</Option>
                   // </Select>
                   <SelectPollutantType
+                    singleHidden
                     style={{ width: 231 }}
                     placeholder="请选择企业类型"
                     onChange={value => {

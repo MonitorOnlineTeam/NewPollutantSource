@@ -496,6 +496,7 @@ export default class EntTransmissionEfficiency extends Component {
                         <Option value="1">废水</Option>
                       </Select> */}
                       <SelectPollutantType
+                        singleHidden
                         allowClear
                         placeholder="企业类型"
                         onChange={this.typeChange}

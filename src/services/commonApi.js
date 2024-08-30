@@ -44,11 +44,25 @@ export async function getEnterpriseAndPoint(params) {
 
 // 获取污染物类型
 export async function getPollutantTypeList(params) {
+  console.log(params)
+  let pollutantCodes;
+  if(params.isOpera){ //运维特殊处理
+   if(params.singleHidden){
+    pollutantCodes =  sessionStorage.getItem('sysPollutantCodes')
+   }else{
+    pollutantCodes = params.pollutantCodes
+   }
+   
+  }else{
+    pollutantCodes = sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes
+  }
   const result = await post(
     API.CommonApi.GetPollutantTypeList,
     {
       ...params,
-      pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes,
+      isOpera:undefined,
+      singleHidden:undefined,
+      pollutantCodes: pollutantCodes,
     },
     null,
   );

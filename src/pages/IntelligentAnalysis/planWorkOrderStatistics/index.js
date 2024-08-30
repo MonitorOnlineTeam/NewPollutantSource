@@ -196,7 +196,7 @@ const Index = (props) => {
             <Option value={2}>废气</Option>
             <Option value={1}>废水</Option>
           </Select> */}
-          <SelectPollutantType placeholder='请选择' style={{ width: 120 }} />
+          <SelectPollutantType  singleHidden placeholder='请选择' style={{ width: 120 }} />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType='submit' >
@@ -234,7 +234,7 @@ const Index = (props) => {
                <Option value={2}>废气</Option>
                <Option value={1}>废水</Option>
                </Select> */}
-              <SelectPollutantType placeholder='请选择' style={{ width: 120 }} />
+              <SelectPollutantType singleHidden placeholder='请选择' style={{ width: 120 }} />
             </Form.Item>
             <Form.Item>
               <Button type="primary" htmlType='submit' >

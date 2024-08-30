@@ -839,6 +839,7 @@ class index extends PureComponent {
 
                             // </Select>
                             <SelectPollutantType
+                                singleHidden
                                 style={{ width: 180, marginLeft: 10, marginRight: 20 }}
                                 //defaultValue={'1'}
                                 placeholder="企业类型"

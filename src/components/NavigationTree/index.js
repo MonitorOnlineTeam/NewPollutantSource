@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-07-18 10:32:08
- * @LastEditors: lzp
- * @LastEditTime: 2019-09-18 11:11:18
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-08-29 08:59:17
  * @Description: 导航树
  */
 import React, { Component } from 'react';
@@ -1467,6 +1467,7 @@ class NavigationTree extends Component {
             {!this.props.polShow ? (
               <SelectPollutantType
                 // mode="multiple"
+                singleHidden
                 {...SelectPollutantProps}
                 showDefaultValue={this.props.defaultPollutant === 'undefined'}
                 style={{ width: '100%' }}

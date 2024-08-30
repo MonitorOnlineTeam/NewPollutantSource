@@ -267,7 +267,7 @@ const Index = (props) => {
             <Option key={2} value={2} >废气</Option>
             <Option key={1} value={1} >废水</Option>
           </Select> */}
-          <SelectPollutantType onChange={pollutantTypeChange} style={{ width: 150 }}/>
+          <SelectPollutantType  singleHidden onChange={pollutantTypeChange} style={{ width: 150 }}/>
         </Form.Item>
         <Spin spinning={taskTypeLoading} size='small'>
           <Form.Item label='运维内容' name='content'>

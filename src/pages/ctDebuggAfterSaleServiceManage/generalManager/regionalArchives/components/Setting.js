@@ -64,24 +64,24 @@ const Setting = props => {
         <Form.Item
           name="PointNum"
           label="（现场检查）覆盖监测点个数（个/月）"
-          rules={[
-            {
-              required: true,
-              message: '不能为空',
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //     message: '不能为空',
+          //   },
+          // ]}
         >
           <InputNumber placeholder="请输入" style={{ width: 120 }} />
         </Form.Item>
         <Form.Item
           name="OperationNum"
           label="（现场检查）覆盖人员数量（人/月）"
-          rules={[
-            {
-              required: true,
-              message: '不能为空',
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //     message: '不能为空',
+          //   },
+          // ]}
         >
           <InputNumber placeholder="请输入" style={{ width: 120 }} />
         </Form.Item>

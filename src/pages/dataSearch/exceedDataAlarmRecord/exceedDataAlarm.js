@@ -357,6 +357,7 @@ class index extends PureComponent {
 
                 </Select> */}
                 <SelectPollutantType 
+                    singleHidden
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                     placeholder="排口类型"
                     maxTagCount={2}

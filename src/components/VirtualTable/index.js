@@ -1,3 +1,9 @@
+/*
+ * @Author: outman0611
+ * @Date: 2024-08-13 16:23:56
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-08-28 18:52:35
+ */
 import {  BaseTable,useTablePipeline } from 'ali-react-table'
 import { Spin,Empty } from 'antd'
 import React, { useState, useEffect } from 'react';

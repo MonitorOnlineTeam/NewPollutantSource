@@ -563,6 +563,7 @@ class SummaryReportPage extends PureComponent {
                       ],
                     })(
                       <SelectPollutantType
+                        singleHidden
                         placeholder="请选择污染物类型"
                         onChange={value => {
                           this.getEntAndPointList(value);

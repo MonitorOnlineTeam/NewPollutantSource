@@ -355,6 +355,7 @@ export default class Index extends Component {
                   <Option value="1">废水</Option>
                 </Select> */}
                  <SelectPollutantType
+                  singleHidden
                   placeholder="企业类型"
                   onChange={this.typeChange}
                   value={PollutantType}

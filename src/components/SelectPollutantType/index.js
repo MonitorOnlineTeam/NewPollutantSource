@@ -2,7 +2,7 @@
  * @Author: outman0611 jia_anbo@163.com
  * @Date: 2024-06-07 10:56:38
  * @LastEditors: outman0611
- * @LastEditTime: 2024-08-26 11:32:26
+ * @LastEditTime: 2024-08-29 10:21:04
  * @FilePath: \merged_master\src\components\SelectPollutantType\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -47,6 +47,8 @@ class SelectPollutantType extends PureComponent {
             ? undefined
             : this.props.filterPollutantType, //自定义显示污染物类型 wjw
         filterInvalidData: this.props.filterInvalidData, //自定义显示污染物类型 wjw
+        singleHidden:this.props.singleHidden,
+        isOpera: this.props.configInfo.IsOpera
       },
       showAll: this.props.showAll,
       callback: data => {

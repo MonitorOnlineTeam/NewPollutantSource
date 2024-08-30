@@ -481,6 +481,7 @@ class Index extends PureComponent {
                     //   <Option value="5">空气站</Option>
                     // </Select>
                      <SelectPollutantType
+                     singleHidden
                      placeholder="请选择企业类型"
                      onChange={value => {
                       this.getPollutantByType(true,false,value);

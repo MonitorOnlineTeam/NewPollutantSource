@@ -483,6 +483,7 @@ export default class EntIndexModal extends Component {
                     <Option value="1">废水</Option>
                   </Select> */}
                   <SelectPollutantType
+                    singleHidden
                     placeholder="请选择排口类型"
                     onChange={this.typeChange}
                     value={this.state.PollutantType}

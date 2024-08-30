@@ -471,6 +471,7 @@ export default class EntTransmissionEfficiency extends Component {
 
                       </Select> */}
                       <SelectPollutantType
+                        singleHidden
                         allowClear
                         placeholder="企业类型"
                         onChange={this.typeChange}
