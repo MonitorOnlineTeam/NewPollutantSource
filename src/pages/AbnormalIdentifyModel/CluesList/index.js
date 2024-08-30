@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-08-29 15:35:29
+ * @Last Modified time: 2024-08-30 16:13:51
  * @Description：线索列表
  */
 
@@ -530,7 +530,7 @@ const CluesList = props => {
       maxTagPlaceholder: '...',
       placeholder: '请选择场景类别',
       style: {
-        width: '400px',
+        width: '420px',
       },
       treeDefaultExpandAll: true,
     };
@@ -548,9 +548,27 @@ const CluesList = props => {
 
   const getPageContent = () => {
     let cardProps = showMode === 'modal' ? { bordered: false, bodyStyle: { padding: 0 } } : {};
-    let actionTreeProps = getTreePorps(modelList);
-    let levelTreeProps = getTreePorps(levelList);
-    let typeTreeProps = getTreePorps(typeList);
+    let actionTreeProps = getTreePorps([
+      {
+        label: '全部',
+        value: '0-0',
+        children: modelList,
+      },
+    ]);
+    let levelTreeProps = getTreePorps([
+      {
+        ModelName: '全部',
+        ModelGuid: '0-0',
+        ModelList: levelList,
+      },
+    ]);
+    let typeTreeProps = getTreePorps([
+      {
+        ModelName: '全部',
+        ModelGuid: '0-0',
+        ModelList: typeList,
+      },
+    ]);
 
     // 处理行政区初始化值
     let regionCode = warningForm[modelNumber].regionCode;
