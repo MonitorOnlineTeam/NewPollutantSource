@@ -74,12 +74,19 @@ export default Model.extend({
     },
     // 切换项目
     *UpdateUserProject({ payload, callback }, { call, update }) {
-      const result = yield call(requestPost, `${API.SystemManageApi.UpdateUserProject}`, payload);
-      if (result.IsSuccess) {
-        yield update({
-          currentProjectID: payload.projectCode,
-        });
+      if (configInfo.IsOpera) {
         callback && callback();
+        yield update({
+          currentProjectID: undefined,
+        });
+      } else {
+        const result = yield call(requestPost, `${API.SystemManageApi.UpdateUserProject}`, payload);
+        if (result.IsSuccess) {
+          yield update({
+            currentProjectID: payload.projectCode,
+          });
+          callback && callback();
+        }
       }
     },
     // 编辑项目

@@ -13,7 +13,6 @@ import SwitchProject from './SwitchProject';
 
 class AvatarDropdown extends React.Component {
   componentDidMount() {
-    console.log('currentUser', this.props.currentUser);
     this.GetUserProjectList();
   }
 
