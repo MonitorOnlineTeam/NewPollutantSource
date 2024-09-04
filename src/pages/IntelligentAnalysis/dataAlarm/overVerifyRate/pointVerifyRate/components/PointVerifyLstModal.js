@@ -288,9 +288,9 @@ export default class PointVerifyLst extends Component {
     let colList = this.props.divisorList
         colList =  [{PollutantName:'全部合计',PollutantCode:'全部合计'},...colList]
         colList.map((item, key) => {
-        let pollutantList = this.props.overVerifyRateForm.PollutantList.value?  
-                        this.props.overVerifyRateForm.PollutantList.value : this.props.overVerifyRateForm.PollutantList;
-        let index = pollutantList.findIndex((checkedItem, checkedKey) => {
+        let pollutantList = this.props.overVerifyRateForm?.PollutantCodeList?.value?  
+                        this.props.overVerifyRateForm.PollutantCodeList.value : this.props.overVerifyRateForm.PollutantCodeList;
+        let index = pollutantList?.findIndex((checkedItem, checkedKey) => {
           if (item.PollutantCode == checkedItem) {
             return true;
           }
@@ -442,7 +442,7 @@ export default class PointVerifyLst extends Component {
     })
    }
    entAlarmNum = (record,pollutantCode,status) => { //报警次数 弹框
-    const {overVerifyRateForm: {beginTime,  endTime, EntCode,PollutantList, RegionCode,  AttentionCode,  PollutantType, OperationPersonnel } } = this.props;
+    const {overVerifyRateForm: {beginTime,  endTime, EntCode,PollutantList,PollutantCodeList, RegionCode,  AttentionCode,  PollutantType, OperationPersonnel } } = this.props;
     this.setState({
       alarmNumVisible:true,
       PollutantCode: pollutantCode=='全部合计'? '' : pollutantCode,

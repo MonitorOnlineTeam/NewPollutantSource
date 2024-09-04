@@ -88,12 +88,12 @@ const Setting = props => {
         <Form.Item
           name="CustomersNum"
           label="回访客户次数（次/月）"
-          rules={[
-            {
-              required: true,
-              message: '不能为空',
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //     message: '不能为空',
+          //   },
+          // ]}
         >
           <InputNumber placeholder="请输入" style={{ width: 120 }} />
         </Form.Item>

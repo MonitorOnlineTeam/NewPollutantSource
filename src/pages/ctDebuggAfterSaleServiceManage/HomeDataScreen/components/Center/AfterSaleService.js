@@ -162,7 +162,7 @@ const AfterSaleService = props => {
         onCancel={() => {
           setOpen(false);
         }}
-        bodyStyle={{ padding: 0 }}
+        bodyStyle={{ padding: 0,height:'calc(100vh - 46px)',overflowX:'hidden'}}
       >
         {open && <UnderWarrantyServices btnType={openType} hideBreadcrumb modalWrapClassName="fullScreenModal" />}
       </Modal>

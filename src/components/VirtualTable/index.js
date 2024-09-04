@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-08-13 16:23:56
  * @LastEditors: outman0611
- * @LastEditTime: 2024-08-28 18:52:35
+ * @LastEditTime: 2024-09-03 14:17:30
  */
 import {  BaseTable,useTablePipeline } from 'ali-react-table'
 import { Spin,Empty } from 'antd'
@@ -45,13 +45,13 @@ const VirtualTable = (props) => {
     })
   }
 
-  return <div className={styles[props.className]}>
+  return <div className={styles[props.className]} style={props.style}>
    <BaseTable
     stickyTop={6}
     defaultColumnWidth={100}
     {...props}
     isLoading={props.loading}
-    useVirtual={ { horizontal:  props.useVirtual?.horizontal || true, vertical:  props.useVirtual?.horizontal || true,}}
+    useVirtual={ { horizontal:  props.useVirtual?.horizontal || true, vertical:  props.useVirtual?.vertical || true,}}
     className={styles.virtualTableWrapper}
     components={{
       EmptyContent: AntEmptyContent,

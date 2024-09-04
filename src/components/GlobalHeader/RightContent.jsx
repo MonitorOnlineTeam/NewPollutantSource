@@ -35,7 +35,16 @@ const GlobalHeaderRight = props => {
       },
     });
   };
-
+  const clearCommonData = () => {
+    //清除公共组件数据 运维废水废气系统切换
+    props.dispatch({
+      type: 'common/updateState',
+      payload: {
+        entList: [],
+        noFilterEntList: [],
+      },
+    });
+  };
 
   let className = styles.right;
 
@@ -75,6 +84,7 @@ const GlobalHeaderRight = props => {
               rel="noopener noreferrer"
               onClick={() => {
                 UpdateUserProject(undefined);
+                clearCommonData()
                 let url = item.Url ? new URL(item.Url) : item.Url;
                 if (item.ID !== sessionStorage.getItem('sysMenuId')) {
                   if (url && (url.protocol === 'http:' || url.protocol === 'https:')) {

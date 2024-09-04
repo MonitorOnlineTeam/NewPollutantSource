@@ -1706,6 +1706,11 @@ const routes = [
                 redirect: '/operations/calendar/index',
               },
               {
+                path: '/operations/taskRecordTotal',
+                name: 'taskRecordTotal', //测试环境运维工单总览
+                component: './operations/TaskRecord',
+              },
+              {
                 path: '/operations/taskRecord',
                 name: 'taskRecord',
                 component: './operations/TaskRecord',
@@ -4652,6 +4657,12 @@ const routes = [
                     name: 'disciplineCheck',
                     path: '/workSupervision/dailyManagement/disciplineCheck/:systemType',
                     component: './workSupervision/dailyManagement/disciplineCheck',
+                  },
+                  {
+                    // 现场检查模板设置
+                    name: 'disciplineCheck',
+                    path: '/workSupervision/dailyManagement/siteInspecTempSet',
+                    component: './workSupervision/dailyManagement/siteInspecTempSet',
                   },
                 ],
               },

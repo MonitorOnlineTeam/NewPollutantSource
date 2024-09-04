@@ -66,7 +66,7 @@ const Install = props => {
   const minWidth = 1950
   return (
     <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
-      <div className={styles.pageWrapper}>
+      <div className={styles.pageWrapper} style={modalWrapClassName&&{overflowX:'inherit'}}>
         <Space direction="vertical" style={{ width: '100%' }}>
           <Card bodyStyle={{ paddingTop: 10, paddingBottom: 10 }} style={{ marginBottom: 0 }}>
             年份：

@@ -186,7 +186,7 @@ class SdlForm extends PureComponent {
           format={format}
           style={{ width: '100%' }}
           disabledDate={
-            item.fullFieldName === 'dbo.T_Bas_CommonPoint.Col10' ? (current)=>current && current > moment().endOf('day') : null
+            item.fullFieldName === 'dbo.T_Bas_CommonPoint.Col10' ? (current) => current && current > moment().endOf('day') : null
           }
         />
       ); //disabledDate 监测点监测设备安装日期选择范围显示/>
@@ -207,8 +207,8 @@ class SdlForm extends PureComponent {
           defaultValue: isStart
             ? moment('00:00:00', 'HH:mm:ss')
             : isEnd
-            ? moment('23:59:59', 'HH:mm:ss')
-            : moment(),
+              ? moment('23:59:59', 'HH:mm:ss')
+              : moment(),
         }}
         format={'YYYY-MM-DD HH:mm:ss'}
         style={{ width: '100%' }}
@@ -343,7 +343,7 @@ class SdlForm extends PureComponent {
               data={item.value}
               selectType={labelText === '行政区' ? item.selectType : '999,是'}
               placeholder={placeholder}
-              isCtPoll={configId==='CTEnterprise'}
+              isCtPoll={configId === 'CTEnterprise'}
             />
           );
           break;
@@ -355,7 +355,16 @@ class SdlForm extends PureComponent {
           if (item.value && !initialValue && !isEdit) {
             initialValue = item.value[0] ? item.value[0].key : undefined;
           }
-          element = <SdlRadio data={item.value} configId={item.configId} />;
+          element = <SdlRadio
+            disabled={
+              (configId === 'GasOutput' || configId === 'WaterOutput') &&
+                item.fullFieldName === 'dbo.T_Bas_CommonPoint.Col5' &&
+                isEdit
+                ? true
+                : false
+            }
+            data={item.value}
+            configId={item.configId} />;
           break;
         case '多选':
           element = <SdlCheckbox data={item.value} configId={item.configId} />;
@@ -425,8 +434,8 @@ class SdlForm extends PureComponent {
         case '上传':
           const fileListProps = isEdit
             ? {
-                fileList: fileList,
-              }
+              fileList: fileList,
+            }
             : { fileList: [] };
           element = (
             <SdlUpload

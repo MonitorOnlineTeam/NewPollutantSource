@@ -78,13 +78,13 @@ export default class Index extends Component {
       case 1: //企业
         if (noFilter) { //不用过滤的企业列表
           if (noFilterEntList && noFilterEntList.length) { return }
-          dispatch({ type: 'common/getEntNoFilterList', payload: { RegionCode: regionCode, PollutantType: pollutantType }, })
+          dispatch({ type: 'common/getEntNoFilterList', payload: { RegionCode: regionCode, pollutantType: pollutantType }, })
         } else if (enable) { //启用的企业 不包含停用的企业
           if (enableEntList && enableEntList.length) { return }
-          dispatch({ type: 'common/getEnableEntList', payload: { RegionCode: regionCode, PollutantType: pollutantType }, })
+          dispatch({ type: 'common/getEnableEntList', payload: { RegionCode: regionCode, pollutantType: pollutantType }, })
         } else {
           if (entList && entList.length) { return }
-          dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType }, })
+          dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode, pollutantType: pollutantType }, })
         }
         break;
       case 2: //空气站
@@ -95,10 +95,10 @@ export default class Index extends Component {
     }
 
   }
-  componentDidUpdate(props) {
+  componentDidUpdate(prevProps) {
     const { type, dispatch, regionCode, pollutantType, noFilter } = this.props;
-    if (props.regionCode !== regionCode || props.pollutantType !== pollutantType) {
-      type == 1 ? dispatch({ type: noFilter ? 'common/getEntNoFilterList' : 'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType }, }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode }, });
+    if (prevProps.regionCode !== regionCode || prevProps.pollutantType !== pollutantType) {
+      type == 1 ? dispatch({ type: noFilter ? 'common/getEntNoFilterList' : 'common/getEntByRegion', payload: { RegionCode: regionCode, pollutantType: pollutantType }, }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode }, });
     }
   }
   loadingStatus = () => {

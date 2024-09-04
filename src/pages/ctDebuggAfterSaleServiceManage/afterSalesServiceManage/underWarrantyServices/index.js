@@ -79,7 +79,7 @@ const UnderWarrantyServices = props => {
   const widthFlag = windowWidth<=minWidth
   return (
     <BreadcrumbWrapper hideBreadcrumb={hideBreadcrumb}>
-      <div className={styles.pageWrapper}>
+      <div className={styles.pageWrapper} style={modalWrapClassName&&{overflowX:'inherit'}}>
         <Space direction="vertical" style={{ width: '100%' }}>
           <Card
             size="small"

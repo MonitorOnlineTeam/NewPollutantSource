@@ -71,9 +71,11 @@ const { RangePicker } = DatePicker;
 class TaskRecord extends Component {
   constructor(props) {
     super(props);
+    console.log(this.props, 8888)
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'))
     this.state = {
       ParentType: '企业',
-      expand: props.isWorkExecue,
+      expand: props.isWorkExecue || true,
       //  EntCode:null,
       taskRecordDetailVisible: false,
       TaskID: null,
@@ -88,7 +90,8 @@ class TaskRecord extends Component {
       forwardRemark: null,
       rejectPermis: false,
       forwardPermis: false,
-      taskTypeListLoading: true
+      taskTypeListLoading: true,
+      pollutantType: this.pollutantType == 1 ? ['7', '9', '19', '25', '26', '27', '31', '21', '8', '12', '11'] : this.pollutantType == 2 ? ['1', '3', '20', '28', '29', '30', '32', '22', '2', '6', '5'] : []
     };
     this._SELF_ = {
       configId: 'TaskRecord',
@@ -121,13 +124,10 @@ class TaskRecord extends Component {
       this.getPar()
     } else {
       setTimeout(() => {
-        this.LoadData();
+        // this.LoadData();
+        this.LoadData({ TaskTypeList: this.props.operaTaskType? this.props.operaTaskType.split(',') : this.state.pollutantType });
       })
     }
-    // dispatch({
-    //   type: 'operations/getOperationCompanyList',
-    //   payload: {},
-    // });
 
   }
   componentDidUpdate(prevProps, prevState) {
@@ -142,9 +142,16 @@ class TaskRecord extends Component {
     if (this.props.match?.params?.type !== prevProps.match?.params?.type || this.state.taskTypeListLoading !== prevState.taskTypeListLoading) {
       if (!this.state.taskTypeListLoading) {
         const taskTypeList = this.props.match?.params?.type?.split('=')?.[1]?.split(',')
-        this.props.form.setFieldsValue({
-          TaskTypeList: taskTypeList || undefined,
-        })
+        if (taskTypeList) {
+          this.props.form.setFieldsValue({
+            TaskTypeList: taskTypeList || undefined,
+          })
+        } else {
+            this.props.form.setFieldsValue({// 宝武看板 || 运维工单总览
+              TaskTypeList: this.props.operaTaskType? this.props.operaTaskType.split(',') : this.state.pollutantType 
+            })
+          }
+
       }
 
     }
@@ -276,7 +283,7 @@ class TaskRecord extends Component {
           TaskFrom: '',
           TaskStatusList: taskStatus,
           OperationsUserId: '',
-          TaskType: operaTaskType,
+          // TaskType: operaTaskType? operaTaskType : [],
           CompleteTime: completeTime,
           CreateTime: isWorkExecue ? '' : [moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
           pageIndex: 1,
@@ -827,7 +834,7 @@ class TaskRecord extends Component {
                     {getFieldDecorator('EntCode', {
                       initialValue: undefined,
                     })(
-                      <EntAtmoList style={{ width: '100%' }} onChange={this.entChange} />
+                      <EntAtmoList  style={{ width: '100%' }} onChange={this.entChange} />
                     )}
                   </FormItem>
                 </Col>
@@ -976,16 +983,21 @@ class TaskRecord extends Component {
               </Col>
               <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                 <FormItem {...formLayout} label="任务类型" style={{ width: '100%' }}>
-                  {getFieldDecorator(this.props.match?.params?.type ? 'TaskTypeList' : 'TaskType', {
-                    initialValue: this.props.match?.params?.type ? (!this.state.taskTypeListLoading && gettasklistqueryparams.TaskTypeList || undefined) : gettasklistqueryparams.TaskType || undefined,
+                  {getFieldDecorator('TaskTypeList', {
+                    // {getFieldDecorator(this.props.match?.params?.type ? 'TaskTypeList' : 'TaskType', {
+                    // initialValue: this.props.match?.params?.type ? (!this.state.taskTypeListLoading && gettasklistqueryparams.TaskTypeList || undefined) : gettasklistqueryparams.TaskType || undefined,
+                    initialValue: !this.state.taskTypeListLoading && gettasklistqueryparams.TaskTypeList || undefined,
                   })(
                     <SearchSelect
-                      mode={this.props.match?.params?.type ? 'multiple' : '-'}
+                      // mode={this.props.match?.params?.type ? 'multiple' : '-'}
+                      mode={'multiple'}
+                      maxTagCount={3}
+                      maxTagPlaceholder="..."
                       style={{ width: '100%' }}
                       configId="RecordTypes"
                       itemName="dbo.T_Cod_RecordTypes.PollutantTypeName"
                       itemValue="dbo.T_Cod_RecordTypes.ID"
-                      disabled
+                      disabled={this.props.match?.params?.type}
                       loadingChange={(status) => { this.setState({ taskTypeListLoading: status }) }}
                     />,
                   )}

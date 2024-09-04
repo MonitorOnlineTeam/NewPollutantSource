@@ -201,7 +201,7 @@ const InstallDebugRate = props => {
         onCancel={() => {
           setOpen(false);
         }}
-        bodyStyle={{ padding: '10px 0' }}
+        bodyStyle={{ padding: 0,height:'calc(100vh - 46px)',overflowX:'hidden'}}
       >
         {open && (
           <InstallDebugger

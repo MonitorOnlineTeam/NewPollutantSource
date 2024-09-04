@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-08-16 09:48:47
  * @LastEditors: outman0611
- * @LastEditTime: 2024-08-23 16:34:19
+ * @LastEditTime: 2024-08-30 16:51:48
  * @Description: 运维记录
  */
 import React, { Component } from 'react';
@@ -52,6 +52,7 @@ const { Option } = Select;
   recordTypeList: operationform.recordTypeList,
   currentDate: operationform.currentDate,
   exportReportLoading: loading.effects['operationform/exportReport'],
+  maintenanceSelectValue: operationform.maintenanceSelectValue,
 }))
 @Form.create()
 class OperationRecord extends Component {
@@ -105,7 +106,7 @@ class OperationRecord extends Component {
         },
       ],
       maintenanceFlag: 'log',
-      maintenanceSelectValue: null,
+      // maintenanceSelectValue: null,
     };
   }
   //表单类型改变事件
@@ -134,8 +135,13 @@ class OperationRecord extends Component {
       }, 0);
     }
     if (maintenanceFlag === 'log') {
-      this.setState({ maintenanceSelectValue: value }); //下拉框选中的值 运维日志
-
+      // this.setState({ maintenanceSelectValue: value }); //下拉框选中的值 运维日志
+      this.props.dispatch({
+        type: 'operationform/updateState',
+        payload: {
+          maintenanceSelectValue: value,
+        },
+      });
     }
 
     // if (value == '8') {
@@ -191,7 +197,11 @@ class OperationRecord extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.DGIMN != nextProps.DGIMN) {
-      this.setState({ maintenanceSelectValue: null })
+      // this.setState({ maintenanceSelectValue: null })
+      this.props.dispatch({
+        type: 'operationform/updateState',
+        payload: {maintenanceSelectValue: null},
+      });
     }
     if (this.props.PollutantType != nextProps.PollutantType) {
       this.getOperationrecordData(nextProps)
@@ -360,7 +370,11 @@ class OperationRecord extends Component {
           currentRecordType: this.props.currentRecordType ? this.props.currentRecordType : null,
         },
       });
-      this.setState({ maintenanceSelectValue: this.props.currentRecordType }); //下拉框选中的值 运维日志
+      // this.setState({ maintenanceSelectValue: this.props.currentRecordType }); //下拉框选中的值 运维日志
+      this.props.dispatch({
+        type: 'operationform/updateState',
+        payload: {maintenanceSelectValue: this.props.currentRecordType},//下拉框选中的值 运维日志
+      });
     }
     if (e.target.value === 'operationrecord') {
       //运维记录
@@ -381,8 +395,9 @@ class OperationRecord extends Component {
       exportReportLoading,
       DGIMN,
       PollutantType,
+      maintenanceSelectValue,
     } = this.props;
-    const { columns, searchParams, maintenanceFlag, maintenanceSelectValue, } = this.state;
+    const { columns, searchParams, maintenanceFlag,  } = this.state;
     const currentType = currentRecordType || 1;
     const currentDate = this.props.currentDate;
     // const defaultValue = (() => {
@@ -400,9 +415,9 @@ class OperationRecord extends Component {
       <div>
         <Card
           title={
-            <>
+            <Row justify='end'  style={{  marginRight: 145 }}>
               <Select
-                style={{ width: 220, marginRight: 10 }}
+                style={{ width: 220, marginRight: 8 }}
                 onChange={this.onTreeChange}
                 // onSearch={this.onTreeSearch}
                 value={maintenanceSelectValue}
@@ -448,7 +463,7 @@ class OperationRecord extends Component {
                 {/* <Radio.Button value="log">运维日志</Radio.Button> */}
                 {/* <Radio.Button value="operationrecord">运维记录</Radio.Button> */}
               {/* </Radio.Group> */}
-            </>
+            </Row>
           }
         >
           <Card.Grid

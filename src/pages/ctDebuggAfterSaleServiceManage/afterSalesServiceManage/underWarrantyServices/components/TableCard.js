@@ -130,12 +130,12 @@ const TableCard = props => {
   }
 
 
- const getCellPropsFun = (index,colSpan) =>{
-  return {
-    ...colSpan,  
-    // style: { background: index % 2 != 0 && '#f0f2f5' }
-   };
- }
+  const getCellPropsFun = (index, colSpan) => {
+    return {
+      ...colSpan,
+      // style: { background: index % 2 != 0 && '#f0f2f5' }
+    };
+  }
 
   const getColumns = () => {
     const rectMap = virtualTransMergeMap(TableList, 'year');
@@ -208,7 +208,7 @@ const TableCard = props => {
         width: 54,
         lock: true,
         // fixed: 'left',
-        getCellProps: (text, record, index) => getCellPropsFun(index,{colSpan: text === '总计' ? 2 : 1,})
+        getCellProps: (text, record, index) => getCellPropsFun(index, { colSpan: text === '总计' ? 2 : 1, })
         // render: (text, record, index) => {
         //   return {
         //     children: text,
@@ -223,7 +223,7 @@ const TableCard = props => {
         width: 200,
         lock: true,
         // fixed: 'left',
-        getCellProps: (text, record, index) => getCellPropsFun(index,{colSpan: text === '总计' ? 0 : 1,})
+        getCellProps: (text, record, index) => getCellPropsFun(index, { colSpan: text === '总计' ? 0 : 1, })
         // render: (text, record, index) => {
         //   return {
         //     children: text,
@@ -735,11 +735,12 @@ const TableCard = props => {
         }}
         pagination={false}
       />  */}
-      <VirtualTable
-        dataSource={TableList}
-        columns={getColumns()}
-        className={'first_white'}
-      />
+        <VirtualTable
+          dataSource={TableList}
+          columns={getColumns()}
+          className={'first_white'}
+          stickyTop={modalWrapClassName ? 0 : 6}
+        />
       <Modal
         title={`${moment(date).format('YYYY年')}质保内服务统计（${
           type === 1 ? '按产品类别' : '按服务原因'

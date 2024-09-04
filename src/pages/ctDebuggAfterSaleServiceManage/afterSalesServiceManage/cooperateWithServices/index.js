@@ -783,7 +783,7 @@ const Index = (props) => {
                     </Col>
                     <Col span={10} style={{ paddingLeft: 4, display: 'flex', flexDirection: 'column', alignItems: 'end', justifyContent: 'center', justifyItems: 'center' }} >{workHourDataRatio.map((item, index) => {
                       return <Row align='middle' style={{ width: '100%', paddingBottom: index == workHourDataRatio.length ? 0 : 8 }}>
-                        <Row align='middle' wrap={false} style={{ width: 'calc(100% - 54px)' }}>
+                        <Row align='middle' wrap={false} style={{ width: 'calc(100% - 62px)' }}>
                           <div style={{ display: 'inline-block', width: 14, height: 14, borderRadius: 2, backgroundColor: item.itemStyle.color, marginRight: 8 }}></div>
                           <div className='textOverflow' style={{ width: 'calc(100% - 24px)' }}>{item.name}</div>
                         </Row>

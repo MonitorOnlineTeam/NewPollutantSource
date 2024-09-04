@@ -35,7 +35,7 @@ const TableCard = props => {
     modalWrapClassName,
   } = props;
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   // 导出
   const onExport = () => {
@@ -46,17 +46,17 @@ const TableCard = props => {
       },
     });
   };
-  
+
   const onCancel = () => {
     setIsModalOpen(false);
   };
-  const [queryData,setQueryData]=useState({})
-  const typeClick = (data) =>{
+  const [queryData, setQueryData] = useState({})
+  const typeClick = (data) => {
     setIsModalOpen(true);
     setQueryData(data)
   }
-  const TypeRenderComponents = ({data}) =>{
-  return <a onClick={()=>typeClick(data)}>{data?.text || data?.text==0?  data.text : ''}</a>
+  const TypeRenderComponents = ({ data }) => {
+    return <a onClick={() => typeClick(data)}>{data?.text || data?.text == 0 ? data.text : ''}</a>
   }
   //
   const getColumns = () => {
@@ -70,8 +70,8 @@ const TableCard = props => {
             key: `Excellent${item.ID}`,
             width: 100,
             align: 'center',
-            render:(text,record)=>{
-              return <TypeRenderComponents data={{auditResults:1,serviceAreaCode:item.ID,text:text, time:[moment(record.btime),moment(record.etime) ],systemModelId:record.SystemModelId }}  />
+            render: (text, record) => {
+              return <TypeRenderComponents data={{ auditResults: 1, serviceAreaCode: item.ID, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
             }
           },
           {
@@ -80,8 +80,8 @@ const TableCard = props => {
             key: `Qualified${item.ID}`,
             width: 100,
             align: 'center',
-            render:(text,record)=>{
-              return <TypeRenderComponents data={{auditResults:2,serviceAreaCode:item.ID,text:text,time:[moment(record.btime),moment(record.etime) ],systemModelId:record.SystemModelId  }}  />
+            render: (text, record) => {
+              return <TypeRenderComponents data={{ auditResults: 2, serviceAreaCode: item.ID, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
             }
           },
           {
@@ -90,8 +90,8 @@ const TableCard = props => {
             key: `Unqualified${item.ID}`,
             width: 100,
             align: 'center',
-            render:(text,record)=>{
-              return <TypeRenderComponents data={{auditResults:3,serviceAreaCode:item.ID,text:text,time:[moment(record.btime),moment(record.etime) ],systemModelId:record.SystemModelId  }}  />
+            render: (text, record) => {
+              return <TypeRenderComponents data={{ auditResults: 3, serviceAreaCode: item.ID, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
             }
           },
           {
@@ -100,8 +100,8 @@ const TableCard = props => {
             key: `NoPhotos${item.ID}`,
             width: 100,
             align: 'center',
-            render:(text,record)=>{
-              return <TypeRenderComponents data={{auditResults:4,serviceAreaCode:item.ID,text:text,time:[moment(record.btime),moment(record.etime) ],systemModelId:record.SystemModelId  }}  />
+            render: (text, record) => {
+              return <TypeRenderComponents data={{ auditResults: 4, serviceAreaCode: item.ID, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
             }
           },
           {
@@ -110,8 +110,8 @@ const TableCard = props => {
             key: `NoNeed${item.ID}`,
             width: 100,
             align: 'center',
-            render:(text,record)=>{
-              return <TypeRenderComponents data={{auditResults:5,serviceAreaCode:item.ID,text:text,time:[moment(record.btime),moment(record.etime) ],systemModelId:record.SystemModelId  }}  />
+            render: (text, record) => {
+              return <TypeRenderComponents data={{ auditResults: 5, serviceAreaCode: item.ID, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
             }
           },
           {
@@ -151,7 +151,7 @@ const TableCard = props => {
         code: 'sort',
         key: 'sort',
         lock: true,
-        getCellProps: (text, record, index) => ({colSpan: text === '总计' ? 2 : 1 }),
+        getCellProps: (text, record, index) => ({ colSpan: text === '总计' ? 2 : 1 }),
         // fixed: 'left',
         // render: (text, record, index) => {
         //   return {
@@ -166,7 +166,7 @@ const TableCard = props => {
         key: 'CategoryName',
         width: 200,
         lock: true,
-        getCellProps: (text, record, index) => ({colSpan: text === '总计' ? 0 : 1 }),
+        getCellProps: (text, record, index) => ({ colSpan: text === '总计' ? 0 : 1 }),
         // fixed: 'left',
         // render: (text, record, index) => {
         //   return {
@@ -177,7 +177,7 @@ const TableCard = props => {
       },
       {
         title: '总计（安装套数）',
-        lock:true,
+        lock: true,
         children: [
           {
             title: '优秀',
@@ -186,8 +186,8 @@ const TableCard = props => {
             width: 100,
             align: 'center',
             // fixed: 'left',
-            render:(text,record)=>{
-              return <TypeRenderComponents data={{auditResults:1,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
+            render: (text, record) => {
+              return <TypeRenderComponents data={{ auditResults: 1, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
             }
           },
           {
@@ -197,8 +197,8 @@ const TableCard = props => {
             width: 100,
             align: 'center',
             // fixed: 'left',
-            render:(text,record)=>{
-              return <TypeRenderComponents data={{auditResults:2,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
+            render: (text, record) => {
+              return <TypeRenderComponents data={{ auditResults: 2, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
             }
           },
           {
@@ -208,8 +208,8 @@ const TableCard = props => {
             width: 100,
             align: 'center',
             // fixed: 'left',
-            render:(text,record)=>{
-              return <TypeRenderComponents data={{auditResults:3,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
+            render: (text, record) => {
+              return <TypeRenderComponents data={{ auditResults: 3, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
             }
           },
           {
@@ -219,8 +219,8 @@ const TableCard = props => {
             width: 100,
             align: 'center',
             // fixed: 'left',
-            render:(text,record)=>{
-              return <TypeRenderComponents data={{auditResults:4,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
+            render: (text, record) => {
+              return <TypeRenderComponents data={{ auditResults: 4, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
             }
           },
           {
@@ -230,8 +230,8 @@ const TableCard = props => {
             width: 100,
             align: 'center',
             // fixed: 'left',
-            render:(text,record)=>{
-              return <TypeRenderComponents data={{auditResults:5,text:text,time:[moment(record.btime),moment(record.etime)],systemModelId:record.SystemModelId  }}  />
+            render: (text, record) => {
+              return <TypeRenderComponents data={{ auditResults: 5, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
             }
           },
           {
@@ -296,11 +296,12 @@ const TableCard = props => {
         dataSource={TableList}
         columns={getColumns()}
         className={'first_white'}
-        // align="center"
-        // scroll={{
-        //   y: 500,
-        // }}
-        // pagination={false}
+        stickyTop={modalWrapClassName ? 0 : 6}
+      // align="center"
+      // scroll={{
+      //   y: 500,
+      // }}
+      // pagination={false}
       />
       {isModalOpen && (
         <Modal
@@ -310,16 +311,16 @@ const TableCard = props => {
           destroyOnClose
           footer={null}
           mask={false}
-          bodyStyle={{padding:0}}
+          bodyStyle={{ padding: 0 }}
           onCancel={() => {
             onCancel();
           }}
         >
           <InstallEquipment
             hideBreadcrumb
-            modalWrapClassName = {modalWrapClassName}
+            modalWrapClassName={modalWrapClassName}
             defaultTime={computeStartAndEnd(date)}
-            queryData = {queryData}
+            queryData={queryData}
             defaultStatus=""
             auditResultList={[1, 2, 3, 4, 5]}
             location={props.location}

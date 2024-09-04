@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-06-11 14:29:31
  * @LastEditors: outman0611
- * @LastEditTime: 2024-08-26 10:35:39
+ * @LastEditTime: 2024-09-03 14:03:40
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Timeline } from 'antd';
@@ -986,7 +986,7 @@ const Index = (props) => {
 
   }
 
-  const dgimnEchoDataFun = (mn, data, title) => { //通过监测点获取回显数据  编辑时
+  const dgimnEchoDataFun = (mn, data, title) => { //通过监测点获取回显数据时、编辑时
 
     getPointConsistencyParamFun(mn, (pollutantList, paramList, addRealTimeList) => {
       if (!data.consistencyCheckList || data.consistencyCheckList?.length == 0) { //数据一致性核查表 回显数据为空数组时
@@ -1010,7 +1010,7 @@ const Index = (props) => {
 
       }
 
-
+     
       if (data.couUpload && data.couUpload[0]) { //实时数据一致性核查表 附件
         form2.setFieldsValue({ files2: data.couUpload[0].FileUuid })
         setFilesCuid2(data.couUpload[0].FileUuid)
@@ -1030,7 +1030,6 @@ const Index = (props) => {
       } else {
         setFilesCuid2(cuid())
       }
-
       //参数一致性核查 回显数据
       const paramData = data?.consistentParametersCheckList?.[0] ? data?.consistentParametersCheckList : paramList
       paramData?.[0] && echoParFun(paramData)
@@ -1044,7 +1043,6 @@ const Index = (props) => {
     let analyzerUploadList = {}, analyzerUploadFilesListObj = {};
     let dasUploadList = {}, dasUploadFilesListObj = {};
     let rangeUploadList = {}, rangeUploadFilesListObj = {};
-
     consistencyCheckList.map(item => { //一致性核查表 量程和数据
 
       let val = item.DataList;
@@ -1055,12 +1053,12 @@ const Index = (props) => {
           if (val.Special == 1) { //有显示屏
             echoForamt(code, val, item)
             setIsDisPlayCheck1(true)
-            isDisplayChange({ target: { checked: true } }, 'isDisplay1', 'firstDefault')
+            // isDisplayChange({ target: { checked: true } }, 'isDisplay1', 'firstDefault')
             onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1)
           }
           if (val.Special == 2) { //无显示屏
             echoForamt(`${code}a`, val, item)
-            isDisplayChange({ target: { checked: true } }, 'isDisplay2', 'firstDefault')
+            // isDisplayChange({ target: { checked: true } }, 'isDisplay2', 'firstDefault')
             onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}a` }, `${code}aRangCheck`, 1)
 
           }
@@ -1093,25 +1091,24 @@ const Index = (props) => {
         }
         if (val.Special == 1) { //差压法
           echoForamt(code, val, item, isImport)
-          isDisplayChange2({ target: { checked: true } }, 'isDisplay3', 'firstDefault')
+          // isDisplayChange2({ target: { checked: true } }, 'isDisplay3', 'firstDefault')
           onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1)
         } else if (val.Special == 2) { //直测流速法
           echoForamt(`${code}b`, val, item, isImport)
-          isDisplayChange2({ target: { checked: true } }, 'isDisplay4', 'firstDefault')
+          // isDisplayChange2({ target: { checked: true } }, 'isDisplay4', 'firstDefault')
           onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}b` }, `${code}bRangCheck`, 1)
 
         }
 
       } else {
         echoForamt(code, val, item, isImport)
-        onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1) //编辑 手工修正结果 量程一致性
+        // onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1) //编辑 手工修正结果 量程一致性
         !isImport && onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)//编辑 手工修正结果 实时数据
 
       }
       // setNumChecked(val.DataRangeStatus == 1 ? true : false)
       // setNumRealTimeChecked(val.DataStatus == 1 ? true : false)
       // setDasChecked(val.DASStatus == 1 ? true : false)
-
       const echoFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => { //附件回显
 
         if (code == '411' && item.DataList && !item.DataList.Special) { return }
@@ -1135,6 +1132,8 @@ const Index = (props) => {
       echoFileList(item.RangeFileList, rangeUploadList, rangeUploadFilesListObj, `${pars}RangeFilePar`) //数采仪量程照片	
 
     })
+    // console.log(analyzerUploadList,analyzerUploadFilesListObj,dasUploadList,dasUploadFilesListObj,rangeUploadList,)
+    // return //耗时操作
     setAnalyzerFileList({ ...analyzerUploadList })
     setAnalyzerFileCuidList({ ...analyzerUploadFilesListObj })
 
@@ -1172,6 +1171,7 @@ const Index = (props) => {
       // resetData(true)//防止提交完之后 切换tab栏 提交下一个 数据清空的情况
       echoUnit(pollutantList) //默认显示单位默认值
       echoUnit(addRealTimeList)
+      // console.log(pollutantList)
       if (title === '添加') {
         if (pollutantList?.[0]) {
           defaultRangeTimeFilesCuid(pollutantList)
@@ -1589,6 +1589,7 @@ const Index = (props) => {
     data.map(item => {
       const code = item.CheckItem ? item.CheckItem : item.ChildID;
       echoFilePar(code, item, isImport)
+      item.Uniformity && onManualChange([item.Uniformity], item, `${code}RangCheck3`, 3) //编辑 手工修正结果 参数一致性核查
       const echoFileList = (uploadList, uploadListPar, uploadFilesListObj, filePar) => {
         let parFileList = [];
         uploadList?.length && uploadList.map(uploadItem => {
@@ -1608,8 +1609,10 @@ const Index = (props) => {
       echoFileList(item.InstrumentFileList, instrumentUploadList, instrumentUploadFilesListObj, 'InstrumentFilePar') //DAS设定值照片	
       echoFileList(item.TraceabilityFileList, traceabilityUploadList, traceabilityUploadFilesListObj, 'TraceabilityFilePar') //溯源值照片	
       echoFileList(item.DataFileList, dataUploadList, dataUploadFilesListObj, 'DataFilePar') //数采仪设定值照片	
-      item.Uniformity && onManualChange([item.Uniformity], item, `${code}RangCheck3`, 3) //编辑 手工修正结果 参数一致性核查
+     
     })
+    // console.log(settingUploadList,settingUploadFilesListObj)
+    // return //耗时操作
     setSettingFileList({ ...settingUploadList })
     setSettingFileCuidList({ ...settingUploadFilesListObj })
 
