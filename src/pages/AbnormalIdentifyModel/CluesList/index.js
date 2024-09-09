@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-08-30 16:13:51
+ * @Last Modified time: 2024-09-06 09:58:08
  * @Description：线索列表
  */
 
@@ -569,7 +569,6 @@ const CluesList = props => {
         ModelList: typeList,
       },
     ]);
-
     // 处理行政区初始化值
     let regionCode = warningForm[modelNumber].regionCode;
     if (regionCode) {

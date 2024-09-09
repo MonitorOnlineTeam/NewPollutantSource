@@ -167,6 +167,5 @@ export default Model.extend({
         callback && callback(result.Datas?.col);
       }
     },
-
   },
 });

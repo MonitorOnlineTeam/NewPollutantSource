@@ -115,7 +115,7 @@ const SystemDashboardPageWrapper = props => {
 
   // 改变时间
   const onChangeDateTime = data => {
-    if (data.key === timeLabel) {
+    if (data.key === timeLabel && data.key !== '自定义') {
       return;
     }
     dispatch({
@@ -232,6 +232,7 @@ const SystemDashboardPageWrapper = props => {
         open={customTimeModalOpen}
         onCancel={() => setCustomTimeModalOpen(false)}
         onDateChange={data => {
+          console.log('data', data);
           onChangeDateTime(data);
           setCustomTimeModalOpen(false);
         }}

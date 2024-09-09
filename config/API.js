@@ -1268,6 +1268,20 @@ export const API = {
 
     // 排放口数据来源
     GetPointDataBy: before + '/WarningV2/GetPointDataBy',
+    // 停运参数管理列表
+    GetStopParamList: before + '/StatePointApi/GetStopParamList',
+    // 获取参数名称
+    GetParamCodeList: before + '/StatePointApi/GetParamCodeList',
+    // 添加或修改停运参数
+    AddOrUpdStopParam: before + '/StatePointApi/AddOrUpdStopParam',
+    // 删除停运参数
+    DelStopParam: before + '/StatePointApi/DelStopParam',
+    // 获取燃烧工艺管理数据
+    PmCemsSupplierList: before + '/StatePointApi/PmCemsSupplierList',
+    // 获取燃烧工艺
+    GetPmCemsSupplierCode: before + '/StatePointApi/GetPmCemsSupplierCode',
+    // 修改燃烧工艺
+    UpdatePmCemsSupplier: before + '/StatePointApi/UpdatePmCemsSupplier',
 
     /*实时数据异常识别及管理*/
     //异常线索清单
@@ -1314,6 +1328,20 @@ export const API = {
     StatisNormalRange: before + '/ProjectMonitorDataApi/StatisNormalRange', //波动范围和振幅范围
     //模型选配
     GetModelApolegamyList: before + '/ProjectMonitorDataApi/GetModelApolegamyList', //获取模型选配信息
+    // 点位训练
+    AddTaskInfo: before + '/StatePointApi/AddTaskInfo', // 创建任务
+    GetLastTaskInfo: before + '/StatePointApi/GetLastTaskInfo', // 获取最新任务
+    SaveStatePointModelRelationDGIMN: before + '/StatePointApi/SaveStatePointModelRelationDGIMN', // 关联点位
+    CheckStatus: before + '/StatePointApi/CheckStatus', // 核查完成
+    GetTaskMonitorData: before + '/StatePointApi/GetTaskMonitorData', // 监测数据获取
+    GetPollutantCheck: before + '/StatePointApi/GetPollutantCheck', // 污染物核查
+    GetParamCheck: before + '/StatePointApi/GetParamCheck', // 备案参数核查
+    GetCombustionProcess: before + '/StatePointApi/GetCombustionProcess', // 燃烧工艺
+    ModelTrain: before + '/StatePointApi/ModelTrain', // 模型训练
+    ScanningConditions: before + '/StatePointApi/ScanningConditions', // 扫描工况
+    CalculateDistance: before + '/StatePointApi/CalculateDistance', // 计算排口距离
+    AutoModelDelection: before + '/StatePointApi/AutoModelDelection', // 自动匹配模型
+    
   },
   // 唐银钢铁Api
   TYGTApi: {

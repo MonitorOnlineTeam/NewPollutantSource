@@ -275,9 +275,9 @@ class MapContent extends PureComponent {
         color = legendList[2].color;
         count = data['一般异常'];
         break;
-      case '1': // 轻微异常
+      case '1': // 提示类异常
         color = legendList[3].color;
-        count = data['轻微异常'];
+        count = data['提示类异常'];
         break;
       case '': // 无异常
         color = legendList[4].color;
@@ -623,8 +623,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: 'skyblue', fontSize: 20 }}>{position['轻微异常']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>轻微异常</p>
+                <p style={{ color: 'skyblue', fontSize: 20 }}>{position['提示类异常']}</p>
+                <p style={{ fontSize: 13, color: '#fff' }}>提示类异常</p>
               </Col>
             </Row>
           </div>
