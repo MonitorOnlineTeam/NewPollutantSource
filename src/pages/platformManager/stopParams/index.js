@@ -245,7 +245,7 @@ const StopParams = props => {
             <SdlTable dataSource={dataSource} columns={columns} loading={loading} />
           </Card>
           <Modal
-            title={`${currentRow.ID ? '新增' : '编辑'}停运参数`}
+            title={`${currentRow.ID ? '编辑' : '新增'}停运参数`}
             open={isModalOpen}
             onCancel={() => setIsModalOpen(false)}
             onOk={() => {

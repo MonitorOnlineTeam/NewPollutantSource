@@ -32,7 +32,7 @@ import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { EditIcon } from '@/utils/icon';
 
-@connect(({ loading, standardLibrary, autoForm,global }) => ({
+@connect(({ loading, standardLibrary, autoForm, global }) => ({
   ...loading,
   list: standardLibrary.uselist,
   total: standardLibrary.total,
@@ -620,9 +620,7 @@ class MonitoringStandard extends Component {
           }
           return (
             <span>
-              {' '}
               <Button size="small" color="blue">
-                {' '}
                 <a title="单击从监测中移除" onClick={() => this.IsEnabled(0, record)}>
                   <SettingOutlined spin={true} /> 监测中
                 </a>
@@ -731,7 +729,7 @@ class MonitoringStandard extends Component {
           columns={pollutantType == '5' ? columnsDay : columns}
           dataSource={standardTableDatas}
           className={styles.tableSty}
-          scroll={{ y: this.props.isPoint && this.props.clientHeight - 420}}
+          scroll={{ y: this.props.isPoint && this.props.clientHeight - 420 }}
           //  pagination={{ pageSize: 20 }}
         />
         <Modal

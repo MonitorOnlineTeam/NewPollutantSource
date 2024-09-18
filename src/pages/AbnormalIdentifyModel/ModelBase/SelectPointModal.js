@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import {
-  Card,
-  Modal,
-  Select,
-  Tree,
-  Space,
-  Button,
-  Form,
-  message,
-  Popconfirm,
-  Spin,
-} from 'antd';
+import { Card, Modal, Select, Tree, Space, Button, Form, message, Popconfirm, Spin } from 'antd';
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import RegionList from '@/components/RegionList';
 import EntAtmoList from '@/components/EntAtmoList';
@@ -27,6 +16,7 @@ const PointTraining = props => {
   const { dispatch, open, title, onOk, onCancel, entAndPointLoading } = props;
 
   const [checkedKeys, setCheckedKeys] = useState(props.checkedKeys);
+  const [checkedKeysName, setCheckedKeysName] = useState([]);
   const [treeData, setTreeData] = useState([]);
 
   useEffect(() => {
@@ -55,7 +45,8 @@ const PointTraining = props => {
         outputType: values.outputType,
         regionCode: values.regionCode,
         entCode: values.entCode,
-        StopPointFlag: true,
+        operationStatus: 0,
+        // StopPointFlag: true,
         // ModelGuid: ID,
       },
       callback: res => {
@@ -113,7 +104,6 @@ const PointTraining = props => {
       </>
     );
   };
-
   return (
     <Modal
       centered
@@ -123,7 +113,7 @@ const PointTraining = props => {
       wrapClassName="spreadOverModal"
       destroyOnClose
       onOk={() => {
-        onOk(checkedKeys);
+        onOk(checkedKeys, checkedKeysName);
         // entAndPointForm.resetFields();
       }}
       onCancel={() => {
@@ -164,12 +154,14 @@ const PointTraining = props => {
             onCheck={(keys, info) => {
               if (info.checked == true) {
                 let _keys = [];
+                let _keysName = [];
 
                 // 处理全选，过滤掉企业key
                 if (info.node.key === '0-0') {
                   info.node.children.map(item => {
                     if (item.children.length) {
                       _keys = _keys.concat(item.children.map(i => i.key));
+                      _keysName = _keys.concat(item.children.map(i => `${i.EntName}-${i.title}`));
                     }
                   });
                 } else {
@@ -177,35 +169,51 @@ const PointTraining = props => {
                   if (info.node.children) {
                     // 点击的父节点
                     _keys = info.node.children.map(item => item.key);
+                    _keysName = info.node.children.map(item => `${i.EntName}-${i.title}`);
                   } else if (info.node.EntCode) {
                     // 点击的子节点
                     _keys = [info.node.key];
+                    _keysName = [`${info.node.EntName}-${info.node.title}`];
                   }
                 }
                 // 已选中数据 与 当前数据源选中数据去重
                 let _checkedKeys = [...checkedKeys].concat(_keys);
                 setCheckedKeys(_.uniq(_checkedKeys));
+
+                let _checkedKeysName = [...checkedKeysName].concat(_keysName);
+                setCheckedKeysName(_.uniq(_checkedKeysName));
               } else {
                 let arr1 = [...checkedKeys];
                 let arr2 = [info.node.key];
+
+                let arr1Name = [...checkedKeysName];
+                let arr2Name = [`${info.node.EntName}-${info.node.title}`];
 
                 // 处理反选全部，过滤掉企业key
                 if (info.node.key === '0-0') {
                   info.node.children.map(item => {
                     if (item.children.length) {
                       arr2 = arr2.concat(item.children.map(i => i.key));
+                      arr2Name = arr2Name.concat(item.children.map(i => `${i.EntName}-${i.title}`));
                     }
                   });
                 } else {
                   if (info.node.children) {
                     arr2 = info.node.children.map(item => item.key).concat([info.node.key]);
+                    arr2Name = info.node.children
+                      .map(item => item.key)
+                      .concat([`${info.node.EntName}-${info.node.title}`]);
                   } else if (info.node.EntCode) {
                     arr2.push(info.node.EntCode);
+                    arr2Name.push(`${info.node.EntName}-${info.node.title}`);
                   }
                 }
                 // 在原有数据中，排除掉反选的数据
                 let _checkedKeys = _.difference(arr1, arr2);
                 setCheckedKeys(_checkedKeys);
+
+                let _checkedKeysName = _.difference(arr1Name, arr2Name);
+                setCheckedKeysName(_checkedKeysName);
               }
             }}
             treeData={treeData}

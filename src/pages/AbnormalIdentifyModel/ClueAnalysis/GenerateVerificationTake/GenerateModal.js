@@ -761,6 +761,7 @@ const Index = props => {
                     }
                     return node;
                   }}
+                  overlayInnerStyle={{width: 680}}
                   placement={planDatas?.length >= 18 ? 'rightBottom' : 'right'}
                   content={
                     <>

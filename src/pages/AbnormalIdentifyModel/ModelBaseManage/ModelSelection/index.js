@@ -16,7 +16,6 @@ import Link from 'umi/link';
 import moment from 'moment';
 import RegionList from '@/components/RegionList'
 import EntAtmoList from '@/components/EntAtmoList';
-import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import styles from "../../styles.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';

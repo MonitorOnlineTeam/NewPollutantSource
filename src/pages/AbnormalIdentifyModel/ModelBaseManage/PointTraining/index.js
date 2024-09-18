@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-09-02 17:05:03
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-09-06 10:57:42
+ * @Last Modified time: 2024-09-12 11:39:43
  * @Description:  新增点位训练页面
  */
 import React, { useState, useEffect } from 'react';
@@ -20,6 +20,8 @@ import {
   Tooltip,
   Popover,
   Badge,
+  Empty,
+  Modal,
 } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import styles from '@/pages/AbnormalIdentifyModel/styles.less';
@@ -28,15 +30,16 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { API } from '@config/API';
 import SelectPointModal from '@/pages/AbnormalIdentifyModel/ModelBase/SelectPointModal.js';
 import moment from 'moment';
+import MonitoringStandard from '@/components/MonitoringStandard';
+import EquipmentParmars from '@/pages/platformManager/equipmentParmars/ContentPages.js';
+import AssistDataAnalysis from '@/pages/AbnormalIdentifyModel/AssistDataAnalysis';
+import SelectPmCemsSupplierModal from '@/pages/platformManager/combustionProcess/SelectPmCemsSupplierModal.js';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({});
 
 const PointTraining = props => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState({
-    // GetLastTaskInfo: true,
-    // GetPollutantCheck: true,
-  });
+  const [loading, setLoading] = useState(false);
   const [stepsList, setStepsList] = useState([]);
   const [isSelectPointModalOpen, setIsSelectPointModalOpen] = useState(false);
   const [pointList, setPointList] = useState([]);
@@ -50,6 +53,12 @@ const PointTraining = props => {
   const [trainBeginTime, setTrainBeginTime] = useState();
   const [trainEndTime, setTrainEndTime] = useState();
   const [workConDate, setWorkConDate] = useState([]);
+  const [currentRow, setCurrentRow] = useState({});
+  const [isPointModalOpen, setIsPointModalOpen] = useState(false);
+  const [isParamsModalOpen, setIsParamsModalOpen] = useState(false);
+  const [isWrwModalOpen, setIsWrwModalOpen] = useState(false);
+  const [isPmCemsSupplierModal, setIsPmCemsSupplierModal] = useState(false);
+  const [checkedKeys, setCheckedKeys] = useState([]);
   const { dispatch, pageTitle, entCode, DGIMN, time, regionCode } = props;
 
   useEffect(() => {
@@ -61,20 +70,14 @@ const PointTraining = props => {
 
   // 获取数据
   const GenericPostRequest = ({ urlName, payload = {}, callback }) => {
-    setLoading({
-      ...loading,
-      [urlName]: true,
-    });
+    // setLoading(true);
     dispatch({
       type: 'AbnormalIdentifyModel/GenericPostRequest',
       url: API.AbnormalIdentifyModel[urlName],
       payload: payload,
       callback: res => {
         callback(res.Datas);
-        setLoading({
-          ...loading,
-          [urlName]: false,
-        });
+        // setLoading(false);
       },
     });
   };
@@ -96,7 +99,7 @@ const PointTraining = props => {
       urlName: 'GetLastTaskInfo',
       callback: res => {
         let _statusList = {};
-        let stepDatas = res.logInfo.map(item => {
+        let stepDatas = res?.logInfo?.map(item => {
           _statusList[item.NodeID] = item;
 
           // 返填监测数据时间
@@ -128,10 +131,11 @@ const PointTraining = props => {
           };
         });
         console.log('_statusList', _statusList);
+        console.log('stepDatas', stepDatas);
         setStatusList(_statusList);
-        setStepsList(stepDatas);
-        setPointList(res.pointList);
-
+        setStepsList(stepDatas || []);
+        setPointList(res?.pointList || []);
+        setCheckedKeys(res?.pointList?.map(item => item.DGIMN));
         // 返填监测数据时间
         // let step3Data = stepDatas.find(item => item.NodeID === '3');
         // setBeginTime(step3Data && step3Data.BeginTime ? moment(step3Data.BeginTime) : undefined);
@@ -151,6 +155,9 @@ const PointTraining = props => {
         setIsSelectPointModalOpen(false);
         message.success('关联成功！');
         GetLastTaskInfo();
+        GetPollutantCheck();
+        GetParamCheck();
+        GetCombustionProcess();
       },
     });
   };
@@ -200,6 +207,17 @@ const PointTraining = props => {
       urlName: 'GetCombustionProcess',
       callback: res => {
         setCombustionProcess(res);
+      },
+    });
+  };
+
+  // 燃烧工艺 - 开始获取
+  const CheckProcess = () => {
+    GenericPostRequest({
+      urlName: 'CheckProcess',
+      callback: res => {
+        message.success('操作成功！');
+        GetLastTaskInfo();
       },
     });
   };
@@ -346,8 +364,32 @@ const PointTraining = props => {
           },
           {
             title: '操作',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'handle',
+            key: 'handle',
+            render: (text, record) => {
+              return (
+                <Space>
+                  <a
+                    onClick={e => {
+                      window.open(
+                        `/platformconfig/monitortarget/AEnterpriseTest/1/undefined/monitorpoint/${record.ParentCode}/${record.ParentName}?tabName=维护点信息`,
+                        '_blank',
+                      );
+                    }}
+                  >
+                    配置
+                  </a>
+                  <a
+                    onClick={() => {
+                      setCurrentRow(record);
+                      setIsPointModalOpen(true);
+                    }}
+                  >
+                    数据
+                  </a>
+                </Space>
+              );
+            },
           },
         ];
       case 2: // 污染物核查
@@ -367,17 +409,32 @@ const PointTraining = props => {
             dataIndex: 'pzPollutant',
             key: 'pzPollutant',
             ellipsis: true,
+            width: 280,
           },
           {
             title: '上传污染物',
             dataIndex: 'sjPollutant',
             key: 'sjPollutant',
             ellipsis: true,
+            width: 280,
           },
           {
             title: '操作',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'handle',
+            key: 'handle',
+            width: 60,
+            render: (text, row) => {
+              return (
+                <a
+                  onClick={() => {
+                    setCurrentRow(row);
+                    setIsWrwModalOpen(true);
+                  }}
+                >
+                  配置
+                </a>
+              );
+            },
           },
         ];
       case 3: // 备案参数核查
@@ -400,10 +457,7 @@ const PointTraining = props => {
               let _text = text || '-';
               if (row.flueCoefficientStr) {
                 return (
-                  <Popover
-                    content={<Badge status="warning" text={row.flueCoefficientStr} />}
-                    title="Title"
-                  >
+                  <Popover content={<Badge status="warning" text={row.flueCoefficientStr} />}>
                     <span style={{ color: '#ff4d4f' }}>{_text}</span>
                   </Popover>
                 );
@@ -419,7 +473,7 @@ const PointTraining = props => {
               let _text = text || '-';
               if (row.atmosStr) {
                 return (
-                  <Popover content={<Badge status="warning" text={row.atmosStr} />} title="Title">
+                  <Popover content={<Badge status="warning" text={row.atmosStr} />}>
                     <span style={{ color: '#ff4d4f' }}>{_text}</span>
                   </Popover>
                 );
@@ -445,8 +499,20 @@ const PointTraining = props => {
           },
           {
             title: '操作',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'handle',
+            key: 'handle',
+            render: (text, row) => {
+              return (
+                <a
+                  onClick={() => {
+                    setCurrentRow(row);
+                    setIsParamsModalOpen(true);
+                  }}
+                >
+                  配置
+                </a>
+              );
+            },
           },
         ];
       case 4: // 燃烧工艺
@@ -468,13 +534,25 @@ const PointTraining = props => {
           },
           {
             title: '操作',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'handle',
+            key: 'handle',
+            render: (text, row) => {
+              return (
+                <a
+                  onClick={() => {
+                    setCurrentRow(row);
+                    setIsPmCemsSupplierModal(true);
+                  }}
+                >
+                  配置
+                </a>
+              );
+            },
           },
         ];
     }
   };
-  // console.log('loading', loading);
+
   return (
     <BreadcrumbWrapper>
       <div className={styles.PageWrapper}>
@@ -484,12 +562,14 @@ const PointTraining = props => {
             onConfirm={AddTaskInfo}
             placement="bottom"
           >
-            <Button type="primary" onClick={AddTaskInfo}>
-              新增训练任务
-            </Button>
+            <Button type="primary">新增训练任务</Button>
           </Popconfirm>
-          <Card title="流程进度" loading={loading['GetLastTaskInfo']}>
-            <Steps progressDot items={stepsList} />
+          <Card title="流程进度" loading={loading}>
+            {stepsList.length ? (
+              <Steps progressDot items={stepsList} />
+            ) : (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            )}
           </Card>
           <Card
             title={
@@ -512,13 +592,26 @@ const PointTraining = props => {
             {isSelectPointModalOpen && (
               <SelectPointModal
                 open={isSelectPointModalOpen}
-                checkedKeys={[]}
+                checkedKeys={checkedKeys}
                 onCancel={() => setIsSelectPointModalOpen(false)}
                 onOk={keys => {
+                  console.log('keys', keys)
                   bindingPoint(keys);
+                  setCheckedKeys(keys);
                 }}
               />
             )}
+            <Modal
+              title={`${currentRow.ParentName} - ${currentRow.PointName}`}
+              wrapClassName="spreadOverModal"
+              destroyOnClose
+              open={isPointModalOpen}
+              footer={false}
+              onCancel={() => setIsPointModalOpen(false)}
+              bodyStyle={{ padding: 0 }}
+            >
+              <AssistDataAnalysis displayType="modal" DGIMN={currentRow.DGIMN} />
+            </Modal>
           </Card>
           <Card
             title={
@@ -527,7 +620,7 @@ const PointTraining = props => {
                 {renderStatusTag('3')}
               </p>
             }
-            loading={loading['GetLastTaskInfo']}
+            loading={loading}
             extra={renderDoneBtn('3')}
           >
             <Space direction="vertical" size="middle">
@@ -570,7 +663,7 @@ const PointTraining = props => {
                 {renderStatusTag('4')}
               </p>
             }
-            loading={loading['GetPollutantCheck']}
+            loading={loading}
             extra={renderDoneBtn('4')}
           >
             <SdlTable
@@ -579,6 +672,17 @@ const PointTraining = props => {
               pagination={false}
               scroll={false}
             />
+            <Modal
+              title={`${currentRow.entName} - ${currentRow.pointName} / 污染物配置`}
+              open={isWrwModalOpen}
+              wrapClassName="spreadOverModal"
+              onCancel={() => {
+                setIsWrwModalOpen(false);
+              }}
+              footer={false}
+            >
+              <MonitoringStandard noload DGIMN={currentRow.DGIMN} pollutantType={1} />
+            </Modal>
           </Card>
           <Card
             title={
@@ -587,7 +691,7 @@ const PointTraining = props => {
                 {renderStatusTag('5')}
               </p>
             }
-            loading={loading['GetParamCheck']}
+            loading={loading}
             extra={renderDoneBtn('5')}
           >
             <SdlTable
@@ -596,6 +700,17 @@ const PointTraining = props => {
               pagination={false}
               scroll={false}
             />
+            <Modal
+              title={`${currentRow.entName} - ${currentRow.pointName} / 备案参数核查`}
+              open={isParamsModalOpen}
+              wrapClassName="spreadOverModal"
+              onCancel={() => {
+                setIsParamsModalOpen(false);
+              }}
+              footer={false}
+            >
+              <EquipmentParmars DGIMN={currentRow.DGIMN} type={'smoke'} />
+            </Modal>
           </Card>
           <Card
             title={
@@ -604,15 +719,36 @@ const PointTraining = props => {
                 {renderStatusTag('6')}
               </p>
             }
-            loading={loading['GetCombustionProcess']}
+            loading={loading}
             extra={renderDoneBtn('6')}
           >
-            <SdlTable
-              dataSource={combustionProcess}
-              columns={getColumns(4)}
-              pagination={false}
-              scroll={false}
-            />
+            <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+              <SdlTable
+                dataSource={combustionProcess}
+                columns={getColumns(4)}
+                pagination={false}
+                scroll={false}
+              />
+              <Button
+                type="primary"
+                onClick={() => {
+                  CheckProcess();
+                }}
+              >
+                开始获取
+              </Button>
+            </Space>
+            {isPmCemsSupplierModal && (
+              <SelectPmCemsSupplierModal
+                currentRow={currentRow}
+                open={isPmCemsSupplierModal}
+                onCancel={() => setIsPmCemsSupplierModal(false)}
+                onOk={() => {
+                  GetCombustionProcess();
+                  setIsPmCemsSupplierModal(false);
+                }}
+              />
+            )}
           </Card>
           <Card
             title={

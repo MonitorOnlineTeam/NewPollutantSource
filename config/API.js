@@ -398,7 +398,7 @@ export const API = {
     AddOrUpdatePointElectronicFenceInfo:
       before + '/MonitorPointApi/AddOrUpdatePointElectronicFenceInfo', //添加更新电子围栏半径信息
   },
-  
+
   // 仪器信息
   InstrumentApi: {
     // 获取站点仪器信息
@@ -1265,7 +1265,6 @@ export const API = {
     // 核查打回
     RepulseCheck: before + '/Clue/RepulseCheck',
 
-
     // 排放口数据来源
     GetPointDataBy: before + '/WarningV2/GetPointDataBy',
     // 停运参数管理列表
@@ -1282,11 +1281,17 @@ export const API = {
     GetPmCemsSupplierCode: before + '/StatePointApi/GetPmCemsSupplierCode',
     // 修改燃烧工艺
     UpdatePmCemsSupplier: before + '/StatePointApi/UpdatePmCemsSupplier',
+    // 自动选配燃烧工艺
+    AutoPmCemsSupplier: before + '/StatePointApi/AutoPmCemsSupplier',
+    // 备案参数管理
+    GetParamCheckList: before + '/StatePointApi/GetParamCheckList',
 
     /*实时数据异常识别及管理*/
     //异常线索清单
     //线索分析
     GetClueDatas: before + '/Clue/GetClueDatas', //工作台信息
+    // 暂停线索时段
+    GetPauseWarningList: before + '/Clue/GetPauseWarningList',
     //生成核查任务
     GetWaitCheckDatas: before + '/Clue/GetWaitCheckDatas', //获取生产核查任务信息
     GetPreTakeFlagDatas: before + '/Clue/GetPreTakeFlagDatas', //获取庄家意见信息
@@ -1312,6 +1317,7 @@ export const API = {
     AccessEmissionStandardList: before + '/DataFormatBaseDataApi/AccessEmissionStandardList', //接入站点污染物排放信息执行
     AccessMonitorPollutantList: before + '/DataFormatBaseDataApi/AccessMonitorPollutantList', //接入站点污染物关联信息执行
     AccessHourData: before + '/DataFormatBaseDataApi/AccessHourData', //接入小时数据执行
+    AccessPreprocessing: before + '/DataFormatBaseDataApi/AccessPreprocessing', //清洗工况数据
     //清洗数据
     GetProjectLogsList: before + '/ProjectMonitorDataApi/GetProjectLogsList', //企业信息、排放口信息、备案参数日志信息
     GetProjectLogsInfoList: before + '/ProjectMonitorDataApi/GetProjectLogsInfoList', //企业信息、排放口信息、备案参数日志详情信息
@@ -1341,7 +1347,7 @@ export const API = {
     ScanningConditions: before + '/StatePointApi/ScanningConditions', // 扫描工况
     CalculateDistance: before + '/StatePointApi/CalculateDistance', // 计算排口距离
     AutoModelDelection: before + '/StatePointApi/AutoModelDelection', // 自动匹配模型
-    
+    CheckProcess: before + '/StatePointApi/CheckProcess', // 燃烧工艺
   },
   // 唐银钢铁Api
   TYGTApi: {
@@ -2074,8 +2080,8 @@ export const API = {
     AddSetLongInAppRole: before + '/RoleApi/AddSetLongInAppRole', //设置允许登录的APP角色
     GetSetRoleId: before + '/RoleApi/GetSetRoleId', //获取行政区获取点位角色信息
     AddSetRole: before + '/RoleApi/AddSetRole', //设置行政区获取点位角色
-    GetRolePushInfo : before + '/RoleApi/GetRolePushInfo', // 获取角色设置推送信息
-    UpdPushInfo : before + '/RoleApi/UpdPushInfo', //更改角色设置推送信息
+    GetRolePushInfo: before + '/RoleApi/GetRolePushInfo', // 获取角色设置推送信息
+    UpdPushInfo: before + '/RoleApi/UpdPushInfo', //更改角色设置推送信息
     /*用户权限*/
     InsertPointFilterByUser: before + '/AuthorizeApi/InsertPointFilterByUser', //给当前人员添加排口权限（可批量）
     /*用户恢复*/

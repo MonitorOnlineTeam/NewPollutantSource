@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-09-06 09:58:08
+ * @Last Modified time: 2024-09-18 15:38:41
  * @Description：线索列表
  */
 
@@ -191,20 +191,20 @@ const CluesList = props => {
     });
   };
 
-  // 根据模型类型编号获取模型id
-  const getModelIdsByModelNumber = isInitValue => {
-    if (!modelNumber) return;
+  // // 根据模型类型编号获取模型id
+  // const getModelIdsByModelNumber = isInitValue => {
+  //   if (!modelNumber) return;
 
-    let modelIds = ModelNumberIdsDatas[modelNumber];
-    // 初始化场景类别默认值
-    isInitValue &&
-      form.setFieldsValue({
-        warningTypeCode: modelIds,
-      });
+  //   let modelIds = ModelNumberIdsDatas[modelNumber];
+  //   // 初始化场景类别默认值
+  //   isInitValue &&
+  //     form.setFieldsValue({
+  //       warningTypeCode: modelIds,
+  //     });
 
-    // setModelIdDatas(modelIds);
-    // return modelIds;
-  };
+  //   // setModelIdDatas(modelIds);
+  //   // return modelIds;
+  // };
 
   const getColumns = () => {
     return [
