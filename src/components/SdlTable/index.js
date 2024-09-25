@@ -384,7 +384,7 @@ class SdlTable extends PureComponent {
         width:
           !col.width && this.props.autowidth && col.title != '序号'
             ? (document.getElementById('sdlTable')?.clientWidth - 54) / (columns.length - 1)
-            : column.width, //自适应除序号列表格宽度并且能伸缩
+            : column.width, //自适应除序号列表格宽度 其他列能伸缩
         onResize: resizable ? this.handleResize(index) : undefined,
       }),
     }));
@@ -447,8 +447,11 @@ class SdlTable extends PureComponent {
             dataSource={dragable ? this.state.dataSource : this.props.dataSource}
             {..._props}
             scroll={
-              this.props.scroll === false
+              this.props.scroll === false // || this.props.dataSource?.length==0
                 ? {}
+                :
+                this.props.dataSource?.length==0?
+                 {x:'100%',y:undefined}
                 : {
                     x:
                       (this.props.scroll && this.props.scroll.x && this.props.scroll.x) ||

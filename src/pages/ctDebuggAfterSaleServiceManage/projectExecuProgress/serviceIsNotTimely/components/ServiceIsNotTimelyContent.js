@@ -54,8 +54,11 @@ const ServiceIsNotTimely = props => {
     return {
       ...values,
       time: undefined,
+      time2:undefined,
       registerBeginTime: values.time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
       registerEndTime: values.time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      LeaveBtime: values.time2?.[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      LeaveEtime: values.time2?.[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
       serviceType: serviceType,
       isAll: isAll ? 0 : 1,
     };
@@ -179,6 +182,13 @@ const ServiceIsNotTimely = props => {
         width: 180,
       },
       {
+        title: '离开现场时间',
+        dataIndex: 'LeaveDate',
+        key: 'LeaveDate',
+        ellipsis: true,
+        width: 180,
+      },
+      {
         title: '客户服务需求时间',
         dataIndex: 'NeedDate',
         key: 'NeedDate',
@@ -205,7 +215,7 @@ const ServiceIsNotTimely = props => {
         ellipsis: true,
         width: 240,
         render: (text, record) => {
-          return <Tooltip title={text}>{text}</Tooltip>;
+          return <Tooltip placement='left' title={text}>{text}</Tooltip>;
         },
       },
       {
@@ -295,7 +305,7 @@ const ServiceIsNotTimely = props => {
           // labelCol={{ span: 5 }}
           // wrapperCol={{ span: 18 }}
           labelCol={{
-            flex: '90px',
+            flex: '108px',
           }}
           wrapperCol={{
             flex: 1,
@@ -346,6 +356,14 @@ const ServiceIsNotTimely = props => {
                 />
               </Form.Item>
             </Col>
+            <Col span={8}>
+                <Form.Item name="time2" label="离开现场时间">
+                <RangePicker_
+                  style={{ width: '100%' }}
+                  format="YYYY-MM-DD"
+                />
+                </Form.Item>
+              </Col>
           </Row>
         </Form>
         <Space style={{ marginLeft: 10 }}>

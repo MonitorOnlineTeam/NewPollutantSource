@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-18 10:32:08
  * @LastEditors: outman0611
- * @LastEditTime: 2024-08-29 08:59:17
+ * @LastEditTime: 2024-09-24 09:37:19
  * @Description: 导航树
  */
 import React, { Component } from 'react';
@@ -26,6 +26,7 @@ import {
   Spin,
   Tag,
   Space,
+  Checkbox,
 } from 'antd';
 import { connect } from 'dva';
 import $ from 'jquery';
@@ -86,7 +87,7 @@ const styleNor = {
   padding: 3,
   borderColor: '#1990fc',
   cursor: 'pointer',
-  marginLeft: 5,
+  // marginLeft: 5,
 };
 const styleFor = {
   border: '1px solid',
@@ -94,7 +95,7 @@ const styleFor = {
   padding: 3,
   borderColor: '#001529',
   cursor: 'pointer',
-  marginLeft: 5,
+  // marginLeft: 5,
 };
 
 @connect(({ navigationtree, loading, global }) => ({
@@ -123,8 +124,8 @@ class NavigationTree extends Component {
       PollutantTypes: this.props.configInfo?.IsOpera && this.pollutantType ? this.pollutantType : this.props.checkpPol
         ? this.props.checkpPol
         : this.props.defaultPollutant === 'undefined'
-        ? 'undefined'
-        : '',
+          ? 'undefined'
+          : '',
       Status: '',
       RegionCode: '',
       right: floats == 'topmenu' ? 'caret-left' : 'caret-right',
@@ -154,6 +155,7 @@ class NavigationTree extends Component {
         2: 0,
         3: 0,
       },
+      isGrab:0,
       // panelSelKey:"",
       panelColumn: [
         {
@@ -179,8 +181,8 @@ class NavigationTree extends Component {
                     停运
                   </Tag>
                 ) : (
-                  ''
-                )}
+                    ''
+                  )}
               </span>
             </div>
           ),
@@ -197,8 +199,8 @@ class NavigationTree extends Component {
                   style={{ color: this.getColor(record.Status), fontSize: '20px', margin: '0 4px' }}
                 />
               ) : (
-                ''
-              )}
+                  ''
+                )}
               {!!props.noticeList.find(m => m.DGIMN === record.key) && (
                 <div className={styles.bell}>
                   <BellIcon
@@ -618,6 +620,7 @@ class NavigationTree extends Component {
         industryTypeCode: this.state.industryTypeCode,
         StopPointFlag: this.state.stopPointFlag,
         DataType: this.state.dataType,
+        IsGrab:this.state.isGrab,
         ...this.props.propsParams,
       },
       callback: data => {
@@ -625,7 +628,34 @@ class NavigationTree extends Component {
       },
     });
   };
-
+  filterGrabChange = (value) =>{//过滤抓取点位
+    this.setState({
+      isGrab: value ? 1 : 0,
+      pageIndex: 1,
+    },()=>{
+      this.props.dispatch({
+        type: 'navigationtree/getentandpoint',
+        payload: {
+          PollutantTypes: this.state.PollutantTypes,
+          RegionCode: value,
+          Name: this.state.Name,
+          Status: this.state.screenList,
+          RunState: this.state.RunState,
+          isFilter: this.props.isMap,
+          // PageIndex: 1,
+          // PageSize: this.state.pageSize,
+          industryTypeCode: this.state.industryTypeCode,
+          StopPointFlag: this.state.stopPointFlag,
+          DataType: this.state.dataType,
+          IsGrab:this.state.isGrab,
+          ...this.props.propsParams,
+        },
+        callback: data => {
+          this.loadCallback(data);
+        },
+      });
+    });
+  }
   changeRegion = value => {
     //行政区筛选
     this.setState({
@@ -646,6 +676,7 @@ class NavigationTree extends Component {
         industryTypeCode: this.state.industryTypeCode,
         StopPointFlag: this.state.stopPointFlag,
         DataType: this.state.dataType,
+        IsGrab:this.state.isGrab,
         ...this.props.propsParams,
       },
       callback: data => {
@@ -746,8 +777,8 @@ class NavigationTree extends Component {
     let tempEntAndPoint = entList.length
       ? entList
       : pointResultList.length
-      ? pointResultList
-      : DGIMNResultList;
+        ? pointResultList
+        : DGIMNResultList;
     if (msg) {
       let expandedKeys = tempEntAndPoint.map(item => item.key);
       this.setState({
@@ -789,7 +820,7 @@ class NavigationTree extends Component {
             'all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1)';
           tabsElement
             ? (tabsElement.style.transition =
-                'all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1)')
+              'all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1)')
             : undefined;
         }
       },
@@ -896,6 +927,7 @@ class NavigationTree extends Component {
         industryTypeCode: this.state.industryTypeCode,
         StopPointFlag: this.state.stopPointFlag,
         DataType: this.state.dataType,
+        IsGrab:this.state.isGrab,
         ...this.props.propsParams,
       },
       callback: data => {
@@ -1178,7 +1210,7 @@ class NavigationTree extends Component {
 
   render() {
     const { searchValue, expandedKeys, autoExpandParent, stateNumber } = this.state;
-    const { configInfo, showIndustry } = this.props;
+    const { configInfo, showIndustry, type, isSdlOpera } = this.props;
     // 渲染数据及企业排口图标和运行状态
     const loop = data =>
       data.map((item, idx) => {
@@ -1193,8 +1225,8 @@ class NavigationTree extends Component {
               {afterStr}
             </span>
           ) : (
-            <span style={{ marginLeft: 3 }}>{item.title}</span>
-          );
+              <span style={{ marginLeft: 3 }}>{item.title}</span>
+            );
         if (item.Type == '0') {
           return (
             <TreeNode
@@ -1221,8 +1253,8 @@ class NavigationTree extends Component {
                       }}
                     />
                   ) : (
-                    ''
-                  )}
+                      ''
+                    )}
                 </div>
               }
               key={item.key}
@@ -1233,12 +1265,13 @@ class NavigationTree extends Component {
           );
         }
         if (item.Type == '1') {
+          const isSdlOperaGrab = isSdlOpera && item.IsGrab;
           return (
             <TreeNode
               style={{ width: '100%' }}
               title={
                 <div style={{ width: '254px', position: 'relative' }}>
-                  <div className={styles.titleStyle} title={item.title} style={{ width: 210 }}>
+                  <div className={styles.titleStyle} title={item.title} style={{ width: isSdlOperaGrab? 200 : 210 }}>
                     {this.getPollutantIcon(item.PollutantType, 16)}
                     {title}
                     {item.outPutFlag == 1 ? (
@@ -1246,22 +1279,27 @@ class NavigationTree extends Component {
                         停运
                       </Tag>
                     ) : (
-                      ''
-                    )}
+                        ''
+                      )}
                   </div>
-                  {item.IsEnt == 0 && item.Status != -1 ? (
+                  {isSdlOperaGrab ?
+                    <Tag line-height={18} color="#1890ff">
+                      抓取
+                  </Tag>
+                  :
+                  item.IsEnt == 0 && item.Status != -1 ? (
                     <LegendIcon
-                      style={{
-                        color: this.getColor(item.Status),
-                        fontSize: '20px',
-                        // height: 10,
-                        float: 'right',
-                        marginTop: 2,
-                        marginRight: 10,
-                        position: 'absolute',
-                        right: 10,
-                      }}
-                    />
+                    style={{
+                      color: this.getColor(item.Status),
+                      fontSize: '20px',
+                      // height: 10,
+                      float: 'right',
+                      marginTop: 2,
+                      marginRight: 10,
+                      position: 'absolute',
+                      right: 10,
+                    }}
+                  />
                   ) : (
                     ''
                   )}
@@ -1279,8 +1317,8 @@ class NavigationTree extends Component {
                       />
                     </div>
                   ) : (
-                    ''
-                  )}
+                      ''
+                    )}
                 </div>
               }
               key={item.key}
@@ -1322,7 +1360,7 @@ class NavigationTree extends Component {
             marginTop: 64,
           }}
         >
-          <div style={{ marginBottom: 15 }}>
+          <div style={{ marginBottom: 8 }}>
             <Row style={{ textAlign: 'center' }}>
               <Col
                 span={5}
@@ -1453,18 +1491,29 @@ class NavigationTree extends Component {
               </Col>
             </Row>
           </div>
-          <Space direction="vertical">
+          <Space direction="vertical" size={8}  className={styles.spaceSearchSty}>
             {// 企业项目不显示行政区
-            !configInfo.IsSingleEnterprise && (
-              <RegionList
-                style={{ width: '100%' }}
-                spinSty={{ top: -4 }}
-                changeRegion={this.changeRegion}
-                RegionCode={this.state.RegionCode}
-              />
-            )}
+              isSdlOpera ? //运维平台 SDL运维
+                <Row justify='space-between' align='middle'>
+                  <RegionList
+                    style={{ width: 'calc(100% - 122px)' }}
+                    spinSty={{ top: -4 }}
+                    changeRegion={this.changeRegion}
+                    RegionCode={this.state.RegionCode}
+                  />
+                  <Checkbox onChange={(e)=>this.filterGrabChange(e.target.checked) }>过滤抓取点位</Checkbox>
+                </Row>
+                :
+                !configInfo.IsSingleEnterprise && (
+                  <RegionList
+                    style={{ width: '100%' }}
+                    spinSty={{ top: -4 }}
+                    changeRegion={this.changeRegion}
+                    RegionCode={this.state.RegionCode}
+                  />
+                )}
 
-            {!this.props.polShow ? (
+            {!this.props.polShow && !isSdlOpera? ( //运维拆分废气废水系统后不用展示
               <SelectPollutantType
                 // mode="multiple"
                 singleHidden
@@ -1474,9 +1523,9 @@ class NavigationTree extends Component {
                 onChange={this.handleChange}
               />
             ) : (
-              ''
-            )}
-            {this.props.type == 'ent' ? (
+                ''
+              )}
+            {/* {type == 'ent' ? ( //运维分废气废水子系统后 已经弃用
               <Select
                 style={{ width: '100%' }}
                 onChange={this.handleChange}
@@ -1490,7 +1539,7 @@ class NavigationTree extends Component {
                   废气
                 </Option>
               </Select>
-            ) : null}
+            ) : null}  */}
             {showIndustry && (
               <SearchSelect
                 placeholder="请选择行业"
@@ -1529,7 +1578,7 @@ class NavigationTree extends Component {
               </Radio.Group>
             </div>
           </Space>
-          <Divider />
+          <Divider style={{margin:'8px 0 6px 0'}}/>
           {this.state.treeVis ? (
             <div>
               {this.props.EntAndPointLoading ? (
@@ -1544,78 +1593,77 @@ class NavigationTree extends Component {
                   size="large"
                 />
               ) : (
-                <div>
-                  {this.state.EntAndPoint.length ? (
-                    <Tree
-                      data-id="mytree"
-                      selectable={!this.props.choice}
-                      checkable={this.props.choice}
-                      onCheck={this.onCheck}
-                      checkedKeys={this.state.checkedKeys}
-                      onSelect={this.onSelect}
-                      selectedKeys={this.state.selectedKeys}
-                      style={{
-                        // marginTop: '5%',
-                        maxHeight: 'calc(100vh - 320px)',
-                        overflow: 'hidden',
-                        overflowY: 'auto',
-                        width: '100%',
-                      }}
-                      onExpand={this.onExpand}
-                      // expandedKeys={expandedKeys}
-                      {..._props}
-                      autoExpandParent={autoExpandParent}
-                    >
-                      {loop(this.state.EntAndPoint)}
-                    </Tree>
-                  ) : (
-                    <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                  )}
-                </div>
-              )}
+                  <div>
+                    {this.state.EntAndPoint.length ? (
+                      <Tree
+                        data-id="mytree"
+                        selectable={!this.props.choice}
+                        checkable={this.props.choice}
+                        onCheck={this.onCheck}
+                        checkedKeys={this.state.checkedKeys}
+                        onSelect={this.onSelect}
+                        selectedKeys={this.state.selectedKeys}
+                        style={{
+                          // marginTop: '5%',
+                          maxHeight: `calc(100vh - 229px - ${showIndustry? '39px' : '0px'} - ${isSdlOpera? '0px' : '39px'})`,
+                          overflow: 'hidden',
+                          overflowY: 'auto',
+                          width: '100%',
+                        }}
+                        onExpand={this.onExpand}
+                        // expandedKeys={expandedKeys}
+                        {..._props}
+                        autoExpandParent={autoExpandParent}
+                      >
+                        {loop(this.state.EntAndPoint)}
+                      </Tree>
+                    ) : (
+                        <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                      )}
+                  </div>
+                )}
             </div>
           ) : (
-            <div>
-              {this.props.EntAndPointLoading ? (
-                <Spin
-                  style={{
-                    width: '100%',
-                    height: 'calc(100vh/2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                  size="large"
-                />
-              ) : (
-                <div id="treeTableWrapper" style={{}}>
-                  {' '}
-                  {this.state.panelDataListAys.length ? (
-                    <Table
-                      id="treeTable"
-                      rowKey="tabKey"
-                      columns={this.state.panelColumn}
-                      dataSource={this.state.panelDataList}
-                      showHeader={false}
-                      pagination={false}
-                      style={{
-                        marginTop: '5%',
-                        maxHeight: 730,
-                        overflow: 'auto',
-                        cursor: 'pointer',
-                        maxHeight: 'calc(100vh - 290px)',
-                      }}
-                      onRow={this.onClickRow}
-                      rowClassName={this.setRowClassName}
-                      size="small"
-                    ></Table>
-                  ) : (
-                    <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+              <div>
+                {this.props.EntAndPointLoading ? (
+                  <Spin
+                    style={{
+                      width: '100%',
+                      height: 'calc(100vh/2)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                    size="large"
+                  />
+                ) : (
+                    <div id="treeTableWrapper" style={{}}>
+                      {' '}
+                      {this.state.panelDataListAys.length ? (
+                        <Table
+                          id="treeTable"
+                          rowKey="tabKey"
+                          columns={this.state.panelColumn}
+                          dataSource={this.state.panelDataList}
+                          showHeader={false}
+                          pagination={false}
+                          style={{
+                            marginTop: 2,
+                            overflow: 'auto',
+                            cursor: 'pointer',
+                            maxHeight: `calc(100vh - 234px - ${showIndustry? '39px' : '0px'} - ${isSdlOpera? '0px' : '39px'})`,
+                          }}
+                          onRow={this.onClickRow}
+                          rowClassName={this.setRowClassName}
+                          size="small"
+                        ></Table>
+                      ) : (
+                          <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        )}
+                    </div>
                   )}
-                </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
         </Drawer>
         <div
           visible

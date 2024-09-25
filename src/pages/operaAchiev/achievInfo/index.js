@@ -618,7 +618,7 @@ const Index = (props) => {
 
       <Row>
         <Form.Item label='统计月份' name='Month' className='form2ItemWidth'>
-          <DatePicker picker="month" allowClear={false} style={{ width: 195 }} />
+          <DatePicker picker="month" allowClear={false} style={{ width: 228 }} />
         </Form.Item>
         <Form.Item label='员工编号' name='UserAccount'>
           <Input placeholder='请输入' allowClear={true} />
@@ -663,7 +663,7 @@ const Index = (props) => {
 
       <Row>
         <Form.Item label='统计月份' name='Month' className='form_label_width_69'>
-          <DatePicker picker="month" allowClear={false} style={{ width: 195 }} />
+          <DatePicker picker="month" allowClear={false} style={{ width: 228 }} />
         </Form.Item>
         <Form.Item label='员工编号' name='UserAccount'>
           <Input placeholder='请输入' allowClear={true} />

@@ -64,7 +64,7 @@ const Index = (props) => {
   return (
     <div className={styles.supervisionSty}>
     <BreadcrumbWrapper>
-    <Card>
+    <Card size='small'>
     <Tabs tabPosition={'left'}>
           <TabPane tab="督查类别清单" key="1">
             <Category />

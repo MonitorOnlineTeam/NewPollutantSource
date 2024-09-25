@@ -20,7 +20,6 @@ import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import LargeRegionList from '@/pages/ctDebuggAfterSaleServiceManage/components/largeRegionList';
 import { virtualTransMergeMap } from '@/pages/ctDebuggAfterSaleServiceManage/utils/utils';
 import VirtualTable from '@/components/VirtualTable';
 
@@ -112,12 +111,12 @@ const Index = props => {
   const typeClick = (record) => {
     setIsModalOpen(true);
     form.setFieldsValue({
-      solveStatus:record.solveStatus,
-      serviceAreaCode:record.serviceAreaCode,
-      time:record.btime && record.etime? [moment(record.btime),moment(record.etime) ] : [ moment(moment(disposableDate).format('YYYY')).startOf('year'),moment(moment(disposableDate)).endOf('year')],
-      questionID:record.QuestionID,
+      solveStatus: record.solveStatus,
+      serviceAreaCode: record.serviceAreaCode,
+      time: record.btime && record.etime ? [moment(record.btime), moment(record.etime)] : [moment(moment(disposableDate).format('YYYY')).startOf('year'), moment(moment(disposableDate)).endOf('year')],
+      questionID: record.QuestionID,
     });
-    setTimeout(()=>{
+    setTimeout(() => {
       handleTableChange(1, 20);
     })
   }
@@ -129,7 +128,7 @@ const Index = props => {
     let columnList = disposableRateList?.ColumnList ? disposableRateList.ColumnList.map(item => {
       return {
         title: item.LargeRegion,
-        children: [ 
+        children: [
           {
             title: '总次数',
             code: `count${item.ID}`,
@@ -137,7 +136,7 @@ const Index = props => {
             width: 120,
             align: 'center',
             render: (text, record) => {
-              return <TypeRenderComponents record={{text:text,solveStatus:'', serviceAreaCode:item.ID, ...record }}  />
+              return <TypeRenderComponents record={{ text: text, solveStatus: '', serviceAreaCode: item.ID, ...record }} />
             }
           },
           {
@@ -147,7 +146,7 @@ const Index = props => {
             width: 120,
             align: 'center',
             render: (text, record) => {
-              return <TypeRenderComponents record={{text:text,solveStatus:1, serviceAreaCode:item.ID, ...record}}  />
+              return <TypeRenderComponents record={{ text: text, solveStatus: 1, serviceAreaCode: item.ID, ...record }} />
             }
           },
           {
@@ -157,7 +156,7 @@ const Index = props => {
             width: 120,
             align: 'center',
             render: (text, record) => {
-              return <TypeRenderComponents record={{text:text, solveStatus:0,serviceAreaCode:item.ID, ...record}}  />
+              return <TypeRenderComponents record={{ text: text, solveStatus: 0, serviceAreaCode: item.ID, ...record }} />
             }
           },
           {
@@ -195,7 +194,7 @@ const Index = props => {
         code: 'sort',
         key: 'sort',
         lock: true,
-        getCellProps: (text, record, index) => ({colSpan: text === '总计' ? 0 : 1 })
+        getCellProps: (text, record, index) => ({ colSpan: text === '总计' ? 0 : 1 })
         // fixed: 'left',
         // render: (text, record, index) => {
         //   return {
@@ -210,7 +209,7 @@ const Index = props => {
         key: 'reasonName',
         width: 200,
         lock: true,
-        getCellProps: (text, record, index) => ({colSpan: text === '总计' ? 0 : 1 })
+        getCellProps: (text, record, index) => ({ colSpan: text === '总计' ? 0 : 1 })
         // fixed: 'left',
         // render: (text, record, index) => {
         //   return {
@@ -232,7 +231,7 @@ const Index = props => {
             align: 'center',
             // fixed: 'left',
             render: (text, record) => {
-              return <TypeRenderComponents record={{text:text,solveStatus:'',  ...record }}  />
+              return <TypeRenderComponents record={{ text: text, solveStatus: '', ...record }} />
             }
           },
           {
@@ -243,7 +242,7 @@ const Index = props => {
             align: 'center',
             // fixed: 'left',
             render: (text, record) => {
-              return <TypeRenderComponents record={{text:text,solveStatus:1, ...record}}  />
+              return <TypeRenderComponents record={{ text: text, solveStatus: 1, ...record }} />
             }
           },
           {
@@ -254,7 +253,7 @@ const Index = props => {
             align: 'center',
             // fixed: 'left',
             render: (text, record) => {
-              return <TypeRenderComponents record={{text:text,solveStatus:0, ...record}}  />
+              return <TypeRenderComponents record={{ text: text, solveStatus: 0, ...record }} />
             }
           },
           {
@@ -301,12 +300,65 @@ const Index = props => {
         ellipsis: true,
         width: 180,
       },
+      // {
+      //   title: '最终用户',
+      //   dataIndex: 'CustomEnt',
+      //   key: 'CustomEnt',
+      //   ellipsis: true,
+      //   width: 180,
+      // },
       {
         title: '服务大区',
         dataIndex: 'serviceAreaName',
         key: 'serviceAreaName',
         ellipsis: true,
+        width: 150,
       },
+      // {
+      //   title: '开始时间',
+      //   dataIndex: 'BeginTime',
+      //   key: 'BeginTime',
+      //   ellipsis: true,
+      //   width: 180,
+      //   align: 'center',
+      // },
+      // {
+      //   title: '结束时间',
+      //   dataIndex: 'EndTime',
+      //   key: 'EndTime',
+      //   ellipsis: true,
+      //   width: 180,
+      //   align: 'center',
+      // },
+      // {
+      //   title: '企业名称',
+      //   dataIndex: 'EntName',
+      //   key: 'EntName',
+      //   ellipsis: true,
+      //   align: 'center',
+      //   width: 180,
+      // },
+      // {
+      //   title: '监测点名称',
+      //   dataIndex: 'PointName',
+      //   key: 'PointName',
+      //   ellipsis: true,
+      //   align: 'center',
+      //   width: 180,
+      // },
+      // {
+      //   title: '设备型号',
+      //   dataIndex: 'questionName',
+      //   key: 'questionName',
+      //   ellipsis: true,
+      // },
+      // {
+      //   title: '服务时长（小时）',
+      //   dataIndex: 'ServiceTime',
+      //   key: 'ServiceTime',
+      //   ellipsis: true,
+      //   align: 'center',
+      // },
       {
         title: '服务工程师',
         dataIndex: 'workerName',
@@ -326,7 +378,7 @@ const Index = props => {
         ellipsis: true,
       },
       {
-        title: '问题解决状态',
+        title: '是否解决',
         dataIndex: 'solveStatusName',
         key: 'solveStatusName',
         ellipsis: true,
@@ -346,6 +398,18 @@ const Index = props => {
         key: 'leaveDate',
         ellipsis: true,
       },
+      // {
+      //   title: '填报人',
+      //   dataIndex: 'CreateUserName',
+      //   key: 'CreateUserName',
+      //   ellipsis: true,
+      // },
+      // {
+      //   title: '填报时间',
+      //   dataIndex: 'CreateTime',
+      //   key: 'CreateTime',
+      //   ellipsis: true,
+      // },
     ];
 
     return columns;
@@ -402,16 +466,16 @@ const Index = props => {
         dataSource={disposableRateList?.TableList || []}
         columns={getColumns()}
         className={'first_white'}
-        // align="center"
-        // scroll={{
-        //   y: 500,
-        // }}
-        // pagination={false}
+      // align="center"
+      // scroll={{
+      //   y: 500,
+      // }}
+      // pagination={false}
       />
 
       <Modal
         title={`${disposableDate && moment(disposableDate).format('YYYY年')}质保内服务一次解决率基础数据`}
-        wrapClassName={`spreadOverModal ${styles.modalSty}`}
+        wrapClassName={`spreadOverModal ${styles.modalSty} queryCriterTitleSty`}
         visible={isModalOpen}
         destroyOnClose
         footer={null}
@@ -419,8 +483,9 @@ const Index = props => {
         onCancel={() => {
           onCancel();
         }}
+
       >
-       <Form
+        <Form
           id="searchForm"
           form={form}
           initialValues={{
@@ -428,35 +493,54 @@ const Index = props => {
             solveStatus: '',
           }}
           autoComplete="off"
-          style={{ marginTop: 10, marginBottom: 10 }}
         >
-         <Row>
+          <Row>
+            {/* <Col span={8}>
+              <Form.Item name="num" label="派工单号">
+                <Input placeholder="请输入" allowClear />
+              </Form.Item>
+            </Col> */}
+            <Col span={8} >
+              <Form.Item name='projectCode' label='项目编号' className='form_label_width_97'>
+                <Input placeholder="请输入" allowClear />
+              </Form.Item>
+            </Col>
+            <Col span={8} >
+              <Form.Item name='projectName' label='项目名称'>
+                <Input placeholder="请输入" allowClear />
+              </Form.Item>
+            </Col>
+            {/* <Col span={8}>
+              <Form.Item name='customEnt'  label='最终用户' >
+                <Input placeholder="请输入" allowClear />
+              </Form.Item>
+            </Col> 
             <Col span={8}>
-              <Form.Item name='time' label='离开现场时间' style={{ paddingRight: 8 }}>
-                <RangePicker_ style={{ width: '100%' }}
-                  allowClear={false}
-                  showTime={false}
-                  format="YYYY-MM-DD"
-                />
+              <Form.Item name='serviceAreaCode'  label='服务大区'  className='form_label_width_97'>
+                <Select placeholder='请选择' allowClear fieldNames={{label:'LargeRegion',value:'ID'}} options={disposableRateList?.ColumnList} />
               </Form.Item>
             </Col>
-            <Col span={8} >
-              <Form.Item name='projectCode' label='项目编号' style={{ paddingRight: 8 }}>
-                <Input placeholder="请输入" allowClear />
+            <Col span={8}>
+              <Form.Item name='questionID'  label='设备型号' >
+               <Select placeholder='请选择' allowClear fieldNames={{label:'reasonName',value:'reasonName'}} options={disposableRateList?.TimeoutReasonAnalysis} />
               </Form.Item>
-            </Col>
-            <Col span={8} >
-              <Form.Item name='projectName' label='项目名称' style={{ paddingRight: 8 }}>
-                <Input placeholder="请输入" allowClear />
-              </Form.Item>
-            </Col>
-            <Col>
-              <Form.Item name='solveStatus' label='解决状态' className='minWidth' >
+            </Col>*/}
+            <Col span={8}>
+              <Form.Item name='solveStatus' label='解决状态'  >
                 <Radio.Group>
                   <Radio value={''}>全部</Radio>
                   <Radio value={1}>已解决</Radio>
                   <Radio value={0}>未解决</Radio>
                 </Radio.Group>
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name='time' label='离开现场时间'>
+                <RangePicker_ style={{ width: '100%' }}
+                  allowClear={false}
+                  showTime={false}
+                  format="YYYY-MM-DD"
+                />
               </Form.Item>
             </Col>
             <Col>
@@ -485,9 +569,9 @@ const Index = props => {
               </Form.Item>
             </Col>
           </Row>
-          <Form.Item name='serviceAreaCode' hidden> </Form.Item>
-          <Form.Item name='questionID' hidden> </Form.Item>
-        </Form> 
+           <Form.Item name='serviceAreaCode' hidden> </Form.Item>
+           <Form.Item name='questionID' hidden> </Form.Item> 
+        </Form>
         <SdlTable
           loading={basicsLoading}
           dataSource={basicsDataSource}

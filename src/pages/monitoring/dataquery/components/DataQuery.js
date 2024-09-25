@@ -197,12 +197,16 @@ class DataQuery extends Component {
     if (checked !== 'chart') {
       this.setState({
         displayType: 'table',
-        displayName: '查看图表',
+        displayName: '查看数据',
+      },()=>{
+        this.reloaddatalist();
       });
     } else {
       this.setState({
         displayType: 'chart',
-        displayName: '查看数据',
+        displayName: '查看图表',
+      },()=>{
+        this.reloaddatalist();
       });
     }
   };
@@ -285,7 +289,6 @@ class DataQuery extends Component {
         DGIMN: this.props.DGIMN,
       };
     }
-
     dispatch({
       type: 'dataquery/queryhistorydatalist',
       payload: {
@@ -294,6 +297,7 @@ class DataQuery extends Component {
         IsSupplyData: dataStatus ? undefined : IsSupplyData,
         dataStatus: dataStatus,
         ...queryParams,
+        displayType:this.state.displayType,
         // DGIMN: historyparams.DGIMN || this.props.DGIMN,
       },
     });
@@ -431,12 +435,13 @@ class DataQuery extends Component {
   };
 
   // 重置分页
-  onResetPage = () => {
+  onResetPage = (pagePar) => {
     let { historyparams, dispatch } = this.props;
     historyparams = {
       ...historyparams,
       pageIndex: 1,
       pageSize: 20,
+      ...pagePar
     };
     this.props.dispatch({
       type: 'dataquery/updateState',

@@ -5,11 +5,11 @@
   "description": "An out-of-box UI solution for enterprise applications",
   "scripts": {
     "analyze": "cross-env ANALYZE=1 umi build",
-    "build": "umi build",
+    "build": "SET NODE_OPTIONS=--openssl-legacy-provider && umi build",
     "fetch:blocks": "fetch-blocks",
     "format-imports": "import-sort --write '**/*.{js,jsx,ts,tsx}'",
     "prettier": "prettier -c --write **/*",
-    "start": "umi dev",
+    "start": "SET NODE_OPTIONS=--openssl-legacy-provider && umi dev",
     "start:no-mock": "cross-env MOCK=none umi dev"
   },
   "browserslist": [

@@ -976,6 +976,8 @@ class Index extends PureComponent {
             dataSource={tableDataSource}
             columns={columns}
             loading={loading}
+            scroll={{y:'calc(100vh - 326px)'}}
+            pagination={false}
           />
         </Card>
         <Modal

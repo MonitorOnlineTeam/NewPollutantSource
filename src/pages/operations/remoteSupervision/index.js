@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-06-11 14:29:31
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-03 14:03:40
+ * @LastEditTime: 2024-09-06 17:17:36
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Timeline } from 'antd';
@@ -1053,12 +1053,12 @@ const Index = (props) => {
           if (val.Special == 1) { //有显示屏
             echoForamt(code, val, item)
             setIsDisPlayCheck1(true)
-            // isDisplayChange({ target: { checked: true } }, 'isDisplay1', 'firstDefault')
+            isDisplayChange({ target: { checked: true } }, 'isDisplay1', 'firstDefault')
             onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1)
           }
           if (val.Special == 2) { //无显示屏
             echoForamt(`${code}a`, val, item)
-            // isDisplayChange({ target: { checked: true } }, 'isDisplay2', 'firstDefault')
+            isDisplayChange({ target: { checked: true } }, 'isDisplay2', 'firstDefault')
             onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}a` }, `${code}aRangCheck`, 1)
 
           }
@@ -1091,18 +1091,18 @@ const Index = (props) => {
         }
         if (val.Special == 1) { //差压法
           echoForamt(code, val, item, isImport)
-          // isDisplayChange2({ target: { checked: true } }, 'isDisplay3', 'firstDefault')
+          isDisplayChange2({ target: { checked: true } }, 'isDisplay3', 'firstDefault')
           onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1)
         } else if (val.Special == 2) { //直测流速法
           echoForamt(`${code}b`, val, item, isImport)
-          // isDisplayChange2({ target: { checked: true } }, 'isDisplay4', 'firstDefault')
+          isDisplayChange2({ target: { checked: true } }, 'isDisplay4', 'firstDefault')
           onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}b` }, `${code}bRangCheck`, 1)
 
         }
 
       } else {
         echoForamt(code, val, item, isImport)
-        // onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1) //编辑 手工修正结果 量程一致性
+        onManualChange(val.RangeStatus && [val.RangeStatus], { ...val, par: `${code}` }, `${code}RangCheck`, 1) //编辑 手工修正结果 量程一致性
         !isImport && onManualChange(val.CouStatus && [val.CouStatus], { ...val, par: `${code}` }, `${code}RangCheck2`, 2)//编辑 手工修正结果 实时数据
 
       }

@@ -1,8 +1,8 @@
 /*
  * @Author: outman0611 jia_anbo@163.com
  * @Date: 2024-06-07 10:56:42
- * @LastEditors: outman0611 jia_anbo@163.com
- * @LastEditTime: 2024-08-22 14:17:55
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-09-23 18:29:18
  * @FilePath: \merged_master\src\pages\monitoring\dataquery\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -12,11 +12,15 @@ import NavigationTree from '../../../components/NavigationTree';
 import DataQuery2 from './components/DataQuery2';
 import DataQuery from './components/DataQuery';
 import PageLoading from '@/components/PageLoading';
+import { connect } from 'dva';
 /**
  * 数据查询页面
  * xpy 2019.07.26
  */
-
+@connect(({ userLogin, global, loading }) => ({
+  userLogin,
+  configInfo: global.configInfo,
+}))
 class Index extends Component {
   constructor(props) {
     super(props);
@@ -44,10 +48,13 @@ class Index extends Component {
       location: {
         query: { pollutantCode },
       },
+      configInfo: { IsOpera,IsShowProjectRegion },
     } = this.props;
     console.log('location', this.props.location)
     // 是否显示原始和审核
     const isShowSearchDataType = this.props.location.query.isShowSearchDataType == 1 ? true : false;
+    const isSdlOpera = IsOpera && !IsShowProjectRegion;
+
     return (
       <div id="dataquery">
         <BreadcrumbWrapper titles={`【${title}】`}>
@@ -78,6 +85,8 @@ class Index extends Component {
           runState="1"
           domId="#dataquery"
           choice={false}
+          // type='ent' //运维分废气废水子系统后 已经弃用
+          isSdlOpera={isSdlOpera} //运维平台 SDL运维
           onItemClick={value => {
             if (value.length > 0 && !value[0].IsEnt) {
               console.log('value=', value);

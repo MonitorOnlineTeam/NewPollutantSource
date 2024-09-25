@@ -423,7 +423,7 @@ class Index extends PureComponent {
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
         <Card>
-          <Form layout="inline" style={{ marginBottom: 20 }}>
+          <Form layout="inline" style={{ marginBottom: 14 }}>
             <Row>
               {/* <FormItem label="数据类型">
                 {getFieldDecorator('dataType', {
@@ -478,7 +478,7 @@ class Index extends PureComponent {
               </div>
             </Row>
           </Form>
-          <SdlTable align="center" dataSource={tableDataSource} columns={columns} loading={loading} />
+          <SdlTable align="center" dataSource={tableDataSource} columns={columns} loading={loading}  pagination={false} />
         </Card>
       </BreadcrumbWrapper>
     );

@@ -100,13 +100,13 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '点位类别',
+      title: 'CEMS型号',
       dataIndex: 'PollutantTypeName',
       key: 'PollutantTypeName',
       align: 'center',
     },
     {
-      title: '督查类别',
+      title: '检查项目',
       dataIndex: 'InspectorTypeName',
       key: 'InspectorTypeName',
       align: 'center',
@@ -118,23 +118,11 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '考核方式',
-      dataIndex: 'AssessmentMethodName',
-      key: 'AssessmentMethodName',
-      align: 'center',
-    },
-    {
-      title: '分值',
-      dataIndex: 'Fraction',
-      key: 'Fraction',
-      align: 'center',
-    },
-
-    {
       title: '使用状态',
       dataIndex: 'Status',
       key: 'Status',
       align: 'center',
+      width:100,
       render: (text, record) => {
         if (text == 1) {
           return <span onClick={() => { statusChange(record) }}><Tag style={{ cursor: 'pointer' }} color="blue">启用</Tag></span>;
@@ -144,7 +132,13 @@ const Index = (props) => {
         }
       },
     },
-
+    {
+      title: '排序',
+      dataIndex: 'AssessmentMethodName',
+      key: 'AssessmentMethodName',
+      align: 'center',
+      width:80,
+    },
     {
       title: '操作',
       dataIndex: 'pointName',
@@ -254,7 +248,7 @@ const Index = (props) => {
     onFinish(PageIndex, PageSize)
   }
   return (
-    <div className={styles.categorySty}>
+    <div>
       <Form
         form={form}
         name="advanced_search"
@@ -262,16 +256,16 @@ const Index = (props) => {
         initialValues={{
         }}
         layout='inline'
-        className={styles.queryForm}
+        style={{paddingBottom:8}}
       >
-        <Form.Item label='点位类别' name='PollutantType'>
-          <Select placeholder='请选择' allowClear style={{ width: 150 }}>
-            <Option value={2}>废气</Option>
-            <Option value={1}>废水</Option>
-          </Select>
+        <Form.Item label='系统型号' name='aaa'>
+          <Input placeholder='请输入' allowClear/>
         </Form.Item>
-        <Form.Item label='使用状态' name='Status' >
-          <Select placeholder='请选择' allowClear style={{ width: 150 }}>
+        <Form.Item label='检查项目' name='aaa'>
+          <Input placeholder='请输入' allowClear/>
+        </Form.Item>
+        <Form.Item label='使用状态' name='bbb' >
+          <Select placeholder='请选择' allowClear  style={{width:100}}>
             <Option value={1}>启用</Option>
             <Option value={0}>停用</Option>
           </Select>
@@ -293,6 +287,7 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={columns}
+        resizable
         pagination={{
           total: tableTotal,
           pageSize: pageSize,
@@ -317,70 +312,25 @@ const Index = (props) => {
           form={form2}
           name="advanced_search2"
           initialValues={{
-            PollutantType: 2,
             Status: 1,
           }}
-          className={styles.addForm}
         >
-          <Col span={24}>
-            <Form.Item label="编号" name="TypeNum" rules={[{ required: true, message: '请输入' }]}>
-              <InputNumber placeholder='请输入' disabled />
-            </Form.Item>
-            <NumTips />
-          </Col>
-          <Col span={24}>
-            <Form.Item label="点位类别" name="PollutantType" rules={[{ required: true, message: '请选择点位类型' }]} >
-              <Select placeholder='请选择' disabled={title == '编辑'}>
-                <Option value={2}>废气</Option>
-                <Option value={1}>废水</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Spin spinning={inspectorTypeloading} size='small' style={{ top: -8, left: 20 }}>
-              <Form.Item label='督查类别' name='InspectorType' rules={[{ required: true, message: '请选择督查类别' }]}>
-                <Select placeholder='请选择' showSearch optionFilterProp="children" disabled={title == '编辑'}>
-                  {
-                    inspectorTypeList[0] && inspectorTypeList.map(item => {
-                      return <Option key={item.ChildID} value={item.ChildID} >{item.Name}</Option>
-                    })
-                  }
-                </Select>
+              <Form.Item label='CEMS型号' name='InspectorType' rules={[{ required: true, message: '请选择CEMS型号！' }]}>
+                <Select placeholder='请选择' showSearch optionFilterProp="children"  loading={inspectorTypeloading} fieldNames={{label:'Name',value:'ChildID'}} options={inspectorTypeList} />
               </Form.Item>
-            </Spin>
-          </Col>
-          <Col span={24}>
-            <Form.Item label="督查类别描述" name="InspectorTypeDescribe" rules={[{ required: true, message: '请输入' }]}>
-              <TextArea rows={1} placeholder='请输入' />
+            <Form.Item label="检查项目" name="bb" rules={[{ required: true, message: '请输入检查项目！' }]}>
+              <Input placeholder='请输入'  />
             </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Spin spinning={inspectorTypeloading} size='small' style={{ top: -8, left: 20 }}>
-              <Form.Item label='考核方式' name='AssessmentMethod' rules={[{ required: true, message: '请选择考核方式' }]}>
-                <Select placeholder='请选择' showSearch optionFilterProp="children" onChange={assessMethodChange} disabled={title == '编辑'}>
-                  {
-                    assessmentMethodList[0] && assessmentMethodList.map(item => {
-                      return <Option key={item.ChildID} value={item.ChildID} >{item.Name}</Option>
-                    })
-                  }
-                </Select>
-              </Form.Item>
-            </Spin>
-          </Col>
-          <Col span={24}>
-            <Form.Item label="分值" name="Fraction" >
-              <InputNumber placeholder='请输入' disabled={scoreDis} />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item label="使用状态" name="Status" >
+            <Form.Item label="使用状态" name="Status" rules={[{ required: true, message: '请选择使用状态！' }]}>
               <Radio.Group>
                 <Radio value={1}>启用</Radio>
                 <Radio value={0}>停用</Radio>
               </Radio.Group>
             </Form.Item>
-          </Col>
-          <Form.Item name="ID" hidden>  <Input />   </Form.Item>
+            <Form.Item label="排序" name="Fraction" rules={[{ required: true, message: '请输入排序！' }]}>
+              <InputNumber placeholder='请输入' disabled={scoreDis} />
+            </Form.Item>
+          <Form.Item name="ID" hidden />
         </Form>
       </Modal>
     </div>

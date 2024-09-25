@@ -853,6 +853,7 @@ export default class OverVerifyLstModal extends Component {
           loading={this.props.loading}
           columns={!this.state.regionLevel? this.state.columns : this.state.cityColumns}
           dataSource={this.props.tableDatas.data}
+          pagination={false}
         // pagination={{
         // showSizeChanger: true,
         // showQuickJumper: true,

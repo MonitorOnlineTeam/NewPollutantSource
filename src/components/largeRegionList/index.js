@@ -1,3 +1,9 @@
+/*
+ * @Author: outman0611
+ * @Date: 2024-07-04 11:25:06
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-09-24 17:01:32
+ */
 /**
  * 功  能：服务大区 成套
  * 创建人：jab
@@ -57,9 +63,9 @@ const Index = (props) => {
   return (
       <Form.Item name={name ? name : 'serviceAreaCode'} label={label ? label : '服务大区'}  className={props.formItemClassName}>
         {props.largeRegionListLoading ?
-          <Spin size='small'> <Select placeholder='请选择' style={{width:'100%'}}/> </Spin>
+          <Spin size='small'> <Select placeholder='请选择' style={{minWidth:130,width:'100%'}}/> </Spin>
           :
-          <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
+          <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{minWidth:130, width:'100%'}}>
             {largeRegionList.map(item => <Option value={item.ID}>{item.LargeRegion}</Option>)}
           </Select>
         }

@@ -106,9 +106,9 @@ p {
     // }
   }
 
-  .ant-table-fixed {
-    table-layout: fixed; //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
-  }
+  // .ant-table-fixed {
+  //   table-layout: fixed; //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
+  // }
 
   .ant-table-tbody > tr > td {
     //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
@@ -1180,6 +1180,9 @@ a:hover {
   .ant-table-row:nth-child(2n + 1) .ant-table-cell-fix-right {
     background-color: #fff; //左侧固定
   }
+  textarea.ant-input{
+    margin-bottom:0;
+  }
 }
 .red {
   color: #f5222d;
@@ -1425,5 +1428,23 @@ a:hover {
 .smallCardWrapper :global {
   .ant-pro-page-header-wrap-children-content>.ant-card>.ant-card-body{
     padding:8px 24px;
+  }
+}
+@keyframes fades {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fromLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(0);
   }
 }

@@ -650,7 +650,7 @@ class index extends PureComponent {
             return key = item.key
           }
         })
-        let alarmDetailList = this.props.AlarmDetailList.filter(item => item.regionName !== "全部合计")
+        let alarmDetailList = this.props.AlarmDetailList?.filter(item => item.regionName !== "全部合计") || []
         if (key != '') {
           let obj = {
             title: text, content: <SdlTable columns={columns} dataSource={alarmDetailList}

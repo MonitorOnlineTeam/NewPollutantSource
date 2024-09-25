@@ -51,7 +51,7 @@ import config from '@/config';
 import ImageView from '@/components/ImageView';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SetUserListBtn from '@/components/SetUserListBtn';
-import LargeRegionList from '@/pages/ctDebuggAfterSaleServiceManage/components/largeRegionList';
+import LargeRegionList from '@/components/largeRegionList';
 import ViewPhotos from './components/ViewPhotos';
 import HandlingSugges from './components/HandlingSugges';
 import ExamineModal from './components/ExamineModal';

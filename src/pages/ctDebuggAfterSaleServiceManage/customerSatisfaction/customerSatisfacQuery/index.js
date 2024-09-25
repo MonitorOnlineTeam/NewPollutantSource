@@ -18,7 +18,6 @@ import ImageView from '@/components/ImageView';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import TitleComponents from '@/components/TitleComponents'
 import SetUserListBtn from "@/components/SetUserListBtn";
-import LargeRegionList from "@/pages/ctDebuggAfterSaleServiceManage/components/largeRegionList";
 import DispatchDetails from "./components/DispatchDetails";
 import InvestigaContent from "./components/InvestigaContent";
 import InvestigateModal from "./components/InvestigateModal";
@@ -119,7 +118,9 @@ const Index = (props) => {
     formAll.resetFields()
     setPopVisible(false)
     setPopVisible2(false)
-    onFinish(1, pageIndex2, pageSize2);
+    setTimeout(()=>{
+      onFinish(1, pageIndex2, pageSize2);
+    })
   }
 
   const columns = (type) => [
@@ -477,7 +478,10 @@ const Index = (props) => {
         processingStatus: isHome ? 2 : values.processingStatus,
         bTime: values.time?.[0] && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
         eTime: values.time?.[1] && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
+        LeaveBtime: values.time2?.[0] && moment(values.time2[0]).format('YYYY-MM-DD 00:00:00'),
+        LeaveEtime: values.time2?.[1] && moment(values.time2[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
+        time2: undefined,
         pageIndex: PageIndex,
         pageSize: PageSize,
         allData: type,
@@ -526,11 +530,14 @@ const Index = (props) => {
       name="advanced_search"
       className={'ant-advanced-search-form'}
       onFinish={() => { setPageIndex(1); setPageSize(20); onFinish(2, 1, 20) }}
+      initialValues={{
+        time2: [moment().add(-1, 'months').startOf('day'), moment().endOf('day')]
+      }}
     >
       <Row align='middle'>
         <Col span={8}>
           <Spin size='small' spinning={largeRegionListLoading} className='formItemSpinSty'>
-            <Form.Item name='serviceAreaCode' label='大区名称'>
+            <Form.Item name='serviceAreaCode' label='大区名称'  className='form_label_width_97'>
               <Select placeholder='请选择' onChange={largeRegionChange} allowClear>
                 {largeRegionList.map(item => <Option value={item.ID}>{item.LargeRegion}</Option>)}
               </Select>
@@ -550,6 +557,15 @@ const Index = (props) => {
         <Col span={8} >
           <Form.Item name='projectCode' label='项目编号' >
             <Input placeholder="合同编号、立项号" allowClear />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item name='time2' label='服务完成日期'>
+            <RangePicker_ style={{ width: '100%' }}
+              allowClear={false}
+              showTime={false}
+              format="YYYY-MM-DD"
+            />
           </Form.Item>
         </Col>
         <Col span={8} >
@@ -578,7 +594,8 @@ const Index = (props) => {
       name="advanced_search"
       className={'ant-advanced-search-form'}
       initialValues={{
-        time: initDate || []
+        time: initDate || [],
+        time2: [moment().add(-1, 'months').startOf('day'), moment().endOf('day')]
       }}
       onFinish={() => { setPageIndex2(1); setPageSize2(20); onFinish(1, 1, 20) }}
     >
@@ -594,7 +611,7 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Spin size='small' spinning={largeRegionListLoading} className='formItemSpinSty'>
-            <Form.Item name='province' className='minWidth' label='省份' >
+            <Form.Item name='province' className='minWidth' label='省份'  className='form_label_width_97'>
               <Select placeholder='请选择' allowClear>
                 {provinceList2.map(item => <Option value={item.RegionCode}>{item.RegionName}</Option>)}
               </Select>
@@ -611,13 +628,22 @@ const Index = (props) => {
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
+        <Col span={8}>
+          <Form.Item name='time2' label='服务完成日期'>
+            <RangePicker_ style={{ width: '100%' }}
+              allowClear={false}
+              showTime={false}
+              format="YYYY-MM-DD"
+            />
+          </Form.Item>
+        </Col>
         <Col span={8} >
           <Form.Item name='investigator' className='minWidth' label='调查人' >
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
         {!isHome && <><Col span={8} >
-          <Form.Item name='investigationStatus' label='调查状态' >
+          <Form.Item name='investigationStatus' label='调查状态'>
             <Select placeholder='请选择' allowClear>
               <Option value={1}>待调查</Option>
               <Option value={2}>调查终止</Option>
@@ -626,7 +652,7 @@ const Index = (props) => {
           </Form.Item>
         </Col>
           <Col span={8} >
-            <Form.Item name='processingStatus' label='处理状态' >
+            <Form.Item name='processingStatus' label='处理状态'   className='form_label_width_97'>
               <Select placeholder='请选择' allowClear>
                 <Option value={1}>待处理</Option>
                 <Option value={2}>已处理</Option>

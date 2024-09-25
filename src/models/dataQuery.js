@@ -83,7 +83,13 @@ export default Model.extend({
       const dataqueryData = yield select(_ => _.dataquery);
       let historyparams = dataqueryData.historyparams;
       let _pollutantlist = dataqueryData.pollutantlist;
-      let _historyparams = { ...historyparams, ...payload };
+      let _historyparams = {
+         ...historyparams,
+         ...payload,
+         pageIndex: payload.displayType == 'chart'? undefined : historyparams.pageIndex,
+         pageSize: payload.displayType == 'chart'? undefined : historyparams.pageSize,
+         displayType:undefined,
+        };
       let pollutantlist = _pollutantlist;
       // 电力：实时类型不显示“有功总累计电能”，其他类型只显示“有功总累计电能”
       if (payload.Type == 37) {

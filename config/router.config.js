@@ -4659,8 +4659,14 @@ const routes = [
                     component: './workSupervision/dailyManagement/disciplineCheck',
                   },
                   {
-                    // 现场检查模板设置
-                    name: 'disciplineCheck',
+                    // 现场质量检查
+                    name: 'siteInspecTempSet',
+                    path: '/workSupervision/dailyManagement/siteQualityInspection',
+                    component: './workSupervision/dailyManagement/siteQualityInspection',
+                  },
+                  {
+                    // 现场检查模板配置
+                    name: 'siteInspecTempSet',
                     path: '/workSupervision/dailyManagement/siteInspecTempSet',
                     component: './workSupervision/dailyManagement/siteInspecTempSet',
                   },

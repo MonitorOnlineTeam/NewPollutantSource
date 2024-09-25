@@ -280,7 +280,7 @@ class RegionDetails extends PureComponent {
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb} title="数据异常报警响应率详情">
         <Card>
-          <Row style={{ fontWeight: 'bold', marginBottom: 20 }}>
+          <Row style={{ fontWeight: 'bold', marginBottom: 14 }}>
             {`${queryCondition.RegionName}${beginTime}至${endTime}数据异常报警响应情况`}
           </Row>
           <Row style={{ marginBottom: 10 }}>
@@ -336,6 +336,7 @@ class RegionDetails extends PureComponent {
             loading={loading}
             dataSource={secondTableDataSource}
             columns={columns}
+            scroll={{y:'calc(100vh - 358px)'}}
           />
           <Modal
             // title="Basic Modal"

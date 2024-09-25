@@ -855,6 +855,7 @@ export default class OverVerifyLst extends Component {
           loading={this.props.loading}
           columns={this.state.columns}
           dataSource={this.props.tableDatas.data}
+          pagination={false}
         />
 
         <Modal

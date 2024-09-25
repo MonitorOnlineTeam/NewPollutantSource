@@ -63,7 +63,7 @@ export default Model.extend({
         EndTime: payload.EndTime,
         PageSize: payload.PageSize,
         PageIndex: payload.PageIndex,
-        PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [],
+        PollutantCodeList: payload.PollutantCodeList?.filter(item=>item!='全部合计') || [],
         OperationPersonnel: payload.operationpersonnel,
         regionLevel: payload.regionLevel && payload.regionLevel,
       };
@@ -91,7 +91,7 @@ export default Model.extend({
         EndTime: payload.EndTime,
         PageSize: payload.PageSize,
         PageIndex: payload.PageIndex,
-        PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [],
+        PollutantCodeList: payload.PollutantCodeList?.filter(item=>item!='全部合计') || [],
         OperationPersonnel: payload.operationpersonnel,
       };
       const result = yield call(GetAlarmVerifyRateDetail, body, null);
@@ -120,7 +120,7 @@ export default Model.extend({
         DataType: payload.DataType,
         BeginTime: payload.BeginTime,
         EndTime: payload.EndTime,
-        PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [],
+        PollutantCodeList: payload.PollutantCodeList?.filter(item=>item!='全部合计') || [],
         PollutantCode: payload.PollutantCode=='全部合计'? '' : payload.PollutantCode,
         Status: payload.Status,
         EntCode: payload.EntCode,
@@ -185,7 +185,7 @@ export default Model.extend({
         DataType: payload.DataType,
         BeginTime: payload.BeginTime,
         EndTime: payload.EndTime,
-        PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [],
+        PollutantCodeList: payload.PollutantCodeList?.filter(item=>item!='全部合计') || [],
         OperationPersonnel: payload.operationpersonnel,
         regionLevel: payload.regionLevel,
       };
@@ -203,7 +203,7 @@ export default Model.extend({
         DataType: payload.DataType,
         BeginTime: payload.BeginTime,
         EndTime: payload.EndTime,
-        PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [],
+        PollutantCodeList: payload.PollutantCodeList?.filter(item=>item!='全部合计') || [],
         OperationPersonnel: payload.operationpersonnel,
         regionLevel: payload.regionLevel,
       };
@@ -225,7 +225,7 @@ export default Model.extend({
         Status: payload.Status,
         EntCode: payload.EntCode,
         VerifyStatus: payload.VerifyStatus,
-        PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [],
+        PollutantCodeList: payload.PollutantCodeList?.filter(item=>item!='全部合计') || [],
         OperationPersonnel: payload.operationpersonnel,
       };
       const result = yield call(ExportAlarmVerifyDetail, body, null);
