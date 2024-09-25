@@ -197,12 +197,10 @@ export default class MonitorPoint extends Component {
 
     try {
       const { SystemPollutantTypeConfigId } = configInfo;
-      debugger;
       const configIds = SystemPollutantTypeConfigId.split(',');
       let thisConfigId = null;
       if (configIds.length > 0) {
         thisConfigId = configIds.filter(m => m.split(':')[0] == type);
-        debugger;
         if (thisConfigId.length > 0) {
           pointConfigIdEdit = thisConfigId[0].split(':')[1];
           pointConfigId = `${pointConfigIdEdit}New`;

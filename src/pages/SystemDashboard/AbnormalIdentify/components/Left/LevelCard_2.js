@@ -252,7 +252,7 @@ const LevelCard = props => {
                       );
                     })}
                 </div>
-                <p style={{ marginTop: 10 }}>轻微异常（不影响数据质量，属于管理不规范的）</p>
+                <p style={{ marginTop: 10 }}>提示类异常（不影响数据质量，属于管理不规范的）</p>
                 <div style={{ marginLeft: 20 }}>
                   {modelLevelList
                     ?.find(model => model.ModelTypeCode === '1')

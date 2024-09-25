@@ -1228,6 +1228,24 @@ const routes = [
                 path: '/platformconfig/pointDataSource',
                 component: './platformManager/pointDataSource',
               },
+              //停运参数管理
+              {
+                name: 'stopParams',
+                path: '/platformconfig/stopParams',
+                component: './platformManager/stopParams',
+              },
+              //燃烧工艺管理
+              {
+                name: 'combustionProcess',
+                path: '/platformconfig/combustionProcess',
+                component: './platformManager/combustionProcess',
+              },
+              //备案参数管理
+              {
+                name: 'recordParams',
+                path: '/platformconfig/recordParams',
+                component: './platformManager/recordParams',
+              },
               {
                 //视频管理
                 name: 'videomanager',
@@ -4311,6 +4329,7 @@ const routes = [
                     path: '/AbnormalIdentifyModel/CluesList/CluesDetails/:id',
                     component: './AbnormalIdentifyModel/CluesList/CluesDetails',
                   },
+
                   {
                     // 线索分析
                     name: 'ClueDetails',
@@ -4377,14 +4396,20 @@ const routes = [
                 ],
               },
               {
+                // 暂停线索时段
+                name: 'PauseModelWarning',
+                path: '/AbnormalIdentifyModel/PauseModelWarning',
+                component: './AbnormalIdentifyModel/PauseModelWarning',
+              },
+              {
                 // 整改复核列表
-                name: 'FluctuateRange',
+                name: 'RectificationTask',
                 path: '/AbnormalIdentifyModel/RectificationTask',
                 component: './AbnormalIdentifyModel/RectificationTask',
               },
               {
                 // 整改率
-                name: 'FluctuateRange',
+                name: 'rectificaRate',
                 path: '/AbnormalIdentifyModel/rectificaRate',
                 component: './AbnormalIdentifyModel/RectificationTask/rectificaRate',
               },
@@ -4521,6 +4546,12 @@ const routes = [
                     component: './AbnormalIdentifyModel/ModelBaseManage/DataCleaning',
                   },
                   {
+                    // 模型执行管理
+                    name: 'ModelExecutive',
+                    path: '/AbnormalIdentifyModel/ModelBaseManage/ModelExecutive',
+                    component: './AbnormalIdentifyModel/ModelBaseManage/ModelExecutive',
+                  },
+                  {
                     // 排放特征学习
                     name: 'CharacteristicLearning',
                     path: '/AbnormalIdentifyModel/ModelBaseManage/CharacteristicLearning',
@@ -4531,6 +4562,12 @@ const routes = [
                     name: 'ModelSelection',
                     path: '/AbnormalIdentifyModel/ModelBaseManage/ModelSelection',
                     component: './AbnormalIdentifyModel/ModelBaseManage/ModelSelection',
+                  },
+                  // 点位训练
+                  {
+                    name: 'PointTraining',
+                    path: '/AbnormalIdentifyModel/ModelBaseManage/PointTraining',
+                    component: './AbnormalIdentifyModel/ModelBaseManage/PointTraining',
                   },
                 ],
               },

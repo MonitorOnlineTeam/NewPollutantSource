@@ -45,7 +45,7 @@ const pageInfoData = {
       '#faad14', // 重点
       '#ff4d4f', // 严重
     ],
-    list: ['轻微异常', '一般异常', '重点异常', '严重异常'],
+    list: ['提示类异常', '一般异常', '重点异常', '严重异常'],
   },
   type: {
     color: defaultColor,

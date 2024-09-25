@@ -86,7 +86,7 @@ const DescriptionModal = props => {
         </Col>
         <Col span={12}>
           <div className={styles.itemContent}>
-            <p className={styles.descTitle}>轻微异常</p>
+            <p className={styles.descTitle}>提示类异常</p>
             <p className={styles.desc}>* 不影响数据质量，属于管理不规范的</p>
             <div style={{ marginLeft: 20 }}>
               {modelLevelList

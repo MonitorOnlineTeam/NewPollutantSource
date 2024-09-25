@@ -14,13 +14,17 @@ export default Model.extend({
     dataAccessDatas: [],
     modelSelectionData: [],
     modelSelectionCol: [],
-    modelSelectionTotal:0,
+    modelSelectionTotal: 0,
   },
   effects: {
     // 数据接入
     // 数据接入信息
     *GetProjectMonitorDataList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetProjectMonitorDataList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetProjectMonitorDataList,
+        payload,
+      );
       if (result.IsSuccess) {
         yield update({
           dataAccessDatas: result.Datas,
@@ -30,9 +34,13 @@ export default Model.extend({
     },
     //接入信息 修改执行方式
     *UpdProjectMonitorData({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.UpdProjectMonitorData, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.UpdProjectMonitorData,
+        payload,
+      );
       if (result.IsSuccess) {
-        message.success(result.Message)
+        message.success(result.Message);
         callback && callback(result.Datas);
       }
     },
@@ -40,40 +48,55 @@ export default Model.extend({
     *AccessEntInfoList({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.AbnormalIdentifyModel.AccessEntInfoList, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
+        message.success(result.Message);
       }
       callback && callback(result.Message);
-
     },
     //接入站点数据执行
     *AccessPointInfoList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.AccessPointInfoList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.AccessPointInfoList,
+        payload,
+      );
       if (result.IsSuccess) {
-        message.success(result.Message)
+        message.success(result.Message);
       }
       callback && callback(result.Message);
     },
     //接入备案参数执行
     *AccessParamInfoList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.AccessParamInfoList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.AccessParamInfoList,
+        payload,
+      );
       if (result.IsSuccess) {
-        message.success(result.Message)
+        message.success(result.Message);
       }
       callback && callback(result.Message);
     },
     //接入站点污染物排放信息执行
     *AccessEmissionStandardList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.AccessEmissionStandardList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.AccessEmissionStandardList,
+        payload,
+      );
       if (result.IsSuccess) {
-        message.success(result.Message)
+        message.success(result.Message);
       }
       callback && callback(result.Message);
     },
     //接入站点污染物关联信息执行
     *AccessMonitorPollutantList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.AccessMonitorPollutantList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.AccessMonitorPollutantList,
+        payload,
+      );
       if (result.IsSuccess) {
-        message.success(result.Message)
+        message.success(result.Message);
       }
       callback && callback(result.Message);
     },
@@ -81,7 +104,19 @@ export default Model.extend({
     *AccessHourData({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.AbnormalIdentifyModel.AccessHourData, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
+        message.success(result.Message);
+      }
+      callback && callback(result.Message);
+    },
+    //清洗燃烧工艺
+    *AccessPreprocessing({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.AccessPreprocessing,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success(result.Message);
       }
       callback && callback(result.Message);
     },
@@ -93,44 +128,68 @@ export default Model.extend({
     },
     //企业信息、排放口信息、备案参数日志详情信息
     *GetProjectLogsInfoList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetProjectLogsInfoList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetProjectLogsInfoList,
+        payload,
+      );
       callback && callback(result);
     },
     //污染物日志信息
     *GetMonitorPollutantLogsList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetMonitorPollutantLogsList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetMonitorPollutantLogsList,
+        payload,
+      );
       callback && callback(result);
     },
     //污染物日志详情信息
     *GetMonitorPollutantLogsInfoList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetMonitorPollutantLogsInfoList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetMonitorPollutantLogsInfoList,
+        payload,
+      );
       callback && callback(result);
     },
     //排放标准日志信息
     *GetMonitorAlarmLogsList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetMonitorAlarmLogsList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetMonitorAlarmLogsList,
+        payload,
+      );
       callback && callback(result);
-
     },
     //排放标准日志详情信息
     *GetMonitorAlarmLogsInfoList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetMonitorAlarmLogsInfoList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetMonitorAlarmLogsInfoList,
+        payload,
+      );
       callback && callback(result);
-
     },
     //查看监测数据日志信息
     *GetHourDataLogsList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetHourDataLogsList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetHourDataLogsList,
+        payload,
+      );
       callback && callback(result);
-
     },
     //排口表头信息
     *GetPointRelevantCount({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetPointRelevantCount, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetPointRelevantCount,
+        payload,
+      );
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       }
-
     },
     // 排放特征学习
     //获取训练结果
@@ -157,7 +216,11 @@ export default Model.extend({
     },
     // 模型选配
     *GetModelApolegamyList({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetModelApolegamyList, payload);
+      const result = yield call(
+        requestPost,
+        API.AbnormalIdentifyModel.GetModelApolegamyList,
+        payload,
+      );
       if (result.IsSuccess) {
         yield update({
           modelSelectionData: result.Datas?.dataList,
@@ -167,6 +230,5 @@ export default Model.extend({
         callback && callback(result.Datas?.col);
       }
     },
-
   },
 });
