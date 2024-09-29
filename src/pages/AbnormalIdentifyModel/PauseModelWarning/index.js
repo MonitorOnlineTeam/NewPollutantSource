@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-09-18 14:36:43
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-09-18 14:37:15
+ * @Last Modified time: 2024-09-18 17:13:11
  * @Description:  暂停线索时段
  */
 
@@ -40,9 +40,10 @@ const PauseModelWarning = props => {
     setLoading(true);
     dispatch({
       type: 'AbnormalIdentifyModel/GenericPostRequest',
-      url: API.AbnormalIdentifyModel.PmCemsSupplierList,
+      url: API.AbnormalIdentifyModel.GetPauseWarningList,
       payload: {
         ...values,
+        flagCode: values.flagCode ? values.flagCode.toString() : '',
         pageIndex: _pageIndex || pageIndex,
         pageSize: _pageSize || pageSize,
       },
@@ -81,64 +82,64 @@ const PauseModelWarning = props => {
       },
       {
         title: '企业',
-        dataIndex: 'entName',
-        key: 'entName',
+        dataIndex: 'ParentName',
+        key: 'ParentName',
         width: 180,
         ellipsis: true,
       },
       {
         title: '排口',
-        dataIndex: 'pointName',
-        key: 'pointName',
+        dataIndex: 'PointName',
+        key: 'PointName',
         width: 180,
         ellipsis: true,
       },
       {
         title: '场景',
-        dataIndex: 'pmCemsSupplierName',
-        key: 'pmCemsSupplierName',
+        dataIndex: 'FlagName',
+        key: 'FlagName',
         ellipsis: true,
-        width: 280,
+        width: 230,
         render: text => {
           return text || '-';
         },
       },
       {
         title: '暂停报警开始时间',
-        dataIndex: 'createUser',
-        key: 'createUser',
+        dataIndex: 'StopAlarmBeginTime',
+        key: 'StopAlarmBeginTime',
         ellipsis: true,
-        width: 140,
-        sorter: (a, b) => a.createUser - b.createUser,
+        // width: 140,
+        sorter: (a, b) => moment(a.StopAlarmBeginTime) - moment(b.StopAlarmBeginTime),
         render: text => {
           return text || '-';
         },
       },
       {
         title: '暂定报警截止时间',
-        dataIndex: 'createTime',
-        key: 'createTime',
+        dataIndex: 'StopAlarmEndTime',
+        key: 'StopAlarmEndTime',
         ellipsis: true,
-        width: 140,
-        sorter: (a, b) => a.createTime - b.createTime,
+        // width: 140,
+        sorter: (a, b) => moment(a.StopAlarmEndTime) - moment(b.StopAlarmEndTime),
         render: text => {
           return text || '-';
         },
       },
       {
         title: '创建人',
-        dataIndex: 'createTime',
-        key: 'createTime',
+        dataIndex: 'User_Name',
+        key: 'User_Name',
         ellipsis: true,
         width: 140,
       },
       {
         title: '创建时间',
-        dataIndex: 'createTime',
-        key: 'createTime',
+        dataIndex: 'CreateTime',
+        key: 'CreateTime',
         ellipsis: true,
-        width: 140,
-        sorter: (a, b) => a.createTime - b.createTime,
+        // width: 140,
+        sorter: (a, b) => moment(a.CreateTime) - moment(b.CreateTime),
         render: text => {
           return text || '-';
         },
@@ -204,7 +205,7 @@ const PauseModelWarning = props => {
                 </Select>
               </Form.Item>
             </Spin>
-            <Form.Item label="场景类别" name="warningTypeCode">
+            <Form.Item label="场景类别" name="flagCode">
               <ModelTree type="action" />
             </Form.Item>
             <Form.Item>

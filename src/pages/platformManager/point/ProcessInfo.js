@@ -152,8 +152,8 @@ const ProcessInfo = props => {
                       getEntAndPointList();
                     } else {
                       form.setFieldsValue({ GLDYYT: undefined });
-                      setRenderRandom(Math.random());
                     }
+                    setRenderRandom(Math.random());
                   }}
                 >
                   {getFormItemInfo('SCCJ').datas.map(item => {

@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-03-20 09:10:05
+ * @Last Modified time: 2024-09-25 10:27:36
  */
 
 import React, { PureComponent, Fragment } from 'react';
@@ -186,19 +186,15 @@ class SdlForm extends PureComponent {
           format={format}
           style={{ width: '100%' }}
           disabledDate={
-            item.fullFieldName === 'dbo.T_Bas_CommonPoint.Col10' ? (current) => current && current > moment().endOf('day') : null
+            item.fullFieldName === 'dbo.T_Bas_CommonPoint.Col10'
+              ? current => current && current > moment().endOf('day')
+              : null
           }
         />
       ); //disabledDate 监测点监测设备安装日期选择范围显示/>
     }
     if (format === 'YYYY-MM-DD HH') {
-      return (
-        <DatePicker
-          format={format}
-          showTime={{ format: 'HH' }}
-          style={{ width: '100%' }}
-        />
-      );
+      return <DatePicker format={format} showTime={{ format: 'HH' }} style={{ width: '100%' }} />;
     }
     // 年-月-日 时:分:秒
     return (
@@ -207,8 +203,8 @@ class SdlForm extends PureComponent {
           defaultValue: isStart
             ? moment('00:00:00', 'HH:mm:ss')
             : isEnd
-              ? moment('23:59:59', 'HH:mm:ss')
-              : moment(),
+            ? moment('23:59:59', 'HH:mm:ss')
+            : moment(),
         }}
         format={'YYYY-MM-DD HH:mm:ss'}
         style={{ width: '100%' }}
@@ -288,7 +284,13 @@ class SdlForm extends PureComponent {
           } else {
             placeholder = placeholder || inputPlaceholder;
           }
-          element = <Input disabled={item.labelText === '设备编号(MN)' && isEdit ? true : false} placeholder={'请输入' + item.labelText} allowClear />;
+          element = (
+            <Input
+              disabled={item.labelText === '设备编号(MN)' && isEdit ? true : false}
+              placeholder={'请输入' + item.labelText}
+              allowClear
+            />
+          );
           break;
         case '数字':
           validator = `${inputPlaceholder}`;
@@ -355,16 +357,19 @@ class SdlForm extends PureComponent {
           if (item.value && !initialValue && !isEdit) {
             initialValue = item.value[0] ? item.value[0].key : undefined;
           }
-          element = <SdlRadio
-            disabled={
-              (configId === 'GasOutput' || configId === 'WaterOutput') &&
+          element = (
+            <SdlRadio
+              disabled={
+                (configId === 'GasOutput' || configId === 'WaterOutput') &&
                 item.fullFieldName === 'dbo.T_Bas_CommonPoint.Col5' &&
                 isEdit
-                ? true
-                : false
-            }
-            data={item.value}
-            configId={item.configId} />;
+                  ? true
+                  : false
+              }
+              data={item.value}
+              configId={item.configId}
+            />
+          );
           break;
         case '多选':
           element = <SdlCheckbox data={item.value} configId={item.configId} />;
@@ -434,8 +439,8 @@ class SdlForm extends PureComponent {
         case '上传':
           const fileListProps = isEdit
             ? {
-              fileList: fileList,
-            }
+                fileList: fileList,
+              }
             : { fileList: [] };
           element = (
             <SdlUpload
@@ -670,6 +675,7 @@ class SdlForm extends PureComponent {
         >
           <Row>
             {this.renderFormItem()}
+            {this.props.appendFormItem && this.props.appendFormItem()}
             <Col style={{ display: 'none' }}>
               <FormItem key="cuid">{getFieldDecorator('cuid', {})(<Input />)}</FormItem>
             </Col>

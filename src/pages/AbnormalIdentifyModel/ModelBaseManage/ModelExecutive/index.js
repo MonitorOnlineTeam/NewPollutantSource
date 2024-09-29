@@ -10,32 +10,72 @@ import { LoadingOutlined, SyncOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
+let timer;
+
 const dvaPropsData = ({ loading, dataModel }) => ({});
 
 const ModelExecutive = props => {
   const [form] = Form.useForm();
   const { dispatch } = props;
   const [isSelectPointModalOpen, setIsSelectPointModalOpen] = useState(false);
-  const [DGIMN, setDGIMN] = useState();
   const [keysName, setKeysName] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
-  const [dataSource, setDataSource] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [executionLoading, setExecutionLoading] = useState(false);
+  const [logsLoading, setLogsLoading] = useState(false);
+  const [logsList, setLogsList] = useState([]);
+  const [runProgress, setRunProgress] = useState(0);
+  const [isAll, setIsAll] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getRunLogs();
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
-  // 加载数据
-  const loadData = () => {
-    setLoading(true);
+  // 开始执行
+  const startExecution = () => {
+    form.validateFields().then(values => {
+      setExecutionLoading(true);
+      dispatch({
+        type: 'AbnormalIdentifyModel/GenericPostRequest',
+        url: API.AbnormalIdentifyModel.AutoOpeModel,
+        payload: {
+          IsStudy: values.IsStudy,
+          DGIMN: !isAll ? selectedKeys.toString() : undefined,
+          BeginTime: values.runTime[0].format('YYYY-MM-DD HH:00:00'), // 模型执行时间
+          EndTime: values.runTime[1].format('YYYY-MM-DD HH:59:59'), // 模型执行时间
+          RangeBeginTime: values.learnTime[0].format('YYYY-MM-DD HH:00:00'), // 学习时间
+          RangeEndTime: values.learnTime[1].format('YYYY-MM-DD HH:59:59'), // 学习时间
+        },
+        callback: res => {
+          setTimeout(() => {
+            setExecutionLoading(false);
+            getRunLogs();
+          }, 10000);
+        },
+      });
+    });
+  };
+
+  // 运行日志
+  const getRunLogs = () => {
     dispatch({
       type: 'AbnormalIdentifyModel/GenericPostRequest',
-      url: API.AbnormalIdentifyModel.GetStopParamList,
-      payload: {
-        DGIMN,
-      },
+      url: API.AbnormalIdentifyModel.GetModelRunStatusLogs,
+      payload: {},
       callback: res => {
-        setLoading(false);
-        setDataSource(res.Datas);
+        console.log('res', res);
+        let isLoading = res.Datas.roundedProgress !== 100;
+        setLogsLoading(isLoading);
+        setLogsList(res.Datas.rtnStr);
+        setRunProgress(res.Datas.roundedProgress);
+        clearTimeout(timer);
+        if (isLoading) {
+          timer = setTimeout(() => {
+            getRunLogs();
+          }, 120000);
+        }
       },
     });
   };
@@ -43,25 +83,23 @@ const ModelExecutive = props => {
   return (
     <BreadcrumbWrapper>
       <Card title="模型执行管理">
-        {/* <Row justify="center"> */}
         <Row>
           <Form
-            name="basic"
+            form={form}
             labelCol={{
               flex: '300px',
             }}
             wrapperCol={{
               flex: 1,
             }}
-            initialValues={{}}
-            // onFinish={onFinish}
-            // onFinishFailed={onFinishFailed}
+            initialValues={{
+              IsAll: 2,
+            }}
             autoComplete="off"
-            // style={{ width: 800 }}
             style={{ width: '100%' }}
           >
             <Form.Item
-              name="username"
+              name="IsAll"
               label="是否对所有排口执行模型"
               rules={[
                 {
@@ -70,30 +108,37 @@ const ModelExecutive = props => {
                 },
               ]}
             >
-              <Radio.Group>
+              <Radio.Group
+                onChange={e => {
+                  setIsAll(e.target.value === 1);
+                }}
+              >
                 <Radio value={1}>是</Radio>
                 <Radio value={2}>否</Radio>
               </Radio.Group>
             </Form.Item>
-            <Row style={{ marginLeft: 300, marginBottom: 10 }}>
-              <Col span={24}>
-                <Button type="primary" onClick={() => setIsSelectPointModalOpen(true)}>
-                  选取排口
-                </Button>
-              </Col>
-              <Col span={24} style={{ marginTop: 10 }}>
-                {keysName.map(item => {
-                  return (
-                    <Tag color="processing" key={item}>
-                      {item}
-                    </Tag>
-                  );
-                })}
-              </Col>
-            </Row>
+            {!isAll && (
+              <Row style={{ marginLeft: 300, marginBottom: 10 }}>
+                <Col span={24}>
+                  <Button type="primary" onClick={() => setIsSelectPointModalOpen(true)}>
+                    选取排口
+                  </Button>
+                </Col>
+                <Col span={24} style={{ marginTop: 10 }}>
+                  {keysName.map(item => {
+                    return (
+                      <Tag color="processing" key={item}>
+                        {item}
+                      </Tag>
+                    );
+                  })}
+                </Col>
+              </Row>
+            )}
+
             <Form.Item
               label="是否学习排口数据特征"
-              name="password"
+              name="IsStudy"
               rules={[
                 {
                   required: true,
@@ -102,14 +147,14 @@ const ModelExecutive = props => {
               ]}
             >
               <Radio.Group>
-                <Radio value={1}>是</Radio>
-                <Radio value={2}>否</Radio>
+                <Radio value={true}>是</Radio>
+                <Radio value={false}>否</Radio>
               </Radio.Group>
             </Form.Item>
             <Form.Item label="特征学习时间范围" required>
               <Space direction="vertical">
                 <Form.Item
-                  name="password"
+                  name="learnTime"
                   rules={[
                     {
                       required: true,
@@ -133,7 +178,7 @@ const ModelExecutive = props => {
             </Form.Item>
             <Form.Item
               label="模型执行时间范围"
-              name="password"
+              name="runTime"
               style={{ marginTop: 24 }}
               rules={[
                 {
@@ -152,7 +197,12 @@ const ModelExecutive = props => {
             </Form.Item>
             <Form.Item>
               <Divider orientation="right">
-                <Button type="primary" htmlType="submit">
+                <Button
+                  type="primary"
+                  loading={executionLoading}
+                  onClick={() => startExecution()}
+                  disabled={logsLoading}
+                >
                   开始执行
                 </Button>
               </Divider>
@@ -164,37 +214,27 @@ const ModelExecutive = props => {
         title={
           <span className="innerCardTitle">
             运行日志
-            <Tag style={{ marginLeft: 8 }} icon={<SyncOutlined spin />} color="processing">
-              运行中...
-            </Tag>
+            {logsLoading && (
+              <Tag style={{ marginLeft: 8 }} icon={<SyncOutlined spin />} color="processing">
+                正在运行，进度{runProgress}%，请等待...
+              </Tag>
+            )}
           </span>
         }
         bordered={false}
-        bodyStyle={{ paddingTop: 0, paddingBottom: 0 }}
+        bodyStyle={{
+          paddingTop: 0,
+          paddingBottom: 0,
+          height: 'calc(100vh - 648px)',
+          overflowY: 'auto',
+        }}
       >
         <List
           itemLayout="horizontal"
-          dataSource={[
-            {
-              title: 'Ant Design Title 1',
-            },
-            {
-              title: 'Ant Design Title 2',
-            },
-            {
-              title: 'Ant Design Title 3',
-            },
-            {
-              title: 'Ant Design Title 4',
-            },
-          ]}
+          dataSource={logsList}
           renderItem={item => (
-            <List.Item>
-              <List.Item.Meta
-                // avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-                title={<a href="https://ant.design">{item.title}</a>}
-                description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-              />
+            <List.Item key={item.Index}>
+              <List.Item.Meta title={item.Time} description={item.ParamsStr} />
             </List.Item>
           )}
         />
@@ -205,9 +245,6 @@ const ModelExecutive = props => {
           checkedKeys={selectedKeys}
           onCancel={() => setIsSelectPointModalOpen(false)}
           onOk={(keys, keysName) => {
-            // bindingPoint(keys);
-            console.log('keys', keys);
-            console.log('keysName', keysName);
             setSelectedKeys(keys);
             setKeysName(keysName);
             setIsSelectPointModalOpen(false);
