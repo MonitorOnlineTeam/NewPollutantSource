@@ -74,6 +74,7 @@ const ModelTree = props => {
         width: '420px',
       },
       treeDefaultExpandAll: true,
+      ...props
     };
 
     return tProps;

@@ -59,6 +59,7 @@ import EditOperationStatus from './components/editOperationStatus';
 import { permissionButton } from '@/utils/utils';
 import ProcessInfo from './ProcessInfo';
 import InstrumentInfo from './InstrumentInfo';
+import SearchSelect from '@/pages/AutoFormManager/SearchSelect.js';
 
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
@@ -66,7 +67,9 @@ const { confirm } = Modal;
 let pointConfigId = '';
 let pointConfigIdEdit = '';
 const IsModelProject =
-  sessionStorage.getItem('sysMenuId') === '5cd1884a-3f42-426f-8893-5cae720bddf3'; //是否为模型项目
+  // sessionStorage.getItem('sysMenuId') === '5cd1884a-3f42-426f-8893-5cae720bddf3'; //是否为模型项目
+  sessionStorage.getItem('sysMenuId') === 'f6eb76ab-ce0b-4cfb-8626-2e0ec4435ec3'; //是否为模型项目
+
 @connect(({ loading, autoForm, monitorTarget, common, point, global }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   otherloading: loading.effects['monitorTarget/getPollutantTypeList'],
@@ -396,6 +399,7 @@ export default class MonitorPoint extends Component {
       });
     } else {
       form.validateFields((err, values) => {
+        console.log('values', values);
         //监测点
         if (!err) {
           const _submit = () => {
@@ -1484,6 +1488,45 @@ export default class MonitorPoint extends Component {
                       }}
                       types="point"
                       isModal
+                      appendFormItem={() => {
+                        return (
+                          <Col span={12}>
+                            <Form.Item
+                              label="折算类型"
+                              key={'IsExistCamera'}
+                              labelCol={{ span: 8 }}
+                              wrapperCol={{ span: 14 }}
+                            >
+                              {getFieldDecorator(`IsExistCamera`, {
+                                // initialValue: initialValue !== undefined ? initialValue : undefined,
+                                rules: [
+                                  {
+                                    required: this.props.form.getFieldValue('OutputType') === '0',
+                                    message: '不能为空',
+                                  },
+                                ],
+                              })(
+                                <SearchSelect
+                                  data={[
+                                    {
+                                      key: '1',
+                                      value: '折算',
+                                    },
+                                    {
+                                      key: '2',
+                                      value: '不折算',
+                                    },
+                                    {
+                                      key: '3',
+                                      value: '有时折算',
+                                    },
+                                  ]}
+                                />,
+                              )}
+                            </Form.Item>
+                          </Col>
+                        );
+                      }}
                     ></SdlForm>
                   </Card>
                   {IsModelProject && this.props.form.getFieldValue('Col7') && (

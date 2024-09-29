@@ -1238,6 +1238,10 @@ export const API = {
     GetPwPointList: before + '/WarningV2/GetPwPointList',
     // 删除报警及任务单关联
     DelWarningModel: before + '/WarningV2/DelWarningModel',
+    // 模型执行
+    AutoOpeModel: before + '/WarningV2/AutoOpeModel',
+    // 获取模型运行日志和状态
+    GetModelRunStatusLogs: before + '/MoldV2/GetModelRunStatusLogs',
 
     // 整改复核列表
     GetCheckedRectificationList: before + '/WarningV2/GetCheckedRectificationList',
@@ -1291,7 +1295,7 @@ export const API = {
     //线索分析
     GetClueDatas: before + '/Clue/GetClueDatas', //工作台信息
     // 暂停线索时段
-    GetPauseWarningList: before + '/Clue/GetPauseWarningList',
+    GetPauseWarningList: before + '/MoldV2/GetPauseWarningList',
     //生成核查任务
     GetWaitCheckDatas: before + '/Clue/GetWaitCheckDatas', //获取生产核查任务信息
     GetPreTakeFlagDatas: before + '/Clue/GetPreTakeFlagDatas', //获取庄家意见信息
