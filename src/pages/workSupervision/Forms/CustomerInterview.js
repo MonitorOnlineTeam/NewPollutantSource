@@ -26,6 +26,7 @@ import styles from './styles.less';
 import HandleCustomer from './HandleCustomer';
 import Cookie from 'js-cookie';
 import moment from 'moment';
+import RegionList from '@/components/RegionList';
 
 const dataSource = [
   {
@@ -59,6 +60,8 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
   // messageList: wordSupervision.messageList,
   // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
   submitLoading: loading.effects['wordSupervision/InsOrUpdOtherCustomer'],
+  largeRegionListLoading: loading.effects[`ctCommon/GetLargeRegionList`],
+
 });
 
 const CustomerInterview = props => {
@@ -74,12 +77,15 @@ const CustomerInterview = props => {
   const [form] = Form.useForm();
 
   const [customID, setCustomID] = useState();
+  const [provinceList, setProvinceList] = useState([]);
 
   useEffect(() => {
     getCustomerList();
     return ()=>{
       form.resetFields()
     }
+
+    
   }, []);
 
   // 获取客户
@@ -211,12 +217,12 @@ const CustomerInterview = props => {
           <Row style={{ width: '100%' }}>
             <Form.Item name="RegionalArea" style={{ display: 'none' }}>
               {/* 大区id */}
-              <Input disabled />
+              <Input placeholder='请先选择客户名称' disabled />
             </Form.Item>
-            <Form.Item name="Province" style={{ display: 'none' }}>
+            {/* <Form.Item name="Province" style={{ display: 'none' }}> */}
               {/* 省份id */}
-              <Input disabled />
-            </Form.Item>
+              {/* <Input disabled /> */}
+            {/* </Form.Item> */}
             <Col span={12}>
               <Form.Item
                 label="大区"
@@ -234,7 +240,8 @@ const CustomerInterview = props => {
             <Col span={12}>
               <Form.Item
                 label="省份"
-                name="ProvinceName"
+                // name="ProvinceName"
+                name='Province'
                 rules={[
                   {
                     required: true,
@@ -242,7 +249,7 @@ const CustomerInterview = props => {
                   },
                 ]}
               >
-                <Input disabled />
+              <Select placeholder='请先选择客户名称' optionFilterProp="children" fieldNames={{ label: 'RegionName', value: 'RegionCode' }}  options={provinceList} loading={props.largeRegionListLoading} allowClear={false}/>
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -262,17 +269,40 @@ const CustomerInterview = props => {
                         placeholder="请选择客户名称"
                         style={{ width: '100%' }}
                         showSearch
-                        filterOption={(input, option) =>
-                          option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
+                        optionFilterProp="children"
+                        // filterOption={(input, option) =>
+                        //   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        // }
                         onChange={(value, option) => {
                           setCustomID(value);
                           form.setFieldsValue({
-                            RegionalArea: option['data-item'].UserGroup_ID,
-                            UserGroup_Name: option['data-item'].UserGroup_Name,
-                            ProvinceName: option['data-item'].ProvinceName,
-                            Province: option['data-item'].Province,
+                            RegionalArea: option['data-item']?.UserGroup_ID,
+                            UserGroup_Name: option['data-item']?.UserGroup_Name,
+                            ProvinceName: option['data-item']?.ProvinceName,
+                            // Province: option['data-item']?.Province,
                           });
+                          props.dispatch({
+                            type: `ctCommon/GetLargeRegionList`,
+                            payload: {},
+                            callback:(res)=>{
+                              const data = [];
+                              res.map(item=>{
+                               if(item.ChildList?.[0]){
+                                 item.ChildList.map(childListItem=>{
+                                   data.push(childListItem)
+                                 })
+                               }
+                              
+                             })
+                             const currentProvinceData = option['data-item'].UserGroup_ID? data.filter(item=>item.ID == option['data-item'].UserGroup_ID) : []
+                             setProvinceList(currentProvinceData)
+                             setTimeout(()=>{
+                              form.setFieldsValue({
+                                Province: option['data-item']?.Province,
+                              });
+                             })
+                            },
+                          })
                         }}
                       >
                         {customerList.map(item => {

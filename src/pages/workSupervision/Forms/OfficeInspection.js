@@ -296,6 +296,8 @@ const OfficeInspection = props => {
                   placeholder="请选择大区"
                   style={{ width: '100%' }}
                   disabled
+                  showSearch
+                  optionFilterProp="children"
                   // onChange={(value, option) => {
                   //   // debugger;
                   //   // formRef.current.setFieldsValue({
@@ -335,6 +337,8 @@ const OfficeInspection = props => {
                 <Select
                   placeholder="请选择大区"
                   style={{ width: '100%' }}
+                  showSearch
+                  optionFilterProp="children"
                   disabled
                   // onChange={(value, option) => {
                   //   GetOfficeList();
@@ -365,7 +369,7 @@ const OfficeInspection = props => {
                   },
                 ]}
               >
-                <Select placeholder="请选择办事处" style={{ width: '100%' }}>
+                <Select placeholder="请选择办事处" style={{ width: '100%' }} showSearch optionFilterProp="children">
                   {officeList.map(item => {
                     return (
                       <Option value={item.ID} key={item.ID}>

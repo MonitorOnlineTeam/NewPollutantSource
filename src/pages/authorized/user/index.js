@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
- * @LastEditors: lzp
- * @LastEditTime: 2019-09-18 10:56:03
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-09-26 11:20:00
  * @Description: 用户管理
  */
 import React, { Component, Fragment } from 'react';
@@ -207,9 +207,10 @@ export default class UserInfoIndex extends Component {
                   <a
                     onClick={() => {
                       dispatch(
-                        routerRedux.push(
-                          '/rolesmanager/user/userinfoedit/' + row['dbo.Base_UserInfo.User_ID'] + "?tabName=用户管理 - 编辑",
-                        ),
+                        routerRedux.push({
+                          pathname:'/rolesmanager/user/userinfoedit/' + row['dbo.Base_UserInfo.User_ID'] + "?tabName=用户管理 - 编辑",
+                          query: JSON.stringify(row)
+                        }),
                       );
                     }}
                   >
@@ -222,8 +223,8 @@ export default class UserInfoIndex extends Component {
                     onClick={() => {
                       dispatch(
                         routerRedux.push(
-                          '/rolesmanager/user/userinfoview/' + row['dbo.Base_UserInfo.User_ID'] + "?tabName=用户管理 - 详情",
-                        ),
+                           '/rolesmanager/user/userinfoview/' + row['dbo.Base_UserInfo.User_ID'] + "?tabName=用户管理 - 详情",
+                         ),
                       );
                     }}
                   >

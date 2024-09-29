@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-08-30 15:01:30
+ * @LastEditTime: 2024-09-27 14:47:11
  * @Description: 角色管理
  */
 import React, { Component, Fragment } from 'react';
@@ -15,6 +15,7 @@ import {
   MenuUnfoldOutlined,
   UserAddOutlined,
   AlertOutlined,
+  DatabaseOutlined,
 } from '@ant-design/icons';
 
 import { Form } from '@ant-design/compatible';
@@ -226,6 +227,11 @@ class RoleIndex extends Component {
       settingAppRolePermis: false,
       expandRowsLoading: false,
       alarmPushData: { AppPush: false, WeChartPush: false },
+      mangerType: 1,
+      settingEntAdmin: false,
+      settingOperaAdmin: false,
+      settingSystemAdmin: false,
+      roleID:undefined,
     };
   }
   getColumns = () => {
@@ -438,6 +444,23 @@ class RoleIndex extends Component {
                 </a>
               </Popover>
             </Tooltip>
+            <Divider type="vertical" />
+                <Tooltip title="设置点位访问权限">
+                  <a
+                    onClick={() => {
+                      this.setState(
+                        {
+                          roleID: record.Roles_ID,
+                        },
+                        () => {
+                          this.settingRole(7, `设置${record.Roles_Name}角色可访问权限`)
+                        },
+                      );
+                    }}
+                  >
+                    <DatabaseOutlined style={{ fontSize: 16 }} />
+                  </a>
+                </Tooltip>
           </span>
         ),
       },
@@ -584,6 +607,15 @@ class RoleIndex extends Component {
           break;
         case 'SetAppRole':
           this.setState({ settingAppRolePermis: true });
+          break;
+        case 'setEntAdmin':
+          this.setState({ settingEntAdmin: true });
+          break;
+        case 'setOperaAdmin':
+          this.setState({ settingOperaAdmin: true });
+          break;
+        case 'setSystemAdmin':
+          this.setState({ settingSystemAdmin: true });
           break;
       }
     });
@@ -746,7 +778,7 @@ class RoleIndex extends Component {
   };
 
   addRight = () => {
-  
+
     let buttonAuthority = this.state.buttonState.filter(item => item.State == 1); //按钮权限
     if (buttonAuthority?.[0]) {
       buttonAuthority = buttonAuthority.map(item => item.ID);
@@ -754,7 +786,7 @@ class RoleIndex extends Component {
     //  console.log('菜单id：', this.state.selectButton); //菜单权限列表
     //  console.log('权限按钮：',buttonAuthority); //菜单按钮权限列表
     let menuIDArr = [...this.state.selectButton, ...buttonAuthority];
-        menuIDArr = menuIDArr.filter((item, index) => menuIDArr.indexOf(item) === index); //数组去重 编辑只操作权限按钮会重复 获取的时候没处理 在这处理了 
+    menuIDArr = menuIDArr.filter((item, index) => menuIDArr.indexOf(item) === index); //数组去重 编辑只操作权限按钮会重复 获取的时候没处理 在这处理了 
     this.props.dispatch({
       type: 'roleinfo/insertmenubyroleid',
       payload: {
@@ -850,22 +882,23 @@ class RoleIndex extends Component {
 
     return newArr;
   }
-  settingRole = (type, title) => {
+  settingRole = (type, title, mangerType) => {
     this.setState({
       settingRoleVisible: true,
       settingRoleTitle: title,
       settingType: type,
+      mangerType: mangerType,    
     });
     this.props.dispatch({
       type: 'roleinfo/getSetRegOrAppRoleId',
-      payload: { type: type },
+      payload: { type: type, mangerType: mangerType,roleID:this.state.roleID },
     });
   };
 
   settingRoleOk = (roleIdChecked, state, callback) => {
     this.props.dispatch({
       type: 'roleinfo/addSetRegOrAppRole',
-      payload: { type: this.state.settingType, RoleIdList: roleIdChecked, State: state },
+      payload: { type: this.state.settingType, RoleIdList: roleIdChecked, State: state, mangerType: this.state.mangerType,roleID:this.state.roleID },
       callback: () => {
         callback();
       },
@@ -976,10 +1009,42 @@ class RoleIndex extends Component {
                     设置允许登录运维APP角色
                   </Button>
                 )}
+                {this.state.settingAppRolePermis && (
+                  <Button
+                    type="primary"
+                    onClick={() => this.settingRole(3, '设置企业管理员角色')}
+                  >
+                    设置允许登录运维APP角色
+                  </Button>
+                )}
                 {// 超级管理员显示
-                isSystem() && (
-                  <Button type="primary" onClick={() => this.settingRole(3, '设置业务专家角色')}>
-                    设置业务专家角色
+                  isSystem() && (
+                    <Button type="primary" onClick={() => this.settingRole(3, '设置业务专家角色')}>
+                      设置业务专家角色
+                    </Button>
+                  )}
+                {this.state.settingEntAdmin && (
+                  <Button
+                    type="primary"
+                    onClick={() => this.settingRole(4, '设置企业管理员角色', 1)}
+                  >
+                    设置企业管理员角色
+                  </Button>
+                )}
+                {this.state.settingOperaAdmin && (
+                  <Button
+                    type="primary"
+                    onClick={() => this.settingRole(5, '设置运维单位管理员角色', 2)}
+                  >
+                    设置运维单位管理员角色
+                  </Button>
+                )}
+                {this.state.settingSystemAdmin && (
+                  <Button
+                    type="primary"
+                    onClick={() => this.settingRole(6, '设置系统管理员角色', 3)}
+                  >
+                    设置系统管理员角色
                   </Button>
                 )}
               </Space>

@@ -505,7 +505,7 @@ export async function AddUserMenu(params) {
 export async function GetWorkbenchesModuleList(params) {
   const result = await post(
     // `${API.WorkStageApi.GetWorkbenchesModuleList}?menuId=${Cookie.get('sysMenuId')}`,
-    `${API.WorkStageApi.GetWorkbenchesModuleList}?menuId=${sessionStorage.getItem('sysMenuId')}`,
+    `${API.WorkStageApi.GetWorkbenchesModuleList}?menuId=${sessionStorage.getItem('sysMenuId') || Cookie.get('sysMenuId')}`,
     {},
   );
   return result;

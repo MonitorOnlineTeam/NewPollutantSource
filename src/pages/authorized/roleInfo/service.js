@@ -169,3 +169,24 @@ export async function AddSetExpertRole(params) {
   const result = post(API.AuthorityApi.AddSetExpertRole, params);
   return result;
 }
+// 获取管理员角色身份
+export async function GetSetManagerRole(params) {
+  const result = post(API.AuthorityApi.GetSetManagerRole, params);
+  return result;
+}
+// 设置管理员角色身份
+export async function AddSetManagerRole (params) {
+  const result = post(API.AuthorityApi.AddSetManagerRole, params);
+  return result;
+}
+// 查看角色可查看角色权限
+export async function GetViewRoleList(params) {
+  const result = post(API.AuthorityApi.GetViewRoleList, params);
+  return result;
+}
+// 设置角色可查看角色权限
+export async function AddViewRole (params) {
+  const result = post(API.AuthorityApi.AddViewRole, params);
+  return result;
+}
+

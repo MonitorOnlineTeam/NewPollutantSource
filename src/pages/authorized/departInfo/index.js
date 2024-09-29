@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
- * @LastEditors: outman0611 jia_anbo@163.com
- * @LastEditTime: 2024-08-13 17:36:03
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-09-27 13:51:55
  * @Description: 部门管理
  */
 import React, { Component, Fragment } from 'react';
@@ -571,8 +571,8 @@ class DepartIndex extends Component {
               <DatabaseOutlined style={{ fontSize: 16 }} />
             </a>
           </Tooltip> */}
-            {true && (
-              // {this.props.configInfo && this.props.configInfo.IsShowProjectRegion && (
+            {/* {true && ( */}
+              {this.props.configInfo && this.props.configInfo.IsShowProjectRegion && (
               <>
                 <Divider type="vertical" />
                 <Tooltip title="设置点位访问权限">

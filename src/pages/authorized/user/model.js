@@ -6,6 +6,8 @@ import {
 } from './service';
 import { postAutoFromDataAdd, postAutoFromDataUpdate } from '@/services/autoformapi'
 import { message } from 'antd';
+import { requestPost } from '@/utils/utils';
+import { API } from '@config/API';
 /*
 用户管理相关接口
 add by xpy
@@ -34,7 +36,9 @@ export default Model.extend({
         UserRoles: [],
         UserDep: [],
         UserRolesName:'',
-        UserDepName:''
+        UserDepName:'',
+        userType:undefined,
+        operaBasicInfoForm:{},
     },
     subscriptions: {
         setup({
@@ -242,6 +246,17 @@ export default Model.extend({
                 });
             }
 
+        },
+        * AddOrUpdUser({ payload,callback }, { call, update, put }) {
+            const result = yield call(
+                requestPost,
+                API.AssetManagementApi.AddOrUpdUser,
+                payload,
+              );
+              if (result.IsSuccess) {
+                message.success(result.Message);
+                callback && callback(result);
+              }
         },
         * add({ payload }, { call, update, put }) {
             console.log(payload);

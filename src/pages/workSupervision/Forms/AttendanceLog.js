@@ -98,7 +98,8 @@ const AttendanceLog = props => {
   // 添加一行
   const onAdd = () => {
     let tempDataSource = [...dataSource];
-    let Key = tempDataSource.at(-1) ? tempDataSource.at(-1).Key + 1 : 0;
+    // let Key = tempDataSour.at(ce-1) ? tempDataSource.at(-1).Key + 1 : 0;
+    let Key =tempDataSource?.length && tempDataSource[tempDataSource.length - 1] ? tempDataSource[tempDataSource.length - 1]?.Key + 1 : 0;
     tempDataSource.push({
       Key: Key,
       RegionalArea: taskInfo.LargeName,

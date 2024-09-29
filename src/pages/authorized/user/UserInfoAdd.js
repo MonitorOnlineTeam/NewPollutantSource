@@ -2,17 +2,19 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-08-28 15:19:05
+ * @LastEditTime: 2024-09-26 16:41:36
  * @Description: 用户添加
  */
 import React, { Component } from 'react';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Tabs, Layout, Menu, Card, Button, Divider, Tree, Input, message, Spin } from 'antd';
+import { Tabs, Layout, Menu, Card, Button, Divider, Tree, Input, message, Spin, Row, Col,Radio,Select  } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlForm from '@/pages/AutoFormManager/SdlForm'
+import OperaFormComponents from './OperaFormComponents'
+import styles from './style.less';
 
 const { Search } = Input;
 
@@ -28,13 +30,14 @@ const {
 const { TreeNode } = Tree;
 
 
-@connect(({ userinfo, loading, global }) => ({
+@connect(({ userinfo, loading, global,operations }) => ({
     treeDataLoading: loading.effects['userinfo/getdepartmenttree'],
     RolesTreeDataLoading: loading.effects['userinfo/getrolestree'],
     treeData: userinfo.DepartTree,
     RolesTreeData: userinfo.RolesTree,
     btnisloading: loading.effects['userinfo/add'],
     configInfo: global.configInfo,
+    operaBasicInfoForm: userinfo.operaBasicInfoForm,
 }))
 @Form.create()
 export default class UserInfoAdd extends Component {
@@ -154,7 +157,6 @@ export default class UserInfoAdd extends Component {
         this.onSubmitForm();
         const { dispatch, form, RolesTreeData } = this.props;
         const { FormDatas, leafTreeDatas, checkedKeySel, checkedKeysSel } = this.state;
-        debugger
         if (checkedKeySel.length == 0) {
             message.error('角色不能为空');
             return;
@@ -163,6 +165,33 @@ export default class UserInfoAdd extends Component {
             message.error('部门不能为空');
             return;
         }
+        if(this.props.configInfo.IsOpera){
+            this.props.operaBasicInfoForm.validateFields((err, values) => {
+                if (!err) {
+                    
+                    dispatch({
+                        type: 'userinfo/AddOrUpdUser',
+                        payload: {
+                            Role: checkedKeySel,
+                            Depart: checkedKeysSel,
+                            FormData: {
+                                ...values,
+                            },
+                        },
+                        callback:()=>{
+                            router.push('/rolesmanager/user/newUserInfo')
+                        }
+                    })
+                }else{
+                    this.setState({
+                        activeKey: 'base',
+                        baseState: 'block', rolesState: 'none', departState: 'none' 
+                    });
+                }
+            });
+            return
+        }
+
         form.validateFields((err, values) => {
             if (!err) {
                 const FormData = {};
@@ -256,7 +285,18 @@ export default class UserInfoAdd extends Component {
                                 >返回
                                 </Button>
                                 <Card bordered={false} title="基本信息" style={{ display: this.state.baseState }}>
-                                    <SdlForm
+                                   {this.props.configInfo.IsOpera?
+                                    <OperaFormComponents formValidateFieldsCallback={(values)=>{ //单独写一个组件 因为getFieldDecorator每次都会render整个组件 导致卡顿
+                                        this.setState({
+                                        activeKey: 'roles',
+                                        baseState: 'none',
+                                        rolesState: 'block',
+                                        departState: 'none',
+                                        selectKey: 'roles',
+                                    })  
+                                   }}/>
+                                   :
+                                   <SdlForm
                                         configId="UserInfoAdd"
                                         onSubmitForm={this.onSubmitForm.bind(this)}
                                         form={this.props.form}
@@ -305,8 +345,8 @@ export default class UserInfoAdd extends Component {
                                             >下一步
                                             </Button>
                                         </Divider>
-                                    </SdlForm>
-
+                                </SdlForm>
+                                }
                                 </Card>
                                 <Card bordered={false} title="角色设置" style={{ display: this.state.rolesState }}>
                                     {

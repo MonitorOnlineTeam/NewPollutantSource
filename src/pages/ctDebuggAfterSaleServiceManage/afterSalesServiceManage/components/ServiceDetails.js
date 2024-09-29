@@ -78,7 +78,7 @@ const Index = (props) => {
   const {serviceQueryPar,queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,type,largeRegionListLoading  } = props;
 
   const [largeRegionList, setLargeRegionList] = useState([]);
-  const [provinceList, setProvincelist] = useState([]);
+  const [provinceList, setProvinceList] = useState([]);
   const [provinceAllList, setProvinceAlllist] = useState([]);
 
   useEffect(() => {
@@ -94,7 +94,7 @@ const Index = (props) => {
          
         })
         const currentProvinceData = serviceQueryPar.serviceAreaCode? data.filter(item=>item.ID == serviceQueryPar.serviceAreaCode) : data
-        setProvincelist(currentProvinceData)
+        setProvinceList(currentProvinceData)
         setProvinceAlllist(data)
         form.setFieldsValue({...serviceQueryPar})
         onFinish(pageIndex, pageSize);
@@ -270,7 +270,7 @@ const Index = (props) => {
   const largeRegionChange = (value)=>{
     form.setFieldsValue({province:undefined})
     const data = value? provinceAllList.filter(item=>item.ID == value ) : provinceAllList
-    setProvincelist(data)
+    setProvinceList(data)
   }
   const searchComponents = () => {
     return <Form
@@ -341,7 +341,7 @@ const Index = (props) => {
             <Button type="primary" htmlType="submit" loading={tableLoading}>
               查询
          </Button>
-            <Button style={{margin: '0 8px',}} onClick={() => { form.resetFields();setProvincelist([]);setPageIndex(1);setPageSize(20);onFinish(1,20) }}  >
+            <Button style={{margin: '0 8px',}} onClick={() => { form.resetFields();setProvinceList([]);setPageIndex(1);setPageSize(20);onFinish(1,20) }}  >
               重置
          </Button>
          <Button icon={<ExportOutlined />} loading={exportLoading} style={{ marginRight: 8, }} onClick={() => { exports() }}>

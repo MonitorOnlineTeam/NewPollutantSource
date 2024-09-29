@@ -603,7 +603,10 @@ export const API = {
     AddSetRole: before + '/RoleApi/AddSetRole', //设置行政区获取点位角色
     GetSetExpertRoleId: before + '/RoleApi/GetSetExpertRoleId', //获取设置过业务专家的角色
     AddSetExpertRole: before + '/RoleApi/AddSetExpertRole', // 设置业务专家角色
-
+    GetSetManagerRole: before + '/RoleApi/GetSetManagerRole', // 获取管理员角色
+    AddSetManagerRole: before + '/RoleApi/AddSetManagerRole', //获取设置管理员角色
+    GetViewRoleList: before + '/RoleApi/GetViewRoleList', // 查看角色可查看角色权限
+    AddViewRole: before + '/RoleApi/AddViewRole', //设置角色可查看角色权限
     // 获取部门详细信息及层级关系
     GetDepInfoByTree: before + '/DepartmentApi/GetDepInfoByTree',
     // 获取部门树(带根结点)
@@ -2039,6 +2042,7 @@ export const API = {
     GetRoleByUserID: before + '/UserApi/GetRoleByUserID', //获取用户角色
     GetDepartmentTree: before + '/DepartmentApi/GetDepartmentTree', //获取部门树
     GetDepByUserID: before + '/UserApi/GetDepByUserID', //获取部门树
+    AddOrUpdUser: before + '/UserApi/AddOrUpdUser', //运维 添加用户
     InsertRoleDepForUser: before + '/UserApi/InsertRoleDepForUser', //给用户添加角色和部门
     DelUserAndRoleDep: before + '/UserApi/DelUserAndRoleDep', //删除用户（假删除）
     /*部门管理*/

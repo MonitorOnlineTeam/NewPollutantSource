@@ -19,6 +19,10 @@ import {
   getSetRoleId,
   GetSetExpertRoleId,
   AddSetExpertRole,
+  GetSetManagerRole,
+  AddSetManagerRole,
+  GetViewRoleList,
+  AddViewRole,
 } from './service';
 import { message } from 'antd';
 import { downloadFile, requestPost } from '@/utils/utils';
@@ -41,18 +45,18 @@ function collectMenuButtons(objArray) {
 
   // 递归函数用来遍历对象数组
   function traverse(data) {
-      if (Array.isArray(data)) { // 如果当前项是数组
-          data.forEach(item => {
-              traverse(item); // 继续递归
-          });
-      } else if (typeof data === 'object' && data !== null) { // 如果当前项是对象
-          if (Array.isArray(data.Menu_Button)) { // 检查是否有Menu_Button数组
-              menuButtons.push(...data.Menu_Button); // 合并Menu_Button数组
-          }
-          if (data.children) { // 如果有children属性，则继续递归
-              traverse(data.children);
-          }
+    if (Array.isArray(data)) { // 如果当前项是数组
+      data.forEach(item => {
+        traverse(item); // 继续递归
+      });
+    } else if (typeof data === 'object' && data !== null) { // 如果当前项是对象
+      if (Array.isArray(data.Menu_Button)) { // 检查是否有Menu_Button数组
+        menuButtons.push(...data.Menu_Button); // 合并Menu_Button数组
       }
+      if (data.children) { // 如果有children属性，则继续递归
+        traverse(data.children);
+      }
+    }
   }
 
   traverse(objArray); // 从顶层对象数组开始递归
@@ -80,7 +84,7 @@ export default Model.extend({
   },
   subscriptions: {
     setup({ dispatch, history }) {
-      history.listen(location => {});
+      history.listen(location => { });
     },
   },
 
@@ -200,7 +204,7 @@ export default Model.extend({
       }
     },
     /*获取菜单列表层级关系**/
-    *getrolemenutree({ payload,callback }, { call, update }) {
+    *getrolemenutree({ payload, callback }, { call, update }) {
       const result = yield call(getrolemenutree, { ...payload });
       if (result.IsSuccess) {
         let newData = removeEmptyChildren(result.Datas);
@@ -247,11 +251,17 @@ export default Model.extend({
         case 3: // 3业务专家
           serviceApi = AddSetExpertRole;
           break;
+       case 4: case 5: case 6: // 管理员角色
+          serviceApi = AddSetManagerRole;
+          break;
+          case 7: // 设置角色可访问角色权限
+          serviceApi = AddViewRole;
+          break;
       }
-
       const result = yield call(serviceApi, {
         ...payload,
-        type: undefined,
+        type:  payload.mangerType || undefined,
+        mangerType:undefined,
       });
       if (result.IsSuccess) {
         message.success(result.Message);
@@ -275,28 +285,35 @@ export default Model.extend({
         case 3: // 3业务专家
           serviceApi = GetSetExpertRoleId;
           break;
+        case 4: case 5: case 6: // 管理员角色
+          serviceApi = GetSetManagerRole;
+          break;
+          case 7 :
+          serviceApi = GetViewRoleList;
+          break;
       }
       const result = yield call(serviceApi, {
         ...payload,
-        type: undefined,
+        type:  payload.mangerType || undefined,
+        mangerType:undefined,
       });
       if (result.IsSuccess) {
         yield update({
-          setRegOrAppRoleId: result.Datas,
+          setRegOrAppRoleId: result.Datas || [],
         });
-        callback && callback(result.Datas);
+        callback && callback(result.Datas || []);
       } else {
         result.Message && message.error(result.Message);
       }
     },
     *GetRolePushInfo({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost,API.AssetManagementApi.GetRolePushInfo, payload);
+      const result = yield call(requestPost, API.AssetManagementApi.GetRolePushInfo, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       }
     },
     *UpdPushInfo({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost,API.AssetManagementApi.UpdPushInfo, payload);
+      const result = yield call(requestPost, API.AssetManagementApi.UpdPushInfo, payload);
       if (result.IsSuccess) {
         message.success(result.Message);
       }

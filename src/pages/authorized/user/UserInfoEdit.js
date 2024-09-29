@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
- * @LastEditors: lzp
- * @LastEditTime: 2019-09-18 10:56:36
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-09-26 16:41:27
  * @Description: 用户修改
  */
 import React, { Component } from 'react';
@@ -13,7 +13,7 @@ import { connect } from 'dva';
 import router from 'umi/router';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlForm from '@/pages/AutoFormManager/SdlForm'
-
+import OperaFormComponents from './OperaFormComponents'
 const { Search } = Input;
 
 
@@ -36,6 +36,8 @@ const { TreeNode } = Tree;
     UserRoles: userinfo.UserRoles,
     UserDep: userinfo.UserDep,
     btnisloading: loading.effects['userinfo/edit'],
+    configInfo: global.configInfo,
+    operaBasicInfoForm: userinfo.operaBasicInfoForm,
 }))
 @Form.create()
 export default class UserInfoEdit extends Component {
@@ -83,8 +85,39 @@ export default class UserInfoEdit extends Component {
                 User_ID: this.props.match.params.userid,
             },
         })
-    }
 
+    }
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.operaBasicInfoForm !== prevProps.operaBasicInfoForm) {
+            if (this.props.configInfo.IsOpera) {
+                const queryData = this.props.location.query
+                this.props.dispatch({
+                    type: 'userinfo/updateState',
+                    payload: {
+                        userType: queryData.userType || undefined,
+                    },
+                });
+                this.props.operaBasicInfoForm.setFieldsValue({
+                    User_Account: queryData.userAccount,
+                    User_Name: queryData.userName,
+                    User_Sex: queryData.userSex && Number(queryData.userSex),
+                    Phone: queryData.userPhone,
+                    Email: queryData.email,
+                    SendPush: queryData.sendPush && queryData.sendPush.split(','),
+                    UserType: queryData.userType,
+                    OperationCompany: queryData.companyID,
+                    BusinessAttribute: queryData.businessAttributeCode && queryData.businessAttributeCode.split(','),
+                    IndustryAttribute: queryData.industryAttributeCode && queryData.industryAttributeCode.split(','),
+                    Question: queryData.question && Number(queryData.question),
+                });
+
+            }
+        }
+
+        if (this.props.startTime !== prevProps.startTime || this.props.endTime !== prevProps.endTime) {
+            this.getAllTypeDataList();
+        }
+    }
     componentWillReceiveProps(nextProps) {
         if (this.props.UserRoles !== nextProps.UserRoles) {
             this.setState({
@@ -99,6 +132,7 @@ export default class UserInfoEdit extends Component {
             })
         }
     }
+    component
 
     onExpand = expandedKeys => {
         // if not set autoExpandParent to false, if children expanded, parent can not collapse.
@@ -178,6 +212,34 @@ export default class UserInfoEdit extends Component {
         if (checkedKeysSel.length == 0) {
             message.error('部门不能为空');
             return;
+        }
+        if (this.props.configInfo.IsOpera) {
+            this.props.operaBasicInfoForm.validateFields((err, values) => {
+                if (!err) {
+
+                    dispatch({
+                        type: 'userinfo/AddOrUpdUser',
+                        payload: {
+                            User_ID: this.props.match.params.userid,
+                            Role: checkedKeySel,
+                            Depart: checkedKeysSel,
+                            FormData: {
+                                User_ID: this.props.match.params.userid,
+                                ...values,
+                            },
+                        },
+                        callback:()=>{
+                            router.push('/rolesmanager/user/newUserInfo')
+                        }
+                    })
+                } else {
+                    this.setState({
+                        activeKey: 'base',
+                        baseState: 'block', rolesState: 'none', departState: 'none'
+                    });
+                }
+            });
+            return
         }
         form.validateFields((err, values) => {
             console.log('11=', values)
@@ -290,15 +352,26 @@ export default class UserInfoEdit extends Component {
                                 >返回
                                 </Button>
                                 <Card bordered={false} title="基本信息" style={{ height: 'calc(100vh - 160px)', display: this.state.baseState }}>
-                                    <SdlForm
-                                        configId="UserInfoAdd"
-                                        onSubmitForm={this.onSubmitForm}
-                                        form={this.props.form}
-                                        isEdit
-                                        hideBtns
-                                        keysParams={{ 'dbo.Base_UserInfo.User_ID': this.props.match.params.userid }}
-                                    >
-                                        {/* <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
+                                    {this.props.configInfo.IsOpera ?
+                                        <OperaFormComponents formValidateFieldsCallback={(values) => { //单独写一个组件 因为getFieldDecorator每次都会render整个组件 导致卡顿
+                                            this.setState({
+                                                activeKey: 'roles',
+                                                baseState: 'none',
+                                                rolesState: 'block',
+                                                departState: 'none',
+                                                selectKey: 'roles',
+                                            })
+                                        }} />
+                                        :
+                                        <SdlForm
+                                            configId="UserInfoAdd"
+                                            onSubmitForm={this.onSubmitForm}
+                                            form={this.props.form}
+                                            isEdit
+                                            hideBtns
+                                            keysParams={{ 'dbo.Base_UserInfo.User_ID': this.props.match.params.userid }}
+                                        >
+                                            {/* <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
                                             <Button
                                                 type="primary"
                                                 htmlType="submit"
@@ -320,27 +393,27 @@ export default class UserInfoEdit extends Component {
                                         </FormItem> */}
 
 
-                                        <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
-                                            <Button
-                                                type="primary"
-                                                onClick={() => {
-                                                    const { dispatch, form } = this.props;
-                                                    form.validateFields((err, values) => {
-                                                        if (!err) {
-                                                            this.setState({
-                                                                activeKey: 'roles',
-                                                                baseState: 'none',
-                                                                rolesState: 'block',
-                                                                departState: 'none',
-                                                            })
-                                                        }
-                                                    })
-                                                }}
-                                            >下一步
+                                            <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
+                                                <Button
+                                                    type="primary"
+                                                    onClick={() => {
+                                                        const { dispatch, form } = this.props;
+                                                        form.validateFields((err, values) => {
+                                                            if (!err) {
+                                                                this.setState({
+                                                                    activeKey: 'roles',
+                                                                    baseState: 'none',
+                                                                    rolesState: 'block',
+                                                                    departState: 'none',
+                                                                })
+                                                            }
+                                                        })
+                                                    }}
+                                                >下一步
                                             </Button>
-                                        </Divider>
-                                    </SdlForm>
-
+                                            </Divider>
+                                        </SdlForm>
+                                    }
                                 </Card>
                                 <Card bordered={false} title="角色设置" style={{ height: 'calc(100vh - 160px)', display: this.state.rolesState }}>
                                     {

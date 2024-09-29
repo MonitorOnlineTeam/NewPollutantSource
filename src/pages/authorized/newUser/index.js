@@ -1,8 +1,8 @@
 /*
  * @Author: jab
  * @Date: 2020-12-1
- * @LastEditors: jab
- * @LastEditTime: 2020-12-1
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-09-26 16:10:21
  * @Description: 用户管理 新页面
  */
 import React, { Component, Fragment } from 'react';
@@ -211,9 +211,10 @@ export default class UserInfoIndex extends Component {
                 <a
                   onClick={() => {
                     this.props.dispatch(
-                      routerRedux.push(
-                        '/rolesmanager/user/userinfoedit/' + row['ID'] + '?tabName=用户管理 - 编辑',
-                      ),
+                      routerRedux.push({
+                        pathname: '/rolesmanager/user/userinfoedit/' + row['ID'],
+                        query: row
+                      }),
                     );
                   }}
                 >

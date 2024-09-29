@@ -3,7 +3,7 @@
  * 创建人：jab
  * 创建时间：2021.05.08
  */
-import React, { Component,Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import { ExportOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
@@ -22,7 +22,10 @@ import {
   Select,
   Tooltip,
   Popconfirm,
-  Divider
+  Divider,
+  TreeSelect,
+  Spin,
+  Empty,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -38,28 +41,36 @@ import ButtonGroup_ from '@/components/ButtonGroup'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { DelIcon } from '@/utils/icon'
-import {  ToolTwoTone,UserOutlined  } from '@ant-design/icons';
+import { ToolTwoTone, UserOutlined, DatabaseOutlined, CloseCircleOutlined } from '@ant-design/icons';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
+import SelectPollutantType from '@/components/SelectPollutantType';
+import TreeTransfer from '@/components/TreeTransfer';
+import { permissionButton } from '@/utils/utils';
 
+const { SHOW_PARENT } = TreeSelect;
 const pageUrl = {
   updateState: 'operationUnit/updateState',
   getData: 'operationUnit/getDefectModel',
 };
-@connect(({ loading, operationUnit,autoForm,common}) => ({
+@connect(({ loading, operationUnit, autoForm, common }) => ({
   priseList: operationUnit.priseList,
-  exloading:operationUnit.exloading,
+  exloading: operationUnit.exloading,
   loading: loading.effects[pageUrl.getData],
   total: operationUnit.total,
   tableDatas: operationUnit.tableDatas,
   queryPar: operationUnit.queryPar,
   regionList: autoForm.regionList,
-  attentionList:operationUnit.attentionList,
-  atmoStationList:common.atmoStationList,
-  operationUnitWhere:operationUnit.operationUnitWhere
+  attentionList: operationUnit.attentionList,
+  atmoStationList: common.atmoStationList,
+  operationUnitWhere: operationUnit.operationUnitWhere,
+  regionInfoTree: autoForm.regionList,
+  entAndPointList: common.entAndPointList,
+  getEntPointLoading: loading.effects['common/getEntAndPointList'],
+  checkPointLoading: loading.effects['userAuthority/getpointbydepid'],
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -67,22 +78,43 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
-      visible:false,
-      operationPersonConfigId:'NewOperationMaintenancePersonnel',
-      entName:'',
-      entCode:''
+      visible: false,
+      operationPersonConfigId: 'NewOperationMaintenancePersonnel',
+      entName: '',
+      entCode: '',
+      pointPermissionVisible: false,
+      pointPermissionID: undefined,
+      pointPermissionTitle: '',
+      regionCode: undefined,
+      pollutantType: 2,
+      pointPermissionCheckedKeys: [],
+      pointPermissionOkLoading: false,
+      settingPointPermission: false,
+      cancelOperaUtil: false,
     };
-    
+
     this.columns = [];
   }
 
   componentDidMount() {
+    const buttonList = permissionButton(this.props.location?.pathname);
+    buttonList.map(item => {
+      switch (item) {
+        case 'settingPointPermission':
+          this.setState({ settingPointPermission: true });
+          break;
+        case 'cancelOperaUtil':
+          this.setState({ cancelOperaUtil: true });
+          break;
+      }
+    });
     this.initData();
+
   }
   initData = () => {
-    const {dispatch, match: { params: { configId } }} = this.props;
+    const { dispatch, match: { params: { configId } } } = this.props;
 
-
+    this.getEntAndPointList()
     // dispatch({
     //   type: 'autoForm/getPageConfig',
     //   payload: {
@@ -96,9 +128,18 @@ export default class EntTransmissionEfficiency extends Component {
     //   },
     // });
 
-  
+
 
   };
+
+  // 获取企业和排口
+  getEntAndPointList = () => {
+    this.props.dispatch({
+      type: "common/getEntAndPointList",
+      payload: { Status: [], RunState: 1, RegionCode: this.state.regionCode?.toString(), PollutantTypes: this.state.pollutantType }
+    });
+  }
+
   updateQueryState = payload => {
     const { queryPar, dispatch } = this.props;
 
@@ -109,27 +150,27 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   getTableData = () => {
-    const { dispatch, queryPar,match: { params: { configId } }, } = this.props;
-   dispatch({
-    type: 'autoForm/getAutoFormData',
-     payload: {
+    const { dispatch, queryPar, match: { params: { configId } }, } = this.props;
+    dispatch({
+      type: 'autoForm/getAutoFormData',
+      payload: {
         configId: configId,
         // searchParams: operationUnitWhere,
-       },
+      },
     });
   };
 
 
 
- 
+
 
 
 
   //查询事件
   queryClick = () => {
 
-    const {queryPar: {dataType }, } = this.props;
-   
+    const { queryPar: { dataType }, } = this.props;
+
 
     this.getTableData();
   };
@@ -150,92 +191,263 @@ export default class EntTransmissionEfficiency extends Component {
   //   },
   //   });
   //  }
-   onSubmitForms=(form)=>{
-  //   dispatch({
-  //     type: 'operationUnit/updateState',
-  //     payload: {
-  //         operationUnitWhere: [
-  //             {
-  //                 Key: 'dbo__T_Bas_OperationMaintenanceEnterprise__State',
-  //                 Value: '',
-  //                 Where: '$=',
-  //             },
-  //         ],
-  //     },
-  // });
-   }
-   operationPerson=(row)=>{
+  onSubmitForms = (form) => {
+    //   dispatch({
+    //     type: 'operationUnit/updateState',
+    //     payload: {
+    //         operationUnitWhere: [
+    //             {
+    //                 Key: 'dbo__T_Bas_OperationMaintenanceEnterprise__State',
+    //                 Value: '',
+    //                 Where: '$=',
+    //             },
+    //         ],
+    //     },
+    // });
+  }
+  operationPerson = (row) => {
     this.props.dispatch({
-        type: 'autoForm/getPageConfig',
-        payload: {
-          configId:this.state.operationPersonConfigId,
+      type: 'autoForm/getPageConfig',
+      payload: {
+        configId: this.state.operationPersonConfigId,
+      },
+    });
+    this.setState({
+      visible: true,
+      entName: row['dbo.T_Bas_OperationMaintenanceEnterprise.Company'],
+      entCode: row['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']
+    })
+  }
+  cancelOperaUnit = (record) => { //注销运维单位
+
+  }
+  /** 设置点位访问权限切换行政区 */
+  regionChange = value => {
+    this.setState({
+      regionCode: value,
+    }, () => {
+      this.getEntAndPointList()
+    });
+
+    this.props.dispatch({
+      type: 'userAuthority/getpointbydepid',
+      payload: {
+        UserGroup_ID: this.state.pointPermissionID,
+        PollutantType: this.state.pollutantType,
+        RegionCode: value?.toString(),
+      },
+    });
+
+  };
+  /** 设置点位访问权限切换污染物 */
+  pollutantChange = e => {
+    this.setState({ pollutantType: e.target.value }, () => {
+      this.getEntAndPointList()
+    });
+    this.props.dispatch({
+      type: 'userAuthority/getpointbydepid',
+      payload: {
+        UserGroup_ID: keys.toString(),
+        PollutantType: e.target.value,
+        RegionCode: this.state.regionCode?.toString(),
+      },
+    });
+  };
+  pointPermissionOK = (state, callback) => {
+    this.setState({ pointPermissionOkLoading: true })
+    this.props.dispatch({
+      type: 'userAuthority/insertPointFilterByUser',
+      payload: {
+        DGIMN: this.state.checkedKeys,
+        User_ID: this.state.selectedRow.ID,
+        Type: this.state.pollutantType,
+        RegionCode: this.state.regionCode?.toString(),
+        state: state,
+        callback: res => {
+          if (res.IsSuccess) {
+            message.success('操作成功');
+            callback()
+          } else {
+            res.Message && message.error(res.Message);
+          }
+          setTimeout(() => {
+            this.setState({ pointPermissionOkLoading: false })
+          })
         },
-      });
-     this.setState({
-       visible:true,
-       entName:row['dbo.T_Bas_OperationMaintenanceEnterprise.Company'],
-       entCode:row['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']
-     })
-   }
+      },
+    });
+  };
+
+
+
   render() {
     const {
       Atmosphere,
       exloading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,PageSize,PageIndex,OperationPersonnel },
+      queryPar: { beginTime, endTime, EntCode, RegionCode, AttentionCode, dataType, PollutantType, PageSize, PageIndex, OperationPersonnel },
       match: { params: { configId } },
     } = this.props;
-
+    const tProps = {
+      treeData: this.props.regionInfoTree,
+      value: this.state.regionCode,
+      onChange: this.regionChange,
+      treeCheckable: true,
+      showCheckedStrategy: SHOW_PARENT,
+      searchPlaceholder: '行政区',
+      treeDefaultExpandedKeys: ['0'],
+      style: {
+        width: 200,
+        marginLeft: 16,
+      },
+      dropdownStyle: {
+        maxHeight: '700px',
+        overflowY: 'auto',
+      },
+      showSearch: true,
+      filterOption: (input, option) => {
+        if (option && option.props && option.props.title) {
+          return option.props.title === input || option.props.title.indexOf(input) !== -1
+        } else {
+          return true
+        }
+      }
+    };
     return (
-        <Card
-          bordered={false}
-          title={
-            <SearchWrapper
+      <Card
+        bordered={false}
+        title={
+          <SearchWrapper
             onSubmitForm={form => this.onSubmitForms(form)}
             configId={configId}
-        ></SearchWrapper>
-          }
-        >
-          <>
+          ></SearchWrapper>
+        }
+      >
+        <>
 
-                    <AutoFormTable
-                        getPageConfig
-                        onRef={this.onRef1}
-                        style={{ marginTop: 10 }}
-                        configId={configId}
-                        parentcode="platformconfig/operationEntManage"
-                        appendHandleRows={row =><> <Fragment>
-                            {/* <Tooltip title="删除">
+          <AutoFormTable
+            getPageConfig
+            onRef={this.onRef1}
+            style={{ marginTop: 10 }}
+            configId={configId}
+            parentcode="platformconfig/operationEntManage"
+            appendHandleRows={row => <> <Fragment>
+              {/* <Tooltip title="删除">
                             <Popconfirm  title="确定要删除此条信息吗？" onConfirm={() => this.del(row)} okText="是" cancelText="否">
                                 <a  style={{paddingLeft:5}} > <DelIcon/> </a>
                             </Popconfirm>
                         </Tooltip> */}
-                        <Divider type="vertical" />
-                        <Tooltip title="运维人员">
-                                <a  onClick={()=>{this.operationPerson(row)}}> <UserOutlined style={{fontSize:18}}/> </a>
-                        </Tooltip>
-                        </Fragment></>}
-                    />
-          </>
-          <Modal
-                    title={`运维人员 - ${this.state.entName}`}
-                    visible={this.state.visible} 
-                    onCancel={()=>{this.setState({visible:false})}}
-                    footer={null}
-                    width={'50%'}
-                >
-                    <AutoFormTable
-                        configId={this.state.operationPersonConfigId}
-                        searchParams={
-                          [
-                            {
-                                Key: 'dbo__T_Bas_OperationMaintenancePersonnel__EnterpriseID',
-                                Value: this.state.entCode,//match.params.Pointcode,
-                                Where: '$=',
-                            }
-                        ]}
-                    />
-            </Modal>
-        </Card>
+              <Divider type="vertical" />
+              <Tooltip title="运维人员">
+                <a onClick={() => { this.operationPerson(row) }}> <UserOutlined style={{ fontSize: 18 }} /> </a>
+              </Tooltip>
+              {this.state.settingPointPermission && <><Divider type="vertical" />
+                <Tooltip title="设置点位访问权限">
+                  <a
+                    onClick={() => {
+                      this.setState(
+                        {
+                          pointPermissionVisible: true,
+                          pointPermissionTitle: row['dbo.T_Bas_OperationMaintenanceEnterprise.Company'],
+                          pointPermissionID: row['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'],
+                        }
+                      );
+                    }}
+                  >
+                    <DatabaseOutlined style={{ fontSize: 16 }} />
+                  </a>
+                </Tooltip></>}
+              {this.state.cancelOperaUtil && <><Divider type="vertical" />
+                <Tooltip title="注销运维单位">
+                  <Popconfirm placement="left" title="确定要注销运维运维吗？" onConfirm={() => this.cancelOperaUnit(record)} okText="是" cancelText="否">
+                    <a href="#" > <CloseCircleOutlined style={{ fontSize: 16 }} /> </a>
+                  </Popconfirm>
+                </Tooltip></>}
+
+            </Fragment></>}
+          />
+        </>
+        <Modal
+          title={`运维人员 - ${this.state.entName}`}
+          visible={this.state.visible}
+          onCancel={() => { this.setState({ visible: false }) }}
+          footer={null}
+          width={'50%'}
+        >
+          <AutoFormTable
+            configId={this.state.operationPersonConfigId}
+            searchParams={
+              [
+                {
+                  Key: 'dbo__T_Bas_OperationMaintenancePersonnel__EnterpriseID',
+                  Value: this.state.entCode,//match.params.Pointcode,
+                  Where: '$=',
+                }
+              ]}
+          />
+        </Modal>
+        <Modal
+          title={`设置点位访问权限 - ${this.state.pointPermissionTitle}`}
+          visible={this.state.pointPermissionVisible}
+          destroyOnClose
+          onCancel={() => { this.setState({ pointPermissionVisible: false }) }}
+          width={1100}
+          footer={null}
+          bodyStyle={{
+            overflowY: 'auto',
+            maxHeight: this.props.clientHeight - 240,
+          }}
+        >
+          {
+
+            <div>
+              <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
+
+                <SelectPollutantType
+                  showType="radio"
+                  mode="multiple"
+                  value={this.state.pollutantType}
+                  onChange={this.pollutantChange}
+                  onlyShowEnt
+                />
+                <TreeSelect
+                  {...tProps}
+                  treeCheckable={false}
+                  allowClear
+                  placeholder='请选择行政区'
+                />
+                <Input.Group compact style={{ width: 290, marginLeft: 16, display: 'inline-block' }}>
+                  <Input style={{ width: 200 }} allowClear placeholder='请输入企业名称' onBlur={(e) => this.setState({ entPointName: e.target.value })} />
+                  <Button type="primary" loading={this.props.checkPointLoading} onClick={this.pointAccessClick}>查询</Button>
+                </Input.Group>
+              </Row>
+              {this.props.checkPointLoading || this.props.getEntPointLoading ? (
+                <Spin
+                  style={{
+                    width: '100%',
+                    height: 'calc(100vh/2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  size="large"
+                />
+              ) : this.props.entAndPointList && this.props.entAndPointList.length > 0 ? (
+                <Spin spinning={this.state.pointPermissionOkLoading}>
+                  <TreeTransfer
+                    key="key"
+                    treeData={this.state.entAndPointList}
+                    checkedKeys={this.state.pointPermissionCheckedKeys}
+                    targetKeysChange={(key, type, callback) => this.setState({ pointPermissionCheckedKeys: key }, () => {
+                      this.pointPermissionOK(type == 1 ? 1 : 2, callback)
+                    })} />
+                </Spin>
+              ) : (
+                    <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                  )}
+            </div>
+          }
+        </Modal>
+      </Card>
     );
   }
 }

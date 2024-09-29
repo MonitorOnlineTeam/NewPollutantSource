@@ -483,7 +483,7 @@ const Index = (props) => {
       form={form}
       name="advanced_search"
       className={styles['ant-advanced-search-form']}
-      onFinish={() => { onFinish(pageIndex, pageSize) }}
+      onFinish={() => {setPageIndex(1); onFinish(1, pageSize) }}
       initialValues={{
         time: [moment().subtract(6, 'months').startOf('d'), moment().endOf('d')],
       }}

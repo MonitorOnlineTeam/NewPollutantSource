@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-18 10:32:08
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-25 08:43:05
+ * @LastEditTime: 2024-09-27 11:48:47
  * @Description: 导航树
  */
 import React, { Component } from 'react';
@@ -1493,17 +1493,17 @@ class NavigationTree extends Component {
           </div>
           <Space direction="vertical" size={8}  className={styles.spaceSearchSty}>
             {// 企业项目不显示行政区
-              isSdlOpera ? //运维平台 SDL运维
-                <Row justify='space-between' align='middle'>
-                  <RegionList
-                    style={{ width: 'calc(100% - 122px)' }}
-                    spinSty={{ top: -4 }}
-                    changeRegion={this.changeRegion}
-                    RegionCode={this.state.RegionCode}
-                  />
-                  <Checkbox onChange={(e)=>this.filterGrabChange(e.target.checked) }>过滤抓取点位</Checkbox>
-                </Row>
-                :
+              // isSdlOpera ? //运维平台 SDL运维
+              //   <Row justify='space-between' align='middle'>
+              //     <RegionList
+              //       style={{ width: 'calc(100% - 122px)' }}
+              //       spinSty={{ top: -4 }}
+              //       changeRegion={this.changeRegion}
+              //       RegionCode={this.state.RegionCode}
+              //     />
+              //     <Checkbox onChange={(e)=>this.filterGrabChange(e.target.checked) }>过滤抓取点位</Checkbox>
+              //   </Row>
+              //   :
                 !configInfo.IsSingleEnterprise && (
                   <RegionList
                     style={{ width: '100%' }}
@@ -1605,7 +1605,7 @@ class NavigationTree extends Component {
                         selectedKeys={this.state.selectedKeys}
                         style={{
                           // marginTop: '5%',
-                          maxHeight: `calc(100vh - 229px - ${showIndustry? '39px' : '0px'} - ${isSdlOpera? '0px' : '39px'})`,
+                          maxHeight: `calc(100vh - 229px - ${showIndustry? '39px' : '0px'} - ${isSdlOpera? '0px' : '39px'} - ${configInfo.IsSingleEnterprise? '-39px' : '0px' })`,
                           overflow: 'hidden',
                           overflowY: 'auto',
                           width: '100%',
@@ -1651,7 +1651,7 @@ class NavigationTree extends Component {
                             marginTop: 2,
                             overflow: 'auto',
                             cursor: 'pointer',
-                            maxHeight: `calc(100vh - 234px - ${showIndustry? '39px' : '0px'} - ${isSdlOpera? '0px' : '39px'})`,
+                            maxHeight: `calc(100vh - 234px - ${showIndustry? '39px' : '0px'} - ${isSdlOpera? '0px' : '39px'} - ${configInfo.IsSingleEnterprise? '-39px' : '0px' })`,
                           }}
                           onRow={this.onClickRow}
                           rowClassName={this.setRowClassName}
