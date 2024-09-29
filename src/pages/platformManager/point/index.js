@@ -1463,10 +1463,6 @@ export default class MonitorPoint extends Component {
                   ]
             }
           >
-            {console.log('1111=', this.props.form.getFieldsValue())}
-            {console.log('1111--222=', this.props.form.getFieldValue('Col7'))}
-            {console.log('1111--IsModelProject=', IsModelProject)}
-            {/* {console.log("1111-222=",FormData['dbo.T_Bas_CommonPoint.Col7'])} */}
             {!this.state.isView ? (
               <Tabs activeKey={this.state.tabKey} onChange={this.onTabPaneChange}>
                 <TabPane
@@ -1489,43 +1485,45 @@ export default class MonitorPoint extends Component {
                       types="point"
                       isModal
                       appendFormItem={() => {
-                        return (
-                          <Col span={12}>
-                            <Form.Item
-                              label="折算类型"
-                              key={'IsExistCamera'}
-                              labelCol={{ span: 8 }}
-                              wrapperCol={{ span: 14 }}
-                            >
-                              {getFieldDecorator(`IsExistCamera`, {
-                                // initialValue: initialValue !== undefined ? initialValue : undefined,
-                                rules: [
-                                  {
-                                    required: this.props.form.getFieldValue('OutputType') === '0',
-                                    message: '不能为空',
-                                  },
-                                ],
-                              })(
-                                <SearchSelect
-                                  data={[
+                        // 只有废气显示
+                        if (pointConfigIdEdit === 'GasOutput')
+                          return (
+                            <Col span={12}>
+                              <Form.Item
+                                label="折算类型"
+                                key={'IsExistCamera'}
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 14 }}
+                              >
+                                {getFieldDecorator(`IsExistCamera`, {
+                                  // initialValue: initialValue !== undefined ? initialValue : undefined,
+                                  rules: [
                                     {
-                                      key: '1',
-                                      value: '折算',
+                                      required: this.props.form.getFieldValue('OutputType') === '0',
+                                      message: '不能为空',
                                     },
-                                    {
-                                      key: '2',
-                                      value: '不折算',
-                                    },
-                                    {
-                                      key: '3',
-                                      value: '有时折算',
-                                    },
-                                  ]}
-                                />,
-                              )}
-                            </Form.Item>
-                          </Col>
-                        );
+                                  ],
+                                })(
+                                  <SearchSelect
+                                    data={[
+                                      {
+                                        key: '1',
+                                        value: '折算',
+                                      },
+                                      {
+                                        key: '2',
+                                        value: '不折算',
+                                      },
+                                      {
+                                        key: '3',
+                                        value: '有时折算',
+                                      },
+                                    ]}
+                                  />,
+                                )}
+                              </Form.Item>
+                            </Col>
+                          );
                       }}
                     ></SdlForm>
                   </Card>
