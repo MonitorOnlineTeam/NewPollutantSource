@@ -8,15 +8,6 @@ export async function getPollutantList(params) {
     data: null
   } : result;
 }
-
-// 获取站点日报数据
-export async function getSiteDailyDayReport(params) {
-  const result = await post(API.ReportApi.GetDayReport, params, null);
-  return result === null ? {
-    data: null
-  } : result;
-}
-
 /**
  * 获取系统污染物
  */
@@ -28,96 +19,11 @@ export async function getPollutantTypeList(params) {
   }, null);
   return result === null ? { data: null } : result;
 }
-
 /**
  * 获取企业
  */
 export async function getEnterpriseList(params) {
   const result = await post(`/api/rest/PollutantSourceApi/MonitorTargetApi/GetTargetList?regionCode=${params.regionCode}&pollutantTypeCode=${params.pollutantTypeCode}`, {}, null);
-  return result === null ? { data: null } : result;
-}
-
-/**
- * 获取汇总日报数据
- */
-export async function getDailySummaryList(params) {
-  const result = await post(API.ReportApi.GetSummaryDayReport, params, null);
-  return result === null ? { data: null } : result;
-}
-
-/**
- * 报表导出
- */
-export async function reportExcel(params) {
-  const result = await post(API.ExportApi.GetReportExcel, params, null);
-  return result === null ? { data: null } : result;
-}
-
-/**
- * 汇总报表导出
- */
-export async function summaryReportExcel(params) {
-  const result = await post(API.ExportApi.GetSummaryReportExcel, params, null);
-  return result === null ? { data: null } : result;
-}
-
-/**
- * 获取上报数据月报
- */
-export async function getStatisticsReportDataList(params) {
-
-  const result = await post('/api/rest/PollutantSourceApi/DataReportApi/GetStatisticsReportDataList', params, null);
-  return result === null ? { data: null } : result;
-}
-
-/**
- * 获取上报数据月报
- */
-export async function getEntSewageList(params) {
-
-  const result = await post('/api/rest/PollutantSourceApi/DataReportApi/GetEntSewageList', params, null);
-  return result === null ? { data: null } : result;
-}
-
-/**
- * 导出上报数据月报
- */
-export async function getStatisticsReportDataExcel(params) {
-
-  const result = await post('/api/rest/PollutantSourceApi/DataReportApi/GetStatisticsReportDataExcel', params, null);
-  return result === null ? { data: null } : result;
-}
-
-
-/**
- * 获取站点月报数据
- */
-export async function getMonthlyReport(params) {
-  const result = await post(API.ReportApi.GetMonthReport, params, null);
-  return result === null ? { data: null } : result;
-}
-
-/**
- * 获取站点年报表
- */
-export async function getAnnalsReport(params) {
-  const result = await post(API.ReportApi.GetYearReport, params, null);
-  return result === null ? { data: null } : result;
-}
-
-/**
- * 获取汇总月报数据
- */
-export async function getSummaryMonthReport(params) {
-  const result = await post(API.ReportApi.GetSummaryMonthReport, params, null);
-  return result === null ? { data: null } : result;
-}
-
-/**
- * 获取汇总年报数据
- */
-export async function getSummaryYearReport(params) {
-  const result = await post(API.ReportApi.GetSummaryYearReport, params, null);
   return result === null ? { data: null } : result;
 }
 
@@ -147,19 +53,6 @@ export async function exportSmokeReport(params) {
   const result = await post(API.ExportApi.ExportAllTypeDataListGas, params, null);
   return result;
 }
-
-// 汇总周报
-export async function getSummaryWeekReport(params) {
-  const result = await post(API.ReportApi.GetSummaryWeekReport, params, null);
-  return result;
-}
-
-// 汇总季报
-export async function getSummaryQuarterReport(params) {
-  const result = await post(API.ReportApi.GetSummaryQuarterReport, params, null);
-  return result;
-}
-
 // 二氧化碳 - 获取企业列表
 export async function getEntByRegionAndAtt(params) {
   const result = post(API.RegionApi.GetEntByRegionAndAtt, params, null)
@@ -171,4 +64,120 @@ export async function getReportColumns(params) {
   return result
 }
 
+
+// 获取站点日报数据
+export async function getSiteDailyDayReport(params) {
+  // const result = await post(API.ReportApi.GetDayReport, params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetSummaryAllTypeReportData, {...params, dataType: "day"}, null);
+  return result === null ? {
+    data: null
+  } : result;
+}
+/**
+ * 获取站点月报数据
+ */
+export async function getMonthlyReport(params) {
+  // const result = await post(API.ReportApi.GetMonthReport, params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetSummaryAllTypeReportData, {...params, dataType: "month"}, null);
+  return result === null ? { data: null } : result;
+}
+
+/**
+ * 获取站点年报表
+ */
+export async function getAnnalsReport(params) {
+  // const result = await post(API.ReportApi.GetYearReport, params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetSummaryAllTypeReportData, {...params, dataType: "year"}, null);
+  return result === null ? { data: null } : result;
+}
+
+/**
+ * 站点报表导出
+ */
+export async function reportExcel(params) {
+  // const result = await post(API.ExportApi.GetReportExcel, params, null);
+  const result = await post(API.WholeProcessMonitorApi.ExportSummaryAllTypeReportData, params, null);
+  return result === null ? { data: null } : result;
+}
+
+
+
+/**
+ * 获取上报数据月报
+ */
+export async function getStatisticsReportDataList(params) {
+
+  const result = await post('/api/rest/PollutantSourceApi/DataReportApi/GetStatisticsReportDataList', params, null);
+  return result === null ? { data: null } : result;
+}
+
+/**
+ * 获取上报数据月报
+ */
+export async function getEntSewageList(params) {
+
+  const result = await post('/api/rest/PollutantSourceApi/DataReportApi/GetEntSewageList', params, null);
+  return result === null ? { data: null } : result;
+}
+
+/**
+ * 导出上报数据月报
+ */
+export async function getStatisticsReportDataExcel(params) {
+
+  const result = await post('/api/rest/PollutantSourceApi/DataReportApi/GetStatisticsReportDataExcel', params, null);
+  return result === null ? { data: null } : result;
+}
+
+
+
+/**
+ * 获取汇总日报数据
+ */
+export async function getDailySummaryList(params) {
+  // const result = await post(API.ReportApi.GetSummaryDayReport, params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetSummaryAllTypeData,  {...params, dataType: "day"}, null);
+  return result === null ? { data: null } : result;
+}
+
+// 汇总周报
+export async function getSummaryWeekReport(params) {
+  // const result = await post(API.ReportApi.GetSummaryWeekReport, params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetSummaryAllTypeData,  {...params, dataType: "week"}, null);
+  return result;
+}
+/**
+ * 获取汇总月报数据
+ */
+export async function getSummaryMonthReport(params) {
+  // const result = await post(API.ReportApi.GetSummaryMonthReport, params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetSummaryAllTypeData,  {...params, dataType: "month"}, null);
+  return result === null ? { data: null } : result;
+}
+// 汇总季报
+export async function getSummaryQuarterReport(params) {
+  // const result = await post(API.ReportApi.GetSummaryQuarterReport, params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetSummaryAllTypeData, {...params, dataType: "quarter"}, null);
+  return result;
+}
+
+/**
+ * 获取汇总年报数据
+ */
+export async function getSummaryYearReport(params) {
+  // const result = await post(API.ReportApi.GetSummaryYearReport, params, null);
+  const result = await post(API.WholeProcessMonitorApi.GetSummaryAllTypeData, {...params, dataType: "year"}, null);
+  return result === null ? { data: null } : result;
+}
+
+
+
+/**
+ * 汇总报表导出
+ */
+export async function summaryReportExcel(params) {
+  // const result = await post(API.ExportApi.GetSummaryReportExcel, params, null);
+  const result = await post(API.WholeProcessMonitorApi.ExportSummaryAllTypeData, params, null);
+  return result === null ? { data: null } : result;
+}
 

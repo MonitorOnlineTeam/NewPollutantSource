@@ -31,6 +31,8 @@ const Index = props => {
     permisBtnTip,
     titles,
     singleLayer,
+    disabled,
+    listDisabled,
   } = props;
   const [targetKeys, setTargetKeys] = useState(checkedKeys);
   const [rightTreeData, setRightTreeData] = useState([]);
@@ -155,13 +157,13 @@ const Index = props => {
                 defaultExpandAll
                 height={550}
                 {...props}
+                disabled={listDisabled}
                 checkedKeys={checkedKeys}
                 treeData={leftTreeData}
                 onCheck={(_, node) => {
-                  // if(!permission){
-                  //   message.warning(permisBtnTip)
-                  //   return;
-                  // }
+                  if(listDisabled){
+                    return;
+                  }
                   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll });
                 }}
                 // onSelect={(_, node) => {
@@ -181,13 +183,13 @@ const Index = props => {
                 defaultExpandAll
                 height={550}
                 {...props}
+                disabled={listDisabled}
                 checkedKeys={checkedKeys}
                 treeData={rightTreeData}
                 onCheck={(_, node) => {
-                  // if(permission){
-                  //   message.warning(permisBtnTip)
-                  //   return;
-                  // }
+                  if(listDisabled){
+                    return;
+                  }
                   dealCheckboxSeleted({ node, onItemSelect, onItemSelectAll });
                 }}
                 // onSelect={(_, node) => {
@@ -337,7 +339,7 @@ const Index = props => {
 
   return (
     <Spin spinning={initDataLoading}>
-      <TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange} />{' '}
+      <TreeTransfer dataSource={treeData} targetKeys={targetKeys} onChange={onChange}  disabled={disabled} listDisabled={listDisabled}/>{' '}
     </Spin>
   );
 };

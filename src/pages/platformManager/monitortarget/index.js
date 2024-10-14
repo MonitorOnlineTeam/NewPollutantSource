@@ -45,6 +45,7 @@ import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import webConfig from '@public/webConfig';
 import MonitorEntElectronicFence from './components/MonitorEntElectronicFence';
+import { permissionButton } from '@/utils/utils';
 
 const { confirm } = Modal;
 
@@ -59,12 +60,28 @@ const { confirm } = Modal;
 export default class MonitorTarget extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      licencePermis:false,
+      pointQRPermis:false,
+      operationTaskPermis:false,
+      editElectronicFenceRadiusPermis:false,
+
+    };
   }
 
   componentDidMount() {
     const { match, dispatch } = this.props;
     this.reloadPage(match.params.configId);
+    const buttonList = permissionButton(this.props.location.pathname);
+    buttonList.map(item => {
+      switch (item) {
+        case 'licence': this.setState({ licencePermis: true });break;
+        case 'pointQR': this.setState({ pointQRPermis: true });break;
+        case 'operationTask': this.setState({ operationTaskPermis: true });break;
+        case 'editElectronicFenceRadius': this.setState({ editElectronicFenceRadiusPermis: true });break;
+
+      }
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -319,7 +336,7 @@ export default class MonitorTarget extends Component {
                 )}
 
                 {/* {configId == "Station" && webConfig.entShowBtns.includes("licence") && <><Divider type="vertical" /> */}
-                {webConfig.entShowBtns.includes('licence') && !configInfo.IsOpera && (
+                {webConfig.entShowBtns.includes('licence') && !configInfo.IsOpera && this.state.licencePermis && (
                   <>
                     <Divider type="vertical" />
                     <Tooltip title="排污许可证">
@@ -335,7 +352,7 @@ export default class MonitorTarget extends Component {
                 )}
 
                 {// 只有企业显示机组
-                targetType == 1 && webConfig.entShowBtns.includes('QR') && (
+                targetType == 1 && webConfig.entShowBtns.includes('QR') && this.state.pointQRPermis && (
                   <>
                     <Divider type="vertical" />
                     <Tooltip title="生成监测点二维码">
@@ -369,7 +386,7 @@ export default class MonitorTarget extends Component {
                     </Tooltip>
                   </>
                 )}
-                {webConfig.entShowBtns.includes('operationTask') && configInfo.IsOpera && (
+                {webConfig.entShowBtns.includes('operationTask') && configInfo.IsOpera && this.state.operationTaskPermis && (
                   <>
                     <Divider type="vertical" />
                     <Tooltip title="运维任务">
@@ -390,7 +407,7 @@ export default class MonitorTarget extends Component {
                     </Tooltip>
                   </>
                 )}
-                {webConfig.entShowBtns.includes('electronicFence') && configInfo.IsOpera && (
+                {webConfig.entShowBtns.includes('electronicFence') && configInfo.IsOpera && this.state.editElectronicFenceRadiusPermis && (
                   <>
                     <Divider type="vertical" />
                     <Tooltip title="修改电子围栏半径">

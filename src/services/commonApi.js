@@ -182,7 +182,7 @@ export async function GetRoleCodeList(params) {
 
 //行政区  列表  调试服务
 export async function GetTestXuRegions(params) {
-  const result = post(API.CtAssetManagementApi.GetTestXuRegions, params, params, null);
+  const result = post(API.CtDebugServiceApi.GetTestXuRegions, params, params, null);
   return result;
 }
 //行政区  列表  成套

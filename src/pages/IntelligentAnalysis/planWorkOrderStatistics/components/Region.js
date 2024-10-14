@@ -60,6 +60,8 @@ const dvaPropsData = ({ loading, planWorkOrderStatistics, global }) => ({
   exportActualRegDetailLoading: planWorkOrderStatistics.exportActualRegDetailLoading,
   exportActualRegTaskLoading: planWorkOrderStatistics.exportActualRegTaskLoading,
   exportActualRegDetailTaskLoading: planWorkOrderStatistics.exportActualRegDetailTaskLoading,
+  operationSettingInfo: global.operationSettingInfo,
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -173,7 +175,7 @@ const Index = (props, ref) => {
 
 
 
-  const { clientHeight, tableDatas, tableTotal, tableLoading, pointLoading, exportLoading, exportPointLoading, pollutantType, refInstance, isPlanCalibrationModal, isPlanInspectionModal, isActualCalibrationModal } = props;
+  const { clientHeight, tableDatas, tableTotal, tableLoading, pointLoading, exportLoading, exportPointLoading, pollutantType, refInstance, isPlanCalibrationModal, isPlanInspectionModal, isActualCalibrationModal,operationSettingInfo:{OperationType} } = props;
 
   const { cityTableDatas, cityTableLoading, cityTableTotal, cityActualTableLoading } = props; //市级别
 
@@ -594,7 +596,7 @@ const Index = (props, ref) => {
       ],
     },
   ]
-  const insideWorkOrderColumns = [
+  let insideWorkOrderColumns = [
     // {
     //   title: '省/市',
     //   dataIndex: 'regionName',
@@ -714,7 +716,7 @@ const Index = (props, ref) => {
 
   ];
 
-  const insideWorkOrderColumns2 = [
+  let insideWorkOrderColumns2 = [
     // {
     //   title: '省/市',
     //   dataIndex: 'regionName',
@@ -2124,6 +2126,10 @@ const Index = (props, ref) => {
     }
   }
   handleCol()
+  if(OperationType==2){
+    insideWorkOrderColumns = insideWorkOrderColumns.filter(item=>item.title!='运维负责人' && item.title!='运维负责人工号')
+    insideWorkOrderColumns2 = insideWorkOrderColumns2.filter(item=>item.title!='运维负责人' && item.title!='运维负责人工号')
+  }
 
   return (
     <div style={{ height: '100%' }}>
@@ -2232,7 +2238,7 @@ const Index = (props, ref) => {
             loading={!isActualCalibrationModal ? insideOrOutsideWorkLoading : insideOrOutsideWorkActualLoading}
             bordered
             dataSource={insideOrOutsiderWorkTableDatas}
-            columns={insideWorkType == 1 ? insideWorkOrderColumns : insideWorkOrderColumns2}
+            columns={insideWorkType == 1 ?  insideWorkOrderColumns : insideWorkOrderColumns2}
             scroll={{ y: 'calc(100vh - 420px)' }}
             pagination={{
               showSizeChanger: true,

@@ -25,7 +25,7 @@ const { MonthPicker } = DatePicker;
 const { SHOW_PARENT, SHOW_ALL } = TreeSelect;
 
 @connect(({ loading, report, autoForm, global }) => ({
-  loading: loading.effects['report/getDateReportData'],
+  loading: loading.effects['report/getDateReportData'] || loading.effects['report/getPollutantList']  || loading.effects['report/getPollutantTypeList'],
   exportLoading: loading.effects['report/reportExport'],
   entLoading: loading.effects['report/getEnterpriseList'],
   entAndPointLoading: loading.effects['report/getPointReportEntAndPointList'],
@@ -133,6 +133,7 @@ class DateReportPage extends PureComponent {
                   DGIMN: values.DGIMN,
                   BeginTime: this.state.beginTime,
                   EndTime: this.state.endTime,
+                  PageSize: values.reportType=='siteDaily'? 24 :  values.reportType === 'monthly' ? 31 : 12,
                 },
                 reportType: values.reportType,
               });
@@ -215,7 +216,7 @@ class DateReportPage extends PureComponent {
       }));
 
       columns.unshift({
-        title: '点名称',
+        title: '排口名称',
         width: 200,
         dataIndex: 'pointName',
       });
@@ -430,11 +431,12 @@ class DateReportPage extends PureComponent {
       treeDefaultExpandAll: true,
     };
     // };
+
     return (
       <BreadcrumbWrapper>
-        <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
-          <Card className="contentContainer">
-            <Form style={{ marginBottom: 20 }}>
+        {/* <Spin spinning={exportLoading || entAndPointLoading} delay={500}> */}
+          <Card className="contentContainer" bodyStyle={{padding:'10px 24px'}}>
+            <Form>
               <Row>
                 <Col xxl={4} md={6} xs={24}>
                   <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
@@ -616,7 +618,7 @@ class DateReportPage extends PureComponent {
             </Form>
             <SdlTable
               rowKey={(record, index) => index}
-              loading={loading}
+              loading={loading || entAndPointLoading}
               // style={{ minHeight: 80 }}
               columns={this.state.columns}
               dataSource={dateReportData}
@@ -639,7 +641,7 @@ class DateReportPage extends PureComponent {
               }}
             />
           </Card>
-        </Spin>
+        {/* </Spin> */}
       </BreadcrumbWrapper>
     );
   }

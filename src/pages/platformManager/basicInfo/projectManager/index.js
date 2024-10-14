@@ -149,7 +149,7 @@ const Index = (props) => {
 
   const isEditing = (record) => record.key === editingKey;
 
-  const { tableDatas, tableTotal, loadingConfirm, pointDatas, pointDatasTotal, tableLoading, pointLoading, exportLoading, exportPointLoading,sellerCompanyDatas,sellerCompanyTotal,sellerCompanyLoading,addOrUpdSellerCompanyLoading, delSellerCompanyLoading,} = props;
+  const { tableDatas, tableTotal, loadingConfirm, pointDatas, pointDatasTotal, tableLoading, pointLoading, exportLoading, exportPointLoading,sellerCompanyDatas,sellerCompanyTotal,sellerCompanyLoading,addOrUpdSellerCompanyLoading, delSellerCompanyLoading, match:{params:{listType:listType}}} = props;
 
   // const provinceShow = props.configInfo&&props.configInfo.IsShowProjectRegion; 
   const provinceShow = true;
@@ -158,7 +158,7 @@ const Index = (props) => {
   useEffect(() => {
     onFinish(pageIndex, pageSize);
     sellerhandleTableChange(1,20)
-    const buttonList = permissionButton(props.match.path)
+    const buttonList = permissionButton(props.location.pathname)
     buttonList.map(item => {
       switch (item) {
         case 'sellCompany': setSellCompanyPermis(true); break;
@@ -647,11 +647,11 @@ const Index = (props) => {
             />
           </Form.Item>
         </Col>
-          <Col span={8}>
+          {listType == 2 && <Col span={8}>
             <Form.Item name='EntName' label='卖方公司名称'>
               <Input placeholder="请输入卖方公司名称" allowClear />
             </Form.Item>
-          </Col>
+          </Col>}
           <Col span={8}>
             <Form.Item name='RegionCode' label='客户所在地' >
               <Input placeholder='请输入客户所在地' allowClear />
@@ -684,12 +684,13 @@ const Index = (props) => {
         <Button icon={<ExportOutlined />} loading={exportLoading} style={{ margin: '0 8px', }} onClick={() => { exports() }}>
           导出
          </Button>
-        {sellCompanyPermis&&<Button type="primary" onClick={() => { setSellerCompanyVisible(true);setSellerPageIndex(1);setSellerPageSize(20) }}>
+        {sellCompanyPermis&& listType == 2 && <Button type="primary" onClick={() => { setSellerCompanyVisible(true);setSellerPageIndex(1);setSellerPageSize(20) }}>
           维护卖方公司清单
          </Button>}
       </Row>
     </Form>
   }
+  listType == 2 ? columns : columns = columns.filter(item => item.title != '卖方公司名称')
   return (
     <div className={styles.projectManagerSty}>
       <BreadcrumbWrapper>
@@ -753,7 +754,7 @@ const Index = (props) => {
                 <Input placeholder='请输入客户所在地' />
               </Form.Item>
             </Col>
-            <Col span={12}>
+           {listType ==2 &&  <Col span={12}>
    
               <Form.Item label="卖方公司"    name="SellCompanyName" rules={[{ required: true, message: '请输入卖方公司!', },]} >
               {sellerCompanyLoading?
@@ -766,7 +767,7 @@ const Index = (props) => {
                 }
               </Form.Item>
             
-            </Col>
+            </Col>}
 
             <Col span={12}>
               <Form.Item label="行业" name="IndustryCode" >

@@ -143,6 +143,7 @@ export default class MonitorPoint extends Component {
       editOperationStatusData: {},
       associationPointList: [], // 窑尾关联的排口
       modifyPointOpratioinStatusPermis: false,
+      devicePointName:'',
     };
   }
 
@@ -151,9 +152,7 @@ export default class MonitorPoint extends Component {
     // 2.污染物类型
     // 3.获取监测点数据
     const { dispatch, match } = this.props;
-    console.log('match=', match);
-    const buttonList = permissionButton('/platformconfig/monitortarget/AEnterpriseTest/1');
-    console.log(buttonList);
+    const buttonList = permissionButton(this.props.location.pathname);
     buttonList.map(item => {
       switch (item) {
         case 'ModifyPointOpratioinStatus':
@@ -906,6 +905,7 @@ export default class MonitorPoint extends Component {
       deviceManagerVisible: true,
       deviceManagerMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
       deviceManagerGasType: row['dbo.T_Bas_CommonPoint.Col4'],
+      devicePointName:row['dbo.T_Bas_CommonPoint.PointName'],
     });
   };
   editOperationStatus = row => {
@@ -1195,8 +1195,8 @@ export default class MonitorPoint extends Component {
       },
     };
     // const radiusFlag = tabKey == 6 && !isSuperAdministrator;
-    const titles =
-      pollutantType == 1 ? '废水' : deviceManagerGasType == 1 ? '废气-常规CEMS' : '废气-VOCS';
+    const titles = this.state.devicePointName
+      // pollutantType == 1 ? '废水' : deviceManagerGasType == 1 ? '废气-常规CEMS' : '废气-VOCS';
 
     return (
       <BreadcrumbWrapper title="监测点维护">

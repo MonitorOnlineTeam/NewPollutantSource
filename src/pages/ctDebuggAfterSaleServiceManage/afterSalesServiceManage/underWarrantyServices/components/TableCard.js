@@ -758,7 +758,6 @@ const TableCard = props => {
         <Form
           id="searchForm"
           form={form}
-          layout="inline"
           initialValues={{
             solveStatus: '',
           }}

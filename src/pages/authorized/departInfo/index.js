@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-27 13:51:55
+ * @LastEditTime: 2024-09-29 14:06:11
  * @Description: 部门管理
  */
 import React, { Component, Fragment } from 'react';
@@ -945,7 +945,6 @@ class DepartIndex extends Component {
   pointAccessClick = () => {
     const dataTreeValue = this.state.DataTreeValue;
     const { pollutantType } = this.state;
-    debugger;
     this.props.dispatch({
       type: 'departinfo/getentandpoint',
       payload: {
@@ -2085,6 +2084,46 @@ class DepartIndex extends Component {
                 </div>
               )}
             </Modal>
+            <Modal
+              title={this.state.settingOperationGrouptitle}
+              visible={this.state.settingOperationGroupVisible}
+              destroyOnClose={true}
+              onCancel={() => {
+                this.setState({ settingOperationGroupVisible: false });
+              }}
+              width={1100}
+              footer={null}
+              bodyStyle={{
+                overflowY: 'auto',
+                maxHeight: this.props.clientHeight - 240,
+              }}
+            >
+              <Spin
+                spinning={
+                  this.props.GetDepartInfoByTree ||
+                  this.props.addSetOperationGroupLoading ||
+                  this.props.getSetOperationGroupLoading
+                }
+              >
+                {this.state.departInfoTree?.length > 0 &&
+                !this.props.GetDepartInfoByTree &&
+                !this.props.getSetOperationGroupLoading ? (
+                  <TreeTransferSingle
+                    key="key"
+                    titles={['待设置运维小组', '已设置运维小组']}
+                    treeData={this.state.departInfoTree}
+                    fieldNames={{ title: 'UserGroup_Name'}}
+                    checkedKeys={this.props.setOperationGroupId}
+                    targetKeysChange={(key, type, callback) => {
+                      this.settingOperationGroupOk(key, type == 1 ? 1 : 2, callback);
+                    }}
+                  />
+                ) : (
+                  <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                )}
+              </Spin>
+            </Modal>
+
             <Modal
               title={this.state.settingOperationGrouptitle}
               visible={this.state.settingOperationGroupVisible}

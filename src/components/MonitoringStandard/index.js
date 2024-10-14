@@ -21,6 +21,8 @@ import {
   Empty,
   Tooltip,
   Switch,
+  Tree,
+  Spin
 } from 'antd';
 import { connect } from 'dva';
 import EditPollutant from './editPollutant';
@@ -31,7 +33,7 @@ import SdlTable from '@/components/SdlTable';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { EditIcon } from '@/utils/icon';
-
+const { DirectoryTree } = Tree;
 @connect(({ loading, standardLibrary, autoForm, global }) => ({
   ...loading,
   list: standardLibrary.uselist,
@@ -41,6 +43,9 @@ import { EditIcon } from '@/utils/icon';
   requstresult: standardLibrary.requstresult,
   standardTableDatas: standardLibrary.PollutantListByDGIMN,
   clientHeight: global.clientHeight,
+  getStandardPointListLoading: loading.effects['standardLibrary/GetStandardPointList'],
+  addSetOperationCompanyPointLoading: loading.effects['standardLibrary/CopyStandard'],
+
 }))
 class MonitoringStandard extends Component {
   constructor(props) {
@@ -54,6 +59,10 @@ class MonitoringStandard extends Component {
       PollutantCode: null,
       PollutantName: null,
       standardLibraryModal: false,
+      copyAddVisible: false,
+      standardPointList: [],
+      copyMN: '',
+      copyAddExpandedKeys:[],
     };
   }
 
@@ -139,7 +148,55 @@ class MonitoringStandard extends Component {
       },
     });
   };
+  copyAdd = () => {
+    this.setState({
+      copyAddVisible: true
+    })
+    this.props.dispatch({
+      type: 'standardLibrary/GetStandardPointList',
+      payload: {
+        DGIMN: this.props.DGIMN,
+        PollutantCode: 1,
+        Enalbe: 1,
+      },
+      callback: (res) => {
+        if (res?.[0]) {
+          const data = [{ title: res[0].ParentName, key: res[0].ParentCode,selectable:false}]
+          data[0].children = res.map(item => ({ title: item.PointName, key: item.DGIMN }))
+          this.setState({
+            standardPointList: data,
+            copyAddExpandedKeys:res.map(item => item.DGIMN) //展开所有节点
+          })
+        }
+      }
+    });
+  }
+  copyAddSelect = (keys, info) => {
+    this.setState({ copyMN: keys })
+  }
+  copyAddOk = () => {
+    if(this.state.copyMN?.length<=0){
+       message.error('请选择需要复制添加的点位')
+       return
+    }
+    this.props.dispatch({
+      type: 'standardLibrary/CopyStandard',
+      payload: {
+        oldDGIMN: this.props.DGIMN,
+        DGIMN: this.state.copyMN.toString(),
+        PollutantCode: 1,
+        Enalbe: 1,
+      },
+      callback: (res) => {
+        this.setState({copyAddVisible:false})
+        this.getpollutantbydgimn(this.props.DGIMN);
+      }
+    });
+  }
 
+  copyAddCancel = () =>{
+    this.setState({ copyAddVisible: false,standardPointList:[] })
+  }
   render() {
     const columns = [
       {
@@ -703,23 +760,26 @@ class MonitoringStandard extends Component {
         style={{ width: '100%' }}
         bodyStyle={{ paddingBottom: 0 }}
         className={styles.standardlibrarySty}
-        extra={
-          <>
-            {pollutantType == '5' ? (
-              ''
-            ) : (
-              <Button
-                onClick={() => {
-                  this.setState({
-                    standardlibraryModal: true,
-                  });
-                }}
-                icon={<SearchOutlined />}
-              >
-                查看标准库
-              </Button>
-            )}
-          </>
+        title={
+          <Row justify='space-between'>
+            <Button type='primary' onClick={this.copyAdd}>复制添加</Button>
+            <>
+              {pollutantType == '5' ? (
+                ''
+              ) : (
+                  <Button
+                    onClick={() => {
+                      this.setState({
+                        standardlibraryModal: true,
+                      });
+                    }}
+                    icon={<SearchOutlined />}
+                  >
+                    查看标准库
+                  </Button>
+                )}
+            </>
+          </Row>
         }
       >
         <SdlTable
@@ -730,7 +790,7 @@ class MonitoringStandard extends Component {
           dataSource={standardTableDatas}
           className={styles.tableSty}
           scroll={{ y: this.props.isPoint && this.props.clientHeight - 420 }}
-          //  pagination={{ pageSize: 20 }}
+        //  pagination={{ pageSize: 20 }}
         />
         <Modal
           open={standardlibraryModal}
@@ -803,15 +863,34 @@ class MonitoringStandard extends Component {
                   oncancel={this.oncancel}
                 />
               ) : (
-                <EditPollutant
-                  pid={this.state.PollutantCode}
-                  DGIMN={this.state.DGIMN}
-                  onRef={this.onRef1}
-                  oncancel={this.oncancel}
-                />
-              )}{' '}
+                  <EditPollutant
+                    pid={this.state.PollutantCode}
+                    DGIMN={this.state.DGIMN}
+                    onRef={this.onRef1}
+                    oncancel={this.oncancel}
+                  />
+                )}{' '}
             </>
           )}
+        </Modal>
+        <Modal
+          open={this.state.copyAddVisible}
+          title={'复制添加'}
+          destroyOnClose={true} // 清除上次数据
+          onCancel={this.copyAddCancel}
+          footer={this.state.standardPointList?.length>=1? [<Button onClick={this.copyAddCancel}>取消</Button>, <Button loading={this.props.addSetOperationCompanyPointLoading} type='primary' onClick={this.copyAddOk}>提交</Button>] : null}
+        >
+          <Spin spinning={this.props.getStandardPointListLoading}>
+            {this.state.standardPointList?.[0]?
+              <DirectoryTree
+                defaultExpandAll
+                onSelect={this.copyAddSelect}
+                treeData={this.state.standardPointList}
+              />
+              :
+              <Empty description='暂无可复制添加的点位'/>
+            }
+          </Spin>
         </Modal>
       </Card>
     );

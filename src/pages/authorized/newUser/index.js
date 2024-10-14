@@ -2,7 +2,7 @@
  * @Author: jab
  * @Date: 2020-12-1
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-26 16:10:21
+ * @LastEditTime: 2024-10-10 11:29:29
  * @Description: 用户管理 新页面
  */
 import React, { Component, Fragment } from 'react';
@@ -43,6 +43,7 @@ import {
   TreeSelect,
   Tree,
   Empty,
+  Descriptions
 } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { routerRedux } from 'dva/router';
@@ -99,6 +100,8 @@ export default class UserInfoIndex extends Component {
       pollutantType: 2,
       entPointName: '',
       checkedKeys: [],
+      operaEditVisible: false,
+      operaEditData:{},
     };
 
     this.columns = [
@@ -226,6 +229,13 @@ export default class UserInfoIndex extends Component {
               <Tooltip title="详情">
                 <a
                   onClick={() => {
+                    if (this.props.configInfo.IsOpera) {
+                      this.setState({
+                        operaEditVisible: true,
+                        operaEditData:row
+                      })
+                      return
+                    }
                     this.props.dispatch(
                       routerRedux.push(
                         '/rolesmanager/user/userinfoview/' + row['ID'] + '?tabName=用户管理 - 详情',
@@ -693,7 +703,7 @@ export default class UserInfoIndex extends Component {
     const searchConditions = searchConfigItems[configId] || [];
     const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
 
-    const { selectedRowKeys, selectedRows } = this.state;
+    const { selectedRowKeys, selectedRows,operaEditData } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -724,6 +734,12 @@ export default class UserInfoIndex extends Component {
       },
     };
     const provinceShow = this.props.configInfo && this.props.configInfo.IsShowProjectRegion;
+    if (this.props.configInfo.IsOpera) {
+      this.columns = this.columns.filter(
+        item =>
+          item.title != '拼音'
+      )
+    }
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -923,11 +939,11 @@ export default class UserInfoIndex extends Component {
             columns={
               provinceShow
                 ? this.columns.filter(
-                    item =>
-                      item.title != '运维单位' &&
-                      item.title != '业务属性' &&
-                      item.title != '行业属性',
-                  )
+                  item =>
+                    item.title != '运维单位' &&
+                    item.title != '业务属性' &&
+                    item.title != '行业属性',
+                )
                 : this.columns
             }
             dataSource={this.props.tableDatas}
@@ -954,8 +970,8 @@ export default class UserInfoIndex extends Component {
               overflowY: 'auto',
               maxHeight: this.props.clientHeight - 240,
             }}
-            // onOk={this.handleDataOK}
-            // confirmLoading={this.state.okLoading}
+          // onOk={this.handleDataOK}
+          // confirmLoading={this.state.okLoading}
           >
             {
               <div>
@@ -1018,10 +1034,39 @@ export default class UserInfoIndex extends Component {
                     />
                   </Spin>
                 ) : (
-                  <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                )}
+                      <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                    )}
               </div>
             }
+          </Modal>
+
+          <Modal
+            title={`用户详情`}
+            visible={this.state.operaEditVisible}
+            destroyOnClose={true}
+            wrapClassName={'spreadOverModal'}
+            mask={false}
+            onCancel={() => {
+              this.setState({ operaEditVisible: false });
+            }}
+            footer={null}
+
+          >
+            <Descriptions>
+               <Descriptions.Item label="登录名">{operaEditData?.userAccount}</Descriptions.Item>
+              <Descriptions.Item label="姓名">{operaEditData?.userName}</Descriptions.Item>
+              <Descriptions.Item label="性别">{operaEditData?.userSex==1? '男' : '女'}</Descriptions.Item>
+              <Descriptions.Item label="手机号">{operaEditData?.userPhone}</Descriptions.Item>
+              <Descriptions.Item label="邮箱">{operaEditData?.email}</Descriptions.Item>
+              <Descriptions.Item label="推送类型">{operaEditData?.sendPushName}</Descriptions.Item>
+              <Descriptions.Item label="用户类型">{operaEditData?.userType==1? '雪迪龙': operaEditData?.userType==2? '运维' : '其他' } </Descriptions.Item>
+              {operaEditData?.userType==1 || operaEditData?.userType==2 && <Descriptions.Item label="运维公司">{operaEditData?.companyName} </Descriptions.Item>}
+              {operaEditData?.userType==1 && <Descriptions.Item label="业务属性">{operaEditData?.businessAttribute} </Descriptions.Item>}
+              {operaEditData?.userType==1 &&<Descriptions.Item label="行业属性">{operaEditData?.industryAttribute} </Descriptions.Item>}
+              {operaEditData?.userType==1 &&<Descriptions.Item label="所属大区">{operaEditData?.questionName} </Descriptions.Item>}
+
+            </Descriptions>
+
           </Modal>
         </Card>
       </BreadcrumbWrapper>

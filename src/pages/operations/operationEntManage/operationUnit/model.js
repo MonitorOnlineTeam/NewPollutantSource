@@ -1,7 +1,8 @@
-/**
- * 功  能：缺失数据
- * 创建人：jab
- * 创建时间：2020.09.27
+/*
+ * @Author: outman0611
+ * @Date: 2024-06-11 14:29:31
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-09-29 15:39:58
  */
 
 import Model from '@/utils/model';
@@ -10,8 +11,11 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportGetAlarmDataList,
-  DeleteOperationMaintenanceEnterpriseID
+  DeleteOperationMaintenanceEnterpriseID,
+
 } from './service';
+import { requestPost } from '@/utils/utils';
+import { API } from '@config/API'
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
@@ -27,22 +31,22 @@ export default Model.extend({
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      Atmosphere:'',
-      PollutantType:'',
-      PageSize:20,
-      PageIndex:1,
-      dataType:'HourData',
-      OperationPersonnel:''
+      Atmosphere: '',
+      PollutantType: '',
+      PageSize: 20,
+      PageIndex: 1,
+      dataType: 'HourData',
+      OperationPersonnel: ''
     },
     tableDatas: [],
     total: '',
-    attentionList:[],
+    attentionList: [],
     priseList: [],
-    operationUnitWhere:undefined
+    operationUnitWhere: undefined
   },
   subscriptions: {},
   effects: {
-    *getDefectModel({ payload,callback }, { call, put, update, select }) {
+    *getDefectModel({ payload, callback }, { call, put, update, select }) {
       //列表
       const response = yield call(GetDefectModel, { ...payload });
       if (response.IsSuccess) {
@@ -54,7 +58,7 @@ export default Model.extend({
       }
     },
 
-    *deleteOperationMaintenanceEnterpriseID({ payload,callback}, { call, put, update, select }) {
+    *deleteOperationMaintenanceEnterpriseID({ payload, callback }, { call, put, update, select }) {
       //获取所有企业列表
       const response = yield call(DeleteOperationMaintenanceEnterpriseID, { ...payload });
       if (response.IsSuccess) {
@@ -62,8 +66,25 @@ export default Model.extend({
         callback(response)
       }
     },
-
-
-
+    // 获取运维企业权限点位信息
+    *GetOperationCompanyPointList({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestPost, API.AssetManagementApi.GetOperationCompanyPointList, payload);
+        callback && callback(result?.Datas);
+    },
+    // 添加运维企业点位权限
+    *AddSetOperationCompanyPoint({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestPost, API.AssetManagementApi.AddSetOperationCompanyPoint, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 注销运维公司
+    *LogOffCompany({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestPost, API.AssetManagementApi.LogOffCompany, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
   },
 });
+

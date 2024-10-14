@@ -20,6 +20,7 @@ export default Model.extend({
     provinceTableDatas: [],
     provinceTableTotal: 0,
     provinceQueryPar: {},
+    resourceRetrievalCenterSelectIndex:'',
   },
   effects: {
     /*车辆管理 */
@@ -160,5 +161,28 @@ export default Model.extend({
         callback && callback(result.Datas);
       }
     },
+    //专家信息
+    *GetMavenList({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.GeneralManagerApi.GetMavenList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    //问题列表
+    *GetQuestionList({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.SystemManageApi.GetQuestionList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    //问题类别
+    *GetQuestionCategoryType({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.TechExpertSystemApi.GetQuestionList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+
+
   },
 });

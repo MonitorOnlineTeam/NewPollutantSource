@@ -168,10 +168,10 @@ export default {
       target: API_HOST,
       changeOrigin: true,
     },
-    // '/wwwroot': {
-    //   target: API_HOST, // 接口的域名
-    //   changeOrigin: true,
-    // },
+    '/wwwroot': {
+      target: UPLOAD_HOST, // 接口的域名
+      changeOrigin: true,
+    },
     '/109Api': {
       target: API_HOST_109, //调试服务导出PDF 代理
       changeOrigin: true,

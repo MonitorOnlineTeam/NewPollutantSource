@@ -1,4 +1,5 @@
 import { post, get } from '@/utils/request';
+import { API } from '@config/API';
 
 // 获取大区
 export async function GetAllRegionalList(params) {
@@ -21,7 +22,7 @@ export async function InsOrUpdExpert(params) {
 // 查询专家信息
 export async function GetExpertList(params) {
   const result = await post(
-    '/rest/PollutantSourceApi/DailyWorkManagerApi/GetExpertList',
+    API.GeneralManagerApi.GetExpertList,
     params,
   );
   return result;

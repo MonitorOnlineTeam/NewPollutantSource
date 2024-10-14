@@ -383,14 +383,14 @@ const Index = (props) => {
                   <Form.Item style={{  paddingLeft: 42 }}>
                     <Button style={{ width: '100%'}} icon={<DownloadOutlined />} onClick={questionTemplate} loading={questionTemplateLoading}>下载导入模板</Button>
                   </Form.Item>
-                  <Row align='end'>
+                  <Form.Item style={{  paddingLeft: 42 }}>
                     <Button onClick={() => { setPopVisible(false) }} style={{ marginRight: 8 }} >
                       取消
                 </Button>
                     <Button type="primary"   disabled={fileList.length === 0}  onClick={()=>handleUpload()} loading={uploading}>
                     {uploading ? '上传中' : '确定'}
                   </Button>
-                  </Row>
+                  </Form.Item>
                 </Form>
               }
             >

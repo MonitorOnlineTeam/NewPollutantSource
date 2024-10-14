@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-26 16:41:36
+ * @LastEditTime: 2024-10-09 17:43:38
  * @Description: 用户添加
  */
 import React, { Component } from 'react';
@@ -35,7 +35,7 @@ const { TreeNode } = Tree;
     RolesTreeDataLoading: loading.effects['userinfo/getrolestree'],
     treeData: userinfo.DepartTree,
     RolesTreeData: userinfo.RolesTree,
-    btnisloading: loading.effects['userinfo/add'],
+    btnisloading: loading.effects['userinfo/add'] || loading.effects['userinfo/AddOrUpdUser'],
     configInfo: global.configInfo,
     operaBasicInfoForm: userinfo.operaBasicInfoForm,
 }))
@@ -172,11 +172,13 @@ export default class UserInfoAdd extends Component {
                     dispatch({
                         type: 'userinfo/AddOrUpdUser',
                         payload: {
+                            User_ID: this.props.match.params.userid,
                             Role: checkedKeySel,
                             Depart: checkedKeysSel,
-                            FormData: {
-                                ...values,
-                            },
+                            ...values,
+                            SendPush: values.SendPush?.toString(),
+                            BusinessAttribute: values.BusinessAttribute?.toString(),
+                            IndustryAttribute: values.IndustryAttribute?.toString(),
                         },
                         callback:()=>{
                             router.push('/rolesmanager/user/newUserInfo')
@@ -285,7 +287,7 @@ export default class UserInfoAdd extends Component {
                                 >返回
                                 </Button>
                                 <Card bordered={false} title="基本信息" style={{ display: this.state.baseState }}>
-                                   {this.props.configInfo.IsOpera?
+                                 {this.props.configInfo.IsOpera?
                                     <OperaFormComponents formValidateFieldsCallback={(values)=>{ //单独写一个组件 因为getFieldDecorator每次都会render整个组件 导致卡顿
                                         this.setState({
                                         activeKey: 'roles',
@@ -295,14 +297,14 @@ export default class UserInfoAdd extends Component {
                                         selectKey: 'roles',
                                     })  
                                    }}/>
-                                   :
+                                   : 
                                    <SdlForm
                                         configId="UserInfoAdd"
                                         onSubmitForm={this.onSubmitForm.bind(this)}
                                         form={this.props.form}
                                         hideBtns
                                     >
-                                        {/* <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
+                                         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
                                             <Button
                                                 type="primary"
                                                 htmlType="submit"
@@ -321,7 +323,7 @@ export default class UserInfoAdd extends Component {
                                                 }}
                                             >下一步
                                         </Button>
-                                        </FormItem> */}
+                                        </FormItem> 
 
 
                                         <Divider orientation="right">
@@ -346,7 +348,7 @@ export default class UserInfoAdd extends Component {
                                             </Button>
                                         </Divider>
                                 </SdlForm>
-                                }
+                                 }
                                 </Card>
                                 <Card bordered={false} title="角色设置" style={{ display: this.state.rolesState }}>
                                     {

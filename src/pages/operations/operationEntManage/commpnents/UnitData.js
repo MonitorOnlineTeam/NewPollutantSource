@@ -70,7 +70,11 @@ const pageUrl = {
   regionInfoTree: autoForm.regionList,
   entAndPointList: common.entAndPointList,
   getEntPointLoading: loading.effects['common/getEntAndPointList'],
-  checkPointLoading: loading.effects['userAuthority/getpointbydepid'],
+  checkPointLoading: loading.effects['operationUnit/GetOperationCompanyPointList'],
+  addSetOperationCompanyPointLoading: loading.effects['operationUnit/AddSetOperationCompanyPoint'],
+  logOffCompanyLoading: loading.effects['operationUnit/LogOffCompany'],
+
+
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -83,12 +87,12 @@ export default class EntTransmissionEfficiency extends Component {
       entName: '',
       entCode: '',
       pointPermissionVisible: false,
-      pointPermissionID: undefined,
+      compoanyID: undefined,
       pointPermissionTitle: '',
       regionCode: undefined,
       pollutantType: 2,
+      entPointName:'',
       pointPermissionCheckedKeys: [],
-      pointPermissionOkLoading: false,
       settingPointPermission: false,
       cancelOperaUtil: false,
     };
@@ -131,12 +135,11 @@ export default class EntTransmissionEfficiency extends Component {
 
 
   };
-
   // 获取企业和排口
   getEntAndPointList = () => {
     this.props.dispatch({
       type: "common/getEntAndPointList",
-      payload: { Status: [], RunState: 1, RegionCode: this.state.regionCode?.toString(), PollutantTypes: this.state.pollutantType }
+      payload: { Status: [], RunState: 1, RegionCode: this.state.regionCode?.toString(), PollutantTypes: this.state.pollutantType, Name: this.state.entPointName, }
     });
   }
 
@@ -218,8 +221,32 @@ export default class EntTransmissionEfficiency extends Component {
       entCode: row['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']
     })
   }
-  cancelOperaUnit = (record) => { //注销运维单位
-
+  cancelOperaUnit = (id) => { //注销运维单位
+    return new Promise((resolve) => {
+      this.props.dispatch({
+        type: 'operationUnit/LogOffCompany',
+        payload: {
+          compoanyID: id,
+        },
+        callback:()=>{
+          resolve(null)
+        }
+      });
+    });
+  }
+  
+  getOperationCompanyPointList = ({compoanyID,pollutantType,regionCode}) =>{ //获取已设置的点位权限
+    this.props.dispatch({
+      type: 'operationUnit/GetOperationCompanyPointList',
+      payload: {
+        compoanyID: compoanyID || this.state.compoanyID,
+        PollutantType: pollutantType || this.state.pollutantType,
+        RegionCode: regionCode || this.state.regionCode?.toString(),
+      },
+      callback:(data)=>{
+        this.setState({pointPermissionCheckedKeys:data || []})
+      }
+    });
   }
   /** 设置点位访问权限切换行政区 */
   regionChange = value => {
@@ -228,52 +255,32 @@ export default class EntTransmissionEfficiency extends Component {
     }, () => {
       this.getEntAndPointList()
     });
-
-    this.props.dispatch({
-      type: 'userAuthority/getpointbydepid',
-      payload: {
-        UserGroup_ID: this.state.pointPermissionID,
-        PollutantType: this.state.pollutantType,
-        RegionCode: value?.toString(),
-      },
-    });
-
+    this.getOperationCompanyPointList({RegionCode: value?.toString()})
   };
   /** 设置点位访问权限切换污染物 */
   pollutantChange = e => {
     this.setState({ pollutantType: e.target.value }, () => {
       this.getEntAndPointList()
     });
-    this.props.dispatch({
-      type: 'userAuthority/getpointbydepid',
-      payload: {
-        UserGroup_ID: keys.toString(),
-        PollutantType: e.target.value,
-        RegionCode: this.state.regionCode?.toString(),
-      },
-    });
+    this.getOperationCompanyPointList({PollutantType: e.target.value})
   };
+
+  pointAccessClick = () => {
+    this.getEntAndPointList()
+    this.getOperationCompanyPointList({})
+  };
+
   pointPermissionOK = (state, callback) => {
-    this.setState({ pointPermissionOkLoading: true })
     this.props.dispatch({
-      type: 'userAuthority/insertPointFilterByUser',
+      type: 'operationUnit/AddSetOperationCompanyPoint',
       payload: {
-        DGIMN: this.state.checkedKeys,
-        User_ID: this.state.selectedRow.ID,
-        Type: this.state.pollutantType,
+        mnList: this.state.pointPermissionCheckedKeys,
+        compoanyID: this.state.compoanyID,
         RegionCode: this.state.regionCode?.toString(),
         state: state,
-        callback: res => {
-          if (res.IsSuccess) {
-            message.success('操作成功');
-            callback()
-          } else {
-            res.Message && message.error(res.Message);
-          }
-          setTimeout(() => {
-            this.setState({ pointPermissionOkLoading: false })
-          })
-        },
+      },
+      callback: res => {
+        callback()
       },
     });
   };
@@ -348,7 +355,9 @@ export default class EntTransmissionEfficiency extends Component {
                         {
                           pointPermissionVisible: true,
                           pointPermissionTitle: row['dbo.T_Bas_OperationMaintenanceEnterprise.Company'],
-                          pointPermissionID: row['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'],
+                          compoanyID: row['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'],
+                        },()=>{
+                          this.getOperationCompanyPointList({compoanyID: row['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']})
                         }
                       );
                     }}
@@ -358,7 +367,7 @@ export default class EntTransmissionEfficiency extends Component {
                 </Tooltip></>}
               {this.state.cancelOperaUtil && <><Divider type="vertical" />
                 <Tooltip title="注销运维单位">
-                  <Popconfirm placement="left" title="确定要注销运维运维吗？" onConfirm={() => this.cancelOperaUnit(record)} okText="是" cancelText="否">
+                  <Popconfirm  placement="left" title="确定要注销运维单位吗？" onConfirm={() => this.cancelOperaUnit(row['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'])} okText="是" cancelText="否">
                     <a href="#" > <CloseCircleOutlined style={{ fontSize: 16 }} /> </a>
                   </Popconfirm>
                 </Tooltip></>}
@@ -417,7 +426,7 @@ export default class EntTransmissionEfficiency extends Component {
                 />
                 <Input.Group compact style={{ width: 290, marginLeft: 16, display: 'inline-block' }}>
                   <Input style={{ width: 200 }} allowClear placeholder='请输入企业名称' onBlur={(e) => this.setState({ entPointName: e.target.value })} />
-                  <Button type="primary" loading={this.props.checkPointLoading} onClick={this.pointAccessClick}>查询</Button>
+                  <Button type="primary" loading={this.props.checkPointLoading || this.props.getEntPointLoading || !!this.props.addSetOperationCompanyPointLoading } onClick={this.pointAccessClick}>查询</Button>
                 </Input.Group>
               </Row>
               {this.props.checkPointLoading || this.props.getEntPointLoading ? (
@@ -431,15 +440,20 @@ export default class EntTransmissionEfficiency extends Component {
                   }}
                   size="large"
                 />
-              ) : this.props.entAndPointList && this.props.entAndPointList.length > 0 ? (
-                <Spin spinning={this.state.pointPermissionOkLoading}>
+              ) : this.props.entAndPointList?.length > 0 ? (
+                <Spin spinning={!!this.props.addSetOperationCompanyPointLoading}>
                   <TreeTransfer
                     key="key"
-                    treeData={this.state.entAndPointList}
+                    treeData={this.props.entAndPointList}
                     checkedKeys={this.state.pointPermissionCheckedKeys}
-                    targetKeysChange={(key, type, callback) => this.setState({ pointPermissionCheckedKeys: key }, () => {
+                    targetKeysChange={(key, type, callback) => {
+                      this.setState({ pointPermissionCheckedKeys: key }, () => {
                       this.pointPermissionOK(type == 1 ? 1 : 2, callback)
-                    })} />
+                      })
+                  
+                  } 
+                    
+                  }/>
                 </Spin>
               ) : (
                     <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />

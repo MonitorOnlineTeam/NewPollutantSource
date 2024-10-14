@@ -553,6 +553,24 @@ class index extends PureComponent {
         dataIndex: 'createTime',
         key: 'createTime',
       },
+      {
+        title: '更新人',
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+        dataIndex: 'updUser',
+        ellipsis: true,
+        key: 'updUser',
+      },
+      {
+        title: '更新时间',
+        width: 180,
+        align: 'center',
+        ellipsis: true,
+        fixed: fixed,
+        dataIndex: 'updTime',
+        key: 'updTime',
+      },
     ];
     isHomeModal ? columns.splice(0, 4) : null;
     return (

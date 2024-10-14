@@ -141,32 +141,32 @@ export default Model.extend({
       const result = yield call(serviceApi, postData);
       if (result.IsSuccess) {
         let data = [];
-        if (result.Datas.length) {
-          data = result.Datas.map(item => {
-            let variate = [];
-            variate = item.Datas.map(itm => ({
-              ...itm,
-              pointName: item.PointName,
-              entName: item.EntName,
-              rowSpan: item.Datas.length + 3,
-            }));
-            // 大气和扬尘不显示最大最小平均值
-            if (
-              dateReportForm.PollutantSourceType.value != 5 &&
-              dateReportForm.PollutantSourceType.value != 12
-            ) {
-              variate.concat([
-                // 将最大、最小、平均值放入数据源中
-                { ...item.MinVal[0], pointName: item.PointName, time: '最小值' },
-                { ...item.MaxVal[0], pointName: item.PointName, time: '最大值' },
-                { ...item.AvgVal[0], pointName: item.PointName, time: '平均值' },
-              ]);
-            }
-            return variate;
-          }).reduce((acc, cur) => acc.concat(cur));
-        }
-        // console.log('data=',data)
-        // message.success("统计成功！")
+            data = result.Datas
+        // if (result.Datas.length) {
+        //   data = result.Datas.map(item => {
+        //     let variate = [];
+        //     variate = item.Datas.map(itm => ({
+        //       ...itm,
+        //       pointName: item.PointName,
+        //       entName: item.EntName,
+        //       rowSpan: item.Datas.length + 3,
+        //     }));
+        //     // 大气和扬尘不显示最大最小平均值
+        //     if (
+        //       dateReportForm.PollutantSourceType.value != 5 &&
+        //       dateReportForm.PollutantSourceType.value != 12
+        //     ) {
+        //       variate.concat([
+        //         // 将最大、最小、平均值放入数据源中
+        //         { ...item.MinVal[0], pointName: item.PointName, time: '最小值' },
+        //         { ...item.MaxVal[0], pointName: item.PointName, time: '最大值' },
+        //         { ...item.AvgVal[0], pointName: item.PointName, time: '平均值' },
+        //       ]);
+        //     }
+        //     return variate;
+        //   }).reduce((acc, cur) => acc.concat(cur));
+        // }
+        console.log('data=',data)
         yield update({
           dateReportData: data,
           dateReportForm: {
@@ -243,12 +243,12 @@ export default Model.extend({
       });
       if (result.IsSuccess) {
         let data = [];
-        if (result.Datas.length) {
-          data = result.Datas.map(item =>
-            // return { ...item, EntName: item.EntName}
-            ({ EntName: item.EntName, ...item.DatasItem }),
-          );
-        }
+        data = result.Datas
+        // if (result.Datas.length) {
+        //   data = result.Datas.map(item =>
+        //     ({ EntName: item.EntName, ...item.DatasItem }),
+        //   );
+        // }
         yield update({
           dailySummaryDataList: data,
           Total: result.Total,
@@ -258,6 +258,12 @@ export default Model.extend({
     // 报表导出
     *reportExport({ payload }, { call, update, select }) {
       const dateReportForm = yield select(state => state.report.dateReportForm);
+      const dataTypeObj={
+        siteDaily : 'day',
+        monthly:'month',
+        annals:'year'
+      }
+      payload = {...payload,dataType:dataTypeObj[payload.Type]}
       const result = yield call(services.reportExcel, payload);
       if (result.IsSuccess) {
         result.Datas && downloadFile(result.Datas);
@@ -268,6 +274,14 @@ export default Model.extend({
     // 汇总报表导出
     *summaryReportExcel({ payload }, { call, update, select }) {
       const summaryForm = yield select(state => state.report.summaryForm);
+      const dataTypeObj={
+        daily : 'day',
+        week:'week',
+        monthly:'month',
+        quarter:'',
+        annals:'year'
+      }
+      payload = {...payload,dataType:dataTypeObj[payload.Type]}
       const result = yield call(services.summaryReportExcel, payload);
       if (result.IsSuccess) {
         result.Datas && downloadFile(result.Datas);

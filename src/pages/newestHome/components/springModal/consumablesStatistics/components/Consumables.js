@@ -303,15 +303,15 @@ const columns2 = [
     initialValues={{
     }}
     layout='inline'
-    style={{paddingBottom:15}}
+    style={{paddingBottom:8}}
   >  
-     <Form.Item label='仓库名称' name='warehouseName'  style={{paddingRight:'16px'}}>
+     <Form.Item label='仓库名称' name='warehouseName'  style={{paddingRight:8}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='存货编码' name='stockCode'  style={{paddingRight:'16px'}}>
+    <Form.Item label='存货编码' name='stockCode'  style={{paddingRight:8}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='易耗品名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
+    <Form.Item label='易耗品名称' name='sparePartsName'  style={{paddingRight:8}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
        <Form.Item>
@@ -330,21 +330,35 @@ const columns2 = [
     onFinish={onFinish2}
     initialValues={{
     }}
-    layout='inline'
-    style={{paddingBottom:15}}
+    style={{paddingBottom:8}}
   >  
-     <Form.Item label='企业名称' name='entName'  style={{paddingRight:'16px'}}>
+    <Row>
+      <Col span={8}>
+     <Form.Item label='企业名称' name='entName'  className='form_label_width_83' style={{paddingRight:8}}>
       <Input placeholder='请输入' allowClear/>
      </Form.Item>
-     <Form.Item label='仓库名称' name='warehouseName'  style={{paddingRight:'16px'}}>
+     </Col>
+     <Col span={8}>
+     <Form.Item label='仓库名称' name='warehouseName'  style={{paddingRight:8}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='存货编码' name='stockCode'  style={{paddingRight:'16px'}}>
+    </Col>
+    <Col span={8}>
+    <Form.Item label='存货编码' name='stockCode'  style={{paddingRight:8}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='易耗品名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
+    </Col>
+    <Col span={8}>
+    <Form.Item label='易耗品名称' name='sparePartsName'  style={{paddingRight:8}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
+    </Col>
+    <Col span={8}>
+    <Form.Item label='更换人员' name='operationUser'  style={{paddingRight:8}}>
+      <Input placeholder='请输入' allowClear/>
+    </Form.Item> 
+    </Col>
+    <Col span={8}>
        <Form.Item>
            <Button  type="primary" htmlType='submit' >
          查询
@@ -353,6 +367,8 @@ const columns2 = [
            导出
     </Button> 
     </Form.Item> 
+    </Col>
+    </Row>
     </Form>}
     </>
   {tabsType==1?

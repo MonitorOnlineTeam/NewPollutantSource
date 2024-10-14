@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-18 10:32:08
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-27 11:48:47
+ * @LastEditTime: 2024-10-14 17:31:16
  * @Description: 导航树
  */
 import React, { Component } from 'react';
@@ -322,6 +322,7 @@ class NavigationTree extends Component {
       this.setLocalStorage([], [], {});
       this.defaultKey = 0;
     }
+    console.log(data,stateNumber,'22222222222222')
     this.setState(
       {
         EntAndPoint: data,
@@ -637,7 +638,7 @@ class NavigationTree extends Component {
         type: 'navigationtree/getentandpoint',
         payload: {
           PollutantTypes: this.state.PollutantTypes,
-          RegionCode: value,
+          RegionCode: this.state.RegionCode,
           Name: this.state.Name,
           Status: this.state.screenList,
           RunState: this.state.RunState,
@@ -1210,7 +1211,7 @@ class NavigationTree extends Component {
 
   render() {
     const { searchValue, expandedKeys, autoExpandParent, stateNumber } = this.state;
-    const { configInfo, showIndustry, type, isSdlOpera } = this.props;
+    const { configInfo, showIndustry, type, configInfo: { IsOpera }, isSdlOpera } = this.props;
     // 渲染数据及企业排口图标和运行状态
     const loop = data =>
       data.map((item, idx) => {
@@ -1265,13 +1266,13 @@ class NavigationTree extends Component {
           );
         }
         if (item.Type == '1') {
-          const isSdlOperaGrab = isSdlOpera && item.IsGrab;
+          const isSdlOperaGrab = isSdlOpera && item.IsGrab == 1;
           return (
             <TreeNode
               style={{ width: '100%' }}
               title={
                 <div style={{ width: '254px', position: 'relative' }}>
-                  <div className={styles.titleStyle} title={item.title} style={{ width: isSdlOperaGrab? 200 : 210 }}>
+                  <div className={styles.titleStyle} title={item.title} style={{ width: 210 }}>
                     {this.getPollutantIcon(item.PollutantType, 16)}
                     {title}
                     {item.outPutFlag == 1 ? (
@@ -1283,9 +1284,10 @@ class NavigationTree extends Component {
                       )}
                   </div>
                   {isSdlOperaGrab ?
-                    <Tag line-height={18} color="#1890ff">
-                      抓取
-                  </Tag>
+                  //   <Tag line-height={18} color="processing">
+                  //     抓
+                  // </Tag>
+                   <img src='/zq.png' style={{paddingBottom:2}}/>
                   :
                   item.IsEnt == 0 && item.Status != -1 ? (
                     <LegendIcon
@@ -1341,6 +1343,7 @@ class NavigationTree extends Component {
     if (this.props.getContainer !== undefined) {
       getContainer = this.props.getContainer;
     }
+    
     return (
       <div>
         <Drawer
@@ -1491,40 +1494,38 @@ class NavigationTree extends Component {
               </Col>
             </Row>
           </div>
-          <Space direction="vertical" size={8}  className={styles.spaceSearchSty}>
+          <div  className={styles.spaceSearchSty}>
             {// 企业项目不显示行政区
-              // isSdlOpera ? //运维平台 SDL运维
-              //   <Row justify='space-between' align='middle'>
-              //     <RegionList
-              //       style={{ width: 'calc(100% - 122px)' }}
-              //       spinSty={{ top: -4 }}
-              //       changeRegion={this.changeRegion}
-              //       RegionCode={this.state.RegionCode}
-              //     />
-              //     <Checkbox onChange={(e)=>this.filterGrabChange(e.target.checked) }>过滤抓取点位</Checkbox>
-              //   </Row>
-              //   :
+              isSdlOpera ? //运维平台 SDL运维
+                <Row justify='space-between' align='middle' style={{marginTop:8}}>
+                  <RegionList
+                    style={{ width: 'calc(100% - 122px)' }}
+                    spinSty={{ top: -4 }}
+                    changeRegion={this.changeRegion}
+                    RegionCode={this.state.RegionCode}
+                  />
+                  <Checkbox onChange={(e)=>this.filterGrabChange(e.target.checked) }>过滤抓取点位</Checkbox>
+                </Row>
+                :
                 !configInfo.IsSingleEnterprise && (
                   <RegionList
                     style={{ width: '100%' }}
-                    spinSty={{ top: -4 }}
+                    spinSty={{ top: -4, marginTop:8 }}
                     changeRegion={this.changeRegion}
                     RegionCode={this.state.RegionCode}
                   />
                 )}
 
-            {!this.props.polShow && !isSdlOpera? ( //运维拆分废气废水系统后不用展示
+            {!this.props.polShow && !isSdlOpera && ( //运维拆分废气废水系统后不用展示
               <SelectPollutantType
                 // mode="multiple"
                 singleHidden
                 {...SelectPollutantProps}
                 showDefaultValue={this.props.defaultPollutant === 'undefined'}
-                style={{ width: '100%' }}
+                style={{ width: '100%', marginTop:8 }}
                 onChange={this.handleChange}
               />
-            ) : (
-                ''
-              )}
+            )}
             {/* {type == 'ent' ? ( //运维分废气废水子系统后 已经弃用
               <Select
                 style={{ width: '100%' }}
@@ -1543,7 +1544,7 @@ class NavigationTree extends Component {
             {showIndustry && (
               <SearchSelect
                 placeholder="请选择行业"
-                style={{ width: '100%' }}
+                style={{ width: '100%', marginTop:8 }}
                 configId={'IndustryType'}
                 itemName={'dbo.T_Cod_IndustryType.IndustryTypeName'}
                 itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
@@ -1552,7 +1553,7 @@ class NavigationTree extends Component {
                 }}
               />
             )}
-            <div>
+            <div   style={{ marginTop:8 }}>
               <Search
                 placeholder="请输入关键字查询"
                 onChange={this.onChangeSearch}
@@ -1577,7 +1578,7 @@ class NavigationTree extends Component {
                 </Tooltip>
               </Radio.Group>
             </div>
-          </Space>
+          </div>
           <Divider style={{margin:'8px 0 6px 0'}}/>
           {this.state.treeVis ? (
             <div>
@@ -1605,7 +1606,7 @@ class NavigationTree extends Component {
                         selectedKeys={this.state.selectedKeys}
                         style={{
                           // marginTop: '5%',
-                          maxHeight: `calc(100vh - 229px - ${showIndustry? '39px' : '0px'} - ${isSdlOpera? '0px' : '39px'} - ${configInfo.IsSingleEnterprise? '-39px' : '0px' })`,
+                          maxHeight: `calc(100vh - 236px - ${showIndustry? '39px' : '0px'} - ${IsOpera? '-8px' : '39px'} - ${configInfo.IsSingleEnterprise? '-39px' : '0px' })`,
                           overflow: 'hidden',
                           overflowY: 'auto',
                           width: '100%',
@@ -1651,7 +1652,7 @@ class NavigationTree extends Component {
                             marginTop: 2,
                             overflow: 'auto',
                             cursor: 'pointer',
-                            maxHeight: `calc(100vh - 234px - ${showIndustry? '39px' : '0px'} - ${isSdlOpera? '0px' : '39px'} - ${configInfo.IsSingleEnterprise? '-39px' : '0px' })`,
+                            maxHeight: `calc(100vh - 236px - ${showIndustry? '39px' : '0px'} - ${IsOpera? '-8px' : '39px'} - ${configInfo.IsSingleEnterprise? '-39px' : '0px' })`,
                           }}
                           onRow={this.onClickRow}
                           rowClassName={this.setRowClassName}

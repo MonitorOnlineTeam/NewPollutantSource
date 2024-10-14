@@ -32,6 +32,9 @@ import {
   useallDGIMNbyid,
   changeUseStatisti,
 } from '@/services/standardLibraryApi';
+import { downloadFile, requestPost } from '@/utils/utils';
+import { API } from '@config/API';
+
 export default Model.extend({
   namespace: 'standardLibrary',
   state: {
@@ -404,6 +407,27 @@ export default Model.extend({
         result.Message && message.error(result.Message)
       }
     },
+    // 获取可复制的监测标准站点
+    *GetStandardPointList({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestPost, API.IntelligentDiagnosisApi.GetStandardPointList, payload);
+      callback && callback(result?.Datas);
+    },
+    // 复制监测标准
+    *CopyStandard({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestPost, API.IntelligentDiagnosisApi.CopyStandard, payload);
+      if (result.IsSuccess) {
+        if (result.IsSuccess) {
+          message.success(result.Message)
+          callback && callback(result?.Datas);
+        }
+      }
+    },
+
+
+
+
+
+
   },
   reducers: {
     save(state, action) {

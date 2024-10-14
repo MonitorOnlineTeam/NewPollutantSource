@@ -754,6 +754,9 @@ export const API = {
     /*缺失数据分析*/
     GetMissDataList: before + '/ExceptionDataApi/GetMissDataList', //获取缺失数据分析信息
     ExportMissDataList: before + '/ExceptionDataApi/ExportMissDataList', //导出缺失数据分析信息
+    /*监测标准设置*/
+    GetStandardPointList: before + '/StandardLibraryApi/GetStandardPointList', //获取可复制的监测标准站点
+    CopyStandard: before + '/StandardLibraryApi/CopyStandard ', //复制监测标准
     /*异常标准记录*/
     GetExceptionStandValue: before + '/MonitorPointApi/GetExceptionStandValue', //获取异常标准记录
     ExportExceptionStandValue: before + '/MonitorPointApi/ExportExceptionStandValue', //导出异常标准记录
@@ -1498,14 +1501,18 @@ export const API = {
     /*平台分析报告*/
     ExportPlatformAnalysisReport: before + '/WorkOrderStatistics/ExportPlatformAnalysisReport', //导出平台分析报告
     /*站点数据总览*/
-    GetDayReport: before + '/MonBasicDataApi/GetDayReport', //获取站点日报报表
-    GetMonthReport: before + '/MonBasicDataApi/GetMonthReport', //获取站点月报报表
-    GetYearReport: before + '/MonBasicDataApi/GetYearReport', //获取站点年报报表
-    GetReportExcel: before + '/MonBasicDataApi/GetReportExcel', //导出站点日报、月报、年报报表
-    GetSummaryDayReport: before + '/MonBasicDataApi/GetSummaryDayReport', //获取站点汇总日报报表
-    GetSummaryMonthReport: before + '/MonBasicDataApi/GetSummaryMonthReport', //获取站点汇总月报报表
-    GetSummaryYearReport: before + '/MonBasicDataApi/GetSummaryYearReport', //获取站点汇总年报报表
-    GetSummaryReportExcel: before + '/MonBasicDataApi/GetSummaryReportExcel', //导出站点汇总站点日报、月报、年报报表
+    // GetDayReport: before + '/MonBasicDataApi/GetDayReport', //获取站点日报报表
+    // GetMonthReport: before + '/MonBasicDataApi/GetMonthReport', //获取站点月报报表
+    // GetYearReport: before + '/MonBasicDataApi/GetYearReport', //获取站点年报报表
+    // GetReportExcel: before + '/MonBasicDataApi/GetReportExcel', //导出站点日报、月报、年报报表
+    // GetSummaryDayReport: before + '/MonBasicDataApi/GetSummaryDayReport', //获取站点汇总日报报表
+    // GetSummaryMonthReport: before + '/MonBasicDataApi/GetSummaryMonthReport', //获取站点汇总月报报表
+    // GetSummaryYearReport: before + '/MonBasicDataApi/GetSummaryYearReport', //获取站点汇总年报报表
+    // GetSummaryReportExcel: before + '/MonBasicDataApi/GetSummaryReportExcel', //导出站点汇总站点日报、月报、年报报表
+    GetSummaryAllTypeReportData: before + '/MonBasicDataApi/GetSummaryAllTypeReportData', //获取站点汇总日报报表 新
+    ExportSummaryAllTypeReportData: before + '/MonBasicDataApi/ExportSummaryAllTypeReportData', //站点报表导出 新 
+    GetSummaryAllTypeData: before + '/MonBasicDataApi/GetSummaryAllTypeData', // 获取站点汇总报表 新
+    ExportSummaryAllTypeData: before + '/MonBasicDataApi/ExportSummaryAllTypeData', //汇总报表导出 新
     /*废气排放量总览*/
     GetAllTypeDataListGas: before + '/MonBasicDataApi/GetAllTypeDataListGas', //获取废气日平均值小日平均日报、日平均月报、月平均季报、季平均年报信息
     ExportAllTypeDataListGas: before + '/MonBasicDataApi/ExportAllTypeDataListGas', //导出废气日平均值小日平均日报、日平均月报、月平均季报、季平均年报信息
@@ -1984,6 +1991,10 @@ export const API = {
       before + '/AccountApi/ExportCalibrationAccountFillingTypeList', //台账填报设置信息 导出
 
     /*** 运维台账 ***/
+    /*运维单位管理*/
+    GetOperationCompanyPointList: before + '/BaseDataApi/GetOperationCompanyPointList', //获取运维企业权限点位信息
+    AddSetOperationCompanyPoint: before + '/BaseDataApi/AddSetOperationCompanyPoint', //添加运维企业点位权限
+    LogOffCompany: before + '/BaseDataApi/LogOffCompany', //注销运维公司
     /*运维技术资料库*/
     DeleteOperationSysTable: before + '/AccountApi/DeleteOperationSysTable', //删除运维技术资料库信息
     /*运维上岗证*/
@@ -2094,6 +2105,14 @@ export const API = {
     InsertPointFilterByUser: before + '/AuthorizeApi/InsertPointFilterByUser', //给当前人员添加排口权限（可批量）
     /*用户恢复*/
     RecoveryUserInfo: before + '/UserApi/RecoveryUserInfo', //恢复用户信息
+    /*运维小组*/
+    GetOperationTeamList: before + '/BaseDataApi/GetOperationTeamList', //获取运维小组信息
+    AddOrUpdOperationTeam: before + '/BaseDataApi/AddOrUpdOperationTeam', //添加编辑运维小组
+    DelOperationTeam: before + '/BaseDataApi/DelOperationTeam', //删除运维公司
+    GetOperationTeamUser: before + '/BaseDataApi/GetOperationTeamUser', //获取运维小组人员
+    AddSetOperationTeamUser: before + '/BaseDataApi/AddSetOperationTeamUser', //添加运维小组人员
+    GetOperationTeamPoint: before + '/BaseDataApi/GetOperationTeamPoint', //获取运维小组权限点位信息
+    AddSetOperationTeamPoint: before + '/BaseDataApi/AddSetOperationTeamPoint', //添加运维小组权限点位信息
     /*短信发送*/
     GetUserMessageList: before + '/AuthorizeApi/GetUserMessageList', //获取短信推送设置信息
     ExportUserMessageList: before + '/AuthorizeApi/ExportUserMessageList', //获取短信推送设置 导出
@@ -2454,6 +2473,10 @@ export const API = {
     AddProvinceManagementRules: before + '/DailyWorkBaseApi/AddProvinceManagementRules', // 设置省区经理日常规则
     GetProvinceManagementRulesList: before + '/DailyWorkBaseApi/GetProvinceManagementRulesList', // 获取省区经理日常规则列表
     DeleteProvinceManagementRules: before + '/DailyWorkBaseApi/DeleteProvinceManagementRules', // 删除省区经理日常规则列表
+    /*专家信息清单*/
+    GetExpertList: before + '/DailyWorkManagerApi/GetExpertList', //获取专家信息
+    /**资源检索中心 */
+    GetMavenList: before + '/DailyWorkManagerApi/GetMavenList', //获取专家信息 资源中心列表用
   },
   //技术专家系统 Api
   TechExpertSystemApi: {

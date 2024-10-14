@@ -1,3 +1,9 @@
+/*
+ * @Author: outman0611
+ * @Date: 2024-06-11 14:29:31
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-09-29 10:29:39
+ */
 import { post } from '@/utils/request';
 
 /**

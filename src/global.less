@@ -207,6 +207,11 @@ a:hover {
   // height: calc(100vh - 170px);
   // overflow-y: auto;
   border: none;
+  :global{
+  .ant-legacy-form-item{
+   margin-bottom: 8px;
+  }
+ }
 }
 
 .center {
@@ -1446,5 +1451,19 @@ a:hover {
 
   100% {
     transform: translateX(0);
+  }
+}
+.ant-transfer-disabled .ant-transfer-list :global{
+ background-color: transparent;
+}
+
+.darkthemePaginationSty  :global{
+  padding: 12px 0;
+  .ant-pagination-item-active, .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+    background-color: #1890FF;
+    color: #fff;
+    a{
+      color: #fff;
+    }
   }
 }

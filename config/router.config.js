@@ -1309,10 +1309,10 @@ const routes = [
                 path: '/platformconfig/emissionEnt',
                 component: './platformManager/emissionEnt/',
               },
-              {
-                path: '/platformconfig/basicInfo',
-                redirect: '/platformconfig/basicInfo/projectManager',
-              },
+              // {
+              //   path: '/platformconfig/basicInfo',
+              //   redirect: '/platformconfig/basicInfo/projectManager',
+              // },
               {
                 //仓库管理
                 name: 'warehouse',
@@ -1432,7 +1432,7 @@ const routes = [
               {
                 // 项目管理
                 name: 'projectManager',
-                path: '/platformconfig/basicInfo/projectManager',
+                path: '/platformconfig/basicInfo/projectManager/list/:listType',
                 component: './platformManager/basicInfo/projectManager',
               },
               {
@@ -2061,6 +2061,11 @@ const routes = [
                 name: 'userRecovery',
                 path: '/rolesmanager/userRecovery',
                 component: './authorized/userRecovery',
+              },
+              {
+                name: 'operaGroup', //运维小组
+                path: '/rolesmanager/operaGroup',
+                component: './authorized/operaGroup',
               },
               {
                 name: 'smsSend', //短信发送
@@ -5154,6 +5159,31 @@ const routes = [
                     path: '/ctManage/generalManager/regionalArchives',
                     component: './ctDebuggAfterSaleServiceManage/generalManager/regionalArchives',
                   },
+                  {
+                    // 资源检索中心
+                    name: 'RsourceRetrievalCenter',
+                    path: '/ctManage/generalManager/resourceRetrievalCenter',
+                    component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter',
+                  },
+                  {
+                    // 专家信息
+                    name: 'ExpertInfo',
+                    path: '/ctManage/generalManager/resourceRetrievalCenter/expertInfo',
+                    component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/expertInfo',
+                  },
+                  {
+                    // 资源信息
+                    name: 'ResourceInfo',
+                    path: '/ctManage/generalManager/resourceRetrievalCenter/resourceInfo',
+                    component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/resourceInfoProblemsSolutions',
+                  },
+                  {
+                    // 问题及解决方案
+                    name: 'ProblemsSolutions',
+                    path: '/ctManage/generalManager/resourceRetrievalCenter/problemsSolutions',
+                    component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/resourceInfoProblemsSolutions',
+                  },
+                
                 ],
               },
 

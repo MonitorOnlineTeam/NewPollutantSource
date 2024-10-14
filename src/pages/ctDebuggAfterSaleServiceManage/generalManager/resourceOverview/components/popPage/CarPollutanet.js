@@ -101,7 +101,7 @@ const Index = (props) => {
             render: (text, record, index) => colSpanFun(text,record),
         },
         {
-            title: '车辆排序',
+            title: '车辆数量',
             dataIndex: 'Num',
             key: 'Num',
             align: 'center',

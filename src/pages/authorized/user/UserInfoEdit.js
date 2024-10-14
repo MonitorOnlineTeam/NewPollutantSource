@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-26 16:41:27
+ * @LastEditTime: 2024-10-10 09:04:53
  * @Description: 用户修改
  */
 import React, { Component } from 'react';
@@ -35,7 +35,7 @@ const { TreeNode } = Tree;
     UserDepLoading: loading.effects['userinfo/getdepbyuserid'],
     UserRoles: userinfo.UserRoles,
     UserDep: userinfo.UserDep,
-    btnisloading: loading.effects['userinfo/edit'],
+    btnisloading: loading.effects['userinfo/edit']  || loading.effects['userinfo/AddOrUpdUser'] ,
     configInfo: global.configInfo,
     operaBasicInfoForm: userinfo.operaBasicInfoForm,
 }))
@@ -132,7 +132,6 @@ export default class UserInfoEdit extends Component {
             })
         }
     }
-    component
 
     onExpand = expandedKeys => {
         // if not set autoExpandParent to false, if children expanded, parent can not collapse.
@@ -216,17 +215,16 @@ export default class UserInfoEdit extends Component {
         if (this.props.configInfo.IsOpera) {
             this.props.operaBasicInfoForm.validateFields((err, values) => {
                 if (!err) {
-
                     dispatch({
                         type: 'userinfo/AddOrUpdUser',
                         payload: {
                             User_ID: this.props.match.params.userid,
                             Role: checkedKeySel,
                             Depart: checkedKeysSel,
-                            FormData: {
-                                User_ID: this.props.match.params.userid,
-                                ...values,
-                            },
+                            ...values,
+                            SendPush: values.SendPush?.toString(),
+                            BusinessAttribute: values.BusinessAttribute?.toString(),
+                            IndustryAttribute: values.IndustryAttribute?.toString(),
                         },
                         callback:()=>{
                             router.push('/rolesmanager/user/newUserInfo')
@@ -352,8 +350,8 @@ export default class UserInfoEdit extends Component {
                                 >返回
                                 </Button>
                                 <Card bordered={false} title="基本信息" style={{ height: 'calc(100vh - 160px)', display: this.state.baseState }}>
-                                    {this.props.configInfo.IsOpera ?
-                                        <OperaFormComponents formValidateFieldsCallback={(values) => { //单独写一个组件 因为getFieldDecorator每次都会render整个组件 导致卡顿
+                                  {this.props.configInfo.IsOpera ?
+                                        <OperaFormComponents isEdit formValidateFieldsCallback={(values) => { //单独写一个组件 因为getFieldDecorator每次都会render整个组件 导致卡顿
                                             this.setState({
                                                 activeKey: 'roles',
                                                 baseState: 'none',
@@ -362,7 +360,7 @@ export default class UserInfoEdit extends Component {
                                                 selectKey: 'roles',
                                             })
                                         }} />
-                                        :
+                                        : 
                                         <SdlForm
                                             configId="UserInfoAdd"
                                             onSubmitForm={this.onSubmitForm}
@@ -371,7 +369,7 @@ export default class UserInfoEdit extends Component {
                                             hideBtns
                                             keysParams={{ 'dbo.Base_UserInfo.User_ID': this.props.match.params.userid }}
                                         >
-                                            {/* <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
+                                         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
                                             <Button
                                                 type="primary"
                                                 htmlType="submit"
@@ -390,7 +388,7 @@ export default class UserInfoEdit extends Component {
                                                 }}
                                             >下一步
                                         </Button>
-                                        </FormItem> */}
+                                        </FormItem> 
 
 
                                             <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
@@ -413,7 +411,7 @@ export default class UserInfoEdit extends Component {
                                             </Button>
                                             </Divider>
                                         </SdlForm>
-                                    }
+                                     } 
                                 </Card>
                                 <Card bordered={false} title="角色设置" style={{ height: 'calc(100vh - 160px)', display: this.state.rolesState }}>
                                     {

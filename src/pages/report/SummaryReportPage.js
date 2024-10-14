@@ -27,7 +27,7 @@ const InputGroup = Input.Group;
 
 @Form.create()
 @connect(({ loading, report, autoForm, global }) => ({
-  loading: loading.effects['report/getDailySummaryDataList'],
+  loading: loading.effects['report/getDailySummaryDataList'] || loading.effects['report/getPollutantList']   || loading.effects['report/getPollutantTypeList'],
   exportLoading: loading.effects['report/summaryReportExcel'],
   entAndPointLoading: loading.effects['common/getEnterpriseAndPoint'],
   dailySummaryDataList: report.dailySummaryDataList,
@@ -186,6 +186,7 @@ class SummaryReportPage extends PureComponent {
         render: (text, row, index) => {
           // 数据不可信处理
           if (item.dataIndex === 'time') {
+            console.log(text, row, index)
             return (
               <span>
                 {getDataTruseMsg(row)}
@@ -525,11 +526,11 @@ class SummaryReportPage extends PureComponent {
 
     return (
       <BreadcrumbWrapper>
-        <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
-          <Card className="contentContainer">
-            <Form style={{ marginBottom: 20 }}>
+        {/* <Spin spinning={exportLoading || entAndPointLoading} delay={500}> */}
+          <Card className="contentContainer" bodyStyle={{padding:'10px 24px'}}>
+            <Form>
               <Row>
-                <Col md={4} xs={24}>
+                <Col xxl={4} md={6} xs={24}>
                   <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
                     {getFieldDecorator('reportType', {
                       initialValue: 'daily',
@@ -601,7 +602,7 @@ class SummaryReportPage extends PureComponent {
                 {/* {getFieldValue('PollutantSourceType') == 5 && ( */}
                 {true && (
                   // 大气站显示监控目标
-                  <Col sm={24} md={6}>
+                  <Col xxl={7} md={8} xs={24}>
                     <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
                       {getFieldDecorator('DGIMN', {
                         initialValue: this.props.form.getFieldValue('DGIMN'),
@@ -623,8 +624,9 @@ class SummaryReportPage extends PureComponent {
                   </Col>
                 )}
                 <Col
-                  sm={24}
-                  md={4}
+                  xxl={5}
+                  md={6}
+                  xs={24}
                   style={{
                     display:
                       getFieldValue('PollutantSourceType') == 5 && reportType != 'quarter'
@@ -645,8 +647,9 @@ class SummaryReportPage extends PureComponent {
                   </FormItem>
                 </Col>
                 <Col
-                  sm={24}
-                  md={4}
+                  xxl={5}
+                  md={6}
+                  xs={24}
                   style={{
                     display:
                       getFieldValue('PollutantSourceType') == 5 || reportType == 'quarter'
@@ -667,8 +670,9 @@ class SummaryReportPage extends PureComponent {
                   </FormItem>
                 </Col>
                 <Col
-                  sm={24}
-                  md={4}
+                xxl={5}
+                md={6}
+                xs={24}
                   style={{ display: reportType === 'quarter' ? 'block' : 'none' }}
                 >
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
@@ -731,13 +735,14 @@ class SummaryReportPage extends PureComponent {
                     </InputGroup>
                   </FormItem>
                 </Col>
-                <Col md={4} sm={24}>
+                <Col xxl={4} md={10} xs={24}>
                   <FormItem label="" style={{ width: '100%', marginLeft: 5 }}>
                     {/* {getFieldDecorator("", {})( */}
                     <Button
                       type="primary"
                       style={{ marginRight: 10 }}
                       onClick={this.statisticsReport}
+                      loading={loading}
                     >
                       生成统计
                     </Button>
@@ -752,7 +757,7 @@ class SummaryReportPage extends PureComponent {
             </Form>
             {/* <p className={style.title}>{moment(this.state.currentDate).format(format)} {reportText}</p> */}
             <SdlTable
-              loading={loading}
+              loading={loading || entAndPointLoading}
               style={{ minHeight: 80 }}
               size="small"
               columns={this.state.columns}
@@ -776,7 +781,7 @@ class SummaryReportPage extends PureComponent {
               // pagination={true}
             />
           </Card>
-        </Spin>
+        {/* </Spin> */}
       </BreadcrumbWrapper>
     );
   }

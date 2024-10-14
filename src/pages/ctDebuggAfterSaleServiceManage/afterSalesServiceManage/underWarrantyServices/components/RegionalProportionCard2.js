@@ -204,6 +204,7 @@ const RegionalProportionCard2 = props => {
     option = getPie3D(seriesData, {
       internalDiameterRatio: 0.8,
       customVal: customVal,
+      height:20,
       legendOption: { show: false },
     });
 
