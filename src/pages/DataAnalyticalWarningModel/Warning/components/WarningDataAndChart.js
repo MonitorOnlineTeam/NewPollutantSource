@@ -377,7 +377,7 @@ const WarningDataAndChart = props => {
 
         markAreaData.push(continuousItem);
         continuousItem = [];
-      } else if (item.WorkCon_Status && idx === allTypeDataList.length - 1) {
+      } else if (item.WorkCon_Status && idx === allTypeDataList.length - 1 && continuousItem.length) {
         continuousItem.push({
           name: '异常工况',
           xAxis: item.MonitorTime,

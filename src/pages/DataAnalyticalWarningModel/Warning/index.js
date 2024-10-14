@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-08-16 17:08:20
+ * @Last Modified time: 2024-10-09 17:06:43
  * @Description：报警记录
  */
 
@@ -92,6 +92,13 @@ const WarningRecord = props => {
 
     console.log('modelNumber', modelNumber);
   }, [modelNumber]);
+
+  useEffect(() => {
+    form.setFieldsValue({ ...warningForm[modelNumber] });
+    if (warningForm[modelNumber].EntCode) {
+      getPointList(warningForm[modelNumber].EntCode);
+    }
+  }, [warningForm[modelNumber]]);
 
   // useEffect(() => {
   //   onFinish();
@@ -386,13 +393,18 @@ const WarningRecord = props => {
           layout="inline"
           style={{ padding: '10px 0' }}
           initialValues={{
-            ...warningForm[modelNumber],
+            // ...warningForm[modelNumber],
           }}
           autoComplete="off"
           // onValuesChange={onValuesChange}
           onValuesChange={(changedFields, allFields) => {
             console.log('changedFields', changedFields);
             console.log('allFields', allFields);
+
+            let DGIMN = allFields.DGIMN;
+            if (!allFields.EntCode || changedFields.EntCode) {
+              DGIMN = undefined;
+            }
             dispatch({
               type: 'dataModel/updateState',
               payload: {
@@ -401,6 +413,7 @@ const WarningRecord = props => {
                   [modelNumber]: {
                     ...props.warningForm[modelNumber],
                     ...changedFields,
+                    DGIMN,
                   },
                 },
               },
@@ -427,15 +440,16 @@ const WarningRecord = props => {
               onChange={value => {
                 if (!value) {
                   form.setFieldsValue({ DGIMN: undefined });
+                  // setPointList([]);
                 } else {
                   form.setFieldsValue({ DGIMN: undefined });
-                  getPointList(value);
+                  // getPointList(value);
                 }
               }}
             />
           </Form.Item>
           {/* </Spin> */}
-          <Spin spinning={!!pointListLoading} size="small" style={{ background: '#fff' }}>
+          {/* <Spin spinning={!!pointListLoading} size="small" style={{ background: '#fff' }}> */}
             <Form.Item label="监测点名称" name="DGIMN">
               <Select
                 placeholder="请选择"
@@ -453,7 +467,7 @@ const WarningRecord = props => {
                 })}
               </Select>
             </Form.Item>
-          </Spin>
+          {/* </Spin> */}
           <Form.Item label="行业" name="IndustryType">
             <SearchSelect
               placeholder="排口所属行业"
