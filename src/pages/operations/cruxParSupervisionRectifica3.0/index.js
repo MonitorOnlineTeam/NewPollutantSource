@@ -26,7 +26,7 @@ import OperationInspectoUserList from '@/components/OperationInspectoUserList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import cuid from 'cuid';
 import { getBase64, } from '@/utils/utils';
-import RectificaDetail from './RectificaDetail';
+import RectificaDetailModal from './RectificaDetailModal';
 import Lightbox from "react-image-lightbox-rotate";
 
 const { TextArea } = Input;
@@ -91,9 +91,9 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined;
+  const pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined;
 
-  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading, queryPar,par } = props;
+  const { tableDatas, tableTotal, tableLoading, exportLoading, entLoading, queryPar, par } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -102,12 +102,12 @@ const Index = (props) => {
 
   useEffect(() => {
     if (par) {
-      form.setFieldsValue({ entCode:par?.EntCode,time:par?.time })
+      form.setFieldsValue({ entCode: par?.EntCode, time: par?.time })
       setPointLoading(true)
       props.getPointByEntCode({ entCode: par?.EntCode }, (res) => {
         setPointList(res)
         setPointLoading(false)
-        form.setFieldsValue({ DGIMN:par?.DGIMN })
+        form.setFieldsValue({ DGIMN: par?.DGIMN })
         onFinish(pageIndex, pageSize)
       })
     } else {
@@ -200,19 +200,19 @@ const Index = (props) => {
           <div>
             {record.isCheckUser == 0 ?
               <>
-              <a onClick={() => { rectificaDetail(record, 2) }}>
-                整改
+                <a onClick={() => { rectificaDetail(record, 2) }}>
+                  整改
                </a>
-               <Divider type="vertical" />
-                </>
+                <Divider type="vertical" />
+              </>
               :
-              ((record.isCheckUser == 1 && record.CheckType =='一级审核') || (record.isCheckUser == 2 && record.CheckType =='二级审核')) && <><a onClick={() => { rectificaDetail(record, 1) }}>
+              ((record.isCheckUser == 1 && record.CheckType == '一级审核') || (record.isCheckUser == 2 && record.CheckType == '二级审核')) && <><a onClick={() => { rectificaDetail(record, 1) }}>
                 核查整改
                </a>
                 <Divider type="vertical" />
-                </>
+              </>
             }
-           
+
             <a onClick={() => {
               rectificaDetail(record, 3)
             }}>
@@ -243,7 +243,7 @@ const Index = (props) => {
         endTime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
         time2: undefined,
-        pollutantType : pollutantType,
+        pollutantType: pollutantType,
         pageIndex: pageIndexs,
         pageSize: pageSizes,
       })
@@ -254,9 +254,9 @@ const Index = (props) => {
   const exports = async () => { //导出
     props.exportZGCheckList({
       ...queryPar,
-      pollutantType : pollutantType,
-      pageIndex:undefined,
-      pageSize:undefined,
+      pollutantType: pollutantType,
+      pageIndex: undefined,
+      pageSize: undefined,
     })
   }
 
@@ -296,57 +296,74 @@ const Index = (props) => {
       onValuesChange={onValuesChange}
     >
       <Row align='middle'>
-        <Form.Item label='行政区' name='regionCode' className='minWidth'>
-          <RegionList noFilter levelNum={2} style={{ width: 150 }} />
-        </Form.Item>
-        {/* <Spin spinning={entLoading} size='small' style={{ top: -3, left: 39 }}> */}
-          <Form.Item label='企业' name='entCode'>
-            <EntAtmoList noFilter style={{ width: 300 }} />
+        <Col span={6}>
+          <Form.Item label='行政区' name='regionCode'>
+            <RegionList noFilter levelNum={2}  />
           </Form.Item>
-        {/* </Spin> */}
-        <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
-          <Form.Item label='监测点名称' name='DGIMN' >
+        </Col>
+        <Col span={6}>
+          <Form.Item label='企业' name='entCode'>
+            <EntAtmoList noFilter  style={{width:'100%'}}/>
+          </Form.Item>
+        </Col>
+        <Col span={6}>
+          <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
+            <Form.Item label='监测点名称' name='DGIMN' >
 
-            <Select placeholder='请选择' showSearch allowClear optionFilterProp="children" style={{ width: 150 }}>
-              {
-                pointList[0] && pointList.map(item => {
-                  return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
-                })
-              }
+              <Select placeholder='请选择' showSearch allowClear optionFilterProp="children" >
+                {
+                  pointList[0] && pointList.map(item => {
+                    return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
+                  })
+                }
+              </Select>
+            </Form.Item>
+          </Spin>
+        </Col>
+
+        <Col span={6}>
+          <Form.Item label="核查人" name="CheckUser" className='minWidth'>
+            {/* <OperationInspectoUserList workNum type='2' style={{ width: 150 }} /> */}
+            <Input placeholder='请输入' allowClear  />
+          </Form.Item>
+          </Col>
+          <Col span={6}>
+          <Form.Item label="核查日期" name="time"  >
+            <RangePicker_
+              allowClear={false}
+              format="YYYY-MM-DD" />
+          </Form.Item>
+        </Col>
+        <Col span={6}>
+          <Form.Item label="整改状态" name="CheckStatus"  >
+            <Select placeholder='请选择' allowClear >
+              <Option key={1} value={1} >整改未完成</Option>
+              <Option key={2} value={2} >整改待核实</Option>
+              <Option key={3} value={3} >整改已完成</Option>
             </Select>
           </Form.Item>
-        </Spin>
-      </Row>
+        </Col>
+        <Col span={6}>
+          <Form.Item label='审核类型' name='node' >
 
-      <Row style={{ paddingTop: 5 }}>
-        <Form.Item label="核查人" name="CheckUser" className='minWidth'>
-          {/* <OperationInspectoUserList workNum type='2' style={{ width: 150 }} /> */}
-          <Input placeholder='请输入'  allowClear style={{ width: 150 }}/>
-        </Form.Item>
-        <Form.Item label="核查日期" name="time"  >
-          <RangePicker_
-            style={{ width: 300 }}
-            allowClear={false}
-            format="YYYY-MM-DD" />
-        </Form.Item>
-        <Form.Item label="整改状态" name="CheckStatus"  >
-          <Select placeholder='请选择' allowClear style={{ width: 150 }}>
-            <Option key={1} value={1} >整改未完成</Option>
-            <Option key={2} value={2} >整改待核实</Option>
-            <Option key={3} value={3} >整改已完成</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item style={{ paddingLeft: 16 }}>
-          <Button type="primary" loading={tableLoading} htmlType='submit'>
-            查询
+            <Select placeholder='请选择' allowClear  >
+              <Option key={1} value={1} >一级审核</Option>
+              <Option key={2} value={2} >二级审核</Option>
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={6}>
+          <Form.Item>
+            <Button type="primary" loading={tableLoading} htmlType='submit'>
+              查询
           </Button>
-          <Button onClick={() => { form.resetFields() }} style={{ margin: '0 8px' }}>
-            重置
+            <Button onClick={() => { form.resetFields() }} style={{ margin: '0 8px' }}>
+              重置
           </Button>
-          <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
+            <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
 
-        </Form.Item>
-
+          </Form.Item>
+        </Col>
       </Row>
     </Form>
   }
@@ -376,8 +393,8 @@ const Index = (props) => {
 
 
   return (
-    <div className={styles.supervisionManagerSty}>
-      <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
+    <div  className={`${styles.supervisionManagerSty} queryCriterTitleSty`}>
+      <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb} >
         <Card bordered={!props.hideBreadcrumb} title={searchComponents()}>
           <SdlTable
             resizable
@@ -385,7 +402,7 @@ const Index = (props) => {
             bordered
             dataSource={tableDatas}
             columns={columns}
-            scroll={{ y: props.hideBreadcrumb? 'calc(100vh - 260px)' : 'calc(100vh - 360px)' }}
+            scroll={{ y: props.hideBreadcrumb ? 'calc(100vh - 260px)' : 'calc(100vh - 360px)' }}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,
@@ -398,21 +415,8 @@ const Index = (props) => {
         </Card>
       </BreadcrumbWrapper>
 
-
-
-      <Modal //核查和详情
-        visible={rectificaDetailVisible}
-        title={rectificaDetailType == 1 ? '核查整改' : rectificaDetailType == 2 ? '整改' : '整改详情'}
-        footer={null}
-        mask={false}
-        wrapClassName='spreadOverModal'
-        onCancel={() => { setRectificaDetailVisible(false); }}// rectificaDetailType != 3 && infoData?.Status !== '整改已完成' && onFinish(pageIndex, pageSize);
-        destroyOnClose
-        zIndex={666}
-        className={styles.rectificaDetailSty}
-      >
-        <RectificaDetail id={rectificaDetailId} rectificaDetailType={rectificaDetailType} infoData={infoData} onFinish={()=>onFinish(pageIndex, pageSize)}/>
-      </Modal>
+          {/* 核查和详情 */}
+        <RectificaDetailModal   visible={rectificaDetailVisible}  title={rectificaDetailType == 1 ? '核查整改' : rectificaDetailType == 2 ? '整改' : '整改详情'} onCancel={() => { setRectificaDetailVisible(false); }}   id={rectificaDetailId} rectificaDetailType={rectificaDetailType} infoData={infoData} onFinish={() => onFinish(pageIndex, pageSize)} />
     </div>
   );
 };

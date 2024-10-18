@@ -298,6 +298,13 @@ const Index = (props) => {
   const [imageIndex, setImageIndex] = useState();
   const [imageList, setImageList] = useState([]);
   const onPreviewImg = (file, filesList) => {
+    if (file?.originFileObj?.type == "application/pdf" || /pdf/.test(file?.name)) {
+      const url = file?.response?.Datas?.fNameList?.[0]? `/${file.response.Datas.fNameList[0]}` : file?.url
+      if (url) {
+        window.open(`${url}`)
+      }
+      return
+    }
     setIsOpen(true)
     const imageList = filesList
     let imageListIndex = 0;
@@ -320,7 +327,7 @@ const Index = (props) => {
   const [title, setTitle] = useState()
   const [row, setRow] = useState({})
 
-  const edit =  (record) => {
+  const edit = (record) => {
     setFormVisible(true)
     setTitle(`${record.ProjectCode}-编辑`)
     setRow(record)
@@ -551,7 +558,7 @@ const Index = (props) => {
         visible={formVisible}
         record={row}
         onCancel={() => { setFormVisible(false) }}
-        onFinish = {()=>onFinish(pageIndex, pageSize)}
+        onFinish={() => onFinish(pageIndex, pageSize)}
       />
       {/* <Modal
         title={title}

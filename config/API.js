@@ -355,7 +355,7 @@ export const API = {
     // 添加监测点信息
     AddPoint: before + '/MonitorPointApi/AddPoint',
     // 删除监测点（支持批量）
-    DeletePoints: before + '/MonitorPointApi/DeletePoints',
+    DeletePoints: before + '/AutoFormDataApi/DeletePoints',
     // 更新监测点信息
     UpdatePoint: before + '/MonitorPointApi/UpdatePoint',
     // 获取企业下各个排口的二维码
@@ -381,7 +381,7 @@ export const API = {
     DeletePointProjectRelationInfo: before + '/EnterpriseApi/DeletePointProjectRelationInfo', //删除监测设备运维信息
     GetProjectList: before + '/ProjectApi/GetProjectList', //获取项目管理
     ExportPointProjectRelationList: before + '/EnterpriseApi/ExportPointProjectRelationList', //导出监测设备运维信息
-    UpdatePointDGIMN: before + '/MonitorPointApi/UpdatePointDGIMN', //更新MN号
+    UpdatePointDGIMN: before + '/AutoFormDataApi/UpdatePointDGIMN', //更新MN号
     GetMonitorPointVerificationItem: before + '/MonitorPointApi/GetMonitorPointVerificationItem', //获取监测点数据核查信息
     GetMonitorPointVerificationList: before + '/MonitorPointApi/GetMonitorPointVerificationList', //获取数据核查项码表
     AddPointVerificationItem: before + '/MonitorPointApi/AddPointVerificationItem', //添加更新监测点数据核查项
@@ -1538,6 +1538,7 @@ export const API = {
     RejectTask: before + '/WorkOrderApi/RejectTask', //驳回任务
     GetOperationLogList: before + '/WorkOrderApi/GetOperationLogList', //获取运维记录
     PostRetransmission: before + '/WorkOrderApi/PostRetransmission', //任务转发
+    DelteTask: before + '/WorkOrderApi/DelteTask', //任务删除
     //电子表单
     GetCemsCalibrationRecord: before + '/GasOperationFormApi/GetCemsCalibrationRecord', //获取单个任务的校准记录
     GetConsumablesReplaceRecordList:
@@ -1887,7 +1888,7 @@ export const API = {
     queryPointForTarget: before + '/MonitorPointApi/queryPointForTarget', //根据批量监控目标id获取监测点(删除监控目标用)
     AddPoint: before + '/MonitorPointApi/AddPoint', //添加监测点
     UpdatePoint: before + '/MonitorPointApi/UpdatePoint', //更新监测点
-    DeletePoints: before + '/MonitorPointApi/DeletePoints', //删除监测点
+    // DeletePoints: before + '/AutoFormDataApi/DeletePoints', //删除监测点
     AddOrUpdatePointCoefficientInfo: before + '/MonitorPointApi/AddOrUpdatePointCoefficientInfo', //添加更新监测点系数
     CreateQRCode: before + '/MonitorPointApi/CreateQRCode', //获取企业下各个监测点的二维码信息
     GetPointProjectRelationList: before + '/EnterpriseApi/GetPointProjectRelationList', //获取监测设备运维信息
@@ -1895,7 +1896,7 @@ export const API = {
     AddOrUpdatePointProjectRelationInfo:
       before + '/EnterpriseApi/AddOrUpdatePointProjectRelationInfo', //添加更新监测设备运维信息
     DeletePointProjectRelationInfo: before + '/EnterpriseApi/DeletePointProjectRelationInfo', //删除监测设备运维信息
-    UpdatePointDGIMN: before + '/MonitorPointApi/UpdatePointDGIMN', //更新MN号
+    // UpdatePointDGIMN: before + '/AutoFormDataApi/UpdatePointDGIMN', //更新MN号
     GetMonitorPointVerificationList: before + '/MonitorPointApi/GetMonitorPointVerificationList', //获取数据核查项码表
     GetMonitorPointVerificationItem: before + '/MonitorPointApi/GetMonitorPointVerificationItem', //获取监测点数据核查信息
     AddPointVerificationItem: before + '/MonitorPointApi/AddPointVerificationItem', //添加更新监测点数据核查项
@@ -2473,6 +2474,8 @@ export const API = {
     AddProvinceManagementRules: before + '/DailyWorkBaseApi/AddProvinceManagementRules', // 设置省区经理日常规则
     GetProvinceManagementRulesList: before + '/DailyWorkBaseApi/GetProvinceManagementRulesList', // 获取省区经理日常规则列表
     DeleteProvinceManagementRules: before + '/DailyWorkBaseApi/DeleteProvinceManagementRules', // 删除省区经理日常规则列表
+    /*办事处管理*/
+    GetOfficeUserList: before + '/CTBaseDataApi/GetOfficeUserList', //获取办事处人员
     /*专家信息清单*/
     GetExpertList: before + '/DailyWorkManagerApi/GetExpertList', //获取专家信息
     /**资源检索中心 */

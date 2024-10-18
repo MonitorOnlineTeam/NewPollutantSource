@@ -171,10 +171,8 @@ const OfficeCheck = props => {
           initialValues={{
             time: [
               moment()
-                .subtract(1, 'month')
                 .startOf('month'),
               moment()
-                .subtract(1, 'month')
                 .endOf('month'),
             ],
           }}
@@ -267,6 +265,7 @@ const OfficeCheck = props => {
             isRecord
             hideBreadcrumb
             match={props.match}
+            time={form.getFieldValue('time')}
             queryApiName={API.DailyManagement.FieldCheckApi.GetSiteInspectionList}
             exportApiName={API.DailyManagement.FieldCheckApi.ExportSystemFacilityVerificationList}
           />

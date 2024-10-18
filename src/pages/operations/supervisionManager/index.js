@@ -971,7 +971,7 @@ const Index = (props) => {
         form={form}
         name="advanced_search"
         initialValues={{
-          time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
+          time: props.time ||  [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
         }}
         className={styles["ant-advanced-search-form"]}
         onFinish={()=>{setPageIndex(1); onFinish(1,pageSize)}}

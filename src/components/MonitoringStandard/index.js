@@ -182,8 +182,8 @@ class MonitoringStandard extends Component {
     this.props.dispatch({
       type: 'standardLibrary/CopyStandard',
       payload: {
-        oldDGIMN: this.props.DGIMN,
-        DGIMN: this.state.copyMN.toString(),
+        oldDGIMN: this.state.copyMN.toString(),
+        DGIMN: this.props.DGIMN,
         PollutantCode: 1,
         Enalbe: 1,
       },

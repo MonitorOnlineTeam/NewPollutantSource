@@ -562,6 +562,7 @@ const Index = (props) => {
         wrapClassName={styles.telModalSty}
         confirmLoading={title==='添加'? saveloading : saveloading||detailLoading}
         wrapClassName='spreadOverModal'
+        mask={false}
       >
         <Spin spinning={title==='添加'? false : detailLoading}>
         <Form

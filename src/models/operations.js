@@ -5,7 +5,8 @@ import Model from '@/utils/model';
 import { message } from 'antd';
 import { router } from 'umi';
 import config from '@/config';
-import { downloadFile } from '@/utils/utils';
+import { downloadFile,requestPost } from '@/utils/utils';
+import { API } from '@config/API';
 
 export default Model.extend({
   namespace: 'operations',
@@ -377,7 +378,15 @@ export default Model.extend({
         });
       }
     },
+    // 删除 任务
+    *DelteTask({ payload,callback }, { call, put, update }) {
 
+      const result = yield call( requestPost,`${API.PredictiveMaintenanceApi.DelteTask}`, payload,);
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback && callback(result.Datas);
+      }
+    },
     // 获取运维人员列表
     *getOperationsUserList({ payload }, { call, put, update }) {
       const result = yield call(services.getOperationsUserList, payload);

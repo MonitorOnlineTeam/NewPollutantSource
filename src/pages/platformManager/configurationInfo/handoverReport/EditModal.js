@@ -187,6 +187,13 @@ const Index = (props) => {
     const [imageIndex, setImageIndex] = useState();
     const [imageList, setImageList] = useState([]);
     const onPreviewImg = (file, filesList) => {
+        if (file?.originFileObj?.type == "application/pdf" || /pdf/.test(file?.name)) {
+            const url = file?.response?.Datas?.fNameList?.[0] ? `/${file.response.Datas.fNameList[0]}` : file?.url
+            if (url) {
+                window.open(`${url}`)
+            }
+            return
+        }
         setIsOpen(true)
         const imageList = filesList
         let imageListIndex = 0;
@@ -229,17 +236,17 @@ const Index = (props) => {
     const uploadProps2 = (fileName) => {
         const filesCuid = form2.getFieldValue([fileName])
         return { //照片附件 上传
-            action: API.UploadApi.UploadPicture,
+            action: API.UploadApi.UploadFiles,
             headers: { Cookie: null, Authorization: "Bearer " + Cookie.get(config.cookieName) },
-            accept: 'image/*',
+            // accept: 'image/*',
             data: {
                 FileUuid: filesCuid,
                 FileActualType: '0',
             },
             beforeUpload: (file) => {
                 const fileType = file?.type; //获取文件类型 type  image/*
-                if (!(/^image/g.test(fileType))) {
-                    message.error(`请上传图片格式文件!`);
+                if (!(/^image/g.test(fileType) || /pdf/g.test(fileType))) {
+                    message.error(`请上传图片或者PDF格式文件!`);
                     return false;
                 }
             },
@@ -247,7 +254,7 @@ const Index = (props) => {
                 const fileList = [];
                 info.fileList.map(item => {
                     if (item.response && item.response.IsSuccess) { //刚上传的
-                        fileList.push({ ...item, url: `/${item.response.Datas}`, })
+                        fileList.push({ ...item, url: `/${item.response.Datas?.fNameList}`, })
                     } else if (!item.response) {
                         fileList.push({ ...item })
                     }
@@ -305,8 +312,8 @@ const Index = (props) => {
                             </Radio.Group>
                         </Form.Item>
                         <Form.Item label="运维接收-运维交接单" name="receiveFile" >
-                            <Upload {...uploadProps2('receiveFile')} accept='image/*'>
-                                <Button icon={<UploadOutlined />}>上传照片</Button>
+                            <Upload {...uploadProps2('receiveFile')}>
+                                <Button icon={<UploadOutlined />}>上传照片或PDF文件</Button>
                             </Upload>
                         </Form.Item>
                         <Form.Item label="项目结束状态" name="EndStatus" >
@@ -316,13 +323,13 @@ const Index = (props) => {
                             </Radio.Group>
                         </Form.Item>
                         <Form.Item label="运维移交-运维交接单" name="transferFile" >
-                            <Upload {...uploadProps2('transferFile')} accept='image/*'>
-                                <Button icon={<UploadOutlined />}>上传照片</Button>
+                            <Upload {...uploadProps2('transferFile')} >
+                                <Button icon={<UploadOutlined />}>上传照片或PDF文件</Button>
                             </Upload>
                         </Form.Item>
                         <Form.Item label="运维合同履约完成报告" name="performanceFile" >
-                            <Upload {...uploadProps2('performanceFile')} accept='image/*'>
-                                <Button icon={<UploadOutlined />}>上传照片</Button>
+                            <Upload {...uploadProps2('performanceFile')} >
+                                <Button icon={<UploadOutlined />}>上传照片或PDF文件</Button>
                             </Upload>
                         </Form.Item>
                         <Form.Item label="备注" name="remark" >

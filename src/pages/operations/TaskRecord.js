@@ -13,6 +13,7 @@ import {
   UpOutlined,
   ExportOutlined,
   SendOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
@@ -90,6 +91,7 @@ class TaskRecord extends Component {
       forwardRemark: null,
       rejectPermis: false,
       forwardPermis: false,
+      deletePermis:false,
       taskTypeListLoading: true,
       pollutantType: this.pollutantType == 1 ? ['7', '9', '19', '25', '26', '27', '31', '21', '8', '12', '11'] : this.pollutantType == 2 ? ['1', '3', '20', '28', '29', '30', '32', '22', '2', '6', '5'] : []
     };
@@ -118,6 +120,7 @@ class TaskRecord extends Component {
       switch (item) {
         case 'reject': this.setState({ rejectPermis: true }); break;
         case 'forward': this.setState({ forwardPermis: true }); break;
+        case 'delete': this.setState({ deletePermis: true }); break;
       }
     })
     if (this.props.match?.params?.type) {
@@ -412,6 +415,24 @@ class TaskRecord extends Component {
     this.LoadData(this.props.gettasklistqueryparams);
   }
 
+  //删除
+  
+  delTask = key => {
+
+   return new Promise((resolve) => {
+      setTimeout(() => resolve(null), 3000);
+      this.props.dispatch({
+        type: 'operations/DelteTask',
+        payload: {
+          taskId: key,
+        },
+        callback:()=>{
+          resolve(null)
+          this.LoadData(this.props.gettasklistqueryparams);
+        }
+      })
+    });
+  }
   // 监控类型选择
   taskParentTypeChange = val => {
     this.props.dispatch({
@@ -746,6 +767,7 @@ class TaskRecord extends Component {
         title: '操作',
         key: 'action',
         align: 'center',
+        width:200,
         ellipsis: true,
         render: (text, record, index) => {
           const { forwardPermis, rejectPermis, } = this.state;
@@ -766,9 +788,27 @@ class TaskRecord extends Component {
 
               {forwardPermis && <><Divider type="vertical" /><Tooltip title="任务转发">
                 <a style={{ cursor: record.IsForward != '1' && 'not-allowed', color: record.IsForward != '1' && 'rgba(0, 0, 0, 0.25) ', }}>
-                  <SendOutlined style={{ cursor: record.IsForward != '1' && 'not-allowed', }} onClick={() => this.taskForward(record)} /></a>
+                  <SendOutlined style={{fontSize:16, cursor: record.IsForward != '1' && 'not-allowed', }} onClick={() => this.taskForward(record)} /></a>
               </Tooltip></>}
-            </>)
+
+              {this.state.deletePermis && record.TaskFrom!=2 &&<><Divider type="vertical" />
+                    <Tooltip title="删除">
+                      <Popconfirm
+                        placement="left"
+                        title={'确定要删除这条运维工单？'}
+                        onConfirm={() => {
+                          this.delTask(TaskID);
+                        }}
+                        okText="是"
+                        cancelText="否">
+                        <a><DeleteOutlined style={{fontSize:16}}/></a>
+                      </Popconfirm>
+                    </Tooltip>
+                    </>
+                    }
+            </>
+            
+            )
             if (completeTime && rejectPermis) {
               // console.log('timetimetimetimetimetime', moment().diff(time, 'days'));
               // 当前时间 > 完成时间显示驳回
@@ -789,9 +829,12 @@ class TaskRecord extends Component {
                         }}
                         okText="是"
                         cancelText="否">
-                        <a><CloseCircleOutlined /></a>
+                        <a><CloseCircleOutlined  style={{fontSize:16}}/></a>
                       </Popconfirm>
-                    </Tooltip></>)
+                    </Tooltip>
+                    
+
+                    </>)
               }
             }
             return reslist;

@@ -198,8 +198,11 @@ export default Model.extend({
     //关键参数核查 保存 新
     *addRemoteInspector({ payload, callback }, { call, update, select, put }) {
       const result = yield call(services.AddRemoteInspector, { ...payload });
-      callback(result.IsSuccess)
+      callback(result.IsSuccess,result.Message)
       if (result.IsSuccess) {
+        if(result.Message=='请核对基准含氧量或当地大气压填写是否正确！'){
+          return
+        }
         message.success(result.Message)
       } else {
         result.Message && message.error(result.Message)

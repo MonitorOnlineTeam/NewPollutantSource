@@ -218,10 +218,8 @@ const Training = props => {
           initialValues={{
             time: [
               moment()
-                .subtract(1, 'month')
                 .startOf('months'),
               moment()
-                .subtract(1, 'month')
                 .endOf('months'),
             ],
           }}

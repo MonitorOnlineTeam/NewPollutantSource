@@ -419,8 +419,8 @@ const Index = (props) => {
 
       props.getProjectInfoList({
         ...values,
-        BegBeginTime: values.BegTime && moment(values.BegTime[0]).format('YYYY-MM-DD HH:mm:ss'),
-        BegEndTime: values.BegTime && moment(values.BegTime[1]).format('YYYY-MM-DD HH:mm:ss'),
+        BegBeginTime: values.BegTime && moment(values.BegTime[0]).format('YYYY-MM-DD 00:00:00'),
+        BegEndTime: values.BegTime && moment(values.BegTime[1]).format('YYYY-MM-DD 23:59:59'),
         // EndBeginTime:values.EndTime&&moment(values.EndTime[0]).format('YYYY-MM-DD HH:mm:ss'),
         // EndEndTime:values.EndTime&&moment(values.EndTime[1]).format('YYYY-MM-DD HH:mm:ss'),
         BegTime: undefined,
@@ -642,8 +642,10 @@ const Index = (props) => {
         </Col>
         {expand && <>  <Col span={8}>
           <Form.Item name='BegTime' label='运维日期' >
-            <RangePicker style={{ width: '100%' }}
-              showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
+            <RangePicker 
+             format='YYYY-MM-DD'
+             style={{ width: '100%' }}
+              // showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment(' 00:00:00', ' HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
             />
           </Form.Item>
         </Col>
@@ -699,7 +701,7 @@ const Index = (props) => {
             resizable
             loading={tableLoading}
             bordered
-            scroll={{ y: expand ? 'calc(100vh - 470px)' : 'calc(100vh - 370px)' }}
+            scroll={{ y: expand ? 'calc(100vh - 408px)' : 'calc(100vh - 370px)' }}
             dataSource={tableDatas}
             columns={provinceShow ? columns : columns.filter(item => item.title != '行政区')}
             pagination={{

@@ -259,10 +259,8 @@ const ChecklistRecordAndManagement = props => {
     let initialValues = {
       time: [
         moment()
-          .subtract(1, 'month')
           .startOf('month'),
         moment()
-          .subtract(1, 'month')
           .endOf('month'),
       ],
     };

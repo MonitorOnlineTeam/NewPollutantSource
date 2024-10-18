@@ -41,6 +41,9 @@ import HandleComplaints from '@/pages/ctDebuggAfterSaleServiceManage/customerSat
 import ProjectQueryDetail from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/projectQuery/Detail';
 import StandardGasValidityContent from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/standardGasValidity/components/StandardGasValidityContent';
 import HandoverReportEditModal from '@/pages/platformManager/configurationInfo/handoverReport/EditModal';
+import RemoteSupervisionEditModal from '@/pages/operations/remoteSupervision/EditModal';
+import RectificaDetailModal from '@/pages/operations/cruxParSupervisionRectifica3.0/RectificaDetailModal';
+
 import router from 'umi/router';
 import { PageLoading } from '@ant-design/pro-layout';
 import Cookie from 'js-cookie';
@@ -1762,6 +1765,7 @@ const Workbench = props => {
           title={'监督核查-详情'}
           footer={null}
           wrapClassName="spreadOverModal"
+          mask={false}
           className={superviseRectificaSty.fromModal}
           onCancel={() => {
             setSuperviseRectificaDetailVisible(false);

@@ -231,10 +231,8 @@ const ReturnVisit = props => {
           initialValues={{
             time: [
               moment()
-                .subtract(1, 'month')
                 .startOf('month'),
               moment()
-                .subtract(1, 'month')
                 .endOf('month'),
             ],
           }}

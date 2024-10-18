@@ -1243,6 +1243,17 @@ const Index = (props) => {
   </Fragment>
   return (
     <div>
+       <Modal //核查和详情
+        visible={props.visible}
+        title={props.title}
+        footer={null}
+        mask={false}
+        wrapClassName='spreadOverModal'
+        onCancel={() => {props.onCancel && props.onCancel()}}// rectificaDetailType != 3 && infoData?.Status !== '整改已完成' && onFinish(pageIndex, pageSize);
+        destroyOnClose
+        zIndex={666}
+        className={styles.rectificaDetailSty}
+      >
       <Form>
         <div style={{ padding: '8px 0' }}>
           <Row>
@@ -1312,8 +1323,9 @@ const Index = (props) => {
               rowClassName={null}
             />
           </TabPane>
-        </Tabs>
+        </Tabs>  
       </div>
+      </Modal>
       {/* 查看附件弹窗 */}
       <ImageView
         isOpen={previewVisible}

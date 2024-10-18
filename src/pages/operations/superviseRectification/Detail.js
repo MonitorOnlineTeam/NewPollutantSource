@@ -525,6 +525,7 @@ const Index = (props) => {
       }
     },
     onChange(info) {
+      debugger
       const fileList = [];
       info.fileList.map(item => {
         if (item.response && item.response.IsSuccess) { //刚上传的
@@ -536,6 +537,7 @@ const Index = (props) => {
 
       if (info.file.status == 'uploading') {
         setFilesList2(fileList)
+        form.setFieldsValue({ InspectorAttachment: filesCuid })
       }
       if (info.file.status === 'done') {
         form.setFieldsValue({ InspectorAttachment: filesCuid })

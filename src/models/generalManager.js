@@ -38,9 +38,10 @@ export default Model.extend({
             carQueryPar: payload,
           });
         }
+        callback && callback(result.Datas || []);
       } else {
         result.Message && message.error(result.Message);
-        callback && callback({});
+        callback && callback(payload.id? {} : []);
       }
       !payload.id ? yield update({ carTableLoading: false }) : null;
     },

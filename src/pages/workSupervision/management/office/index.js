@@ -37,7 +37,8 @@ const CONFIGID = 'T_Bas_OfficeLocation';
 const dvaPropsData = ({ loading, wordSupervisionManage }) => ({
   allUserByOffice: wordSupervisionManage.allUserByOffice,
   allManager: wordSupervisionManage.allManager,
-  getUserLoading: loading.effects['wordSupervisionManage/GetAllUserByOffice'],
+  // getUserLoading: loading.effects['wordSupervisionManage/GetAllUserByOffice'],
+  getUserLoading: loading.effects['wordSupervisionManage/GetOfficeUserList'],
   bindUserLoading: loading.effects['wordSupervisionManage/InsertOfficeByUser'],
 });
 
@@ -93,7 +94,7 @@ const TableTransfer = ({ leftColumns, rightColumns, loading, ...restProps }) => 
 );
 
 const Office = props => {
-  const { allUserByOffice, allManager, getUserLoading, bindUserLoading, isModal, onlyAppendHandleRows } = props;
+  const { allUserByOffice, allManager, getUserLoading, bindUserLoading, isModal, onlyAppendHandleRows,aaData } = props;
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
   const [targetKeys, setTargetKeys] = useState([]);
@@ -123,19 +124,27 @@ const Office = props => {
   // 获取所有人员(已经选过的办事处用户不会出现)
   const getAllUserByOffice = id => {
     props.dispatch({
-      type: 'wordSupervisionManage/GetAllUserByOffice',
+      type: 'wordSupervisionManage/GetOfficeUserList',
       payload: {
         id,
       },
-      callback: () => {
-        props.dispatch({
-          type: 'autoForm/getAutoFormData',
-          payload: {
-            configId: CONFIGID,
-          },
-        });
-      },
+      callback: () => { },
     });
+    
+    // props.dispatch({
+    //   type: 'wordSupervisionManage/GetAllUserByOffice',
+    //   payload: {
+    //     id,
+    //   },
+    //   callback: () => {
+    //     props.dispatch({
+    //       type: 'autoForm/getAutoFormData',
+    //       payload: {
+    //         configId: CONFIGID,
+    //       },
+    //     });
+    //   },
+    // });
   };
 
   // 绑定办事处人员
@@ -153,19 +162,19 @@ const Office = props => {
   };
 
   // 获取已绑定的办事处用户
-  const GetUserByOfficeCode = id => {
-    props.dispatch({
-      type: 'wordSupervisionManage/GetUserByOfficeCode',
-      payload: {
-        id,
-      },
-      callback: res => {
-        console.log('res', res);
-        let keys = res.map(item => item.key);
-        setTargetKeys(keys);
-      },
-    });
-  };
+  // const GetUserByOfficeCode = id => {
+  //   props.dispatch({
+  //     type: 'wordSupervisionManage/GetUserByOfficeCode',
+  //     payload: {
+  //       id,
+  //     },
+  //     callback: res => {
+  //       console.log('res', res);
+  //       let keys = res.map(item => item.key);
+  //       setTargetKeys(keys);
+  //     },
+  //   });
+  // };
 
   // 获取办事处所有经理
   const GetAllManager = id => {
@@ -198,19 +207,54 @@ const Office = props => {
   const handleChange = newTargetKeys => {
     setTargetKeys(newTargetKeys);
   };
+  // const columns = [
+  //   {
+  //     dataIndex: 'User_Account',
+  //     title: '账号',
+  //     ellipsis: true,
+  //   },
+  //   {
+  //     dataIndex: 'User_Name',
+  //     title: '名称',
+  //     ellipsis: true,
+  //   },
+  // ];
   const columns = [
     {
-      dataIndex: 'User_Account',
-      title: '账号',
-      ellipsis: true,
+      title: '序号',
     },
     {
-      dataIndex: 'User_Name',
-      title: '名称',
-      ellipsis: true,
+      dataIndex: 'UserName',
+      title: '姓名',
+    },
+    {
+      dataIndex: 'UserAccount',
+      title: '工号',
+    },
+    {
+      dataIndex: 'IsSignAddress',
+      title:'是否在住',
+    },
+    {
+      dataIndex: 'BeginTime',
+      title: '入住日期',
+    },
+    {
+      dataIndex: 'EndTime',
+      title: '退房日期',
     },
   ];
-  return (<div  className='smallCardWrapper'>
+
+  const relatedOfficePersonnel = () =>{
+    props.dispatch({
+      type: 'wordSupervisionManage/SetOfficeManager',
+      payload: {
+        id: currentID,
+        manager: currentManager,
+      },
+    });
+  }
+  return (<div className='smallCardWrapper'>
     <BreadcrumbWrapper hideBreadcrumb={isModal}>
       <Card bordered={false}>
         <SearchWrapper configId={CONFIGID} />
@@ -236,7 +280,7 @@ const Office = props => {
                       setVisible(true);
                       setCurrentID(row['dbo.T_Bas_OfficeLocation.ID']);
                       getAllUserByOffice(row['dbo.T_Bas_OfficeLocation.ID']);
-                      GetUserByOfficeCode(row['dbo.T_Bas_OfficeLocation.ID']);
+                      // GetUserByOfficeCode(row['dbo.T_Bas_OfficeLocation.ID']);
                     }}
                   >
                     <UsergroupAddOutlined style={{ fontSize: 16 }} />
@@ -263,13 +307,22 @@ const Office = props => {
         <Modal
           title="关联办事处人员"
           visible={visible}
-          width={800}
-          onOk={onBindOfficeByUser}
           onCancel={() => setVisible(false)}
-          confirmLoading={bindUserLoading}
-          footer={onlyAppendHandleRows&&null}
+          width={800}
+          footer={null}
+        // onOk={onBindOfficeByUser}
+        // confirmLoading={bindUserLoading}
+        // footer={onlyAppendHandleRows&&null}
         >
-          {onlyAppendHandleRows ?
+          <SdlTable
+            columns={columns}
+            dataSource={allUserByOffice}
+            loading={getUserLoading}
+            size="small"
+            align='center'
+            pagination={false}
+          />
+          {/* {onlyAppendHandleRows ?
             <SdlTable
               columns={columns}
               dataSource={allUserByOffice.filter(obj => targetKeys.includes(obj.key))}
@@ -291,7 +344,7 @@ const Office = props => {
               leftColumns={columns}
               rightColumns={columns}
             />
-          }
+          } */}
         </Modal>
         <Modal
           title="设置成套大区经理/省区运维经理"
@@ -338,7 +391,7 @@ const Office = props => {
         </Modal>
       </Card>
     </BreadcrumbWrapper>
-    </div>
+  </div>
   );
 };
 

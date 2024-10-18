@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-27 14:47:11
+ * @LastEditTime: 2024-10-15 11:23:34
  * @Description: 角色管理
  */
 import React, { Component, Fragment } from 'react';
@@ -1204,7 +1204,8 @@ class RoleIndex extends Component {
                 destroyOnClose="true"
                 onCancel={this.handleCancelMenu}
                 confirmLoading={this.props.insertmenubyroleidLoading}
-                width={1200}
+                wrapClassName='spreadOverModal isFooterSty'
+                mask={false}
               >
                 <div style={{ width: '100%', maxHeight: '600px', overflow: 'auto' }}>
                   {

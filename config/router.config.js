@@ -1387,7 +1387,7 @@ const routes = [
                     component: './platformManager/configurationInfo/newOldProtocolConversManger',
                   },
                   {
-                    name: 'newOldProtocolConversManger', // 交接和报告
+                    name: 'handoverReport', // 交接和报告
                     path: '/platformconfig/configurationInfo/handoverReporting/handoverReport',
                     component: './platformManager/configurationInfo/handoverReport',
                   },

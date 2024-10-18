@@ -1,3 +1,10 @@
+/*
+ * @Author: outman0611
+ * @Date: 2024-08-16 18:00:06
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-10-17 09:41:56
+ * @Description: 
+ */
 import moment from 'moment';
 import * as services from '../services/wordSupervisionManage';
 import Cookie from 'js-cookie';
@@ -5,7 +12,8 @@ import Model from '@/utils/model';
 import { message } from 'antd';
 import { router } from 'umi';
 import config from '@/config';
-import { downloadFile } from '@/utils/utils';
+import { downloadFile,requestPost } from '@/utils/utils';
+import { API } from '@config/API';
 
 export default Model.extend({
   namespace: 'wordSupervisionManage',
@@ -34,17 +42,26 @@ export default Model.extend({
         result.Message && message.error(result.Message);
       }
     },
-    // 获取办事处人员(已经选过的办事处用户不会出现)
-    *GetAllUserByOffice({ payload, callback }, { call, put, update }) {
-      const result = yield call(services.GetAllUserByOffice, payload);
+    // 获取办事处人员 新
+    *GetOfficeUserList({ payload, callback }, { call, select, update }) {
+      const result = yield call( requestPost, `${API.GeneralManagerApi.GetOfficeUserList}`, payload,);
       if (result.IsSuccess) {
         yield update({
           allUserByOffice: result.Datas,
         });
-      } else {
-        result.Message && message.error(result.Message);
-      }
+      } 
     },
+    // 获取办事处人员(已经选过的办事处用户不会出现)
+    // *GetAllUserByOffice({ payload, callback }, { call, put, update }) {
+    //   const result = yield call(services.GetAllUserByOffice, payload);
+    //   if (result.IsSuccess) {
+    //     yield update({
+    //       allUserByOffice: result.Datas,
+    //     });
+    //   } else {
+    //     result.Message && message.error(result.Message);
+    //   }
+    // },
     // 绑定办事处人员
     *InsertOfficeByUser({ payload, callback }, { call, put, update }) {
       const result = yield call(services.InsertOfficeByUser, payload);

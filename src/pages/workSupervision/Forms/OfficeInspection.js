@@ -92,6 +92,8 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
   largeRegionList: wordSupervision.largeRegionList,
   officeList: wordSupervision.officeList,
   submitLoading: loading.effects['wordSupervision/InsOrUpdOfficeCheck'],
+  carLoading: loading.effects['generalManager/GetCarList'],
+  
 });
 
 const OfficeInspection = props => {
@@ -107,10 +109,11 @@ const OfficeInspection = props => {
   } = props;
   const [currentTodoItem, setCurrentTodoItem] = useState({});
   const [provinceList, setProvinceList] = useState([]);
-
+  const [carList,setCarList ] = useState([])
   useEffect(() => {
     GetLargeRegion();
     GetOfficeList();
+    GetCarList();
   }, []);
 
   const findLargeRegionByRegionCode = (data, code) => {
@@ -156,7 +159,15 @@ const OfficeInspection = props => {
       },
     });
   };
-
+  const GetCarList = () => {
+    props.dispatch({
+      type: `generalManager/GetCarList`,
+      payload: {status:"在用"},
+      callback:(res)=>{
+        setCarList(res) 
+      }
+    })
+  }
   // 提交任务单
   const onFinish = async () => {
     const values = await form.validateFields();
@@ -166,13 +177,13 @@ const OfficeInspection = props => {
     // return;
     let body = {
       ...values,
+      PlateNumber: values.PlateNumber?.toString(),
       LargeRegion: undefined,
       RegionCode: undefined,
       DailyTaskID: dailyTaskID,
       ID: editData.ID,
       CreateTime: editData.CreateTime,
     };
-    console.log('body', body);
     // return;
     props.dispatch({
       type: 'wordSupervision/InsOrUpdOfficeCheck',
@@ -236,6 +247,26 @@ const OfficeInspection = props => {
                 </Radio.Group>
               </Form.Item>
             );
+          } else if (record.dataIndex === 'PlateNumber') { //车牌号
+            el = (
+              <Form.Item
+                name={record.dataIndex}
+                style={{ marginBottom: 0 }}
+                labelCol={{ span: 0 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: '不能为空！',
+                  },
+                ]}
+              >
+                <Select placeholder='请选择' mode='multiple' options={carList}  
+                        fieldNames={{ label: 'CarNum', value: 'ID'}} loading={props.carLoading} allowClear showSearch                      
+                        optionFilterProp="CarNum"
+                />
+              </Form.Item>
+            );
           } else {
             el = (
               <Form.Item
@@ -275,6 +306,7 @@ const OfficeInspection = props => {
             BusinessCulture: '1',
             IsLock: '1',
             ...editData,
+            PlateNumber: editData?.PlateNumber?.split(',') || []
             // UserGroup_Name: editData.LargeRegion,
           }}
           onFinish={onFinish}
@@ -298,16 +330,16 @@ const OfficeInspection = props => {
                   disabled
                   showSearch
                   optionFilterProp="children"
-                  // onChange={(value, option) => {
-                  //   // debugger;
-                  //   // formRef.current.setFieldsValue({
-                  //   setProvinceList(option['data-childList']);
-                  //   form.setFieldsValue({
-                  //     ProvinceName: option['data-childList'][0].RegionCode,
-                  //     OfficeCode: undefined,
-                  //   });
-                  //   GetOfficeList();
-                  // }}
+                // onChange={(value, option) => {
+                //   // debugger;
+                //   // formRef.current.setFieldsValue({
+                //   setProvinceList(option['data-childList']);
+                //   form.setFieldsValue({
+                //     ProvinceName: option['data-childList'][0].RegionCode,
+                //     OfficeCode: undefined,
+                //   });
+                //   GetOfficeList();
+                // }}
                 >
                   {largeRegionList.map(item => {
                     return (
@@ -340,12 +372,12 @@ const OfficeInspection = props => {
                   showSearch
                   optionFilterProp="children"
                   disabled
-                  // onChange={(value, option) => {
-                  //   GetOfficeList();
-                  //   form.setFieldsValue({
-                  //     OfficeCode: undefined,
-                  //   });
-                  // }}
+                // onChange={(value, option) => {
+                //   GetOfficeList();
+                //   form.setFieldsValue({
+                //     OfficeCode: undefined,
+                //   });
+                // }}
                 >
                   {provinceList?.map(item => {
                     return (

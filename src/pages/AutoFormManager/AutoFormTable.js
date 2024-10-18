@@ -43,6 +43,7 @@ import AutoFormEditModal from './AutoFormEditModal';
 import SdlTable from '@/components/SdlTable';
 import defaultSettings from '../../../config/defaultSettings';
 import moment from 'moment';
+import Cookie from 'js-cookie';
 
 const { confirm } = Modal;
 
@@ -195,6 +196,16 @@ class AutoFormTable extends PureComponent {
       this.props.onDelete(record, record[keys[configId][0]]);
       return;
     }
+    if (configId == 'CTEnterprise') { //成套污染源监测点位管理
+      const createTime = record['dbo.T_Bas_CTEnterprise.CreateTime']
+      const parsedTime = moment(createTime, "YYYY-MM-DD HH:mm:ss");
+      const userName = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser'))?.UserName
+      const daysDiffFlag = moment().diff(parsedTime, 'days')>3 || !createTime;   // 判断是否超过 3 天
+      if (daysDiffFlag && userName!=='超级管理员') {
+        message.error('请联系系统管理员进行删除！')
+        return;
+      }
+    }
     const postData = {};
     keys[configId].map(item => {
       if (record[item]) {
@@ -304,7 +315,7 @@ class AutoFormTable extends PureComponent {
         switch (btn.DISPLAYBUTTON) {
           case 'add':
             // if (btnsAuthority.includes('add')) {
-            return  !notOperate && !onlyAppendHandleRows && (
+            return !notOperate && !onlyAppendHandleRows && (
               <Button
                 style={{ marginRight: 8 }}
                 key={btn.DISPLAYBUTTON}
@@ -597,53 +608,53 @@ class AutoFormTable extends PureComponent {
 
     let parentElement = document.querySelector('.operateWrapper');
     let childElements = parentElement?.querySelectorAll('a');
-    let childElementsLength =  (operateNum? operateNum : childElements?.length && childElements.length ) * 36
+    let childElementsLength = (operateNum ? operateNum : childElements?.length && childElements.length) * 36
     let num = 0;
     if (this._SELF_.btnEl.length || this.props.appendHandleRows) {
       let leftMenuWidth = config.isShowTabs && defaultSettings.layout === 'sidemenu' ? 255 : 0;
       const isFixed = scrollXWidth > window.innerWidth - 64 - 48 - leftMenuWidth ? 'right' : '';
-       _columns.length && this.props.notOperate?
-       this._SELF_.btnEl.filter(item=>item.type === 'view')[0]&&_columns.push({
-        align: 'center',
-        title: '操作',
-        width: childElementsLength?  childElementsLength : 90,
-        fixed: isFixed,
-        render: (text, record) => {
-          const returnKey = keys[configId] && record[keys[configId][0]];
-          return this._SELF_.btnEl.map((item, index) => {
-          if (item.type === 'view') {
-            return <div className='operateWrapper'>
-              <Fragment key={item.type}>
-                <Tooltip title="详情">
-                  <a
-                    onClick={() => {
-                      const postData = {};
-                      keys[configId].map(item => {
-                        if (record[item]) {
-                          postData[item] = record[item];
-                        }
-                      });
-                      this.onHandleView(record, returnKey, postData,parentCode,configId);
-                    }}
-                  >
-                    <DetailIcon />
-                  </a>
-                </Tooltip>
-              </Fragment>
-            </div>
+      _columns.length && this.props.notOperate ?
+        this._SELF_.btnEl.filter(item => item.type === 'view')[0] && _columns.push({
+          align: 'center',
+          title: '操作',
+          width: childElementsLength ? childElementsLength : 90,
+          fixed: isFixed,
+          render: (text, record) => {
+            const returnKey = keys[configId] && record[keys[configId][0]];
+            return this._SELF_.btnEl.map((item, index) => {
+              if (item.type === 'view') {
+                return <div className='operateWrapper'>
+                  <Fragment key={item.type}>
+                    <Tooltip title="详情">
+                      <a
+                        onClick={() => {
+                          const postData = {};
+                          keys[configId].map(item => {
+                            if (record[item]) {
+                              postData[item] = record[item];
+                            }
+                          });
+                          this.onHandleView(record, returnKey, postData, parentCode, configId);
+                        }}
+                      >
+                        <DetailIcon />
+                      </a>
+                    </Tooltip>
+                  </Fragment>
+                </div>
+              }
+            })
           }
         })
-        }
-        })
-      :
+        :
         _columns.push({
           align: 'center',
           title: '操作',
-          width:  childElementsLength?  childElementsLength : 260,
-          fixed:  isFixed,
+          width: childElementsLength ? childElementsLength : 260,
+          fixed: isFixed,
           render: (text, record) => {
             const returnKey = keys[configId] && record[keys[configId][0]];
-            return this.props.onlyAppendHandleRows?  <div>{this.props.appendHandleRows && this.props.appendHandleRows(record, returnKey)} </div> :(
+            return this.props.onlyAppendHandleRows ? <div>{this.props.appendHandleRows && this.props.appendHandleRows(record, returnKey)} </div> : (
               <div className='operateWrapper'>
                 {this._SELF_.btnEl.map((item, index) => {
                   // if (item.type === 'edit' && btnsAuthority.includes('edit')) {

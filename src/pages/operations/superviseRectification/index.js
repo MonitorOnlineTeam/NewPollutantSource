@@ -444,6 +444,7 @@ const Index = (props) => {
         title={'详情'}
         footer={null}
         wrapClassName='spreadOverModal'
+        mask={false}
         className={styles.fromModal}
         onCancel={() => { setDetailVisible(false) }}
         destroyOnClose
