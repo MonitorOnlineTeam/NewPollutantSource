@@ -20,12 +20,40 @@ const AnomalyRate = props => {
   const [echarts1, setEcharts1] = useState();
   const [echarts2, setEcharts2] = useState();
   const [echarts3, setEcharts3] = useState();
-
   const [open, setOpen] = useState(false);
 
   const { dispatch, loading, time, modalRates, entCode, regionCode } = props;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    // 在组件卸载或者依赖发生变化前，移除事件监听器
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [echarts1, echarts2, echarts3]);
+
+  const handleResize = () => {
+    echarts1 && refreshChart(echarts1);
+    echarts2 && refreshChart(echarts2);
+    echarts3 && refreshChart(echarts3);
+  };
+
+  const fontSizeFn = size => {
+    const scale = document.documentElement.clientWidth / 1680;
+    return size * scale;
+  };
+
+  // 改变echarts图字体大小
+  const refreshChart = chart => {
+    let echarts_instance = chart.getEchartsInstance();
+    echarts_instance.resize();
+    let option = echarts_instance.getOption();
+    if (option.title) {
+      option.title[0].textStyle.rich.name.fontSize = fontSizeFn(12);
+      option.title[0].textStyle.rich.val.fontSize = fontSizeFn(20);
+      echarts_instance.setOption(option);
+    }
+  };
 
   const onOpenModal = () => {
     setOpen(true);
@@ -35,13 +63,13 @@ const AnomalyRate = props => {
     let echarts,
       colors = [];
     if (type === 1) {
-      echarts = echarts1;
+      echarts = echarts1?.echarts;
       colors = ['#FFA800', '#FFDE25'];
     } else if (type === 2) {
-      echarts = echarts2;
+      echarts = echarts2?.echarts;
       colors = ['#0066FF', '#00CCFF'];
     } else {
-      echarts = echarts3;
+      echarts = echarts3?.echarts;
       colors = ['#3A6DFF', '#513DFD'];
     }
     if (echarts)
@@ -53,12 +81,12 @@ const AnomalyRate = props => {
           textStyle: {
             rich: {
               val: {
-                fontSize: 20,
+                fontSize: fontSizeFn(20),
                 fontWeight: 'bold',
                 color: '#fff',
               },
               name: {
-                fontSize: 12,
+                fontSize: fontSizeFn(12),
                 color: '#bfbfbf',
                 padding: [8, 0, 0, 0],
                 fontWeight: 'bold',
@@ -113,6 +141,9 @@ const AnomalyRate = props => {
                 },
               ]),
             },
+            label: {
+              show: false,
+            },
           },
           {
             type: 'pie',
@@ -125,6 +156,9 @@ const AnomalyRate = props => {
             data: [data],
             itemStyle: {
               color: '#003577',
+            },
+            label: {
+              show: false,
             },
           },
           {
@@ -164,11 +198,11 @@ const AnomalyRate = props => {
 
     return {};
   };
-
+  console.log('echarts1', echarts1);
   return (
     <HomeCard
       title="疑似异常占比分析"
-      style={{ minHeight: 260, flex: 2 }}
+      style={{ flex: 2 }}
       bodyStyle={{}}
       loading={loading}
       onExtraClick={onOpenModal}
@@ -178,7 +212,8 @@ const AnomalyRate = props => {
           <Col span={8} onClick={onOpenModal}>
             <ReactEcharts
               ref={echart => {
-                echart && setEcharts1(echart.echarts);
+                console.log('echart', echart);
+                echart && setEcharts1(echart);
               }}
               option={getOption(1, modalRates.ExcepRate, '疑似异常占比')}
               lazyUpdate={true}
@@ -189,7 +224,7 @@ const AnomalyRate = props => {
           <Col span={8}>
             <ReactEcharts
               ref={echart => {
-                echart && setEcharts2(echart.echarts);
+                echart && setEcharts2(echart);
               }}
               // option={getOption(2, modalRates.CheckRate, '核实率')}
               option={getOption(2, 93, '核实率')}
@@ -200,7 +235,7 @@ const AnomalyRate = props => {
           <Col span={8}>
             <ReactEcharts
               ref={echart => {
-                echart && setEcharts3(echart.echarts);
+                echart && setEcharts3(echart);
               }}
               option={getOption(3, 94, '整改率')}
               lazyUpdate={true}

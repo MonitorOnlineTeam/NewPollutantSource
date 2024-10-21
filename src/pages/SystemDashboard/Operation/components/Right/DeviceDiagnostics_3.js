@@ -9,6 +9,8 @@ import EquipmentFailureRate from '@/pages/newestHome/components/springModal/equi
 import EquipmentFailureRatePoint from '@/pages/newestHome/components/springModal/equipmentFailureRate/components/Point';
 import EquipmentFailurerePairRate from '@/pages/newestHome/components/springModal/equipmentFailurerePairRate';
 import EquipmentFailurerePairRatePoint from '@/pages/newestHome/components/springModal/equipmentFailurerePairRate/components/Point.js';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
+
 let myChart;
 const dvaPropsData = ({ loading, sysDashboard }) => ({
   level: sysDashboard.level,
@@ -81,30 +83,6 @@ const DeviceDiagnostics = props => {
       },
     ]);
     const colorSet = [[value !== '-' ? value : 0, color], [1, '#192A51']];
-    const rich = {
-      bule: {
-        fontSize: 120,
-        fontFamily: 'DINBold',
-        color: '#fff',
-        fontWeight: '700',
-      },
-      radius: {
-        width: 350,
-        height: 80,
-        // lineHeight:80,
-        borderWidth: 1,
-        borderColor: '#0092F2',
-        fontSize: 50,
-        color: '#fff',
-        backgroundColor: '#1B215B',
-        borderRadius: 20,
-        textAlign: 'center',
-      },
-      size: {
-        height: 20,
-        padding: [10, 0, 0, 0],
-      },
-    };
     let option = {
       tooltip: {
         formatter: '{a} <br/>{b} : {c}%',
@@ -121,16 +99,16 @@ const DeviceDiagnostics = props => {
           },
           detail: {
             color: type === 1 ? '#00EDFF' : '#FFA111',
-            lineHeight: 40,
-            padding: [40, 0, 0, 0],
+            lineHeight: fontSizeFn(40),
+            padding: [fontSizeFn(40), 0, 0, 0],
             fontStyle: 'italic',
-            fontSize: 26,
+            fontSize: fontSizeFn(26),
             formatter: function(val) {
               // return '{size|' + num + '%}';
               return value !== '-' ? value + '%' : '-';
             },
             // rich: rich,
-            offsetCenter: ['0%', 50],
+            offsetCenter: ['0%', fontSizeFn(50)],
           },
 
           data: dataArr,
@@ -138,14 +116,14 @@ const DeviceDiagnostics = props => {
             show: true,
             color: '#fff',
             // offsetCenter: ["0", -100],
-            fontSize: 20,
+            fontSize: fontSizeFn(20),
             fontStyle: 'italic',
           },
           axisLine: {
             show: true,
             lineStyle: {
               color: colorSet,
-              width: 25,
+              width: fontSizeFn(25),
               shadowOffsetX: 0,
               shadowOffsetY: 0,
               opacity: 1,
@@ -189,13 +167,13 @@ const DeviceDiagnostics = props => {
           splitLine: {
             length: 0, //刻度节点线长度
             lineStyle: {
-              width: 5,
+              width: fontSizeFn(5),
               color: '#018DFF',
             }, //刻度节点线
           },
           axisLabel: {
             color: 'rgba(255, 255, 255, 1)',
-            fontSize: 12,
+            fontSize: fontSizeFn(12),
             padding: [0, -20, 0, -12],
           }, //刻度节点文字颜色
           pointer: {
@@ -246,8 +224,15 @@ const DeviceDiagnostics = props => {
   };
 
   return (
-    <HomeCard title="设备故障分析" bodyStyle={{}} loading={loading}>
-      <Row style={{ marginTop: 16, padding: '0 20px', height: '100%' }}>
+    <HomeCard
+      title="设备故障分析"
+      bodyStyle={{
+        // display: 'flex',
+        overflow: 'hidden',
+      }}
+      loading={loading}
+    >
+      <Row style={{ marginTop: '1rem', padding: '0 1.25rem', height: '100%' }}>
         <Col
           span={12}
           style={{ cursor: 'pointer' }}
@@ -275,16 +260,16 @@ const DeviceDiagnostics = props => {
             }}
             option={getOption(1)}
             lazyUpdate={true}
-            style={{ height: 'calc(100% - 40px)', width: '100%' }}
+            style={{ height: 'calc(100% - 2.5rem)', width: '100%' }}
           />
           <p
             style={{
               width: '100%',
               textAlign: 'center',
               color: '#fff',
-              fontSize: 16,
+              fontSize: '1rem',
               position: 'absolute',
-              bottom: 40,
+              bottom: '2.5rem',
               fontWeight: 'bold',
             }}
           >
@@ -318,7 +303,7 @@ const DeviceDiagnostics = props => {
             }}
             option={getOption(2)}
             lazyUpdate={true}
-            style={{ height: 'calc(100% - 40px)', width: '100%' }}
+            style={{ height: 'calc(100% - 2.5rem)', width: '100%' }}
             onEvents={{
               click: () => {
                 setOpen2(true);
@@ -330,9 +315,9 @@ const DeviceDiagnostics = props => {
               width: '100%',
               textAlign: 'center',
               color: '#fff',
-              fontSize: 16,
+              fontSize: '1rem',
               position: 'absolute',
-              bottom: 40,
+              bottom: '2.5rem',
               fontWeight: 'bold',
             }}
           >

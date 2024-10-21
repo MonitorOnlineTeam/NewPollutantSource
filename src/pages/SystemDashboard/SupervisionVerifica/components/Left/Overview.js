@@ -61,13 +61,29 @@ const DeviceInfoCount = props => {
     setOpen(true);
   };
   const dataList = [
-    { name: '排口数量', value: nums?.pointCount, iconUrl: '/SystemDashboard/supervision/zl_type1.png' },
-    { name: '核查不规范', value: nums?.unqualifiedCount, iconUrl: '/SystemDashboard/supervision/zl_type2.png' },
-    { name: '未核查', value: nums?.rectificationCount, iconUrl: '/SystemDashboard/supervision/zl_type3.png' },
-    { name: '核查正常', value: nums?.qualifiedCount, iconUrl: '/SystemDashboard/supervision/zl_type4.png' }
-  ]
+    {
+      name: '排口数量',
+      value: nums?.pointCount,
+      iconUrl: '/SystemDashboard/supervision/zl_type1.png',
+    },
+    {
+      name: '核查不规范',
+      value: nums?.unqualifiedCount,
+      iconUrl: '/SystemDashboard/supervision/zl_type2.png',
+    },
+    {
+      name: '未核查',
+      value: nums?.rectificationCount,
+      iconUrl: '/SystemDashboard/supervision/zl_type3.png',
+    },
+    {
+      name: '核查正常',
+      value: nums?.qualifiedCount,
+      iconUrl: '/SystemDashboard/supervision/zl_type4.png',
+    },
+  ];
   const valSty = {
-    fontSize: 20,
+    fontSize: '1.25rem',
     fontWeight: 500,
     color: '#C3F0FF',
     background: 'linear-gradient(to bottom, #F6FAFC, #6CBAEC)',
@@ -77,17 +93,20 @@ const DeviceInfoCount = props => {
   const nameSty = {
     fontWeight: 500,
     color: '#C3F0FF',
+    fontSize: '.875rem',
   };
-  const ImgComponents = ({ src }) => <img style={{ width: 53, height: 61 }} src={src} />;
+  const ImgComponents = ({ src }) => (
+    <img style={{ width: '3.3125rem', height: '3.8125rem' }} src={src} />
+  );
   return (
-    <HomeCard title="监督核查总览" bodyStyle={{}} loading={loading} style={{ minHeight: 256 }}>
-      <div style={{ width: '100%', height: '100%', padding: '16px 0' }}>
+    <HomeCard title="监督核查总览" bodyStyle={{}} loading={loading} style={{ minHeight: '16rem' }}>
+      <div style={{ width: '100%', height: '100%', padding: '1rem 0' }}>
         <Row className={`${styles.SupervisionVerificaOverviewCard}`} onClick={onOpenModal}>
           {dataList.map((item, index) => (
-            <Col span={12} style={{ padding: '16px 16px 0 16px' }}>
+            <Col span={12} style={{ padding: '1rem 1rem 0 1rem' }}>
               <Row align="middle" justify={index % 2 == 0 ? 'start' : 'end'}>
                 {index % 2 == 0 && <ImgComponents src={item.iconUrl} />}
-                <div style={{ minWidth: 70, paddingLeft: index % 2 == 0 && 10 }}>
+                <div style={{ minWidth: '70', paddingLeft: index % 2 == 0 && '.625rem' }}>
                   <p style={{ ...nameSty }}>
                     {item.name}
                     {item.name === '核查不规范' && (
@@ -116,8 +135,11 @@ const DeviceInfoCount = props => {
           <div
             style={{
               position: 'absolute',
-              left: 'calc(50% - 41px)',
-              top: 'calc(50% - 28px)',
+              left: '50%',
+              top: '50%',
+              transform: 'translateX(-50%) translateY(-50%)',
+              // left: 'calc(50% - 2.5625rem)',
+              // top: 'calc(50% - 1.75rem)',
               textAlign: 'center',
             }}
           >
@@ -126,12 +148,12 @@ const DeviceInfoCount = props => {
                 style={{
                   ...valSty,
                   background: 'linear-gradient(to bottom, #F6FAFC, #0FAEFF)',
-                  fontSize: 32,
+                  fontSize: '2rem',
                 }}
               >
                 {nums?.entCount}
-              </span>{' '}
-              家
+              </span>
+              <span style={{fontSize: '.875rem'}}> 家</span>
             </div>
             <div style={{ ...nameSty }}>排污单位数量</div>
           </div>

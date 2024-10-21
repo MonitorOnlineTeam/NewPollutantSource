@@ -46,24 +46,24 @@ const ServiceResponseRate = props => {
   return (
     <HomeCard
       title="服务响应及时分析"
-      style={{ minHeight: 260, flex: 3 }}
+      style={{ flex: 3 }}
       bodyStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       loading={loading}
     >
       <div className={styles.ServiceResponseRateWrapper} onClick={onOpenModal}>
-        <div className={styles.center} style={{ width: 100, height: 84 }}>
+        <div className={styles.center} style={{ width: '6.25rem', height: '5.25rem' }}>
           <p className={styles.count}>
             {ServiceResponse.nottimelyCount}
             <span>次</span>
           </p>
           <p className={styles.text}>响应次数</p>
         </div>
-        <div style={{ width: 30, height: 25, position: 'relative', top: -108 }}></div>
+        <div style={{ width: '1.875rem', height: '1.5625rem', position: 'relative', top: '-6.75rem' }}></div>
         <div
           className={styles.center}
           style={{
-            width: 160,
-            height: 134,
+            width: '10rem',
+            height: '8.375rem',
             backgroundImage: 'url(/ctHomeDataScreen/ServiceResponseRate_1.png)',
           }}
         >
@@ -72,8 +72,8 @@ const ServiceResponseRate = props => {
           </p>
           <p className={styles.text}>响应及时率</p>
         </div>
-        <div style={{ width: 30, height: 25, position: 'relative', top: -124 }}></div>
-        <div className={styles.center} style={{ width: 100, height: 84 }}>
+        <div style={{ width: '1.875rem', height: '1.5625rem', position: 'relative', top: '-7.75rem' }}></div>
+        <div className={styles.center} style={{ width: '6.25rem', height: '5.25rem' }}>
           <p className={styles.count}>
             {ServiceResponse.timelyCount}
             <span>次</span>

@@ -61,30 +61,30 @@
   }
 
   /* 在小屏幕上调整文本大小 */
-  @media screen and (max-width: 1200px) {
-    header {
-      font-size: 22px !important;
-    }
-    .boxWrapper {
-      flex-wrap: wrap;
-      margin-bottom: 0 !important;
+  // @media screen and (max-width: 1200px) {
+  //   header {
+  //     font-size: 22px !important;
+  //   }
+  //   .boxWrapper {
+  //     flex-wrap: wrap;
+  //     margin-bottom: 0 !important;
 
-      .boxItem {
-        width: 100% !important;
-        margin-right: 0 !important;
-        margin-bottom: 14px;
-      }
-    }
+  //     .boxItem {
+  //       width: 100% !important;
+  //       margin-right: 0 !important;
+  //       margin-bottom: 14px;
+  //     }
+  //   }
 
-    .checkBox {
-      padding-top: 20px !important;
+  //   .checkBox {
+  //     padding-top: 20px !important;
 
-      .legendInfo {
-        margin-bottom: 18px !important;
-        font-size: 18px !important;
-      }
-    }
-  }
+  //     .legendInfo {
+  //       margin-bottom: 18px !important;
+  //       font-size: 18px !important;
+  //     }
+  //   }
+  // }
 
   :global {
     .ant-spin-nested-loading,
@@ -97,8 +97,8 @@
   // 下拉列表
   .SelectWrapper {
     position: absolute;
-    left: 20px;
-    top: 46px;
+    left: 1.25rem;
+    top: 2.875rem;
     :global {
       .ant-select:not(.ant-select-customize-input) .ant-select-selector {
         border-color: rgba(0, 188, 255, 0.5);
@@ -107,16 +107,16 @@
         // background: rgba(10, 125, 254, 0.4);
         color: #fceded;
         font-weight: bold;
-        height: 30px;
-        line-height: 30px;
+        height: 1.875rem;
+        line-height: 1.875rem;
         border-radius: 0;
       }
 
       .ant-select-single:not(.ant-select-customize-input)
         .ant-select-selector
         .ant-select-selection-search-input {
-        height: 30px;
-        line-height: 30px;
+        height: 1.875rem;
+        line-height: 1.875rem;
       }
 
       .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
@@ -127,7 +127,8 @@
 
       .ant-select-selection-item {
         font-weight: 500;
-        line-height: 28px;
+        line-height: 1.75rem;
+        font-size: .875rem;
       }
 
       .ant-select-clear {
@@ -137,33 +138,33 @@
 
       .ant-select-arrow {
         color: #59deff;
-        font-size: 10px;
-        right: 6px;
+        font-size: .625rem;
+        right: .375rem;
       }
     }
   }
 
   header {
-    height: 80px;
+    height: 5rem;
     text-align: center;
     background: url(/dataModal/statistics/top.png) no-repeat;
     background-size: 100% 100%;
 
-    font-size: 26px;
+    font-size: 1.625rem;
     font-weight: bold;
     color: #ffffff;
-    line-height: 60px;
+    line-height: 3.75rem;
     position: relative;
   }
 
   main {
-    padding: 10px 20px;
+    padding: .625rem 1.25rem;
   }
   .boxWrapper {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    margin-bottom: 14px;
+    margin-bottom: .875rem;
 
     .boxItem {
       // height: 420px;
@@ -177,13 +178,13 @@
       flex-direction: column;
 
       .title {
-        height: 44px;
+        height: 2.75rem;
         background: linear-gradient(90deg, rgba(14, 119, 157, 0.4), rgba(11, 26, 69, 0));
         color: #65d9ff;
-        line-height: 44px;
-        padding: 0 10px;
+        line-height: 2.75rem;
+        padding: 0 .625rem;
         font-weight: bold;
-        font-size: 20px;
+        font-size: 1.25rem;
       }
       .boxItemContent {
         flex: 1;
@@ -195,32 +196,32 @@
       align-items: center;
       height: 100%;
       .countBox {
-        width: 280px;
-        height: 280px;
+        width: 17.5rem;
+        height: 17.5rem;
         margin-left: 4%;
-        background: url(/dataModal/statistics/count_bg.png) no-repeat 0 -20px;
+        background: url(/dataModal/statistics/count_bg.png) no-repeat 0 -1.25rem;
         background-size: contain;
         color: #fff;
         text-align: center;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 90px;
+        padding-top: 5.625rem;
         cursor: pointer;
 
         p.text {
           // width: 94px;
-          // line-height: 24px;
-          padding: 1px 6px;
+          // line-height: 1.5rem;
+          padding: .0625rem .375rem;
           background: rgba(0, 89, 255, 0.6);
-          margin-left: -28px;
-          font-size: 17px;
+          margin-left: -1.75rem;
+          font-size: 1.0625rem;
           font-weight: 900;
         }
 
         p.count {
-          font-size: 32px;
-          margin-left: -28px;
+          font-size: 2rem;
+          margin-left: -1.75rem;
           font-weight: bold;
         }
       }
@@ -231,33 +232,34 @@
         text-align: center;
         .text {
           margin-bottom: 0;
-          line-height: 38px;
-          height: 38px;
+          line-height: 2.375rem;
+          height: 2.375rem;
           overflow: hidden;
           vertical-align: middle;
           font-weight: bold;
-          font-size: 18px;
-          margin-bottom: 10px;
+          font-size: 1.125rem;
+          margin-bottom: .625rem;
           // display: flex;
           // align-items: center;
 
           i {
-            width: 18px;
-            height: 18px;
+            width: 1.125rem;
+            height: 1.125rem;
             display: inline-block;
-            margin-right: 4px;
+            margin-right: .25rem;
             background: url(/dataModal/statistics/icon.png) no-repeat;
+            background-size: contain;
           }
         }
         .count {
-          line-height: 40px;
+          line-height: 2.5rem;
           background: linear-gradient(
             90deg,
             rgba(11, 26, 69, 0),
             rgba(14, 119, 157, 0.4),
             rgba(11, 26, 69, 0)
           );
-          border-top: 1px solid;
+          border-top: .0625rem solid;
           border-image: linear-gradient(
               to right,
               rgba(0, 188, 255, 0.1),
@@ -265,13 +267,13 @@
               rgba(0, 188, 255, 0.1)
             )
             1;
-          margin: 0 10px;
-          border-bottom: 1px solid;
-          padding: 0 22px;
+          margin: 0 .625rem;
+          border-bottom: .0625rem solid;
+          padding: 0 1.375rem;
           text-align: center;
-          min-width: 130px;
-          height: 50px;
-          line-height: 50px;
+          min-width: 8.125rem;
+          height: 3.125rem;
+          line-height: 3.125rem;
           overflow: hidden;
           vertical-align: middle;
           font-weight: bold;
@@ -279,8 +281,8 @@
           span {
             color: #26e3ff;
             font-weight: bold;
-            margin-right: 6px;
-            font-size: 22px;
+            margin-right: .375rem;
+            font-size: 1.375rem;
           }
         }
       }
@@ -292,39 +294,39 @@
       flex-direction: column;
       justify-content: space-around;
       height: 100%;
-      padding: 0 20px;
+      padding: 0 1.25rem;
 
       .legendInfo {
         color: #fff;
         font-weight: 500;
-        font-size: 18px;
-        margin-bottom: 6px;
+        font-size: 1.125rem;
+        margin-bottom: .375rem;
 
         .content {
           position: relative;
           :global {
             .ant-progress-steps-item {
-              width: calc((100% - 300px) / 50) !important;
-              margin-right: 4px;
+              width: calc((100% - 18.75rem) / 50) !important;
+              margin-right: .25rem;
             }
           }
 
           .num {
             position: absolute;
-            top: -3px;
+            top: -0.1875rem;
             right: 0;
             color: #26e3ff;
-            font-size: 19px;
+            font-size: 1.1875rem;
           }
           .ent {
-            font-size: 16px;
+            font-size: 1rem;
             margin-bottom: 0;
-            margin-top: -6px;
+            margin-top: -0.375rem;
           }
           .entCount {
             color: #26e3ff;
-            font-size: 19px;
-            margin-left: 40px;
+            font-size: 1.1875rem;
+            margin-left: 2.5rem;
           }
         }
       }
@@ -332,17 +334,17 @@
 
     // 线索数量企业排名
     .entRankBox {
-      padding: 20px;
-      height: 280px;
+      padding: 1.25rem;
+      height: 17.5rem;
       overflow-y: auto;
       .rankItem {
-        margin-bottom: 12px;
+        margin-bottom: .75rem;
         .info {
           display: flex;
           justify-content: space-between;
           color: #fff;
           font-weight: 500;
-          margin-bottom: 10px;
+          margin-bottom: .625rem;
           .text {
           }
           .num {
@@ -351,7 +353,7 @@
 
         .progress {
           background: #0f255d;
-          height: 20px;
+          height: 1.25rem;
           .inner {
             height: 100%;
             background: linear-gradient(-90deg, #138ff4, #26afd5);
@@ -363,7 +365,7 @@
     // 核实信息
     .checkInfoWrapper {
       .tableWrapper {
-        height: calc(100% - 42px);
+        height: calc(100% - 2.625rem);
         & > div {
           height: 100%;
         }
@@ -387,7 +389,7 @@
           background: #143778;
           color: #71cdf9;
           border: none;
-          font-size: 16px;
+          font-size: 1rem;
         }
 
         .ant-table-column-sorter {
@@ -419,7 +421,7 @@
         .ant-table-tbody > tr > td {
           background: transparent;
           color: #fff;
-          font-size: 16px;
+          font-size: 1rem;
           font-weight: 500;
         }
 

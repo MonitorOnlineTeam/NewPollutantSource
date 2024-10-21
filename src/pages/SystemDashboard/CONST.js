@@ -207,3 +207,9 @@ export const dateRangeList = [
     ],
   },
 ];
+
+
+export const fontSizeFn = size => {
+  const scale = document.documentElement.clientWidth / 1680;
+  return size * scale;
+};

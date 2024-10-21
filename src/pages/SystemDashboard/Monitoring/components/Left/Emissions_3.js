@@ -7,6 +7,7 @@ import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import { bar3DrenderItem } from '@/pages/ctDebuggAfterSaleServiceManage/utils/getBar3D';
 import EmissionStatistical from '@/pages/IntelligentAnalysis/emissionStatistical/EmissionStatistical';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 const COLOR = ['#3AE3FD', '#00AEFF', '#FFC75D'];
 const xData = ['烟尘', 'SO₂', 'NOx'];
@@ -35,6 +36,32 @@ const Emissions = props => {
   useEffect(() => {
     getData();
   }, [level, regionCode, entCode, time]);
+
+  useEffect(() => {
+    window.addEventListener('resize', refreshChart);
+    // 在组件卸载或者依赖发生变化前，移除事件监听器
+    return () => {
+      window.removeEventListener('resize', refreshChart);
+    };
+  }, [echarts]);
+
+  // 改变echarts图字体大小
+  const refreshChart = () => {
+    if (echarts) {
+      let echarts_instance = echarts.getEchartsInstance();
+      echarts_instance.resize();
+      let option = echarts_instance.getOption();
+      if (option.grid) {
+        option.grid = {
+          left: fontSizeFn(100),
+          right: fontSizeFn(20),
+          bottom: fontSizeFn(30),
+          top: fontSizeFn(50),
+        };
+        option.xAxis[0].axisLabel.textStyle.fontSize = fontSizeFn(13);
+      }
+    }
+  };
 
   const getData = () => {
     dispatch({
@@ -87,10 +114,10 @@ const Emissions = props => {
     return {
       color: ['#3AE3FD', '#00AEFF', '#FFC75D'],
       grid: {
-        left: 100,
-        right: 20,
-        bottom: 30,
-        top: 50,
+        left: fontSizeFn(100),
+        right: fontSizeFn(20),
+        bottom: fontSizeFn(30),
+        top: fontSizeFn(50),
       },
 
       xAxis: {
@@ -107,7 +134,7 @@ const Emissions = props => {
           textStyle: {
             color: '#fff', // 修改 x 轴刻度文字的颜色
             fontWeight: 'bold',
-            fontSize: 13,
+            fontSize: fontSizeFn(13),
           },
         },
         axisTick: {
@@ -125,12 +152,14 @@ const Emissions = props => {
           nameTextStyle: {
             color: '#63BFFF',
             fontWeight: 'bold',
+            fontSize: fontSizeFn(13)
           },
           min: 0,
           minInterval: 1,
           axisLabel: {
             textStyle: {
               color: '#fff',
+              fontSize: fontSizeFn(13)
             },
 
             // formatter: '{value}次',
@@ -153,7 +182,7 @@ const Emissions = props => {
         {
           name: '排放量综合分析',
           type: 'custom',
-          barWidth: 60,
+          barWidth: fontSizeFn(60),
           renderItem: (params, api) => {
             return renderItemFun(params, api, 1);
           },
@@ -217,32 +246,32 @@ const Emissions = props => {
   }
 
   return (
-    <HomeCard title="排放量综合分析" style={{ minHeight: 310 }} loading={loading}>
-      <Row style={{ marginTop: 16, padding: '0 20px' }} className={styles.center}>
+    <HomeCard title="排放量综合分析" style={{}} loading={loading}>
+      <Row style={{ marginTop: '1rem', padding: '0 1.25rem' }} className={styles.center}>
         {xData.map((item, index) => {
           return (
             <Col span={5} className={styles.center}>
               <i
                 style={{
                   display: 'inline-block',
-                  width: 10,
-                  height: 10,
+                  width: '.625rem',
+                  height: '.625rem',
                   background: COLOR[index],
-                  marginRight: 4,
+                  marginRight: '.25rem',
                 }}
               ></i>
-              <span style={{ fontSize: 12, color: '#fff' }}>{item}</span>
+              <span style={{ fontSize: '.75rem', color: '#fff' }}>{item}</span>
             </Col>
           );
         })}
       </Row>
       <ReactEcharts
         ref={echart => {
-          echart && setEcharts(echart.echarts);
+          echart && setEcharts(echart);
         }}
         option={getOption(1)}
         lazyUpdate={true}
-        style={{ height: 'calc(100% - 40px)', width: '100%' }}
+        style={{ height: 'calc(100% - 2.5rem)', width: '100%' }}
         onEvents={{ click: onOpenModal }}
       />
 

@@ -8,6 +8,7 @@ import moment from 'moment';
 import { bar3DrenderItem } from '@/pages/ctDebuggAfterSaleServiceManage/utils/getBar3D';
 import ConsumablesStatisticsModal from '@/pages/newestHome/components/springModal/consumablesStatistics';
 import ConsumablesStatisticsModal2 from '@/pages/newestHome/components/springModal/consumablesStatistics/components/Point.js';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 const COLOR = ['#3AE3FD', '#00AEFF', '#FFC75D'];
 const xData = ['标准气体更换数量', '易耗品更换数量', '备品备件更换数量'];
@@ -93,10 +94,10 @@ const ReplacementAnalysis = props => {
     return {
       color: ['#3AE3FD', '#00AEFF', '#FFC75D'],
       grid: {
-        left: 50,
-        right: 20,
-        bottom: 30,
-        top: 50,
+        left: fontSizeFn(50),
+        right: fontSizeFn(20),
+        bottom: fontSizeFn(30),
+        top: fontSizeFn(50),
       },
 
       xAxis: {
@@ -113,7 +114,7 @@ const ReplacementAnalysis = props => {
           textStyle: {
             color: '#fff', // 修改 x 轴刻度文字的颜色
             fontWeight: 'bold',
-            fontSize: 13,
+            fontSize: fontSizeFn(13),
           },
         },
         axisTick: {
@@ -132,8 +133,8 @@ const ReplacementAnalysis = props => {
           axisLabel: {
             textStyle: {
               color: '#fff',
+              fontSize: fontSizeFn(13)
             },
-
             // formatter: '{value}次',
           },
           axisTick: {
@@ -154,7 +155,7 @@ const ReplacementAnalysis = props => {
         {
           name: '备件更换分析',
           type: 'custom',
-          barWidth: 60,
+          barWidth: fontSizeFn(60),
           renderItem: (params, api) => {
             return renderItemFun(params, api, 1);
           },
@@ -169,7 +170,8 @@ const ReplacementAnalysis = props => {
               position: 'top',
               color: '#3AE3FD',
               fontWeight: 'bold',
-              offset: [4, -20], //左右 上下
+              offset: [fontSizeFn(4), -20], //左右 上下
+              fontSize: fontSizeFn(14)
             },
           },
           itemStyle: {
@@ -218,20 +220,20 @@ const ReplacementAnalysis = props => {
 
   return (
     <HomeCard title="备件更换分析" bodyStyle={{}} loading={loading}>
-      <Row style={{ marginTop: 16, padding: '0 20px' }}>
+      <Row style={{ marginTop: '1rem', padding: '0 1.25rem' }}>
         {xData.map((item, index) => {
           return (
             <Col span={8} className={styles.center}>
               <i
                 style={{
                   display: 'inline-block',
-                  width: 10,
-                  height: 10,
+                  width: '.625rem',
+                  height: '.625rem',
                   background: COLOR[index],
-                  marginRight: 4,
+                  marginRight: '.25rem',
                 }}
               ></i>
-              <span style={{ fontSize: 12, color: '#fff' }}>{item}</span>
+              <span style={{ fontSize: '.75rem', color: '#fff' }}>{item}</span>
             </Col>
           );
         })}
@@ -242,7 +244,7 @@ const ReplacementAnalysis = props => {
         }}
         option={getOption(1)}
         lazyUpdate={true}
-        style={{ height: 'calc(100% - 40px)', width: '100%' }}
+        style={{ height: 'calc(100% - 2.5rem)', width: '100%' }}
         onEvents={{ click: onOpenModal }}
       />
 

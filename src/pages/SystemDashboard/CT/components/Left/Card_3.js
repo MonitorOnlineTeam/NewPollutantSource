@@ -5,6 +5,7 @@ import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import InstallDebugger from '@/pages/ctDebuggAfterSaleServiceManage/reportsViews/InstStdAndCompReso/install';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 let myChart;
 const dvaPropsData = ({ loading, sysDashboard }) => ({
@@ -29,6 +30,67 @@ const Card_3 = props => {
   useEffect(() => {
     getData();
   }, [time]);
+
+  useEffect(() => {
+    window.addEventListener('resize', refreshChart);
+    // 在组件卸载或者依赖发生变化前，移除事件监听器
+    return () => {
+      window.removeEventListener('resize', refreshChart);
+    };
+  }, [echarts]);
+
+  // 改变echarts图字体大小
+  const refreshChart = () => {
+    if (echarts) {
+      let echarts_instance = echarts.getEchartsInstance();
+      echarts_instance.resize();
+      let option = echarts_instance.getOption();
+      if (option.title) {
+        option.title[0].textStyle.rich.val.fontSize = fontSizeFn(24);
+        option.series[0].radius = [fontSizeFn(60), fontSizeFn(100)];
+        option.series[0].label = {
+          show: true,
+          position: 'outside',
+          color: 'inherit', //继承饼图颜色
+          formatter: function(params) {
+            return '{b|' + params.name + '：}{c|' + params.value + '套}\n{hr|●}';
+          },
+          rich: {
+            b: {
+              fontFamily: 'Source Han Sans CN',
+              fontWeight: 500,
+              fontSize: fontSizeFn(15),
+              color: '#fff',
+              padding: [fontSizeFn(-10), 0, 0, fontSizeFn(6)],
+            },
+            c: {
+              fontFamily: 'Microsoft YaHei',
+              fontWeight: 500,
+              fontSize: fontSizeFn(15),
+              padding: [fontSizeFn(-10), fontSizeFn(20), 0, 0],
+              align: 'left',
+            },
+            hr: {
+              color: 'inherit',
+              width: fontSizeFn(4),
+              height: fontSizeFn(4),
+              verticalAlign: 'top',
+              lineHeight: fontSizeFn(-20),
+              padding: [fontSizeFn(-5), fontSizeFn(-10), 0, fontSizeFn(-10)],
+            },
+          },
+        };
+        option.series[0].labelLine = {
+          length: fontSizeFn(2),
+          length2: fontSizeFn(30),
+          lineStyle: {
+            width: fontSizeFn(2), // 引导线宽度
+          },
+        };
+        echarts_instance.setOption(option);
+      }
+    }
+  };
 
   const getData = () => {
     setLoading(true);
@@ -92,7 +154,7 @@ const Card_3 = props => {
         textStyle: {
           rich: {
             val: {
-              fontSize: 24,
+              fontSize: fontSizeFn(24),
               fontWeight: 500,
               color: '#0693EF',
             },
@@ -103,7 +165,7 @@ const Card_3 = props => {
         {
           name: '安装调试占比',
           type: 'pie',
-          radius: [60, 100],
+          radius: [fontSizeFn(60), fontSizeFn(100)],
           roseType: 'area',
           itemStyle: {
             normal: {
@@ -118,47 +180,36 @@ const Card_3 = props => {
             formatter: function(params) {
               return '{b|' + params.name + '：}{c|' + params.value + '套}\n{hr|●}';
             },
-            // padding: [0, -90],
             rich: {
-              // a: {
-              //   fontSize: 18,
-              //   padding: [18, 0, 0, 0],
-              // },
               b: {
                 fontFamily: 'Source Han Sans CN',
                 fontWeight: 500,
-                fontSize: 15,
+                fontSize: fontSizeFn(15),
                 color: '#fff',
-                padding: [-10, 0, 0, 6],
+                padding: [fontSizeFn(-10), 0, 0, fontSizeFn(6)],
               },
               c: {
                 fontFamily: 'Microsoft YaHei',
                 fontWeight: 500,
-                fontSize: 15,
-                padding: [-10, 20, 0, 0],
+                fontSize: fontSizeFn(15),
+                padding: [fontSizeFn(-10), fontSizeFn(20), 0, 0],
                 align: 'left',
-                // color: '#0055FE',
               },
               hr: {
                 color: 'inherit',
-                // borderRadius: 100,
-                width: 4,
-                height: 4,
+                width: fontSizeFn(4),
+                height: fontSizeFn(4),
                 verticalAlign: 'top',
-                lineHeight: -20,
-                padding: [-5, -10, 0, -10],
-                // shadowColor: 'inherit',
-                // shadowBlur: 1,
-                // shadowOffsetX: '0',
-                // shadowOffsetY: '-26',
+                lineHeight: fontSizeFn(-20),
+                padding: [fontSizeFn(-5), fontSizeFn(-10), 0, fontSizeFn(-10)],
               },
             },
           },
           labelLine: {
-            length: 2,
-            length2: 30,
+            length: fontSizeFn(2),
+            length2: fontSizeFn(30),
             lineStyle: {
-              width: 2, // 引导线宽度
+              width: fontSizeFn(2), // 引导线宽度
             },
           },
           data: seriesData,
@@ -173,7 +224,7 @@ const Card_3 = props => {
     <HomeCard title="安装调试达标分析" bodyStyle={{}} loading={loading}>
       <ReactEcharts
         ref={echart => {
-          echart && setEcharts(echart.echarts);
+          echart && setEcharts(echart);
         }}
         option={getOption()}
         lazyUpdate={true}

@@ -19,7 +19,7 @@ const HomeDataScreen = props => {
   return (
     <SystemDashboardPageWrapper pageName="安装调试">
       <Col
-        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        style={{ width: '27%',  display: fullScreen ? 'none' : 'flex' }}
         className={styles.leftWrapper}
       >
         {/* 总览 */}
@@ -38,7 +38,7 @@ const HomeDataScreen = props => {
         />
       </Col>
       <Col
-        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        style={{ width: '27%',  display: fullScreen ? 'none' : 'flex' }}
         className={styles.rightWrapper}
       >
         {/* 服务响应及时分析 */}

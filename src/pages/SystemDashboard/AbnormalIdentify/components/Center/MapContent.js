@@ -305,11 +305,11 @@ class MapContent extends PureComponent {
     return (
       <div
         style={{
-          width: 24,
-          height: 24,
-          lineHeight: '24px',
+          width: '1.5rem',
+          height: '1.5rem',
+          lineHeight: '1.5rem',
           background: color,
-          boxShadow: '0px 0px 2px 0px #000000',
+          boxShadow: '0px 0px .125rem 0px #000000',
           borderRadius: '50%',
           textAlign: 'center',
           color: '#484020',
@@ -558,11 +558,11 @@ class MapContent extends PureComponent {
         <div
           style={{
             position: 'relative',
-            transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
-            padding: '0 10px',
+            transform: `translate(-50%, ${'calc(-50% - .875rem)'})`,
+            padding: '0 .625rem',
             cursor: 'text',
-            width: 200,
-            height: 170,
+            width: '12.5rem',
+            height: '10.625rem',
             background: `url(/SystemDashboard/regionTip.png)`,
             backgroundSize: '100% 100%',
           }}
@@ -571,17 +571,18 @@ class MapContent extends PureComponent {
             style={{
               opacity: 1,
               color: '#52F2FF',
-              height: 'calc(100% - 12px)',
+              height: 'calc(100% - .75rem)',
             }}
           >
             <div
               className="textOverflow"
               style={{
-                width: 'calc(100% - 28px)',
-                height: 28,
-                lineHeight: '28px',
+                width: 'calc(100% - 1.75rem)',
+                height: '1.75rem',
+                lineHeight: '1.75rem',
                 fontWeight: 'bold',
                 cursor: 'pointer',
+                fontSize: '.875rem'
               }}
               title={title}
               onClick={() => (level === 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
@@ -590,14 +591,14 @@ class MapContent extends PureComponent {
             </div>
             <RightOutlined
               onClick={() => (level === 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
-              style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
+              style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: '.75rem' }}
             />
             <Row
               style={{
                 height: 'calc(100% - 36px)',
                 display: 'flex',
                 fontWeight: 'bold',
-                padding: '0 10px',
+                padding: '0 .625rem',
               }}
             >
               <Col
@@ -608,8 +609,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FF3737', fontSize: 20 }}>{position['严重异常']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>严重异常</p>
+                <p style={{ color: '#FF3737', fontSize: '1.25rem' }}>{position['严重异常']}</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>严重异常</p>
               </Col>
               <Col
                 span={10}
@@ -619,8 +620,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: 'darkorange', fontSize: 20 }}>{position['重点异常']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>重点异常</p>
+                <p style={{ color: 'darkorange', fontSize: '1.25rem' }}>{position['重点异常']}</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>重点异常</p>
               </Col>
               <Col
                 span={14}
@@ -630,8 +631,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: 'gold', fontSize: 20 }}>{position['一般异常']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>一般异常</p>
+                <p style={{ color: 'gold', fontSize: '1.25rem' }}>{position['一般异常']}</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>一般异常</p>
               </Col>
               <Col
                 span={10}
@@ -641,8 +642,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: 'skyblue', fontSize: 20 }}>{position['提示类异常']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>提示类异常</p>
+                <p style={{ color: 'skyblue', fontSize: '1.25rem' }}>{position['提示类异常']}</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>提示类异常</p>
               </Col>
             </Row>
           </div>
@@ -651,11 +652,11 @@ class MapContent extends PureComponent {
               className={styles.circle}
               style={{
                 display: 'inline-block',
-                marginTop: 16,
-                width: 10,
-                height: 10,
+                marginTop: '1rem',
+                width: '.625rem',
+                height: '.625rem',
                 background: 'rgba(0, 141, 253, 1)',
-                boxShadow: ' 0 0 4px 4px rgba(0, 141, 253, .1)',
+                boxShadow: ' 0 0 .25rem .25rem rgba(0, 141, 253, .1)',
                 borderRadius: '50%',
               }}
             ></span>
@@ -665,7 +666,7 @@ class MapContent extends PureComponent {
     } else if (level == 3 || level == 4) {
       //监测点
       return (
-        <div style={{ position: 'relative', marginTop: 24, zIndex: extData.position.Level }}>
+        <div style={{ position: 'relative', marginTop: '1.5rem', zIndex: extData.position.Level }}>
           <span
             onClick={() => {
               this.onClickPoint(extData);

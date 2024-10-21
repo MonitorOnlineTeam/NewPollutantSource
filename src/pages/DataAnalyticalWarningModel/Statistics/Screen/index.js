@@ -13,6 +13,7 @@ import { RollbackOutlined, CalendarOutlined, ExclamationCircleOutlined } from '@
 import { ModalNameConversion } from '@/pages/DataAnalyticalWarningModel/CONST';
 import 'moment/locale/zh-cn';
 import locale from 'antd/es/date-picker/locale/zh_CN';
+import { setRem } from '@/utils/utils.js';
 
 const { RangePicker } = DatePicker;
 
@@ -184,7 +185,17 @@ const Index = props => {
   useEffect(() => {
     StatisAlarmInfoSum();
   }, [selectedRowKeys]);
-  //
+
+  // rem等比适配配置文件
+  useEffect(() => {
+    setRem();
+    // 监听窗口大小变化
+    window.addEventListener('resize', setRem);
+
+    return () => {
+      window.removeEventListener('resize', setRem);
+    };
+  }, []);
 
   // const onCancel = () => {
   //   setVisible(false);
@@ -535,7 +546,7 @@ const Index = props => {
         //   }}
         // />
         <>
-          <Row align="middle" style={{ fontSize: 12, color: '#878282', marginBottom: 10 }}>
+          <Row align="middle" style={{ fontSize: '.75rem', color: '#878282', marginBottom: '.625rem' }}>
             {/* <ExclamationCircleOutlined style={{ marginBottom: 2, marginRight: 10 }} /> */}
             <span>
               当前数据时间：{queryDateLabel}（{beginTime} - {endTime}）
@@ -579,12 +590,12 @@ const Index = props => {
     <div className={styles.ScreenWrapper}>
       <header className={styles.header}>
         异常数据智能精准识别系统
-        <div className={styles.SelectWrapper} style={{ top: 26 }}>
+        <div className={styles.SelectWrapper} style={{ top: '1.625rem' }}>
           <Select
             value={queryDateLabel}
             placeholder="请选择时间"
             style={{
-              width: 160,
+              width: '10rem',
             }}
             onChange={(value, option) => {
               let date = option['data-date'];
@@ -607,13 +618,13 @@ const Index = props => {
             style={{
               position: 'absolute',
               zIndex: 1,
-              border: '2px solid rgb(49 97 141)',
-              fontSize: 16,
-              padding: 4,
+              border: '.125rem solid rgb(49 97 141)',
+              fontSize: '1rem',
+              padding: '.25rem',
               cursor: 'pointer',
               fontWeight: 'bold',
-              right: 22,
-              top: 34,
+              right: '1.375rem',
+              top: '2.125rem',
               color: 'rgb(101, 217, 255)',
             }}
             onClick={() => {
@@ -857,15 +868,15 @@ const Index = props => {
         <div className={styles.boxWrapper} style={{ marginBottom: 0 }}>
           <BoxItem
             title="核实信息"
-            style={{ flex: 1, height: 'calc(100vh - 440px)', minHeight: 400, width: '100%' }}
-            bodyStyle={{ height: 'calc(100% - 44px)' }}
+            style={{ flex: 1, height: 'calc(100vh - 27.5rem)', minHeight: 400, width: '100%' }}
+            bodyStyle={{ height: 'calc(100% - 2.75rem)' }}
           >
             <div className={styles.checkInfoWrapper} style={{ height: '100%' }}>
               {/* <Spin spinning={alertLoading}> */}
               <Alert
                 banner
                 message={
-                  <div style={{ color: '#65D9FF', fontWeight: 500, fontSize: 16 }}>
+                  <div style={{ color: '#65D9FF', fontWeight: 500, fontSize: '1rem' }}>
                     已选择{selectedRowKeys.length}项&nbsp;&nbsp;&nbsp;&nbsp;
                     {/* {`总数：发现线索${tableSelectedCount.DisCulesNum}个，已核实${tableSelectedCount.VerifiedNum}个，
                       核实为异常${tableSelectedCount.CheckedResult2Count}个，

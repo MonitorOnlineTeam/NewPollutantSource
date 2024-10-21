@@ -7,6 +7,7 @@ import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
 import SupervisionAnalySumm from '@/pages/operations/supervisionAnalySumm';
 import { fomatFloat } from '@/utils/utils';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 const COLOR = ['#2899F6', '#FF4F4F', '#E3AB15'];
 
@@ -60,12 +61,12 @@ const ProjectExecution = props => {
         textStyle: {
           rich: {
             name: {
-              fontSize: 14,
+              fontSize: fontSizeFn(14),
               color: '#C3F0FF',
-              padding: [4, 0],
+              padding: [fontSizeFn(4), 0],
             },
             val: {
-              fontSize: 24,
+              fontSize: fontSizeFn(24),
               color: '#0693EF',
             },
           },
@@ -88,7 +89,7 @@ const ProjectExecution = props => {
           center: ['50%', '50%'],
           label: { show: false },
           itemStyle: {
-            padding: 4,
+            padding: fontSizeFn(4),
           },
           minAngle: 2,
           padAngle: 4,

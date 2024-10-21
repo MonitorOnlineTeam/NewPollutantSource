@@ -12,15 +12,21 @@ import { adjustDuplicateCoordinates } from '@/pages/SystemDashboard/CONST.js';
 const legendList = [
   {
     name: '合格',
-    color: '#2EEB9D',
-    value: '4',
-    description: '严重影响数据质量，动机定义明确，影响恶劣的',
+    color: 'rgb(46, 234, 156)',
+    value: '0',
+    // description: '严重影响数据质量，动机定义明确，影响恶劣的',
   },
   {
     name: '不合格',
-    color: '#4699FF',
-    value: '3',
-    description: '影响数据质量，无法判断明显动机，非正常运行的',
+    color: 'rgb(255, 55, 55)',
+    value: '1',
+    // description: '影响数据质量，无法判断明显动机，非正常运行的',
+  },
+  {
+    name: '无效',
+    color: '#fafafa',
+    value: '2',
+    // description: '影响数据质量，无法判断明显动机，非正常运行的',
   },
 ];
 let aMap;
@@ -31,7 +37,7 @@ let aMap;
   level1MapData: sysDashboard.level1MapData,
   level4MapData: sysDashboard.level4MapData,
   levelOtherMapData: sysDashboard.levelOtherMapData,
-  loading: loading.effects['sysDashboard/GetMapPointInfo'],
+  loading: loading.effects['sysDashboard/GetQCAMapPointInfo'],
 }))
 class MapContent extends PureComponent {
   constructor(props) {
@@ -156,7 +162,7 @@ class MapContent extends PureComponent {
     const { time } = this.props;
     const { level, regionCode, entCode } = this.state;
     this.props.dispatch({
-      type: 'sysDashboard/GetMapPointInfo',
+      type: 'sysDashboard/GetQCAMapPointInfo',
       payload: {
         regionCode: level == 2 ? regionCode : undefined,
         entCode: level == 3 ? entCode : undefined,
@@ -258,47 +264,40 @@ class MapContent extends PureComponent {
   };
 
   getPointIcon = data => {
-    let status = data.Level;
+    let status = data.Result;
     let count = 0;
     let color = '';
 
     switch (status) {
-      case '4': // 严重异常
+      case '0': // 合格
         color = legendList[0].color;
-        count = data['严重异常'];
         break;
-      case '3': // 重点异常
-        color = legendList[1].color;
-        count = data['重点异常'];
-        break;
-      case '2': // 一般异常
+      case '2': // 无效
         color = legendList[2].color;
-        count = data['一般异常'];
         break;
-      case '1': // 提示类异常
-        color = legendList[3].color;
-        count = data['提示类异常'];
+      case '1': // 不合格
+        color = legendList[1].color;
         break;
-      case '': // 无异常
-        color = legendList[4].color;
+      case '-': // 无结果
+        color = '#69c0ff';
         break;
     }
 
     return (
       <div
         style={{
-          width: 24,
-          height: 24,
-          lineHeight: '24px',
+          width: '1.5rem',
+          height: '1.5rem',
+          lineHeight: '1.5rem',
           background: color,
-          boxShadow: '0px 0px 2px 0px #000000',
+          boxShadow: '0px 0px .125rem 0px #000000',
           borderRadius: '50%',
           textAlign: 'center',
           color: '#484020',
         }}
       >
-        {/* 无异常不显示数量 */}
-        {status !== '' ? count : ''}
+        {/* 无异常不显示数量
+        {status !== '' ? count : ''} */}
       </div>
     );
   };
@@ -308,7 +307,7 @@ class MapContent extends PureComponent {
     let imgName = '/gasInfoWindow.png';
 
     return (
-      <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 248 }}>
+      <div className={styles.infoWindowContent} style={{ width: '21.25rem', minHeight: '15.5rem' }}>
         <>
           <div className={styles.header}>
             <h2>
@@ -534,17 +533,17 @@ class MapContent extends PureComponent {
     const { position } = extData;
     const { showType, entTitleShow, pointTitleShow, isMassive, level } = this.state;
 
-    if (level == 1 || level == 2) {
-      let title = level == 1 ? position.regionName : position.entName;
+    if (level == 1) {
+      let title = position.regionName;
       return (
         <div
           style={{
             position: 'relative',
-            transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
+            transform: `translate(-50%, ${'calc(-50% - .875rem)'})`,
             padding: '0 10px',
             cursor: 'text',
-            width: 200,
-            height: 170,
+            width: '13.75rem',
+            height: '10.625rem',
             background: `url(/SystemDashboard/regionTip.png)`,
             backgroundSize: '100% 100%',
           }}
@@ -553,33 +552,40 @@ class MapContent extends PureComponent {
             style={{
               opacity: 1,
               color: '#52F2FF',
-              height: 'calc(100% - 12px)',
+              height: 'calc(100% - .75rem)',
             }}
           >
             <div
               className="textOverflow"
               style={{
-                width: 'calc(100% - 28px)',
-                height: 28,
-                lineHeight: '28px',
+                width: 'calc(100% - 1.75rem)',
+                height: '1.75rem',
+                lineHeight: '1.75rem',
                 fontWeight: 'bold',
                 cursor: 'pointer',
+                fontSize: '.875rem',
               }}
               title={title}
-              onClick={() => (level === 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
+              onClick={() => this.onClickRegion(extData)}
             >
               {title}
             </div>
             <RightOutlined
-              onClick={() => (level === 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
-              style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
+              onClick={() => this.onClickRegion(extData)}
+              style={{
+                color: '#4BF3F9',
+                position: 'absolute',
+                top: '.375rem',
+                right: '.375rem',
+                fontSize: '.75rem',
+              }}
             />
             <Row
               style={{
-                height: 'calc(100% - 36px)',
+                height: 'calc(100% - 2.25rem)',
                 display: 'flex',
                 fontWeight: 'bold',
-                padding: '0 10px',
+                padding: '0 .625rem',
               }}
             >
               <Col
@@ -590,8 +596,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FF3737', fontSize: 20 }}>{position['严重异常']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>严重异常</p>
+                <p style={{ color: '#00A3FF', fontSize: '1.25rem' }}>{position['entCount']}</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>企业数量</p>
               </Col>
               <Col
                 span={10}
@@ -601,8 +607,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: 'darkorange', fontSize: 20 }}>{position['重点异常']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>重点异常</p>
+                <p style={{ color: '#00A3FF', fontSize: '1.25rem' }}>{position['pointCount']}</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>排口数量</p>
               </Col>
               <Col
                 span={14}
@@ -612,8 +618,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: 'gold', fontSize: 20 }}>{position['一般异常']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>一般异常</p>
+                <p style={{ color: '#2DE599', fontSize: '1.25rem' }}>{position['ResultTrueNum']}</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>质控合格</p>
               </Col>
               <Col
                 span={10}
@@ -623,8 +629,10 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: 'skyblue', fontSize: 20 }}>{position['提示类异常']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>提示类异常</p>
+                <p style={{ color: '#FF3737', fontSize: '1.25rem' }}>
+                  {position['ResultFalseNum']}
+                </p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>质控不合格</p>
               </Col>
             </Row>
           </div>
@@ -633,11 +641,129 @@ class MapContent extends PureComponent {
               className={styles.circle}
               style={{
                 display: 'inline-block',
-                marginTop: 16,
-                width: 10,
-                height: 10,
+                marginTop: '1rem',
+                width: '.625rem',
+                height: '.625rem',
                 background: 'rgba(0, 141, 253, 1)',
-                boxShadow: ' 0 0 4px 4px rgba(0, 141, 253, .1)',
+                boxShadow: ' 0 0 .25rem .25rem rgba(0, 141, 253, .1)',
+                borderRadius: '50%',
+              }}
+            ></span>
+          </div>
+        </div>
+      );
+    } else if (level == 2) {
+      let title = position.entName;
+      return (
+        <div
+          style={{
+            position: 'relative',
+            transform: `translate(-50%, ${'calc(-50% - .875rem)'})`,
+            padding: '0 .625rem',
+            cursor: 'text',
+            width: '18.75rem',
+            height: '7.5rem',
+            background: `url(/SystemDashboard/regionTip.png)`,
+            backgroundSize: '100% 100%',
+          }}
+        >
+          <div
+            style={{
+              opacity: 1,
+              color: '#52F2FF',
+              height: 'calc(100% - .75rem)',
+              paddingTop: 2,
+            }}
+          >
+            <div
+              className="textOverflow"
+              style={{
+                width: 'calc(100% + 1.0625rem)',
+                lineHeight: '1.375rem',
+                fontWeight: 'bold',
+                background: ' #073783',
+                margin: '0 -.5625rem',
+                padding: '0 .625rem',
+                cursor: 'pointer',
+                fontSize: '.875rem',
+              }}
+              title={title}
+              onClick={() => this.onClickEnt(extData)}
+            >
+              {title}
+            </div>
+            <RightOutlined
+              onClick={() => this.onClickEnt(extData)}
+              style={{
+                color: '#4BF3F9',
+                position: 'absolute',
+                top: '.375rem',
+                right: '.375rem',
+                fontSize: '.75rem',
+              }}
+            />
+            <Row
+              style={{
+                height: 'calc(100% - 2.25rem)',
+                display: 'flex',
+                fontWeight: 'bold',
+                padding: '0 .625rem',
+              }}
+            >
+              <Col
+                span={8}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
+              >
+                <p style={{ color: '#00a3ff', fontSize: '1.25rem' }}>
+                  {position.pointCount}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>排口数量</p>
+              </Col>
+              <Col
+                span={8}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
+              >
+                <p style={{ color: '#2DE599', fontSize: '1.25rem' }}>
+                  {position.ResultTrueNum}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>质控合格</p>
+              </Col>
+              <Col
+                span={8}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
+              >
+                <p style={{ color: '#FF3737', fontSize: '1.25rem' }}>
+                  {position.ResultFalseNum}
+                  <span className={styles.overViewUnit}>个</span>
+                </p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>质控不合格</p>
+              </Col>
+            </Row>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <span
+              className={styles.circle}
+              style={{
+                display: 'inline-block',
+                marginTop: '1rem',
+                width: '.625rem',
+                height: '.625rem',
+                background: 'rgba(0, 141, 253, 1)',
+                boxShadow: ' 0 0 .25rem .25rem rgba(0, 141, 253, .1)',
                 borderRadius: '50%',
               }}
             ></span>
@@ -647,7 +773,7 @@ class MapContent extends PureComponent {
     } else if (level == 3 || level == 4) {
       //监测点
       return (
-        <div style={{ position: 'relative', marginTop: 24, zIndex: extData.position.Level }}>
+        <div style={{ position: 'relative', marginTop: '1.5rem', zIndex: extData.position.Level }}>
           <span
             onClick={() => {
               this.onClickPoint(extData);
@@ -898,10 +1024,10 @@ class MapContent extends PureComponent {
           </div>
         </Spin>
 
-        <CluesListModal
+        {/* <CluesListModal
           open={this.state.isModalOpen}
           onCancel={() => this.setState({ isModalOpen: false })}
-        />
+        /> */}
       </div>
     );
   }

@@ -386,11 +386,11 @@ class MapContent extends PureComponent {
         <div
           style={{
             position: 'relative',
-            transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
-            padding: '0 10px',
+            transform: `translate(-50%, ${'calc(-50% - .875rem)'})`,
+            padding: '0 .625rem',
             cursor: 'text',
-            width: 240,
-            height: 170,
+            width: '15rem',
+            height: '10.625rem',
             background: `url(/SystemDashboard/regionTip.png)`,
             backgroundSize: '100% 100%',
           }}
@@ -399,17 +399,18 @@ class MapContent extends PureComponent {
             style={{
               opacity: 1,
               color: '#52F2FF',
-              height: 'calc(100% - 12px)',
+              height: 'calc(100% - .75rem)',
             }}
           >
             <div
               className="textOverflow"
               style={{
-                width: 'calc(100% - 28px)',
-                height: 24,
-                lineHeight: '28px',
+                width: 'calc(100% - 1.75rem)',
+                height: '1.5rem',
+                lineHeight: '1.75rem',
                 fontWeight: 'bold',
                 cursor: 'pointer',
+                fontSize: '1rem'
               }}
               title={title}
               onClick={() => this.onClickRegion(extData)}
@@ -418,14 +419,14 @@ class MapContent extends PureComponent {
             </div>
             <RightOutlined
               onClick={() => this.onClickRegion(extData)}
-              style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
+              style={{ color: '#4BF3F9', position: 'absolute', top: '.375rem', right: '.375rem', fontSize: '.75rem' }}
             />
             <Row
               style={{
-                height: 'calc(100% - 36px)',
+                height: 'calc(100% - 2.25rem)',
                 display: 'flex',
                 fontWeight: 'bold',
-                padding: '0 10px',
+                padding: '0 .625rem',
               }}
             >
               <Col
@@ -436,11 +437,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#00a3ff', fontSize: 20 }}>
+                <p style={{ color: '#00a3ff', fontSize: '1.25rem' }}>
                   {position.entCount}
                   <span className={styles.overViewUnit}>家</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>企业数量</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>企业数量</p>
               </Col>
               <Col
                 span={10}
@@ -450,11 +451,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#00a3ff', fontSize: 20 }}>
+                <p style={{ color: '#00a3ff', fontSize: '1.25rem' }}>
                   {position.pointCount}
                   <span className={styles.overViewUnit}>个</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排口数量</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>排口数量</p>
               </Col>
               <Col
                 span={14}
@@ -464,11 +465,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>
+                <p style={{ color: '#2EEB9D', fontSize: '1.25rem' }}>
                   {position.normarlCount}
                   <span className={styles.overViewUnit}>个</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维正常排口</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>运维正常排口</p>
               </Col>
               <Col
                 span={10}
@@ -478,11 +479,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FFCC00', fontSize: 20 }}>
+                <p style={{ color: '#FFCC00', fontSize: '1.25rem' }}>
                   {position.exceptionCount}
                   <span className={styles.overViewUnit}>个</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维异常排口</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>运维异常排口</p>
               </Col>
             </Row>
           </div>
@@ -491,11 +492,11 @@ class MapContent extends PureComponent {
               className={styles.circle}
               style={{
                 display: 'inline-block',
-                marginTop: 16,
-                width: 10,
-                height: 10,
+                marginTop: '1rem',
+                width: '.625rem',
+                height: '.625rem',
                 background: 'rgba(0, 141, 253, 1)',
-                boxShadow: ' 0 0 4px 4px rgba(0, 141, 253, .1)',
+                boxShadow: ' 0 0 .25rem .25rem rgba(0, 141, 253, .1)',
                 borderRadius: '50%',
               }}
             ></span>
@@ -508,11 +509,11 @@ class MapContent extends PureComponent {
         <div
           style={{
             position: 'relative',
-            transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
-            padding: '0 10px',
+            transform: `translate(-50%, ${'calc(-50% - .875rem)'})`,
+            padding: '0 .625rem',
             cursor: 'text',
-            width: 300,
-            height: 120,
+            width: '18.75rem',
+            height: '7.5rem',
             background: `url(/SystemDashboard/regionTip.png)`,
             backgroundSize: '100% 100%',
           }}
@@ -521,19 +522,19 @@ class MapContent extends PureComponent {
             style={{
               opacity: 1,
               color: '#52F2FF',
-              height: 'calc(100% - 12px)',
+              height: 'calc(100% - .75rem)',
               paddingTop: 2,
             }}
           >
             <div
               className="textOverflow"
               style={{
-                width: 'calc(100% + 17px)',
-                lineHeight: '22px',
+                width: 'calc(100% + 1.0625rem)',
+                lineHeight: '1.375rem',
                 fontWeight: 'bold',
                 background: ' #073783',
-                margin: '0 -9px',
-                padding: '0 10px',
+                margin: '0 -.5625rem',
+                padding: '0 .625rem',
                 cursor: 'pointer',
               }}
               title={title}
@@ -543,14 +544,14 @@ class MapContent extends PureComponent {
             </div>
             <RightOutlined
               onClick={() => this.onClickEnt(extData)}
-              style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
+              style={{ color: '#4BF3F9', position: 'absolute', top: '.375rem', right: '.375rem', fontSize: '.75rem' }}
             />
             <Row
               style={{
-                height: 'calc(100% - 36px)',
+                height: 'calc(100% - 2.25rem)',
                 display: 'flex',
                 fontWeight: 'bold',
-                padding: '0 10px',
+                padding: '0 .625rem',
               }}
             >
               <Col
@@ -561,11 +562,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#00a3ff', fontSize: 20 }}>
+                <p style={{ color: '#00a3ff', fontSize: '1.25rem' }}>
                   {position.pointCount}
                   <span className={styles.overViewUnit}>个</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排口数量</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>排口数量</p>
               </Col>
               <Col
                 span={8}
@@ -575,11 +576,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>
+                <p style={{ color: '#2EEB9D', fontSize: '1.25rem' }}>
                   {position.normarlCount}
                   <span className={styles.overViewUnit}>个</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维正常排口</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>运维正常排口</p>
               </Col>
               <Col
                 span={8}
@@ -589,11 +590,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FFCC00', fontSize: 20 }}>
+                <p style={{ color: '#FFCC00', fontSize: '1.25rem' }}>
                   {position.exceptionCount}
                   <span className={styles.overViewUnit}>个</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>运维异常排口</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>运维异常排口</p>
               </Col>
             </Row>
           </div>
@@ -602,11 +603,11 @@ class MapContent extends PureComponent {
               className={styles.circle}
               style={{
                 display: 'inline-block',
-                marginTop: 16,
-                width: 10,
-                height: 10,
+                marginTop: '1rem',
+                width: '.625rem',
+                height: '.625rem',
                 background: 'rgba(0, 141, 253, 1)',
-                boxShadow: ' 0 0 4px 4px rgba(0, 141, 253, .1)',
+                boxShadow: ' 0 0 .25rem .25rem rgba(0, 141, 253, .1)',
                 borderRadius: '50%',
               }}
             ></span>
@@ -616,7 +617,7 @@ class MapContent extends PureComponent {
     } else if (level == 3 || level == 4) {
       //监测点
       return (
-        <div style={{ position: 'relative', marginTop: 24 }}>
+        <div style={{ position: 'relative', marginTop: '1.5rem' }}>
           <span
             onClick={() => {
               let { position } = extData;

@@ -1859,6 +1859,10 @@ export const API = {
     GetInstallationDebuggingMap: before + '/CTStatisticsApi/GetInstallationDebuggingMap',
     // 模型首页地图
     GetMapPointInfo: before + '/MoldHome/GetMapPointInfo',
+    // 质控首页地图
+    GetQCAMapPointInfo: before + '/QCAStandardGas/GetQCAMapPointInfo',
+    // 质控核查任务分析
+    GetQCACRTaskAnalysis: before + '/QCAStandardGas/GetQCACRTaskAnalysis',
     //监督核查
     //督查总览
     GetSupervisionOverview: before + '/Supervision/GetSupervisionOverview',

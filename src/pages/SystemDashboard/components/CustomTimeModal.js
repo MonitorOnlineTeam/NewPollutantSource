@@ -22,8 +22,8 @@ const CustomTimeModal = props => {
   const renderContent = () => {
     return (
       <div>
-        <p style={{ marginBottom: 10, fontWeight: 'bold' }}>请选择时间：</p>
-        <Space style={{ width: '100%', marginLeft: 10 }}>
+        <p style={{ marginBottom: '.625rem', fontWeight: 'bold' }}>请选择时间：</p>
+        <Space style={{ width: '100%', marginLeft: '.625rem' }}>
           <RangePicker
             style={{ width: 'calc(100%)' }}
             allowClear={false}

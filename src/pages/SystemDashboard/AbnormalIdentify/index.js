@@ -23,7 +23,7 @@ const HomeDataScreen = props => {
   return (
     <SystemDashboardPageWrapper pageName="异常数据识别">
       <Col
-        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        style={{ width: '27%', display: fullScreen ? 'none' : 'flex' }}
         className={styles.leftWrapper}
       >
         {/* 总览 */}
@@ -42,7 +42,7 @@ const HomeDataScreen = props => {
         />
       </Col>
       <Col
-        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        style={{ width: '27%', display: fullScreen ? 'none' : 'flex' }}
         className={styles.rightWrapper}
       >
         {/* 异常行为分析 */}

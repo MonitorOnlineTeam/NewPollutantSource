@@ -6,6 +6,7 @@ import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import TimelinessQualityReport from '@/pages/ctDebuggAfterSaleServiceManage/reportsViews/timelinessQualityReport';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 let myChart;
 const dvaPropsData = ({ loading, sysDashboard }) => ({
@@ -29,6 +30,31 @@ const Card_2 = props => {
   useEffect(() => {
     getData();
   }, [time]);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    // 在组件卸载或者依赖发生变化前，移除事件监听器
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [echarts1, echarts2, echarts3]);
+
+  const handleResize = () => {
+    echarts1 && refreshChart(echarts1);
+    echarts2 && refreshChart(echarts2);
+    echarts3 && refreshChart(echarts3);
+  };
+
+  // 改变echarts图字体大小
+  const refreshChart = chart => {
+    let echarts_instance = chart.getEchartsInstance();
+    echarts_instance.resize();
+    let option = echarts_instance.getOption();
+    if (option.title) {
+      option.title[0].textStyle.fontSize = fontSizeFn(18);
+      echarts_instance.setOption(option);
+    }
+  };
 
   const getData = value => {
     dispatch({
@@ -73,7 +99,7 @@ const Card_2 = props => {
             x: 'center',
             y: 'center',
             textStyle: {
-              fontSize: 18,
+              fontSize: fontSizeFn(18),
               color: colors[2],
               // fontFamily: 'DINAlternate-Bold, DINAlternate',
               fontWeight: 'bold',
@@ -117,7 +143,7 @@ const Card_2 = props => {
             //   color: 'rgba(66, 66, 66, .3)',
             // },
             itemStyle: {
-              color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+              color: new echarts.echarts.graphic.LinearGradient(0, 0, 1, 0, [
                 {
                   offset: 0,
                   color: colors[1],
@@ -127,6 +153,9 @@ const Card_2 = props => {
                   color: colors[0],
                 },
               ]),
+            },
+            label: {
+              show: false,
             },
           },
           {
@@ -140,6 +169,9 @@ const Card_2 = props => {
             data: [data],
             itemStyle: {
               color: '#rgba(66, 66, 66, .3)',
+            },
+            label: {
+              show: false,
             },
           },
           {
@@ -213,7 +245,7 @@ const Card_2 = props => {
         <Col span={8}>
           <ReactEcharts
             ref={echart => {
-              echart && setEcharts1(echart.echarts);
+              echart && setEcharts1(echart);
             }}
             option={getOption(1, ServiceReport.ReportTimelyRate)}
             lazyUpdate={true}
@@ -224,7 +256,7 @@ const Card_2 = props => {
         <Col span={8}>
           <ReactEcharts
             ref={echart => {
-              echart && setEcharts2(echart.echarts);
+              echart && setEcharts2(echart);
             }}
             option={getOption(2, ServiceReport.ReportTimelyQualifiedRate)}
             lazyUpdate={true}
@@ -235,7 +267,7 @@ const Card_2 = props => {
         <Col span={8}>
           <ReactEcharts
             ref={echart => {
-              echart && setEcharts3(echart.echarts);
+              echart && setEcharts3(echart);
             }}
             option={getOption(3, ServiceReport.ReportQualifiedRate)}
             lazyUpdate={true}

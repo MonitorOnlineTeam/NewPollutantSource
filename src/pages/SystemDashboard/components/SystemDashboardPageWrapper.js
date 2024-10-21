@@ -8,6 +8,7 @@ import FullscreenToggle from './FullscreenToggle';
 import { allSysList, dateRangeList } from '../CONST';
 import CustomTimeModal from './CustomTimeModal';
 import moment from 'moment';
+import { setRem } from '@/utils/utils.js';
 
 const dvaPropsData = ({ loading, sysDashboard, user }) => ({
   time: sysDashboard.time,
@@ -24,6 +25,13 @@ const SystemDashboardPageWrapper = props => {
   const [customTimeModalOpen, setCustomTimeModalOpen] = useState(false);
 
   const { dispatch, timeLabel, children, pageName, currentMenu, time } = props;
+
+  // rem等比适配配置文件
+  useEffect(() => {
+    setRem();
+    // 监听窗口大小变化
+    window.addEventListener('resize', setRem);
+  }, []);
 
   useEffect(() => {
     pageName === '智慧运维' &&
@@ -138,7 +146,7 @@ const SystemDashboardPageWrapper = props => {
   };
 
   return (
-    <div className={`${styles.dashboardPageWrapper} ${styles.operationWrapper}`} ref={containerRef}>
+    <div className={`${styles.dashboardPageWrapper}`} ref={containerRef}>
       <header className={styles.header}>{pageInfo.title}</header>
       <div className={styles.leftContent}>
         <div className={styles.menuSelectContent}>

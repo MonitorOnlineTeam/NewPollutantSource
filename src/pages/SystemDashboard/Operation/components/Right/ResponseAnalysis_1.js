@@ -7,7 +7,7 @@ import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import AbnormalAlarmRateModal from '@/pages/newestHome/components/springModal/abnormalAlarmRate';
 import RegionDetails from '@/pages/IntelligentAnalysis/dataAlarm/abnormalResRate/RegionDetails';
-
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 import MissingDataRateModal from '@/pages/newestHome/components/springModal/missingDataRate/MissingDataRateModel';
 
 let myChart;
@@ -42,6 +42,58 @@ const ResponseAnalysis = props => {
   useEffect(() => {
     getData();
   }, [level, regionCode, entCode, time]);
+
+  useEffect(() => {
+    window.addEventListener('resize', refreshChart);
+    // 在组件卸载或者依赖发生变化前，移除事件监听器
+    return () => {
+      window.removeEventListener('resize', refreshChart);
+    };
+  }, [echarts]);
+
+  // 改变echarts图字体大小
+  const refreshChart = () => {
+    if (echarts) {
+      let echarts_instance = echarts.getEchartsInstance();
+      echarts_instance.resize();
+      let option = echarts_instance.getOption();
+      if (option.grid) {
+        option.grid = [
+          {
+            show: false,
+            left: fontSizeFn(70),
+            top: '18%',
+            bottom: fontSizeFn(10),
+            containLabel: true,
+            width: '24%',
+          },
+          {
+            show: false,
+            left: '52%',
+            top: '18%',
+            bottom: fontSizeFn(10),
+            width: '0%',
+          },
+          {
+            show: false,
+            right: fontSizeFn(70),
+            top: '18%',
+            bottom: fontSizeFn(10),
+            containLabel: true,
+            width: '24%',
+          },
+        ];
+        option.xAxis[0].nameTextStyle.padding = [0, 0, fontSizeFn(-10), 0];
+        option.xAxis[0].nameTextStyle.fontSize = fontSizeFn(15);
+        option.xAxis[2].nameTextStyle.padding = [0, 0, fontSizeFn(-10), 0];
+        option.xAxis[2].nameTextStyle.fontSize = fontSizeFn(15);
+        option.yAxis[1].axisLabel.textStyle.fontSize = fontSizeFn(15);
+        option.series[2].label.fontSize = fontSizeFn(16);
+        option.series[5].label.fontSize = fontSizeFn(16);
+        echarts_instance.setOption(option);
+      }
+    }
+  };
 
   function formatNumber(value) {
     // 如果是整数就直接返回，不是就保留小数
@@ -138,9 +190,9 @@ const ResponseAnalysis = props => {
         grid: [
           {
             show: false,
-            left: '70px',
+            left: fontSizeFn(70),
             top: '18%',
-            bottom: '10',
+            bottom: fontSizeFn(10),
             containLabel: true,
             width: '24%',
           },
@@ -148,14 +200,14 @@ const ResponseAnalysis = props => {
             show: false,
             left: '52%',
             top: '18%',
-            bottom: '10',
+            bottom: fontSizeFn(10),
             width: '0%',
           },
           {
             show: false,
-            right: '70px',
+            right: fontSizeFn(70),
             top: '18%',
-            bottom: '10',
+            bottom: fontSizeFn(10),
             containLabel: true,
             width: '24%',
           },
@@ -165,9 +217,9 @@ const ResponseAnalysis = props => {
             name: '异常报警响应',
             nameTextStyle: {
               color: '#fff',
-              padding: [0, 0, -10, 0],
+              padding: [0, 0, fontSizeFn(-10), 0],
               fontWeight: 'bold',
-              fontSize: 15,
+              fontSize: fontSizeFn(15),
             },
             nameLocation: 'center',
             type: 'value',
@@ -195,9 +247,9 @@ const ResponseAnalysis = props => {
             name: '缺失报警响应',
             nameTextStyle: {
               color: '#fff',
-              padding: [0, 0, -10, 0],
+              padding: [0, 0, fontSizeFn(-10), 0],
               fontWeight: 'bold',
-              fontSize: 15,
+              fontSize: fontSizeFn(15),
             },
             nameLocation: 'center',
             gridIndex: 2,
@@ -252,7 +304,7 @@ const ResponseAnalysis = props => {
               padding: [0, 0, 0, 0],
               textStyle: {
                 color: '#A4C7DB',
-                fontSize: 15,
+                fontSize: fontSizeFn(15),
                 fontWeight: 'bold',
               },
               align: 'center',
@@ -300,7 +352,7 @@ const ResponseAnalysis = props => {
           stack: '1',
           itemStyle: {
             normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+              color: new echarts.echarts.graphic.LinearGradient(0, 0, 1, 0, [
                 {
                   offset: 0,
                   color: colors[0].start,
@@ -347,7 +399,7 @@ const ResponseAnalysis = props => {
             position: 'left',
             color: '#FDB31E',
             fontWeight: 'bold',
-            fontSize: 16,
+            fontSize: fontSizeFn(16),
             formatter: params => {
               let dataIndex = params.dataIndex;
               return exRates[dataIndex] + '%';
@@ -364,7 +416,7 @@ const ResponseAnalysis = props => {
           yAxisIndex: 2,
           itemStyle: {
             normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+              color: new echarts.echarts.graphic.LinearGradient(0, 0, 1, 0, [
                 {
                   offset: 0,
                   color: colors[1].start,
@@ -415,7 +467,7 @@ const ResponseAnalysis = props => {
             position: 'right',
             color: '#77B2FF',
             fontWeight: 'bold',
-            fontSize: 16,
+            fontSize: fontSizeFn(16),
             formatter: params => {
               let dataIndex = params.dataIndex;
               return missRates[dataIndex] + '%';
@@ -447,7 +499,7 @@ const ResponseAnalysis = props => {
     <HomeCard title="响应异常分析" bodyStyle={{}} loading={loading}>
       <ReactEcharts
         ref={echart => {
-          echart && setEcharts(echart.echarts);
+          echart && setEcharts(echart);
         }}
         option={getOption(1)}
         lazyUpdate={true}
@@ -455,10 +507,10 @@ const ResponseAnalysis = props => {
       />
       <Row
         style={{
-          height: 'calc(100% - 80px)',
+          height: 'calc(100% - 5rem)',
           position: 'absolute',
           width: '94%',
-          top: 60,
+          top: '3.75rem',
           cursor: 'pointer',
         }}
       >

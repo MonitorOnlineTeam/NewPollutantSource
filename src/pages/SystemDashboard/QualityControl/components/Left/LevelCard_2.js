@@ -7,61 +7,74 @@ import DescriptionModal from '@/pages/SystemDashboard/components/DescriptionModa
 import ReactEcharts from 'echarts-for-react';
 import AbnormalDataAnalysis from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis';
 import _ from 'lodash';
+import moment from 'moment';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 let myChart;
 const dvaPropsData = ({ loading, sysDashboard, AbnormalIdentifyModel }) => ({
+  level: sysDashboard.level,
   time: sysDashboard.time,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
-  LevelList: sysDashboard.modalLevelList,
-  loading: loading.effects['sysDashboard/GetMapPointInfo'],
+  loading: loading.effects['sysDashboard/GetQCACRTaskAnalysis'],
 });
 
 const LevelCard = props => {
   const [echarts, setEcharts] = useState();
-  const [dataType, setDataType] = useState('Hours');
+  const [taskAnalysisData, setTaskAnalysisData] = useState([]);
   const [open, setOpen] = useState(false);
 
-  const { dispatch, loading, LevelList, entCode, regionCode, time } = props;
+  const { dispatch, loading, level, entCode, regionCode, time } = props;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getData();
+  }, [level, regionCode, entCode, time]);
+
+  const getData = value => {
+    dispatch({
+      type: 'sysDashboard/GetQCACRTaskAnalysis',
+      payload: {
+        regionCode: level == 2 ? regionCode : undefined,
+        entCode: level == 3 ? entCode : undefined,
+        pLeve: level,
+        TopNum: 10,
+        bTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
+        eTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
+      },
+      callback: res => {
+        setTaskAnalysisData(res);
+      },
+    });
+  };
 
   const onOpenModal = () => {
     setOpen(true);
   };
 
   const getOption = () => {
-    console.log('LevelList', LevelList);
-
-    if (!echarts || !LevelList.length) {
+    if (!echarts) {
       return {};
     }
-    let max = _.maxBy(LevelList, dataType)[dataType];
-    let seriesData = [],
-      seriesData2 = [],
-      xData = [];
 
-    LevelList.map(item => {
-      xData.push(item.key);
-      seriesData2.push(max);
-      seriesData.push(item[dataType]);
+    let xData = [],
+      ResultTrueNums = [],
+      ResultFalseNum = [],
+      rates = [];
+    taskAnalysisData.map(item => {
+      xData.push(item.Name);
+      ResultTrueNums.push(item.ResultTrueNum);
+      ResultFalseNum.push(item.ResultFalseNum);
+      let count = item.ResultFalseNum + item.ResultTrueNum;
+      let rate = count > 0 ? item.ResultTrueNum / count : 0;
+      rates.push(rate);
     });
 
-    var color = [
-      ['#FF3737', 'rgba(255,55,55,0)'],
-      ['#FF6600', 'rgba(255,102,0,0)'],
-      ['#FFCC00', 'rgba(255,204,0, 0)'],
-      ['#00C0FF', 'rgba(0,192,255,0)'],
-      ['#2EEB9D', 'rgba(46,235,157,0)'],
-    ];
-
-    let unit = dataType === 'Hours' ? '小时' : '个';
     let series = [
       {
         name: '完成数量',
-        data: [320, 332, 301, 334, 390, 330, 320],
+        data: ResultTrueNums,
         type: 'bar',
-        barMaxWidth: 40,
+        barMaxWidth: fontSizeFn(40),
         stack: 'total',
         itemStyle: {
           color: '#1B8FFE',
@@ -69,9 +82,9 @@ const LevelCard = props => {
       },
       {
         name: '失败数量',
-        data: [20, 32, 1, 34, 90, 30, 20],
+        data: ResultFalseNum,
         type: 'bar',
-        barMaxWidth: 40,
+        barMaxWidth: fontSizeFn(40),
         stack: 'total',
         itemStyle: {
           color: '#FF7F0E',
@@ -79,9 +92,9 @@ const LevelCard = props => {
       },
       {
         name: '质控完成率',
-        data: [20, 32, 1, 34, 90, 30, 20],
+        data: rates,
         type: 'line',
-        barMaxWidth: 40,
+        barMaxWidth: fontSizeFn(40),
         yAxisIndex: 1,
         smooth: true,
         itemStyle: {
@@ -103,11 +116,12 @@ const LevelCard = props => {
         x: 'center',
         top: 10,
         borderRadius: 0,
-        itemGap: 18,
-        itemWidth: 18,
+        itemGap: fontSizeFn(18),
+        itemWidth: fontSizeFn(18),
         // itemHeight: 14,
         textStyle: {
           color: '#fff',
+          fontSize: fontSizeFn(13),
         },
         itemStyle: {
           borderRadius: 0,
@@ -116,15 +130,22 @@ const LevelCard = props => {
       tooltip: {
         trigger: 'axis',
         formatter: params => {
-          return `${params[0].marker}${params[0].name}：${params[0].value} ${unit}`;
+          console.log('params', params);
+          let str = '';
+          params.map(item => {
+            let unit = item.seriesName === '质控完成率' ? '%' : '个';
+            str += `${item.marker}${item.seriesName}：${item.value} ${unit} <br />`;
+          });
+
+          return str;
         },
       },
       grid: {
         borderWidth: 0,
-        bottom: 40,
-        right: 40,
-        left: 40,
-        top: 80,
+        bottom: fontSizeFn(40),
+        right: fontSizeFn(40),
+        left: fontSizeFn(40),
+        top: fontSizeFn(80),
         // textStyle: {
         //   color: '#fff',
         // },
@@ -141,7 +162,7 @@ const LevelCard = props => {
             show: false,
           },
           axisLabel: {
-            interval: 0,
+            // interval: 0,
             // formatter: function(value, index) {
             //   if (index == 0) {
             //     return `{clickItem|${value}}`;
@@ -150,7 +171,7 @@ const LevelCard = props => {
             //   }
             // },
             textStyle: {
-              // fontSize: 14,
+              fontSize: fontSizeFn(14),
               color: '#dfdfdf',
               fontWeight: 'bold',
             },
@@ -163,8 +184,9 @@ const LevelCard = props => {
           type: 'value',
           name: `数量(个)`,
           nameTextStyle: {
-            padding: [0, 0, 10, 0],
+            padding: [0, 0, fontSizeFn(10), 0],
             color: '#63BFFF',
+            fontSize: fontSizeFn(13),
           },
           axisTick: {
             show: false,
@@ -176,6 +198,7 @@ const LevelCard = props => {
             textStyle: {
               color: '#fff',
               fontWeight: 'bold',
+              fontSize: fontSizeFn(13),
             },
           },
           splitLine: {
@@ -189,8 +212,9 @@ const LevelCard = props => {
           type: 'value',
           name: `完成率(%)`,
           nameTextStyle: {
-            padding: [0, 0, 10, 0],
+            padding: [0, 0, fontSizeFn(10), 0],
             color: '#63BFFF',
+            fontSize: fontSizeFn(13),
           },
           axisTick: {
             show: false,
@@ -202,6 +226,7 @@ const LevelCard = props => {
             textStyle: {
               color: '#fff',
               fontWeight: 'bold',
+              fontSize: fontSizeFn(13),
             },
           },
           splitLine: {
@@ -235,7 +260,7 @@ const LevelCard = props => {
         theme="my_theme"
         // onEvents={{ click: onOpenModal }}
       />
-      <Modal
+      {/* <Modal
         title={'异常分级统计'}
         wrapClassName="fullScreenModal"
         destroyOnClose
@@ -256,7 +281,7 @@ const LevelCard = props => {
             wrapClassName={'fullScreenModal'}
           />
         )}
-      </Modal>
+      </Modal> */}
     </HomeCard>
   );
 };

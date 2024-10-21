@@ -15,8 +15,8 @@ const dvaPropsData = ({ sysDashboard, loading }) => ({
   time: sysDashboard.time,
   regionCode: sysDashboard.regionCode,
   entCode: sysDashboard.entCode,
-  modalCountAnalysis: sysDashboard.modalCountAnalysis,
-  loading: loading.effects['sysDashboard/GetMapPointInfo'],
+  QCOverviewData: sysDashboard.QCOverviewData,
+  loading: loading.effects['sysDashboard/GetQCAMapPointInfo'],
 });
 
 const DeviceInfoCount = props => {
@@ -25,7 +25,7 @@ const DeviceInfoCount = props => {
   const [exceptionPageOpen, setExceptionPageOpen] = useState(false); //
   const [level2Params, setLevel2Params] = useState({}); //
 
-  const { dispatch, modalCountAnalysis, loading, level, entCode, regionCode, time } = props;
+  const { dispatch, QCOverviewData, loading, level, entCode, regionCode, time } = props;
 
   useEffect(() => {}, []);
 
@@ -44,7 +44,7 @@ const DeviceInfoCount = props => {
             setOverviewOpen(true);
           }}
         >
-          <p className={styles.pointNum}>{modalCountAnalysis.EntCount}</p>
+          <p className={styles.pointNum}>{QCOverviewData.EntCount}</p>
           <p className={styles.unit}>（家）</p>
           <img src="/SystemDashboard/opera/pointNum_bg.png" />
           <p className={styles.text}>排污单位数量</p>
@@ -54,9 +54,9 @@ const DeviceInfoCount = props => {
             <li onClick={onOpenModal}>
               <img src="/SystemDashboard/opera/pointNum1.png" />
               <span className={styles.text}>排放口数量</span>
-              <div style={{ position: 'absolute', right: 10 }}>
+              <div style={{ position: 'absolute', right: '.625rem' }}>
                 <span className={styles.num} style={{ color: '#00A3FF' }}>
-                  {modalCountAnalysis.PointCount}
+                  {QCOverviewData.PointCount}
                 </span>
                 <span className={styles.unit}>个</span>
               </div>
@@ -64,9 +64,9 @@ const DeviceInfoCount = props => {
             <li onClick={onOpenModal}>
               <img src="/SystemDashboard/Overview/qualified.png" />
               <span className={styles.text}>合格</span>
-              <div style={{ position: 'absolute', right: 10 }}>
+              <div style={{ position: 'absolute', right: '.625rem' }}>
                 <span className={styles.num} style={{ color: '#2EEB9D' }}>
-                  {modalCountAnalysis.NormalCount}
+                  {QCOverviewData.ResultTrueNum}
                 </span>
                 <span className={styles.unit}>个</span>
               </div>
@@ -78,9 +78,9 @@ const DeviceInfoCount = props => {
             >
               <img src="/SystemDashboard/Overview/unqualified.png" />
               <span className={styles.text}>不合格</span>
-              <div style={{ position: 'absolute', right: 10 }}>
+              <div style={{ position: 'absolute', right: '.625rem' }}>
                 <span className={styles.num} style={{ color: '#FF3737' }}>
-                  {modalCountAnalysis.ExcepCount}
+                  {QCOverviewData.ResultFalseNum}
                 </span>
                 <span className={styles.unit}>个</span>
               </div>
@@ -89,7 +89,7 @@ const DeviceInfoCount = props => {
         </Col>
       </Row>
 
-      {distributeOpen && (
+      {/* {distributeOpen && (
         <PointDistribute // 排口分布
           // wrapClassName="fullScreenModal"
           open={distributeOpen}
@@ -125,7 +125,7 @@ const DeviceInfoCount = props => {
           open={exceptionPageOpen}
           onCancel={() => setExceptionPageOpen(false)}
         />
-      )}
+      )} */}
     </HomeCard>
   );
 };
