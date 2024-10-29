@@ -32,6 +32,9 @@ const { TextArea } = Input;
 
 const dvaPropsData = ({ loading }) => ({
   queryLoading: loading.effects[`reportSpotCheck/GetServiceReportList`],
+  auditServiceLoading: loading.effects[`reportAudit/AuditService`],
+
+ 
 });
 
 const AuditModalPage = props => {
@@ -59,7 +62,7 @@ const AuditModalPage = props => {
 
   // 获取处理意见
   const getProcessingOpinions = () => {
-    dispatch({
+    id && dispatch({
       type: `installEquipment/GetAuditPhoto`,
       payload: {
         equipmentAuditId: id,
@@ -82,6 +85,7 @@ const AuditModalPage = props => {
         },
         callback: res => {
           setStepCurrent(2);
+          reloadPageData();
         },
       }).catch(errorInfo => {
         message.warning('请输入完整的数据');
@@ -96,10 +100,10 @@ const AuditModalPage = props => {
     form1.resetFields();
     setStepCurrent(0);
     onCancel();
-    // 重新加载数据列表
-    reloadPageData();
+    // // 重新加载数据列表
+    // reloadPageData();
   };
-
+  
   // 第一步内容
   const getStep1Content = () => {
     return (
@@ -203,7 +207,7 @@ const AuditModalPage = props => {
         <Row justify="center">
           <Space>
             <Button onClick={() => setStepCurrent(0)}>上一步</Button>
-            <Button type="primary" onClick={() => AddCheckServiceReport()}>
+            <Button type="primary" loading={props?.auditServiceLoading} onClick={() => AddCheckServiceReport()}>
               下一步
             </Button>
           </Space>
@@ -246,6 +250,7 @@ const AuditModalPage = props => {
       open={isModalOpen}
       destroyOnClose
       footer={false}
+      mask={false}
       onCancel={() => {
         setStepCurrent(0);
         onCancel();

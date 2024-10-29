@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-10 09:04:53
+ * @LastEditTime: 2024-10-29 10:13:48
  * @Description: 用户修改
  */
 import React, { Component } from 'react';
@@ -427,7 +427,7 @@ export default class UserInfoEdit extends Component {
                                         /> :
                                             <Tree
                                                 checkable
-                                                checkStrictly={false}
+                                                checkStrictly={this.props.configInfo.IsOpera}
                                                 onExpand={this.onExpand}
                                                 expandedKeys={this.state.expandedKeys}
                                                 autoExpandParent={this.state.autoExpandParent}

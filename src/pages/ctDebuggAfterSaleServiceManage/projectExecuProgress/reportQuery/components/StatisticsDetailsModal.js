@@ -23,35 +23,46 @@ const StatisticsDetailsModal = props => {
   const [form] = Form.useForm();
 
   const [dataSource, setDataSource] = useState([]);
+  const [dataTotal, setDataTotal] = useState(0);
+  const [pageIndex,setPageIndex] = useState(1)
+  const [pageSize,setPageSize] = useState(20)
 
   const { dispatch, queryLoading, exportLoading, isModalOpen, onCancel, largeRegionList } = props;
 
   useEffect(() => {
-    GetServiceReportDesc();
+    GetServiceReportDesc(pageIndex,pageSize);
   }, []);
 
   // 获取请求参数
-  const getParams = () => {
+  const getParams = (pageIndex,pageSize) => {
     const values = form.getFieldsValue();
     return {
       ...values,
       time: undefined,
       beginLeaveDate: values.time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
       endLeaveDate: values.time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      pageIndex,pageSize
     };
   };
 
-  const GetServiceReportDesc = () => {
-    const body = getParams();
+  const GetServiceReportDesc = (pageIndex,pageSize) => {
+    const body = getParams(pageIndex,pageSize);
+    setPageIndex(pageIndex);
+    setPageSize(pageSize);
     dispatch({
       type: 'reportQuery/GetServiceReportDesc',
       payload: body,
       callback: res => {
         setDataSource(res.Datas);
+        setDataTotal(res.Total)
       },
     });
   };
-
+  const handleTableChange =  (PageIndex,PageSize )=>{ //分页
+    setPageSize(PageSize)
+    setPageIndex(PageIndex)
+    GetServiceReportDesc(PageIndex, PageSize);
+  }
   // 导出
   const onExport = () => {
     const body = getParams();
@@ -256,7 +267,14 @@ const StatisticsDetailsModal = props => {
           align="center"
           dataSource={dataSource}
           columns={getColumns()}
-          pagination={false}
+          pagination={{
+            total:dataTotal,
+            pageSize: pageSize,
+            current: pageIndex,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            onChange: handleTableChange,
+        }}
         />
       </Card>
     );

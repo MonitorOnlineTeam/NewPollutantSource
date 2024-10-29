@@ -3,7 +3,7 @@
  * @Author: outman0611
  * @Date: 2024-09-30 10:42:07
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-09 15:22:47
+ * @LastEditTime: 2024-10-29 16:08:30
  */
 import React, { Component, Fragment } from 'react';
 import { ExportOutlined } from '@ant-design/icons';
@@ -44,7 +44,7 @@ const { SHOW_PARENT } = TreeSelect;
   regionInfoTree: autoForm.regionList,
   entAndPointList: common.entAndPointList,
   getEntPointLoading: loading.effects['common/getEntAndPointList'],
-
+  getPollutantTypeListLoading: loading.effects['common/getPollutantTypeList'],
 
 }))
 @Form.create()
@@ -147,7 +147,7 @@ export default class Index extends Component {
 
           <div>
             <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
-
+              <Spin size='small' spinning={this.props.getPollutantTypeListLoading}>
               <SelectPollutantType
                 showType="radio"
                 mode="multiple"
@@ -155,6 +155,7 @@ export default class Index extends Component {
                 onChange={this.pollutantChange}
                 onlyShowEnt
               />
+              </Spin>
               <TreeSelect
                 {...tProps}
                 treeCheckable={false}
@@ -163,7 +164,7 @@ export default class Index extends Component {
               />
               <Input.Group compact style={{ width: 290, marginLeft: 16, display: 'inline-block' }}>
                 <Input style={{ width: 200 }} allowClear placeholder='请输入企业名称' onBlur={(e) => this.setState({ entPointName: e.target.value })} />
-                <Button type="primary" loading={this.props.getEntPointLoading || this.props.getSettingPointPointLoading || !!this.props.settingPointLoading} onClick={this.pointAccessClick}>查询</Button>
+                <Button type="primary" loading={this.props.getEntPointLoading || this.props.getSettingPointPointLoading || !!this.props.settingPointLoading || !!this.props.getPollutantTypeListLoading} onClick={this.pointAccessClick}>查询</Button>
               </Input.Group>
             </Row>
             {this.props.getEntPointLoading || this.props.getSettingPointPointLoading ? (

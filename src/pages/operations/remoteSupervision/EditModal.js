@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-06-11 14:29:31
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-17 15:51:16
+ * @LastEditTime: 2024-10-29 16:48:14
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Timeline } from 'antd';
@@ -278,7 +278,6 @@ const Index = (props) => {
   const [isCheckUser, setIsCheckUser] = useState(false)
   const [roleType, setRoleType] = useState()
   const [editId, setEditId] = useState()
-  const [checkEditvisible, setCheckEditvisible] = useState(false)
 
   const initData = ()=>{
     setEchoLoading(true)
@@ -807,7 +806,7 @@ const Index = (props) => {
           }
    
           const complateCallback=(isSuccess)=>{
-            setVisible(false)
+            onCancel && onCancel();
             type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
             isSuccess && onFinish(pageIndex, pageSize)
           }
@@ -816,9 +815,9 @@ const Index = (props) => {
             ...par
           }, (isSuccess, message) => {
             if (isSuccess && message == '请核对基准含氧量或当地大气压填写是否正确！') {
-              Modal.warning({
+              Modal.confirm({
                 title: '提示',
-                content: '请核对基准含氧量或当地大气压填写是否正确',
+                content: '请核对基准含氧量或当地大气压填写是否正确，是否继续提交',
                 onOk() {
                   props.addRemoteInspector({
                     ...par,
@@ -826,6 +825,9 @@ const Index = (props) => {
                   }, (isSuccess, Message) => {
                     complateCallback(isSuccess)
                   })
+                },
+                onCancel() {
+                  complateCallback(isSuccess)
                 },
               });
 

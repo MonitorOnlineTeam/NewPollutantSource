@@ -123,10 +123,17 @@ const Index = (props) => {
                     dataIndex: 'pointName',
                     key: 'pointName',
                     align: 'center',
-                    width: 100,
+                    width: 130,
                     render:(text, record, index)=>rowSpanFun(text, record)
                 },
-
+                {
+                    title: '排口类型',
+                    dataIndex: 'pointType',
+                    key: 'pointType',
+                    align: 'center',
+                    width: 80,
+                    render:(text, record, index)=>rowSpanFun(text, record)
+                },
                 {
                     title: '督查人员',
                     dataIndex: 'createUserName',

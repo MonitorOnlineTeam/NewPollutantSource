@@ -124,11 +124,9 @@ const dvaDispatch = (dispatch) => {
 }
 
 
-
-
 const Index = (props) => {
 
-  const { detailList, tableLoading, id, pollutantType, rectificaDetailType, infoData, updZGRangeCheckLoading, updZGCouCheckLoading, updZGParamCheckLoading, keyPollutantListLoading } = props;
+  const {visible, title, detailList, tableLoading, id, pollutantType, rectificaDetailType, infoData, updZGRangeCheckLoading, updZGCouCheckLoading, updZGParamCheckLoading, keyPollutantListLoading } = props;
   const [selectIndex, setSelectIndex] = useState();
   const [popVisble, setPopVisble] = useState(false);
   const [rangform] = Form.useForm();
@@ -137,9 +135,9 @@ const Index = (props) => {
   const [rejectform] = Form.useForm();
   const [couUpload, setCouUpload] = useState()
 
-  useEffect(() => {
-    props.getZGCheckInfoList({ id: id })
-  }, []);
+  useEffect(() => { 
+    visible && props.getZGCheckInfoList({ id: id })
+  }, [visible]);
 
   const TitleComponents = (props) => {
     return <div style={{ display: 'inline-block', fontWeight: 'bold', padding: '2px 4px', marginBottom: 16, borderBottom: '1px solid rgba(0,0,0,.1)' }}>{props.text}</div>
@@ -1244,8 +1242,8 @@ const Index = (props) => {
   return (
     <div>
        <Modal //核查和详情
-        visible={props.visible}
-        title={props.title}
+        visible={visible}
+        title={title}
         footer={null}
         mask={false}
         wrapClassName='spreadOverModal'
@@ -1259,32 +1257,32 @@ const Index = (props) => {
           <Row>
             <Col span={12}>
               <Form.Item label="企业名称" >
-                {infoData && infoData.entName}
+                {infoData?.entName || detailList?.entName}
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item label='监测点名称' >
-                {infoData && infoData.pointName}
+                {infoData?.pointName  || detailList?.pointName }
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item label="运维人员"   >
-                {infoData && infoData.OperationUser}
+                {infoData?.OperationUser  || detailList?.operationUserName }
               </Form.Item>
             </Col >
             <Col span={12}>
               <Form.Item label="提交时间" >
-                {infoData && infoData.CompleteDate}
+                {infoData?.CompleteDate  || detailList?.completeDate  }
               </Form.Item>
             </Col >
             <Col span={12}>
               <Form.Item label="核查人员"   >
-                {infoData && infoData.CheckUser}
+                {infoData?.CheckUser   || detailList?.checkUserName }
               </Form.Item>
             </Col >
             <Col span={12}>
               <Form.Item label="核查日期" >
-                {infoData && infoData.CheckDate}
+                {infoData?.CheckDate || detailList?.checkDate}
               </Form.Item>
             </Col >
           </Row>

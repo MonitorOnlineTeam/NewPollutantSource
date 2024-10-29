@@ -232,7 +232,7 @@ const Office = props => {
       title: '工号',
     },
     {
-      dataIndex: 'IsSignAddress',
+      dataIndex: 'Islive',
       title:'是否在住',
     },
     {
@@ -241,7 +241,7 @@ const Office = props => {
     },
     {
       dataIndex: 'EndTime',
-      title: '退房日期',
+      title: '退住日期',
     },
   ];
 

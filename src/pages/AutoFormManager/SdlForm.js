@@ -360,9 +360,9 @@ class SdlForm extends PureComponent {
           element = (
             <SdlRadio
               disabled={
-                (configId === 'GasOutput' || configId === 'WaterOutput') &&
+                ((configId === 'GasOutput' || configId === 'WaterOutput') &&
                 item.fullFieldName === 'dbo.T_Bas_CommonPoint.Col5' &&
-                isEdit
+                isEdit) ||  (configId === 'OperationMaintenanceEnterprise')
                   ? true
                   : false
               }

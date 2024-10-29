@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-15 11:23:34
+ * @LastEditTime: 2024-10-29 11:02:58
  * @Description: 角色管理
  */
 import React, { Component, Fragment } from 'react';
@@ -445,7 +445,7 @@ class RoleIndex extends Component {
               </Popover>
             </Tooltip>
             <Divider type="vertical" />
-                <Tooltip title="设置点位访问权限">
+                <Tooltip title="设置角色访问角色权限">
                   <a
                     onClick={() => {
                       this.setState(
@@ -453,7 +453,7 @@ class RoleIndex extends Component {
                           roleID: record.Roles_ID,
                         },
                         () => {
-                          this.settingRole(7, `设置${record.Roles_Name}角色可访问权限`)
+                          this.settingRole(7, `设置${record.Roles_Name}访问角色权限`)
                         },
                       );
                     }}
@@ -1009,14 +1009,6 @@ class RoleIndex extends Component {
                     设置允许登录运维APP角色
                   </Button>
                 )}
-                {this.state.settingAppRolePermis && (
-                  <Button
-                    type="primary"
-                    onClick={() => this.settingRole(3, '设置企业管理员角色')}
-                  >
-                    设置允许登录运维APP角色
-                  </Button>
-                )}
                 {// 超级管理员显示
                   isSystem() && (
                     <Button type="primary" onClick={() => this.settingRole(3, '设置业务专家角色')}>
@@ -1207,7 +1199,7 @@ class RoleIndex extends Component {
                 wrapClassName='spreadOverModal isFooterSty'
                 mask={false}
               >
-                <div style={{ width: '100%', maxHeight: '600px', overflow: 'auto' }}>
+                <div style={{ width: '100%'}}>
                   {
                     <div style={{ marginBottom: 10 }}>
                       <Select
@@ -1273,6 +1265,7 @@ class RoleIndex extends Component {
                         columns={this.getMenuColumns()}
                         dataSource={this.props.MenuTree}
                         defaultExpandAllRows={this.state.expandRows}
+                        // scroll={{y:'auto'}}
                         pagination={false}
                       />
                     )}

@@ -1,5 +1,5 @@
 /**
- * 功  能：核查人员修改
+ * 功  能：核查人员 核查
  * 创建人：jab
  * 创建时间：2023.11.16
  */
@@ -62,7 +62,7 @@ const dvaDispatch = (dispatch) => {
   }
 }
 const Index = (props) => {
-  const { visible, title, onCancel, id, type, clientHeight } = props;
+  const { visible, title, onCancel, id, type,onFinish, clientHeight } = props;
   const [form2] = Form.useForm(); //添加编辑表单  数据一致性核查表
   const [form3] = Form.useForm(); //添加编辑表单   参数一致性核查表
   const [commonForm] = Form.useForm();
@@ -166,7 +166,7 @@ const Index = (props) => {
                 return {
                   CheckItem: item.ChildID,
                   ItemName: item.Name,
-                  Content: item.Col1,
+                  Content: item.Col1, 
                 }
               })
               const listData = { consistencyCheckList: pollutantList, consistentParametersCheckList: paramList }
@@ -301,7 +301,7 @@ const Index = (props) => {
     })
     const data = {
       AddType: type,
-      isCheckUser: true,
+      isCheckUser: consistencyCheckDetail?.isCheckUser,
       Data: {
         ...commonData,
         CouUpload: consistencyCheckDetail?.couUpload?.[0]?.FileUuid,
@@ -311,7 +311,7 @@ const Index = (props) => {
     }
     props.addRemoteInspector({
       AddType: type,
-      isCheckUser: true,
+      isCheckUser: consistencyCheckDetail?.isCheckUser,
       Data: {
         ...commonData,
         CouUpload: consistencyCheckDetail?.couUpload?.[0]?.FileUuid,
@@ -320,7 +320,11 @@ const Index = (props) => {
       ParamDataList: paramDataList,
     }, (isSuccess) => {
       type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-      isSuccess && props.onFinish()
+      if(isSuccess){
+        onCancel && onCancel()
+        onFinish && onFinish()
+      }
+
     })
 
 

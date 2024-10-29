@@ -530,7 +530,7 @@ export function isSystem() {
   const userCookie = Cookie.get('currentUser');
   let isSystem = false;
   if (userCookie) {
-    isSystem = JSON.parse(userCookie).User_ID === '48f3889c-af8d-401f-ada2-c383031af92d';
+    isSystem = JSON.parse(userCookie)?.User_ID === '48f3889c-af8d-401f-ada2-c383031af92d';
   }
   return isSystem;
 }

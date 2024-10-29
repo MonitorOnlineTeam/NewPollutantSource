@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-06-11 14:29:31
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-17 15:37:03
+ * @LastEditTime: 2024-10-29 16:47:11
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Timeline } from 'antd';
@@ -899,16 +899,14 @@ const Index = (props) => {
   const [editRecord, setEditRecord] = useState({})
 
   const edit = (record) => { //编辑
-    if(record.isCheckUser){ //核查人员编辑的时候
-      setCheckEditvisible(true)
-      setTitle('编辑')
-      setEditId(record.id)
-      return;
-    }
-    setVisible(true)
     setTitle('编辑')
     setEditId(record.id)
 
+    if(record.isCheckUser){ //核查人员编辑的时候
+      setCheckEditvisible(true)
+      return;
+    }
+    setVisible(true)
     setEditRecord(record)
     // setEchoLoading(true)
     // resetData();
@@ -1249,242 +1247,196 @@ const Index = (props) => {
     // !flag&&setAddId();
     // !flag&&props.updateState({ addDataConsistencyData: [], addRealTimeData: [], addParconsistencyData: [] })
   }
-  const add = () => {
+  // const add = () => {
 
-    setTitle('添加')
-    setVisible(true)
-    setTabType('1')
-    // setFilesCuid1(cuid())
-    setFilesCuid2(cuid())
-    resetData()
-  }
-  const [saveLoading1, setSaveLoading1] = useState(false)
-  const [saveLoading2, setSaveLoading2] = useState(false)
-
-
-  const [addId, setAddId] = useState();
-  const save = (type) => {
-
-    commonForm.validateFields().then(commonValues => {
-      if (type == 2 && !isCheckUser && !commonValues.Commitment) { //运维人员不在结尾的“已阅读已承诺”打勾，不能提交
-        message.error(`请确认“已阅读已承诺”!`)
-        return;
-      }
-      const commonData = {
-        ...commonValues,
-        // ID: title === '添加' ? addId : editId,
-        ID: editId,
-        month: undefined,
-        DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-DD 00:00:00") : undefined,
-        Commitment: commonValues.Commitment ? 1 : undefined,
-      }
-      // if (tabType == 1) { //数据一致性核查表
-
-      type == 1 ? setSaveLoading1(true) : setSaveLoading2(true);
-      form2.validateFields().then((values) => {
-        form3.validateFields().then(values2 => {
-          const dataList1 = addDataConsistencyData.map(item => {
-            return {
-              PollutantCode: item.ChildID,
-              AnalyzerMin: values[`${item.par}AnalyzerRang1`],
-              AnalyzerMax: values[`${item.par}AnalyzerRang2`],
-              AnalyzerUnit: values[`${item.par}AnalyzerUnit`],
-              DASMin: dasChecked ? values[`${item.par}DsRang1`] : undefined,
-              DASMax: dasChecked ? values[`${item.par}DsRang2`] : undefined,
-              DASUnit: dasChecked ? values[`${item.par}DsUnit`] : undefined,
-              DataMin: numChecked ? values[`${item.par}ScyRang1`] : undefined,
-              DataMax: numChecked ? values[`${item.par}ScyRang2`] : undefined,
-              DataUnit: numChecked ? values[`${item.par}ScyUnit`] : undefined,
-              RangeAutoStatus: values[`${item.par}RangUniformity`], //量程一致性(自动判断)
-              RangeStatus: values[`${item.par}RangCheck`] && values[`${item.par}RangCheck`][0] ? values[`${item.par}RangCheck`][0] : undefined,
-              RangeRemark: values[`${item.par}Remark`],
-              OperationRangeRemark: values[`${item.par}OperationRangeRemark`],
-              ManagerRangeRemark: values[`${item.par}ManagerRangeRemark`],
-              Special: item.isDisplay == 1 && isDisPlayCheck1 || item.isDisplay == 3 && isDisPlayCheck3 ? 1 : item.isDisplay == 2 && isDisPlayCheck2 || item.isDisplay == 4 && isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和直测流速法
-              DASStatus: dasChecked ? 1 : 2,
-              DataRangeStatus: numChecked ? 1 : 2, //数采仪量程
-              DataStatus: numRealTimeChecked ? 1 : 2, //数采仪实时数据
-              AnalyzerFile: values[`${item.par}AnalyzerFilePar`],
-              DASFile: values[`${item.par}DasFilePar`],
-              RangeFile: values[`${item.par}RangeFilePar`],
-            }
-          })
-          const dataList2 = addRealTimeData.map(item => {
-            return {
-              PollutantCode: item.ChildID,
-              AnalyzerCou: values[`${item.par}IndicaVal`],
-              AnalyzerCouUnit: values[`${item.par}IndicaUnit`],
-              DASCou: dasChecked ? values[`${item.par}DsData`] : undefined,
-              DASCouUnit: dasChecked ? values[`${item.par}DsDataUnit`] : undefined,
-              DataCou: numRealTimeChecked ? values[`${item.par}ScyData`] : undefined,
-              DataCouUnit: numRealTimeChecked ? values[`${item.par}ScyDataUnit`] : undefined,
-              CouAutoStatus: values[`${item.par}DataUniformity`],
-              CouStatus: values[`${item.par}RangCheck2`] && values[`${item.par}RangCheck2`][0] ? values[`${item.par}RangCheck2`][0] : undefined,
-              CouRemrak: values[`${item.par}Remark2`],
-              OperationDataRemark: values[`${item.par}OperationDataRemark`],
-              ManagerDataRemark: values[`${item.par}ManagerDataRemark`],
-              CouType: item.concentrationType == '原始浓度' ? 1 : item.concentrationType == '标杆浓度' ? 2 : undefined,
-            }
-          })
-          dataList1.map((item, index) => { // 合并颗粒物和流速的数据  量程一致性核查表 删除没勾选的 颗粒物和流速
-            if (item.PollutantCode == '411' && !item.Special || item.PollutantCode == '415' && !item.Special) {
-              dataList1.splice(index, 1)
-            }
-          })
-
-          let dataList = [], obj1 = null, obj2 = null, obj3 = null;
-          dataList1.map((item1, index1) => { //合并两个表格的数据     
-            dataList2.map((item2, index2) => {
-              if (item1.PollutantCode == '411' || item2.PollutantCode == '411') { //颗粒物特殊处理
-                if (item1.PollutantCode == '411' && item1.Special) {
-                  obj1 = item1 //颗粒物 有无显示屏
-                }
-                if (item2.PollutantCode == '411' && item2.CouType == 1) {
-                  obj2 = item2  //颗粒物 原始浓度
-                }
-                if (item2.PollutantCode == '411' && item2.CouType == 2) {
-                  obj3 = item2  //颗粒物 标杆浓度
-                }
-              } else {
-                if (item1.PollutantCode == item2.PollutantCode) {
-                  dataList.push({ ...item1, ...item2 })
-                }
-              }
-            })
-          })
-
-          dataList.push(obj1, obj2, obj3)
-          dataList = dataList.filter(item => item) //去除值为空的情况
-
-          const paramDataList = addParconsistencyData.map(item => {
-            const values = values2
-            return {
-              CheckItem: item.ChildID,
-              Status: values[`${item.par}IsEnable`] && values[`${item.par}IsEnable`][0] == 1 ? 1 : 2,
-              SetValue: values[`${item.par}SetVal`],
-              InstrumentSetValue: values[`${item.par}InstrumentSetVal`],
-              TraceabilityValue: values[`${item.par}TraceVal`],
-              DataValue: values[`${item.par}DataVal`],
-              AutoUniformity: values[`${item.par}Uniform`],
-              Uniformity: values[`${item.par}RangCheck3`] && values[`${item.par}RangCheck3`][0] ? values[`${item.par}RangCheck3`][0] : undefined,//手工修正结果
-              Remark: values[`${item.par}Remark3`],
-              OperationReamrk: values[`${item.par}OperationReamrk`],
-              ManagerRemark: values[`${item.par}ManagerRemark`],
-              SetFile: values[`${item.par}SettingFilePar`],
-              InstrumentFile: values[`${item.par}InstrumentFilePar`],
-              TraceabilityFile: values[`${item.par}TraceabilityFilePar`],
-              DataFile: values[`${item.par}DataFilePar`],
-              SetStatus: values[`${item.par}SetStatus`] && values[`${item.par}SetStatus`][0] == 1 ? 1 : 2,
-              InstrumentStatus: values[`${item.par}InstrumentStatus`] && values[`${item.par}InstrumentStatus`][0] == 1 ? 1 : 2,
-              DataStatus: values[`${item.par}DataStatus`] && values[`${item.par}DataStatus`][0] == 1 ? 1 : 2,
-            }
-          })
-          const par = {
-            AddType: type,
-            isCheckUser: roleType,
-            Data: {
-              ...commonData,
-              CouUpload: values.files2,
-            },
-            DataList: dataList,
-            ParamDataList: paramDataList,
-          }
-
-          const complateCallback = (isSuccess) => {
-            setVisible(false)
-            type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-            isSuccess && onFinish(pageIndex, pageSize)
-          }
-
-          props.addRemoteInspector({
-            ...par
-          }, (isSuccess, message) => {
-            if (isSuccess && message == '请核对基准含氧量或当地大气压填写是否正确！') {
-              Modal.warning({
-                title: '提示',
-                content: '请核对基准含氧量或当地大气压填写是否正确',
-                onOk() {
-                  props.addRemoteInspector({
-                    ...par,
-                    poFlag: 1
-                  }, (isSuccess, Message) => {
-                    complateCallback(isSuccess)
-                  })
-                },
-              });
+  //   setTitle('添加')
+  //   setVisible(true)
+  //   setTabType('1')
+  //   setFilesCuid2(cuid())
+  //   resetData()
+  // }
+  // const [saveLoading1, setSaveLoading1] = useState(false)
+  // const [saveLoading2, setSaveLoading2] = useState(false)
 
 
-            } else {
-              complateCallback(isSuccess)
-            }
-          })
+  // const [addId, setAddId] = useState();
+  // const save = (type) => {
+
+  //   commonForm.validateFields().then(commonValues => {
+  //     if (type == 2 && !isCheckUser && !commonValues.Commitment) { //运维人员不在结尾的“已阅读已承诺”打勾，不能提交
+  //       message.error(`请确认“已阅读已承诺”!`)
+  //       return;
+  //     }
+  //     const commonData = {
+  //       ...commonValues,
+  //       // ID: title === '添加' ? addId : editId,
+  //       ID: editId,
+  //       month: undefined,
+  //       DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-DD 00:00:00") : undefined,
+  //       Commitment: commonValues.Commitment ? 1 : undefined,
+  //     }
+
+  //     type == 1 ? setSaveLoading1(true) : setSaveLoading2(true);
+  //     form2.validateFields().then((values) => {
+  //       form3.validateFields().then(values2 => {
+  //         const dataList1 = addDataConsistencyData.map(item => {
+  //           return {
+  //             PollutantCode: item.ChildID,
+  //             AnalyzerMin: values[`${item.par}AnalyzerRang1`],
+  //             AnalyzerMax: values[`${item.par}AnalyzerRang2`],
+  //             AnalyzerUnit: values[`${item.par}AnalyzerUnit`],
+  //             DASMin: dasChecked ? values[`${item.par}DsRang1`] : undefined,
+  //             DASMax: dasChecked ? values[`${item.par}DsRang2`] : undefined,
+  //             DASUnit: dasChecked ? values[`${item.par}DsUnit`] : undefined,
+  //             DataMin: numChecked ? values[`${item.par}ScyRang1`] : undefined,
+  //             DataMax: numChecked ? values[`${item.par}ScyRang2`] : undefined,
+  //             DataUnit: numChecked ? values[`${item.par}ScyUnit`] : undefined,
+  //             RangeAutoStatus: values[`${item.par}RangUniformity`], //量程一致性(自动判断)
+  //             RangeStatus: values[`${item.par}RangCheck`] && values[`${item.par}RangCheck`][0] ? values[`${item.par}RangCheck`][0] : undefined,
+  //             RangeRemark: values[`${item.par}Remark`],
+  //             OperationRangeRemark: values[`${item.par}OperationRangeRemark`],
+  //             ManagerRangeRemark: values[`${item.par}ManagerRangeRemark`],
+  //             Special: item.isDisplay == 1 && isDisPlayCheck1 || item.isDisplay == 3 && isDisPlayCheck3 ? 1 : item.isDisplay == 2 && isDisPlayCheck2 || item.isDisplay == 4 && isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和直测流速法
+  //             DASStatus: dasChecked ? 1 : 2,
+  //             DataRangeStatus: numChecked ? 1 : 2, //数采仪量程
+  //             DataStatus: numRealTimeChecked ? 1 : 2, //数采仪实时数据
+  //             AnalyzerFile: values[`${item.par}AnalyzerFilePar`],
+  //             DASFile: values[`${item.par}DasFilePar`],
+  //             RangeFile: values[`${item.par}RangeFilePar`],
+  //           }
+  //         })
+  //         const dataList2 = addRealTimeData.map(item => {
+  //           return {
+  //             PollutantCode: item.ChildID,
+  //             AnalyzerCou: values[`${item.par}IndicaVal`],
+  //             AnalyzerCouUnit: values[`${item.par}IndicaUnit`],
+  //             DASCou: dasChecked ? values[`${item.par}DsData`] : undefined,
+  //             DASCouUnit: dasChecked ? values[`${item.par}DsDataUnit`] : undefined,
+  //             DataCou: numRealTimeChecked ? values[`${item.par}ScyData`] : undefined,
+  //             DataCouUnit: numRealTimeChecked ? values[`${item.par}ScyDataUnit`] : undefined,
+  //             CouAutoStatus: values[`${item.par}DataUniformity`],
+  //             CouStatus: values[`${item.par}RangCheck2`] && values[`${item.par}RangCheck2`][0] ? values[`${item.par}RangCheck2`][0] : undefined,
+  //             CouRemrak: values[`${item.par}Remark2`],
+  //             OperationDataRemark: values[`${item.par}OperationDataRemark`],
+  //             ManagerDataRemark: values[`${item.par}ManagerDataRemark`],
+  //             CouType: item.concentrationType == '原始浓度' ? 1 : item.concentrationType == '标杆浓度' ? 2 : undefined,
+  //           }
+  //         })
+  //         dataList1.map((item, index) => { // 合并颗粒物和流速的数据  量程一致性核查表 删除没勾选的 颗粒物和流速
+  //           if (item.PollutantCode == '411' && !item.Special || item.PollutantCode == '415' && !item.Special) {
+  //             dataList1.splice(index, 1)
+  //           }
+  //         })
+
+  //         let dataList = [], obj1 = null, obj2 = null, obj3 = null;
+  //         dataList1.map((item1, index1) => { //合并两个表格的数据     
+  //           dataList2.map((item2, index2) => {
+  //             if (item1.PollutantCode == '411' || item2.PollutantCode == '411') { //颗粒物特殊处理
+  //               if (item1.PollutantCode == '411' && item1.Special) {
+  //                 obj1 = item1 //颗粒物 有无显示屏
+  //               }
+  //               if (item2.PollutantCode == '411' && item2.CouType == 1) {
+  //                 obj2 = item2  //颗粒物 原始浓度
+  //               }
+  //               if (item2.PollutantCode == '411' && item2.CouType == 2) {
+  //                 obj3 = item2  //颗粒物 标杆浓度
+  //               }
+  //             } else {
+  //               if (item1.PollutantCode == item2.PollutantCode) {
+  //                 dataList.push({ ...item1, ...item2 })
+  //               }
+  //             }
+  //           })
+  //         })
+
+  //         dataList.push(obj1, obj2, obj3)
+  //         dataList = dataList.filter(item => item) //去除值为空的情况
+
+  //         const paramDataList = addParconsistencyData.map(item => {
+  //           const values = values2
+  //           return {
+  //             CheckItem: item.ChildID,
+  //             Status: values[`${item.par}IsEnable`] && values[`${item.par}IsEnable`][0] == 1 ? 1 : 2,
+  //             SetValue: values[`${item.par}SetVal`],
+  //             InstrumentSetValue: values[`${item.par}InstrumentSetVal`],
+  //             TraceabilityValue: values[`${item.par}TraceVal`],
+  //             DataValue: values[`${item.par}DataVal`],
+  //             AutoUniformity: values[`${item.par}Uniform`],
+  //             Uniformity: values[`${item.par}RangCheck3`] && values[`${item.par}RangCheck3`][0] ? values[`${item.par}RangCheck3`][0] : undefined,//手工修正结果
+  //             Remark: values[`${item.par}Remark3`],
+  //             OperationReamrk: values[`${item.par}OperationReamrk`],
+  //             ManagerRemark: values[`${item.par}ManagerRemark`],
+  //             SetFile: values[`${item.par}SettingFilePar`],
+  //             InstrumentFile: values[`${item.par}InstrumentFilePar`],
+  //             TraceabilityFile: values[`${item.par}TraceabilityFilePar`],
+  //             DataFile: values[`${item.par}DataFilePar`],
+  //             SetStatus: values[`${item.par}SetStatus`] && values[`${item.par}SetStatus`][0] == 1 ? 1 : 2,
+  //             InstrumentStatus: values[`${item.par}InstrumentStatus`] && values[`${item.par}InstrumentStatus`][0] == 1 ? 1 : 2,
+  //             DataStatus: values[`${item.par}DataStatus`] && values[`${item.par}DataStatus`][0] == 1 ? 1 : 2,
+  //           }
+  //         })
+  //         const par = {
+  //           AddType: type,
+  //           isCheckUser: roleType,
+  //           Data: {
+  //             ...commonData,
+  //             CouUpload: values.files2,
+  //           },
+  //           DataList: dataList,
+  //           ParamDataList: paramDataList,
+  //         }
+
+  //         const complateCallback = (isSuccess) => {
+  //           setVisible(false)
+  //           type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
+  //           isSuccess && onFinish(pageIndex, pageSize)
+  //         }
+
+  //         props.addRemoteInspector({
+  //           ...par
+  //         }, (isSuccess, message) => {
+  //           if (isSuccess && message == '请核对基准含氧量或当地大气压填写是否正确！') {
+  //             Modal.warning({
+  //               title: '提示',
+  //               content: '请核对基准含氧量或当地大气压填写是否正确',
+  //               onOk() {
+  //                 props.addRemoteInspector({
+  //                   ...par,
+  //                   poFlag: 1
+  //                 }, (isSuccess, Message) => {
+  //                   complateCallback(isSuccess)
+  //                 })
+  //               },
+  //             });
+  //           } else {
+  //             complateCallback(isSuccess)
+  //           }
+  //         })
 
 
-        }).catch((info) => {
-          console.log('Validate Failed3:', info);
-        });
+  //       }).catch((info) => {
+  //         console.log('Validate Failed3:', info);
+  //       });
 
 
 
 
 
 
-      }).catch((info) => {
-        console.log('Validate Failed2:', info);
-      });
+  //     }).catch((info) => {
+  //       console.log('Validate Failed2:', info);
+  //     });
 
 
 
 
-      // } else {  //参数一致性核查
-      // form3.validateFields().then(values => {
-      //   const paramDataList = addParconsistencyData.map(item => {
-      //     return {
-      //       CheckItem: item.ChildID,
-      //       Status: values[`${item.par}IsEnable`] && values[`${item.par}IsEnable`][0] == 1 ? 1 : 2,
-      //       SetValue: values[`${item.par}SetVal`],
-      //       InstrumentSetValue: values[`${item.par}InstrumentSetVal`],
-      //       TraceabilityValue: values[`${item.par}TraceVal`],
-      //       DataValue: values[`${item.par}DataVal`],
-      //       AutoUniformity: values[`${item.par}Uniform`],
-      //       Uniformity: values[`${item.par}RangCheck3`] && values[`${item.par}RangCheck3`][0] ? values[`${item.par}RangCheck3`][0] : undefined,//手工修正结果
-      //       Remark: values[`${item.par}Remark3`],
-      //       OperationReamrk: values[`${item.par}OperationReamrk`],
-      //       ManagerRemark: values[`${item.par}ManagerRemark`],
-      //       SetFile: values[`${item.par}SettingFilePar`],
-      //       InstrumentFile: values[`${item.par}InstrumentFilePar`],
-      //       TraceabilityFile: values[`${item.par}TraceabilityFilePar`],
-      //       DataFile: values[`${item.par}DataFilePar`],
-      //       SetStatus: values[`${item.par}SetStatus`] && values[`${item.par}SetStatus`][0] == 1 ? 1 : 2,
-      //       InstrumentStatus: values[`${item.par}InstrumentStatus`] && values[`${item.par}InstrumentStatus`][0] == 1 ? 1 : 2,
-      //       DataStatus: values[`${item.par}DataStatus`] && values[`${item.par}DataStatus`][0] == 1 ? 1 : 2,
-      //     }
-      //   })
-      //   props.addOrUpdParamCheck({
-      //     AddType: type,
-      //     Data: {
-      //       ...commonData,
-      //     },
-      //     ParamDataList: paramDataList,
-      //   }, (id) => {
-      //     title === '添加' && setAddId(id)
-      //     onFinish(pageIndex, pageSize)
-      //     type == 1 ? setSaveLoading11(false) : setSaveLoading22(false)
-      //   })
-      // }).catch((info) => {
-      //   console.log('Validate Failed3:', info);
-      // });
-
-      // }
-      // }).catch((info) => {
-      //   console.log('Validate Failed:', info);
-    });
+  //   });
 
 
 
 
 
-  }
+  // }
 
   const [pointList, setPointList] = useState([])
   const [pointLoading, setPointLoading] = useState(false)

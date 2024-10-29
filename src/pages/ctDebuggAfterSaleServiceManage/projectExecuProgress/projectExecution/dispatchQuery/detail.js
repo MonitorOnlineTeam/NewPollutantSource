@@ -32,6 +32,8 @@ const dvaPropsData = ({ loading, dispatchQuery }) => ({
   serviceDispatchTypeAndRecordLoading: loading.effects[`${namespace}/getServiceDispatchTypeAndRecord`],
   serviceDispatchTypeAndRecordData: dispatchQuery.serviceDispatchTypeAndRecordData,
   serviceDispatchLoading: loading.effects[`${namespace}/getServiceDispatch`],
+  staticInstallPhotoExportLoading: loading.effects[`installEquipment/ExportAuditPhoto`],
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -105,6 +107,14 @@ const dvaDispatch = (dispatch) => {
         callback: callback,
       })
     },
+    exportAuditPhoto: (payload, callback) => { //静态调试 安装照片导出
+      dispatch({
+        type: `installEquipment/ExportAuditPhoto`,
+        payload: payload,
+        callback: callback,
+      })
+    },
+    
   }
 }
 
@@ -126,14 +136,14 @@ const Index = (props) => {
       const itemStatusData = data.map(item => item.ItemStatus)
       const itemStatusFlag = itemStatusData?.toString()?.includes('1') ? true : false; //判断是否全部为空
       const showData = data.filter(item => item.ItemStatus == 1)
-      setTabKey(itemStatusFlag ? props.tabKey? props.tabKey : showData?.[0]?.ItemId : '')
+      setTabKey(itemStatusFlag ? props.tabKey ? props.tabKey : showData?.[0]?.ItemId : '')
       setFillContentTab(itemStatusFlag ? showData : [])
 
     })
     if (serviceApplicaData) {
       setData(serviceApplicaData)
     } else {
-      props.getServiceDispatch({ ID: id }, (data) => {
+      id && props.getServiceDispatch({ ID: id }, (data) => {
         setData(data?.[0] ? data[0] : {})
       })
     }
@@ -154,21 +164,21 @@ const Index = (props) => {
 
   useEffect(() => {
 
-  
-    if(fillContentTab?.[0]){
-    setTimeout(() => {
-      scrollEle = document.querySelector('.ant-tabs-content-top')
-      if(scrollEle){
-        scrollEle.addEventListener('scroll',handleScroll);
-      }
-    }, 1000)
-  }
+
+    if (fillContentTab?.[0]) {
+      setTimeout(() => {
+        scrollEle = document.querySelector('.ant-tabs-content-top')
+        if (scrollEle) {
+          scrollEle.addEventListener('scroll', handleScroll);
+        }
+      }, 1000)
+    }
     return () => {
-      if(scrollEle){
-        scrollEle.removeEventListener('scroll',handleScroll);
-       }
+      if (scrollEle) {
+        scrollEle.removeEventListener('scroll', handleScroll);
+      }
     };
-  }, [fillContentTab,isOpen]);
+  }, [fillContentTab, isOpen]);
 
   const acceptanceServicesCol = [ //验收服务报告列
     {
@@ -869,7 +879,24 @@ const Index = (props) => {
         }
 
       })}
+      <Button type='primary' icon={<ExportOutlined />} loading={props.staticInstallPhotoExportLoading} onClick={() => {
+          const record = staticWorkData?.[0]
+          props.exportAuditPhoto({
+              projectCode: serviceApplicaData?.ProjectCode,
+              dispatchId: serviceApplicaData?.ID,
+              systemModelId: record?.SystemModelId,
+              pointId: record?.PointId,
+              equipmentAuditId: '',
+              entName: record?.EntName,
+              pointName: record?.PointName,
+              systemModelName: record?.SystemModelName,
+
+          })
+      }}  style={{ marginBottom: 6 }}>
+        导出
+      </Button>
     </Form>
+
   }
   /** 动态运行**/
 
@@ -2009,10 +2036,10 @@ const Index = (props) => {
         onCloseRequest={() => {
           setIsOpen(false);
           const scrollEle = document.querySelector('.ant-tabs-content-top')
-          if(scrollEle){
+          if (scrollEle) {
             scrollEle.scrollTop = scrollHeight;
           }
-        
+
         }}
       />
       <Modal

@@ -2,7 +2,7 @@
  * @Author: jab
  * @Date: 2020-12-1
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-10 11:29:29
+ * @LastEditTime: 2024-10-29 10:57:36
  * @Description: 用户管理 新页面
  */
 import React, { Component, Fragment } from 'react';
@@ -103,7 +103,87 @@ export default class UserInfoIndex extends Component {
       operaEditVisible: false,
       operaEditData:{},
     };
+    this.operateCol = [{
+      title: <span>操作</span>,
+      dataIndex: '',
+      key: '',
+      align: 'center',
+      render: (text, row) => {
+        return (
+          <Fragment>
+            <Tooltip title="设置点位访问权限">
+              <a
+                onClick={() => {
+                  this.setState(
+                    {
+                      selectedRow: row,
+                    },
+                    () => {
+                      this.showDataModal();
+                    },
+                  );
+                }}
+              >
+                <DatabaseOutlined style={{ fontSize: 16 }} />
+              </a>
+            </Tooltip>
+            <Divider type="vertical" />
+            <Tooltip title="编辑">
+              <a
+                onClick={() => {
+                  this.props.dispatch(
+                    routerRedux.push({
+                      pathname: '/rolesmanager/user/userinfoedit/' + row['ID'],
+                      query: row
+                    }),
+                  );
+                }}
+              >
+                <EditOutlined style={{ fontSize: 16 }} />
+              </a>
+            </Tooltip>
 
+            <Divider type="vertical" />
+            <Tooltip title="详情">
+              <a
+                onClick={() => {
+                  if (this.props.configInfo?.IsOpera) {
+                    this.setState({
+                      operaEditVisible: true,
+                      operaEditData:row
+                    })
+                    return
+                  }
+                  this.props.dispatch(
+                    routerRedux.push(
+                      '/rolesmanager/user/userinfoview/' + row['ID'] + '?tabName=用户管理 - 详情',
+                    ),
+                  );
+                }}
+              >
+                <ProfileOutlined style={{ fontSize: 16 }} />
+              </a>
+            </Tooltip>
+            <Divider type="vertical" />
+            <Tooltip title="删除">
+              <Popconfirm
+                title="确认要删除吗?"
+                onConfirm={() => {
+                  this.confirm(row['ID']);
+                }}
+                onCancel={this.cancel}
+                okText="是"
+                cancelText="否"
+              >
+                <a>
+                  <DeleteOutlined style={{ fontSize: 16 }} />
+                </a>
+              </Popconfirm>
+            </Tooltip>
+          </Fragment>
+        );
+      },
+    }]
     this.columns = [
       {
         title: <span>登录名</span>,
@@ -185,87 +265,62 @@ export default class UserInfoIndex extends Component {
         align: 'center',
         ellipsis: true,
       },
-      {
-        title: <span>操作</span>,
-        dataIndex: '',
-        key: '',
-        align: 'center',
-        render: (text, row) => {
-          return (
-            <Fragment>
-              <Tooltip title="设置点位访问权限">
-                <a
-                  onClick={() => {
-                    this.setState(
-                      {
-                        selectedRow: row,
-                      },
-                      () => {
-                        this.showDataModal();
-                      },
-                    );
-                  }}
-                >
-                  <DatabaseOutlined style={{ fontSize: 16 }} />
-                </a>
-              </Tooltip>
-              <Divider type="vertical" />
-              <Tooltip title="编辑">
-                <a
-                  onClick={() => {
-                    this.props.dispatch(
-                      routerRedux.push({
-                        pathname: '/rolesmanager/user/userinfoedit/' + row['ID'],
-                        query: row
-                      }),
-                    );
-                  }}
-                >
-                  <EditOutlined style={{ fontSize: 16 }} />
-                </a>
-              </Tooltip>
+     ... this.operateCol
+    ];
 
-              <Divider type="vertical" />
-              <Tooltip title="详情">
-                <a
-                  onClick={() => {
-                    if (this.props.configInfo.IsOpera) {
-                      this.setState({
-                        operaEditVisible: true,
-                        operaEditData:row
-                      })
-                      return
-                    }
-                    this.props.dispatch(
-                      routerRedux.push(
-                        '/rolesmanager/user/userinfoview/' + row['ID'] + '?tabName=用户管理 - 详情',
-                      ),
-                    );
-                  }}
-                >
-                  <ProfileOutlined style={{ fontSize: 16 }} />
-                </a>
-              </Tooltip>
-              <Divider type="vertical" />
-              <Tooltip title="删除">
-                <Popconfirm
-                  title="确认要删除吗?"
-                  onConfirm={() => {
-                    this.confirm(row['ID']);
-                  }}
-                  onCancel={this.cancel}
-                  okText="是"
-                  cancelText="否"
-                >
-                  <a>
-                    <DeleteOutlined style={{ fontSize: 16 }} />
-                  </a>
-                </Popconfirm>
-              </Tooltip>
-            </Fragment>
-          );
+    this.opreaColumns = [
+      {
+        title: '登录名',
+        dataIndex: 'userAccount',
+        key: 'userAccount',
+        align: 'center',
+      },
+      {
+        title: '姓名',
+        dataIndex: 'userName',
+        key: 'userName',
+        align: 'center',
+      },
+      {
+        title: '性别',
+        dataIndex: 'userSex',
+        key: 'userSex',
+        align: 'center',
+        width:80,
+        render:(text)=>{
+          return text==1? '男' : '女'
+        }
+      },
+      {
+        title: '邮箱',
+        dataIndex: 'email',
+        key: 'email',
+        align: 'center',
+      },
+      {
+        title: '手机号',
+        dataIndex: 'userPhone',
+        key: 'userPhone',
+        width:100,
+        align: 'center',
+      },
+      {
+        title: '部门',
+        dataIndex: 'groupName',
+        key: 'groupName',
+        align: 'center',
+      },
+      {
+        title: '角色',
+        dataIndex: 'roleName',
+        key: 'roleName',
+        align: 'center',
+        width: 150,
+        render: (text, record) => {
+          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>;
         },
       },
+     ... this.operateCol
     ];
   }
 
@@ -734,12 +789,6 @@ export default class UserInfoIndex extends Component {
       },
     };
     const provinceShow = this.props.configInfo && this.props.configInfo.IsShowProjectRegion;
-    if (this.props.configInfo.IsOpera) {
-      this.columns = this.columns.filter(
-        item =>
-          item.title != '拼音'
-      )
-    }
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -937,13 +986,8 @@ export default class UserInfoIndex extends Component {
             rowSelection={rowSelection}
             loading={this.props.loading}
             columns={
-              provinceShow
-                ? this.columns.filter(
-                  item =>
-                    item.title != '运维单位' &&
-                    item.title != '业务属性' &&
-                    item.title != '行业属性',
-                )
+              this.props.configInfo?.IsOpera?
+                this.opreaColumns
                 : this.columns
             }
             dataSource={this.props.tableDatas}
@@ -1059,8 +1103,8 @@ export default class UserInfoIndex extends Component {
               <Descriptions.Item label="手机号">{operaEditData?.userPhone}</Descriptions.Item>
               <Descriptions.Item label="邮箱">{operaEditData?.email}</Descriptions.Item>
               <Descriptions.Item label="推送类型">{operaEditData?.sendPushName}</Descriptions.Item>
-              <Descriptions.Item label="用户类型">{operaEditData?.userType==1? '雪迪龙': operaEditData?.userType==2? '运维' : '其他' } </Descriptions.Item>
-              {operaEditData?.userType==1 || operaEditData?.userType==2 && <Descriptions.Item label="运维公司">{operaEditData?.companyName} </Descriptions.Item>}
+              <Descriptions.Item label="用户类型">{operaEditData?.userType==1? '雪迪龙': operaEditData?.userType==2? '运维单位' : '其他' } </Descriptions.Item>
+              {(operaEditData?.userType==1 || operaEditData?.userType==2 ) && <Descriptions.Item label="运维公司">{operaEditData?.companyName} </Descriptions.Item>}
               {operaEditData?.userType==1 && <Descriptions.Item label="业务属性">{operaEditData?.businessAttribute} </Descriptions.Item>}
               {operaEditData?.userType==1 &&<Descriptions.Item label="行业属性">{operaEditData?.industryAttribute} </Descriptions.Item>}
               {operaEditData?.userType==1 &&<Descriptions.Item label="所属大区">{operaEditData?.questionName} </Descriptions.Item>}

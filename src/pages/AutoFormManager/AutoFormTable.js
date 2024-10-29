@@ -305,17 +305,20 @@ class AutoFormTable extends PureComponent {
       parentcode,
       configId,
       notOperate,
-      onlyAppendHandleRows
+      onlyAppendHandleRows,
+      addPermis,
+      delPermis, 
+      editPermis,
     } = this.props;
     this._SELF_.btnEl = [];
     this._SELF_.moreBtns = [];
-    const { btnEl, moreBtns } = this._SELF_;
+    const { btnEl, moreBtns,  } = this._SELF_;
     return opreationButtons[configId]
       ? opreationButtons[configId].map(btn => {
         switch (btn.DISPLAYBUTTON) {
           case 'add':
             // if (btnsAuthority.includes('add')) {
-            return !notOperate && !onlyAppendHandleRows && (
+            return !notOperate && !onlyAppendHandleRows && addPermis!==false && (
               <Button
                 style={{ marginRight: 8 }}
                 key={btn.DISPLAYBUTTON}
@@ -398,7 +401,7 @@ class AutoFormTable extends PureComponent {
           //     导入
           // </Button>;
           case 'edit':
-            btnEl.push({
+            editPermis!==false &&  btnEl.push({
               type: 'edit',
             });
             break;
@@ -408,7 +411,7 @@ class AutoFormTable extends PureComponent {
             });
             break;
           case 'del':
-            btnEl.push({
+            delPermis!==false && btnEl.push({
               type: 'del',
             });
             break;
@@ -660,7 +663,7 @@ class AutoFormTable extends PureComponent {
                   // if (item.type === 'edit' && btnsAuthority.includes('edit')) {
                   if (item.type === 'edit') {
                     // const uid = record.
-                    return (
+                    return   (
                       <Fragment key={item.type}>
                         <Tooltip title="编辑">
                           <a

@@ -67,8 +67,8 @@ const reportAudit = props => {
     return {
       ...values,
       time: undefined,
-      beginLeaveDate: values.time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-      endLeaveDate: values.time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      beginLeaveDate: values.time?.[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      endLeaveDate: values.time?.[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
     };
   };
 

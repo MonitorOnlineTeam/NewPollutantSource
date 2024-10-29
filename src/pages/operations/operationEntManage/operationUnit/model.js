@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-06-11 14:29:31
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-29 15:39:58
+ * @LastEditTime: 2024-10-29 15:12:10
  */
 
 import Model from '@/utils/model';
@@ -75,6 +75,7 @@ export default Model.extend({
     *AddSetOperationCompanyPoint({ payload, callback }, { call, select, update }) {
       const result = yield call(requestPost, API.AssetManagementApi.AddSetOperationCompanyPoint, payload);
       if (result.IsSuccess) {
+        message.success(result.Message);
         callback && callback(result.Datas);
       }
     },
@@ -82,6 +83,7 @@ export default Model.extend({
     *LogOffCompany({ payload, callback }, { call, select, update }) {
       const result = yield call(requestPost, API.AssetManagementApi.LogOffCompany, payload);
       if (result.IsSuccess) {
+        message.success(result.Message);
         callback && callback(result);
       }
     },

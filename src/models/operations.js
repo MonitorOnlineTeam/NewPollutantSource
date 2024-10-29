@@ -476,10 +476,11 @@ export default Model.extend({
     *getOperationCompanyList({ payload, callback }, { call, put, update, select }) {
       const result = yield call(services.getOperationCompanyList, {configId:'OperationMaintenanceEnterprise'});
       if (result.IsSuccess) {
+        const data =  result.Datas?.DataSource?.filter(item=>item['dbo.T_Bas_OperationMaintenanceEnterprise.State']!=2) || []
         yield update({
-          operationCompanyList: result.Datas?.DataSource,
+          operationCompanyList:data,
         });
-        callback && callback( result.Datas?.DataSource)
+        callback && callback(data)
       } else {
         result.Message && message.error(result.Message);
       }

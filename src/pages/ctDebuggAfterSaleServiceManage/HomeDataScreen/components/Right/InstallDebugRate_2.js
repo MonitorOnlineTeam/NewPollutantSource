@@ -172,6 +172,7 @@ const InstallDebugRate = props => {
     <HomeCard
       style={{ minHeight: 320 }}
       title="安装调试达标率"
+      lastTime
       timeTypes={['上月', '本年']}
       onChange={value => {
         getData(value);

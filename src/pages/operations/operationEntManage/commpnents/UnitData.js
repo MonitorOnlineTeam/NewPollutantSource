@@ -95,6 +95,9 @@ export default class EntTransmissionEfficiency extends Component {
       pointPermissionCheckedKeys: [],
       settingPointPermission: false,
       cancelOperaUtil: false,
+      addPermis:false,
+      delPermis:false,
+      editPermis:false,
     };
 
     this.columns = [];
@@ -103,12 +106,21 @@ export default class EntTransmissionEfficiency extends Component {
   componentDidMount() {
     const buttonList = permissionButton(this.props.location?.pathname);
     buttonList.map(item => {
-      switch (item) {
+      switch (item) { 
         case 'settingPointPermission':
           this.setState({ settingPointPermission: true });
           break;
         case 'cancelOperaUtil':
           this.setState({ cancelOperaUtil: true });
+          break;
+          case 'addAuthority':
+            this.setState({ addPermis: true });
+            break;
+         case 'delete':
+         this.setState({ delPermis: true });
+         break;
+         case 'editAuthority':
+          this.setState({ editPermis: true });
           break;
       }
     });
@@ -229,7 +241,8 @@ export default class EntTransmissionEfficiency extends Component {
           compoanyID: id,
         },
         callback:()=>{
-          resolve(null)
+          resolve(null);
+          this.getTableData();
         }
       });
     });
@@ -337,6 +350,9 @@ export default class EntTransmissionEfficiency extends Component {
             style={{ marginTop: 10 }}
             configId={configId}
             parentcode="platformconfig/operationEntManage"
+            addPermis={this.state.addPermis}
+            delPermis={this.state.delPermis}
+            editPermis={this.state.editPermis}
             appendHandleRows={row => <> <Fragment>
               {/* <Tooltip title="删除">
                             <Popconfirm  title="确定要删除此条信息吗？" onConfirm={() => this.del(row)} okText="是" cancelText="否">
@@ -365,7 +381,7 @@ export default class EntTransmissionEfficiency extends Component {
                     <DatabaseOutlined style={{ fontSize: 16 }} />
                   </a>
                 </Tooltip></>}
-              {this.state.cancelOperaUtil && <><Divider type="vertical" />
+              {this.state.cancelOperaUtil && row['dbo.T_Bas_OperationMaintenanceEnterprise.State'] !=2 && <><Divider type="vertical" />
                 <Tooltip title="注销运维单位">
                   <Popconfirm  placement="left" title="确定要注销运维单位吗？" onConfirm={() => this.cancelOperaUnit(row['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'])} okText="是" cancelText="否">
                     <a href="#" > <CloseCircleOutlined style={{ fontSize: 16 }} /> </a>

@@ -41,7 +41,7 @@ import HandleComplaints from '@/pages/ctDebuggAfterSaleServiceManage/customerSat
 import ProjectQueryDetail from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/projectQuery/Detail';
 import StandardGasValidityContent from '@/pages/ctDebuggAfterSaleServiceManage/assetManagement/equipmentAccount/standardGasValidity/components/StandardGasValidityContent';
 import HandoverReportEditModal from '@/pages/platformManager/configurationInfo/handoverReport/EditModal';
-import RemoteSupervisionEditModal from '@/pages/operations/remoteSupervision/EditModal';
+import RemoteSupervisionEditModal from '@/pages/operations/remoteSupervision/checkUserEdit';
 import RectificaDetailModal from '@/pages/operations/cruxParSupervisionRectifica3.0/RectificaDetailModal';
 
 import router from 'umi/router';
@@ -596,9 +596,23 @@ const Workbench = props => {
   const [superviseRectificaDetailVisible, setSuperviseRectificaDetailVisible] = useState(false);
   const [superviseRectificaDetailId, setSuperviseRectificaDetailId] = useState();
 
-  const operaServiceClick = id => {
-    setSuperviseRectificaDetailVisible(true);
+  const [remoteSupervisionModalVisible, setRemoteSupervisionModalVisible] = useState(false);
+  const [rectificaDetailModalVisible, setRectificaDetailModalVisible] = useState(false);
+
+  const operaServiceClick = (id, type) => {
     setSuperviseRectificaDetailId(id);
+    switch (type) {
+      case '1':
+        setSuperviseRectificaDetailVisible(true);
+        break;
+      case '2':
+        setRemoteSupervisionModalVisible(true);
+        break;
+      case '3':
+        setRectificaDetailModalVisible(true);
+        break;
+    }
+
   };
 
   const dataAlarmTypeChange = val => {
@@ -932,7 +946,7 @@ const Workbench = props => {
     '6': '（满意度调查）',
     '7': '（验收服务报告）',
   };
-  const [projectReportList,setProjectReportList] = useState() //交接和报告
+  const [projectReportList, setProjectReportList] = useState() //交接和报告
   const ListComponents = ({ list, loading }) => {
     return <Spin
       spinning={loading}
@@ -954,7 +968,7 @@ const Workbench = props => {
                   payload: {
                     MsgID: item.MsgID,
                   },
-                  callback:(res)=>{
+                  callback: (res) => {
                     res?.Datas?.[0] && setProjectReportList(res.Datas[0])
                   }
                 });
@@ -1074,7 +1088,7 @@ const Workbench = props => {
                                           justify="space-between"
                                           style={{ paddingBottom: paddingBottomVal, cursor: 'pointer' }}
                                           onClick={() => {
-                                            operaServiceClick(item.ID);
+                                            operaServiceClick(item.ID, item.Type);
                                           }}
                                         >
                                           <Col
@@ -1123,10 +1137,9 @@ const Workbench = props => {
                                               } else if (item.Type == 7) {
                                                 //验收服务报告
                                                 setReportAuditVisible(true);
-                                                const dataArr = item.Col2?.split(',');
+                                                const dataObj = item.Col2 ? JSON.parse(item.Col2) : {};
                                                 setReportAuditData({
-                                                  ID: dataArr?.[0],
-                                                  CheckStatus: dataArr?.[1],
+                                                  ...dataObj
                                                 });
                                               }
                                             }}
@@ -1884,8 +1897,10 @@ const Workbench = props => {
         />
 
         <ReportAuditModal
-          CheckStatus={reportAuditData.CheckStatus}
-          id={reportAuditData.ID}
+          id={reportAuditData?.DispatchId}
+          CheckStatus={reportAuditData?.CheckStatus}
+          WorkJLID={reportAuditData?.WorkJLID}
+          AssistantID={reportAuditData?.AssistantID}
           isModalOpen={reportAuditVisible}
           onCancel={() => {
             setReportAuditVisible(false);
@@ -1938,12 +1953,25 @@ const Workbench = props => {
         </Modal>
         <HandoverReportEditModal
           record={projectReportList}
-          visible={handoverReportVisible} 
+          visible={handoverReportVisible}
           onCancel={() => setHandoverReportVisible(false)}
-          onFinish = {()=>{
+          onFinish={() => {
             getCtWorkbenchMsg(5);
           }}
-          />
+        />
+        <RemoteSupervisionEditModal
+          title={'编辑'}
+          visible={remoteSupervisionModalVisible}
+          id={superviseRectificaDetailId}
+          onCancel={() => { setRemoteSupervisionModalVisible(false) }}
+          onFinish={() => GetStagingInspectorRectificationList()} />
+        <RectificaDetailModal
+          visible={rectificaDetailModalVisible}
+          id={superviseRectificaDetailId}
+          rectificaDetailType={1}
+          title='核查整改'
+          onCancel={() => { setRectificaDetailModalVisible(false) }}
+          onFinish={() => GetStagingInspectorRectificationList()} />
       </BreadcrumbWrapper>
     </div>
   );

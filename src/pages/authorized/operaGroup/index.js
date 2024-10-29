@@ -3,13 +3,13 @@
  * @Author: outman0611
  * @Date: 2024-09-29 17:13:21
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-09 15:31:05
+ * @LastEditTime: 2024-10-29 16:42:34
  */
 
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Space } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, SortAscendingOutlined } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined,DatabaseOutlined,TeamOutlined, DownOutlined, ExportOutlined, SortAscendingOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -83,7 +83,7 @@ const Index = (props) => {
       width: 'auto',
     },
     {
-      title: '运维单位名称',
+      title: '运维单位',
       dataIndex: 'CompanyName',
       key: 'CompanyName',
       align: 'center',
@@ -119,22 +119,30 @@ const Index = (props) => {
     {
       title: '操作',
       align: 'center',
-      width: 280,
+      width: 180,
       render: (text, record) => {
-        return <Space>
+        return <Space  size={16}>
           <Fragment>
-            <a onClick={() => addEdit('编辑', record)}>编辑</a>
+            <Tooltip title="编辑">
+             <a  onClick={() => addEdit('编辑', record)}><EditIcon /></a>
+            </Tooltip> 
           </Fragment>
           <Fragment>
             <Popconfirm placement='left' title="确定要删除此条信息吗？" onConfirm={() =>  del(record) } okText="是" cancelText="否">
-              <a>删除</a>
+            <Tooltip title="删除">
+             <a><DelIcon  /></a>
+            </Tooltip> 
             </Popconfirm>
           </Fragment>
           <Fragment>
-            <a onClick={() => assigningUsers(record)}>分配小组成员</a>
+            <Tooltip title="分配小组成员">
+             <a  onClick={() => assigningUsers(record)}><TeamOutlined  style={{ fontSize: 18 }} /></a>
+            </Tooltip> 
           </Fragment>
           <Fragment>
-            <a onClick={() => settingPointPermissions(record)}>设置点位访问权限</a>
+            <Tooltip title="设置点位访问权限">
+             <a  onClick={() => settingPointPermissions(record)}><DatabaseOutlined  style={{ fontSize: 18 }} /></a>
+            </Tooltip> 
           </Fragment>
         </Space>
       }
@@ -274,11 +282,11 @@ const Index = (props) => {
       }}
       onFinish={onFinish}
     >
-      <Form.Item label="运维小组名称" name="UserName" >
+      <Form.Item label="运维小组名称" name="operationTeamName" >
         <Input placeholder='请输入' allowClear />
       </Form.Item>
-      <Form.Item label="运维小组单位名称" name="UserAccount"  >
-        <Input placeholder='请输入' />
+      <Form.Item label="运维单位" name="companyName"  >
+        <Input placeholder='请输入' allowClear />
       </Form.Item>
 
       <Form.Item>
@@ -306,7 +314,7 @@ const Index = (props) => {
             dataSource={tableDatas}
             columns={columns}
             size='small'
-            scroll={{ y: 'calc(100vh - 288px)' }}
+            scroll={{x:800, y: 'calc(100vh - 288px)' }}
             pagination={false}
           />
         </Card>

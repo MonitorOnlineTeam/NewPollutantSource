@@ -300,13 +300,13 @@ const Index = props => {
         ellipsis: true,
         width: 180,
       },
-      // {
-      //   title: '最终用户',
-      //   dataIndex: 'CustomEnt',
-      //   key: 'CustomEnt',
-      //   ellipsis: true,
-      //   width: 180,
-      // },
+      {
+        title: '最终用户',
+        dataIndex: 'CustomEnt',
+        key: 'CustomEnt',
+        ellipsis: true,
+        width: 180,
+      },
       {
         title: '服务大区',
         dataIndex: 'serviceAreaName',
@@ -314,51 +314,51 @@ const Index = props => {
         ellipsis: true,
         width: 150,
       },
-      // {
-      //   title: '开始时间',
-      //   dataIndex: 'BeginTime',
-      //   key: 'BeginTime',
-      //   ellipsis: true,
-      //   width: 180,
-      //   align: 'center',
-      // },
-      // {
-      //   title: '结束时间',
-      //   dataIndex: 'EndTime',
-      //   key: 'EndTime',
-      //   ellipsis: true,
-      //   width: 180,
-      //   align: 'center',
-      // },
-      // {
-      //   title: '企业名称',
-      //   dataIndex: 'EntName',
-      //   key: 'EntName',
-      //   ellipsis: true,
-      //   align: 'center',
-      //   width: 180,
-      // },
-      // {
-      //   title: '监测点名称',
-      //   dataIndex: 'PointName',
-      //   key: 'PointName',
-      //   ellipsis: true,
-      //   align: 'center',
-      //   width: 180,
-      // },
-      // {
-      //   title: '设备型号',
-      //   dataIndex: 'questionName',
-      //   key: 'questionName',
-      //   ellipsis: true,
-      // },
-      // {
-      //   title: '服务时长（小时）',
-      //   dataIndex: 'ServiceTime',
-      //   key: 'ServiceTime',
-      //   ellipsis: true,
-      //   align: 'center',
-      // },
+      {
+        title: '开始时间',
+        dataIndex: 'BeginTime',
+        key: 'BeginTime',
+        ellipsis: true,
+        width: 180,
+        align: 'center',
+      },
+      {
+        title: '结束时间',
+        dataIndex: 'EndTime',
+        key: 'EndTime',
+        ellipsis: true,
+        width: 180,
+        align: 'center',
+      },
+      {
+        title: '企业名称',
+        dataIndex: 'EntName',
+        key: 'EntName',
+        ellipsis: true,
+        align: 'center',
+        width: 180,
+      },
+      {
+        title: '监测点名称',
+        dataIndex: 'PointName',
+        key: 'PointName',
+        ellipsis: true,
+        align: 'center',
+        width: 180,
+      },
+      {
+        title: '设备型号',
+        dataIndex: 'questionName',
+        key: 'questionName',
+        ellipsis: true,
+      },
+      {
+        title: '服务时长（小时）',
+        dataIndex: 'ServiceTime',
+        key: 'ServiceTime',
+        ellipsis: true,
+        align: 'center',
+      },
       {
         title: '服务工程师',
         dataIndex: 'workerName',
@@ -398,18 +398,18 @@ const Index = props => {
         key: 'leaveDate',
         ellipsis: true,
       },
-      // {
-      //   title: '填报人',
-      //   dataIndex: 'CreateUserName',
-      //   key: 'CreateUserName',
-      //   ellipsis: true,
-      // },
-      // {
-      //   title: '填报时间',
-      //   dataIndex: 'CreateTime',
-      //   key: 'CreateTime',
-      //   ellipsis: true,
-      // },
+      {
+        title: '填报人',
+        dataIndex: 'CreateUserName',
+        key: 'CreateUserName',
+        ellipsis: true,
+      },
+      {
+        title: '填报时间',
+        dataIndex: 'CreateTime',
+        key: 'CreateTime',
+        ellipsis: true,
+      },
     ];
 
     return columns;
@@ -495,11 +495,11 @@ const Index = props => {
           autoComplete="off"
         >
           <Row>
-            {/* <Col span={8}>
+             <Col span={8}>
               <Form.Item name="num" label="派工单号">
                 <Input placeholder="请输入" allowClear />
               </Form.Item>
-            </Col> */}
+            </Col>
             <Col span={8} >
               <Form.Item name='projectCode' label='项目编号' className='form_label_width_97'>
                 <Input placeholder="请输入" allowClear />
@@ -510,7 +510,7 @@ const Index = props => {
                 <Input placeholder="请输入" allowClear />
               </Form.Item>
             </Col>
-            {/* <Col span={8}>
+             <Col span={8}>
               <Form.Item name='customEnt'  label='最终用户' >
                 <Input placeholder="请输入" allowClear />
               </Form.Item>
@@ -522,9 +522,9 @@ const Index = props => {
             </Col>
             <Col span={8}>
               <Form.Item name='questionID'  label='设备型号' >
-               <Select placeholder='请选择' allowClear fieldNames={{label:'reasonName',value:'reasonName'}} options={disposableRateList?.TimeoutReasonAnalysis} />
+               <Select placeholder='请选择' allowClear fieldNames={{label:'reasonName',value:'questionId'}} options={disposableRateList?.TimeoutReasonAnalysis} />
               </Form.Item>
-            </Col>*/}
+            </Col>
             <Col span={8}>
               <Form.Item name='solveStatus' label='解决状态'  >
                 <Radio.Group>
@@ -569,8 +569,8 @@ const Index = props => {
               </Form.Item>
             </Col>
           </Row>
-           <Form.Item name='serviceAreaCode' hidden> </Form.Item>
-           <Form.Item name='questionID' hidden> </Form.Item> 
+           {/* <Form.Item name='serviceAreaCode' hidden> </Form.Item>
+           <Form.Item name='questionID' hidden> </Form.Item>  */}
         </Form>
         <SdlTable
           loading={basicsLoading}
