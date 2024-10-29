@@ -6,6 +6,8 @@ import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
 import PlanWorkOrderStatistics from '@/pages/newestHome/components/springModal/planWorkOrderStatistics/index.js';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
+
 const COLOR = ['#2998FF', '#21ECBB', '#DFE06D'];
 
 const dvaPropsData = ({ sysDashboard, loading }) => ({
@@ -21,7 +23,7 @@ const dvaPropsData = ({ sysDashboard, loading }) => ({
 
 const ProjectExecution = props => {
   const [open, setOpen] = useState(false);
-
+  const [echarts, setEcharts] = useState();
   const {
     dispatch,
     time,
@@ -38,6 +40,29 @@ const ProjectExecution = props => {
   useEffect(() => {
     getData();
   }, [level, regionCode, entCode, time]);
+
+  useEffect(() => {
+    window.addEventListener('resize', refreshChart);
+    // 在组件卸载或者依赖发生变化前，移除事件监听器
+    return () => {
+      window.removeEventListener('resize', refreshChart);
+    };
+  }, [echarts]);
+
+  // 改变echarts图字体大小
+  const refreshChart = () => {
+    if (echarts) {
+      let echarts_instance = echarts.getEchartsInstance();
+      echarts_instance.resize();
+      let option = echarts_instance.getOption();
+      if (option.title) {
+        option.title[0].textStyle.rich.val.fontSize = fontSizeFn(24);
+        option.title[0].textStyle.rich.name.fontSize = fontSizeFn(14);
+        option.title[0].textStyle.rich.name.padding = [fontSizeFn(10), 0];
+        echarts_instance.setOption(option);
+      }
+    }
+  };
 
   const getData = () => {
     dispatch({
@@ -74,13 +99,13 @@ const ProjectExecution = props => {
         textStyle: {
           rich: {
             name: {
-              fontSize: 14,
+              fontSize: fontSizeFn(14),
               color: '#C3F0FF',
-              padding: [10, 0],
+              padding: [fontSizeFn(10), 0],
               fontWeight: 'bold',
             },
             val: {
-              fontSize: 24,
+              fontSize: fontSizeFn(24),
               fontWeight: 'bold',
               color: '#0693EF',
             },
@@ -139,10 +164,19 @@ const ProjectExecution = props => {
   }
 
   return (
-    <HomeCard title="巡检质量分析" bodyStyle={{}} loading={loading}>
+    <HomeCard
+      title="巡检质量分析"
+      bodyStyle={{
+        overflow: 'hidden',
+      }}
+      loading={loading}
+    >
       <Row style={{ height: '100%' }}>
         <Col span={13}>
           <ReactEcharts
+            ref={echart => {
+              echart && setEcharts(echart);
+            }}
             option={getOption()}
             style={{ height: '100%' }}
             className="echarts-for-echarts"

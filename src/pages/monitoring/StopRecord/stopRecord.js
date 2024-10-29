@@ -66,7 +66,7 @@ class index extends PureComponent {
     this.newTabIndex = 0;
     this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined;
     this.state = {
-      Begintime: [
+      Begintime: props.time || [
         moment(
           moment()
             .add(-1, 'month')
@@ -77,9 +77,9 @@ class index extends PureComponent {
       // Endtime: [moment(moment().add(-1, "month").format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
       Endtime: [],
       regionValue: '',
-      entValue: '',
+      entValue: props.entCode || '',
       voucher: '',
-      pointValue: '',
+      pointValue: props.DGIMN || '',
       visible: false,
       fileArr: [],
       popVisible: false,
@@ -88,6 +88,7 @@ class index extends PureComponent {
 
   componentDidMount() {
     this.initData();
+    console.log('props', this.props);
   }
 
   initData = () => {
@@ -104,6 +105,11 @@ class index extends PureComponent {
       type: pageUrl.GetEntByRegion,
       payload: { RegionCode: '' },
     });
+
+    if (this.props.entCode) {
+      this.getPointListByEntCode(this.props.entCode);
+    }
+
     const { Begintime, Endtime, voucher, pointValue, entValue, regionValue } = this.state;
     this.loadData(0, 0);
   };
@@ -123,7 +129,7 @@ class index extends PureComponent {
         EntCode: entValue == undefined ? '' : entValue,
         DGIMN: isHomeModal ? DGIMN : pointValue == undefined ? '' : pointValue,
         Status: voucher == undefined ? '' : voucher,
-        pollutantType:this.pollutantType,
+        pollutantType: this.pollutantType,
       },
     });
   };
@@ -143,7 +149,7 @@ class index extends PureComponent {
         EntCode: entValue == undefined ? '' : entValue,
         DGIMN: isHomeModal ? DGIMN : pointValue == undefined ? '' : pointValue,
         Status: voucher == undefined ? '' : voucher,
-        pollutantType:this.pollutantType,
+        pollutantType: this.pollutantType,
         PageSize: 20,
         PageIndex: 1,
       },
@@ -211,21 +217,37 @@ class index extends PureComponent {
       return selectList;
     }
   };
+
+  // 根据企业获取监测点
+  getPointListByEntCode = value => {
+    //获取监测点
+    this.props.dispatch({
+      type: pageUrl.GetPointByEntCode,
+      payload: {
+        EntCode: value,
+      },
+    });
+    this.setState({
+      entValue: value,
+    });
+  };
+
   onRef1 = ref => {
     this.childrenHand = ref;
   };
   cardTitle = () => {
-    const { Begintime, Endtime } = this.state;
+    const { Begintime, Endtime, entValue } = this.state;
     const { isHomeModal, exportLoading } = this.props;
+    console.log('state', this.state);
     return (
       <>
         <label style={{ fontSize: 14 }}>停运时间:</label>
         <RangePicker_
-          format='YYYY-MM-DD'
+          format="YYYY-MM-DD"
           onRef={this.onRef1}
           isVerification={true}
           dateValue={Begintime}
-          style={{ width: 230,marginRight: 10, marginLeft: 10 }}
+          style={{ width: 230, marginRight: 10, marginLeft: 10 }}
           callback={(dates, dataType) => {
             this.setState({
               Begintime: dates,
@@ -289,6 +311,7 @@ class index extends PureComponent {
               maxTagTextLength={5}
               maxTagPlaceholder="..."
               optionFilterProp="children"
+              defaultValue={entValue || undefined}
               filterOption={(input, option) => {
                 if (option && option.props && option.props.title) {
                   return option.props.title === input || option.props.title.indexOf(input) !== -1;
@@ -297,15 +320,8 @@ class index extends PureComponent {
                 }
               }}
               onChange={value => {
-                //获取监测点
-                this.props.dispatch({
-                  type: pageUrl.GetPointByEntCode,
-                  payload: {
-                    EntCode: value,
-                  },
-                });
+                this.getPointListByEntCode(value);
                 this.setState({
-                  entValue: value,
                   pointValue: '',
                 });
               }}
@@ -370,15 +386,15 @@ class index extends PureComponent {
     this.props.dispatch({
       type: pageUrl.GetStopList,
       payload: {
-        BeginTime: Begintime[0] ? moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss') : null,
-        BeginTimeEnd: Begintime[1] ? moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss') : null,
+        BeginTime: Begintime[0] ? moment(Begintime[0]).format('YYYY-MM-DD 00:00:00') : null,
+        BeginTimeEnd: Begintime[1] ? moment(Begintime[1]).format('YYYY-MM-DD 23:59:59') : null,
         EndTime: Endtime[0] ? moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss') : null,
         EndTimeEnd: Endtime[1] ? moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss') : null,
         RegionCode: regionValue == undefined ? '' : regionValue,
         EntCode: entValue == undefined ? '' : entValue,
         DGIMN: isHomeModal ? DGIMN : pointValue == undefined ? '' : pointValue,
         Status: voucher == undefined ? '' : voucher,
-        pollutantType:this.pollutantType,
+        pollutantType: this.pollutantType,
         PageSize: PageSize == 0 ? 20 : PageSize,
         PageIndex: PageIndex == 0 ? 1 : PageIndex,
       },
@@ -612,6 +628,7 @@ class index extends PureComponent {
         <div id="siteParamsPage" className={style.cardTitle}>
           <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
             <Card
+              bordered={!this.props.hideBreadcrumb}
               extra={
                 <>
                   <div style={{ float: 'left' }}>{this.cardTitle()}</div>

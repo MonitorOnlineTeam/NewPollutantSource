@@ -7,11 +7,12 @@ import { router } from 'umi';
 import config from '@/config'
 import { downloadFile, requestPost } from '@/utils/utils';
 import { API } from '@config/API';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 export default Model.extend({
   namespace: 'newestHome',
   state: {
-    subjectFontSize: 14,
+    subjectFontSize: fontSizeFn(13),
     operationDataSource: [],
     latelyDays30: { beginTime: moment(moment().add(-30, 'day')).format('YYYY-MM-DD 00:00:00'), endTime: moment(moment()).format('YYYY-MM-DD 23:59:59') },
     latelyDays7: { beginTime: moment(moment().add(-7, 'day')).format('YYYY-MM-DD 00:00:00'), endTime: moment(moment()).format('YYYY-MM-DD 23:59:59') },

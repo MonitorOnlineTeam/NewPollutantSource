@@ -10,7 +10,7 @@ import RemoteSupervision from '@/pages/operations/remoteSupervision';
 import SupervisionManager from '@/pages/operations/supervisionManager';
 import CruxParSupervisionRectifica from '@/pages/operations/cruxParSupervisionRectifica3.0';
 import SuperviseRectification from '@/pages/operations/superviseRectification';
-import { adjustDuplicateCoordinates } from '@/pages/SystemDashboard/CONST.js';
+import { adjustDuplicateCoordinates, fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 const legendList = [
   {
@@ -250,15 +250,14 @@ class MapContent extends PureComponent {
         color = legendList[1].color;
         break;
     }
-
     return (
       <div
         style={{
-          width: 24,
-          height: 24,
-          lineHeight: '24px',
+          width: '1.5rem',
+          height: '1.5rem',
+          lineHeight: '1.5rem',
           background: color,
-          boxShadow: '0px 0px 2px 0px #000000',
+          boxShadow: '0px 0px .125rem 0px #000000',
           borderRadius: '50%',
           textAlign: 'center',
           color: '#484020',
@@ -267,7 +266,6 @@ class MapContent extends PureComponent {
       ></div>
     );
   };
-
   infoWindowContent = () => {
     const { currentPointInfo } = this.state;
     let imgName = '/gasInfoWindow.png';
@@ -441,11 +439,11 @@ class MapContent extends PureComponent {
         <div
           style={{
             position: 'relative',
-            transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
-            padding: '0 10px',
+            transform: `translate(-50%, ${'calc(-50% - .875rem)'})`,
+            padding: '0 .625rem',
             cursor: 'text',
-            width: 240,
-            height: 130,
+            width: '16rem',
+            height: '8.125rem',
             background: `url(/SystemDashboard/regionTip.png)`,
             backgroundSize: '100% 100%',
           }}
@@ -454,17 +452,18 @@ class MapContent extends PureComponent {
             style={{
               opacity: 1,
               color: '#52F2FF',
-              height: 'calc(100% - 12px)',
+              height: 'calc(100% - .75rem)',
             }}
           >
             <div
               className="textOverflow"
               style={{
-                width: 'calc(100% - 28px)',
-                height: 28,
-                lineHeight: '28px',
+                width: 'calc(100% - 1.75rem)',
+                height: '1.75rem',
+                lineHeight: '1.75rem',
                 fontWeight: 'bold',
                 cursor: 'pointer',
+                fontSize: '.875rem'
               }}
               title={title}
               onClick={() => (level === 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
@@ -473,11 +472,11 @@ class MapContent extends PureComponent {
             </div>
             <RightOutlined
               onClick={() => (level === 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
-              style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
+              style={{ color: '#4BF3F9', position: 'absolute', top: '.375rem', right: '.375rem', fontSize: '.75rem' }}
             />
             <Row
               style={{
-                height: 'calc(100% - 36px)',
+                height: 'calc(100% - 2.25rem)',
                 display: 'flex',
                 fontWeight: 'bold',
                 padding: '0 10px',
@@ -491,8 +490,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#2eeb9d', fontSize: 20 }}>{position['qualifiedCount']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>核查正常</p>
+                <p style={{ color: '#2eeb9d', fontSize: '1.25rem' }}>{position['qualifiedCount']}</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>核查正常</p>
               </Col>
               <Col
                 span={8}
@@ -502,8 +501,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#4699FF', fontSize: 20 }}>{position['rectificationCount']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>未核查</p>
+                <p style={{ color: '#4699FF', fontSize: '1.25rem' }}>{position['rectificationCount']}</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>未核查</p>
               </Col>
               <Col
                 span={8}
@@ -513,8 +512,8 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FF7E00', fontSize: 20 }}>{position['unqualifiedCount']}</p>
-                <p style={{ fontSize: 13, color: '#fff' }}>核查不规范</p>
+                <p style={{ color: '#FF7E00', fontSize: '1.25rem' }}>{position['unqualifiedCount']}</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>核查不规范</p>
               </Col>
             </Row>
           </div>
@@ -523,11 +522,11 @@ class MapContent extends PureComponent {
               className={styles.circle}
               style={{
                 display: 'inline-block',
-                marginTop: 16,
-                width: 10,
-                height: 10,
+                marginTop: '1rem',
+                width: '.625rem',
+                height: '.625rem',
                 background: 'rgba(0, 141, 253, 1)',
-                boxShadow: ' 0 0 4px 4px rgba(0, 141, 253, .1)',
+                boxShadow: ' 0 0 .25rem .25rem rgba(0, 141, 253, .1)',
                 borderRadius: '50%',
               }}
             ></span>
@@ -537,7 +536,7 @@ class MapContent extends PureComponent {
     } else if (level == 3 || level == 4) {
       //监测点
       return (
-        <div style={{ position: 'relative', marginTop: 24 }}>
+        <div style={{ position: 'relative', marginTop: '1.5rem' }}>
           <span onClick={() => {}}>{this.getPointIcon(extData.position)}</span>
           {pointTitleShow ? (
             <div className={styles.pointTitlePopSty}>

@@ -6,6 +6,7 @@ import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import SupervisionAnalySumm from '@/pages/operations/supervisionAnalySumm';
 import CruxParSupervisionAnalysis from '@/pages/operations/cruxParSupervisionAnalysis';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 import moment from 'moment';
 import Modal from 'antd/lib/modal/Modal';
@@ -64,18 +65,18 @@ const Calibration = props => {
         },
       },
       legend: {
-        itemGap: 40,
-        top: 16,
-        itemWidth: 28,  // 设置图例的宽度
-        itemHeight: 14, // 设置图例的高度
+        itemGap: fontSizeFn(40),
+        top: fontSizeFn(16),
+        itemWidth: fontSizeFn(28),  // 设置图例的宽度
+        itemHeight: fontSizeFn(14), // 设置图例的高度
         textStyle: {
           color: "#fff", // 文本颜色
         },
       },
       grid: {
-        left: 78,
+        left: fontSizeFn(100),
         right: 0,
-        bottom: 26,
+        bottom: fontSizeFn(26),
       },
       xAxis: {
         type: "value",
@@ -102,7 +103,7 @@ const Calibration = props => {
         data: nameList,
         axisLabel: {
           textStyle: {
-            fontSize: 14,
+            fontSize: fontSizeFn(14),
             color: "#fff",
           },
         },
@@ -169,7 +170,7 @@ const Calibration = props => {
   return (
     <HomeCard title="关键参数监督核查分析" bodyStyle={{}} loading={loading} style={{ minHeight: props.homeCardMinHight }}>
       {renderEcharts}
-      <span style={{ color: '#63BFFF', position: 'absolute', top: 'calc(40px + 16px)', right: 16 }}>单位：个</span>
+      <span style={{ color: '#63BFFF', position: 'absolute', top: 'calc(40px + 16px)', right: 16, fontSize: '.875rem' }}>单位：个</span>
       <Modal
       title='关键参数督查汇总'
       destroyOnClose

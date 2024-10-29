@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-10-09 17:06:43
+ * @Last Modified time: 2024-10-29 14:52:10
  * @Description：报警记录
  */
 
@@ -393,7 +393,7 @@ const WarningRecord = props => {
           layout="inline"
           style={{ padding: '10px 0' }}
           initialValues={{
-            // ...warningForm[modelNumber],
+            ...warningForm[modelNumber],
           }}
           autoComplete="off"
           // onValuesChange={onValuesChange}

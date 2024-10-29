@@ -19,6 +19,7 @@ const LoginModel = {
     *logout(_, { call, put }) {
       const response = yield call(LogOut);
       if (response.IsSuccess) {
+        clearInterval(window.refreshTokenTimer);
         // const { redirect } = getPageQuery(); // redirect
         // if (window.location.pathname !== '/user/login' && !redirect) {
         // yield put(

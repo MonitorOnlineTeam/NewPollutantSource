@@ -22,6 +22,7 @@ import RightContent from './RightContent'
 import MapContent from './MapContent'
 import styles from "../style.less"
 import { Item } from 'gg-editor';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 const { Option } = Select;
 
@@ -66,17 +67,17 @@ const Index = (props) => {
     setMinWidth()
   }
   const setMinWidth=(e)=>{  
-    document.querySelector("body").setAttribute('style', 'min-width:1500px');
+    // document.querySelector("body").setAttribute('style', 'min-width:1500px');
 }
   const cancelMinWidth=(e)=>{  
-   document.querySelector("body").setAttribute('style', 'min-width:inherit');
+  //  document.querySelector("body").setAttribute('style', 'min-width:inherit');
   }
  
   const handleResize = (e) =>{
     if( e.target.innerWidth <=1800){
-      props.updateState({subjectFontSize:13})
+      props.updateState({subjectFontSize:fontSizeFn(13)})
     }else{
-      props.updateState({subjectFontSize:14})
+      props.updateState({subjectFontSize:fontSizeFn(14)})
     }
   }
 
@@ -112,15 +113,15 @@ const Index = (props) => {
   // <BreadcrumbWrapper  hideBreadcrumb>
 
       <div className={styles.homePage}>
-        <Row style={{paddingTop:10,height:'100%'}}>   {/**地图部分 和 地图两侧*/}
-          <Col style={{width:395}} className={`${fullScreen? `${styles.leftContent} ${styles.mapModalHide}`: `${styles.leftContent} ${styles.mapModalShow}` }` }>
+        <Row style={{paddingTop:'.625rem',height:'100%', width: '100%'}}>   {/**地图部分 和 地图两侧*/}
+          <Col style={{maxWidth:'24.6875rem'}} className={`${fullScreen? `${styles.leftContent} ${styles.mapModalHide}`: `${styles.leftContent} ${styles.mapModalShow}` }` }>
              <LeftContent {...props}/>
            </Col>
-           <Col  style={{width:'calc(100% - 790px)'}} className={styles.mapContent}>
+           <Col flex={1}  className={styles.mapContent}>
              <MapContent {...props} fullScreenClick={fullScreenClick}/>
            </Col>
            
-           <Col style={{width:395}} className={`${fullScreen? `${styles.rightContent} ${styles.mapModalHide}`: `${styles.rightContent} ${styles.mapModalShow}` }` }>
+           <Col style={{maxWidth:'24.6875rem'}} className={`${fullScreen? `${styles.rightContent} ${styles.mapModalHide}`: `${styles.rightContent} ${styles.mapModalShow}` }` }>
             <RightContent {...props}/>
             </Col>
         </Row>  

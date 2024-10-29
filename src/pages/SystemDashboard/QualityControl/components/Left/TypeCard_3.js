@@ -5,11 +5,14 @@ import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import InstallDebugger from '@/pages/ctDebuggAfterSaleServiceManage/reportsViews/InstStdAndCompReso/install';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
+import styles from '@/pages/SystemDashboard/styles.less';
 
 let myChart;
 const dvaPropsData = ({ loading, sysDashboard }) => ({
   time: sysDashboard.time,
-  // loading: loading.effects['ctDataScreen/GetInstallationDebuggingAnalysis'],
+  QCOverviewData: sysDashboard.QCOverviewData,
+  loading: loading.effects['sysDashboard/GetQCAMapPointInfo'],
 });
 
 const Card_3 = props => {
@@ -23,142 +26,75 @@ const Card_3 = props => {
     Rate: 0,
   });
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { dispatch, time } = props;
+  const { dispatch, time, loading, QCOverviewData } = props;
 
-  useEffect(() => {
-    // getData();
-  }, [time]);
-
-  const getData = () => {
-    setLoading(true);
-    dispatch({
-      type: 'ctDataScreen/GetInstallationDebuggingAnalysis',
-      payload: {
-        bTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
-        eTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
-      },
-      callback: res => {
-        // 安装调试达标率
-        if (res.IsSuccess) {
-          setInstallationDebuggingRate(res.Datas.InstallationDebuggingRate);
-        }
-        setLoading(false);
-      },
-    });
-  };
+  useEffect(() => {}, []);
 
   const onOpenModal = () => {
     setOpen(true);
   };
 
   const getOption = () => {
-    if (!echarts) {
-      return {};
-    }
-
+    let count = QCOverviewData.ResultTrueNum + QCOverviewData.ResultFalseNum;
+    let rate = count > 0 ? QCOverviewData.ResultTrueNum / count : 0;
     let seriesData = [
-      { value: InstallationDebuggingRate.Excellent, name: '执行数量' },
-      { value: InstallationDebuggingRate.Qualified, name: '不合格数量' },
-      { value: InstallationDebuggingRate.Unqualified, name: '合格数量' },
+      {
+        value: QCOverviewData.ResultTrueNum,
+        name: '合格数量',
+      },
+      {
+        value: QCOverviewData.ResultFalseNum,
+        name: '不合格数量',
+      },
     ];
-    let rate = InstallationDebuggingRate.Rate;
 
     let option = {
-      color: [
-        '#347AED',
-        '#FF4374',
-        '#2EEA9C',
-      ],
-      // tooltip: {
-      //   trigger: 'item',
-      //   valueFormatter: function(value) {
-      //     return value + '套';
-      //   },
-      //   // formatter: '{a} <br/>{b} ： {c} ({d}%)',
-      // },
+      color: ['#2EEA9C', 'rgb(255, 55, 55)'],
       title: {
-        text: '{name|合格率}\n{val|' + rate + '%}',
+        text: '{val|' + rate + '%}\n{name|合格率}',
         top: 'center',
         left: 'center',
         textStyle: {
           rich: {
             name: {
-              fontSize: 14,
-              color: '#fff',
-              padding: [10, 0],
+              fontSize: fontSizeFn(14),
+              color: '#C3F0FF',
+              padding: [fontSizeFn(10), 0],
               fontWeight: 'bold',
             },
             val: {
-              fontSize: 24,
-              fontWeight: 500,
+              fontSize: fontSizeFn(24),
+              fontWeight: 'bold',
               color: '#0693EF',
             },
           },
         },
       },
+      tooltip: {
+        // valueFormatter: function(value) {
+        //   return value + '个';
+        // },
+      },
+      angleAxis: {
+        max: 100,
+        show: false,
+      },
       series: [
         {
-          name: '安装调试占比',
+          name: '合格率分析',
           type: 'pie',
-          radius: [60, 100],
-          roseType: 'area',
+          // radius: [50, 250],
+          radius: ['50%', '70%'],
+          center: ['50%', '50%'],
+          // roseType: 'area',
+          label: { show: false },
           itemStyle: {
-            normal: {
-              shadowBlur: 10,
-              shadowColor: 'rgba(44,44,44,0.2)',
-            },
+            borderRadius: fontSizeFn(6),
+            borderColor: 'rgb(82, 242, 255)',
+            borderWidth: fontSizeFn(2),
+            padding: fontSizeFn(4),
           },
-          label: {
-            show: true,
-            position: 'outside',
-            color: 'inherit', //继承饼图颜色
-            formatter: function(params) {
-              return '{b|' + params.name + '：}{c|' + params.value + '套}\n{hr|●}';
-            },
-            // padding: [0, -90],
-            rich: {
-              // a: {
-              //   fontSize: 18,
-              //   padding: [18, 0, 0, 0],
-              // },
-              b: {
-                fontFamily: 'Source Han Sans CN',
-                fontWeight: 500,
-                fontSize: 15,
-                color: '#fff',
-                padding: [-10, 0, 0, 6],
-              },
-              c: {
-                fontFamily: 'Microsoft YaHei',
-                fontWeight: 500,
-                fontSize: 15,
-                padding: [-10, 20, 0, 0],
-                align: 'left',
-                // color: '#0055FE',
-              },
-              hr: {
-                color: 'inherit',
-                // borderRadius: 100,
-                width: 4,
-                height: 4,
-                verticalAlign: 'top',
-                lineHeight: -20,
-                padding: [-5, -10, 0, -10],
-                // shadowColor: 'inherit',
-                // shadowBlur: 1,
-                // shadowOffsetX: '0',
-                // shadowOffsetY: '-26',
-              },
-            },
-          },
-          labelLine: {
-            length: 2,
-            length2: 30,
-            lineStyle: {
-              width: 2, // 引导线宽度
-            },
-          },
+          padAngle: 4,
           data: seriesData,
         },
       ],
@@ -169,19 +105,51 @@ const Card_3 = props => {
 
   return (
     <HomeCard title="合格率分析" bodyStyle={{}} loading={loading}>
-      <ReactEcharts
-        ref={echart => {
-          echart && setEcharts(echart.echarts);
-        }}
-        option={getOption()}
-        lazyUpdate={true}
-        style={{ height: '100%', width: '100%' }}
-        // onEvents={{
-        //   click: onOpenModal,
-        // }}
-      />
+      <Row style={{ height: '100%' }}>
+        <Col span={13}>
+          <ReactEcharts
+            ref={echart => {
+              echart && setEcharts(echart);
+            }}
+            option={getOption()}
+            style={{ height: '100%' }}
+            className="echarts-for-echarts"
+            theme="my_theme"
+            // onEvents={{ click: onOpenModal }}
+          />
+        </Col>
+        <Col span={11} className={styles.center}>
+          <Row className={styles.chartLegendWrapper}>
+            <Col span={24} className={styles.lengendItem}>
+              <div className={styles.label}>
+                <i style={{ backgroundColor: '#347AED' }}></i>
+                <span className="textOverflow">执行数量</span>
+              </div>
+              <div className={styles.value}>
+                {QCOverviewData.ResultTrueNum + QCOverviewData.ResultFalseNum}
+              </div>
+            </Col>
+            <Col span={24} className={styles.lengendItem}>
+              <div className={styles.label}>
+                <i style={{ backgroundColor: '#2EEA9C' }}></i>
+                <span className="textOverflow">合格数量</span>
+              </div>
+              <div className={styles.value}>{QCOverviewData.ResultTrueNum}</div>
+            </Col>
+            <Col span={24} className={styles.lengendItem}>
+              <div className={styles.label}>
+                <i style={{ backgroundColor: 'rgb(255, 55, 55)' }}></i>
+                <span className="textOverflow">不合格数量</span>
+              </div>
+              <div className={styles.value}>
+                {QCOverviewData.ResultFalseNum}
+              </div>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
 
-      <Modal
+      {/* <Modal
         title={`安装调试达标率`}
         wrapClassName="fullScreenModal"
         open={open}
@@ -208,7 +176,7 @@ const Card_3 = props => {
             }}
           />
         )}
-      </Modal>
+      </Modal> */}
     </HomeCard>
   );
 };

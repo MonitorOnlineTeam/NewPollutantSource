@@ -6,6 +6,7 @@ import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import PlanWorkOrderStatistics from '@/pages/newestHome/components/springModal/planWorkOrderStatistics/index.js';
 import moment from 'moment';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 const COLOR = ['#2998FF', '#21ECBB', '#DFE06D'];
 
@@ -34,7 +35,28 @@ const Calibration = props => {
     entInfo,
   } = props;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    window.addEventListener('resize', refreshChart);
+    // 在组件卸载或者依赖发生变化前，移除事件监听器
+    return () => {
+      window.removeEventListener('resize', refreshChart);
+    };
+  }, [echarts]);
+
+  // 改变echarts图字体大小
+  const refreshChart = () => {
+    if (echarts) {
+      let echarts_instance = echarts.getEchartsInstance();
+      echarts_instance.resize();
+      let option = echarts_instance.getOption();
+      if (option.title) {
+        option.title[0].textStyle.rich.val.fontSize = fontSizeFn(24);
+        option.title[0].textStyle.rich.name.fontSize = fontSizeFn(14);
+        option.title[0].textStyle.rich.name.padding = [fontSizeFn(10), 0];
+        echarts_instance.setOption(option);
+      }
+    }
+  };
 
   const getOption = () => {
     if (!echarts) {
@@ -50,13 +72,13 @@ const Calibration = props => {
         textStyle: {
           rich: {
             name: {
-              fontSize: 14,
+              fontSize: fontSizeFn(14),
               color: '#C3F0FF',
-              padding: [10, 0],
+              padding: [fontSizeFn(10), 0],
               fontWeight: 'bold',
             },
             val: {
-              fontSize: 24,
+              fontSize: fontSizeFn(24),
               fontWeight: 'bold',
               color: '#0693EF',
             },
@@ -114,7 +136,7 @@ const Calibration = props => {
               name: '实际完成数量',
               itemStyle: {
                 normal: {
-                  color: new echarts.graphic.LinearGradient(0, 1, 1, 1, [
+                  color: new echarts.echarts.graphic.LinearGradient(0, 1, 1, 1, [
                     {
                       offset: 0,
                       color: '#0D7759',
@@ -133,7 +155,7 @@ const Calibration = props => {
               name: '待完成数量',
               itemStyle: {
                 normal: {
-                  color: new echarts.graphic.LinearGradient(0, 1, 1, 1, [
+                  color: new echarts.echarts.graphic.LinearGradient(0, 1, 1, 1, [
                     {
                       offset: 0,
                       color: '#AA7829',
@@ -174,12 +196,18 @@ const Calibration = props => {
   }
 
   return (
-    <HomeCard title="校准质量分析" bodyStyle={{}} loading={loading}>
+    <HomeCard
+      title="校准质量分析"
+      bodyStyle={{
+        overflow: 'hidden',
+      }}
+      loading={loading}
+    >
       <Row style={{ height: '100%' }}>
         <Col span={13}>
           <ReactEcharts
             ref={echart => {
-              echart && setEcharts(echart.echarts);
+              echart && setEcharts(echart);
             }}
             option={getOption()}
             style={{ height: '100%' }}

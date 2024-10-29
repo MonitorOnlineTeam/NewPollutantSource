@@ -52,8 +52,8 @@ const AfterSaleService = props => {
   return (
     <HomeCard
       title="售后服务分析"
-      style={{ minHeight: 440, flex: 5 }}
-      bodyStyle={{ height: 'calc(100% - 40px)' }}
+      style={{ flex: 5 }}
+      bodyStyle={{ height: 'calc(100% - 2.5rem)' }}
       loading={loading}
     >
       <Row className={styles.AfterSaleServiceWrapper}>

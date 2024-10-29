@@ -51,29 +51,30 @@ const initializeState = {
     CheckRate: 0,
   },
   //监督核查数据
-  supervisionUniformityAnalysisData: {  //关键参数核查、合规性
+  supervisionUniformityAnalysisData: {
+    //关键参数核查、合规性
     RemoteInspector: [
       {
-        Name: "量程一致性",
+        Name: '量程一致性',
         YiNum: 0,
-        NoYiNum: 0
+        NoYiNum: 0,
       },
       {
-        Name: "数据一致性",
+        Name: '数据一致性',
         YiNum: 0,
-        NoYiNum: 0
+        NoYiNum: 0,
       },
       {
-        Name: "参数一致性",
+        Name: '参数一致性',
         YiNum: 0,
-        NoYiNum: 0
-      }
+        NoYiNum: 0,
+      },
     ],
     InspectorOperationManage: {
       CommonlyProblemNum: 0,
       importanProblemNum: 0,
-      PrincipleProblemNum: 0
-    }
+      PrincipleProblemNum: 0,
+    },
   },
   // 监控总览
   MonitoringCountAnalysis: {
@@ -85,6 +86,14 @@ const initializeState = {
     unLineCount: 0,
     stopCount: 0,
   },
+  // 质控
+  QCOverviewData: {
+    EntCount: 0,
+    NoResultNum: 0,
+    PointCount: 0,
+    ResultFalseNum: 0,
+    ResultTrueNum: 0,
+  },
 };
 
 export default Model.extend({
@@ -93,11 +102,7 @@ export default Model.extend({
   effects: {
     // 获取系统中间页
     *GetSysList({ payload, callback }, { call, put, update }) {
-      const result = yield call(
-        requestPost,
-        '/rest/PollutantSourceApi/MenuApi/GetSysList',
-        {},
-      );
+      const result = yield call(requestPost, '/rest/PollutantSourceApi/MenuApi/GetSysList', {});
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       }
@@ -230,6 +235,40 @@ export default Model.extend({
         callback && callback(result.Datas);
       }
     },
+    // 获取质控地图数据
+    *GetQCAMapPointInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.SystemDashboardApi.GetQCAMapPointInfo, payload);
+      if (result.IsSuccess) {
+        if (payload.pLeve === 1) {
+          // 行政区
+          yield update({
+            level1MapData: result.Datas.list,
+          });
+        } else if (payload.pLeve === 4) {
+          // 全部监测点
+          yield update({
+            level4MapData: result.Datas.list,
+          });
+        } else {
+          // 行政区下企业、企业下监测点
+          yield update({
+            levelOtherMapData: result.Datas.list,
+          });
+        }
+
+        yield update({
+          QCOverviewData: result.Datas,
+        });
+        callback && callback(result.Datas);
+      }
+    },
+    // 质控核查任务核查
+    *GetQCACRTaskAnalysis({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.SystemDashboardApi.GetQCACRTaskAnalysis, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
     // 重点关注企业排行
     *GetPointTopWarning({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.AbnormalIdentifyModel.GetPointTopWarning, payload);
@@ -239,14 +278,22 @@ export default Model.extend({
     },
     //督查总览
     *GetSupervisionOverview({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.SystemDashboardApi.GetSupervisionOverview, payload);
+      const result = yield call(
+        requestPost,
+        API.SystemDashboardApi.GetSupervisionOverview,
+        payload,
+      );
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       }
     },
     //关键参数监督核查分析、合规性监督核查分析
     *GetSupervisionUniformityAnalysis({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.SystemDashboardApi.GetSupervisionUniformityAnalysis, payload);
+      const result = yield call(
+        requestPost,
+        API.SystemDashboardApi.GetSupervisionUniformityAnalysis,
+        payload,
+      );
       if (result.IsSuccess) {
         // 行政区
         yield update({
@@ -258,7 +305,11 @@ export default Model.extend({
     },
     //合格率分析
     *GetSupervisionQualifiedAnalysis({ payload, callback }, { call, put, update }) {
-      const result = yield call(requestPost, API.SystemDashboardApi.GetSupervisionQualifiedAnalysis, payload);
+      const result = yield call(
+        requestPost,
+        API.SystemDashboardApi.GetSupervisionQualifiedAnalysis,
+        payload,
+      );
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       }
@@ -285,7 +336,6 @@ export default Model.extend({
         }
         callback && callback(result.Datas);
       }
-
     },
     // 监控地图
     *GetMapPointList({ payload, callback }, { call, put, update }) {
@@ -324,22 +374,14 @@ export default Model.extend({
     },
     // 排放量综合分析
     *GetEmissionsAnalysis({ callback, payload }, { call, put, update, select }) {
-      const result = yield call(
-        requestPost,
-        API.SystemDashboardApi.GetEmissionsAnalysis,
-        payload,
-      );
+      const result = yield call(requestPost, API.SystemDashboardApi.GetEmissionsAnalysis, payload);
       if (result.IsSuccess) {
         callback(result.Datas);
       }
     },
     // 超标数据分析
     *GetOverDataAnalysis({ callback, payload }, { call, put, update, select }) {
-      const result = yield call(
-        requestPost,
-        API.SystemDashboardApi.GetOverDataAnalysis,
-        payload,
-      );
+      const result = yield call(requestPost, API.SystemDashboardApi.GetOverDataAnalysis, payload);
       if (result.IsSuccess) {
         callback(result.Datas);
       }

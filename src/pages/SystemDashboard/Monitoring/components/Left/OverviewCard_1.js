@@ -28,7 +28,7 @@ const OverviewCard = props => {
   };
 
   return (
-    <HomeCard title="在线监控总览" style={{ minHeight: 360 }} loading={loading}>
+    <HomeCard title="在线监控总览" style={{ }} loading={loading}>
       <Row
         className={`${styles.CTOverviewCard} ${styles.MonitoringOverview}`}
         onClick={onOpenModal}

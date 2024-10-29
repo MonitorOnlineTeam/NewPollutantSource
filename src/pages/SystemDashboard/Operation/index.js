@@ -19,7 +19,7 @@ const HomeDataScreen = props => {
   return (
     <SystemDashboardPageWrapper pageName="智慧运维">
       <Col
-        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        style={{ width: '27%', display: fullScreen ? 'none' : 'flex' }}
         className={styles.leftWrapper}
       >
         <DeviceInfoCount />
@@ -35,7 +35,7 @@ const HomeDataScreen = props => {
         />
       </Col>
       <Col
-        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        style={{ width: '27%', display: fullScreen ? 'none' : 'flex' }}
         className={styles.rightWrapper}
       >
         <ResponseAnalysis />

@@ -25,18 +25,45 @@ const LevelCard = props => {
 
   const { dispatch, loading, LevelList, entCode, regionCode, time } = props;
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
-  }, []);
+    window.addEventListener('resize', handleResize);
+    // 在组件卸载或者依赖发生变化前，移除事件监听器
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [echarts]);
 
+  const handleResize = () => {
+    echarts && refreshChart(echarts);
+  };
 
+  const fontSizeFn = size => {
+    const scale = document.documentElement.clientWidth / 1680;
+    return size * scale;
+  };
+
+  // 改变echarts图字体大小
+  const refreshChart = chart => {
+    let echarts_instance = chart.getEchartsInstance();
+    echarts_instance.resize();
+    let option = echarts_instance.getOption();
+    if (option.xAxis && option.yAxis) {
+      option.xAxis[0].axisLabel.textStyle.fontSize = fontSizeFn(13);
+      option.yAxis[0].nameTextStyle.fontSize = fontSizeFn(13);
+      option.yAxis[0].axisLabel.fontSize = fontSizeFn(13);
+      option.grid.left = fontSizeFn(60);
+      option.grid.bottom = fontSizeFn(40);
+      echarts_instance.setOption(option);
+    }
+  };
 
   const onOpenModal = () => {
     setOpen(true);
   };
 
   const getOption = () => {
-    console.log('LevelList', LevelList);
-
     if (!echarts || !LevelList.length) {
       return {};
     }
@@ -76,6 +103,7 @@ const LevelCard = props => {
           show: true,
           position: 'top',
           fontWeight: 'bold',
+          fontSize: fontSizeFn(14)
           // color: params => {
           //   let index = params.dataIndex;
           //   return color[index][0];
@@ -85,7 +113,7 @@ const LevelCard = props => {
           normal: {
             color: params => {
               let index = params.dataIndex;
-              return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              return new echarts.echarts.graphic.LinearGradient(0, 0, 0, 1, [
                 {
                   offset: 0,
                   color: color[index][0],
@@ -129,9 +157,9 @@ const LevelCard = props => {
       },
       grid: {
         borderWidth: 0,
-        bottom: 40,
+        bottom: fontSizeFn(40),
         right: 0,
-        left: 40,
+        left: fontSizeFn(60),
         // textStyle: {
         //   color: '#fff',
         // },
@@ -157,7 +185,7 @@ const LevelCard = props => {
             //   }
             // },
             textStyle: {
-              // fontSize: 14,
+              fontSize: fontSizeFn(13),
               color: '#dfdfdf',
               fontWeight: 'bold',
             },
@@ -170,8 +198,9 @@ const LevelCard = props => {
           type: 'value',
           name: `（${unit}）`,
           nameTextStyle: {
-            padding: [0, 50, 0, 0],
+            padding: [0, fontSizeFn(50), 0, 0],
             color: '#fff',
+            fontSize: fontSizeFn(13),
           },
           axisTick: {
             show: false,
@@ -180,6 +209,7 @@ const LevelCard = props => {
             show: false,
           },
           axisLabel: {
+            fontSize: fontSizeFn(13),
             textStyle: {
               color: '#fff',
               fontWeight: 'bold',
@@ -204,7 +234,7 @@ const LevelCard = props => {
       title={
         <>
           异常分级统计
-          <DescriptionModal type="level"/>
+          <DescriptionModal type="level" />
           {/* <QuestionTooltip
             color="#073783"
             placement="right"
@@ -274,14 +304,14 @@ const LevelCard = props => {
       onExtraClick={onOpenModal}
     >
       <ToggleRadio
-        style={{ position: 'absolute', right: 20, top: 10, zIndex: 1 }}
+        style={{ position: 'absolute', right: '1.25rem', top: '.625rem', zIndex: 1 }}
         onChange={e => {
           setDataType(e.target.value);
         }}
       />
       <ReactEcharts
         ref={echart => {
-          echart && setEcharts(echart.echarts);
+          echart && setEcharts(echart);
         }}
         option={getOption()}
         style={{ height: '100%' }}

@@ -6,6 +6,7 @@ import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import CustomerSatisfacQuery from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 let myChart;
 const dvaPropsData = ({ loading, sysDashboard }) => ({
@@ -74,13 +75,13 @@ const CustomerSatisfaction = props => {
     if (echarts)
       return {
         title: {
-          text: `{v|${dataValue}}{unit|%}`,
+          text: `{v|${dataValue}}{v|%}`,
           x: 'center',
           y: 'center',
           textStyle: {
             rich: {
-              v: { fontSize: 22, fontWeight: 'bold', color: labelColor },
-              unit: { fontSize: 22, fontWeight: 'bold', color: labelColor },
+              v: { fontSize: fontSizeFn(22), fontWeight: 'bold', color: labelColor },
+              // unit: { fontSize: 22, fontWeight: 'bold', color: labelColor },
             },
           },
         },
@@ -154,10 +155,7 @@ const CustomerSatisfaction = props => {
                     y: 0.2,
                     x2: 1,
                     y2: 0,
-                    colorStops: [
-                      { offset: 0, color: colors[0] },
-                      { offset: 1, color: colors[1] },
-                    ],
+                    colorStops: [{ offset: 0, color: colors[0] }, { offset: 1, color: colors[1] }],
                   },
                 },
               },
@@ -214,12 +212,7 @@ const CustomerSatisfaction = props => {
   };
 
   return (
-    <HomeCard
-      title="客户满意度分析"
-      style={{ minHeight: 260, flex: 2 }}
-      bodyStyle={{}}
-      loading={loading}
-    >
+    <HomeCard title="客户满意度分析" style={{ flex: 2 }} bodyStyle={{}} loading={loading}>
       <div className={styles.CustomerSatisfactionWrapper} onClick={onOpenModal}>
         <Row style={{ height: '100%' }}>
           <Col span={12}>

@@ -101,13 +101,13 @@ export default class Index extends Component  {
  
         return (
             <li key={index}>
-                <span className='table-text2' style={{width:  '37px'}}>
+                <span className='table-text2' style={{width:  '2.3125rem', fontSize: '.875rem'}}>
                    <span className='sort'style={index%2!=0?{background:'none'}:{}} >{index + 1}</span>
                 </span>
-                <span title={item.regionName} className='table-text2 textOverflow' style={{width: 'calc(70% - 31px)',textAlign:'center'}}>
+                <span title={item.regionName} className='table-text2 textOverflow' style={{width: 'calc(70% - 1.9375rem)',textAlign:'center', fontSize: '.875rem'}}>
                   {item.regionName}
                 </span>
-                <span title={item.rate} className='table-text2 textOverflow' style={{width: '35%',textAlign:'center'}}>
+                <span title={item.rate} className='table-text2 textOverflow' style={{width: '35%',textAlign:'center', fontSize: '.875rem'}}>
                   {item.rate}%
                  </span>
 

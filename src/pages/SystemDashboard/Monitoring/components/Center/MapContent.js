@@ -272,7 +272,7 @@ class MapContent extends PureComponent {
     let imgName = '/gasInfoWindow.png';
 
     return (
-      <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 248 }}>
+      <div className={styles.infoWindowContent} style={{ width: '21.25rem', minHeight: '15.5rem' }}>
         <>
           <div className={styles.header}>
             <h2>
@@ -467,28 +467,29 @@ class MapContent extends PureComponent {
         <div
           style={{
             position: 'relative',
-            transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
+            transform: `translate(-50%, ${'calc(-50% - .875rem)'})`,
             padding: '0 10px',
             cursor: 'text',
-            width: 260,
-            height: 170,
+            width: '16.25rem',
+            height: '10.625rem',
             background: `url(/SystemDashboard/regionTip.png)`,
             backgroundSize: '100% 100%',
+            fontSize: '.875rem'
           }}
         >
           <div
             style={{
               opacity: 1,
               color: '#52F2FF',
-              height: 'calc(100% - 12px)',
+              height: 'calc(100% - .75rem)',
             }}
           >
             <div
               className="textOverflow"
               style={{
-                width: 'calc(100% - 28px)',
-                height: 28,
-                lineHeight: '28px',
+                width: 'calc(100% - 1.75rem)',
+                height: '1.75rem',
+                lineHeight: '1.75rem',
                 fontWeight: 'bold',
                 cursor: 'pointer',
               }}
@@ -499,14 +500,14 @@ class MapContent extends PureComponent {
             </div>
             <RightOutlined
               onClick={() => (level == 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
-              style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
+              style={{ color: '#4BF3F9', position: 'absolute', top: '.375rem', right: '.375rem', fontSize: '.75rem' }}
             />
             <Row
               style={{
-                height: 'calc(100% - 36px)',
+                height: 'calc(100% - 2.25rem)',
                 display: 'flex',
                 fontWeight: 'bold',
-                padding: '0 10px',
+                padding: '0 .625rem',
               }}
             >
               <Col
@@ -517,11 +518,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#00a3ff', fontSize: 20 }}>
+                <p style={{ color: '#00a3ff', fontSize: '1.25rem' }}>
                   {position.pointCount}
                   <span className={styles.overViewUnit}>个</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>排口数量</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>排口数量</p>
               </Col>
               <Col
                 span={8}
@@ -531,11 +532,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#2EEB9D', fontSize: 20 }}>
+                <p style={{ color: '#2EEB9D', fontSize: '1.25rem' }}>
                   {position.normalCount}
                   <span className={styles.overViewUnit}>个</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>在线排口</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>在线排口</p>
               </Col>
               <Col
                 span={8}
@@ -545,11 +546,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#C9C9C9', fontSize: 20 }}>
+                <p style={{ color: '#C9C9C9', fontSize: '1.25rem' }}>
                   {position.unLineCount}
                   <span className={styles.overViewUnit}>个</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>离线排口</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>离线排口</p>
               </Col>
               <Col
                 span={8}
@@ -559,11 +560,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FF3737', fontSize: 20 }}>
+                <p style={{ color: '#FF3737', fontSize: '1.25rem' }}>
                   {position.overCount}
                   <span className={styles.overViewUnit}>个</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>超标排口</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>超标排口</p>
               </Col>
               <Col
                 span={8}
@@ -573,11 +574,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#FFCC00', fontSize: 20 }}>
+                <p style={{ color: '#FFCC00', fontSize: '1.25rem' }}>
                   {position.exceptionCount}
                   <span className={styles.overViewUnit}>个</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>异常排口</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>异常排口</p>
               </Col>
               <Col
                 span={8}
@@ -587,11 +588,11 @@ class MapContent extends PureComponent {
                   justifyContent: 'center',
                 }}
               >
-                <p style={{ color: '#836bfb', fontSize: 20 }}>
+                <p style={{ color: '#836bfb', fontSize: '1.25rem' }}>
                   {position.stopCount}
                   <span className={styles.overViewUnit}>个</span>
                 </p>
-                <p style={{ fontSize: 13, color: '#fff' }}>停产排口</p>
+                <p style={{ fontSize: '.8125rem', color: '#fff' }}>停产排口</p>
               </Col>
             </Row>
           </div>
@@ -600,11 +601,11 @@ class MapContent extends PureComponent {
               className={styles.circle}
               style={{
                 display: 'inline-block',
-                marginTop: 16,
-                width: 10,
-                height: 10,
+                marginTop: '1rem',
+                width: '.625rem',
+                height: '.625rem',
                 background: 'rgba(0, 141, 253, 1)',
-                boxShadow: ' 0 0 4px 4px rgba(0, 141, 253, .1)',
+                boxShadow: ' 0 0 .25rem .25rem rgba(0, 141, 253, .1)',
                 borderRadius: '50%',
               }}
             ></span>
@@ -614,7 +615,7 @@ class MapContent extends PureComponent {
     } else if (level == 3 || level == 4) {
       //监测点
       return (
-        <div style={{ position: 'relative', marginTop: 24 }}>
+        <div style={{ position: 'relative', marginTop: '1.5rem' }}>
           <span
             onClick={() => {
               let { position } = extData;

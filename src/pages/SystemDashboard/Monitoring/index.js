@@ -19,7 +19,7 @@ const HomeDataScreen = props => {
   return (
     <SystemDashboardPageWrapper pageName="监控预警">
       <Col
-        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        style={{ width: '27%',  display: fullScreen ? 'none' : 'flex' }}
         className={`${styles.leftWrapper} ${fullScreen ? styles['fade-out'] : styles['fade-in']}`}
       >
         <OverviewCard />
@@ -35,7 +35,7 @@ const HomeDataScreen = props => {
         />
       </Col>
       <Col
-        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        style={{ width: '27%', display: fullScreen ? 'none' : 'flex' }}
         className={`${styles.rightWrapper} ${fullScreen ? styles['fade-out'] : styles['fade-in']}`}
       >
         <AlarmOver />

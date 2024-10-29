@@ -39,7 +39,6 @@ export default Model.extend({
     *getBottleDataList({ payload, }, { call, update, put, take, select }) {
       const result = yield call(services.getBottleDataList, { ...payload, State: 1 });
       if (result.IsSuccess) {
-
         let gasDataTemp = [{}, {}, {}, {}];
         let gasData = _.sortBy([...result.Datas], item => item.GasBottleNum);
         console.log('gasData1=', result.Datas)

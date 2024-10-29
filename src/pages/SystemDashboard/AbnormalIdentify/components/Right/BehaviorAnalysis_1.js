@@ -31,14 +31,14 @@ const BehaviorAnalysis = props => {
   return (
     <HomeCard
       title="异常成因分析"
-      style={{ minHeight: 300, flex: 3 }}
-      bodyStyle={{ height: 'calc(100% - 40px)' }}
+      style={{ flex: 3 }}
+      bodyStyle={{ height: 'calc(100% - 2.5rem)' }}
       loading={loading}
       onExtraClick={onOpenModal}
     >
       <div className={styles.BehaviorAnalysisWrapper}>
         <ToggleRadio
-          style={{ position: 'absolute', right: 6, top: 10, zIndex: 1 }}
+          style={{ position: 'absolute', right: '.375rem', top: '.625rem', zIndex: 1 }}
           onChange={e => {
             setDataType(e.target.value);
           }}
@@ -46,7 +46,7 @@ const BehaviorAnalysis = props => {
         {actionList.map((item, index) => {
           return (
             <div className={styles.legendInfo} key={item.key} onClick={onOpenModal}>
-              <p style={{ fontWeight: 'bold', marginBottom: 0, fontSize: 14, marginBottom: 1 }}>
+              <p style={{ fontWeight: 'bold', marginBottom: 0, fontSize: '.875rem', marginBottom: 1 }}>
                 {item.key}
               </p>
               <div className={styles.content}>

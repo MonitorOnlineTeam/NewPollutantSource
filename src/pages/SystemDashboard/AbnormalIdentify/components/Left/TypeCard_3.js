@@ -10,6 +10,7 @@ import ToggleRadio from '@/pages/SystemDashboard/components/ToggleRadio.js';
 import AbnormalDataAnalysis from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/AbnormalDataAnalysis';
 import QuestionTooltip from '@/components/QuestionTooltip';
 import DescriptionModal from '@/pages/SystemDashboard/components/DescriptionModal.js';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 const COLOR = ['#0FD4F9', '#066EE9', '#73DAA6', '#E9E87A', '#A339E6'];
 
@@ -55,14 +56,14 @@ const TypeCard = props => {
         textStyle: {
           rich: {
             val: {
-              fontSize: 24,
+              fontSize: fontSizeFn(24),
               fontWeight: 'bold',
               color: '#fff',
             },
             name: {
-              fontSize: 13,
+              fontSize: fontSizeFn(13),
               color: '#C3F0FF',
-              padding: [10, 0, 0, 0],
+              padding: [fontSizeFn(10), 0, 0, 0],
               fontWeight: 'bold',
             },
           },
@@ -87,10 +88,10 @@ const TypeCard = props => {
           center: ['50%', '50%'],
           label: { show: false },
           itemStyle: {
-            borderRadius: 10,
+            borderRadius: fontSizeFn(10),
             // borderColor: '#2998FF',
-            borderWidth: 2,
-            padding: 4,
+            borderWidth: fontSizeFn(2),
+            padding: fontSizeFn(4),
           },
           padAngle: 1,
           data: seriesData,
@@ -147,7 +148,7 @@ const TypeCard = props => {
       onExtraClick={onOpenModal}
     >
       <ToggleRadio
-        style={{ position: 'absolute', right: 20, top: 10, zIndex: 1 }}
+        style={{ position: 'absolute', right: '1.25rem', top: '.625rem', zIndex: 1 }}
         onChange={e => {
           setDataType(e.target.value);
         }}

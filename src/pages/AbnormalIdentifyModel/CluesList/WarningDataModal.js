@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-14 10:37:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-08-15 18:10:09
+ * @Last Modified time: 2024-10-23 14:38:47
  * @Description: 报警数据 - 弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -77,6 +77,7 @@ const WarningData = props => {
         warningId={warningId}
         DGIMN={DGIMN}
         pointInfo={{
+          EntCode: warningInfo.EntCode,
           EntName: PointName?.split(' - ')[0],
           PointName: PointName?.split(' - ')[1],
           OpeUserId: warningInfo.OpeUserId

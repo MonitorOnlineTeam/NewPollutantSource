@@ -89,7 +89,7 @@ const AbnormalAlarm_3 = props => {
           <div className={styles.content}>
             <Progress
               style={{ width: '100%' }}
-              strokeWidth={15}
+              strokeWidth={'.9375rem'}
               percent={counts.zeroRate}
               steps={40}
               showInfo={false}
@@ -109,7 +109,7 @@ const AbnormalAlarm_3 = props => {
           <div className={styles.content}>
             <Progress
               style={{ width: '100%' }}
-              strokeWidth={15}
+              strokeWidth={'.9375rem'}
               percent={counts.overLimitRate}
               steps={40}
               showInfo={false}
@@ -127,7 +127,7 @@ const AbnormalAlarm_3 = props => {
           <div className={styles.content}>
             <Progress
               style={{ width: '100%' }}
-              strokeWidth={15}
+              strokeWidth={'.9375rem'}
               percent={counts.continuousRate}
               steps={40}
               showInfo={false}

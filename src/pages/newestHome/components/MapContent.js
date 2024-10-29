@@ -658,16 +658,16 @@ class Index extends PureComponent {
     const { showType, entTitleShow, pointTitleShow, isMassive } = this.state;
     const alarmStatus = extData.position.alarmStatus;
     if (showType == 1) {
-      return <div style={{ position: 'relative', width: 110, height: 110, marginLeft: -55, marginTop: -110, background: 'url("/homeMapBorder.png")', backgroundSize: '100% 100%', cursor: 'default' }}>
-        <div title={extData.position && extData.position.regionName} className='textOverflow' style={{ color: "#4BF3F9", position: 'absolute', left: 10, top: 18, fontSize: 12, lineHeight: '12px', width: 'calc(100% - 14px - 10px - 14px)' }}> {extData.position && extData.position.regionName} </div>
-        <img src='/location.png' style={{ position: 'absolute', top: '100%', left: 'calc(50% - 10px)', width: 20, height: 20 }} />
-        <RightOutlined onClick={() => { this.goEnt(extData) }} style={{ color: "#4BF3F9", position: 'absolute', top: 18, right: 8, fontSize: 14 }} />
+      return <div style={{ position: 'relative', width: '110px', height: '6.875rem', marginLeft: '-3.4375rem', marginTop: '-6.875rem', background: 'url("/homeMapBorder.png")', backgroundSize: '100% 100%', cursor: 'default' }}>
+        <div title={extData.position && extData.position.regionName} className='textOverflow' style={{ color: "#4BF3F9", position: 'absolute', left: '.625rem', top: '1.125rem', fontSize: '.75rem', lineHeight: '.75rem', width: 'calc(100% - .875rem - .625rem - .875rem)' }}> {extData.position && extData.position.regionName} </div>
+        <img src='/location.png' style={{ position: 'absolute', top: '100%', left: 'calc(50% - .625rem)', width: '1.25rem', height: '1.25rem' }} />
+        <RightOutlined onClick={() => { this.goEnt(extData) }} style={{ color: "#4BF3F9", position: 'absolute', top: '1.125rem', right: '.5rem', fontSize: '.875rem' }} />
         {this.regPopovercontent(extData)}
       </div>
     } else if (showType == 2) {
 
       const entName = extData.position.entName;
-      return <div style={{ position: 'relative', marginTop: 24, }}>
+      return <div style={{ position: 'relative', marginTop: '1.5rem', }}>
         <EntIcon />
         <div className={alarmStatus == 1 ? styles.abnormalPaulse : alarmStatus == 2 ? styles.overPaulse : ''}></div>
         {entTitleShow && <div className={styles.titlePopSty}>
@@ -675,11 +675,11 @@ class Index extends PureComponent {
         </div>}
       </div>
     } else { //监测点
-      return <div style={{ position: 'relative', marginTop: 24, }}>
+      return <div style={{ position: 'relative', marginTop: '1.5rem', }}>
         {this.getIcon(extData.position.Status)}
         <div className={alarmStatus == 1 ? styles.abnormalPaulse : alarmStatus == 2 ? styles.overPaulse : ''}></div>
         {pointTitleShow && isMassive ?
-          <div style={{ padding: '4px 8px', backgroundColor: massPointTitleColor }}>{extData.position.ParentName} - {extData.position.PointName}</div>
+          <div style={{ padding: '.25rem .5rem', backgroundColor: massPointTitleColor }}>{extData.position.ParentName} - {extData.position.PointName}</div>
           :
           pointTitleShow ? <div className={styles.pointTitlePopSty}>
             <div className={styles.titlePopSty} >
@@ -744,7 +744,7 @@ class Index extends PureComponent {
       return statusText;
     };
     return (
-      <div className={styles.infoWindowContent} style={{ width: 340,minHeight:248}}>
+      <div className={styles.infoWindowContent} style={{ width: '21.25rem',minHeight:'15.5rem'}}>
         {this.props.infoWindowDataLoading ? <PageLoading /> :
 
           <>
@@ -776,14 +776,14 @@ class Index extends PureComponent {
               </p>
              {(currentClickObj.alarmStatus==1 || currentClickObj.alarmStatus==2) &&
               <p>
-                <div><div style={{display:'inline-block',verticalAlign:'top'}}> 详细描述：</div> <div style={{display:'inline-block',width:'calc(100% - 75px)',overflowWrap: 'break-word'}}>{currentClickObj.alarmMsg}</div></div>
+                <div><div style={{display:'inline-block',verticalAlign:'top'}}> 详细描述：</div> <div style={{display:'inline-block',width:'calc(100% - 4.6875rem)',overflowWrap: 'break-word'}}>{currentClickObj.alarmMsg}</div></div>
               </p>
              }
             </div>
             <div className={styles.desc} style={{borderBottom:ShowMapData? '1px dashed #ccc':'none'}}>
               <div className={styles['desc-l']}>
                 <h3>站点信息</h3>
-                <p className='textOverflow' style={{ width: 160 }} title={infoWindowData.regionName}>区域：{infoWindowData.regionName}</p>
+                <p className='textOverflow' style={{ width: '10rem' }} title={infoWindowData.regionName}>区域：{infoWindowData.regionName}</p>
                 <p>经度：{currentClickObj.Longitude}</p>
                 <p>纬度：{currentClickObj.Latitude}</p>
               </div>
@@ -807,10 +807,10 @@ class Index extends PureComponent {
                       style={{
                         background: infoWindowData.AQI_Color,
                         display: 'inline-block',
-                        width: 30,
+                        width: '1.875rem',
                         textAlign: 'center',
-                        height: 20,
-                        lineHeight: '20px',
+                        height: '1.25rem',
+                        lineHeight: '1.25rem',
                       }}
                     >
                       {infoWindowData.AQI}
@@ -1100,7 +1100,7 @@ class Index extends PureComponent {
         <div className={smallResolution ? styles.smallMapBtn : styles.mapBtn}> { /**按钮 */}
           <Row align='middle'>
             {typeBtnArr.map((item, index) => {
-              return <Row onClick={() => { this.mapBtnClick(index, item) }} style={{ padding: smallResolution ? '7px 10px' : '' }} className={index === mapBtnStatusIndex ? styles.typeBtnActiveSty : styles.typeBtnSty} align='middle' justify='center'>
+              return <Row onClick={() => { this.mapBtnClick(index, item) }} style={{ padding: smallResolution ? '.4375rem .625rem' : '' }} className={index === mapBtnStatusIndex ? styles.typeBtnActiveSty : styles.typeBtnSty} align='middle' justify='center'>
                 <div className={smallResolution ? styles.smallColorBlock : styles.colorBlock} style={{ background: `${item.color}` }}></div>
                 <span style={{ fontSize: subjectFontSize }}>{item.text} {item.val}</span>
               </Row>

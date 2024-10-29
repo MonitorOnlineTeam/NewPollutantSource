@@ -20,7 +20,7 @@ const HomeDataScreen = props => {
   return (
     <SystemDashboardPageWrapper pageName="动态质控">
       <Col
-        style={{ width: '27%', minWidth: 400, display: fullScreen ? 'none' : 'flex' }}
+        style={{ width: '27%', display: fullScreen ? 'none' : 'flex' }}
         className={styles.leftWrapper}
       >
         {/* 总览 */}

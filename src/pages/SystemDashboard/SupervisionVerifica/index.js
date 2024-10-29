@@ -19,7 +19,7 @@ import PassRateAnalysis from './components/Left/Analysis_3';
 
 const dvaPropsData = ({ loading, sysDashboard }) => ({});
 
-const homeCardMinHight = 226;
+const homeCardMinHight = '14.125rem';
 const HomeDataScreen = props => {
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -27,14 +27,14 @@ const HomeDataScreen = props => {
     <SystemDashboardPageWrapper pageName="监督核查" noDate>
       <Col
         className={styles.leftWrapper}
-        style={{ width: 486, display: fullScreen ? 'none' : 'flex' }}
+        style={{ width: '30.375rem', display: fullScreen ? 'none' : 'flex' }}
       >
         <Overview homeCardMinHight={homeCardMinHight} />
         <KeyAnalysis homeCardMinHight={homeCardMinHight} />
         <ComplianceAnalysis homeCardMinHight={homeCardMinHight} />
         <PassRateAnalysis homeCardMinHight={homeCardMinHight} />
       </Col>
-      <Col style={{ width: 'calc(100% - 486px)',minHeight: 969 }} flex={'auto'} className={styles.centerWrapper}>
+      <Col style={{ width: 'calc(100% - 30.375rem)' }} flex={'auto'} className={styles.centerWrapper}>
         {/* 地图 */}
         <MapContent
           onFullScreenChange={value => {

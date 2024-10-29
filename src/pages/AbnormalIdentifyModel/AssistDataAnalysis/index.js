@@ -26,6 +26,7 @@ const AssistDataAnalysis = props => {
     warningId,
   } = props;
   const [DGIMN, setDGIMN] = useState(props.DGIMN);
+  const [entCode, setEntCode] = useState();
   // const [images, setImages] = useState([]);
 
   useEffect(() => {
@@ -46,7 +47,6 @@ const AssistDataAnalysis = props => {
   //     });
   //   }
   // };
-  console.log('pointInfo1', pointInfo);
   const getPageContent = () => {
     return (
       <Card bodyStyle={{ paddingTop: 0 }} bordered={displayType !== 'modal'}>
@@ -61,6 +61,7 @@ const AssistDataAnalysis = props => {
               displayType={displayType}
               pointInfo={pointInfo}
               warningId={warningId}
+              entCode={entCode || pointInfo.EntCode}
               {...dataChartParams}
             />
           </Tabs.TabPane>
@@ -119,6 +120,7 @@ const AssistDataAnalysis = props => {
         onItemClick={value => {
           if (value[0].IsEnt === false) {
             setDGIMN(value[0].key);
+            setEntCode(value[0].EntCode)
           }
         }}
       />

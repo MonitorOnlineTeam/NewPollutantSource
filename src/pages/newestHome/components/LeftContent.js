@@ -25,6 +25,7 @@ import EntWorkOrderModal from '@/pages/IntelligentAnalysis/operationWorkStatis/h
 import OperatingInfo from './springModal/operatingInfo'
 import TaskRecord from '@/pages/operations/TaskRecord'
 import PlanWorkOrderStatisticsDay from '@/pages/IntelligentAnalysis/planWorkOrderStatisticsDay'
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 const { Option } = Select;
 
@@ -262,7 +263,7 @@ const Index = (props) => {
 
   const operaOrderOption = {  //运维工单图表
     tooltip: { show: false },
-    grid: { top: 0, left: 80, right: 65, bottom: 0, },
+    grid: { top: 0, left: fontSizeFn(80), right: fontSizeFn(65), bottom: 0, },
     xAxis: { show: false, type: 'value' },
     yAxis: {
       type: 'category',
@@ -272,8 +273,11 @@ const Index = (props) => {
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: {
-        margin: 80, textStyle: { color: '#fff', fontSize: subjectFontSize, align: 'left' },
+        margin: fontSizeFn(80), textStyle: { color: '#fff', fontSize: subjectFontSize, align: 'left' },
       },
+      textStyle: {
+        fontSize: fontSizeFn(14)
+      }
     },
     series: [
       {
@@ -471,7 +475,7 @@ const Index = (props) => {
         top: "48%",
         textStyle: {
           color: type == 1 ? color1[0] : type == 2 ? color2[0] : color3[0],
-          fontSize: 16,
+          fontSize: fontSizeFn(16),
           align: "center",
           fontWeight: 'bold',
         },
@@ -484,7 +488,7 @@ const Index = (props) => {
           text: type == 1 ? '巡检完成率' : '校准完成率',
           textAlign: "center",
           fill: "#fff",
-          fontSize: 12,
+          fontSize: fontSizeFn(12),
         }
       },
       series: [
@@ -592,14 +596,14 @@ const Index = (props) => {
   }
 
   const planOperaEcharts = useMemo(() => { //监听变量，第一个参数是函数，第二个参数是依赖，只有依赖变化时才会重新计算函数
-    return <div style={{ height: '100%', padding: '5px 0 10px 21px' }}> {/**当图表有点击事件时 更新更新页面时  图表抖动 */}
+    return <div style={{ height: '100%', padding: '.3125rem 0 .625rem 1.3125rem' }}> {/**当图表有点击事件时 更新更新页面时  图表抖动 */}
       <Row type='flex' align='middle'>
         <ReactEcharts
           option={planOperaOption(1)}
-          style={{ width: 105, height: 105 }}
+          style={{ width: '6.5625rem', height: '6.5625rem' }}
           onEvents={{ click: TaskPlanType == 1 ? planInspection : () => planOperation('巡检') }}
         />
-        <img style={{ padding: '0 24px' }} src='./homePlanSplitLine.png' />
+        <img style={{ padding: '0 1.5rem' }} src='./homePlanSplitLine.png' />
         <div className={styles.planOperaText} >
           {TaskPlanType == 1 ?
             <>
@@ -618,14 +622,14 @@ const Index = (props) => {
           }
         </div>
       </Row>
-      <div style={{ width: '100%', height: 1, marginLeft: -21, background: "rgba(65, 66, 69, 0.5)", margin: TaskPlanType == 1 ? 0 : '4px 0' }}></div>
+      <div style={{ width: '100%', height: 1, marginLeft: '-1.3125rem', background: "rgba(65, 66, 69, 0.5)", margin: TaskPlanType == 1 ? 0 : '.25rem 0' }}></div>
       <Row type='flex' align='middle'>
         <ReactEcharts
           option={planOperaOption(2)}
-          style={{ width: 105, height: 105 }}
+          style={{ width: '6.5625rem', height: '6.5625rem' }}
           onEvents={{ click: TaskPlanType == 1 ? planCalibration : () => planOperation('校准') }}
         />
-        <img style={{ padding: '0 24px' }} src='./homePlanSplitLine.png' />
+        <img style={{ padding: '0 1.5rem' }} src='./homePlanSplitLine.png' />
         <div className={styles.planOperaText} >
           {TaskPlanType == 1 ?
             <>
@@ -658,7 +662,7 @@ const Index = (props) => {
     return <ReactEcharts
       option={operaOrderOptionDay()}
       onEvents={{ click: operaOrderOptionDayEchartsClick }}
-      style={{ height: 'calc(100% - 58px )', width: '100%' }}
+      style={{ height: 'calc(100% - 3.625rem )', width: '100%' }}
     />
 
   }, [workOrderExecuData])
@@ -704,9 +708,9 @@ const Index = (props) => {
   const workOrderExecuNumSty = {
     fontFamily: 'YouSheBiaoTiHei',
     fontWeight: 400,
-    fontSize: 18,
+    fontSize: '1.125rem',
     color: '#1BDEEA',
-    paddingRight: 8,
+    paddingRight: '.5rem',
   }
 
 
@@ -715,19 +719,19 @@ const Index = (props) => {
       <Spin spinning={operationLoading}>
         <div className={styles.pointSty}>
           <CardHeader title='运维信息总览' />
-          <Table style={{ padding: '16px 15px 0 0' }} columns={operationColumns} dataSource={operationDataSource} pagination={false} />
+          <Table style={{ padding: '1rem .9375rem 0 0' }} columns={operationColumns} dataSource={operationDataSource} pagination={false} />
         </div>
       </Spin>
 
       {TaskPlanType == 1 ? <Spin spinning={operationTaskLoading}>
         <div className={styles.operaOrder}>
           <CardHeader title='近30日运维工单' />
-          <div style={{ height: '100%', padding: '20px 10px 0 0' }}>
+          <div style={{ height: '100%', padding: '1.25rem .625rem 0 0' }}>
             <ReactEcharts
               option={operaOrderOption}
-              style={{ height: 'calc(100% - 44px )', width: '100%' }}
+              style={{ height: 'calc(100% - 2.75rem )', width: '100%' }}
             />
-            <MoreBtn style={{ padding: '8px 10px 0' }} type='operaOrder' moreBtnClick={moreBtnClick} />
+            <MoreBtn style={{ padding: '.5rem .625rem 0' }} type='operaOrder' moreBtnClick={moreBtnClick} />
           </div>
         </div>
       </Spin> :
@@ -741,8 +745,8 @@ const Index = (props) => {
                 GetOperationTaskStatisticsInfoByDayRequest(value)
               }}
             />
-            <div style={{ height: '100%', padding: '18px 10px 0 0' }}>
-              <Row gutter={workOrderExecuTimeVal == 1 ? 0 : 16} style={{ justifyContent: workOrderExecuTimeVal == 1 ? 'space-between' : 'center', paddingRight: 8 }}>
+            <div style={{ height: '100%', padding: '1.125rem .625rem 0 0' }}>
+              <Row gutter={workOrderExecuTimeVal == 1 ? 0 : 16} style={{ justifyContent: workOrderExecuTimeVal == 1 ? 'space-between' : 'center', paddingRight: '.5rem' }}>
                 <Col style={{ cursor: 'pointer' }} onClick={() => operaOrderOptionDayClick('完成')}><div><span style={workOrderExecuDotSty}></span>完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.completeCount}</span>个</div></Col>
                 <Col style={{ cursor: 'pointer' }} onClick={() => operaOrderOptionDayClick('超时完成')}><div><span style={workOrderExecuDotSty}></span>超时完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeCompleteCount}</span>个</div></Col>
                 {workOrderExecuTimeVal == 1 ? <>
@@ -761,7 +765,7 @@ const Index = (props) => {
         </Spin>
       }
       <Spin spinning={TaskPlanType == 1 ? operationPlanTaskLoading : operationTaskCompleteRateByDayLoading}> {/**近30日运维情况 */}
-        <div className={styles.planOpera} style={{ height: TaskPlanType == 1 ? 269 : 292 }}>
+        <div className={styles.planOpera} style={{ height: TaskPlanType == 1 ? '16.8125rem' : '18.25rem' }}>
           <CardHeader title='近30日运维情况' isPopover />
           {planOperaEcharts}
         </div>
@@ -770,7 +774,7 @@ const Index = (props) => {
       <Spin spinning={planCompleteListLoading}>
         <div className={styles.planComplete}>
           <CardHeader btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='近30日运维排名' />
-          <div style={{ height: '100%', padding: '21px 18px 0 0' }}>
+          <div style={{ height: '100%', padding: '1.3125rem 1.125rem 0 0' }}>
             {!planCompleteListLoading && <ScrollTable data={[...planCompleteList]} column={[]} />}
             {/* <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/> */}
           </div>
