@@ -25,6 +25,7 @@ import { getColorByName, ModalTypeNameConversion, getPollutantNameByCode } from 
 import TableText from '@/components/TableText';
 import moment from 'moment';
 import UpdateDataFlag from './UpdateDataFlag';
+import StopRecord from '@/pages/monitoring/StopRecord/stopRecord.js';
 
 const { CheckableTag } = Tag;
 
@@ -64,6 +65,7 @@ const WarningDataAndChart = props => {
   const [allTypeDataList, setAllTypeDataList] = useState([]);
   const [units, setUnits] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isStopRecordModalOpen, setIsStopRecordModalOpen] = useState(false);
   const [showType, setShowType] = useState(props.defaultShowType || 'chart');
   const [currentBrushRangeDate, setCurrentBrushRangeDate] = useState([]);
   const [brushRangeIndex, setBrushRangeIndex] = useState([]);
@@ -1459,7 +1461,7 @@ const WarningDataAndChart = props => {
           pollutantCodes: [],
         }}
         autoComplete="off"
-        style={{ display: chartPollutantList ? 'none' : '' }}
+        style={{ display: chartPollutantList ? 'none' : '', position: 'relative' }}
       >
         <Form.Item name="pollutantCodes">
           <Select
@@ -1556,28 +1558,37 @@ const WarningDataAndChart = props => {
             </Radio.Group>
           </Spin>
         )}
-        {props.displayType == 'modal' && pointInfo && buttonList.includes('UpdateDataScript') && (
-          // {true && (
+        <Space style={{ position: 'absolute', right: 0, top: 0 }}>
+          {props.displayType == 'modal' && pointInfo && buttonList.includes('UpdateDataScript') && (
+            // {true && (
+            <Button
+              type="primary"
+              onClick={() => {
+                setIsModalOpenDataFlag(true);
+              }}
+              // style={{ position: 'absolute', right: 0, top: 50 }}
+            >
+              修改数据标记
+            </Button>
+          )}
+          {// 弹窗不显示编辑功能
+          props.displayType !== 'modal' && (
+            <Button
+              type="primary"
+              onClick={() => setIsModalOpen(true)}
+              // style={{ position: 'absolute', right: 12, top: 0 }}
+            >
+              编辑图表
+            </Button>
+          )}
           <Button
             type="primary"
-            onClick={() => {
-              setIsModalOpenDataFlag(true);
-            }}
-            style={{ position: 'absolute', right: 0, top: 50 }}
+            onClick={() => setIsStopRecordModalOpen(true)}
+            // style={{ position: 'absolute', right: 12, top: 0 }}
           >
-            修改数据标记
+            停运记录
           </Button>
-        )}
-        {// 弹窗不显示编辑功能
-        props.displayType !== 'modal' && (
-          <Button
-            type="primary"
-            onClick={() => setIsModalOpen(true)}
-            style={{ position: 'absolute', right: 12, top: 0 }}
-          >
-            编辑图表
-          </Button>
-        )}
+        </Space>
       </Form>
       {showType === 'data' ? (
         <SdlTable
@@ -1722,6 +1733,21 @@ const WarningDataAndChart = props => {
           }}
         />
       )}
+      <Modal
+        title="停运记录"
+        wrapClassName="fullScreenModal"
+        open={isStopRecordModalOpen}
+        destroyOnClose
+        // open={false}
+        footer={[]}
+        onCancel={() => {
+          setIsStopRecordModalOpen(false);
+        }}
+      >
+        {isStopRecordModalOpen && (
+          <StopRecord hideBreadcrumb time={form.getFieldValue('time')} DGIMN={DGIMN} entCode={props.entCode} />
+        )}
+      </Modal>
     </>
   );
 };

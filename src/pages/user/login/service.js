@@ -1,10 +1,11 @@
 import { post, get } from '@/utils/request';
 import { API } from '@config/API';
-import { encryptKey } from '@/utils/utils';
+import { encryptKey, refreshToken } from '@/utils/utils';
 import Cookie from 'js-cookie';
 import request from 'umi-request';
 import { async } from 'q';
 import config from '@/config';
+import moment from 'moment';
 // import { JSEncrypt } from 'jsencrypt';
 // import {CryptoJS} from 'crypto-js';
 // var CryptoJS = require('crypto-js');
@@ -43,6 +44,7 @@ export async function getToken(params) {
   });
   if (result.access_token) {
     Cookie.set(config.cookieName, result.access_token);
+
     window.localStorage.setItem(
       'loginTokenData',
       JSON.stringify({
@@ -53,6 +55,13 @@ export async function getToken(params) {
         refresh_token: result.refresh_token,
       }),
     );
+    clearInterval(window.refreshTokenTimer);
+    refreshToken({
+      time: new Date().getTime(),
+      expires_in: result.expires_in,
+      username: params.username,
+      password: params.password,
+    });
   } else {
     Cookie.set(config.cookieName, '');
   }

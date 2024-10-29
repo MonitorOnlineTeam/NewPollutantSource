@@ -3,7 +3,6 @@ import { getBtnAuthority } from '../services/baseapi';
 import * as services from '@/services/commonApi';
 import Model from '@/utils/model';
 import * as mywebsocket from '../utils/mywebsocket';
-import { getTimeDistance } from '../utils/utils';
 import { getAlarmNotices, mymessagelist, getSysPollutantTypeList } from '@/services/globalApi';
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
 import moment from 'moment';
@@ -12,7 +11,7 @@ import Cookie from 'js-cookie';
 import config from '@/config';
 import { message } from 'antd';
 import { router } from 'umi';
-import { getSysName, isOperaSystem } from '@/utils/utils';
+import { getSysName, isOperaSystem, refreshToken } from '@/utils/utils';
 import { GetOperationSetting } from '@/pages/systemManger/operationBasConfig/service';
 
 /**
@@ -99,13 +98,15 @@ export default Model.extend({
         yield update({
           sysPollutantTypeList: sysPollutantTypeList,
         });
+        // let filterData = sysPollutantTypeList.filter(
+        //   item =>
+        //     item.ID !== '1B90866D-523F-4D9D-A2CC-A3616C336C31' && // 废气监测智慧运维管理平台
+        //     item.ID !== '007A64F7-9FFA-4055-9156-9CF4E8FFB04B' && // 废水监测智慧运维管理平台
+        //     item.ID !== '0d4ad7f1-3a05-42ad-9860-c150ee8c270e' && // 模型1.0
+        //     item.ID !== '140496b1-ab85-474a-9278-3ca7c6df3f9b', //   污染源监测安装调试系统
+        // );
         // yield update({
-        //   sysPollutantTypeList: sysPollutantTypeList.filter(
-        //     item =>
-        //       item.ID !== '99dbc722-033f-481a-932a-3c6436e17245' &&
-        //       item.ID !== '0d4ad7f1-3a05-42ad-9860-c150ee8c270e' &&
-        //       item.ID !== '140496b1-ab85-474a-9278-3ca7c6df3f9b',
-        //   ),
+        //   sysPollutantTypeList: filterData,
         // });
         callback && callback(sysPollutantTypeList);
       } else {
@@ -201,6 +202,8 @@ export default Model.extend({
             ...configInfo,
           },
         });
+
+        refreshToken();
       }
     },
   },

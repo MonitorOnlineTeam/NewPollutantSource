@@ -31,6 +31,9 @@ const SystemDashboardPageWrapper = props => {
     setRem();
     // 监听窗口大小变化
     window.addEventListener('resize', setRem);
+    return () => {
+      window.removeEventListener('resize', setRem);
+    };
   }, []);
 
   useEffect(() => {

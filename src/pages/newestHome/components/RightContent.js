@@ -27,6 +27,8 @@ import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmis
 import NetworkRateStatisticsModal from './springModal/networkRateStatistics'
 // import AlarmResponseTimeoutRateModal from './springModal/abnormalWorkStatistics'
 import AlarmResponseTimelyRateModal from './springModal/alarmResponseTimelyRateModal'
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
+
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -212,10 +214,10 @@ const Index = (props) => {
       title: {
         text: networking.networkingRate == '-' ? "-" : networking.networkingRate + '%',
         left: "center",
-        top: "38%",
+        top: "center",
         textStyle: {
           color: '#fff',
-          fontSize: 18,
+          fontSize: fontSizeFn(18),
           align: "center",
           fontWeight: 'bold',
         }
@@ -263,7 +265,7 @@ const Index = (props) => {
           return name + '<br />' + value
         },
         backgroundColor: "rgba(46, 57, 80, 1)", // 提示框浮层的背景颜色。
-        padding: [14, 12, 14, 10],
+        padding: [fontSizeFn(14), fontSizeFn(12), fontSizeFn(14), fontSizeFn(10)],
         axisPointer: { // 坐标轴指示器配置项。
           type: 'line', // 'line' 直线指示器  'shadow' 阴影指示器  'none' 无指示器  'cross' 十字准星指示器。
           snap: true, // 坐标轴指示器是否自动吸附到点上
@@ -279,10 +281,10 @@ const Index = (props) => {
         borderColor: 'rgba(46, 57, 80, 1)', // 修改边框颜色
       },
       grid: {
-        left: 40,
-        right: 20,
-        bottom: 45,
-        top: 10,
+        left: fontSizeFn(40),
+        right: fontSizeFn(20),
+        bottom: fontSizeFn(40),
+        top: fontSizeFn(40),
       },
       xAxis: {
         type: 'category',
@@ -299,7 +301,8 @@ const Index = (props) => {
         },
         axisLabel: {
           textStyle: {
-            color: '#fff'
+            color: '#fff',
+            fontSize: fontSizeFn(12)
           },
         }
       },
@@ -312,7 +315,8 @@ const Index = (props) => {
         axisLabel: {
           formatter: '{value}%',
           textStyle: {
-            color: '#fff'
+            color: '#fff',
+            fontSize: fontSizeFn(12)
           }
         },
         splitLine: {  //x轴分割线
@@ -340,7 +344,7 @@ const Index = (props) => {
 
   const dataAlarmResOption = {  //异常数据总览
     tooltip: { show: false },
-    grid: { top: 0, left: 124, right: 68, bottom: 0, },
+    grid: { top: 0, left: fontSizeFn(124), right: fontSizeFn(68), bottom: 0, },
     xAxis: { show: false, type: 'value' },
     yAxis: {
       type: 'category',
@@ -349,7 +353,7 @@ const Index = (props) => {
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: {
-        margin: 124, textStyle: { color: '#fff', fontSize: subjectFontSize, align: 'left' },
+        margin: fontSizeFn(124), textStyle: { color: '#fff', align: 'left', fontSize: fontSizeFn(13) },
       },
     },
     series: [
@@ -370,7 +374,7 @@ const Index = (props) => {
             },
             fontSize: subjectFontSize,
             color: '#fff',
-            padding: [0, 0, 0, 12],
+            padding: [0, 0, 0, fontSizeFn(12)],
           },
         },
         itemStyle: { normal: { color: '#2E3647' }, },
@@ -411,7 +415,7 @@ const Index = (props) => {
       top: "44%",
       textStyle: {
         color: "#fff",
-        fontSize: 20,
+        fontSize: fontSizeFn(18),
         align: "center",
         fontWeight: 400
       }
@@ -423,7 +427,7 @@ const Index = (props) => {
       {
         name: '点位统计',
         type: 'pie',
-        radius: ['45%', '70%'],
+        radius: ['35%', '60%'],
         avoidLabelOverlap: false,
         hoverAnimation: false,
         minAngle: 90,//最小角度
@@ -438,9 +442,9 @@ const Index = (props) => {
               fontSize: subjectFontSize,
             },
             num: {
-              fontSize: 16,
+              fontSize: fontSizeFn(16),
               color: '#fff',
-              padding: [8, 0, 0, 0]
+              padding: [fontSizeFn(8), 0, 0, 0]
             }
           }
         },
@@ -503,7 +507,7 @@ const Index = (props) => {
 
   const dataAlarmEcharts = useMemo(() => {
 
-    return <div style={{ height: '100%', padding: '24px 19px 15px 0' }}>
+    return <div style={{ height: '100%', padding: '1.5rem 1.1875rem .9375rem 0' }}>
       <ReactEcharts
         option={dataAlarmResOption}
         style={{ height: '100%', width: '100%' }}
@@ -519,17 +523,17 @@ const Index = (props) => {
       <Spin spinning={networkingLoading}>
         <div className={styles.realTimeNetworkSty}>
           <CardHeader title='实时联网率' />
-          <div style={{ paddingTop: 30 }}>
+          <div style={{ paddingTop: '1.875rem' }}>
             <Row align='bottom'>
               <ReactEcharts
                 option={realTimeNetworkOption(1)}
-                style={{ width: 98, height: 98 }}
+                style={{ width: fontSizeFn(98), height: fontSizeFn(98) }}
               />
-              <div style={{ paddingBottom: 25, width: 'calc(100% - 115px)' }}>
+              <div style={{ paddingBottom: '1.5625rem', width: 'calc(100% - 7.1875rem)' }}>
                 <Row align='middle'><div className={styles.realTimeNetworkLegend} style={{ background: '#298CFB' }}></div>
                   <div>已联网监测点数：</div>{networking.networkingCount}<span>个</span>
                 </Row>
-                <Row align='middle' style={{ paddingTop: 8 }}><div className={styles.realTimeNetworkLegend} style={{ background: '#FCA522' }}></div>
+                <Row align='middle' style={{ paddingTop: '.5rem' }}><div className={styles.realTimeNetworkLegend} style={{ background: '#FCA522' }}></div>
                   <div>未联网监测点数：</div>{networking.offLineCount}<span>个</span>
                 </Row>
               </div>
@@ -540,40 +544,45 @@ const Index = (props) => {
         </div>
       </Spin>
 
-      <Spin spinning={effectiveTransmissionLoading}>
-        <div className={styles.effectiveTrans}> {/**有效传输率 */}
-          <CardHeader btnClick={effectiveTransClick} showBtn type='week' btnCheck={effectiveTransBtnCheck} title='有效传输率' />
-          <div style={{ height: '100%', padding: '36px 19px 0 0' }}>
-            <ReactEcharts
-              option={effectiveTransOption()}
-              style={{ height: '100%', width: '100%' }}
-            />
+      {
+        effectiveTransmissionLoading ?
+          <Spin spinning={effectiveTransmissionLoading}>
+            <div className={styles.effectiveTrans}></div>
+          </Spin> : 
+          <div className={styles.effectiveTrans} style={{marginBottom: '0.5625rem'}}> {/**有效传输率 */}
+            <CardHeader btnClick={effectiveTransClick} showBtn type='week' btnCheck={effectiveTransBtnCheck} title='有效传输率' />
+              <ReactEcharts
+                option={effectiveTransOption()}
+                style={{ height: '100%', width: '100%' }}
+              />
+            <MoreBtn className={styles.moreBtnAbsoluteSty} type='effectiveTrans' moreBtnClick={moreBtnClick} />
           </div>
-          <MoreBtn className={styles.moreBtnAbsoluteSty} type='effectiveTrans' moreBtnClick={moreBtnClick} />
-        </div>
-      </Spin>
-
+      }
       <Spin spinning={dataAlarmResLoading}>
-        <div className={styles.dataAlarmRes}  style={{height:TaskPlanType==1? 269 : 292}}>{/**异常数据总览 */}
+        <div className={styles.dataAlarmRes}  style={{height:TaskPlanType==1? '16.8125rem' : '18.25rem'}}>{/**异常数据总览 */}
           <CardHeader btnClick={dataAlarmResClick} showBtn type='week' btnCheck={dataAlarmResBtnCheck} title='异常数据总览' />
           {dataAlarmEcharts}
         </div>
       </Spin>
 
-      <Spin spinning={operationExpireLoading}>
-        <div className={styles.operationExpira}>{/**运维到期点位 */}
-          <CardHeader btnClick={dataAlarmResClick} title='运维到期点位' />
-          <div style={{ height: '100%', padding: '0 15px 18px 0' }}>
-            <ReactEcharts
-              option={operationExpiraOption}
-              style={{ height: '100%', width: '100%' }}
-              ref={operationExpiraEchartsRef}
-            />
+      {
+        operationExpireLoading ? 
+          <Spin spinning={operationExpireLoading}>
+            <div className={styles.operationExpira}></div>
+          </Spin> :
+          <div className={styles.operationExpira}>{/**运维到期点位 */}
+            <CardHeader btnClick={dataAlarmResClick} title='运维到期点位' />
+            <div style={{ height: '100%', paddingRight: '1.3125rem' }}>
+              <ReactEcharts
+                option={operationExpiraOption}
+                style={{ height: '100%', width: '100%' }}
+                ref={operationExpiraEchartsRef}
+              />
+            </div>
+            <MoreBtn className={styles.moreBtnAbsoluteSty} type='operationExpira' moreBtnClick={moreBtnClick} />
           </div>
-          <MoreBtn className={styles.moreBtnAbsoluteSty} type='operationExpira' moreBtnClick={moreBtnClick} />
-        </div>
-      </Spin>
-
+      }
+      
       <MissingDataRateModal //缺失报警响应率弹框
         type={'ent'}
         pollutantType={pollutantType}

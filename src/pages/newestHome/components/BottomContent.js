@@ -26,6 +26,7 @@ import ConsumablesStatisticsModal from './springModal/consumablesStatistics'
 import EquipmentAbnormalRateModal from './springModal/equipmentAbnormalRate'
 import EquipmentFailureRate from './springModal/equipmentFailureRate'
 import EquipmentFailurerePairRate from './springModal/equipmentFailurerePairRate'
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
 
 const { Option } = Select;
@@ -202,7 +203,7 @@ const Index = (props) => {
           borderDistance: 0,//内环padding值
           color: 'none',
           itemStyle: { //外环
-            borderWidth: 5, //圆边线宽度
+            borderWidth: fontSizeFn(5), //圆边线宽度
             shadowBlur: 10,
             shadowColor: 'rgba(63, 218, 255, 0.5)',
             borderColor: { //线性渐变，多用于折线柱形图，前四个参数分别是 x0, y0, x2, y2, 范围从 0 - 1，相当于在图形包围盒中的百分比，
@@ -226,7 +227,7 @@ const Index = (props) => {
           }
         },
         backgroundStyle: { //内环
-          borderWidth: 5,
+          borderWidth: fontSizeFn(5),
           borderColor: '#263249',
           color: 'none',
         },
@@ -239,7 +240,7 @@ const Index = (props) => {
             rich: {
               //富文本 对字体进一步设置样式。val对应的 value
               val: {
-                fontSize: 20,
+                fontSize: fontSizeFn(20),
                 fontWeight: "bold",
               }
             }
@@ -290,14 +291,14 @@ const Index = (props) => {
                 fontSize: subjectFontSize,
                 color: '#fff',
                 align: "left",
-                padding: smallResolution ? [5, 2, 18, 2] : [5, 5, 18, 5]  //上左下右 逆时针 
+                padding: smallResolution ? [fontSizeFn(5), fontSizeFn(2), fontSizeFn(18), fontSizeFn(2)] : [5, 5, 18, 5]  //上左下右 逆时针 
               },
               num: {
-                fontSize: 20,
+                fontSize: fontSizeFn(20),
                 fontWeight: 'bold',
                 color: '#3BBFFE',
                 align: "left",
-                padding: [0, 10, 0, 10]
+                padding: [0, fontSizeFn(10), 0, fontSizeFn(10)]
               }
             },
           },
@@ -370,10 +371,10 @@ const Index = (props) => {
       title: {
         text: type == 1 ? opertionExceptionList.intactRate == '-' ? '-' : ` ${opertionExceptionList.intactRate}%` : type == 2 ? opertionExceptionList.failureRate == '-' ? '-' : `${opertionExceptionList.failureRate}%` : opertionExceptionList.repairRate == '-' ? '-' : `${opertionExceptionList.repairRate}%`,
         left: "center",
-        top: "42%",
+        top: "center",
         textStyle: {
           color: type == 1 ? color1[0] : type == 2 ? color2[0] : color3[0],
-          fontSize: 18,
+          fontSize: fontSizeFn(18),
           align: "center",
           fontWeight: 'bold',
         }
@@ -419,7 +420,7 @@ const Index = (props) => {
 
         <ReactEcharts
           option={deviceAbnormalOption(1)}
-          style={{ width: '100%', height: 151 }}
+          style={{ width: '100%', height: fontSizeFn(151) }}
           onEvents={{ click: deviceAbnormals }}
         />
         <div>设备完好率</div>
@@ -427,7 +428,7 @@ const Index = (props) => {
       <Col span={8} align='middle'>
         <ReactEcharts
           option={deviceAbnormalOption(2)}
-          style={{ width: '100%', height: 151 }}
+          style={{ width: '100%', height: fontSizeFn(151) }}
           onEvents={{ click: deviceFailureRate }}
         />
         <div>设备故障率</div>
@@ -435,7 +436,7 @@ const Index = (props) => {
       <Col span={8} align='middle'>
         <ReactEcharts
           option={deviceAbnormalOption(3)}
-          style={{ width: '100%', height: 151 }}
+          style={{ width: '100%', height: fontSizeFn(151) }}
           onEvents={{ click: deviceFailurerePairRate }}
         />
         <div>故障修复率</div>
@@ -454,80 +455,89 @@ const Index = (props) => {
 
   return (
     <Row style={{ flexFlow: 'row nowrap' }} justify='space-between'>
-
-      <Spin spinning={exceptionSignTaskRateLoading}>
-        <Col className={styles.clockAbnormal}>
-          <CardHeader btnClick={clockAbnormalClick} showBtn type='week' btnCheck={clockBtnCheck} title='现场打卡异常' />
-          <div style={{ paddingTop: 11 }}>
-            <Row>
-              <div style={{ width: '50%' }}>
-                <ReactEcharts
-                  option={sceneClockOption(exceptionSignTaskRateList.insidePlanRate == '-' ? '-' : ` ${exceptionSignTaskRateList.insidePlanRate}%`)}
-                  style={{ height: '112px', width: '100%' }}
-                  ref={planInsideClockAbnormalEchartsRef}
-                />
-                <Row style={{ padding: '3px 0 10px 0', fontWeight: 'bold' }} justify='center' >计划内打卡异常率</Row>
-                <Row justify='center'>
-                  <div className={styles.clockNumTextBag}>
-                    <Row justify='center'>
-                      <Col>
-                        <div className={styles.clockNum}>{exceptionSignTaskRateList.insidePlanTaskCount}次</div>
-                        <div className={styles.clockText}>打卡次数</div>
-                      </Col>
-                      <Col style={{ paddingLeft: 43 }}>
-                        <div className={styles.clockNum}>{exceptionSignTaskRateList.insidePlanTaskExceptionCount}次</div>
-                        <div className={styles.clockText}>打卡异常次数</div>
-                      </Col>
-                    </Row>
-                  </div>
-                </Row>
-              </div>
-              <div style={{ width: '50%' }}>
-                <ReactEcharts
-                  option={sceneClockOption(exceptionSignTaskRateList.outPlanTaskRate == '-' ? '-' : `${exceptionSignTaskRateList.outPlanTaskRate}%`)}
-                  style={{ height: '112px', width: '100%' }}
-                  ref={planOutClockAbnormalEchartsRef}
-                />
-                <Row style={{ padding: '3px 0 10px 0', fontWeight: 'bold' }} justify='center' >计划外打卡异常率</Row>
-                <Row justify='center'>
-                  <div className={styles.clockNumTextBag}>
-                    <Row justify='center'>
-                      <Col>
-                        <div className={styles.clockNum}>{exceptionSignTaskRateList.outPlanTaskCount}次</div>
-                        <div className={styles.clockText}>打卡次数</div>
-                      </Col>
-                      <Col style={{ paddingLeft: 43 }}>
-                        <div className={styles.clockNum}>{exceptionSignTaskRateList.outPlanTaskExceptionCount}次</div>
-                        <div className={styles.clockText}>打卡异常次数</div>
-                      </Col>
-                    </Row>
-                  </div>
-                </Row>
-              </div>
-            </Row>
-          </div>
-        </Col>
-      </Spin>
-
+      {
+        exceptionSignTaskRateLoading ?  
+        <Spin spinning={exceptionSignTaskRateLoading}>
+          <Col className={styles.clockAbnormal}></Col>
+        </Spin> 
+        :
+        <Spin spinning={false}>
+          <Col className={styles.clockAbnormal}>
+            <CardHeader btnClick={clockAbnormalClick} showBtn type='week' btnCheck={clockBtnCheck} title='现场打卡异常' />
+            <div style={{ paddingTop: 11 }}>
+              <Row>
+                <div style={{ width: '50%' }}>
+                  <ReactEcharts
+                    option={sceneClockOption(exceptionSignTaskRateList.insidePlanRate == '-' ? '-' : ` ${exceptionSignTaskRateList.insidePlanRate}%`)}
+                    style={{ height: '7rem', width: '100%' }}
+                    ref={planInsideClockAbnormalEchartsRef}
+                  />
+                  <Row style={{ padding: '.1875rem 0 .625rem 0', fontWeight: 'bold' }} justify='center' >计划内打卡异常率</Row>
+                  <Row justify='center'>
+                    <div className={styles.clockNumTextBag}>
+                      <Row justify='center'>
+                        <Col>
+                          <div className={styles.clockNum}>{exceptionSignTaskRateList.insidePlanTaskCount}次</div>
+                          <div className={styles.clockText}>打卡次数</div>
+                        </Col>
+                        <Col style={{ paddingLeft: 43 }}>
+                          <div className={styles.clockNum}>{exceptionSignTaskRateList.insidePlanTaskExceptionCount}次</div>
+                          <div className={styles.clockText}>打卡异常次数</div>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Row>
+                </div>
+                <div style={{ width: '50%' }}>
+                  <ReactEcharts
+                    option={sceneClockOption(exceptionSignTaskRateList.outPlanTaskRate == '-' ? '-' : `${exceptionSignTaskRateList.outPlanTaskRate}%`)}
+                    style={{ height: '7rem', width: '100%' }}
+                    ref={planOutClockAbnormalEchartsRef}
+                  />
+                  <Row style={{ padding: '.1875rem 0 .625rem 0', fontWeight: 'bold' }} justify='center' >计划外打卡异常率</Row>
+                  <Row justify='center'>
+                    <div className={styles.clockNumTextBag}>
+                      <Row justify='center'>
+                        <Col>
+                          <div className={styles.clockNum}>{exceptionSignTaskRateList.outPlanTaskCount}次</div>
+                          <div className={styles.clockText}>打卡次数</div>
+                        </Col>
+                        <Col style={{ paddingLeft: '2.6875rem' }}>
+                          <div className={styles.clockNum}>{exceptionSignTaskRateList.outPlanTaskExceptionCount}次</div>
+                          <div className={styles.clockText}>打卡异常次数</div>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Row>
+                </div>
+              </Row>
+            </div>
+          </Col>
+        </Spin> 
+      }
+    {
+      consumablesLoading ? 
+      <Spin spinning={consumablesLoading}><Col className={styles.consumablesStatistics}></Col></Spin>
+      :
       <Spin spinning={consumablesLoading}>
         <Col className={styles.consumablesStatistics}>
           <CardHeader btnClick={consumablesClick} showBtn type='week' btnCheck={consumablesCheck} title='耗材统计' />
           <Row justify='center' align='middle' className={styles.consumablesChart} >
-            <div style={{ position: 'absolute', height: '167px', width: '167px', borderRadius: '50%', border: '1px solid #2d3d59' }}></div>
+            <div style={{ position: 'absolute', height: '10.4375rem', width: '10.4375rem', borderRadius: '50%', border: '1px solid #2d3d59' }}></div>
             <ReactEcharts
               option={consumablesOption()}
-              style={{ height: '182px', width: '100%' }}
+              style={{ height: '11.375rem', width: '100%' }}
               ref={consumablesEchartsRef}
             />
             <MoreBtn className={styles.moreBtnAbsoluteSty} type='consumables' moreBtnClick={moreBtnClick} />
           </Row>
         </Col>
       </Spin>
-
+    }
       <Spin spinning={exceptionListLoading}>
         <Col className={styles.deviceAbnormal}> {/**设备异常总览 */}
           <CardHeader btnClick={deviceAbnormalClick} showBtn type='week' btnCheck={deviceAbnormalCheck} title='设备异常总览' />
-          <div style={{ height: '100%', padding: '41px 0 0' }}>
+          <div style={{ height: '100%', padding: '1.875rem 0 0' }}>
             {deviceAbnormalEcharts}{/**当图表有点击事件时 更新更新页面时  图表抖动 */}
           </div>
         </Col>

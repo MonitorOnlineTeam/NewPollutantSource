@@ -23,6 +23,7 @@ import WasteGas from './wasteGas'
 import SurfaceWater from './surfaceWater'
 import ActoryBoundary from './actoryBoundary'
 import Air from './air'
+import { setRem } from '@/utils/utils.js';
 
 const namespace = 'newestHome'
 
@@ -59,9 +60,15 @@ const Index = (props) => {
 
 
 
+  // rem等比适配配置文件
   useEffect(() => {
-
-  },[]);
+    setRem();
+    // 监听窗口大小变化
+    window.addEventListener('resize', setRem);
+    return () => {
+      window.removeEventListener('resize', setRem);
+    };
+  }, []);
 
  const pollutantCode = Number(sessionStorage.getItem('sysPollutantCodes'));
 

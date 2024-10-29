@@ -47,11 +47,14 @@ const errorHandler = error => {
         Cookie.set(configToken.cookieName, null);
         Cookie.set('currentUser', null);
         router.push('/user/login');
+        clearInterval(window.refreshTokenTimer);
         notification.error({
           message: '登录超时，请重新登录！',
           duration: 3,
         });
-        setTimeout(() => { isLoginTimeoutAlertShown = false; }, 3000); // 重置标志，避免长期禁止弹窗
+        setTimeout(() => {
+          isLoginTimeoutAlertShown = false;
+        }, 3000); // 重置标志，避免长期禁止弹窗
       }
 
       return {

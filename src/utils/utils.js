@@ -6,6 +6,7 @@ import Cookie from 'js-cookie';
 import webConfig from '@public/webConfig';
 import CryptoJS from 'crypto-js';
 import { cookieName, uploadPrefix } from '@/config';
+import { getToken } from '@/pages/user/login/service.js';
 
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
@@ -874,5 +875,23 @@ export const setRem = () => {
     document.documentElement.style.fontSize = baseSize * Math.min(scale, 2) + 'px';
   } else {
     document.documentElement.style.fontSize = baseSize * Math.min(scale, 1) + 'px';
+  }
+};
+
+export const refreshToken = (
+  dataObj = JSON.parse(window.localStorage.getItem('loginTokenData')),
+) => {
+  if (Cookie.get(cookieName)) {
+    window.refreshTokenTimer = setInterval(() => {
+      // console.log('new Date().getTime() - dataObj.time', new Date().getTime() - dataObj.time);
+      if (new Date().getTime() - dataObj.time >= dataObj.expires_in * 1000 * 0.9) {
+        getToken({
+          grant_type: 'password',
+          username: dataObj.username,
+          password: dataObj.password,
+          isReload: true,
+        });
+      }
+    }, 10000);
   }
 };
