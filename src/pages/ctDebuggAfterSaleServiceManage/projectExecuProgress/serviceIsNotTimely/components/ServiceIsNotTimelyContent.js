@@ -55,10 +55,10 @@ const ServiceIsNotTimely = props => {
       ...values,
       time: undefined,
       time2:undefined,
-      registerBeginTime: values.time[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-      registerEndTime: values.time[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
-      LeaveBtime: values.time2?.[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
-      LeaveEtime: values.time2?.[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      registerBeginTime: values?.time?.[0]?.startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      registerEndTime: values?.time?.[1]?.endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      LeaveBtime: values?.time2?.[0]?.startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+      LeaveEtime: values?.time2?.[1]?.endOf('day').format('YYYY-MM-DD HH:mm:ss'),
       serviceType: serviceType,
       isAll: isAll ? 0 : 1,
     };
@@ -380,6 +380,7 @@ const ServiceIsNotTimely = props => {
           <Button
             onClick={() => {
               form.resetFields();
+              form.setFieldsValue({time:[]})
               getTableDataSource(1, 20);
             }}
           >

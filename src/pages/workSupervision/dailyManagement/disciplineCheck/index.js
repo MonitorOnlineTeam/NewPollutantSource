@@ -65,7 +65,7 @@ const DisciplineCheck = props => {
 
   let buttonList = [];
 
-   buttonList = permissionButton(`/workSupervision/dailyManagement/disciplineCheck/${systemType}`);
+   buttonList = permissionButton(props.location.pathname);
 
   useEffect(() => {
     getTableDataSource();

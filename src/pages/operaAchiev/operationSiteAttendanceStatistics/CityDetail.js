@@ -60,12 +60,17 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
 
-  const { regDetailQueryPar, detailCode, tableDatas, tableTotal, tableLoading, exportLoading, cityDetailQueryPar,type, regQueryPar,} = props;
+  const {visible, regDetailQueryPar, detailCode, tableDatas, tableTotal, tableLoading, exportLoading, cityDetailQueryPar,type, regQueryPar,pollutantType,} = props;
 
+  const [pageIndex, setPageIndex] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
 
+  
   useEffect(() => {
-    onFinish(pageIndex, pageSize);
-  }, []);
+      onFinish(pageIndex, pageSize)
+   }, []);
+
+
 
   const columns = [
     {
@@ -80,7 +85,7 @@ const Index = (props) => {
       key: 'pollutantTypeName',
       align: 'center',
       ellipsis: true,
-      width:130,
+      width:160,
     },
     {
       title: '工作类型',
@@ -188,12 +193,13 @@ const Index = (props) => {
       const par = type==='hour'? regQueryPar : regDetailQueryPar
       props.GetSignInList(cityDetailQueryPar ? { ...cityDetailQueryPar, pageIndex: pageIndex, pageSize: pageSize } : {
         ...values,
-        pageIndex: pageIndex,
-        pageSize: pageSize,
         ...par,
         regionCode:props.cityDetailCode,
         workType:props.workType,
-        pointType:3
+        pointType:3,
+        pollutantType:pollutantType,
+        pageIndex: pageIndex,
+        pageSize: pageSize,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -229,8 +235,7 @@ const Index = (props) => {
       </Form.Item>
     </Form>
   }
-  const [pageIndex, setPageIndex] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
+
   const handleTableChange = async (PageIndex, PageSize) => { //分页
     setPageSize(PageSize)
     setPageIndex(PageIndex)
@@ -241,6 +246,7 @@ const Index = (props) => {
   const exports = async () => {
     props.ExportSignInList({
       ...cityDetailQueryPar,
+      pollutantType:pollutantType,
       pageIndex: undefined,
       pageSize: undefined
     })

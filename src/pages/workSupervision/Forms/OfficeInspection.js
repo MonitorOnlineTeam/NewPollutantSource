@@ -262,7 +262,7 @@ const OfficeInspection = props => {
                 ]}
               >
                 <Select placeholder='请选择' mode='multiple' options={carList}  
-                        fieldNames={{ label: 'CarNum', value: 'ID'}} loading={props.carLoading} allowClear showSearch                      
+                        fieldNames={{ label: 'CarNum', value: 'CarNum'}} loading={props.carLoading} allowClear showSearch                      
                         optionFilterProp="CarNum"
                 />
               </Form.Item>

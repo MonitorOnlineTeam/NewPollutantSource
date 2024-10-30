@@ -120,10 +120,10 @@ const Index = (props) => {
             const index = newData.findIndex((item) => key === item.ID);
             if (index > -1) {
                 const editRow = {
-                    ASystemName: acemsVal == 465 ? '气态污染物CEMS' : '颗粒物污染物CEMS',
+                    ASystemName: acemsVal == 465 ? '气态污染物CEMS' :  acemsVal == 466 ? '颗粒物污染物CEMS' : 'NMHC-CEMS',
                     ASystemNameID: acemsVal,
                     AManufactorID: asystemManufactorID,
-                    BSystemName: bcemsVal == 465 ? '气态污染物CEMS' : '颗粒物污染物CEMS',
+                    BSystemName: bcemsVal == 465 ? '气态污染物CEMS' :  bcemsVal == 466 ? '颗粒物污染物CEMS' : 'NMHC-CEMS',
                     BSystemNameID: bcemsVal,
                     BManufactorID: bsystemManufactorID,
                     ProjectID:projectID,
@@ -166,7 +166,7 @@ const Index = (props) => {
                     title: 'CEMS系统名称',
                     dataIndex: 'BSystemName',
                     align: 'center',
-                    width: 140,
+                    width: 180,
                     editable: true,
                 },
                 {
@@ -201,7 +201,7 @@ const Index = (props) => {
                     title: 'CEMS系统名称',
                     dataIndex: 'ASystemName',
                     align: 'center',
-                    width: 140,
+                    width: 180,
                     editable: true,
                 },
                 {
@@ -532,6 +532,7 @@ const Index = (props) => {
             inputNode = <Select placeholder='请选择' onChange={cemsChange} disabled={dataIndex === 'ASystemName' ? achoiceManufacturer : bchoiceManufacturer}>
                 <Option value={465}>气态污染物CEMS</Option>
                 <Option value={466}>颗粒物污染物CEMS</Option>
+                <Option value={587}>NMHC-CEMS</Option>
             </Select>
         } else if (inputType === 'number') {
             inputNode = <InputNumber style={{ width: '100%' }} placeholder={`请输入`} />

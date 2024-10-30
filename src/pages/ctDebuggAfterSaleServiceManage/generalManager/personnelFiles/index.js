@@ -123,6 +123,13 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '手机号',
+      dataIndex: 'UserPhone',
+      key: 'UserPhone',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '部门名称',
       dataIndex: 'Department',
       key: 'Department',

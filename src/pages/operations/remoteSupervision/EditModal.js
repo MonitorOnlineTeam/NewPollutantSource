@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-06-11 14:29:31
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-29 16:48:14
+ * @LastEditTime: 2024-10-29 18:25:35
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Timeline } from 'antd';
@@ -214,19 +214,16 @@ const dvaDispatch = (dispatch) => {
   }
 }
 const Index = (props) => {
-  const pchildref = useRef();
   const [form] = Form.useForm();
   const [form2] = Form.useForm(); //添加编辑表单  数据一致性核查表
   const [form3] = Form.useForm(); //添加编辑表单   参数一致性核查表
   const [commonForm] = Form.useForm();
 
-  const pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined;
 
-  const [dates, setDates] = useState([]);
 
-  const {visible,onCancel, record, title,clientHeight, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading, editLoading, tableInfo, exportLoading, forwardTableLoading, forwardTableData, forwardOkLoading, regQueryPar, getRemoteInspectorPointLoading, remoteInspectorPointList, addRemoteInspectorPointLoading, forwardTableTotal, importDataLoading, par } = props;
+  const {visible,onCancel, record, title,clientHeight, addDataConsistencyData, addRealTimeData, parLoading, editLoading, tableInfo, importDataLoading, onFinish } = props;
 
-  const [tabType, setTabType] = useState('1')
+
 
 
 
@@ -282,7 +279,6 @@ const Index = (props) => {
   const initData = ()=>{
     setEchoLoading(true)
     resetData();
-    setTabType("1")
     setIsCheckUser(record.isCheckUser == 1 || record.isCheckUser == 2 ? true : false)
     setRoleType(record.isCheckUser)
     props.getConsistencyCheckInfo({ ID: record.id }, (data) => {
@@ -805,10 +801,10 @@ const Index = (props) => {
             ParamDataList: paramDataList,
           }
    
-          const complateCallback=(isSuccess)=>{
-            onCancel && onCancel();
+          const complateCallback=(isSuccess,noCancel)=>{
+            !noCancel && (onCancel && onCancel());
             type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-            isSuccess && onFinish(pageIndex, pageSize)
+            isSuccess && onFinish && onFinish()
           }
 
           props.addRemoteInspector({
@@ -817,7 +813,9 @@ const Index = (props) => {
             if (isSuccess && message == '请核对基准含氧量或当地大气压填写是否正确！') {
               Modal.confirm({
                 title: '提示',
-                content: '请核对基准含氧量或当地大气压填写是否正确，是否继续提交',
+                content: '请核对基准含氧量或当地大气压填写是否正确，是否继续提交？',
+                okText:'是',
+                cancelText:'否',
                 onOk() {
                   props.addRemoteInspector({
                     ...par,
@@ -827,7 +825,7 @@ const Index = (props) => {
                   })
                 },
                 onCancel() {
-                  complateCallback(isSuccess)
+                  complateCallback(true,'noCancel')
                 },
               });
 
@@ -946,14 +944,7 @@ const Index = (props) => {
   }
 
 
-  const [pageSize, setPageSize] = useState(20)
-  const [pageIndex, setPageIndex] = useState(1)
 
-  const handleTableChange = (PageIndex, PageSize) => { //分页 打卡异常 响应超时 弹框
-    setPageIndex(PageIndex)
-    setPageSize(PageSize)
-    onFinish(PageIndex, PageSize)
-  }
   const echoFilePar = (code, item, isImport) => {
     form3.setFieldsValue({
       [`${code}IsEnable`]: item.Status ? [item.Status] : [],

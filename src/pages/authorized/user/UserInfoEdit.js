@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-29 10:13:48
+ * @LastEditTime: 2024-10-29 18:00:29
  * @Description: 用户修改
  */
 import React, { Component } from 'react';
@@ -35,7 +35,7 @@ const { TreeNode } = Tree;
     UserDepLoading: loading.effects['userinfo/getdepbyuserid'],
     UserRoles: userinfo.UserRoles,
     UserDep: userinfo.UserDep,
-    btnisloading: loading.effects['userinfo/edit']  || loading.effects['userinfo/AddOrUpdUser'] ,
+    btnisloading: loading.effects['userinfo/edit'] || loading.effects['userinfo/AddOrUpdUser'],
     configInfo: global.configInfo,
     operaBasicInfoForm: userinfo.operaBasicInfoForm,
 }))
@@ -160,13 +160,18 @@ export default class UserInfoEdit extends Component {
     onChecks = checkedKeys => {
         var that = this;
         this.setState({ checkedKeys });
-        const leafTree = [];
-        checkedKeys.map(item => {
-            if (that.state.leafTreeDatas.indexOf(item) != -1) {
-                leafTree.push(item);
-            }
-        });
-        this.setState({ checkedKeysSel: leafTree });
+        if (this.props.configInfo.IsOpera) {
+             let checkedData = checkedKeys.checked;
+            this.setState({checkedKeys: checkedData,checkedKeysSel: checkedData }); 
+        } else {
+            const leafTree = [];
+            checkedKeys.map(item => {
+                if (that.state.leafTreeDatas.indexOf(item) != -1) {
+                    leafTree.push(item);
+                }
+            });
+            this.setState({ checkedKeysSel: leafTree });
+        }
     };
 
     onSelects = (selectedKeys, info) => {
@@ -226,7 +231,7 @@ export default class UserInfoEdit extends Component {
                             BusinessAttribute: values.BusinessAttribute?.toString(),
                             IndustryAttribute: values.IndustryAttribute?.toString(),
                         },
-                        callback:()=>{
+                        callback: () => {
                             router.push('/rolesmanager/user/newUserInfo')
                         }
                     })
@@ -350,7 +355,7 @@ export default class UserInfoEdit extends Component {
                                 >返回
                                 </Button>
                                 <Card bordered={false} title="基本信息" style={{ height: 'calc(100vh - 160px)', display: this.state.baseState }}>
-                                  {this.props.configInfo.IsOpera ?
+                                    {this.props.configInfo.IsOpera ?
                                         <OperaFormComponents isEdit formValidateFieldsCallback={(values) => { //单独写一个组件 因为getFieldDecorator每次都会render整个组件 导致卡顿
                                             this.setState({
                                                 activeKey: 'roles',
@@ -360,7 +365,7 @@ export default class UserInfoEdit extends Component {
                                                 selectKey: 'roles',
                                             })
                                         }} />
-                                        : 
+                                        :
                                         <SdlForm
                                             configId="UserInfoAdd"
                                             onSubmitForm={this.onSubmitForm}
@@ -369,26 +374,26 @@ export default class UserInfoEdit extends Component {
                                             hideBtns
                                             keysParams={{ 'dbo.Base_UserInfo.User_ID': this.props.match.params.userid }}
                                         >
-                                         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
-                                            <Button
-                                                type="primary"
-                                                htmlType="submit"
-                                                onClick={() => {
-                                                    const { dispatch, form } = this.props;
-                                                    form.validateFields((err, values) => {
-                                                        if (!err) {
-                                                            this.setState({
-                                                                activeKey: "roles",
-                                                                baseState: 'none',
-                                                                rolesState: 'block',
-                                                                departState: 'none'
-                                                            })
-                                                        }
-                                                    })
-                                                }}
-                                            >下一步
+                                            <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
+                                                <Button
+                                                    type="primary"
+                                                    htmlType="submit"
+                                                    onClick={() => {
+                                                        const { dispatch, form } = this.props;
+                                                        form.validateFields((err, values) => {
+                                                            if (!err) {
+                                                                this.setState({
+                                                                    activeKey: "roles",
+                                                                    baseState: 'none',
+                                                                    rolesState: 'block',
+                                                                    departState: 'none'
+                                                                })
+                                                            }
+                                                        })
+                                                    }}
+                                                >下一步
                                         </Button>
-                                        </FormItem> 
+                                            </FormItem>
 
 
                                             <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
@@ -411,7 +416,7 @@ export default class UserInfoEdit extends Component {
                                             </Button>
                                             </Divider>
                                         </SdlForm>
-                                     } 
+                                    }
                                 </Card>
                                 <Card bordered={false} title="角色设置" style={{ height: 'calc(100vh - 160px)', display: this.state.rolesState }}>
                                     {
@@ -427,7 +432,6 @@ export default class UserInfoEdit extends Component {
                                         /> :
                                             <Tree
                                                 checkable
-                                                checkStrictly={this.props.configInfo.IsOpera}
                                                 onExpand={this.onExpand}
                                                 expandedKeys={this.state.expandedKeys}
                                                 autoExpandParent={this.state.autoExpandParent}
@@ -477,6 +481,7 @@ export default class UserInfoEdit extends Component {
                                                 checkedKeys={this.state.checkedKeys}
                                                 onSelect={this.onSelects}
                                                 selectedKeys={this.state.selectedKeys}
+                                                checkStrictly={this.props.configInfo.IsOpera}
                                             >
                                                 {this.renderTreeNodes(this.props.treeData)}
                                             </Tree>

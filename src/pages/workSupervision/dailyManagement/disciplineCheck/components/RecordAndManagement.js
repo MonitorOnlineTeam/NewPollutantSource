@@ -84,8 +84,10 @@ const RecordAndManagement = props => {
       type: 'wordSupervision/GetDisciplineCheckInfo',
       payload: {
         ...body,
-        pageIndex: taskInfo.ID ? _pageIndex || pageIndex : undefined,
-        pageSize: taskInfo.ID ? _pageSize || pageSize : undefined,
+        pageIndex: _pageIndex || pageIndex,
+        pageSize: _pageSize || pageSize,
+        // pageIndex: taskInfo.ID ? _pageIndex || pageIndex : undefined,
+        // pageSize: taskInfo.ID ? _pageSize || pageSize : undefined,
       },
       callback: res => {
         setDataSource(res.Datas);

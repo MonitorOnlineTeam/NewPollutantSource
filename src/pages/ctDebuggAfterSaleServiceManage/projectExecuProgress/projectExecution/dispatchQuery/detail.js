@@ -872,29 +872,35 @@ const Index = (props) => {
               return <CommonReplaceTable text='安装报告' col={installationReportCol} data={staticInstallRepData} loading={staticInstallRepLoading} />;//安装报告
             }
           case '17':
+            const ExportBtn = ({style}) => <Button  style={{...style}}  type='primary' icon={<ExportOutlined />} loading={props.staticInstallPhotoExportLoading} onClick={() => {
+              const record = staticWorkData?.[0]
+              props.exportAuditPhoto({
+                  projectCode: serviceApplicaData?.ProjectCode,
+                  dispatchId: serviceApplicaData?.ID,
+                  systemModelId: record?.SystemModelId,
+                  pointId: record?.PointId,
+                  equipmentAuditId: '',
+                  entName: record?.EntName,
+                  pointName: record?.PointName,
+                  systemModelName: record?.SystemModelName,
+    
+              })
+          }}>
+            导出
+          </Button>
             if (item.RecordStatus == 1) {
               setStaticPhotoId(item.RecordId);
-              return <InstallPhoto data={staticPhotoData} loading={staticPhotoLoading} />;//安装照片
+              return <div style={{position:'relative'}}>
+                <InstallPhoto data={staticPhotoData} loading={staticPhotoLoading}/>
+                <ExportBtn    style={{position:'absolute',top:0,left:80}}/>
+               </div>;//安装照片
+            }else{
+              return <ExportBtn  style={{ marginBottom: 6 }}/>;
             }
         }
 
       })}
-      <Button type='primary' icon={<ExportOutlined />} loading={props.staticInstallPhotoExportLoading} onClick={() => {
-          const record = staticWorkData?.[0]
-          props.exportAuditPhoto({
-              projectCode: serviceApplicaData?.ProjectCode,
-              dispatchId: serviceApplicaData?.ID,
-              systemModelId: record?.SystemModelId,
-              pointId: record?.PointId,
-              equipmentAuditId: '',
-              entName: record?.EntName,
-              pointName: record?.PointName,
-              systemModelName: record?.SystemModelName,
 
-          })
-      }}  style={{ marginBottom: 6 }}>
-        导出
-      </Button>
     </Form>
 
   }

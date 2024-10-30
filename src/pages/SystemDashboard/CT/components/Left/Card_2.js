@@ -247,7 +247,7 @@ const Card_2 = props => {
             ref={echart => {
               echart && setEcharts1(echart);
             }}
-            option={getOption(1, ServiceReport.ReportTimelyRate)}
+            option={getOption(1, ServiceReport.ReportTimelyQualifiedRate)}
             lazyUpdate={true}
             style={{ height: '90%', width: '100%' }}
           />
@@ -258,7 +258,7 @@ const Card_2 = props => {
             ref={echart => {
               echart && setEcharts2(echart);
             }}
-            option={getOption(2, ServiceReport.ReportTimelyQualifiedRate)}
+            option={getOption(2, ServiceReport.ReportTimelyRate)}
             lazyUpdate={true}
             style={{ height: '90%', width: '100%' }}
           />

@@ -204,8 +204,6 @@ export default Model.extend({
           return
         }
         message.success(result.Message)
-      } else {
-        result.Message && message.error(result.Message)
       }
     },
     //关键参数核查 可申请工单站点

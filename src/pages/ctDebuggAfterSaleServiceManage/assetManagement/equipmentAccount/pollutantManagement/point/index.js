@@ -829,11 +829,6 @@ export default class Index extends Component {
                 </Button>
               )}
               </>}
-              {pointSaveFlag && current < steps.length - 1 ? (
-                <Button onClick={() => this.next()}>
-                  跳过
-                </Button>
-              ) : null}
               {current > 0 && (
                 <Button
                   onClick={() => this.prev()}
@@ -841,6 +836,11 @@ export default class Index extends Component {
                   上一步
                 </Button>
               )}
+              {pointSaveFlag && current < steps.length - 1 ? (
+                <Button onClick={() => this.next()}>
+                  跳过
+                </Button>
+              ) : null}
             </div>
           }
         >

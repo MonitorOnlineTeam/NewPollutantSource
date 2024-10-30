@@ -901,7 +901,7 @@ const Index = (props) => {
   const edit = (record) => { //编辑
     setTitle('编辑')
     setEditId(record.id)
-
+    setTabType('1')
     if(record.isCheckUser){ //核查人员编辑的时候
       setCheckEditvisible(true)
       return;

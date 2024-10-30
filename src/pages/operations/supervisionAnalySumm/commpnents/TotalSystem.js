@@ -128,8 +128,8 @@ const Index = (props) => {
                 },
                 {
                     title: '排口类型',
-                    dataIndex: 'pointType',
-                    key: 'pointType',
+                    dataIndex: 'OutTypeName',
+                    key: 'OutTypeName',
                     align: 'center',
                     width: 80,
                     render:(text, record, index)=>rowSpanFun(text, record)
@@ -152,6 +152,14 @@ const Index = (props) => {
                         const  data  = text ? moment(text).format('YYYY-MM-DD') : null;
                            return rowSpanFun(data, record)
                     }
+                },
+                {
+                    title: '督查类别',
+                    dataIndex: 'InspectorTypeName',
+                    key: 'InspectorTypeName',
+                    align: 'center',
+                    width: 100,
+                    render:(text, record, index)=>rowSpanFun(text, record)
                 },
                 {
                     title: '运维人员',

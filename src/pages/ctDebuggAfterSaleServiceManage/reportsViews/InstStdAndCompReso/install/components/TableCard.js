@@ -68,7 +68,7 @@ const TableCard = props => {
             title: '优秀',
             code: `Excellent${item.ID}`,
             key: `Excellent${item.ID}`,
-            width: 100,
+            width: 60,
             align: 'center',
             render: (text, record) => {
               return <TypeRenderComponents data={{ auditResults: 1, serviceAreaCode: item.ID, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
@@ -78,7 +78,7 @@ const TableCard = props => {
             title: '合格',
             code: `Qualified${item.ID}`,
             key: `Qualified${item.ID}`,
-            width: 100,
+            width: 60,
             align: 'center',
             render: (text, record) => {
               return <TypeRenderComponents data={{ auditResults: 2, serviceAreaCode: item.ID, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
@@ -88,7 +88,7 @@ const TableCard = props => {
             title: '不合格',
             code: `Unqualified${item.ID}`,
             key: `Unqualified${item.ID}`,
-            width: 100,
+            width: 80,
             align: 'center',
             render: (text, record) => {
               return <TypeRenderComponents data={{ auditResults: 3, serviceAreaCode: item.ID, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
@@ -98,7 +98,7 @@ const TableCard = props => {
             title: '无照片',
             code: `NoPhotos${item.ID}`,
             key: `NoPhotos${item.ID}`,
-            width: 100,
+            width: 80,
             align: 'center',
             render: (text, record) => {
               return <TypeRenderComponents data={{ auditResults: 4, serviceAreaCode: item.ID, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
@@ -108,7 +108,7 @@ const TableCard = props => {
             title: '/',
             dataIndex: `NoNeed${item.ID}`,
             key: `NoNeed${item.ID}`,
-            width: 100,
+            width: 60,
             align: 'center',
             render: (text, record) => {
               return <TypeRenderComponents data={{ auditResults: 5, serviceAreaCode: item.ID, text: text, time: [moment(record.btime), moment(record.etime)], systemModelId: record.SystemModelId }} />
@@ -118,7 +118,7 @@ const TableCard = props => {
             title: '达标率',
             code: `Rate${item.ID}`,
             key: `Rate${item.ID}`,
-            width: 100,
+            width: 80,
             align: 'center',
           },
         ],
@@ -151,6 +151,7 @@ const TableCard = props => {
         code: 'sort',
         key: 'sort',
         lock: true,
+        width: 60,
         getCellProps: (text, record, index) => ({ colSpan: text === '总计' ? 2 : 1 }),
         // fixed: 'left',
         // render: (text, record, index) => {
@@ -164,7 +165,7 @@ const TableCard = props => {
         title: '安装设备型号',
         code: 'CategoryName',
         key: 'CategoryName',
-        width: 200,
+        width: 180,
         lock: true,
         getCellProps: (text, record, index) => ({ colSpan: text === '总计' ? 0 : 1 }),
         // fixed: 'left',
@@ -183,7 +184,7 @@ const TableCard = props => {
             title: '优秀',
             code: 'Excellent',
             key: 'Excellent',
-            width: 100,
+            width: 60,
             align: 'center',
             // fixed: 'left',
             render: (text, record) => {
@@ -194,7 +195,7 @@ const TableCard = props => {
             title: '合格',
             code: 'Qualified',
             key: 'Qualified',
-            width: 100,
+            width: 60,
             align: 'center',
             // fixed: 'left',
             render: (text, record) => {
@@ -205,7 +206,7 @@ const TableCard = props => {
             title: '不合格',
             code: 'Unqualified',
             key: 'Unqualified',
-            width: 100,
+            width: 80,
             align: 'center',
             // fixed: 'left',
             render: (text, record) => {
@@ -216,7 +217,7 @@ const TableCard = props => {
             title: '无照片',
             code: 'NoPhotos',
             key: 'NoPhotos',
-            width: 100,
+            width: 80,
             align: 'center',
             // fixed: 'left',
             render: (text, record) => {
@@ -227,7 +228,7 @@ const TableCard = props => {
             title: '/',
             code: `NoNeed`,
             key: `NoNeed`,
-            width: 100,
+            width: 60,
             align: 'center',
             // fixed: 'left',
             render: (text, record) => {
@@ -238,7 +239,7 @@ const TableCard = props => {
             title: '达标率',
             code: `Rate`,
             key: `Rate`,
-            width: 100,
+            width: 80,
             fixed: 'left',
             align: 'center',
           },

@@ -60,7 +60,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
 
-  const {queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,regDetailQueryPar} = props;
+  const {queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,regDetailQueryPar,pollTypeList,pollutantType} = props;
 
 
   useEffect(() => {
@@ -156,11 +156,12 @@ const Index = (props) => {
         const values =  await form.validateFields();
         props.GetSignInList({
           ...values,
-          pageIndex: pageIndex,
-          pageSize: pageSize,
           ...queryPar,
           regionCode:props.regionDetailCode,
-          pointType:2
+          pointType:2,
+          pollutantType:pollutantType,
+          pageIndex: pageIndex,
+          pageSize: pageSize,
         })
       } catch (errorInfo) {
         console.log('Failed:', errorInfo);
@@ -170,6 +171,7 @@ const Index = (props) => {
     const [detailTitle, setDetailTitle] = useState('详情')
     const [cityDetailCode, setCityDetailCode] = useState()
     const [workType, setWorkType] = useState()
+    const [regionDetailPollutantType, setRegionDetailPollutantType] = useState()
   
     const detail = (record,type) => {
       setDetailVisible(true)
@@ -183,6 +185,7 @@ const Index = (props) => {
       setDetailTitle(`${name}（${queryPar.beginTime && moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar.endTime && moment(queryPar.endTime).format('YYYY-MM-DD')}）`)
       setCityDetailCode(code? code : queryPar.regionCode )
       setWorkType(record.workType)
+      setRegionDetailPollutantType(pollTypeList.filter(item=>item.label == record.pollutantTypeName)?.[0]?.value || pollutantType)
     }
 
     const [pageIndex, setPageIndex] = useState(1)
@@ -197,6 +200,7 @@ const Index = (props) => {
     const exports = async () => {
       props.ExportSignInList({
         ...regDetailQueryPar,
+         pollutantType:pollutantType,
          pageIndex: undefined,
          pageSize: undefined
       })
@@ -232,10 +236,11 @@ const Index = (props) => {
         title={detailTitle}
         onCancel={() => { setDetailVisible(false) }}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
       >
-        <CityDetail cityDetailCode={cityDetailCode} workType={workType}/>
+        <CityDetail  cityDetailCode={cityDetailCode} workType={workType} pollutantType={regionDetailPollutantType}/>
       </Modal>
     </div>
   );

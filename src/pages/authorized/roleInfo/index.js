@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-29 11:02:58
+ * @LastEditTime: 2024-10-30 16:37:46
  * @Description: 角色管理
  */
 import React, { Component, Fragment } from 'react';
@@ -779,13 +779,21 @@ class RoleIndex extends Component {
 
   addRight = () => {
 
-    let buttonAuthority = this.state.buttonState.filter(item => item.State == 1); //按钮权限
+    let buttonAuthority = this.state.buttonState.filter(item => item.State == 1); //按钮权限 选中的
     if (buttonAuthority?.[0]) {
       buttonAuthority = buttonAuthority.map(item => item.ID);
     }
     //  console.log('菜单id：', this.state.selectButton); //菜单权限列表
     //  console.log('权限按钮：',buttonAuthority); //菜单按钮权限列表
-    let menuIDArr = [...this.state.selectButton, ...buttonAuthority];
+   
+     let selectBtn = this.state.selectButton
+     let buttonCancelAuthority = this.state.buttonState.filter(item => item.State == 0); //按钮权限 取消选中或者未选中的
+     if(buttonCancelAuthority?.[0]){
+      buttonCancelAuthority = buttonCancelAuthority.map(item => item.ID); //过滤编辑取消选中的按钮
+      selectBtn = selectBtn.filter(item => !buttonCancelAuthority.includes(item))
+      // console.log('权限取消按钮：',selectBtn)
+     }
+    let menuIDArr = [...selectBtn, ...buttonAuthority];
     menuIDArr = menuIDArr.filter((item, index) => menuIDArr.indexOf(item) === index); //数组去重 编辑只操作权限按钮会重复 获取的时候没处理 在这处理了 
     this.props.dispatch({
       type: 'roleinfo/insertmenubyroleid',

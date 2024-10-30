@@ -1,5 +1,5 @@
 /**
- * 功  能：绩效排名 / 签到考勤查询
+ * 功  能：绩效排名 / 现场工作时长
  * 创建人：jab
  * 创建时间：2024.02.27
  */
@@ -77,6 +77,13 @@ const Index = (props) => {
 
 
  const [signInType,setSignInType] = useState([])
+
+ const pollTypeList = [
+  {label:'污染源（废气）', value: 2},
+  {label:'污染源（废水）', value: 1},
+  {label:'污染源（废水、废气）', value: 3},
+ ]
+
   useEffect(() => {
     onFinish();
     props.GetSignInType({},(res)=>{
@@ -159,10 +166,14 @@ const Index = (props) => {
   const [detailVisible, setDetailVisible] = useState(false)
   const [detailTitle, setDetailTitle] = useState('详情')
   const [regionDetailCode, setRegionDetailCode] = useState()
+  const [pollutantType, setPollutantType] = useState()
+
   const detail = (record) => {
     setDetailVisible(true)
     setDetailTitle(`${record.provinceName}（${queryPar.beginTime && moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar.endTime && moment(queryPar.endTime).format('YYYY-MM-DD')}）`)
     setRegionDetailCode(record.provinceCode? record.provinceCode : queryPar.regionCode )
+    setPollutantType(pollTypeList.filter(item=>item.label == record.pollutantTypeName)?.[0]?.value || undefined)
+
   }
 
   const [cityDetailVisible, setCityDetailVisible] = useState(false)
@@ -172,6 +183,7 @@ const Index = (props) => {
     setCityDetailVisible(true)
     setCityDetailTitle(`${record.provinceName}（${queryPar.beginTime && moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar.endTime && moment(queryPar.endTime).format('YYYY-MM-DD')}）`)
     setCityDetailCode(queryPar.regionCode )
+    setPollutantType(pollTypeList.filter(item=>item.label == record.pollutantTypeName)?.[0]?.value || undefined)
   }
 
 
@@ -217,11 +229,7 @@ const Index = (props) => {
         />
       </Form.Item>
       <Form.Item name='pollutantType' label='监测类型' >
-        <Select placeholder='请选择' style={{ width: 160 }} allowClear>
-          <Option value={2}>污染源（废气）</Option>
-          <Option value={1}>污染源（废水）</Option>
-          <Option value={3}>污染源（废气废水）</Option>
-        </Select>
+        <Select placeholder='请选择' style={{ width: 160 }} allowClear options={pollTypeList}/>
       </Form.Item>
       <Spin spinning={signInTypeLoading} size='small' className='formItemSpinSty'>
       <Form.Item name='workType' label='工作类型' >
@@ -243,6 +251,7 @@ const Index = (props) => {
       </Form.Item>
     </Form >
   }
+
 return (
   <div className={styles.operationSiteAttendanceStatisticsSty}>
     <BreadcrumbWrapper>
@@ -263,10 +272,11 @@ return (
         title={detailTitle}
         onCancel={() => { setDetailVisible(false) }}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
       >
-        <RegionDetail regionDetailCode={regionDetailCode} />
+        <RegionDetail regionDetailCode={regionDetailCode} pollTypeList={pollTypeList} pollutantType={pollutantType} />
       </Modal>
 
       <Modal
@@ -274,10 +284,11 @@ return (
         title={cityDetailTitle}
         onCancel={() => { setCityDetailVisible(false) }}
         footer={null}
+        mask={false}
         destroyOnClose
         wrapClassName={`spreadOverModal ${styles.detailModalSty}`}
       >
-        <CityDetail cityDetailCode={cityDetailCode} type='hour'/>
+        <CityDetail  cityDetailCode={cityDetailCode} type='hour' pollutantType={pollutantType} />
       </Modal>
     </BreadcrumbWrapper>
   </div>
