@@ -64,8 +64,7 @@ const DisciplineCheck = props => {
   } = props;
 
   let buttonList = [];
-
-   buttonList = permissionButton(props.location.pathname);
+      buttonList = permissionButton(props.history?.location?.pathname);
 
   useEffect(() => {
     getTableDataSource();
