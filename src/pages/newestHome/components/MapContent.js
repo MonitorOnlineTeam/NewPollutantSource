@@ -647,7 +647,7 @@ class Index extends PureComponent {
     aMap.add(labelsLayer);
   }
   regPopovercontent = (extData) => {
-    return <div className={styles.regPopoverSty} style={{ position: 'absolute', margin: '0 auto', top: 'calc(35px + (65px - 54px)/2)', left: 12 }}>
+    return <div className={styles.regPopoverSty} style={{ position: 'absolute', margin: '0 auto', top: 'calc(2.1875rem + (4.0625rem - 3.375rem)/2)', left: '.75rem' }}>
       <div>企业总数 : {extData.position && extData.position.entCount}</div>
       <div><span style={{ color: '#FF0000' }}>超标</span>点位数 : <span style={{ cursor: 'pointer' }} onClick={() => { this.pointNum(2, extData) }}>{extData.position && extData.position.overCount ? extData.position.overCount : 0}</span></div>
       <div><span style={{ color: '#FFCC00' }}>异常</span>点位数 : <span style={{ cursor: 'pointer' }} onClick={() => { this.pointNum(1, extData) }}>{extData.position && extData.position.exceptionCount ? extData.position.exceptionCount : 0}</span></div>
@@ -658,7 +658,7 @@ class Index extends PureComponent {
     const { showType, entTitleShow, pointTitleShow, isMassive } = this.state;
     const alarmStatus = extData.position.alarmStatus;
     if (showType == 1) {
-      return <div style={{ position: 'relative', width: '110px', height: '6.875rem', marginLeft: '-3.4375rem', marginTop: '-6.875rem', background: 'url("/homeMapBorder.png")', backgroundSize: '100% 100%', cursor: 'default' }}>
+      return <div style={{ position: 'relative', width: '6.875rem', height: '6.875rem', marginLeft: '-3.4375rem', marginTop: '-6.875rem', background: 'url("/homeMapBorder.png")', backgroundSize: '100% 100%', cursor: 'default' }}>
         <div title={extData.position && extData.position.regionName} className='textOverflow' style={{ color: "#4BF3F9", position: 'absolute', left: '.625rem', top: '1.125rem', fontSize: '.75rem', lineHeight: '.75rem', width: 'calc(100% - .875rem - .625rem - .875rem)' }}> {extData.position && extData.position.regionName} </div>
         <img src='/location.png' style={{ position: 'absolute', top: '100%', left: 'calc(50% - .625rem)', width: '1.25rem', height: '1.25rem' }} />
         <RightOutlined onClick={() => { this.goEnt(extData) }} style={{ color: "#4BF3F9", position: 'absolute', top: '1.125rem', right: '.5rem', fontSize: '.875rem' }} />
@@ -800,7 +800,7 @@ class Index extends PureComponent {
                     : '空气质量数据'}
               </h3>
               {infoWindowData.pollutantTypeCode === 5 && (
-                <div style={{ marginBottom: 10, fontSize: 13 }}>
+                <div style={{ marginBottom: '.625rem', fontSize: '.8125rem' }}>
                   <span>
                     AQI：
               <span
@@ -1018,7 +1018,7 @@ class Index extends PureComponent {
 
       return (<div className={styles.mapOperationBtn}>
         {operationBtnArr().map((item, index) => {
-          return <div style={{ paddingBottom: 10 }} onClick={() => { this.operationChange(item.text, props) }}><img title={item.text} src={item.url} /></div>
+          return <div style={{ paddingBottom: '.625rem' }} onClick={() => { this.operationChange(item.text, props) }}><img title={item.text} src={item.url} /></div>
         })}
       </div>);
 
@@ -1071,7 +1071,7 @@ class Index extends PureComponent {
           className={styles.titleInfoWindow}
         >
           <div style={{ whiteSpace: "nowrap" }} >企业名称：{hoverEntTitle}</div>
-          <div style={{ paddingTop: 3, whiteSpace: "nowrap" }}>监测点名称：{hoverPointTitle}</div>
+          <div style={{ paddingTop: '.1875rem', whiteSpace: "nowrap" }}>监测点名称：{hoverPointTitle}</div>
         </InfoWindow>
         <InfoWindow
 
@@ -1083,7 +1083,7 @@ class Index extends PureComponent {
           closeWhenClickMap={false}
         >
           {this.infoWindowContent()}
-          <span onClick={() => { this.setState({ pointInfoWindowVisible: false }) }} style={{ position: 'absolute', cursor: 'pointer', top: 0, right: 8, fontSize: 18 }}>×</span>
+          <span onClick={() => { this.setState({ pointInfoWindowVisible: false }) }} style={{ position: 'absolute', cursor: 'pointer', top: 0, right: 8, fontSize: '1.125rem' }}>×</span>
         </InfoWindow>
 
         <RightIconMapComponent />
@@ -1110,7 +1110,7 @@ class Index extends PureComponent {
         {<div className={styles.searchSty} >  { /**搜索 */}
           <Select
             showSearch
-            style={{ width: smallResolution ? 110 : 220 }}
+            style={{ width: smallResolution ? '110px' : '220px' }}
             placeholder="请输入企业名称"
             optionFilterProp="children"
             filterOption={(input, option) =>
