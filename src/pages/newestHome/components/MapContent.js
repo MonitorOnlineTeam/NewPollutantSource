@@ -647,7 +647,7 @@ class Index extends PureComponent {
     aMap.add(labelsLayer);
   }
   regPopovercontent = (extData) => {
-    return <div className={styles.regPopoverSty} style={{ position: 'absolute', margin: '0 auto', top: 'calc(35px + (65px - 54px)/2)', left: 12 }}>
+    return <div className={styles.regPopoverSty} style={{ position: 'absolute', margin: '0 auto', top: 'calc(2.1875rem + (4.0625rem - 3.375rem)/2)', left: '.75rem' }}>
       <div>企业总数 : {extData.position && extData.position.entCount}</div>
       <div><span style={{ color: '#FF0000' }}>超标</span>点位数 : <span style={{ cursor: 'pointer' }} onClick={() => { this.pointNum(2, extData) }}>{extData.position && extData.position.overCount ? extData.position.overCount : 0}</span></div>
       <div><span style={{ color: '#FFCC00' }}>异常</span>点位数 : <span style={{ cursor: 'pointer' }} onClick={() => { this.pointNum(1, extData) }}>{extData.position && extData.position.exceptionCount ? extData.position.exceptionCount : 0}</span></div>
