@@ -1581,13 +1581,15 @@ const WarningDataAndChart = props => {
               编辑图表
             </Button>
           )}
-          <Button
-            type="primary"
-            onClick={() => setIsStopRecordModalOpen(true)}
-            // style={{ position: 'absolute', right: 12, top: 0 }}
-          >
-            停运记录
-          </Button>
+          {props.entCode && (
+            <Button
+              type="primary"
+              onClick={() => setIsStopRecordModalOpen(true)}
+              // style={{ position: 'absolute', right: 12, top: 0 }}
+            >
+              停运记录
+            </Button>
+          )}
         </Space>
       </Form>
       {showType === 'data' ? (
@@ -1745,7 +1747,12 @@ const WarningDataAndChart = props => {
         }}
       >
         {isStopRecordModalOpen && (
-          <StopRecord hideBreadcrumb time={form.getFieldValue('time')} DGIMN={DGIMN} entCode={props.entCode} />
+          <StopRecord
+            hideBreadcrumb
+            time={form.getFieldValue('time')}
+            DGIMN={DGIMN}
+            entCode={props.entCode}
+          />
         )}
       </Modal>
     </>
