@@ -61,7 +61,7 @@ const AssistDataAnalysis = props => {
               displayType={displayType}
               pointInfo={pointInfo}
               warningId={warningId}
-              entCode={entCode || pointInfo.EntCode}
+              entCode={entCode || pointInfo?.EntCode}
               {...dataChartParams}
             />
           </Tabs.TabPane>

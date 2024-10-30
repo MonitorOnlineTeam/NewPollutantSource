@@ -76,7 +76,7 @@ const WarningDataAndChart = props => {
   const [currentLegend, setCurrentLegend] = useState([]);
   const [isModalOpenDataFlag, setIsModalOpenDataFlag] = useState(false);
 
-  const buttonList = permissionButton(props.location.pathname);
+  const buttonList = permissionButton(location.pathname);
   const RWGYText = ModalTypeNameConversion('人为干预');
   const GZText = ModalTypeNameConversion('故障原因');
 
