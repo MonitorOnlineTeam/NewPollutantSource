@@ -103,10 +103,8 @@ const Index = (props) => {
 
   useEffect(() => {
     initData()
-
-
   }, []);
-  
+
   useEffect(() => {
     if(operationSettingInfo.Availability){
       getOpertionExceptionList(latelyDays7)
@@ -120,11 +118,11 @@ const Index = (props) => {
     getExceptionSignTaskRate(latelyDays7);
     getConsumablesList(latelyDays7)
 
-
     const planInsideClockAbnormalEchartsInstance = planInsideClockAbnormalEchartsRef.current.getEchartsInstance(); //现场打卡异常 计划内  点击事件
     planInsideClockAbnormalEchartsInstance.getZr().on('click', (params) => {
       setClockAbnormalVisible(true)
     });
+
     const planOutClockAbnormalEchartsInstance = planOutClockAbnormalEchartsRef.current.getEchartsInstance(); //现场打卡异常 计划外  点击事件
     planOutClockAbnormalEchartsInstance.getZr().on('click', (params) => {
       setClockAbnormalVisible(true)
@@ -456,11 +454,11 @@ const Index = (props) => {
   return (
     <Row style={{ flexFlow: 'row nowrap' }} justify='space-between'>
       {
-        exceptionSignTaskRateLoading ?  
-        <Spin spinning={exceptionSignTaskRateLoading}>
-          <Col className={styles.clockAbnormal}></Col>
-        </Spin> 
-        :
+        // exceptionSignTaskRateLoading ?  
+        // <Spin spinning={exceptionSignTaskRateLoading}>
+        //   <Col className={styles.clockAbnormal}></Col>
+        // </Spin> 
+        // :
         <Spin spinning={false}>
           <Col className={styles.clockAbnormal}>
             <CardHeader btnClick={clockAbnormalClick} showBtn type='week' btnCheck={clockBtnCheck} title='现场打卡异常' />
@@ -516,9 +514,9 @@ const Index = (props) => {
         </Spin> 
       }
     {
-      consumablesLoading ? 
-      <Spin spinning={consumablesLoading}><Col className={styles.consumablesStatistics}></Col></Spin>
-      :
+      // consumablesLoading ? 
+      // <Spin spinning={consumablesLoading}><Col className={styles.consumablesStatistics}></Col></Spin>
+      // :
       <Spin spinning={consumablesLoading}>
         <Col className={styles.consumablesStatistics}>
           <CardHeader btnClick={consumablesClick} showBtn type='week' btnCheck={consumablesCheck} title='耗材统计' />
