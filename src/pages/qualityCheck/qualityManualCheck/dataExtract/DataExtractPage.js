@@ -77,7 +77,7 @@ class DataExtractPage extends PureComponent {
           BQXXTEXT.push(item.PollutantName)
           return { value: item.PollutantCode, label: item.PollutantName }
         })
-        this.defalutPollutantCode = gasPollutantList.filter(item => item.value !== 'n00000')[0].value;
+        this.defalutPollutantCode = gasPollutantList.filter(item => item.value !== 'n00000')[0]?.value;
         this.setState({
           PQLLTEXT, BQXXTEXT,
           gasPollutantList: gasPollutantList,
