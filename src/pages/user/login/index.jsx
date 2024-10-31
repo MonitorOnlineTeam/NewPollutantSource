@@ -147,12 +147,29 @@ class Login extends Component {
     sessionStorage.clear();
     dispatch({ type: 'global/updateState', payload: { sysPollutantTypeList: [] } });
   };
+  
+  reloadPage = () =>{
+    var version = document.getElementsByTagName('meta')['version'].content //缓存问题处理
+    var xhr = new XMLHttpRequest()
+    xhr.open('GET', "/pageInfo.json?t=" + Date.now(), true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4 && xhr.status == 200 || xhr.status == 304) {
+        if (xhr.responseText && JSON.parse(xhr.responseText).version !== version) {
+            if (window.location.href.indexOf("#reloaded") == -1) {
+              location.href = location.href + "#reloaded";
+              window.location.reload(true);
+            }
+        }
+      }
+    };
+    xhr.send();
+  }
   componentDidMount() {
+    this.reloadPage()
     this.timer = setInterval(() => {
       this.child && this.child.current && this.child.current.click(); // 3分钟刷新一次
     }, 1000 * 60 * 3);
     this.clearData();
-
   }
 
   componentWillUnmount() {

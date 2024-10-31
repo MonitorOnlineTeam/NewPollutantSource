@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-06-11 14:29:31
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-29 18:25:35
+ * @LastEditTime: 2024-10-31 13:30:51
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Timeline } from 'antd';
@@ -221,7 +221,7 @@ const Index = (props) => {
 
 
 
-  const {visible,onCancel, record, title,clientHeight, addDataConsistencyData, addRealTimeData, parLoading, editLoading, tableInfo, importDataLoading, onFinish } = props;
+  const {visible,onCancel, record,roleType, title,clientHeight, addDataConsistencyData, addRealTimeData, parLoading, editLoading, tableInfo, importDataLoading, onFinish,id } = props;
 
 
 
@@ -273,14 +273,13 @@ const Index = (props) => {
 
   const [echoLoading, setEchoLoading] = useState(false)
   const [isCheckUser, setIsCheckUser] = useState(false)
-  const [roleType, setRoleType] = useState()
-  const [editId, setEditId] = useState()
+  // const [roleType, setRoleType] = useState()
 
   const initData = ()=>{
+    console.log(record)
     setEchoLoading(true)
     resetData();
     setIsCheckUser(record.isCheckUser == 1 || record.isCheckUser == 2 ? true : false)
-    setRoleType(record.isCheckUser)
     props.getConsistencyCheckInfo({ ID: record.id }, (data) => {
       //共同的字段
       commonForm.setFieldsValue({
@@ -686,7 +685,7 @@ const Index = (props) => {
       }
       const commonData = {
         ...commonValues,
-        ID: editId,
+        ID: id,
         month: undefined,
         DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-DD 00:00:00") : undefined,
         Commitment: commonValues.Commitment ? 1 : undefined,
@@ -806,7 +805,7 @@ const Index = (props) => {
             type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
             isSuccess && onFinish && onFinish()
           }
-
+          console.log(par)
           props.addRemoteInspector({
             ...par
           }, (isSuccess, message) => {
@@ -2353,15 +2352,6 @@ const Index = (props) => {
         [`${item.ChildID}DataStatus`]: checked ? [1] : [],
       })
     })
-  }
-
-  const [id, setId] = useState()
-  const [detailVisible, setDetailVisible] = useState(false)
-  const [detailTitle, setDetailTitle] = useState()
-  const details = (record) => {
-    setDetailTitle(`${record.entName} - ${record.pointName}`)
-    setDetailVisible(true)
-    setId(record.id)
   }
   const { addParconsistencyData } = props;
 

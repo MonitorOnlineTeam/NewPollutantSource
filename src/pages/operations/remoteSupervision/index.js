@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-06-11 14:29:31
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-29 16:47:11
+ * @LastEditTime: 2024-10-31 10:50:06
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Timeline } from 'antd';
@@ -889,7 +889,7 @@ const Index = (props) => {
   }
 
   // const [echoLoading, setEchoLoading] = useState(false)
-  // const [roleType, setRoleType] = useState()
+  const [roleType, setRoleType] = useState()
   const [isCheckUser, setIsCheckUser] = useState(false)
   const [visible, setVisible] = useState(false)
   const [title, setTitle] = useState('添加')
@@ -902,6 +902,7 @@ const Index = (props) => {
     setTitle('编辑')
     setEditId(record.id)
     setTabType('1')
+    setRoleType(record.isCheckUser)
     if(record.isCheckUser){ //核查人员编辑的时候
       setCheckEditvisible(true)
       return;
@@ -2586,223 +2587,223 @@ const Index = (props) => {
     }
 
   }
-  const columns3 = [
-    {
-      title: '序号',
-      align: 'center',
-      fixed: 'left',
-      render: (text, record, index) => {
-        return index + 1;
-      }
-    },
-    {
-      title: '监测参数',
-      dataIndex: 'Name',
-      key: 'Name',
-      align: 'center',
-      fixed: 'left',
-      width: 100,
-      render: (text, record, index) => {
-        const obj = {
-          children: text,
-          props: {},
-        };
-        if (text == '颗粒物' && record.concentrationType == '原始浓度') {
-          obj.props.rowSpan = 2;
-        }
-        if (text == '颗粒物' && record.concentrationType == '标杆浓度') {
-          obj.props.rowSpan = 0;
-        }
-        return obj;
-      }
-    },
-    {
-      title: '实时数据一致性核查表',
-      children: [
-        {
-          title: '浓度类型',
-          align: 'center',
-          dataIndex: 'concentrationType',
-          key: 'concentrationType',
-          width: 145,
-          render: (text, record) => {
-            return text ? text : '—'
+  // const columns3 = [
+  //   {
+  //     title: '序号',
+  //     align: 'center',
+  //     fixed: 'left',
+  //     render: (text, record, index) => {
+  //       return index + 1;
+  //     }
+  //   },
+  //   {
+  //     title: '监测参数',
+  //     dataIndex: 'Name',
+  //     key: 'Name',
+  //     align: 'center',
+  //     fixed: 'left',
+  //     width: 100,
+  //     render: (text, record, index) => {
+  //       const obj = {
+  //         children: text,
+  //         props: {},
+  //       };
+  //       if (text == '颗粒物' && record.concentrationType == '原始浓度') {
+  //         obj.props.rowSpan = 2;
+  //       }
+  //       if (text == '颗粒物' && record.concentrationType == '标杆浓度') {
+  //         obj.props.rowSpan = 0;
+  //       }
+  //       return obj;
+  //     }
+  //   },
+  //   {
+  //     title: '实时数据一致性核查表',
+  //     children: [
+  //       {
+  //         title: '浓度类型',
+  //         align: 'center',
+  //         dataIndex: 'concentrationType',
+  //         key: 'concentrationType',
+  //         width: 145,
+  //         render: (text, record) => {
+  //           return text ? text : '—'
 
-          }
-        },
-        {
-          title: '分析仪示值',
-          align: 'center',
-          dataIndex: 'par',
-          key: 'par',
-          width: 320,
-          render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标干流量' || record.Name === '流速' || record.Name === '颗粒物' && record.concentrationType === '标杆浓度') {
-              return '—'
-            }
-            return <Row justify='center' align='middle'>
-              {/* <Form.Item name={`${record.par}IndicaVal`} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请输入' }]}> */}
-              <Form.Item name={`${record.par}IndicaVal`}>
-                <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 2) }} disabled={isCheckUser} />
-              </Form.Item>
-              {/* <Form.Item name={`${record.par}IndicaUnit`} style={{ marginLeft: 5 }} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请选择' }]}> */}
-              <Form.Item name={`${record.par}IndicaUnit`} style={{ marginLeft: 5 }}>
-                <Select allowClear placeholder='单位列表' onChange={() => { isJudge(record, 2) }} disabled={isCheckUser}>
-                  {unitFormat(record)}
-                </Select>
-              </Form.Item>
-            </Row>
-          }
-        },
-        {
-          title: <Row align='middle' justify='center'>
-            {/* <Checkbox checked={dasChecked} onChange={onDasChange}>DAS示值</Checkbox> */}
-                 DAS示值
-                 </Row>,
-          align: 'center',
-          dataIndex: 'par',
-          key: 'par',
-          width: 320,
-          render: (text, record) => {
-            return <Row justify='center' align='middle'>
-              {/* <Form.Item name={[`${record.par}DsData`]} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请输入' }]} > */}
-              <Form.Item name={[`${record.par}DsData`]} >
-                <InputNumber placeholder='请输入' disabled={!dasChecked || isCheckUser} onBlur={() => { isJudge(record, 2) }} />
-              </Form.Item>
-              {/* <Form.Item name={[`${record.par}DsDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请选择' }]}> */}
-              <Form.Item name={[`${record.par}DsDataUnit`]} style={{ marginLeft: 5 }}>
-                <Select allowClear placeholder='单位列表' disabled={!dasChecked || isCheckUser} onChange={() => { isJudge(record, 2) }}>
-                  {unitFormat(record)}
-                </Select>
-              </Form.Item>
-            </Row>
-          }
-        },
-        {
-          title: <Row align='middle' justify='center'>
-            {/* <Checkbox checked={numRealTimeChecked} onChange={onNumRealTimeChange}>数采仪实时数据</Checkbox> */}
-                 数采仪实时数据
-                 </Row>,
-          align: 'center',
-          dataIndex: 'par',
-          key: 'par',
-          width: 320,
-          render: (text, record) => {
-            if (record.Name === 'NO' || record.Name === 'NO2') {
-              return '—'
-            }
-            return <Row justify='center' align='middle'>
-              {/* <Form.Item name={[`${record.par}ScyData`]} rules={[{ required: numRealTimeChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numRealTimeChecked, message: '请输入' }]}> */}
-              <Form.Item name={[`${record.par}ScyData`]}>
-                <InputNumber placeholder='请输入' style={{ minWidth: 85 }} disabled={!numRealTimeChecked || isCheckUser} onBlur={() => { isJudge(record, 2) }} />
-              </Form.Item>
-              {/* <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: numRealTimeChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numRealTimeChecked, message: '请选择' }]}> */}
-              <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }}>
-                <Select allowClear placeholder='单位列表' disabled={!numRealTimeChecked || isCheckUser} onChange={() => { isJudge(record, 2) }}>
-                  {unitFormat(record)}
-                </Select>
-              </Form.Item>
-            </Row>
-          }
-        },
-        {
-          title: '附件',
-          align: 'center',
-          dataIndex: 'par',
-          key: 'par',
-          width: 100,
-          render: (text, record, index) => {
-            const fileFlag = !(fileList2 && fileList2[0]);
-            const obj = {
-              children: <div>
-                <Form.Item name='files2' >
-                  <a style={{ cursor: isCheckUser && fileFlag && 'not-allowed', color: isCheckUser && fileFlag && 'rgba(0, 0, 0, 0.7) ', }} onClick={() => { if (isCheckUser && fileFlag) { return }; setFileType(2); setFileVisible(true) }}>{fileList2[0] ? '查看附件' : '上传附件'}</a>
-                </Form.Item>
-              </div>,
-              props: {},
-            };
-            if (index === 0) {
-              obj.props.rowSpan = addRealTimeData.length;
-            } else {
-              obj.props.rowSpan = 0;
-            }
+  //         }
+  //       },
+  //       {
+  //         title: '分析仪示值',
+  //         align: 'center',
+  //         dataIndex: 'par',
+  //         key: 'par',
+  //         width: 320,
+  //         render: (text, record) => {
+  //           if (record.Name === 'NOx' || record.Name === '标干流量' || record.Name === '流速' || record.Name === '颗粒物' && record.concentrationType === '标杆浓度') {
+  //             return '—'
+  //           }
+  //           return <Row justify='center' align='middle'>
+  //             {/* <Form.Item name={`${record.par}IndicaVal`} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请输入' }]}> */}
+  //             <Form.Item name={`${record.par}IndicaVal`}>
+  //               <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 2) }} disabled={isCheckUser} />
+  //             </Form.Item>
+  //             {/* <Form.Item name={`${record.par}IndicaUnit`} style={{ marginLeft: 5 }} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请选择' }]}> */}
+  //             <Form.Item name={`${record.par}IndicaUnit`} style={{ marginLeft: 5 }}>
+  //               <Select allowClear placeholder='单位列表' onChange={() => { isJudge(record, 2) }} disabled={isCheckUser}>
+  //                 {unitFormat(record)}
+  //               </Select>
+  //             </Form.Item>
+  //           </Row>
+  //         }
+  //       },
+  //       {
+  //         title: <Row align='middle' justify='center'>
+  //           {/* <Checkbox checked={dasChecked} onChange={onDasChange}>DAS示值</Checkbox> */}
+  //                DAS示值
+  //                </Row>,
+  //         align: 'center',
+  //         dataIndex: 'par',
+  //         key: 'par',
+  //         width: 320,
+  //         render: (text, record) => {
+  //           return <Row justify='center' align='middle'>
+  //             {/* <Form.Item name={[`${record.par}DsData`]} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请输入' }]} > */}
+  //             <Form.Item name={[`${record.par}DsData`]} >
+  //               <InputNumber placeholder='请输入' disabled={!dasChecked || isCheckUser} onBlur={() => { isJudge(record, 2) }} />
+  //             </Form.Item>
+  //             {/* <Form.Item name={[`${record.par}DsDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请选择' }]}> */}
+  //             <Form.Item name={[`${record.par}DsDataUnit`]} style={{ marginLeft: 5 }}>
+  //               <Select allowClear placeholder='单位列表' disabled={!dasChecked || isCheckUser} onChange={() => { isJudge(record, 2) }}>
+  //                 {unitFormat(record)}
+  //               </Select>
+  //             </Form.Item>
+  //           </Row>
+  //         }
+  //       },
+  //       {
+  //         title: <Row align='middle' justify='center'>
+  //           {/* <Checkbox checked={numRealTimeChecked} onChange={onNumRealTimeChange}>数采仪实时数据</Checkbox> */}
+  //                数采仪实时数据
+  //                </Row>,
+  //         align: 'center',
+  //         dataIndex: 'par',
+  //         key: 'par',
+  //         width: 320,
+  //         render: (text, record) => {
+  //           if (record.Name === 'NO' || record.Name === 'NO2') {
+  //             return '—'
+  //           }
+  //           return <Row justify='center' align='middle'>
+  //             {/* <Form.Item name={[`${record.par}ScyData`]} rules={[{ required: numRealTimeChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numRealTimeChecked, message: '请输入' }]}> */}
+  //             <Form.Item name={[`${record.par}ScyData`]}>
+  //               <InputNumber placeholder='请输入' style={{ minWidth: 85 }} disabled={!numRealTimeChecked || isCheckUser} onBlur={() => { isJudge(record, 2) }} />
+  //             </Form.Item>
+  //             {/* <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: numRealTimeChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numRealTimeChecked, message: '请选择' }]}> */}
+  //             <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }}>
+  //               <Select allowClear placeholder='单位列表' disabled={!numRealTimeChecked || isCheckUser} onChange={() => { isJudge(record, 2) }}>
+  //                 {unitFormat(record)}
+  //               </Select>
+  //             </Form.Item>
+  //           </Row>
+  //         }
+  //       },
+  //       {
+  //         title: '附件',
+  //         align: 'center',
+  //         dataIndex: 'par',
+  //         key: 'par',
+  //         width: 100,
+  //         render: (text, record, index) => {
+  //           const fileFlag = !(fileList2 && fileList2[0]);
+  //           const obj = {
+  //             children: <div>
+  //               <Form.Item name='files2' >
+  //                 <a style={{ cursor: isCheckUser && fileFlag && 'not-allowed', color: isCheckUser && fileFlag && 'rgba(0, 0, 0, 0.7) ', }} onClick={() => { if (isCheckUser && fileFlag) { return }; setFileType(2); setFileVisible(true) }}>{fileList2[0] ? '查看附件' : '上传附件'}</a>
+  //               </Form.Item>
+  //             </div>,
+  //             props: {},
+  //           };
+  //           if (index === 0) {
+  //             obj.props.rowSpan = addRealTimeData.length;
+  //           } else {
+  //             obj.props.rowSpan = 0;
+  //           }
 
-            return obj;
+  //           return obj;
 
-          }
-        },
-        {
-          title: '数据一致性(自动判断)',
-          align: 'center',
-          dataIndex: 'par',
-          key: 'par',
-          width: 170,
-          render: (text, record) => {
-            return <Row justify='center' align='middle'>
-              <Form.Item name={[`${record.par}DataUniformity`]}>
-                <Radio.Group disabled>
-                  <Radio value={1}>是</Radio>
-                  <Radio value={2}>否</Radio>
-                </Radio.Group>
-              </Form.Item>
-            </Row>
-          }
-        },
-        {
-          title: '手工修正结果',
-          align: 'center',
-          dataIndex: 'par',
-          key: 'par',
-          width: 260,
-          render: (text, record, index) => {
-            return <Row justify='center' align='middle' className='manualSty'>
-              <Form.Item name={[`${record.par}RangCheck2`]}>
-                <Checkbox.Group disabled={!isCheckUser} options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck2`, 2) }} />
-              </Form.Item>
-            </Row>
-          }
-        },
-        {
-          title: '运维人员核查备注',
-          align: 'center',
-          dataIndex: 'par',
-          key: 'par',
-          width: 180,
-          render: (text, record) => {
-            return <Form.Item name={`${record.par}OperationDataRemark`}>
-              <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} disabled={isCheckUser} />
-            </Form.Item>
-          }
-        },
-        {
-          title: '备注',
-          align: 'center',
-          dataIndex: 'par',
-          key: 'par',
-          width: 180,
-          render: (text, record) => {
-            const isCheck = roleType != 2;
-            return <Form.Item name={`${record.par}Remark2`}>
-              <TextArea disabled={isCheck} rows={1} placeholder='请输入' style={{ width: '100%' }} />
-            </Form.Item>
-          }
-        },
-        {
-          title: '省区经理备注',
-          align: 'center',
-          dataIndex: 'par',
-          key: 'par',
-          width: 180,
-          render: (text, record) => {
-            const isCheck = roleType != 1;
-            return <Form.Item name={`${record.par}ManagerDataRemark`}>
-              <TextArea disabled={isCheck} rows={1} placeholder='请输入' style={{ width: '100%' }} />
-            </Form.Item>
-          }
-        },
-      ]
-    },
-  ]
+  //         }
+  //       },
+  //       {
+  //         title: '数据一致性(自动判断)',
+  //         align: 'center',
+  //         dataIndex: 'par',
+  //         key: 'par',
+  //         width: 170,
+  //         render: (text, record) => {
+  //           return <Row justify='center' align='middle'>
+  //             <Form.Item name={[`${record.par}DataUniformity`]}>
+  //               <Radio.Group disabled>
+  //                 <Radio value={1}>是</Radio>
+  //                 <Radio value={2}>否</Radio>
+  //               </Radio.Group>
+  //             </Form.Item>
+  //           </Row>
+  //         }
+  //       },
+  //       {
+  //         title: '手工修正结果',
+  //         align: 'center',
+  //         dataIndex: 'par',
+  //         key: 'par',
+  //         width: 260,
+  //         render: (text, record, index) => {
+  //           return <Row justify='center' align='middle' className='manualSty'>
+  //             <Form.Item name={[`${record.par}RangCheck2`]}>
+  //               <Checkbox.Group disabled={!isCheckUser} options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck2`, 2) }} />
+  //             </Form.Item>
+  //           </Row>
+  //         }
+  //       },
+  //       {
+  //         title: '运维人员核查备注',
+  //         align: 'center',
+  //         dataIndex: 'par',
+  //         key: 'par',
+  //         width: 180,
+  //         render: (text, record) => {
+  //           return <Form.Item name={`${record.par}OperationDataRemark`}>
+  //             <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} disabled={isCheckUser} />
+  //           </Form.Item>
+  //         }
+  //       },
+  //       {
+  //         title: '备注',
+  //         align: 'center',
+  //         dataIndex: 'par',
+  //         key: 'par',
+  //         width: 180,
+  //         render: (text, record) => {
+  //           const isCheck = roleType != 2;
+  //           return <Form.Item name={`${record.par}Remark2`}>
+  //             <TextArea disabled={isCheck} rows={1} placeholder='请输入' style={{ width: '100%' }} />
+  //           </Form.Item>
+  //         }
+  //       },
+  //       {
+  //         title: '省区经理备注',
+  //         align: 'center',
+  //         dataIndex: 'par',
+  //         key: 'par',
+  //         width: 180,
+  //         render: (text, record) => {
+  //           const isCheck = roleType != 1;
+  //           return <Form.Item name={`${record.par}ManagerDataRemark`}>
+  //             <TextArea disabled={isCheck} rows={1} placeholder='请输入' style={{ width: '100%' }} />
+  //           </Form.Item>
+  //         }
+  //       },
+  //     ]
+  //   },
+  // ]
   // const columns4 = [
   //   {
   //     title: '序号',
@@ -3351,6 +3352,8 @@ const Index = (props) => {
         title={title}
         visible={visible}
         record={editRecord}
+        id={editId}
+        roleType={roleType}
         destroyOnClose
         onCancel={() => { setVisible(false); }}
         wrapClassName={styles.modalSty}
@@ -3473,7 +3476,7 @@ const Index = (props) => {
 
       </Modal>
 
-      <CheckUserEditDetail visible={checkEditvisible} title={title} id={editId} onCancel={() => { setCheckEditvisible(false); }} onFinish={() => onFinish(pageIndex, pageSize)} />
+      <CheckUserEditDetail visible={checkEditvisible} title={title} id={editId} roleType={roleType} onCancel={() => { setCheckEditvisible(false); }} onFinish={() => onFinish(pageIndex, pageSize)} />
     </div>
 
   );

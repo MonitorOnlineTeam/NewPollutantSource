@@ -3,7 +3,7 @@
  * @Author: outman0611
  * @Date: 2024-09-29 17:13:21
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-29 16:42:34
+ * @LastEditTime: 2024-10-31 09:19:31
  */
 
 import React, { useState, useEffect, Fragment } from 'react';
@@ -342,7 +342,7 @@ const Index = (props) => {
           <Form.Item label='运维小组名称' name="TeamName" rules={[{ required: true, message: '请输入运维小组名称！' }]} >
             <Input placeholder='请输入' allowClear/>
           </Form.Item>
-          <Form.Item label='运维单位名称' name="CompanyID" rules={[{ required: true, message: '请选择运维单位名称！' }]} >
+          <Form.Item label='运维单位' name="CompanyID" rules={[{ required: true, message: '请选择运维单位！' }]} >
             <OperationCompanyList />
           </Form.Item>
           <Form.Item label='排序' name="Sort" rules={[{ required: true, message: '请输入排序！' }]} >

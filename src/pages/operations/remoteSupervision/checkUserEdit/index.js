@@ -62,7 +62,7 @@ const dvaDispatch = (dispatch) => {
   }
 }
 const Index = (props) => {
-  const { visible, title, onCancel, id, type,onFinish, clientHeight } = props;
+  const { visible, title, onCancel, id, roleType, type,onFinish, clientHeight } = props;
   const [form2] = Form.useForm(); //添加编辑表单  数据一致性核查表
   const [form3] = Form.useForm(); //添加编辑表单   参数一致性核查表
   const [commonForm] = Form.useForm();
@@ -241,7 +241,6 @@ const Index = (props) => {
   const [saveLoading1, setSaveLoading1] = useState(false)
   const [saveLoading2, setSaveLoading2] = useState(false)
   const save = (type) => {
-
     type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
     const commonData = {
       ID: id,
@@ -299,19 +298,19 @@ const Index = (props) => {
         Remark: values3[`${code}Remark3`],
       }
     })
-    const data = {
-      AddType: type,
-      isCheckUser: consistencyCheckDetail?.isCheckUser,
-      Data: {
-        ...commonData,
-        CouUpload: consistencyCheckDetail?.couUpload?.[0]?.FileUuid,
-      },
-      DataList: dataList,
-      ParamDataList: paramDataList,
-    }
+    // const data = {
+    //   AddType: type,
+    //   isCheckUser: consistencyCheckDetail?.isCheckUser,
+    //   Data: {
+    //     ...commonData,
+    //     CouUpload: consistencyCheckDetail?.couUpload?.[0]?.FileUuid,
+    //   },
+    //   DataList: dataList,
+    //   ParamDataList: paramDataList,
+    // }
     props.addRemoteInspector({
       AddType: type,
-      isCheckUser: consistencyCheckDetail?.isCheckUser,
+      isCheckUser: roleType,
       Data: {
         ...commonData,
         CouUpload: consistencyCheckDetail?.couUpload?.[0]?.FileUuid,

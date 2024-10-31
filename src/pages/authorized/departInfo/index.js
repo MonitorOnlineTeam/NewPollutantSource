@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-29 14:06:11
+ * @LastEditTime: 2024-10-31 16:17:51
  * @Description: 部门管理
  */
 import React, { Component, Fragment } from 'react';
@@ -332,6 +332,7 @@ class DepartIndex extends Component {
       settingOperationGroupPermis: false,
       testRegionPermis: false,
       largeRegionList: [],
+      updateOperationArea: false,
     };
     this.depApproveColumns = [
       {
@@ -411,32 +412,31 @@ class DepartIndex extends Component {
         title: '部门名称',
         dataIndex: 'UserGroup_Name',
         key: 'UserGroup_Name',
-        width: 'auto',
+        width: 240,
       },
       {
         title: '部门描述',
         dataIndex: 'UserGroup_Remark',
         key: 'UserGroup_Remark',
-        width: 'auto',
       },
       {
         title: '创建人',
         dataIndex: 'CreateUserName',
-        width: 'auto',
         key: 'CreateUserName',
+        width: 140,
       },
       {
         title: '创建时间',
         dataIndex: 'CreateDate',
-        width: 'auto',
         key: 'CreateDate',
+        width: 150,
       },
       {
         title: '操作',
         dataIndex: '',
         key: 'x',
         align: 'left',
-        width: '280px',
+        width: 280,
         render: (text, record, index) => (
           <span>
             <Tooltip title="编辑">
@@ -511,26 +511,26 @@ class DepartIndex extends Component {
             </Tooltip>
             <Divider type="vertical" />
             {// 控制显示隐藏区域过滤
-            this.props.showGroupRegionFilter && (
-              <>
-                <Tooltip title={configInfo.IsOpera ? '运维区域过滤' : '区域过滤'}>
-                  <a
-                    onClick={() => {
-                      this.setState(
-                        {
-                          selectedRowKeys: record,
-                        },
-                        () => {
-                          this.showRegionModal();
-                        },
-                      );
-                    }}
-                  >
-                    <FilterOutlined style={{ fontSize: 16 }} />
-                  </a>
-                </Tooltip>
-              </>
-            )}
+              this.props.showGroupRegionFilter && (
+                <>
+                  <Tooltip title={configInfo.IsOpera ? '运维区域过滤' : '区域过滤'}>
+                    <a
+                      onClick={() => {
+                        this.setState(
+                          {
+                            selectedRowKeys: record,
+                          },
+                          () => {
+                            this.showRegionModal();
+                          },
+                        );
+                      }}
+                    >
+                      <FilterOutlined style={{ fontSize: 16 }} />
+                    </a>
+                  </Tooltip>
+                </>
+              )}
 
             {this.props.configInfo &&
               !this.props.configInfo.IsShowProjectRegion &&
@@ -572,7 +572,7 @@ class DepartIndex extends Component {
             </a>
           </Tooltip> */}
             {/* {true && ( */}
-              {this.props.configInfo && this.props.configInfo.IsShowProjectRegion && (
+            {this.props.configInfo && this.props.configInfo.IsShowProjectRegion && (
               <>
                 <Divider type="vertical" />
                 <Tooltip title="设置点位访问权限">
@@ -611,7 +611,7 @@ class DepartIndex extends Component {
                 <BellOutlined style={{ fontSize: 16 }} />
               </a>
             </Tooltip>
-            {this.props.configInfo && !this.props.configInfo.IsShowProjectRegion && (
+            {this.props.configInfo && !this.props.configInfo.IsShowProjectRegion && this.state.updateOperationArea && (
               <>
                 <Divider type="vertical" />
                 <Tooltip title="更新运维区域">
@@ -1018,6 +1018,11 @@ class DepartIndex extends Component {
         case 'SetOperationGroup':
           this.setState({ settingOperationGroupPermis: true });
           break;
+        case 'updateOperationArea':
+          this.setState({ updateOperationArea: true });
+          break;
+
+
       }
     });
     this.props.dispatch({
@@ -1035,13 +1040,13 @@ class DepartIndex extends Component {
       payload: {},
     });
     !this.props.configInfo?.IsShowProjectRegion &&
-     this.props.dispatch({
-      type: `ctCommon/GetLargeRegionList`,
-      payload: {},
-      callback: (res)=>{
-       this.setState({ largeRegionList:res })
-      },
-    })
+      this.props.dispatch({
+        type: `ctCommon/GetLargeRegionList`,
+        payload: {},
+        callback: (res) => {
+          this.setState({ largeRegionList: res })
+        },
+      })
     this.getUserList({});
     // this.props.dispatch({
     //     type: 'roleinfo/getrolestreeandobj',
@@ -1667,6 +1672,7 @@ class DepartIndex extends Component {
                   //rowSelection={rowRadioSelection}
                   size="small"
                   columns={this.getColumns()}
+                  scroll={{x:920}}
                   defaultExpandAllRows
                   // dataSource={this.props.DepartInfoTree}
                   dataSource={this.state.departInfoTree}
@@ -1703,51 +1709,51 @@ class DepartIndex extends Component {
                     size="large"
                   />
                 ) : (
-                  <Form onSubmit={this.handleSubmit} className="login-form">
-                    <Form.Item label="父节点" {...formItemLayout}>
-                      {getFieldDecorator('ParentId', {
-                        rules: [{ required: true, message: '请选择父节点' }],
-                        initialValue:
-                          this.state.IsEdit == true ? this.props.DepartInfoOne.ParentId : undefined,
-                      })(
-                        <TreeSelect
-                          type="ParentId"
-                          // showSearch
-                          //   style={{ width: 300 }}
-                          //value={this.state.IsEdit==true?this.props.RoleInfoOne.ParentId:null}
-                          dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                          placeholder="请选择父节点"
-                          allowClear
-                          treeDefaultExpandAll
-                          onChange={this.onChange}
-                          treeData={this.props.DepartTree}
-                          style={{ width: '100%' }}
-                        ></TreeSelect>,
-                      )}
-                    </Form.Item>
-                    <Form.Item label="部门名称" {...formItemLayout}>
-                      {getFieldDecorator('UserGroup_Name', {
-                        rules: [{ required: true, message: '请输入部门名称' }],
-                        initialValue:
-                          this.state.IsEdit == true ? this.props.DepartInfoOne.UserGroup_Name : '',
-                      })(<Input type="UserGroup_Name" placeholder="请输入部门名称" />)}
-                    </Form.Item>
-                    <Form.Item label="部门描述" {...formItemLayout}>
-                      {getFieldDecorator('UserGroup_Remark', {
-                        initialValue:
-                          this.state.IsEdit == true
-                            ? this.props.DepartInfoOne.UserGroup_Remark
-                            : '',
-                      })(<TextArea type="UserGroup_Remark" placeholder="请输入部门描述" />)}
-                    </Form.Item>
-                    <Form.Item>
-                      {getFieldDecorator('UserGroup_ID', {
-                        initialValue:
-                          this.state.IsEdit == true ? this.props.DepartInfoOne.UserGroup_ID : '',
-                      })(<Input type="UserGroup_ID" hidden />)}
-                    </Form.Item>
-                  </Form>
-                )}
+                    <Form onSubmit={this.handleSubmit} className="login-form">
+                      <Form.Item label="父节点" {...formItemLayout}>
+                        {getFieldDecorator('ParentId', {
+                          rules: [{ required: true, message: '请选择父节点' }],
+                          initialValue:
+                            this.state.IsEdit == true ? this.props.DepartInfoOne.ParentId : undefined,
+                        })(
+                          <TreeSelect
+                            type="ParentId"
+                            // showSearch
+                            //   style={{ width: 300 }}
+                            //value={this.state.IsEdit==true?this.props.RoleInfoOne.ParentId:null}
+                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                            placeholder="请选择父节点"
+                            allowClear
+                            treeDefaultExpandAll
+                            onChange={this.onChange}
+                            treeData={this.props.DepartTree}
+                            style={{ width: '100%' }}
+                          ></TreeSelect>,
+                        )}
+                      </Form.Item>
+                      <Form.Item label="部门名称" {...formItemLayout}>
+                        {getFieldDecorator('UserGroup_Name', {
+                          rules: [{ required: true, message: '请输入部门名称' }],
+                          initialValue:
+                            this.state.IsEdit == true ? this.props.DepartInfoOne.UserGroup_Name : '',
+                        })(<Input type="UserGroup_Name" placeholder="请输入部门名称" />)}
+                      </Form.Item>
+                      <Form.Item label="部门描述" {...formItemLayout}>
+                        {getFieldDecorator('UserGroup_Remark', {
+                          initialValue:
+                            this.state.IsEdit == true
+                              ? this.props.DepartInfoOne.UserGroup_Remark
+                              : '',
+                        })(<TextArea type="UserGroup_Remark" placeholder="请输入部门描述" />)}
+                      </Form.Item>
+                      <Form.Item>
+                        {getFieldDecorator('UserGroup_ID', {
+                          initialValue:
+                            this.state.IsEdit == true ? this.props.DepartInfoOne.UserGroup_ID : '',
+                        })(<Input type="UserGroup_ID" hidden />)}
+                      </Form.Item>
+                    </Form>
+                  )}
               </Modal>
               <Modal
                 title={`分配用户-${this.state.selectedRowKeys.UserGroup_Name}`}
@@ -1814,29 +1820,29 @@ class DepartIndex extends Component {
                     size="large"
                   />
                 ) : (
-                  <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
-                    <Tree
-                      key="key"
-                      checkable
-                      // checkStrictly={false}
-                      onExpand={this.onExpand}
-                      // expandedKeys={this.state.expandedKeys}
-                      // autoExpandParent={this.state.autoExpandParent}
-                      onCheck={this.onCheck}
-                      checkedKeys={this.state.checkedKey}
-                      onSelect={this.onSelectRegion}
-                      selectedKeys={this.state.selectedKey}
-                      defaultExpandedKeys={['0']}
-                      // autoExpandParent={true}
-                      defaultExpandAll={false}
+                    <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
+                      <Tree
+                        key="key"
+                        checkable
+                        // checkStrictly={false}
+                        onExpand={this.onExpand}
+                        // expandedKeys={this.state.expandedKeys}
+                        // autoExpandParent={this.state.autoExpandParent}
+                        onCheck={this.onCheck}
+                        checkedKeys={this.state.checkedKey}
+                        onSelect={this.onSelectRegion}
+                        selectedKeys={this.state.selectedKey}
+                        defaultExpandedKeys={['0']}
+                        // autoExpandParent={true}
+                        defaultExpandAll={false}
                       // defaultExpandParent
-                    >
-                      <TreeNode title={'全选'} key={'0'}>
-                        {this.renderTreeNodes(this.props.RegionInfoTree)}
-                      </TreeNode>
-                    </Tree>
-                  </div>
-                )}
+                      >
+                        <TreeNode title={'全选'} key={'0'}>
+                          {this.renderTreeNodes(this.props.RegionInfoTree)}
+                        </TreeNode>
+                      </Tree>
+                    </div>
+                  )}
               </Modal>
 
               <Modal
@@ -1850,8 +1856,8 @@ class DepartIndex extends Component {
                   overflowY: 'auto',
                   maxHeight: this.props.clientHeight - 240,
                 }}
-                // confirmLoading={this.props.dataLoading}
-                // onOk={this.handleDataOK}
+              // confirmLoading={this.props.dataLoading}
+              // onOk={this.handleDataOK}
               >
                 {
                   // (this.props.GetRegionInfoByTree && this.props.CheckPointLoading) ? <Spin
@@ -1929,8 +1935,8 @@ class DepartIndex extends Component {
                         />
                       </Spin>
                     ) : (
-                      <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                    )}
+                          <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        )}
                   </div>
                 }
               </Modal>
@@ -2060,7 +2066,7 @@ class DepartIndex extends Component {
               width={900}
               confirmLoading={insertTestRegionByUserLoading}
             >
-              {!!this.props.testRegionByDepIDLoading || !!this.props.largeRegionListLoading? (
+              {!!this.props.testRegionByDepIDLoading || !!this.props.largeRegionListLoading ? (
                 <Spin
                   style={{
                     width: '100%',
@@ -2072,17 +2078,17 @@ class DepartIndex extends Component {
                   size="large"
                 />
               ) : (
-                <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
-                  <Tree
-                    key="key"
-                    checkable
-                    onCheck={this.onTestCheck}
-                    checkedKeys={this.state.testCheckedKey}
-                  >
-                    {this.renderTestTreeNodes(this.state.largeRegionList)}
-                  </Tree>
-                </div>
-              )}
+                  <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
+                    <Tree
+                      key="key"
+                      checkable
+                      onCheck={this.onTestCheck}
+                      checkedKeys={this.state.testCheckedKey}
+                    >
+                      {this.renderTestTreeNodes(this.state.largeRegionList)}
+                    </Tree>
+                  </div>
+                )}
             </Modal>
             <Modal
               title={this.state.settingOperationGrouptitle}
@@ -2106,21 +2112,21 @@ class DepartIndex extends Component {
                 }
               >
                 {this.state.departInfoTree?.length > 0 &&
-                !this.props.GetDepartInfoByTree &&
-                !this.props.getSetOperationGroupLoading ? (
-                  <TreeTransferSingle
-                    key="key"
-                    titles={['待设置运维小组', '已设置运维小组']}
-                    treeData={this.state.departInfoTree}
-                    fieldNames={{ title: 'UserGroup_Name'}}
-                    checkedKeys={this.props.setOperationGroupId}
-                    targetKeysChange={(key, type, callback) => {
-                      this.settingOperationGroupOk(key, type == 1 ? 1 : 2, callback);
-                    }}
-                  />
-                ) : (
-                  <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                )}
+                  !this.props.GetDepartInfoByTree &&
+                  !this.props.getSetOperationGroupLoading ? (
+                    <TreeTransferSingle
+                      key="key"
+                      titles={['待设置运维小组', '已设置运维小组']}
+                      treeData={this.state.departInfoTree}
+                      fieldNames={{ title: 'UserGroup_Name' }}
+                      checkedKeys={this.props.setOperationGroupId}
+                      targetKeysChange={(key, type, callback) => {
+                        this.settingOperationGroupOk(key, type == 1 ? 1 : 2, callback);
+                      }}
+                    />
+                  ) : (
+                    <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                  )}
               </Spin>
             </Modal>
 
@@ -2146,21 +2152,21 @@ class DepartIndex extends Component {
                 }
               >
                 {this.state.departInfoTree?.length > 0 &&
-                !this.props.GetDepartInfoByTree &&
-                !this.props.getSetOperationGroupLoading ? (
-                  <TreeTransferSingle
-                    key="key"
-                    titles={['待设置运维小组', '已设置运维小组']}
-                    treeData={this.state.departInfoTree}
-                    fieldNames={{ title: 'UserGroup_Name'}}
-                    checkedKeys={this.props.setOperationGroupId}
-                    targetKeysChange={(key, type, callback) => {
-                      this.settingOperationGroupOk(key, type == 1 ? 1 : 2, callback);
-                    }}
-                  />
-                ) : (
-                  <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                )}
+                  !this.props.GetDepartInfoByTree &&
+                  !this.props.getSetOperationGroupLoading ? (
+                    <TreeTransferSingle
+                      key="key"
+                      titles={['待设置运维小组', '已设置运维小组']}
+                      treeData={this.state.departInfoTree}
+                      fieldNames={{ title: 'UserGroup_Name' }}
+                      checkedKeys={this.props.setOperationGroupId}
+                      targetKeysChange={(key, type, callback) => {
+                        this.settingOperationGroupOk(key, type == 1 ? 1 : 2, callback);
+                      }}
+                    />
+                  ) : (
+                    <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                  )}
               </Spin>
             </Modal>
           </BreadcrumbWrapper>

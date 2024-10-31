@@ -209,7 +209,7 @@ const OfficeInspection = props => {
           return {
             children: (
               <div
-                className={styles.required}
+                className={(record.key === 'title1' || record.key === 'BusinessCulture' || record.key === 'OfficeNeatness') && styles.required}
                 style={record.isTitle ? { fontWeight: 'bold', color: '#000' } : {}}
               >
                 {text}
@@ -230,6 +230,7 @@ const OfficeInspection = props => {
           let el = '';
           if (record.dataIndex === 'IsLock' || record.dataIndex === 'BusinessCulture') {
             el = (
+              
               <Form.Item
                 name={record.dataIndex}
                 style={{ marginBottom: 0 }}
@@ -237,7 +238,7 @@ const OfficeInspection = props => {
                 wrapperCol={{ span: 24 }}
                 rules={[
                   {
-                    required: true,
+                    required: record.key === 'BusinessCulture' || record.key === 'OfficeNeatness',
                   },
                 ]}
               >
@@ -254,12 +255,12 @@ const OfficeInspection = props => {
                 style={{ marginBottom: 0 }}
                 labelCol={{ span: 0 }}
                 wrapperCol={{ span: 24 }}
-                rules={[
-                  {
-                    required: true,
-                    message: '不能为空！',
-                  },
-                ]}
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: '不能为空！',
+                //   },
+                // ]}
               >
                 <Select placeholder='请选择' mode='multiple' options={carList}  
                         fieldNames={{ label: 'CarNum', value: 'CarNum'}} loading={props.carLoading} allowClear showSearch                      
@@ -276,7 +277,7 @@ const OfficeInspection = props => {
                 wrapperCol={{ span: 24 }}
                 rules={[
                   {
-                    required: true,
+                    required: record.key === 'BusinessCulture' || record.key === 'OfficeNeatness',
                     message: '不能为空！',
                   },
                 ]}

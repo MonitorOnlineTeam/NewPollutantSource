@@ -152,7 +152,8 @@ export default class MonitorPoint extends Component {
     // 2.污染物类型
     // 3.获取监测点数据
     const { dispatch, match } = this.props;
-    const buttonList = permissionButton(this.props.location.pathname);
+    const buttonList = permissionButton('/platformconfig/monitortarget/AEnterpriseTest/1');
+    console.log(buttonList)
     buttonList.map(item => {
       switch (item) {
         case 'ModifyPointOpratioinStatus':

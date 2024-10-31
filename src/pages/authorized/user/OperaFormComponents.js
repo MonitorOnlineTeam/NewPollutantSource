@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-11 09:37:53
+ * @LastEditTime: 2024-10-31 09:38:29
  * @Description: 用户信息添加编辑表单 运维
  */
 import React, { Component } from 'react';
@@ -40,6 +40,7 @@ export default class Index extends Component {
         super(props);
         this.state = {
             largeRegionList: [],
+            operationCompanyRequired:true,
         };
     }
 
@@ -73,7 +74,7 @@ export default class Index extends Component {
             { label: '邮箱', field: 'Email', validator: { type: 'email', message: '邮箱格式不正确!', } },
             { label: '推送类型', field: 'SendPush', inputNode: 'select', required: true, mode: "multiple", list: [{ value: "1", label: "短信推送" }, { value: "2", label: "APP推送" }, { value: "3", label: "网页推送" }, { value: "5", label: "微信推送" }] },
             { label: '用户类型', field: 'UserType', inputNode: 'select', required: true, list: [{ value: "1", label: '雪迪龙' }, { value: "2", label: "运维单位" }, { value: "3", label: "其他" }]},
-            { label: '运维公司', field: 'OperationCompany', inputNode: 'select', hidden: !userType || userType == 3, required: true, list: this.props.operationCompanyList.map(item => ({ value: item['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'], label: item['dbo.T_Bas_OperationMaintenanceEnterprise.Company'] })), initialValue: this.props.operationCompanyList?.[0]?.['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'], loading: this.props.operationCompanyLoading },
+            { label: '运维公司', field: 'OperationCompany', inputNode: 'select', hidden: !userType || userType == 3, required: this.state.operationCompanyRequired, list: this.props.operationCompanyList.map(item => ({ value: item['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'], label: item['dbo.T_Bas_OperationMaintenanceEnterprise.Company'] })), initialValue: this.props.operationCompanyList?.[0]?.['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'], loading: this.props.operationCompanyLoading },
             { label: '业务属性', field: 'BusinessAttribute', inputNode: 'select', hidden: userType != 1, mode: "multiple", list: [{ value: "1", "value": "职能-售后服务" }, { value: "2", label: "售后服务-安装调试" }, { value: "3", label: "售后服务-非驻厂运营" }, { value: "4", label: "售后服务-驻厂运营" }, { value: "5", label: "其他" }] },
             { label: '行业属性', field: 'IndustryAttribute', inputNode: 'select', hidden: userType != 1, mode: "multiple", list: [{ value: "5", "value": "大气" }, { value: "6", label: "地表水" }, { value: "10", label: "过程分析" }, { value: "2", label: "污染源气" }, { value: "1", label: "污染源水" }, { value: "11", label: "其他" }] },
             { label: '所属大区', field: 'Question', inputNode: 'select', hidden: userType != 1, list: this.state.largeRegionList.map(item => ({ value: item['ID'], label: item['LargeRegion'] })), loading: this.props.largeRegionListLoading },
@@ -108,6 +109,17 @@ export default class Index extends Component {
                                                             userType: values,
                                                         },
                                                     });
+                                                    const { dispatch, form } = this.props;
+                                                    if(values==2 || values==3){ //运维单位 || 其他
+                                                        form.setFieldsValue({ BusinessAttribute:undefined, IndustryAttribute:undefined,  Question:undefined, });
+                                                        if(values==3){ 
+                                                             this.setState({operationCompanyRequired:false},()=>{
+                                                                form.setFieldsValue({ OperationCompany:undefined });
+                                                             })
+                                                        }
+                                                    }else{
+                                                        this.setState({operationCompanyRequired:true})
+                                                    }
                                                 }
                                             }} />
                                         :
@@ -125,6 +137,7 @@ export default class Index extends Component {
                         const { dispatch, form } = this.props;
                         form.validateFields((err, values) => {
                             if (!err) {
+                                console.log(values)
                                 this.props.formValidateFieldsCallback(values)
                             }
                         })

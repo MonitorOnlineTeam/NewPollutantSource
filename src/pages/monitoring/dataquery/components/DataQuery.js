@@ -180,7 +180,7 @@ class DataQuery extends Component {
         this.children.onDataTypeChange(dataType, [moment().add(-4, 'h').startOf('hour'), moment().endOf('hour')]);
         break;
       case "hour":
-        this.children.onDataTypeChange(dataType, [moment().add(-1, 'day').startOf('day'), moment().endOf('hour')]);
+        this.children.onDataTypeChange(dataType, [moment().add(-1, 'day').startOf('day'), moment().endOf('day')]);
         break;
       case "day":
         this.children.onDataTypeChange(dataType, [moment().add(-1, 'months').startOf('day'), moment().endOf('day')]);
@@ -472,8 +472,8 @@ class DataQuery extends Component {
     historyparams = {
       ...historyparams,
       DGIMN: dgimn || historyparams.DGIMN,
-      beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
-      endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
+      beginTime: dates?.[0]?.format('YYYY-MM-DD HH:mm:ss'),
+      endTime:dataType=='hour'?  dates?.[1]?.format('YYYY-MM-DD 23:59:59') :  dates?.[1]?.format('YYYY-MM-DD HH:mm:ss'),
       datatype: dataType,
       pageIndex: 1,
       pageSize: 20,

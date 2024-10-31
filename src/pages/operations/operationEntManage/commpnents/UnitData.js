@@ -39,7 +39,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
-import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
+import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'; 
 import { DelIcon } from '@/utils/icon'
 import { ToolTwoTone, UserOutlined, DatabaseOutlined, CloseCircleOutlined } from '@ant-design/icons';
 const { Search } = Input;
@@ -341,6 +341,10 @@ export default class EntTransmissionEfficiency extends Component {
             configId={configId}
           ></SearchWrapper>
         }
+        bodyStyle={{
+          padding:'8px 24px'
+        }}
+        className='autoFormSmallCardHeadTitle'
       >
         <>
 

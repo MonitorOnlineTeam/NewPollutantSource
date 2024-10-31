@@ -203,9 +203,35 @@ export function downloadFile(sUrl) {
   //     return true;
   //   }
   // }
-
+  //下载路径 特殊字符串处理
+const replacements = {
+  '#': "%23",
+  '@': "%40",
+  '$': "%24",
+  '&': "%26",
+  '=': "%3D",
+  ':': "%3A",
+  ',': "%2C",
+  ';': "%3B",
+  '?': "%3F",
+  '+': "%2B"
+};
+// 转义特殊字符的函数
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+// 替换函数
+function replaceSpecialChars(str) {
+  for (const [key, value] of Object.entries(replacements)) {
+      const escapedKey = escapeRegExp(key); // 转义键
+      if (str.includes(key)) {
+          return str.replace(new RegExp(escapedKey, 'g'), value);
+      }
+  }
+  return str; // 如果不包含任何键，则返回原字符串
+}
   // 你的API URL
-  fetch(sUrl, {
+  fetch(replaceSpecialChars(sUrl), {
     method: 'GET',
     headers: {
       Authorization: 'Bearer ' + Cookie.get(cookieName),

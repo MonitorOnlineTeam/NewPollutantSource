@@ -222,7 +222,7 @@ const TimelyPassRate = props => {
             ref={echart => {
               echart && setEcharts1(echart.echarts);
             }}
-            option={getOption(1, ServiceReport.ReportTimelyRate)}
+            option={getOption(1, ServiceReport.ReportTimelyQualifiedRate)}
             lazyUpdate={true}
             style={{ height: '180px', width: '100%' }}
           />
@@ -233,7 +233,7 @@ const TimelyPassRate = props => {
             ref={echart => {
               echart && setEcharts2(echart.echarts);
             }}
-            option={getOption(2, ServiceReport.ReportTimelyQualifiedRate)}
+            option={getOption(2, ServiceReport.ReportTimelyRate)}
             lazyUpdate={true}
             style={{ height: '180px', width: '100%' }}
           />
