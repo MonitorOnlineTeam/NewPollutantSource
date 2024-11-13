@@ -8,6 +8,7 @@ import ReactEcharts from 'echarts-for-react';
 import SupervisionAnalySumm from '@/pages/operations/supervisionAnalySumm';
 import { fomatFloat } from '@/utils/utils';
 import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
+import SupervisionManager from '@/pages/operations/supervisionManager/index.js';
 
 const COLOR = ['#2899F6', '#FF4F4F', '#E3AB15'];
 
@@ -24,14 +25,23 @@ const ProjectExecution = props => {
   const [open, setOpen] = useState(false);
   const [echarts, setEcharts] = useState();
 
-  const { dispatch, time, loading, level, regionCode, entCode, supervisionUniformityAnalysisData: { InspectorOperationManage } } = props;
+  const {
+    dispatch,
+    time,
+    loading,
+    level,
+    regionCode,
+    entCode,
+    supervisionUniformityAnalysisData: { InspectorOperationManage },
+  } = props;
 
-  const sum = Number(InspectorOperationManage.PrincipleProblemNum) + Number(InspectorOperationManage.importanProblemNum) + Number(InspectorOperationManage.CommonlyProblemNum)
-
-  useEffect(() => {
-  }, []);
-
-
+  const sum =
+    Number(InspectorOperationManage.PrincipleProblemNum) +
+    Number(InspectorOperationManage.importanProblemNum) +
+    Number(InspectorOperationManage.CommonlyProblemNum);
+  console.log('regionCode', regionCode);
+  console.log('entCode', entCode);
+  useEffect(() => {}, []);
 
   const getOption = () => {
     if (!echarts) {
@@ -108,7 +118,7 @@ const ProjectExecution = props => {
     return (
       <ReactEcharts
         ref={echart => {
-         echart && setEcharts(echart.echarts);
+          echart && setEcharts(echart.echarts);
         }}
         option={getOption()}
         style={{ height: '100%' }}
@@ -118,43 +128,67 @@ const ProjectExecution = props => {
       />
     );
   }, [InspectorOperationManage]);
-  const textSty = { color: '#FEFEFF', fontWeight: 400 }
+  const textSty = { color: '#FEFEFF', fontWeight: 400 };
+
+  let modalParams = {};
+  if (level != 1 && (regionCode || entCode)) {
+    if (level == 2 && regionCode) {
+      modalParams.RegionCode = regionCode;
+    }
+    if (level == 3 && entCode) {
+      modalParams.RegionCode = regionCode;
+      modalParams.EntCode = entCode;
+    }
+  }
   return (
-    <HomeCard title="合规性监督核查分析" bodyStyle={{}} loading={loading} style={{ minHeight: props.homeCardMinHight }}>
+    <HomeCard
+      title="合规性监督核查分析"
+      bodyStyle={{}}
+      loading={loading}
+      style={{ minHeight: props.homeCardMinHight }}
+    >
       <Row style={{ height: '100%' }}>
-        <Col span={13}>
-          {renderEcharts}
-        </Col>
+        <Col span={13}>{renderEcharts}</Col>
         <Col span={11} className={styles.center}>
           <Row className={styles.chartLegendWrapper}>
             <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
                 <i style={{ backgroundColor: COLOR[0], borderRadius: 0 }}></i>
-                <span className="textOverflow" style={{ ...textSty }}>原则性问题</span>
+                <span className="textOverflow" style={{ ...textSty }}>
+                  原则性问题
+                </span>
               </div>
-              <div className={styles.value} style={{ ...textSty, textAlign: 'right' }}>{fomatFloat(InspectorOperationManage.PrincipleProblemNum / sum * 100, 2)}%</div>
+              <div className={styles.value} style={{ ...textSty, textAlign: 'right' }}>
+                {fomatFloat((InspectorOperationManage.PrincipleProblemNum / sum) * 100, 2)}%
+              </div>
             </Col>
             <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
                 <i style={{ backgroundColor: COLOR[1], borderRadius: 0 }}></i>
-                <span className="textOverflow" style={{ ...textSty }}>重点问题</span>
+                <span className="textOverflow" style={{ ...textSty }}>
+                  重点问题
+                </span>
               </div>
-              <div className={styles.value} style={{ ...textSty, textAlign: 'right' }}>{fomatFloat(InspectorOperationManage.importanProblemNum / sum * 100, 2)}%</div>
+              <div className={styles.value} style={{ ...textSty, textAlign: 'right' }}>
+                {fomatFloat((InspectorOperationManage.importanProblemNum / sum) * 100, 2)}%
+              </div>
             </Col>
             <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
                 <i style={{ backgroundColor: COLOR[2], borderRadius: 0 }}></i>
-                <span className="textOverflow" style={{ ...textSty }}>一般问题</span>
+                <span className="textOverflow" style={{ ...textSty }}>
+                  一般问题
+                </span>
               </div>
               <div className={styles.value} style={{ ...textSty, textAlign: 'right' }}>
-                {fomatFloat(InspectorOperationManage.CommonlyProblemNum / sum * 100, 2)}%
+                {fomatFloat((InspectorOperationManage.CommonlyProblemNum / sum) * 100, 2)}%
               </div>
             </Col>
           </Row>
         </Col>
       </Row>
       <Modal
-        title='全系统督查汇总'
+        title="全系统督查汇总"
         destroyOnClose
         wrapClassName={'fullScreenModal'}
         bodyStyle={{ padding: 0 }}
@@ -164,9 +198,18 @@ const ProjectExecution = props => {
           setOpen(false);
         }}
       >
-        <SupervisionAnalySumm
+        {/* <SupervisionAnalySumm
           tabType={3}
           time={time}
+        /> */}
+        <SupervisionManager
+          par={{
+            ...modalParams,
+            time: [moment().startOf('year'), moment()],
+          }}
+          match={{
+            path: '/operations/siteSupervisionRecod',
+          }}
         />
       </Modal>
     </HomeCard>

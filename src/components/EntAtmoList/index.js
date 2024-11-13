@@ -115,7 +115,7 @@ export default class Index extends Component {
     const { EntCode, changeEnt, type,placeholder,style } = this.props
     return (this.loadingStatus()?
         <Spin size='small'>
-            <Select    style={{ width: '200px',...style }} placeholder={placeholder? placeholder : type == 1 ? "企业列表" : "大气站列表"}/>
+            <Select style={{ width: '200px',...style }} placeholder={placeholder? placeholder : type == 1 ? "企业列表" : "大气站列表"}/>
         </Spin>
         :
       <Select

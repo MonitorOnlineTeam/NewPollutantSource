@@ -139,7 +139,7 @@ const RecordParams = props => {
         },
       },
       {
-        title: '当地大气压(Kpa)',
+        title: '当地大气压(Pa)',
         dataIndex: 'atmos',
         key: 'atmos',
         render: (text, row) => {
