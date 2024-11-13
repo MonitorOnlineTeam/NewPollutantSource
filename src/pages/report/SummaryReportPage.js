@@ -235,8 +235,8 @@ class SummaryReportPage extends PureComponent {
               this.props.dispatch({
                 type: 'report/getDailySummaryDataList',
                 payload: {
-                  DGIMN: values.PollutantSourceType == '5' ? values.DGIMN : null,
-                  // DGIMN: values.DGIMN,
+                  // DGIMN: values.PollutantSourceType == '5' ? values.DGIMN : null,
+                  DGIMN: values.DGIMN,
                   type: match.params.reportType,
                   PollutantSourceType: values.PollutantSourceType,
                   Regions: values.Regions.toString(),
@@ -599,9 +599,8 @@ class SummaryReportPage extends PureComponent {
                     )}
                   </FormItem>
                 </Col>
-                {/* {getFieldValue('PollutantSourceType') == 5 && ( */}
-                {true && (
-                  // 大气站显示监控目标
+                {/* {getFieldValue('PollutantSourceType') == 5 && ( // 大气站显示监控目标 */}
+                  
                   <Col xxl={7} md={8} xs={24}>
                     <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
                       {getFieldDecorator('DGIMN', {
@@ -622,7 +621,7 @@ class SummaryReportPage extends PureComponent {
                       )}
                     </FormItem>
                   </Col>
-                )}
+                {/* )} */}
                 <Col
                   xxl={5}
                   md={6}

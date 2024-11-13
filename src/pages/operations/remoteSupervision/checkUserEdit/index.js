@@ -272,15 +272,24 @@ const Index = (props) => {
         RangeAutoStatus: data?.RangeAutoStatus, //量程一致性(自动判断)
         OperationRangeRemark: data?.OperationRangeRemark,
         Special: data?.Special,//颗粒物有无显示屏 流速差压法和直测流速法 量程一致性核查表
-        CouType: data?.CouType,//颗粒物有无显示屏 实时数据一致性核查表
-        DASStatus: data?.DASStatus,
         DataRangeStatus: data?.DataRangeStatus, //数采仪量程
         DataStatus: data?.DataStatus, //数采仪实时数据
         AnalyzerFile: item?.AnalyzerFileList?.[0]?.FileUuid,
         DASFile: item?.DASFileList?.[0]?.FileUuid,
-        RangeFile: item?.DataFileList?.[0]?.FileUuid,
+        RangeFile: item?.RangeFileList?.[0]?.FileUuid,
         RangeStatus: values2[`${code}RangCheck`] && values2[`${code}RangCheck`]?.[0] ? values2[`${code}RangCheck`][0] : undefined,//手工修正结果
         RangeRemark: values2[`${code}Remark`],
+        CouType: data?.CouType,//颗粒物有无显示屏 实时数据一致性核查表
+        AnalyzerCou: data?.AnalyzerCou,
+        AnalyzerCouUnit: data?.AnalyzerCou,
+        DASCou: data?.DASCou,
+        DASCouUnit: data?.DASCouUnit,
+        // DASStatus: data?.DASStatus, //这个字段不用了
+        DataCou: data?.DataCou,
+        DataCouUnit: data?.DataCouUnit,
+        CouAutoStatus: data?.CouAutoStatus,
+        OperationDataRemark: data?.OperationDataRemark,
+        ManagerDataRemark: data?.ManagerDataRemark,
         CouStatus: values2[`${code}RangCheck2`] && values2[`${code}RangCheck2`]?.[0] ? values2[`${code}RangCheck2`][0] : undefined,//手工修正结果
         CouRemrak: values2[`${code}Remark2`],
       }
@@ -298,16 +307,6 @@ const Index = (props) => {
         Remark: values3[`${code}Remark3`],
       }
     })
-    // const data = {
-    //   AddType: type,
-    //   isCheckUser: consistencyCheckDetail?.isCheckUser,
-    //   Data: {
-    //     ...commonData,
-    //     CouUpload: consistencyCheckDetail?.couUpload?.[0]?.FileUuid,
-    //   },
-    //   DataList: dataList,
-    //   ParamDataList: paramDataList,
-    // }
     props.addRemoteInspector({
       AddType: type,
       isCheckUser: roleType,

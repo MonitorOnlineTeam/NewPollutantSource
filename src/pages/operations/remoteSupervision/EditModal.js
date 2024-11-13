@@ -805,7 +805,6 @@ const Index = (props) => {
             type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
             isSuccess && onFinish && onFinish()
           }
-          console.log(par)
           props.addRemoteInspector({
             ...par
           }, (isSuccess, message) => {

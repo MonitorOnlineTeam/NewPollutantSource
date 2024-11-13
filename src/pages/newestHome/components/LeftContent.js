@@ -496,7 +496,7 @@ const Index = (props) => {
           // name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : '实际校准完成率',
           name: type == 1 ? '计划巡检完成率' : '计划校准完成率',
           type: 'pie',
-          radius: TaskPlanType == 1 ? ['70%', '80%'] : ['80%', '90%'],
+          radius: TaskPlanType == 2 ?  ['80%', '90%'] : ['70%', '80%'] ,
           avoidLabelOverlap: false,
           label: { normal: { show: false, position: 'center' }, },
           // data: [
@@ -568,14 +568,14 @@ const Index = (props) => {
     }
   }
 
-  useEffect(()=>{
-    if(!taskRecordVisible){
+  useEffect(() => {
+    if (!taskRecordVisible) {
       setTaskStatus()
       setOperaStatus()
       setCompleteTime()
       setOperaTaskType()
     }
-  },[taskRecordVisible])
+  }, [taskRecordVisible])
   const [operatingInfoType, setOperatingInfoType] = useState()
   const [operatingStatus, setOperatingStatus] = useState(1)
   const [outputType, setOutputType] = useState(undefined)
@@ -601,17 +601,11 @@ const Index = (props) => {
         <ReactEcharts
           option={planOperaOption(1)}
           style={{ width: '6.5625rem', height: '6.5625rem' }}
-          onEvents={{ click: TaskPlanType == 1 ? planInspection : () => planOperation('巡检') }}
+          onEvents={{ click: TaskPlanType == 2 ?  () => planOperation('巡检') : planInspection  }}
         />
         <img style={{ padding: '0 1.5rem' }} src='./homePlanSplitLine.png' />
         <div className={styles.planOperaText} >
-          {TaskPlanType == 1 ?
-            <>
-              <div>计划内结束次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionCloseCount}</span></div>
-              <div>计划内完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionCompleteCount}</span></div>
-              <div style={{ color: '#4BF3F9' }}>计划内待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.inspectionIncompleteCount}</span> </div>
-            </>
-            :
+          {TaskPlanType == 2 ?
             <>
               <div>计划内应完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionCount}</span></div>
               <div>计划内完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionCompleteCount}</span></div>
@@ -619,31 +613,37 @@ const Index = (props) => {
               <div>超时未完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionOverIncompleteCount}</span></div>
               <div style={{ color: '#4BF3F9' }}>今日待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.inspectionTodayInCompleteCount}</span> </div>
             </>
+            :
+            <>
+              <div>计划内结束次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionCloseCount}</span></div>
+              <div>计划内完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionCompleteCount}</span></div>
+              <div style={{ color: '#4BF3F9' }}>计划内待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.inspectionIncompleteCount}</span> </div>
+            </>
           }
         </div>
       </Row>
-      <div style={{ width: '100%', height: 1, marginLeft: '-1.3125rem', background: "rgba(65, 66, 69, 0.5)", margin: TaskPlanType == 1 ? 0 : '.25rem 0' }}></div>
+      <div style={{ width: '100%', height: 1, marginLeft: '-1.3125rem', background: "rgba(65, 66, 69, 0.5)", margin: TaskPlanType == 2 ? '.25rem 0' :  0 }}></div>
       <Row type='flex' align='middle'>
         <ReactEcharts
           option={planOperaOption(2)}
           style={{ width: '6.5625rem', height: '6.5625rem' }}
-          onEvents={{ click: TaskPlanType == 1 ? planCalibration : () => planOperation('校准') }}
+          onEvents={{ click: TaskPlanType == 2 ?  () => planOperation('校准') : planCalibration }}
         />
         <img style={{ padding: '0 1.5rem' }} src='./homePlanSplitLine.png' />
         <div className={styles.planOperaText} >
-          {TaskPlanType == 1 ?
-            <>
-              <div>计划内结束次数：<span style={{ color: '#FFDD54' }}>{planOperaList.calibrationCloseCount}</span></div>
-              <div>计划内完成次数：<span style={{ color: '#FFDD54' }}>{planOperaList.calibrationCompleteCount}</span></div>
-              <div style={{ color: '#4BF3F9' }}>计划内待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.calibrationIncompleteCount}</span> </div>
-            </>
-            :
+          {TaskPlanType == 2 ?
             <>
               <div>计划内应完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationCount}</span></div>
               <div>计划内完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationCompleteCount}</span></div>
               <div>超时完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationOverCompleteCount}</span></div>
               <div>超时未完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationOverIncompleteCount}</span></div>
               <div style={{ color: '#4BF3F9' }}>今日待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.calibrationTodayInCompleteCount}</span> </div>
+            </>
+            :
+            <>
+              <div>计划内结束次数：<span style={{ color: '#FFDD54' }}>{planOperaList.calibrationCloseCount}</span></div>
+              <div>计划内完成次数：<span style={{ color: '#FFDD54' }}>{planOperaList.calibrationCompleteCount}</span></div>
+              <div style={{ color: '#4BF3F9' }}>计划内待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.calibrationIncompleteCount}</span> </div>
             </>
           }
         </div>
@@ -819,7 +819,7 @@ const Index = (props) => {
         pollutantTypeCode={pollutantType}
       />
       <Modal
-        title={`工单执行情况 - ${pollutantType==2?'废气':'废水'}`}
+        title={`工单执行情况 - ${pollutantType == 2 ? '废气' : '废水'}`}
         destroyOnClose
         wrapClassName='spreadOverModal'
         visible={taskRecordVisible}

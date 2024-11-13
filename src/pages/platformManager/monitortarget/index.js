@@ -49,13 +49,14 @@ import { permissionButton } from '@/utils/utils';
 
 const { confirm } = Modal;
 
-@connect(({ loading, autoForm, common }) => ({
+@connect(({ loading, autoForm, common,global }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   tableInfo: autoForm.tableInfo,
   searchForm: autoForm.searchForm,
   routerConfig: autoForm.routerConfig,
+  configInfo: global.configInfo,
 }))
 export default class MonitorTarget extends Component {
   constructor(props) {
@@ -253,6 +254,7 @@ export default class MonitorTarget extends Component {
       match: {
         params: { configId, targetType },
       },
+      configInfo,
       dispatch,
       hideBreadcrumb,
     } = this.props;
@@ -271,6 +273,7 @@ export default class MonitorTarget extends Component {
     //         size="large"
     //     />);
     // }
+    console.log()
     return (
       <BreadcrumbWrapper hideBreadcrumb={!!hideBreadcrumb}>
         <Card className={styles.contentContainer}>
@@ -336,7 +339,7 @@ export default class MonitorTarget extends Component {
                 )}
 
                 {/* {configId == "Station" && webConfig.entShowBtns.includes("licence") && <><Divider type="vertical" /> */}
-                {webConfig.entShowBtns.includes('licence') && !configInfo.IsOpera && this.state.licencePermis && (
+                {webConfig.entShowBtns.includes('licence') && this.state.licencePermis && !configInfo.IsOpera && (
                   <>
                     <Divider type="vertical" />
                     <Tooltip title="排污许可证">

@@ -2323,7 +2323,7 @@ export const API = {
   //调试服务
   CtDebugServiceApi: {
     /*调试点位管理*/
-    GetTestXuRegions: before + '/DebuggingBase/GetTestXuRegions', //获取省份及省份下的市县（调试服务）
+    // GetTestXuRegions: before + '/DebuggingBase/GetTestXuRegions', //获取省份及省份下的市县（调试服务）
     GetPointCemsSystemList: before + '/DebuggingBase/GetPointCemsSystemList', //获取监测点CEMS参数信息
     OperationPointCemsSystemInfo: before + '/DebuggingBase/OperationPointCemsSystemInfo', //添加更新CEMS参数信息
     GetPointReferenceInstrumentList: before + '/DebuggingBase/GetPointReferenceInstrumentList', //获取参比仪器信息

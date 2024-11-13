@@ -3533,7 +3533,7 @@ const routes = [
               //污染源信息
               {
                 name: 'PollutantInfo',
-                path: '/dataSearch/pollutantInfo',
+                path: '/dataSearch/pollutantInfo/:nav',
                 component: './dataSearch/pollutantInfo',
               },
               //项目信息

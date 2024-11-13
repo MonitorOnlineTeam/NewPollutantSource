@@ -611,7 +611,7 @@ class AutoFormTable extends PureComponent {
 
     let parentElement = document.querySelector('.operateWrapper');
     let childElements = parentElement?.querySelectorAll('a');
-    let childElementsLength = (operateNum ? operateNum : childElements?.length && childElements.length) * 36
+    let childElementsLength = (operateNum ? operateNum : (childElements?.length >=3? childElements.length : 3)) * 36
     let num = 0;
     if (this._SELF_.btnEl.length || this.props.appendHandleRows) {
       let leftMenuWidth = config.isShowTabs && defaultSettings.layout === 'sidemenu' ? 255 : 0;

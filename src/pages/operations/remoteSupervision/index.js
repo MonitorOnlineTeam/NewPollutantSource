@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-06-11 14:29:31
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-31 10:50:06
+ * @LastEditTime: 2024-11-01 15:24:16
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Timeline } from 'antd';
@@ -3355,7 +3355,8 @@ const Index = (props) => {
         id={editId}
         roleType={roleType}
         destroyOnClose
-        onCancel={() => { setVisible(false); }}
+        onCancel={() => { setVisible(false) }}
+        onFinish={() => onFinish(pageIndex, pageSize)}
         wrapClassName={styles.modalSty}
         getContainer={false}
         mask={false}

@@ -29,7 +29,7 @@ const namespace = 'operationRecordList'
 
 
 
-const dvaPropsData = ({ loading, operationRecordList, global, common, point, autoForm }) => ({
+const dvaPropsData = ({ loading, operationRecordList, global, common, operationform }) => ({
   clientHeight: global.clientHeight,
   entLoading: common.entLoading,
   tableDatas: operationRecordList.tableDatas,
@@ -41,14 +41,23 @@ const dvaPropsData = ({ loading, operationRecordList, global, common, point, aut
   regQueryPar: operationRecordList.regQueryPar,
   imageListVisible: common.imageListVisible,
   recordListCol: operationRecordList.recordListCol,
+  // recordTypeList: operationform.recordTypeList,
+  currentRecordType: operationform.currentRecordType,
+  currentDate: operationform.currentDate,
 })
 
 const dvaDispatch = (dispatch) => {
   return {
-    updateState: (namespace,payload) => {
+    updateState: (namespace, payload) => {
       dispatch({
-          type: `${namespace}/updateState`,
-          payload: payload,
+        type: `${namespace}/updateState`,
+        payload: payload,
+      })
+    },
+    operationformUpdateState: (payload) => {
+      dispatch({
+        type: `operationform/updateState`,
+        payload: payload,
       })
     },
     getTaskTypeList: (payload, callback) => { //获取工单类型
@@ -86,14 +95,15 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
 
-  const { DGIMN, PollutantType, tableDatas, tableTotal, tableLoading, regQueryPar, exportLoading, taskTypeLoading, taskTypeList,recordListCol, } = props;
+  const { DGIMN, PollutantType, tableDatas, tableTotal, tableLoading, regQueryPar, exportLoading, taskTypeLoading, taskTypeList, recordListCol, currentRecordType, currentDate } = props;
 
-
+  const [taskType,setTaskType] = useState()
 
   useEffect(() => {
     form.resetFields();
     props.getTaskTypeList({ DGIMN: DGIMN, PollutantType: PollutantType });
     onFinish(pageIndex, pageSize)
+    console.log(currentRecordType, currentDate)
   }, [DGIMN]);
 
   const column = [
@@ -132,10 +142,10 @@ const Index = (props) => {
   ]
   const [columns, setColumns] = useState([]);
   const onFinish = async (pageIndexs, pageSizes, par) => {  //查询  par参数 分页需要的参数
-    
+
     try {
       const values = await form.validateFields();
-
+      console.log(values)
       props.getOperationRecordListByDGIMN(par ? par : {
         ...values,
         DGIMN: DGIMN,
@@ -169,7 +179,7 @@ const Index = (props) => {
         //     })
 
         //   }
-          // setColumns([...column, ...cols])
+        // setColumns([...column, ...cols])
         // }
       })
     } catch (errorInfo) {
@@ -191,11 +201,10 @@ const Index = (props) => {
 
 
 
-
-
-
-
- const [selectDate,setSelectDate] = useState([moment(new Date()).add(-30, 'day'), moment()])
+  useEffect(() => {
+    setPageIndex(1);
+    onFinish(1, pageSize)
+  }, [taskType, currentDate])
 
   const searchComponents = () => {
     return <Form
@@ -203,35 +212,46 @@ const Index = (props) => {
       name="advanced_search"
       layout='inline'
       initialValues={{
-        time: selectDate,
+        TaskType:undefined,
+        time: currentDate,
       }}
       className={styles["ant-advanced-search-form"]}
       onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
     >
-      <Form.Item label='运维日期' name='time' >
-        <RangePicker_
-          format={'YYYY-MM-DD'}
-          style={{ width: 240 }}
-          onChange={(value)=>{
-            setSelectDate(value)
+      <Form.Item name='TaskType' >
+        <Select // label='运维内容' 
+          placeholder='请选择' allowClear style={{ width: 220 }}
+          loading={taskTypeLoading}
+          fieldNames={{ label: 'TypeName', value: 'ID' }}
+          options={taskTypeList}
+          onChange={(value) => {
+            setTaskType(value)
+            // props.updateState('operationform',{
+            //   currentRecordType: value
+            // })
           }}
         />
       </Form.Item>
-      <Spin spinning={taskTypeLoading} size='small'  className='formItemSpinSty'>
-        <Form.Item label='运维内容' name='TaskType'>
-          <Select placeholder='请选择' allowClear style={{ width: 150 }}>
-            {taskTypeList.map(item => <Option key={item.ID} value={item.ID} >{item.TypeName}</Option>)}
-          </Select>
-        </Form.Item>
-      </Spin>
-      <Form.Item>
+      <Form.Item name='time' >
+        <RangePicker_ // label='运维日期'
+          format={'YYYY-MM-DD'}
+          style={{ width: 240 }}
+          allowClear={false}
+          onChange={(value) => {
+            props.updateState('operationform',{
+              currentDate: value
+            })
+          }}
+        />
+      </Form.Item>
+      {/* <Form.Item>
         <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
           查询
           </Button>
         <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>
           导出
           </Button>
-      </Form.Item>
+      </Form.Item> */}
 
     </Form>
   }
@@ -251,7 +271,7 @@ const Index = (props) => {
   const [detailVisible, setDetailVisible] = useState(false)
   const [typeID, setTypeID] = useState(null)
   const [taskID, setTaskID] = useState(1)
-  const detail = (record,type) => { //详情
+  const detail = (record, type) => { //详情
     setIsPop(type)
     if (record.RecordType == 1) {
       setTypeID(record.TypeID);
@@ -265,8 +285,8 @@ const Index = (props) => {
   const [popVisible, setPopVisible] = useState(false);
   const [popKey, setPopKey] = useState(-1);
 
-  const  RecordFormPopover = (props) =>{
-    const dataSource = props.dataSource,keys = props.keys;
+  const RecordFormPopover = (props) => {
+    const dataSource = props.dataSource, keys = props.keys;
     return <div> {dataSource.length && dataSource.length > 1 ? <Popover
       zIndex={1000}
       trigger="click"
@@ -287,46 +307,46 @@ const Index = (props) => {
             {
               align: 'center',
               width: 100,
-              render: (text, record, index) => <a onClick={() => { detail(record,1) }}>查看详情</a>
+              render: (text, record, index) => <a onClick={() => { detail(record, 1) }}>查看详情</a>
             }
           ]}
           dataSource={dataSource} pagination={false} />
       }>
       <a onClick={() => { setPopKey(keys) }}>查看详情</a>
     </Popover> :
-      <a onClick={() => { setPopKey(keys); detail(dataSource[0],2) }}>查看详情</a>
+      <a onClick={() => { setPopKey(keys); detail(dataSource[0], 2) }}>查看详情</a>
     }</div>
   }
- const getCol = () =>{
-   const col = []
-  if (recordListCol && Object.keys(recordListCol).length) {
-    for (let key in recordListCol) {
-      const dataIndexKey =  key&&key.replaceAll('_','');
-      col.push({
-        title: recordListCol[key],
-        dataIndex: dataIndexKey,
-        key: dataIndexKey,
-        align: 'center',
-        ellipsis: true,
-        width:recordListCol[key]&&recordListCol[key].length&&recordListCol[key].length>5 ? recordListCol[key].length*16 : 100,
-        render: (text, record, index) => {
-          if (text && text != '-') {
-            if (text instanceof Array) {
-              let keys = ''
-              keys = `${key}${index}`;   
-              return  <RecordFormPopover keys={keys} dataSource={text}/>  
+  const getCol = () => {
+    const col = []
+    if (recordListCol && Object.keys(recordListCol).length) {
+      for (let key in recordListCol) {
+        const dataIndexKey = key && key.replaceAll('_', '');
+        col.push({
+          title: recordListCol[key],
+          dataIndex: dataIndexKey,
+          key: dataIndexKey,
+          align: 'center',
+          ellipsis: true,
+          width: recordListCol[key] && recordListCol[key].length && recordListCol[key].length > 5 ? recordListCol[key].length * 16 : 100,
+          render: (text, record, index) => {
+            if (text && text != '-') {
+              if (text instanceof Array) {
+                let keys = ''
+                keys = `${key}${index}`;
+                return <RecordFormPopover keys={keys} dataSource={text} />
+              }
             }
           }
-        }
-      })
+        })
 
+      }
     }
+    setColumns([...column, ...col])
   }
-  setColumns([...column, ...col])
- }
- useEffect(()=>{
-  getCol()
- },[recordListCol,popVisible,popKey])
+  useEffect(() => {
+    getCol()
+  }, [recordListCol, popVisible, popKey])
 
   return (
     <div className={styles.operationRecordListSty}>
@@ -355,15 +375,15 @@ const Index = (props) => {
         mask={false}
         footer={null}
         width={'100%'}
-        onCancel={() => { setDetailVisible(false);isPop==1? setPopVisible(true) : setPopKey(-1) }}
+        onCancel={() => { setDetailVisible(false); isPop == 1 ? setPopVisible(true) : setPopKey(-1) }}
         destroyOnClose
       >
         <RecordForm hideBreadcrumb match={{ params: { typeID: typeID, taskID: taskID } }} />
       </Modal>
-        {props.imageListVisible&&<ViewImagesModal  onCloseRequest={()=>{
-                  props.updateState('common',{ imageListVisible: false})
-                  isPop==1&&setPopVisible(true)
-        }}/>}
+      {props.imageListVisible && <ViewImagesModal onCloseRequest={() => {
+        props.updateState('common', { imageListVisible: false })
+        isPop == 1 && setPopVisible(true)
+      }} />}
     </div>
   );
 };

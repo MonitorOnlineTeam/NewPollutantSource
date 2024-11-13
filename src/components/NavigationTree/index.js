@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-18 10:32:08
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-14 17:31:16
+ * @LastEditTime: 2024-11-04 16:25:27
  * @Description: 导航树
  */
 import React, { Component } from 'react';
@@ -1606,7 +1606,7 @@ class NavigationTree extends Component {
                         selectedKeys={this.state.selectedKeys}
                         style={{
                           // marginTop: '5%',
-                          maxHeight: `calc(100vh - 236px - ${showIndustry? '39px' : '0px'} - ${IsOpera? '-8px' : '39px'} - ${configInfo.IsSingleEnterprise? '-39px' : '0px' })`,
+                          maxHeight: `calc(100vh - 236px - ${showIndustry? '39px' : '0px'} - ${isSdlOpera? '-8px' : '39px'} - ${configInfo.IsSingleEnterprise? '-39px' : '0px' })`,
                           overflow: 'hidden',
                           overflowY: 'auto',
                           width: '100%',

@@ -14,6 +14,7 @@ import {
   Popconfirm,
   Divider,
   DatePicker,
+  message,
 } from 'antd';
 import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
@@ -432,19 +433,26 @@ const ChecklistRecordAndManagement = props => {
           bordered={false}
           title={<SearchComponents />}
           headStyle={{ display: taskInfo.ID ? 'none' : 'block' }}
+          className='queryCriterTitleSty'
         >
           {taskInfo.ID && (
             <Button
               type="primary"
-              style={{ margin: '10px 0' }}
+              style={{ marginBottom: 8 }}
+              // loading={loading}
               onClick={() => {
-                setEditData({});
-                setOfficeInspectionOpen(true);
+                // if(dataSource?.[0]){
+                  setEditData(dataSource[0]);
+                  setOfficeInspectionOpen(true);
+                // }else{
+                //   message.error('本月没有派工单，不允许添加！')
+                // }
+
               }}
             >
               添加
             </Button>
-          )}
+           )} 
           <SdlTable
             loading={loading}
             align="center"
@@ -497,6 +505,7 @@ const ChecklistRecordAndManagement = props => {
     <Modal
       title={mode === 'record' ? '办事处检查记录' : '办事处检查管理'}
       wrapClassName={`spreadOverModal`}
+      bodyStyle={{padding:'4px 16px'}}
       mask={false}
       open={open}
       destroyOnClose

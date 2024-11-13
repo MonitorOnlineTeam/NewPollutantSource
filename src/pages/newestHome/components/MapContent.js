@@ -764,7 +764,7 @@ class Index extends PureComponent {
               >
                 进入站房
         </Button>
-              <p>
+              <p style={{paddingBottom:6}}>
                 站点状态：
           {currentClickObj.outPutFlag === 1 ? (
                   <span style={{ color: '#836BFB' }}>停运</span>

@@ -46,10 +46,8 @@ class DateReportPage extends PureComponent {
       columns: [],
       currentDate: moment().add(-1, 'day'),
       defaultRegionCode: [],
-      beginTime: moment()
-        .add(-1, 'day')
-        .format('YYYY-MM-DD 01:00:00'),
-      endTime: moment().format('YYYY-MM-DD 00:00:00'),
+      beginTime: moment().format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format('YYYY-MM-DD 23:59:59'),
     };
     this.SELF = {
       formLayout: {
@@ -60,7 +58,9 @@ class DateReportPage extends PureComponent {
         PollutantSourceType: 1,
         EntCode: '',
         ReportTime: moment().add(-1, 'day'),
+        dayReportTime: moment(),
         airReportTime: [moment().add(-1, 'day'), moment()],
+
       },
     };
     this.statisticsReport = this.statisticsReport.bind(this);
@@ -241,10 +241,8 @@ class DateReportPage extends PureComponent {
     const time = pollutantType != 5 ? reportTime : moment();
     switch (reportType) {
       case 'siteDaily':
-        beginTime = moment(time).format('YYYY-MM-DD 01:00:00');
-        endTime = moment(time)
-          .add(1, 'day')
-          .format('YYYY-MM-DD 00:00:00');
+        beginTime = moment(time).format('YYYY-MM-DD 00:00:00');
+        endTime = moment(time).format('YYYY-MM-DD 23:59:59');
         break;
       case 'monthly':
         beginTime = moment(time).format('YYYY-MM-01 00:00:00');
@@ -436,10 +434,8 @@ class DateReportPage extends PureComponent {
       <BreadcrumbWrapper>
         {/* <Spin spinning={exportLoading || entAndPointLoading} delay={500}> */}
           <Card className="contentContainer" bodyStyle={{padding:'10px 24px'}}>
-            <Form>
-              <Row>
-                <Col xxl={4} md={6} xs={24}>
-                  <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
+            <Form layout='inline'>
+                  <FormItem label="报表类型">
                     {getFieldDecorator('reportType', {
                       initialValue: 'siteDaily',
                       rules: [
@@ -469,9 +465,7 @@ class DateReportPage extends PureComponent {
                       </Select>,
                     )}
                   </FormItem>
-                </Col>
-                <Col xxl={4} md={4} xs={24} style={{ display:sessionStorage.getItem('sysPollutantCodes') && 'none' }}>
-                  <FormItem {...formLayout} label="类型" style={{ width: '100%'}}>
+                  <FormItem  label="类型" hidden={ sessionStorage.getItem('sysPollutantCodes') }>
                     {getFieldDecorator('PollutantSourceType', {
                       initialValue: pollutantTypeList.length
                         ? pollutantTypeList[0].pollutantTypeCode
@@ -523,10 +517,8 @@ class DateReportPage extends PureComponent {
                       />,
                     )}
                   </FormItem>
-                </Col>
                 {getFieldValue('PollutantSourceType') && (
-                  <Col xxl={7} md={8} xs={24}>
-                    <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
+                    <FormItem  label="监控目标" >
                       {getFieldDecorator('DGIMN', {
                         initialValue: this.props.form.getFieldValue('DGIMN'),
                         rules: [
@@ -540,18 +532,11 @@ class DateReportPage extends PureComponent {
                         //   pollutantTypes={getFieldValue('PollutantSourceType')}
                         //   {...this.props}
                         // />,
-                        <TreeSelect {...tProps} />,
+                        <TreeSelect {...tProps} style={{width:360}}/>,
                       )}
                     </FormItem>
-                  </Col>
                 )}
-                <Col
-                  xxl={5}
-                  md={6}
-                  xs={24}
-                  style={{ display: getFieldValue('PollutantSourceType') == 5 ? 'block' : 'none' }}
-                >
-                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                  {/* <FormItem {...formLayout} label="统计时间"  hidden={getFieldValue('PollutantSourceType') != 5}>
                     {getFieldDecorator('airReportTime', {
                       initialValue: defaultSearchForm.airReportTime,
                       rules: [
@@ -561,17 +546,10 @@ class DateReportPage extends PureComponent {
                         },
                       ],
                     })(airTimeEle)}
-                  </FormItem>
-                </Col>
-                <Col
-                  xxl={5}
-                  md={6}
-                  xs={24}
-                  style={{ display: getFieldValue('PollutantSourceType') == 5 ? 'none' : 'block' }}
-                >
-                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                  </FormItem> */}
+                  <FormItem {...formLayout} label="统计时间"  hidden={getFieldValue('PollutantSourceType') == 5}>
                     {getFieldDecorator('ReportTime', {
-                      initialValue: defaultSearchForm.ReportTime,
+                      initialValue: this.props.dateReportForm?.reportType?.value == 'siteDaily' ? defaultSearchForm.dayReportTime :  defaultSearchForm.ReportTime,
                       rules: [
                         {
                           required: true,
@@ -579,10 +557,8 @@ class DateReportPage extends PureComponent {
                         },
                       ],
                     })(timeEle)}
-                  </FormItem>
-                </Col>
-                <Col xxl={4} md={10} xs={24}>
-                  <FormItem label="" style={{ width: '100%' }}>
+                  </FormItem> 
+                  <FormItem label="" >
                     <Button
                       type="primary"
                       style={{ margin: '0 10px' }}
@@ -613,8 +589,6 @@ class DateReportPage extends PureComponent {
                       导出
                     </Button>
                   </FormItem>
-                </Col>
-              </Row>
             </Form>
             <SdlTable
               rowKey={(record, index) => index}

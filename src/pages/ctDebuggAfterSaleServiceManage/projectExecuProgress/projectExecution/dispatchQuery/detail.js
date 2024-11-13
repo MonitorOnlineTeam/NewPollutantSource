@@ -3,7 +3,7 @@
  * 创建人：jab
  * 创建时间：2023.09
  */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Tabs, Spin, Empty } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined } from '@ant-design/icons';
@@ -33,7 +33,8 @@ const dvaPropsData = ({ loading, dispatchQuery }) => ({
   serviceDispatchTypeAndRecordData: dispatchQuery.serviceDispatchTypeAndRecordData,
   serviceDispatchLoading: loading.effects[`${namespace}/getServiceDispatch`],
   staticInstallPhotoExportLoading: loading.effects[`installEquipment/ExportAuditPhoto`],
-
+  getAcceptanceServiceRecordLoading: loading.effects[`${namespace}/getAcceptanceServiceRecord`],
+  getWorkRecordLoading: loading.effects[`${namespace}/getWorkRecord`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -114,14 +115,14 @@ const dvaDispatch = (dispatch) => {
         callback: callback,
       })
     },
-    
+
   }
 }
 
-let scrollEle, scrollHeight = 0;
+
 
 const Index = (props) => {
-  const { id, serviceApplicaData, serviceDispatchTypeAndRecordLoading, serviceDispatchTypeAndRecordData, serviceDispatchLoading, } = props;
+  const { id, shouldOnlyRecordId, serviceApplicaData, serviceDispatchTypeAndRecordLoading, serviceDispatchTypeAndRecordData, serviceDispatchLoading, } = props;
 
   const [isOpen, setIsOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState();
@@ -130,7 +131,7 @@ const Index = (props) => {
   const [tabKey, setTabKey] = useState('')
   const [fillContentTab, setFillContentTab] = useState([])
   const [data, setData] = useState({})
-
+  const scrollRef = useRef(null);
   useEffect(() => {
     props.getServiceDispatchTypeAndRecord({ dispatchId: id }, (data) => {
       const itemStatusData = data.map(item => item.ItemStatus)
@@ -149,36 +150,9 @@ const Index = (props) => {
     }
   }, []);
   const TitleComponents = (props) => {
-    // position:'sticky',top: 0,zIndex:998,background: '#fff',
     return <div style={{ display: 'inline-block', fontWeight: 'bold', marginTop: 4, padding: '2px 0', marginBottom: 12, borderBottom: '1px solid rgba(0,0,0,.1)' }}>{props.text}</div>
   }
 
-  const handleScroll = () => {
-    if (scrollEle) {
-      // 获取滚动高度
-      const scrollTop = scrollEle.scrollTop;
-      scrollHeight = scrollTop
-
-    }
-  };
-
-  useEffect(() => {
-
-
-    if (fillContentTab?.[0]) {
-      setTimeout(() => {
-        scrollEle = document.querySelector('.ant-tabs-content-top')
-        if (scrollEle) {
-          scrollEle.addEventListener('scroll', handleScroll);
-        }
-      }, 1000)
-    }
-    return () => {
-      if (scrollEle) {
-        scrollEle.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, [fillContentTab, isOpen]);
 
   const acceptanceServicesCol = [ //验收服务报告列
     {
@@ -747,7 +721,7 @@ const Index = (props) => {
     }]
     const rowSpanFun = (value, record, index) => {
       let obj = {
-        children: <div>{value}</div>,
+        children: <div className='textOverflow'>{value}</div>,
         props: { rowSpan: index == 0 ? 8 : 0 },
       };
       return obj;
@@ -846,6 +820,7 @@ const Index = (props) => {
               setStaticReportId(item.RecordId);
               return <ServiceReportTable data={staticReportData} loading={staticReportLoading} />; //验收服务报告
             }
+            break;
           case '11':
             if (item.RecordStatus == 1) {
               let columns = []
@@ -861,42 +836,55 @@ const Index = (props) => {
               setStaticWorkId(item.RecordId);
               return <WorkRecordTable data={staticWorkData} loading={staticWorkLoading} col={columns} />;//工作记录
             }
+            break;
           case '13':
             if (item.RecordStatus == 1) {
               setStaticInfoId(item.RecordId);
               return <CommonReplaceTable text='项目交接单' col={projectHandoverCol} data={staticInfoData} loading={staticInfoLoading} />;//项目交接单
             }
+            break;
           case '14':
             if (item.RecordStatus == 1) {
               setStaticInstallRepId(item.RecordId);
               return <CommonReplaceTable text='安装报告' col={installationReportCol} data={staticInstallRepData} loading={staticInstallRepLoading} />;//安装报告
             }
+            break;
           case '17':
-            const ExportBtn = ({style}) => <Button  style={{...style}}  type='primary' icon={<ExportOutlined />} loading={props.staticInstallPhotoExportLoading} onClick={() => {
-              const record = staticWorkData?.[0]
-              props.exportAuditPhoto({
-                  projectCode: serviceApplicaData?.ProjectCode,
-                  dispatchId: serviceApplicaData?.ID,
-                  systemModelId: record?.SystemModelId,
-                  pointId: record?.PointId,
-                  equipmentAuditId: '',
-                  entName: record?.EntName,
-                  pointName: record?.PointName,
-                  systemModelName: record?.SystemModelName,
-    
-              })
-          }}>
-            导出
-          </Button>
+            const ExportBtn = ({ style }) => {
+              return <Button style={{ ...style }} type='primary' icon={<ExportOutlined />}
+                loading={props.staticInstallPhotoExportLoading} onClick={(event) => {
+                  event.stopPropagation(); // 阻止事件冒泡
+                 
+                  const installPhotosTotal = staticPhotoData?.length
+                  if(staticPhotoData?.length){
+                    const index = (installPhotosPageIndex - 1 ) * installPhotosPageSize + 1
+                    const record = staticPhotoData[index];
+                    props.exportAuditPhoto({
+                      projectCode: serviceApplicaData?.ProjectCode,
+                      dispatchId: serviceApplicaData?.ID,
+                      systemModelId: record?.SystemModel,
+                      pointId: record?.PointId,
+                      equipmentAuditId: '',
+                      entName: record?.EntName,
+                      pointName: record?.PointName,
+                      systemModelName: record?.SystemModelName,
+  
+                    })
+  
+                  }
+
+                }}>
+                导出
+            </Button>
+            }
             if (item.RecordStatus == 1) {
               setStaticPhotoId(item.RecordId);
-              return <div style={{position:'relative'}}>
-                <InstallPhoto data={staticPhotoData} loading={staticPhotoLoading}/>
-                <ExportBtn    style={{position:'absolute',top:0,left:80}}/>
-               </div>;//安装照片
-            }else{
-              return <ExportBtn  style={{ marginBottom: 6 }}/>;
+              return <div style={{ position: 'relative' }}>
+                <InstallPhoto data={staticPhotoData} loading={staticPhotoLoading} />
+                <ExportBtn  style={{ position: 'absolute', top: 0, left: 80 }} />
+              </div>;//安装照片
             }
+            
         }
 
       })}
@@ -1776,8 +1764,8 @@ const Index = (props) => {
     let RecordList = isArray(item.RecordList) ? item.RecordList : [];
 
     // 查询指定的RecordId
-    if (props.shouldOnlyRecordId) {
-      RecordList = RecordList.filter(item => item.RecordId === props.shouldOnlyRecordId);
+    if (shouldOnlyRecordId) {
+      RecordList = RecordList.filter(item => item.RecordId === shouldOnlyRecordId);
     }
 
     const tabContent = {
@@ -1799,7 +1787,7 @@ const Index = (props) => {
     return item.ItemId && tabContent[item.ItemId]
   }
 
-  const ServiceFillContent = () => {
+  const serviceFillContent = () => {
     return serviceDispatchTypeAndRecordLoading ? <PageLoading size='default' /> :
       fillContentTab?.[0] ?
         <Tabs type='card' activeKey={tabKey} onChange={(key) => { setTabKey(key) }} size='small' className='serviceFillContentSty'>
@@ -2019,21 +2007,18 @@ const Index = (props) => {
       </Row>
     </Form>
   }
-
   return (
     <div>
-      {
-        props.shouldOnlyRecordId ?
-          <ServiceFillContent /> :
-          <Tabs defaultActiveKey="1" tabPosition="left">
-            <TabPane tab="服务填报内容" key="1">
-              <ServiceFillContent />
-            </TabPane>
-            <TabPane tab="服务派工申请单" key="2">
-              <Spin spinning={!!serviceDispatchLoading}> <ServiceWorkContent /> </Spin>
-            </TabPane>
-          </Tabs>
-      }
+      {shouldOnlyRecordId ?
+      serviceFillContent() :
+      <Tabs defaultActiveKey="1" tabPosition="left">
+        <TabPane tab="服务填报内容" key="1">
+         {serviceFillContent()}
+        </TabPane>
+        <TabPane tab="服务派工申请单" key="2">
+          <Spin spinning={!!serviceDispatchLoading}> <ServiceWorkContent /> </Spin>
+        </TabPane>
+      </Tabs>}
       {/* 查看附件弹窗 */}
       <ImageView
         isOpen={isOpen}
@@ -2041,10 +2026,6 @@ const Index = (props) => {
         imageIndex={imageIndex}
         onCloseRequest={() => {
           setIsOpen(false);
-          const scrollEle = document.querySelector('.ant-tabs-content-top')
-          if (scrollEle) {
-            scrollEle.scrollTop = scrollHeight;
-          }
 
         }}
       />

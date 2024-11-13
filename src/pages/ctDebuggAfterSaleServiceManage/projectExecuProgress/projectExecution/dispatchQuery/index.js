@@ -175,6 +175,7 @@ const Index = (props) => {
       dataIndex: 'OrderDate',
       key: 'OrderDate',
       align: 'center',
+      width:140,
       ellipsis: true,
 
     },
@@ -297,7 +298,7 @@ const Index = (props) => {
       className={styles['ant-advanced-search-form']}
       onFinish={() => {setPageIndex(1); onFinish(1, pageSize) }}
       initialValues={{
-        time:[moment().add(-6, 'months').startOf('day'), moment().endOf('day')]
+        time:[moment().add(-6, 'months').startOf('day'), moment().endOf('day')],
       }}
     >
       <Row align='middle'>
@@ -308,7 +309,7 @@ const Index = (props) => {
         </Col>
         <Col span={8} className='minWidth'>
           <Form.Item name='projectCode' label='合同编号' >
-            <Input placeholder="请输入" allowClear />
+            <Input placeholder="请输入" allowClear/>
           </Form.Item>
         </Col>
         <Col span={8} className='minWidth2'>

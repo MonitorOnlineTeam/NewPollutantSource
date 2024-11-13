@@ -72,10 +72,13 @@ const Index = (props) => {
   { name: '设备信息', key: '5' }, { name: '数据核查项', key: '6' }, { name: '设备参数项', key: '7' }, { name: '监测点系数', key: '8' }, { name: '工单类型系数', key: '9' }, { name: '巡检频次系数', key: '10' }, { name: '点位匹配信息', key: '11' }]);
 
   useEffect(() => {
-    if(props?.location?.query?.nav){
-      const filterArray = props?.location?.query?.nav
-      const filteredArray = tabType.filter(obj => filterArray.includes(obj.key));
-      setType(filteredArray)
+    if(props?.match?.params?.nav){
+      const filterNav = props.match.params.nav
+      if(filterNav!='all'){
+        const filteredArray = tabType.filter(obj => filterNav.includes(obj.key));
+        setType(filteredArray)
+      }
+
     }
   }, [])
 

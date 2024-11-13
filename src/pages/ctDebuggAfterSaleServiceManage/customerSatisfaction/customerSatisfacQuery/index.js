@@ -521,7 +521,7 @@ const Index = (props) => {
   const exports = (type) => {
     props.dispatch({
       type: `${namespace}/ExportSatisfactionSurvey`,
-      payload: type == 2 ? queryPar : queryPar2,
+      payload: type == 2 ? {...queryPar,pageIndex:1,pageSize:999999} : {...queryPar2,pageIndex:1,pageSize:999999},
     });
   }
   const searchComponents = (type) => {

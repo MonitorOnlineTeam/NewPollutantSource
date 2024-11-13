@@ -151,9 +151,8 @@ export default class MonitorPoint extends Component {
     // 1.监控目标ID
     // 2.污染物类型
     // 3.获取监测点数据
-    const { dispatch, match } = this.props;
-    const buttonList = permissionButton('/platformconfig/monitortarget/AEnterpriseTest/1');
-    console.log(buttonList)
+    const { dispatch, match,configInfo,      match: {  params: { targetName, configId }}, } = this.props;
+    const buttonList = permissionButton(`/platformconfig/monitortarget/${configId}/1`);
     buttonList.map(item => {
       switch (item) {
         case 'ModifyPointOpratioinStatus':
@@ -199,6 +198,17 @@ export default class MonitorPoint extends Component {
     // 25	市控
 
     try {
+      const {   match: {  params: { targetName, configId }} }  = this.props;
+      if(configId=='AEnterpriseSimple'){ //权限测试
+        if(type==1){
+          pointConfigIdEdit = `WaterOutputSimple`;
+          pointConfigId = `${pointConfigIdEdit}New`;
+        }else{
+          pointConfigIdEdit = `GasOutputSimple`;
+          pointConfigId = `${pointConfigIdEdit}New`;
+        }
+      }else{
+
       const { SystemPollutantTypeConfigId } = configInfo;
       const configIds = SystemPollutantTypeConfigId.split(',');
       let thisConfigId = null;
@@ -209,6 +219,9 @@ export default class MonitorPoint extends Component {
           pointConfigId = `${pointConfigIdEdit}New`;
         }
       }
+    }
+
+
     } catch (e) {
       // sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
     }
@@ -1128,8 +1141,9 @@ export default class MonitorPoint extends Component {
       saveLoadingAdd,
       saveLoadingEdit,
       saveSortLoading,
+      configInfo,
     } = this.props;
-    const provinceShow = this.props.configInfo && this.props.configInfo.IsShowProjectRegion;
+    const provinceShow = (configInfo && configInfo.IsShowProjectRegion)  || configId=='AEnterpriseSimple';
     // const IsModelProject = Cookie.get('sysMenuId') === '5cd1884a-3f42-426f-8893-5cae720bddf3'; //是否为模型项目
     const { getFieldDecorator } = this.props.form;
     const searchConditions = searchConfigItems[pointConfigId] || [];

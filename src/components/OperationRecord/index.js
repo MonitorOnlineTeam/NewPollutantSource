@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-08-16 09:48:47
  * @LastEditors: outman0611
- * @LastEditTime: 2024-08-30 16:51:48
+ * @LastEditTime: 2024-11-04 10:20:11
  * @Description: 运维记录
  */
 import React, { Component } from 'react';
@@ -415,7 +415,7 @@ class OperationRecord extends Component {
       <div>
         <Card
           title={
-            <Row justify='end'  style={{  marginRight: 145 }}>
+            <Row justify='end'  style={{  marginRight: 135 }}>
               <Select
                 style={{ width: 220, marginRight: 8 }}
                 onChange={this.onTreeChange}
@@ -444,7 +444,7 @@ class OperationRecord extends Component {
               </Select>
               <RangePicker_
                 format='YYYY-MM-DD'
-                style={{ width: 350, textAlign: 'left', marginRight: 10 }}
+                style={{ width: 240,  marginRight: 8 }}
                 dateValue={currentDate}
                 allowClear={false}
                 // format={this.state.formats}

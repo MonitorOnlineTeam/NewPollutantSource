@@ -173,18 +173,15 @@ const OfficeInspection = props => {
     const values = await form.validateFields();
 
     const dailyTaskID = taskInfo.ID || editData.DailyTaskID
-    // console.log('values', values);
-    // return;
     let body = {
       ...values,
       PlateNumber: values.PlateNumber?.toString(),
       LargeRegion: undefined,
       RegionCode: undefined,
       DailyTaskID: dailyTaskID,
-      ID: editData.ID,
-      CreateTime: editData.CreateTime,
+      ID: editData?.ID,
+      CreateTime: editData?.CreateTime,
     };
-    // return;
     props.dispatch({
       type: 'wordSupervision/InsOrUpdOfficeCheck',
       payload: body,
