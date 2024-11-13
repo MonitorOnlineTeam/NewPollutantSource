@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-08-24 11:02:20
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-07-14 19:47:42
+ * @Last Modified time: 2024-11-04 09:56:23
  * @Description: 手动质控 - 页面
  */
 import React, { Component } from 'react';
@@ -14,19 +14,19 @@ import ViewQCProcess from "./ViewQCProcess"
 import { LoadingOutlined, CheckCircleFilled, CloseCircleFilled, ExclamationCircleOutlined } from '@ant-design/icons';
 import PageLoading from "@/components/PageLoading"
 import { gasPollutantList } from "@/utils/CONST"
-const pollutantCodeList = {
-  "a21026": { name: "SO₂", unit: "mg/m³" },
-  "02": { name: "SO₂", unit: "mg/m³" },
-  "03": { name: "NOx", unit: "mg/m³" },
-  "a21002": { name: "NOx", unit: "mg/m³" },
-  "a19001": { name: "O₂", unit: "%" },
-  "30": { name: "CO₂", unit: "mg/m³" },  // 二氧化碳
-  "a05001": { name: "CO₂", unit: "mg/m³" },  // 二氧化碳
-  "a05002": { name: "CH₄", unit: "mg/m³" },  // 甲烷
-  "a24002": { name: "C₃H₈", unit: "mg/m³" },  // 丙烷
-  "a05003": { name: "氧化亚氮", unit: "mg/m³" },  // 氧化亚氮
-  "065": { name: "N₂", unit: "mg/m³" },
-}
+// const pollutantCodeList = {
+//   "a21026": { name: "SO₂", unit: "mg/m³" },
+//   "02": { name: "SO₂", unit: "mg/m³" },
+//   "03": { name: "NOx", unit: "mg/m³" },
+//   "a21002": { name: "NOx", unit: "mg/m³" },
+//   "a19001": { name: "O₂", unit: "%" },
+//   "30": { name: "CO₂", unit: "mg/m³" },  // 二氧化碳
+//   "a05001": { name: "CO₂", unit: "mg/m³" },  // 二氧化碳
+//   "a05002": { name: "CH₄", unit: "mg/m³" },  // 甲烷
+//   "a24002": { name: "C₃H₈", unit: "mg/m³" },  // 丙烷
+//   "a05003": { name: "氧化亚氮", unit: "mg/m³" },  // 氧化亚氮
+//   "065": { name: "N₂", unit: "mg/m³" },
+// }
 
 const { confirm } = Modal;
 // 空闲（绿色），运行（蓝色），维护（黄色），故障（红色），断电（红色），离线（灰色）
@@ -42,6 +42,7 @@ const QCStatusList = {
 // 量程核查为1  盲样核查为2 零点核查：3  响应时间核查为4   线性5
 
 @connect(({ qcManual, qcaCheck, loading }) => ({
+  pollutantCodeList: qcManual.pollutantCodeList,
   bottleDataList: qcManual.bottleDataList,
   qcImageVisible: qcManual.qcImageVisible,
   QCStatus: qcManual.QCStatus,
@@ -286,9 +287,8 @@ class ManualQualityPage extends Component {
   }
 
   getPollutantName = (code) => {
-    console.log('code=', code)
     if (code) {
-      return pollutantCodeList[code].name
+      return this.props.pollutantCodeList[code].name
     }
     return "";
   }

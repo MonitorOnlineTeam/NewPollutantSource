@@ -25,6 +25,7 @@ const ModelExecutive = props => {
   const [logsList, setLogsList] = useState([]);
   const [runProgress, setRunProgress] = useState(0);
   const [isAll, setIsAll] = useState(false);
+  const [isStudy, setIsStudy] = useState(true);
 
   useEffect(() => {
     getRunLogs();
@@ -37,17 +38,22 @@ const ModelExecutive = props => {
   const startExecution = () => {
     form.validateFields().then(values => {
       setExecutionLoading(true);
+      let body = {
+        IsStudy: values.IsStudy,
+        DGIMN: !isAll ? selectedKeys.toString() : undefined,
+        BeginTime: values.runTime[0].format('YYYY-MM-DD HH:00:00'), // 模型执行时间
+        EndTime: values.runTime[1].format('YYYY-MM-DD HH:59:59'), // 模型执行时间
+        RangeBeginTime: values.learnTime
+          ? values.learnTime[0].format('YYYY-MM-DD HH:00:00')
+          : undefined, // 学习时间
+        RangeEndTime: values.learnTime
+          ? values.learnTime[1].format('YYYY-MM-DD HH:59:59')
+          : undefined, // 学习时间
+      };
       dispatch({
         type: 'AbnormalIdentifyModel/GenericPostRequest',
         url: API.AbnormalIdentifyModel.AutoOpeModel,
-        payload: {
-          IsStudy: values.IsStudy,
-          DGIMN: !isAll ? selectedKeys.toString() : undefined,
-          BeginTime: values.runTime[0].format('YYYY-MM-DD HH:00:00'), // 模型执行时间
-          EndTime: values.runTime[1].format('YYYY-MM-DD HH:59:59'), // 模型执行时间
-          RangeBeginTime: values.learnTime[0].format('YYYY-MM-DD HH:00:00'), // 学习时间
-          RangeEndTime: values.learnTime[1].format('YYYY-MM-DD HH:59:59'), // 学习时间
-        },
+        payload: body,
         callback: res => {
           setTimeout(() => {
             setExecutionLoading(false);
@@ -146,36 +152,42 @@ const ModelExecutive = props => {
                 },
               ]}
             >
-              <Radio.Group>
+              <Radio.Group
+                onChange={e => {
+                  setIsStudy(e.target.value);
+                }}
+              >
                 <Radio value={true}>是</Radio>
                 <Radio value={false}>否</Radio>
               </Radio.Group>
             </Form.Item>
-            <Form.Item label="特征学习时间范围" required>
-              <Space direction="vertical">
-                <Form.Item
-                  name="learnTime"
-                  rules={[
-                    {
-                      required: true,
-                      message: '不能为空!',
-                    },
-                  ]}
-                >
-                  <RangePicker_
-                    style={{ width: 300 }}
-                    dataType={'hour'}
-                    showTime
-                    format={'YYYY-MM-DD HH'}
-                    allowClear={false}
-                  />
-                </Form.Item>
-                <Row align="middle" style={{ marginTop: -10, color: '#3888ff' }}>
-                  <InfoCircleOutlined style={{ marginRight: 6 }} />
-                  特征学习时间范围需要覆盖模型执行时间范围
-                </Row>
-              </Space>
-            </Form.Item>
+            {isStudy && (
+              <Form.Item label="特征学习时间范围" required>
+                <Space direction="vertical">
+                  <Form.Item
+                    name="learnTime"
+                    rules={[
+                      {
+                        required: true,
+                        message: '不能为空!',
+                      },
+                    ]}
+                  >
+                    <RangePicker_
+                      style={{ width: 300 }}
+                      dataType={'hour'}
+                      showTime
+                      format={'YYYY-MM-DD HH'}
+                      allowClear={false}
+                    />
+                  </Form.Item>
+                  <Row align="middle" style={{ marginTop: -10, color: '#3888ff' }}>
+                    <InfoCircleOutlined style={{ marginRight: 6 }} />
+                    特征学习时间范围需要覆盖模型执行时间范围
+                  </Row>
+                </Space>
+              </Form.Item>
+            )}
             <Form.Item
               label="模型执行时间范围"
               name="runTime"
@@ -243,6 +255,7 @@ const ModelExecutive = props => {
         <SelectPointModal
           open={isSelectPointModalOpen}
           checkedKeys={selectedKeys}
+          checkedKeysName={keysName}
           onCancel={() => setIsSelectPointModalOpen(false)}
           onOk={(keys, keysName) => {
             setSelectedKeys(keys);

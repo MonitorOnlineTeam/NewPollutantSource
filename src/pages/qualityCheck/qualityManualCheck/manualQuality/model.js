@@ -1,6 +1,5 @@
-
 import * as services from '../services';
-import { getPollutantListByDgimn } from "@/services/commonApi"
+import { getPollutantListByDgimn } from '@/services/commonApi';
 import Model from '@/utils/model';
 import { message } from 'antd';
 import moment from 'moment';
@@ -8,15 +7,28 @@ import moment from 'moment';
 export default Model.extend({
   namespace: 'qcManual',
   state: {
-    currentDGIMN: "",
-    currentPollutantCode: "",
+    pollutantCodeList: {
+      a21026: { name: 'SO₂', unit: 'mg/m³' },
+      '02': { name: 'SO₂', unit: 'mg/m³' },
+      '03': { name: 'NOx', unit: 'mg/m³' },
+      a21002: { name: 'NOx', unit: 'mg/m³' },
+      a19001: { name: 'O₂', unit: '%' },
+      '30': { name: 'CO₂', unit: 'mg/m³' }, // 二氧化碳
+      a05001: { name: 'CO₂', unit: 'mg/m³' }, // 二氧化碳
+      a05002: { name: 'CH₄', unit: 'mg/m³' }, // 甲烷
+      a24002: { name: 'C₃H₈', unit: 'mg/m³' }, // 丙烷
+      a05003: { name: '氧化亚氮', unit: 'mg/m³' }, // 氧化亚氮
+      '065': { name: 'N₂', unit: 'mg/m³' },
+    },
+    currentDGIMN: '',
+    currentPollutantCode: '',
     bottleDataList: [],
     qcImageVisible: false,
     // qcImageVisible: true,
     // 质控仪流程图
     qualityControlName: null, // 质控仪名称
-    gasData: [{}, {}, {}, {}],  // 气瓶信息,
-    CEMSOpen: undefined,// CEMS阀门状态
+    gasData: [{}, {}, {}, {}], // 气瓶信息,
+    CEMSOpen: undefined, // CEMS阀门状态
     CEMSStatus: undefined, // CEMS通信状态
     valveStatus: {}, // 阀门状态
     pressure: [{}, {}, {}, {}],
@@ -36,47 +48,48 @@ export default Model.extend({
   },
   effects: {
     // 获取气瓶数据
-    *getBottleDataList({ payload, }, { call, update, put, take, select }) {
+    *getBottleDataList({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getBottleDataList, { ...payload, State: 1 });
       if (result.IsSuccess) {
         let gasDataTemp = [{}, {}, {}, {}];
         let gasData = _.sortBy([...result.Datas], item => item.GasBottleNum);
-        console.log('gasData1=', result.Datas)
+        console.log('gasData1=', result.Datas);
         if (gasData.length) {
-          gasData.map((item) => {
+          gasData.map(item => {
             let index = item.GasBottleNum - 1;
             if (!gasDataTemp[index].GasCode) {
               gasDataTemp[index] = item;
               gasDataTemp[index].bottleName = item.PollutantName;
             } else {
-              gasDataTemp[index].bottleName = gasDataTemp[index].bottleName + '<br />' + item.PollutantName;
+              gasDataTemp[index].bottleName =
+                gasDataTemp[index].bottleName + '<br />' + item.PollutantName;
             }
-          })
+          });
 
           // gasData[0] = {
           //   ...gasData[0],
           //   PollutantName: gasData[0].PollutantName + '<br />' + gasData[1].PollutantName
           // }
           // gasData.splice(1, 1);
-          console.log('gasData=', gasDataTemp)
-          console.log('gasData2=', gasData)
-          console.log('gasData3=', result.Datas)
+          console.log('gasData=', gasDataTemp);
+          console.log('gasData2=', gasData);
+          console.log('gasData3=', result.Datas);
         }
         yield update({
           bottleDataList: result.Datas,
           gasData: gasDataTemp,
-        })
+        });
       } else {
         yield update({
           bottleDataList: [],
           gasData: [{}, {}, {}, {}],
-        })
-        result.Message && message.error(result.Message)
+        });
+        result.Message && message.error(result.Message);
       }
     },
     // 发送核查命令
     *sendQCACheckCMD({ payload, callback }, { call, update, put, take, select }) {
-      yield update({ QCAResultLoading: true })
+      yield update({ QCAResultLoading: true });
       // console.log('payload=',payload)
       // return;
       const result = yield call(services.sendQCACheckCMD, payload);
@@ -85,7 +98,7 @@ export default Model.extend({
           QCLogsAnswer: {},
           // 质控仪流程图
           qualityControlName: null, // 质控仪名称
-          CEMSOpen: undefined,// CEMS阀门状态
+          CEMSOpen: undefined, // CEMS阀门状态
           CEMSStatus: undefined,
           valveStatus: {}, // 阀门状态
           pressure: [{}, {}, {}, {}],
@@ -104,13 +117,13 @@ export default Model.extend({
           timeList: [],
           valueList: [],
           standardValueList: [],
-        })
-        callback && callback()
-        message.success("命令发送成功");
+        });
+        callback && callback();
+        message.success('命令发送成功');
         // yield update({ QCAResultLoading: true })
       } else {
-        yield update({ QCAResultLoading: false })
-        result.Message && message.error(result.Message)
+        yield update({ QCAResultLoading: false });
+        result.Message && message.error(result.Message);
       }
     },
     // 获取质控仪状态
@@ -118,11 +131,11 @@ export default Model.extend({
       const result = yield call(services.getQCAStatus, payload);
       if (result.IsSuccess) {
         let obj = {};
-        obj.QCStatus = result.Datas.qcaState + "";
-        if (obj.QCStatus == "1") {
+        obj.QCStatus = result.Datas.qcaState + '';
+        if (obj.QCStatus == '1') {
           obj.QCAResultLoading = true;
         }
-        yield update({ ...obj })
+        yield update({ ...obj });
       }
     },
     // 获取状态和质控记录信息
@@ -169,7 +182,7 @@ export default Model.extend({
           updateObj.QCLogsResult = result.Datas[3];
           updateObj.currentDGIMN = result.Datas[3].DGIMN;
         }
-        yield update({ ...updateObj })
+        yield update({ ...updateObj });
       } else {
         // yield update({
         //   QCLogsStart: {},
@@ -185,50 +198,50 @@ export default Model.extend({
     *getSampleRangeFlow({ payload, callback }, { call, update, put, take, select }) {
       const result = yield call(services.getSampleRangeFlow, payload);
       if (result.IsSuccess) {
-        callback && callback(result.Datas)
+        callback && callback(result.Datas);
       } else {
-        result.Message && message.error(result.Message)
+        result.Message && message.error(result.Message);
       }
     },
   },
   reducers: {
     // 质控仪流程图 - 状态
     changeQCState(state, { payload }) {
-      console.log('currentDGIMN=', state.currentDGIMN)
+      console.log('currentDGIMN=', state.currentDGIMN);
       if (state.currentDGIMN) {
         if (payload.DataGatherCode === state.currentDGIMN) {
-          console.log("changeQCState=", payload)
+          console.log('changeQCState=', payload);
           let ValveStatus = state.valveStatus;
           let totalFlow = state.totalFlow;
           let CEMSOpen = state.CEMSOpen;
-          let code = payload.Code.replace("i", "")
+          let code = payload.Code.replace('i', '');
           const value = payload.Value ? payload.Value * 1 : 0;
           // CEMS阀门状态
-          if (code === "33070") {
-            console.log('33070=', payload)
-            CEMSOpen = payload.Value
+          if (code === '33070') {
+            console.log('33070=', payload);
+            CEMSOpen = payload.Value;
           }
 
           // 气瓶1阀门
-          if (code === "33064") {
-            ValveStatus.first = value
+          if (code === '33064') {
+            ValveStatus.first = value;
           }
           // 气瓶2阀门
-          if (code === "33065") {
-            ValveStatus.second = value
+          if (code === '33065') {
+            ValveStatus.second = value;
           }
           // 气瓶3阀门
-          if (code === "33066") {
-            ValveStatus.third = value
+          if (code === '33066') {
+            ValveStatus.third = value;
           }
           // 气瓶4阀门
-          if (code === "33067") {
-            ValveStatus.fourth = value
+          if (code === '33067') {
+            ValveStatus.fourth = value;
           }
 
-          if (code === "33069") {
+          if (code === '33069') {
             // 吹扫阀门
-            ValveStatus.purge = value
+            ValveStatus.purge = value;
           }
 
           // if (code === "33068") {
@@ -236,9 +249,9 @@ export default Model.extend({
           //   CEMSOpen = value
           // }
 
-          if (code === "32009") {
+          if (code === '32009') {
             // CEMS通信状态
-            CEMSStatus = value
+            CEMSStatus = value;
           }
 
           // if (code === "32018") {
@@ -252,40 +265,40 @@ export default Model.extend({
           // }
 
           // 配气流量
-          if (code === "33042") {
-            totalFlow = payload.Value
+          if (code === '33042') {
+            totalFlow = payload.Value;
           }
 
           // 压力
           let pressure = state.pressure;
 
           // 气瓶1压力
-          if (code === "33043") {
-            pressure[0].value = payload.Value + "";
-            pressure[0].pollutantCode = payload.PollutantCode
+          if (code === '33043') {
+            pressure[0].value = payload.Value + '';
+            pressure[0].pollutantCode = payload.PollutantCode;
           }
           // 气瓶2压力
-          if (code === "33044") {
-            pressure[1].value = payload.Value + "";
-            pressure[1].pollutantCode = payload.PollutantCode
+          if (code === '33044') {
+            pressure[1].value = payload.Value + '';
+            pressure[1].pollutantCode = payload.PollutantCode;
           }
           // 气瓶3压力
-          if (code === "33045") {
-            pressure[2].value = payload.Value + "";
-            pressure[2].pollutantCode = payload.PollutantCode
+          if (code === '33045') {
+            pressure[2].value = payload.Value + '';
+            pressure[2].pollutantCode = payload.PollutantCode;
           }
 
           // 气瓶4压力
-          if (code === "33046") {
-            pressure[3].value = payload.Value + "";
-            pressure[3].pollutantCode = payload.PollutantCode
+          if (code === '33046') {
+            pressure[3].value = payload.Value + '';
+            pressure[3].pollutantCode = payload.PollutantCode;
           }
 
           // 标气浓度
           let standardValue = state.standardValue;
           let standardValueUtin = state.standardValueUtin;
           let newStandardValueList = [...state.standardValueList];
-          if (code === "33040") {
+          if (code === '33040') {
             // if (payload.PollutantCode === "a21026" || payload.PollutantCode === "a21002") {
             //   standardValueUtin = "mg/m3"
             // }
@@ -293,13 +306,13 @@ export default Model.extend({
             //   standardValueUtin = "%"
             // }
 
-            if (payload.PollutantCode === "a19001" || payload.PollutantCode === 'a05001') {
-              standardValueUtin = "%"
+            if (payload.PollutantCode === 'a19001' || payload.PollutantCode === 'a05001') {
+              standardValueUtin = '%';
             } else {
-              standardValueUtin = "mg/m³"
+              standardValueUtin = 'mg/m³';
             }
             standardValue = payload.Value;
-            newStandardValueList.push(payload.Value)
+            newStandardValueList.push(payload.Value);
           }
 
           return {
@@ -310,8 +323,8 @@ export default Model.extend({
             standardValue: standardValue,
             standardValueUtin: standardValueUtin,
             totalFlow: totalFlow,
-            standardValueList: newStandardValueList
-          }
+            standardValueList: newStandardValueList,
+          };
         }
       }
       // if (state.cemsList.length) {
@@ -341,18 +354,18 @@ export default Model.extend({
       //     }
       //   }
       // }
-      return { ...state }
+      return { ...state };
     },
     // 更新污染物值
     changePollutantValueListInfo(state, { payload }) {
       if (payload.message[0].DGIMN === state.currentDGIMN) {
-        console.log('changePollutantValueListInfo=', payload.message)
+        console.log('changePollutantValueListInfo=', payload.message);
         return {
           ...state,
-          pollutantValueListInfo: payload.message
-        }
+          pollutantValueListInfo: payload.message,
+        };
       }
-      return { ...state }
+      return { ...state };
     },
     // 质控仪状态
     changeQCStatus(state, { payload }) {
@@ -361,13 +374,13 @@ export default Model.extend({
         let QCStatus = state.QCStatus;
         let door = state.door;
 
-        if (payload.Code === "i32011") {
-          console.log('i32011=', payload)
+        if (payload.Code === 'i32011') {
+          console.log('i32011=', payload);
           // 门状态
-          door = payload.Value
+          door = payload.Value;
         }
-        if (payload.Code === "i32002") {
-          console.log('i32002=', payload)
+        if (payload.Code === 'i32002') {
+          console.log('i32002=', payload);
           QCStatus = payload.Value;
           // if (payload.Value == 1) {
           //   QCAResultLoading = true
@@ -379,27 +392,27 @@ export default Model.extend({
         // 压力异常
         let pressure = state.pressure;
         // 气瓶1压力
-        if (payload.Code === "i32003") {
-          console.log('32003=', payload)
-          pressure[0].exception = payload.Value
+        if (payload.Code === 'i32003') {
+          console.log('32003=', payload);
+          pressure[0].exception = payload.Value;
         }
 
         // 气瓶2压力
-        if (payload.Code === "i32004") {
-          console.log('i32004=', payload)
-          pressure[1].exception = payload.Value
+        if (payload.Code === 'i32004') {
+          console.log('i32004=', payload);
+          pressure[1].exception = payload.Value;
         }
 
         // 气瓶3压力
-        if (payload.Code === "i32005") {
-          console.log('i32005=', payload)
-          pressure[2].exception = payload.Value
+        if (payload.Code === 'i32005') {
+          console.log('i32005=', payload);
+          pressure[2].exception = payload.Value;
         }
 
         // 气瓶4压力
-        if (payload.Code === "i32006") {
-          console.log('i32006=', payload)
-          pressure[3].exception = payload.Value
+        if (payload.Code === 'i32006') {
+          console.log('i32006=', payload);
+          pressure[3].exception = payload.Value;
         }
 
         return {
@@ -407,26 +420,26 @@ export default Model.extend({
           door: door,
           QCStatus: QCStatus,
           QCAResultLoading: QCAResultLoading,
-          pressure
-        }
+          pressure,
+        };
       }
-      return { ...state }
+      return { ...state };
     },
     // log - start
     updateQCLogStart(state, { payload }) {
       let QCLogsStart = state.QCLogsStart;
       let QCAResultLoading = state.QCAResultLoading;
-      console.log("updateQCLogStart=", payload)
+      console.log('updateQCLogStart=', payload);
       if (payload.DGIMN === state.currentDGIMN) {
         QCLogsStart = payload;
         QCAResultLoading = true;
       }
-      return { ...state, QCLogsStart: QCLogsStart, QCAResultLoading: QCAResultLoading }
+      return { ...state, QCLogsStart: QCLogsStart, QCAResultLoading: QCAResultLoading };
     },
     // log - Answer
     updateQCLogAnswer(state, { payload }) {
-      console.log("updateQCLogAnswer=", payload)
-      console.log("updateQCLogAnswer-state=", state)
+      console.log('updateQCLogAnswer=', payload);
+      console.log('updateQCLogAnswer-state=', state);
       let QCAResultLoading = state.QCAResultLoading;
       let QCLogsAnswer = { ...state.QCLogsAnswer };
       if (payload.DGIMN === state.currentDGIMN) {
@@ -435,21 +448,21 @@ export default Model.extend({
         }
         QCLogsAnswer = payload;
       }
-      console.log('QCLogsAnswer-modal=', QCLogsAnswer)
-      return { ...state, QCLogsAnswer: QCLogsAnswer, QCAResultLoading: QCAResultLoading }
+      console.log('QCLogsAnswer-modal=', QCLogsAnswer);
+      return { ...state, QCLogsAnswer: QCLogsAnswer, QCAResultLoading: QCAResultLoading };
     },
     // log - Result
     updateQCLogResult(state, { payload }) {
-      console.log("updateQCLogResult=", payload)
-      debugger
+      console.log('updateQCLogResult=', payload);
+      debugger;
       if (payload.DGIMN === state.currentDGIMN) {
         let QCLogsResult = state.QCLogsResult;
         let QCAResultLoading = state.QCAResultLoading;
-        QCLogsResult = payload
+        QCLogsResult = payload;
         QCAResultLoading = false;
-        return { ...state, QCLogsResult: QCLogsResult, QCAResultLoading: false }
+        return { ...state, QCLogsResult: QCLogsResult, QCAResultLoading: false };
       }
-      return { ...state }
+      return { ...state };
     },
     // 图表数据
     updateRealChartData(state, { payload }) {
@@ -460,21 +473,23 @@ export default Model.extend({
 
       if (state.currentPollutantCode && state.currentDGIMN) {
         if (realtimeData[0].DGIMN === state.currentDGIMN) {
-          const filterPollutantCode = realtimeData.find(item => item.PollutantCode === state.currentPollutantCode);
+          const filterPollutantCode = realtimeData.find(
+            item => item.PollutantCode === state.currentPollutantCode,
+          );
           // 污染物
           newValueList.push(filterPollutantCode.MonitorValue);
           newTimeList.push(filterPollutantCode.MonitorTime);
           // newStandardValueList.push(filterPollutantCode.QCAStandardValue)
         }
       }
-      console.log("newValueList =", newValueList)
-      console.log("newTimeList =", newTimeList)
+      console.log('newValueList =', newValueList);
+      console.log('newTimeList =', newTimeList);
       return {
         ...state,
         timeList: newTimeList,
         valueList: newValueList,
         // standardValueList: newStandardValueList
-      }
+      };
 
       //   const filterDGIMNList = realtimeData.filter(item => item.DGIMN === state.currentDGIMN);
       //   DGIMNList = [
@@ -561,7 +576,7 @@ export default Model.extend({
         //   SO2Info: {},
         //   O2Info: {},
         // },
-        CEMSOpen: undefined,// CEMS阀门状态
+        CEMSOpen: undefined, // CEMS阀门状态
         CEMSStatus: undefined,
         valveStatus: {}, // 阀门状态
         pressure: [{}, {}, {}, {}],
@@ -580,7 +595,7 @@ export default Model.extend({
         timeList: [],
         valueList: [],
         standardValueList: [],
-      }
-    }
-  }
+      };
+    },
+  },
 });

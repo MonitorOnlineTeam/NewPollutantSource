@@ -16,7 +16,7 @@ const PointTraining = props => {
   const { dispatch, open, title, onOk, onCancel, entAndPointLoading } = props;
 
   const [checkedKeys, setCheckedKeys] = useState(props.checkedKeys);
-  const [checkedKeysName, setCheckedKeysName] = useState([]);
+  const [checkedKeysName, setCheckedKeysName] = useState(props.checkedKeysName);
   const [treeData, setTreeData] = useState([]);
 
   useEffect(() => {
@@ -169,7 +169,7 @@ const PointTraining = props => {
                   if (info.node.children) {
                     // 点击的父节点
                     _keys = info.node.children.map(item => item.key);
-                    _keysName = info.node.children.map(item => `${i.EntName}-${i.title}`);
+                    _keysName = info.node.children.map(item => `${item.EntName}-${item.title}`);
                   } else if (info.node.EntCode) {
                     // 点击的子节点
                     _keys = [info.node.key];

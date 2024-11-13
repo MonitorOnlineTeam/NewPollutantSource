@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef,useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import styles from '@/pages/SystemDashboard/styles.less';
@@ -7,6 +7,7 @@ import ReactEcharts from 'echarts-for-react';
 import SupervisionAnalySumm from '@/pages/operations/supervisionAnalySumm';
 import CruxParSupervisionAnalysis from '@/pages/operations/cruxParSupervisionAnalysis';
 import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
+import RemoteSupervision from '@/pages/operations/remoteSupervision/index.js';
 
 import moment from 'moment';
 import Modal from 'antd/lib/modal/Modal';
@@ -25,7 +26,15 @@ const dvaPropsData = ({ sysDashboard, loading }) => ({
 const Calibration = props => {
   const [open, setOpen] = useState(false);
   const [echarts, setEcharts] = useState();
-  const { dispatch, time, loading, level, regionCode, entCode, supervisionUniformityAnalysisData: { RemoteInspector } } = props;
+  const {
+    dispatch,
+    time,
+    loading,
+    level,
+    regionCode,
+    entCode,
+    supervisionUniformityAnalysisData: { RemoteInspector },
+  } = props;
   useEffect(() => {
     getData();
   }, [level, regionCode, entCode, time]);
@@ -47,30 +56,30 @@ const Calibration = props => {
     if (!echarts) {
       return {};
     }
-    const nameList = []
-    const num1 = []
-    const num2 = []
+    const nameList = [];
+    const num1 = [];
+    const num2 = [];
 
-
-    RemoteInspector?.[0] && RemoteInspector.map(item => {
-      nameList.push(item.Name)
-      num1.push(item.YiNum)
-      num2.push(item.NoYiNum)
-    })
+    RemoteInspector?.[0] &&
+      RemoteInspector.map(item => {
+        nameList.push(item.Name);
+        num1.push(item.YiNum);
+        num2.push(item.NoYiNum);
+      });
     let option = {
       tooltip: {
-        trigger: "axis",
+        trigger: 'axis',
         axisPointer: {
-          type: "shadow", // 'shadow' as default; can also be 'line' or 'shadow'
+          type: 'shadow', // 'shadow' as default; can also be 'line' or 'shadow'
         },
       },
       legend: {
         itemGap: fontSizeFn(40),
         top: fontSizeFn(16),
-        itemWidth: fontSizeFn(28),  // 设置图例的宽度
+        itemWidth: fontSizeFn(28), // 设置图例的宽度
         itemHeight: fontSizeFn(14), // 设置图例的高度
         textStyle: {
-          color: "#fff", // 文本颜色
+          color: '#fff', // 文本颜色
         },
       },
       grid: {
@@ -79,13 +88,12 @@ const Calibration = props => {
         bottom: fontSizeFn(26),
       },
       xAxis: {
-        type: "value",
+        type: 'value',
         axisLine: {
           show: true,
           lineStyle: {
-            color: '#202c55'
-          }
-
+            color: '#202c55',
+          },
         },
         axisLabel: {
           show: false,
@@ -94,23 +102,23 @@ const Calibration = props => {
           show: false,
         },
         splitLine: {
-          show: false
+          show: false,
         },
-
       },
       yAxis: {
-        type: "category",
+        type: 'category',
         data: nameList,
         axisLabel: {
           textStyle: {
             fontSize: fontSizeFn(14),
-            color: "#fff",
+            color: '#fff',
           },
         },
-        axisLine: {//y轴线的配置
-          show: true,//是否展示
+        axisLine: {
+          //y轴线的配置
+          show: true, //是否展示
           lineStyle: {
-            color: "#202c55",//y轴线的颜色（若只设置了y轴线的颜色，未设置y轴文字的颜色，则y轴文字会默认跟设置的y轴线颜色一致）
+            color: '#202c55', //y轴线的颜色（若只设置了y轴线的颜色，未设置y轴文字的颜色，则y轴文字会默认跟设置的y轴线颜色一致）
           },
         },
         axisTick: {
@@ -119,29 +127,29 @@ const Calibration = props => {
       },
       series: [
         {
-          name: "一致",
-          type: "bar",
+          name: '一致',
+          type: 'bar',
           barMinWidth: 16,
           barWidth: '34%',
-          stack: "total",
+          stack: 'total',
           emphasis: {
-            focus: "series",
+            focus: 'series',
           },
           data: num1,
           itemStyle: {
-            color: "#58CA73", // 自定义颜色
+            color: '#58CA73', // 自定义颜色
           },
         },
         {
-          name: "不一致",
-          type: "bar",
-          stack: "total",
+          name: '不一致',
+          type: 'bar',
+          stack: 'total',
           emphasis: {
-            focus: "series",
+            focus: 'series',
           },
           data: num2,
           itemStyle: {
-            color: "#FAD046", // 自定义颜色
+            color: '#FAD046', // 自定义颜色
           },
         },
       ],
@@ -167,29 +175,69 @@ const Calibration = props => {
       />
     );
   }, [RemoteInspector]);
+
+  let modalParams = {};
+  if (level != 1 && (regionCode || entCode)) {
+    if (level == 2 && regionCode) {
+      modalParams.RegionCode = regionCode;
+    }
+    if (level == 3 && entCode) {
+      modalParams.RegionCode = regionCode;
+      modalParams.EntCode = entCode;
+    }
+  }
+
   return (
-    <HomeCard title="关键参数监督核查分析" bodyStyle={{}} loading={loading} style={{ minHeight: props.homeCardMinHight }}>
-      {renderEcharts}
-      <span style={{ color: '#63BFFF', position: 'absolute', top: 'calc(40px + 16px)', right: 16, fontSize: '.875rem' }}>单位：个</span>
-      <Modal
-      title='关键参数督查汇总'
-      destroyOnClose
-      wrapClassName={'fullScreenModal'}
-      bodyStyle={{padding:0}}
-      visible={open}
-      mask={false}
-      onCancel={() => {
-        setOpen(false);
-      }}
+    <HomeCard
+      title="关键参数监督核查分析"
+      bodyStyle={{}}
+      loading={loading}
+      style={{ minHeight: props.homeCardMinHight }}
     >
-      <CruxParSupervisionAnalysis
+      {renderEcharts}
+      <span
+        style={{
+          color: '#63BFFF',
+          position: 'absolute',
+          top: 'calc(40px + 16px)',
+          right: 16,
+          fontSize: '.875rem',
+        }}
+      >
+        单位：个
+      </span>
+      <Modal
+        title="关键参数督查汇总"
+        destroyOnClose
+        wrapClassName={'fullScreenModal'}
+        bodyStyle={{ padding: 0 }}
+        visible={open}
+        mask={false}
+        onCancel={() => {
+          setOpen(false);
+        }}
+      >
+        {/* <CruxParSupervisionAnalysis
        hideBreadcrumb 
        par={{time:time,RegionCode:regionCode || undefined, EntCode:entCode || undefined,}} 
        match={{ path: '/operations/remoteSupervisionRecord' }}
-      />
-    </Modal>
-    </HomeCard>
+      /> */}
+        {/* props.match.path === '/operations/remoteSupervisionRecord' */}
 
+        {open && (
+          <RemoteSupervision
+            par={{
+              ...modalParams,
+              CheckStatus: 2,
+              time: [moment().startOf('year'), moment()],
+            }}
+            match={{
+              path: '/operations/remoteSupervisionRecord',
+            }}
+          />
+        )}
+      </Modal>
+    </HomeCard>
   );
 };
 

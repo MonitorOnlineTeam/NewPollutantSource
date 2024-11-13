@@ -12,8 +12,8 @@ export function getTokenTimeAndRefreshToken(callback) {
   // 获取数据
   let data = window.localStorage.getItem('loginTokenData');
   if (!data) return callback && callback();
-  let dataObj = JSON.parse(data);
-  let interval = dataObj.expires_in * 0.9 * 1000;
+  // let dataObj = JSON.parse(data);
+  // let interval = dataObj.expires_in * 0.9 * 1000;
   // debugger;
   // console.log('Cookie.get(config.cookieName)', Cookie.get(config.cookieName));
   // if (!window.refreshTokenTimer && Cookie.get(config.cookieName)) {

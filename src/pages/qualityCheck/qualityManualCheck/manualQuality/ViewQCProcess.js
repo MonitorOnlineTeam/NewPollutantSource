@@ -39,19 +39,19 @@ const QCStatusList = {
   6: { text: '离线', color: '#d9d9d9' },
 };
 
-const pollutantCodeList = {
-  a21026: { name: 'SO₂', unit: 'mg/m³' },
-  '02': { name: 'SO₂', unit: 'mg/m³' },
-  '03': { name: 'NOx', unit: 'mg/m³' },
-  a21002: { name: 'NOx', unit: 'mg/m³' },
-  a19001: { name: 'O₂', unit: '%' },
-  '30': { name: 'CO₂', unit: 'mg/m³' }, // 二氧化碳
-  a05001: { name: 'CO₂', unit: '%' }, // 二氧化碳
-  a05002: { name: 'CH₄', unit: 'mg/m³' }, // 甲烷
-  a24002: { name: 'C₃H₈', unit: 'mg/m³' }, // 丙烷
-  a05003: { name: '氧化亚氮', unit: 'mg/m³' }, // 氧化亚氮
-  '065': { name: 'N₂', unit: 'mg/m³' },
-};
+// const pollutantCodeList = {
+//   a21026: { name: 'SO₂', unit: 'mg/m³' },
+//   '02': { name: 'SO₂', unit: 'mg/m³' },
+//   '03': { name: 'NOx', unit: 'mg/m³' },
+//   a21002: { name: 'NOx', unit: 'mg/m³' },
+//   a19001: { name: 'O₂', unit: '%' },
+//   '30': { name: 'CO₂', unit: 'mg/m³' }, // 二氧化碳
+//   a05001: { name: 'CO₂', unit: '%' }, // 二氧化碳
+//   a05002: { name: 'CH₄', unit: 'mg/m³' }, // 甲烷
+//   a24002: { name: 'C₃H₈', unit: 'mg/m³' }, // 丙烷
+//   a05003: { name: '氧化亚氮', unit: 'mg/m³' }, // 氧化亚氮
+//   '065': { name: 'N₂', unit: 'mg/m³' },
+// };
 
 const gas4 = {
   wrapperPosition: { top: 108, left: 56 },
@@ -86,6 +86,7 @@ const gas2 = {
 };
 
 @connect(({ loading, qcManual }) => ({
+  pollutantCodeList: qcManual.pollutantCodeList,
   gasData: qcManual.gasData,
   valveStatus: qcManual.valveStatus,
   CEMSOpen: qcManual.CEMSOpen,
@@ -122,6 +123,7 @@ class ViewQCProcess extends PureComponent {
 
   pageContent = type => {
     const {
+      pollutantCodeList,
       gasData,
       CEMSStatus,
       QCStatus,
@@ -137,9 +139,7 @@ class ViewQCProcess extends PureComponent {
       qualityControlName,
       door,
     } = this.props;
-    console.log('GasPathMode=', GasPathMode);
     const gasLength = gasData.filter(item => item.GasCode).length;
-    console.log('gasLength=', gasLength);
     let bottleShowData = gasLength === 2 ? gas2 : gas4;
 
     let props = {};
@@ -500,6 +500,7 @@ ${params[1].seriesName} ：${params[1].value} ${standardValueUtin ? standardValu
 
   render() {
     const {
+      pollutantCodeList,
       qcImageVisible,
       pointName,
       pollutantCode,

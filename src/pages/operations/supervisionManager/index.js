@@ -204,7 +204,7 @@ const Index = (props) => {
       }
     })
     if (par) {
-      form.setFieldsValue({ EntCode:par?.EntCode,time:par?.time })
+      form.setFieldsValue({ RegionCode: par?.RegionCode, EntCode:par?.EntCode,time:par?.time })
       setPointLoading(true)
       props.getPointByEntCode({ EntCode: par?.EntCode,PollutantTypeCode:pollutantTypeCode }, (res) => {
         setPointList(res)

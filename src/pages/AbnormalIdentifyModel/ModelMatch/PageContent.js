@@ -49,7 +49,6 @@ const Index = props => {
       },
       callback: res => {
         const result = matchGuids(modelList, res);
-        console.log(result);
         setCheckedList(result);
       },
     });

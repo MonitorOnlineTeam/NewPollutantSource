@@ -59,11 +59,11 @@ const Index = (props) => {
                 payload: {
                     modelSelectionCol:{},
                 },
-            });   
+            });
         }
     }, []);
 
-    let [ columns,setColumns ] = useState([
+    const columns_const = [
         {
             title: '企业',
             dataIndex: 'entName',
@@ -93,7 +93,9 @@ const Index = (props) => {
 
             }
         },
-    ])
+    ]
+
+    let [ columns,setColumns ] = useState(columns_const)
 
     // 根据企业获取排口
     const [pointList, setPointList] = useState([]);
@@ -116,7 +118,7 @@ const Index = (props) => {
 
     const [DGIMN, setDGIMN] = useState()
 
-    
+
     const edit = (record) => {
         setEditVisible(true)
         setDGIMN(record.DGIMN)
@@ -135,7 +137,7 @@ const Index = (props) => {
             payload: {projectType:1, ...allValues }, // projectType:1,
             callback:(col)=>{
                 let trendsCol = []
-                if(col && !isPage){ //防止分页事件刷新列头
+                // if(col && !isPage){ //防止分页事件刷新列头
                     trendsCol= col.map(item=>({
                             title:  item.ModelName,
                             dataIndex: `model_${item.ModelNumber}`,
@@ -145,11 +147,12 @@ const Index = (props) => {
                             width:item.ModelName?.length<=3?   item.ModelName?.length * 30 : item.ModelName?.length * 18,
                             render: (text, record) => {
                                 return text?  <CheckCircleTwoTone style={{fontSize:16}} twoToneColor="#52c41a" /> : <CloseCircleTwoTone style={{fontSize:16}}  twoToneColor="#f5222d"/>;
-                
+
                             }
                     }))
-                }
-                columns.splice(2,0,...trendsCol) 
+                // }
+                columns_const.splice(2,0,...trendsCol)
+                setColumns(columns_const)
             }
         });
     }
@@ -195,7 +198,7 @@ const Index = (props) => {
                         }}
                     />
                 </Form.Item>
-                    <Form.Item label="监测点名称" name="dgimn">  
+                    <Form.Item label="监测点名称" name="dgimn">
                         {!!pointListLoading?
                         <Spin size="small"><Select  placeholder="请选择"   style={{ width: 150 }}/></Spin>
                         :
@@ -222,6 +225,7 @@ const Index = (props) => {
             <BreadcrumbWrapper >
                 <Card title={searchComponents()}>
                     <SdlTable
+                        rowKey={'ModelGuid'}
                         loading={tableLoading}
                         bordered
                         dataSource={tableDatas}
@@ -245,7 +249,7 @@ const Index = (props) => {
                     destroyOnClose
                     footer={null}
                 >
-                  <ModelMatch isModal DGIMN={DGIMN} saveCallBack={saveCallBack} zIndex={1002}/>
+                  {editVisible &&  <ModelMatch isModal DGIMN={DGIMN} saveCallBack={saveCallBack} zIndex={1002}/> }
                 </Modal>
             </BreadcrumbWrapper>
         </div >

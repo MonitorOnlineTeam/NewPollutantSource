@@ -301,7 +301,7 @@ const Index = (props) => {
       }
     })
     if (par) {
-      form.setFieldsValue({ RegionCode: par?.RegionCode, EntCode: par?.EntCode, time: par?.time })
+      form.setFieldsValue({ RegionCode: par?.RegionCode, EntCode: par?.EntCode, time: par?.time, CheckStatus: par?.CheckStatus })
       setPointLoading(true)
       props.getPointByEntCode({ EntCode: par?.EntCode }, (res) => {
         setPointList(res)
@@ -3108,7 +3108,6 @@ const Index = (props) => {
 
   return (
     <div className={styles.remoteSupervisionSty}>
-
       <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
         <Card bordered={!props.hideBreadcrumb} title={
           <Form
