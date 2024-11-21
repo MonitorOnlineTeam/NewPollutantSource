@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-09 17:43:38
+ * @LastEditTime: 2024-11-20 16:38:36
  * @Description: 用户添加
  */
 import React, { Component } from 'react';
@@ -304,7 +304,7 @@ export default class UserInfoAdd extends Component {
                                         form={this.props.form}
                                         hideBtns
                                     >
-                                         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
+                                         {/* <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
                                             <Button
                                                 type="primary"
                                                 htmlType="submit"
@@ -323,7 +323,7 @@ export default class UserInfoAdd extends Component {
                                                 }}
                                             >下一步
                                         </Button>
-                                        </FormItem> 
+                                        </FormItem>  */}
 
 
                                         <Divider orientation="right">

@@ -1,3 +1,10 @@
+/*
+ * @Author: outman0611
+ * @Date: 2024-07-04 11:25:06
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-11-21 15:27:48
+ * @Description: 
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Tooltip, Row, Col, Modal, Space } from 'antd';
@@ -43,7 +50,6 @@ const HomeDataScreen = props => {
             let meunList = sessionStorage.getItem('menuDatas')
               ? JSON.parse(sessionStorage.getItem('menuDatas'))
               : [];
-              console.log(meunList)
             if (meunList?.length >= 1) {
               router.push(meunList[1]);
             } else {

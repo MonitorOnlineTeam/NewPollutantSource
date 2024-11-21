@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-29 18:00:29
+ * @LastEditTime: 2024-11-20 16:38:55
  * @Description: 用户修改
  */
 import React, { Component } from 'react';
@@ -28,7 +28,7 @@ const {
 const { TreeNode } = Tree;
 
 
-@connect(({ userinfo, loading }) => ({
+@connect(({ userinfo, loading,global }) => ({
     treeData: userinfo.DepartTree,
     RolesTreeData: userinfo.RolesTree,
     UserRolesLoading: loading.effects['userinfo/getrolebyuserid'],
@@ -374,7 +374,7 @@ export default class UserInfoEdit extends Component {
                                             hideBtns
                                             keysParams={{ 'dbo.Base_UserInfo.User_ID': this.props.match.params.userid }}
                                         >
-                                            <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
+                                            {/* <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
                                                 <Button
                                                     type="primary"
                                                     htmlType="submit"
@@ -393,7 +393,7 @@ export default class UserInfoEdit extends Component {
                                                     }}
                                                 >下一步
                                         </Button>
-                                            </FormItem>
+                                            </FormItem> */}
 
 
                                             <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>

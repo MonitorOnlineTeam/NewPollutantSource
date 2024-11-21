@@ -52,7 +52,7 @@ const HomeCard = props => {
           if(lastTime){
             data.push({
               name: '本年',
-              time: [moment().subtract(2, 'months').date(21).startOf('day'), moment().subtract(1, 'year').date(20).endOf('day')],
+              time: [ moment().subtract(1, 'year').date(20).endOf('day'), moment().subtract(2, 'months').date(21).startOf('day')],
             });
           }else{
             data.push({

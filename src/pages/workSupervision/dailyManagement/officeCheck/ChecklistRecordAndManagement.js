@@ -442,7 +442,6 @@ const ChecklistRecordAndManagement = props => {
               // loading={loading}
               onClick={() => {
                 // if(dataSource?.[0]){
-                  setEditData(dataSource[0]);
                   setOfficeInspectionOpen(true);
                 // }else{
                 //   message.error('本月没有派工单，不允许添加！')

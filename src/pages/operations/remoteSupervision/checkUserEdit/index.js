@@ -299,6 +299,7 @@ const Index = (props) => {
       let code = item?.CheckItem
       return {
         ...item,
+        OperationReamrk:item.OperationReramk,
         SetFile: item?.SetFileList?.[0]?.FileUuid,
         InstrumentFile: item?.InstrumentFileList?.[0]?.FileUuid,
         TraceabilityFile: item?.TraceabilityFileList?.[0]?.FileUuid,

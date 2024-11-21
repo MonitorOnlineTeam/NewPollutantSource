@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-31 09:38:29
+ * @LastEditTime: 2024-11-21 16:08:17
  * @Description: 用户信息添加编辑表单 运维
  */
 import React, { Component } from 'react';
@@ -11,6 +11,7 @@ import '@ant-design/compatible/assets/index.css';
 import { Tabs, Layout, Menu, Card, Button, Divider, Tree, Input, message, Spin, Col, Select, Row, Radio } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
+import Cookie from 'js-cookie';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlForm from '@/pages/AutoFormManager/SdlForm'
 import styles from './style.less';
@@ -45,12 +46,17 @@ export default class Index extends Component {
     }
 
     componentDidMount() {
+        const UserType =  Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser'))?.UserType
         this.props.dispatch({
             type: 'userinfo/updateState',
             payload: {
+                userType: UserType,
                 operaBasicInfoForm: this.props.form,
             },
         });
+        this.props.form.setFieldsValue({
+            UserType:UserType
+        })
         this.props.dispatch({
             type: 'operations/getOperationCompanyList',//获取运维单位列表
         });
@@ -64,16 +70,18 @@ export default class Index extends Component {
     }
 
 
+
     render() {
         const { form: { getFieldDecorator }, userType,isEdit } = this.props;
+        const UserType =  Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser'))?.UserType
         const formFilesData = [
             { label: '登录名', field: 'User_Account', required: true },
             { label: '姓名', field: 'User_Name', required: true },
             { label: '性别', field: 'User_Sex', inputNode: 'radio', list: [{ name: '男', value: 1 }, { name: '女', value: 2 }], initialValue: 1 },
             { label: '手机号', field: 'Phone', validator: { pattern: /^1[3456789]\d{9}$/, message: '手机号格式不正确!' }, },
             { label: '邮箱', field: 'Email', validator: { type: 'email', message: '邮箱格式不正确!', } },
-            { label: '推送类型', field: 'SendPush', inputNode: 'select', required: true, mode: "multiple", list: [{ value: "1", label: "短信推送" }, { value: "2", label: "APP推送" }, { value: "3", label: "网页推送" }, { value: "5", label: "微信推送" }] },
-            { label: '用户类型', field: 'UserType', inputNode: 'select', required: true, list: [{ value: "1", label: '雪迪龙' }, { value: "2", label: "运维单位" }, { value: "3", label: "其他" }]},
+            { label: '推送类型', field: 'SendPush', inputNode: 'select', mode: "multiple", list: [{ value: "1", label: "短信推送" }, { value: "2", label: "APP推送" }, { value: "3", label: "网页推送" }, { value: "5", label: "微信推送" }] },
+            { label: '用户类型', field: 'UserType', inputNode: 'select', required: true, disabled: UserType==2 || UserType==3, list: [{ value: "1", label: '雪迪龙' }, { value: "2", label: "运维单位" }, { value: "3", label: "其他" }]},
             { label: '运维公司', field: 'OperationCompany', inputNode: 'select', hidden: !userType || userType == 3, required: this.state.operationCompanyRequired, list: this.props.operationCompanyList.map(item => ({ value: item['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'], label: item['dbo.T_Bas_OperationMaintenanceEnterprise.Company'] })), initialValue: this.props.operationCompanyList?.[0]?.['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'], loading: this.props.operationCompanyLoading },
             { label: '业务属性', field: 'BusinessAttribute', inputNode: 'select', hidden: userType != 1, mode: "multiple", list: [{ value: "1", "value": "职能-售后服务" }, { value: "2", label: "售后服务-安装调试" }, { value: "3", label: "售后服务-非驻厂运营" }, { value: "4", label: "售后服务-驻厂运营" }, { value: "5", label: "其他" }] },
             { label: '行业属性', field: 'IndustryAttribute', inputNode: 'select', hidden: userType != 1, mode: "multiple", list: [{ value: "5", "value": "大气" }, { value: "6", label: "地表水" }, { value: "10", label: "过程分析" }, { value: "2", label: "污染源气" }, { value: "1", label: "污染源水" }, { value: "11", label: "其他" }] },
@@ -100,7 +108,7 @@ export default class Index extends Component {
                                     </Radio.Group>
                                     :
                                     item.inputNode === 'select' ?
-                                        <Select  options={item.list} loading={item.loading} mode={item.mode} placeholder="请输入"  
+                                        <Select  options={item.list} loading={item.loading} mode={item.mode}  disabled={item.disabled} placeholder="请输入"  
                                               allowClear onChange={(values) => {
                                                 if (item.field == 'UserType' ) {
                                                     this.props.dispatch({

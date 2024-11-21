@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-10-12 08:43:50
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-14 10:12:04
+ * @LastEditTime: 2024-11-13 16:47:22
  * @Description: 资源信息 和 问题及解决方案
  */
 
@@ -131,7 +131,7 @@ const Index = props => {
               <Space direction="vertical" size={10}>
                 <div style={{fontSize:18,fontWeight:500, color:'#1890FF'}}> {item.QuestionName}</div>
                  {type==1?  <Space>{item.FirstLevel?.split(',')?.map(tagItem => <Tag>{tagItem}</Tag>)}</Space> : <Tag>{item.QuestionTypeName}</Tag>}
-                 {type==1? <div dangerouslySetInnerHTML={{ __html:item.Content }} /> : <div>{item.QuestionDesc}</div>}
+                 {/* {type==1? <div dangerouslySetInnerHTML={{ __html:item.Content }} /> : <div>{item.QuestionDesc}</div>} */}
                 <Space size={16}><span>发布人：{item.CreateUserName}</span> <span>发布时间：{type==1? item.CreateTime : item.CreateDate}</span> </Space>
               </Space>
             </List.Item>

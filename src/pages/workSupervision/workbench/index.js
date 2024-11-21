@@ -1963,6 +1963,7 @@ const Workbench = props => {
           title={'编辑'}
           visible={remoteSupervisionModalVisible}
           id={superviseRectificaDetailId}
+          roleType={1}
           onCancel={() => { setRemoteSupervisionModalVisible(false) }}
           onFinish={() => GetStagingInspectorRectificationList()} />
         <RectificaDetailModal
