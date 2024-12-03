@@ -668,14 +668,14 @@ const Index = (props) => {
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        {/* <Col span={8}>
           <Form.Item name='time3' label='调查提交时间'>
             <RangePicker_ style={{ width: '100%' }}
               showTime={false}
               format="YYYY-MM-DD"
             />
           </Form.Item>
-        </Col>
+        </Col> */}
         <Col span={8} >
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={tableLoading2}>
