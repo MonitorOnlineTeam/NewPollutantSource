@@ -6,6 +6,7 @@ import { Card, Row, Button, Divider, Radio, Modal } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { router } from 'umi';
 import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
+import { convertTextByConfig } from '@/utils/utils';
 
 @connect(({ loading, autoForm, exceptionrecordNew }) => ({
   exceptionAlarmListForEntDataSource: exceptionrecordNew.exceptionAlarmListForEntDataSource,
@@ -15,6 +16,7 @@ import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
 class RegionDetails extends PureComponent {
   constructor(props) {
     super(props);
+    this.isGroupEnt = configInfo.isGroupEnt;
     this.state = {
       visible: false,
       queryCondition: JSON.parse(this.props.location.query.queryCondition),
@@ -28,14 +30,16 @@ class RegionDetails extends PureComponent {
           title: '省',
           dataIndex: 'ProvinceName',
           key: 'ProvinceName',
+          hidden: this.isGroupEnt,
         },
         {
           title: '市',
           dataIndex: 'CityName',
           key: 'CityName',
+          hidden: this.isGroupEnt,
         },
         {
-          title: '企业名称',
+          title: convertTextByConfig('企业') + '名称',
           dataIndex: 'EntName',
           key: 'EntName',
         },
@@ -130,11 +134,13 @@ class RegionDetails extends PureComponent {
           title: '省',
           dataIndex: 'ProvinceName',
           key: 'ProvinceName',
+          hidden: this.isGroupEnt,
         },
         {
           title: '市',
           dataIndex: 'CityName',
           key: 'CityName',
+          hidden: this.isGroupEnt,
         },
         {
           title: '企业名称',
@@ -206,6 +212,7 @@ class RegionDetails extends PureComponent {
       type: 'exceptionrecordNew/getExceptionAlarmListForEnt',
       payload: {
         ...this.state.queryCondition,
+        isGroupEnt: this.isGroupEnt,
       },
     });
   };
@@ -215,6 +222,7 @@ class RegionDetails extends PureComponent {
       type: 'exceptionrecordNew/exportExceptionAlarmListForEnt',
       payload: {
         ...this.state.queryCondition,
+        isGroupEnt: this.isGroupEnt,
       },
     });
   };
@@ -273,7 +281,7 @@ class RegionDetails extends PureComponent {
             align="center"
             loading={loading}
             dataSource={exceptionAlarmListForEntDataSource}
-            columns={_columns}
+            columns={_columns.filter(item => !item.hidden)}
           />
           <Modal
             // title="Basic Modal"

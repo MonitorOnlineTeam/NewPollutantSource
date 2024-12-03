@@ -49,6 +49,7 @@ import ImageView from '@/components/ImageView';
 import { useHistory } from 'react-router-dom';
 import CluesDetails from '@/pages/AbnormalIdentifyModel/CluesList/CluesDetails.js';
 import GenerateModal from './GenerateModal.js';
+import { convertTextByConfig } from '@/utils/utils';
 
 // // 自定义文字大小
 // let fontSize = ['12px', '14px', '16px', '18px', '20px', '24px', '36px'];
@@ -258,7 +259,7 @@ const Index = props => {
         },
       },
       {
-        title: '企业',
+        title: convertTextByConfig('企业'),
         dataIndex: 'EntName',
         key: 'EntName',
         width: 200,
@@ -758,7 +759,7 @@ const Index = props => {
           }
           setSelectedRowKeys(data);
         } else {
-          message.error('同一企业同一排口同一场景下才能同时选中并生成核查方案');
+          message.error(`同一${convertTextByConfig('企业')}同一排口同一场景下才能同时选中并生成核查方案`);
         }
       }
     },
@@ -958,8 +959,9 @@ const Index = props => {
             <RegionList style={{ width: 140 }} />
           </Form.Item> */}
             {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
-            <Form.Item label="企业" name="entCode">
+            <Form.Item label={convertTextByConfig('企业')} name="entCode">
               <EntAtmoList
+                placeholder="请选择"
                 style={{ width: 200 }}
                 onChange={value => {
                   if (!value) {
@@ -1058,7 +1060,7 @@ const Index = props => {
             生成核查方案
           </Button>
           <span style={{ color: '#f5222d', paddingLeft: 8 }}>
-            注：同一企业同一排口同一场景下才能同时选中并生成核查方案
+            注：同一{convertTextByConfig('企业')}同一排口同一场景下才能同时选中并生成核查方案
           </span>
           <SdlTable
             rowKey={(record, index) => `${record.WarningCode}`}

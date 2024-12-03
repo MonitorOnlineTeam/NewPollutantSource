@@ -21,6 +21,7 @@ import moment from 'moment'
 import { router } from 'umi'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList';
+import { convertTextByConfig } from '@/utils/utils';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -63,6 +64,7 @@ const { RangePicker } = DatePicker;
   },
 })
 class index extends PureComponent {
+  isGroupEnt = configInfo.isGroupEnt;
   state = {
     showTime: true,
     format: 'YYYY-MM-DD HH',
@@ -96,7 +98,7 @@ class index extends PureComponent {
       //   }
       // },
       {
-        title: '省',
+        title: convertTextByConfig('省'),
         dataIndex: 'RegionName',
         key: 'RegionName',
         align: 'center',
@@ -108,7 +110,7 @@ class index extends PureComponent {
         },
       },
       {
-        title: '市',
+        title: convertTextByConfig('市'),
         dataIndex: 'CityName',
         key: 'CityName',
         align: 'center',
@@ -118,6 +120,7 @@ class index extends PureComponent {
             children: <a onClick={() => {
             let queryCondition = this.state.queryCondition;
             queryCondition.RegionCode = record.CityCode || this.props.location.query.regionCode;
+            queryCondition.EntCode = configInfo.isGroupEnt ? record.CityCode : this.props.location.query.EntCode, // 集团项目：企业code使用CityCode
             queryCondition = JSON.stringify(queryCondition)
             this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
               router.push(`/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
@@ -156,7 +159,7 @@ class index extends PureComponent {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
                 let RegionCode = record.CityCode || this.props.location.query.regionCode;
-                this.onTableClick(RegionCode, '1', undefined)
+                this.onTableClick(RegionCode, '1', undefined, record)
               }}>{text}</a>
             }
           },
@@ -170,7 +173,7 @@ class index extends PureComponent {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
                 let RegionCode = record.CityCode || this.props.location.query.regionCode;
-                this.onTableClick(RegionCode, "1", '1')
+                this.onTableClick(RegionCode, "1", '1', record)
               }}>{text}</a>
             }
           },
@@ -184,7 +187,7 @@ class index extends PureComponent {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
                 let RegionCode = record.CityCode || this.props.location.query.regionCode;
-                this.onTableClick(RegionCode, "1", '0')
+                this.onTableClick(RegionCode, "1", '0', record)
               }}>{text}</a>
             }
           },
@@ -203,7 +206,7 @@ class index extends PureComponent {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
                 let RegionCode = record.CityCode || this.props.location.query.regionCode;
-                this.onTableClick(RegionCode, "2", undefined)
+                this.onTableClick(RegionCode, "2", undefined, record)
               }}>{text}</a>
             }
           },
@@ -217,7 +220,7 @@ class index extends PureComponent {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
                 let RegionCode = record.CityCode || this.props.location.query.regionCode;
-                this.onTableClick(RegionCode, "2", '1')
+                this.onTableClick(RegionCode, "2", '1', record)
               }}>{text}</a>
             }
           },
@@ -231,7 +234,7 @@ class index extends PureComponent {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
                 let RegionCode = record.CityCode || this.props.location.query.regionCode;
-                this.onTableClick(RegionCode, "2", '0')
+                this.onTableClick(RegionCode, "2", '0', record)
               }}>{text}</a>
             }
           },
@@ -250,7 +253,7 @@ class index extends PureComponent {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
                 let RegionCode = record.CityCode || this.props.location.query.regionCode;
-                this.onTableClick(RegionCode, "3", undefined)
+                this.onTableClick(RegionCode, "3", undefined, record)
               }}>{text}</a>
             }
           },
@@ -264,7 +267,7 @@ class index extends PureComponent {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
                 let RegionCode = record.CityCode || this.props.location.query.regionCode;
-                this.onTableClick(RegionCode, "3", '1')
+                this.onTableClick(RegionCode, "3", '1', record)
               }}>{text}</a>
             }
           },
@@ -278,7 +281,7 @@ class index extends PureComponent {
               return <a onClick={() => {
                 this.setState({ RegionName: record.RegionName })
                 let RegionCode = record.CityCode || this.props.location.query.regionCode;
-                this.onTableClick(RegionCode, "3", '0')
+                this.onTableClick(RegionCode, "3", '0', record)
               }}>{text}</a>
             }
           },
@@ -292,19 +295,19 @@ class index extends PureComponent {
       //   key: 'RegionName',
       // },
       {
-        title: '省',
+        title: convertTextByConfig('省'),
         dataIndex: 'ProvinceName',
         key: 'ProvinceName',
         align: 'center',
       },
       {
-        title: '市',
+        title: convertTextByConfig('市'),
         dataIndex: 'CityName',
         key: 'CityName',
         align: 'center',
       },
       {
-        title: '企业名称',
+        title: convertTextByConfig('企业')+'名称',
         dataIndex: 'EntName',
         key: 'EntName',
       },
@@ -365,7 +368,6 @@ class index extends PureComponent {
     ],
   }
 
-
   componentDidMount() {
     // 获取行政区列表
     // this.props.dispatch({
@@ -382,14 +384,15 @@ class index extends PureComponent {
     this.getExceptionList([moment().subtract(7, "days").startOf("day"), moment().endOf("day")]);
   }
 
-  onTableClick = (RegionCode, ExceptionType, ResponseStatus, operationpersonnel) => {
+  onTableClick = (RegionCode, ExceptionType, ResponseStatus, record) => {
     this.setState({
       secondQueryCondition: {
         ...this.state.queryCondition,
         RegionCode: RegionCode,
         ExceptionType: ExceptionType,
         ResponseStatus: ResponseStatus,
-        OperationPersonnel: this.state.operationpersonnel
+        OperationPersonnel: this.state.operationpersonnel,
+        EntCode: configInfo.isGroupEnt ? record.CityCode : this.state.queryCondition.EntCode, // 集团项目：企业code使用CityCode
       },
       visible: true
     }, () => {
@@ -403,6 +406,7 @@ class index extends PureComponent {
       type: "exceptionrecordNew/getExceptionAlarmListForEnt",
       payload: {
         ...this.state.secondQueryCondition,
+        isGroupEnt: this.isGroupEnt,
       }
     })
   }
@@ -412,6 +416,7 @@ class index extends PureComponent {
       type: "exceptionrecordNew/exportExceptionAlarmListForEnt",
       payload: {
         ...this.state.secondQueryCondition,
+        isGroupEnt: this.isGroupEnt,
       }
     })
   }
@@ -440,7 +445,8 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel: this.state.operationpersonnel
+        OperationPersonnel: this.state.operationpersonnel,
+        isGroupEnt: this.isGroupEnt,
       }
     })
     this.setState({
@@ -521,6 +527,8 @@ class index extends PureComponent {
 
 
   render() {
+  console.log('this.isGroupEnt', this.isGroupEnt)
+
     const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, divisorList, exceptionAlarmDataSource, loading, exportLoading, exportExceptionAlarmListForEntLoading } = this.props;
     const { formLayout, columns, detailsColumns } = this._SELF_;
     const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime } = this.state;
@@ -546,6 +554,9 @@ class index extends PureComponent {
     let modelTitle = `${RegionName}${beginTime} - ${endTime}${showTypeText}`
     if (secondQueryCondition.ResponseStatus == "0") {
       _detailsColumns = _detailsColumns.filter(item => item.dataIndex !== "CompleteTime");
+    }
+    if (this.isGroupEnt) {
+      _detailsColumns = _detailsColumns.filter(item => item.dataIndex !== "ProvinceName" && item.dataIndex !== "CityName");
     }
 
     return (

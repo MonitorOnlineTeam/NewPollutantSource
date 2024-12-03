@@ -32,6 +32,8 @@ import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import { transformData } from '@/pages/AbnormalIdentifyModel/CONST.js';
 import { router } from 'umi';
 import { useHistory } from 'react-router-dom';
+import { convertTextByConfig } from '@/utils/utils';
+
 const textStyle = {
   width: '100%',
   display: 'inline-block',
@@ -271,17 +273,19 @@ const WorkTower = props => {
                   itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
                 />
               </Form.Item>
-              <Form.Item label="行政区" name="RegionCode">
-                <RegionList
-                  noFilter
-                  style={{ width: 140 }}
-                  // onChange={value => {
-                  //   // form.setFieldsValue({ entCode: undefined, dgimn: undefined });
-                  // }}
-                />
-              </Form.Item>
+              {configInfo.isShowRegion && (
+                <Form.Item label="行政区" name="RegionCode">
+                  <RegionList
+                    noFilter
+                    style={{ width: 140 }}
+                    // onChange={value => {
+                    //   // form.setFieldsValue({ entCode: undefined, dgimn: undefined });
+                    // }}
+                  />
+                </Form.Item>
+              )}
               {/* <Spin spinning={!!entListLoading} size="small"> */}
-              <Form.Item label="企业" name="entCode">
+              <Form.Item label={convertTextByConfig('企业')} name="entCode">
                 <EntAtmoList
                   regionCode={form.getFieldValue('RegionCode')}
                   style={{ width: 200 }}

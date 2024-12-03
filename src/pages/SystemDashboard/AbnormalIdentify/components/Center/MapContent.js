@@ -54,6 +54,7 @@ let aMap;
 class MapContent extends PureComponent {
   constructor(props) {
     super(props);
+    this.IsSingleEnterprise = configInfo.IsSingleEnterprise;
     this.state = {
       regionCode: '',
       entCode: '',
@@ -66,7 +67,7 @@ class MapContent extends PureComponent {
       pointInfoWindowVisible: false, // 是否显示排口详情窗口
       pointInfoWindowPosition: {}, // 排口详情窗口位置
       currentPointInfo: {}, // 排口信息
-      level: 1,
+      level: this.IsSingleEnterprise ? 3 : 1,
       mapAllDataList: [],
       CountAnalysis: {
         EntCount: 0,
@@ -181,6 +182,7 @@ class MapContent extends PureComponent {
         pLeve: level,
         btime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
         etime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
+        IsGroupEnt: configInfo.isGroupEnt,
       },
       callback: res => {
         let cardsData = {
@@ -582,7 +584,7 @@ class MapContent extends PureComponent {
                 lineHeight: '1.75rem',
                 fontWeight: 'bold',
                 cursor: 'pointer',
-                fontSize: '.875rem'
+                fontSize: '.875rem',
               }}
               title={title}
               onClick={() => (level === 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
@@ -591,7 +593,13 @@ class MapContent extends PureComponent {
             </div>
             <RightOutlined
               onClick={() => (level === 1 ? this.onClickRegion(extData) : this.onClickEnt(extData))}
-              style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: '.75rem' }}
+              style={{
+                color: '#4BF3F9',
+                position: 'absolute',
+                top: 6,
+                right: 6,
+                fontSize: '.75rem',
+              }}
             />
             <Row
               style={{
@@ -782,6 +790,7 @@ class MapContent extends PureComponent {
           level == 1
             ? '/SystemDashboard/map/toolEntActive.png'
             : '/SystemDashboard/map/toolEnt.png',
+        hidden: this.IsSingleEnterprise,
       },
       {
         text: '展示监测点',
@@ -801,16 +810,17 @@ class MapContent extends PureComponent {
     return (
       <div className={styles.mapOperationBtn}>
         {operationBtnArr.map((item, index) => {
-          return (
-            <div
-              className={styles.btnItem}
-              onClick={() => {
-                this.operationChange(item.text);
-              }}
-            >
-              <img title={item.text} src={item.url} />
-            </div>
-          );
+          if (!item.hidden)
+            return (
+              <div
+                className={styles.btnItem}
+                onClick={() => {
+                  this.operationChange(item.text);
+                }}
+              >
+                <img title={item.text} src={item.url} />
+              </div>
+            );
         })}
       </div>
     );
@@ -888,7 +898,7 @@ class MapContent extends PureComponent {
               </span>
             </InfoWindow> */}
           </Map>
-          {level !== 1 && (
+          {level !== 1 && !this.IsSingleEnterprise && (
             <div className={styles.goback} onClick={() => this.onGoback()}>
               <img src="/homeMapBack.png" />
               <div>返回</div>

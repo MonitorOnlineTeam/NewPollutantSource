@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-02-18 15:16:30
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-30 09:49:40
+ * @Last Modified time: 2024-11-28 15:09:18
  * @desc
  */
 import React, { PureComponent } from 'react';
@@ -30,7 +30,7 @@ import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import RegionList from '@/components/RegionList';
-import { getDataTruseMsg, getDataTruseItemMsg } from '@/utils/utils';
+import { getDataTruseMsg, getDataTruseItemMsg, convertTextByConfig } from '@/utils/utils';
 
 const FormItem = Form.Item;
 const { MonthPicker } = DatePicker;
@@ -453,61 +453,32 @@ class SmokeReportPage extends PureComponent {
         <Card className="contentContainer">
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row style={{ marginBottom: 10 }}>
-              <label style={{ lineHeight: '32px' }}>行政区:</label>
-              {/* <Select
-                allowClear
-                showSearch
-                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                placeholder="行政区"
-                maxTagCount={2}
-                maxTagTextLength={5}
-                maxTagPlaceholder="..."
-                optionFilterProp="children"
-                filterOption={(input, option) => {
-                  if (option && option.props && option.props.title) {
-                    return option.props.title === input || option.props.title.indexOf(input) !== -1
-                  } else {
-                    return true
-                  }
-                }}
-                onChange={(value) => {
-                  //获取关注度列表
-                  this.props.dispatch({
-                    type: pageUrl.GetEntByRegionAndAtt,
-                    payload: {
-                      RegionCode: value,
-                      Attention: this.state.attentionValue,
-                      PollutantTypeCode: '2'
-                    },
-                  });
-                  this.setState({
-                    regionValue: value,
-                    entValue: undefined,
-                    pointValue: undefined
-                  })
-                }}>
-                {this.children()}
-              </Select> */}
-              <RegionList
-                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                // RegionCode={this.props.form.getFieldValue('RegionCode')}
-                changeRegion={value => {
-                  //获取关注度列表
-                  this.props.dispatch({
-                    type: pageUrl.GetEntByRegionAndAtt,
-                    payload: {
-                      RegionCode: value,
-                      Attention: this.state.attentionValue,
-                      PollutantTypeCode: '2',
-                    },
-                  });
-                  this.setState({
-                    regionValue: value,
-                    entValue: undefined,
-                    pointValue: undefined,
-                  });
-                }}
-              />
+              {configInfo.isShowRegion && (
+                <>
+                  <label style={{ lineHeight: '32px' }}>行政区:</label>
+                  <RegionList
+                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                    // RegionCode={this.props.form.getFieldValue('RegionCode')}
+                    changeRegion={value => {
+                      //获取关注度列表
+                      this.props.dispatch({
+                        type: pageUrl.GetEntByRegionAndAtt,
+                        payload: {
+                          RegionCode: value,
+                          Attention: this.state.attentionValue,
+                          PollutantTypeCode: '2',
+                        },
+                      });
+                      this.setState({
+                        regionValue: value,
+                        entValue: undefined,
+                        pointValue: undefined,
+                      });
+                    }}
+                  />
+                </>
+              )}
+
               <label style={{ lineHeight: '32px' }}>关注程度:</label>
               <Select
                 allowClear
@@ -535,7 +506,7 @@ class SmokeReportPage extends PureComponent {
               >
                 {this.attention()}
               </Select>
-              <label style={{ lineHeight: '32px' }}>企业列表:</label>
+              <label style={{ lineHeight: '32px' }}>{convertTextByConfig('企业')}列表:</label>
               <Select
                 allowClear
                 showSearch
@@ -543,7 +514,7 @@ class SmokeReportPage extends PureComponent {
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                placeholder="企业列表"
+                placeholder="请选择"
                 maxTagCount={2}
                 maxTagTextLength={5}
                 value={this.state.entValue}

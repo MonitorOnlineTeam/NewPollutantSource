@@ -28,6 +28,7 @@ import ModelChartMultiple from './components/ModelChart-multiple';
 import ModelChartLinear from './components/ModelChart-Linear';
 import ProgrammeCheck from '@/pages/AbnormalIdentifyModel/components/ProgrammeCheck.js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { convertTextByConfig } from '@/utils/utils';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   warningInfoLoading: loading.effects['AbnormalIdentifyModel/GetSingleWarning'],
@@ -326,7 +327,7 @@ const CluesDetails = props => {
           }
         >
           <Descriptions column={4}>
-            <Descriptions.Item label="企业">
+            <Descriptions.Item label={convertTextByConfig('企业')}>
               <Tooltip title={warningInfo.EntNmae}>
                 <span className={styles.textOverflow}>{warningInfo.EntNmae}</span>
               </Tooltip>

@@ -39,6 +39,8 @@ import { API } from '@config/API';
 import { cookieName, uploadPrefix } from '@/config';
 import ImageView from '@/components/ImageView';
 import moment from 'moment';
+import { convertTextByConfig } from '@/utils/utils';
+
 const { Panel } = Collapse;
 const { Text } = Typography;
 // 自定义文字大小
@@ -637,7 +639,7 @@ const Index = props => {
         >
           <Row>
             <Col span={8}>
-              <Form.Item label="企业">{selectedRow?.EntName}</Form.Item>
+              <Form.Item label={convertTextByConfig('企业')}>{selectedRow?.EntName}</Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item label="排口">{selectedRow?.PointName}</Form.Item>

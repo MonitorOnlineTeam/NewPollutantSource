@@ -40,7 +40,7 @@ import Cookie from 'js-cookie';
 import { API } from '@config/API';
 import { cookieName, uploadPrefix } from '@/config';
 import { useHistory } from 'react-router-dom';
-import { permissionButton } from '@/utils/utils';
+import { permissionButton, convertTextByConfig } from '@/utils/utils';
 
 const textStyle = {
   width: '100%',
@@ -153,7 +153,7 @@ const Index = props => {
         },
       },
       {
-        title: '企业',
+        title: convertTextByConfig('企业'),
         dataIndex: 'EntName',
         key: 'EntName',
         width: 200,
@@ -390,8 +390,9 @@ const Index = props => {
                 />
               </Form.Item>
               {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
-              <Form.Item label="企业" name="entCode">
+              <Form.Item label={convertTextByConfig('企业')} name="entCode">
                 <EntAtmoList
+                  placeholder="请选择"
                   style={{ width: 220 }}
                   onChange={value => {
                     if (!value) {

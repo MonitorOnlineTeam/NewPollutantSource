@@ -7,6 +7,7 @@ import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import ReactEcharts from 'echarts-for-react';
 import ExceptionProblem from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/ExceptionProblem';
+import { convertTextByConfig } from '@/utils/utils';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   loading: loading.effects['AbnormalIdentifyModel/GetExcepDataAnalysis'],
@@ -250,7 +251,7 @@ const PageContent = props => {
         },
       },
       {
-        title: '企业',
+        title: convertTextByConfig('企业'),
         dataIndex: 'ParentName',
         key: 'ParentName',
         width: 200,
@@ -338,8 +339,10 @@ const PageContent = props => {
       title2 = '区域异常分析详情';
       break;
     case 'point':
-      title1 = '重点异常企业分析';
-      title2 = '重点异常企业名单';
+      // title1 = '重点异常企业分析';
+      // title2 = '重点异常企业名单';
+      title1 = '重点异常分析';
+      title2 = '重点异常名单';
       break;
   }
 

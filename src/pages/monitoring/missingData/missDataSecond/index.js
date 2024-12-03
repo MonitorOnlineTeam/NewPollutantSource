@@ -29,10 +29,11 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import config from '@/config'
-import { downloadFile } from '@/utils/utils';
-import ButtonGroup_ from '@/components/ButtonGroup'
+import config from '@/config';
+import { downloadFile, convertTextByConfig } from '@/utils/utils';
+import ButtonGroup_ from '@/components/ButtonGroup';
 import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -43,27 +44,27 @@ const pageUrl = {
   updateState: 'missingData/updateState',
   getData: 'missingData/getDefectPointDetail',
 };
-@connect(({ loading, missingData,autoForm }) => ({
+@connect(({ loading, missingData, autoForm }) => ({
   priseList: missingData.priseList,
-  exloading:missingData.exloading,
+  exloading: missingData.exloading,
   loading: loading.effects[pageUrl.getData],
   total: missingData.total,
   tableDatas: missingData.tableDatil,
   queryPar: missingData.queryPar,
   regionList: autoForm.regionList,
-  attentionList:missingData.attentionList,
-  type:missingData.type
+  attentionList: missingData.attentionList,
+  type: missingData.type,
 }))
 @Form.create()
-
 export default class Index extends Component {
   constructor(props) {
     super(props);
+    this.isGroupEnt = configInfo.isGroupEnt;
     this.state = {
-      visible:false,
-      DGIMN:'',
-      TaskID:'',
-      status:'',
+      visible: false,
+      DGIMN: '',
+      TaskID: '',
+      status: '',
     };
     this.columns = [
       // {
@@ -77,46 +78,64 @@ export default class Index extends Component {
       // },
       {
         title: '省',
-        dataIndex: 'ProvinceName', 
+        dataIndex: 'ProvinceName',
         key: 'ProvinceName',
         align: 'center',
+        hidden: this.isGroupEnt,
       },
       {
         title: '市',
         dataIndex: 'CityName',
         key: 'CityName',
         align: 'center',
+        hidden: this.isGroupEnt,
       },
       {
-        title: <span>{ JSON.parse(this.props.location.query.queryPar).EntType==='1'? '企业名称': '大气站名称'}</span>,
+        title: (
+          <span>
+            {JSON.parse(this.props?.location?.query?.queryPar)?.EntType === '1'
+              ? `${convertTextByConfig('企业')}名称`
+              : '大气站名称'}
+          </span>
+        ),
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',
-        width:250,
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
+        width: 250,
+        render: (text, record) => {
+          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>;
+        },
       },
       {
         title: <span>监测点名称</span>,
         dataIndex: 'pointName',
         key: 'pointName',
         align: 'center',
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
+        render: (text, record) => {
+          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>;
+        },
       },
       {
-        title: <span>{this.props.location&&this.props.location.query&&JSON.parse(this.props.location.query.queryPar).EntType==='1'? '首次缺失时间' : '首次缺失时间' }</span>,
+        title: (
+          <span>
+            {this.props.location &&
+            this.props.location.query &&
+            JSON.parse(this.props.location.query.queryPar).EntType === '1'
+              ? '首次缺失时间'
+              : '首次缺失时间'}
+          </span>
+        ),
         dataIndex: 'firstTime',
         key: 'firstTime',
         // width: '10%',
         align: 'center',
         defaultSortOrder: 'descend',
-        sorter: (a, b) => Number(moment( new Date(a.firstTime)).valueOf()) -   Number(moment( new Date(b.firstTime)).valueOf()),
-      //   render: (text, record) => {     
-      //     return  <div>{ moment( new Date(text)).valueOf()}</div>
-      //  },
+        sorter: (a, b) =>
+          Number(moment(new Date(a.firstTime)).valueOf()) -
+          Number(moment(new Date(b.firstTime)).valueOf()),
+        //   render: (text, record) => {
+        //     return  <div>{ moment( new Date(text)).valueOf()}</div>
+        //  },
       },
       {
         title: <span>报警生成时间</span>,
@@ -129,90 +148,104 @@ export default class Index extends Component {
         dataIndex: 'message',
         key: 'message',
         align: 'center',
-        width:250,
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
+        width: 250,
+        render: (text, record) => {
+          return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>;
+        },
       },
       {
         title: <span>响应状态</span>,
         dataIndex: 'status',
         key: 'status',
         align: 'center',
-        render:(text,record)=>{return text==0?'待响应':'已响应'}
+        render: (text, record) => {
+          return text == 0 ? '待响应' : '已响应';
+        },
       },
       {
         title: <span>响应人</span>,
         dataIndex: 'operationName',
         key: 'operationName',
         align: 'center',
-        render: (text, record) => {     
-          return  record.status==0? "-":text
-       },
+        render: (text, record) => {
+          return record.status == 0 ? '-' : text;
+        },
       },
       {
         title: <span>响应时间</span>,
         dataIndex: 'xiangyingTime',
         key: 'xiangyingTime',
         align: 'center',
-      
       },
       {
         title: <span>处理详情</span>,
         dataIndex: 'status',
         key: 'status',
         align: 'center',
-        render:(text,record)=>{
-          return !text?
-           '': <a href='javascript:;' onClick={this.detail.bind(this,record)}>详情</a>
-          }        
+        render: (text, record) => {
+          return !text ? (
+            ''
+          ) : (
+            <a href="javascript:;" onClick={this.detail.bind(this, record)}>
+              详情
+            </a>
+          );
+        },
       },
     ];
   }
 
-  detail=(record)=>{
-     this.setState({DGIMN:record.DGIMN,TaskID:record.TaskID,visible:true})
-  }
+  detail = record => {
+    this.setState({ DGIMN: record.DGIMN, TaskID: record.TaskID, visible: true });
+  };
   componentDidMount() {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere,type, } = this.props;
-   
+    const { dispatch, location, Atmosphere, type } = this.props;
+
     // type === 'ent'? this.columns[1].title = '企业名称' :  this.columns[1].title = '大气站名称'
-   
 
     // this.updateQueryState({
-      // BeginTime: moment()
-      // .subtract(1, 'day')
-      // .format('YYYY-MM-DD 00:00:00'),
-      // endTime: moment().format('YYYY-MM-DD 23:59:59'),
-      // AttentionCode: '',
-      // EntCode: '',
-      // RegionCode: '',
-      // PollutantType:'',
-      // DataType:'HourData',
-      // EntType:'',
-      // RegionCode:regionCode,
+    // BeginTime: moment()
+    // .subtract(1, 'day')
+    // .format('YYYY-MM-DD 00:00:00'),
+    // endTime: moment().format('YYYY-MM-DD 23:59:59'),
+    // AttentionCode: '',
+    // EntCode: '',
+    // RegionCode: '',
+    // PollutantType:'',
+    // DataType:'HourData',
+    // EntType:'',
+    // RegionCode:regionCode,
     //   Status:status? status : '',
     //  });
-     
+
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
     //  dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: regionCode },  });//获取企业列表
- 
-    //  dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: regionCode },  });//获取关注列表
-  
-    const  status = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar).Status : '';
-    this.setState({
-      status: status? status : '',
-    },()=>{
-      this.getTableData(status);
-    })
 
+    //  dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: regionCode },  });//获取关注列表
+
+    const status =
+      location && location.query && JSON.parse(location.query.queryPar)
+        ? JSON.parse(location.query.queryPar).Status
+        : '';
+    this.setState(
+      {
+        status: status ? status : '',
+      },
+      () => {
+        this.getTableData(status);
+      },
+    );
   };
   updateQueryState = payload => {
-    const { queryPar, dispatch,location:{query} } = this.props;
+    const {
+      queryPar,
+      dispatch,
+      location: { query },
+    } = this.props;
 
     dispatch({
       type: pageUrl.updateState,
@@ -220,18 +253,20 @@ export default class Index extends Component {
     });
   };
 
-  getTableData = (status) => {
-    const { dispatch,location, } = this.props;
-    let par = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar) : {};  
+  getTableData = status => {
+    const { dispatch, location } = this.props;
+    let par =
+      location && location.query && JSON.parse(location.query.queryPar)
+        ? JSON.parse(location.query.queryPar)
+        : {};
     dispatch({
       type: pageUrl.getData,
-      payload: { ...par,Status:status,regionDetailCode:undefined, },
+      payload: { ...par, Status: status, regionDetailCode: undefined, isGroupEnt: this.isGroupEnt },
     });
   };
 
-
-
-  children = () => { //企业列表
+  children = () => {
+    //企业列表
     const { priseList } = this.props;
 
     const selectList = [];
@@ -253,32 +288,37 @@ export default class Index extends Component {
     });
   };
 
-  changeRegion = (value) => { //行政区事件
-    
+  changeRegion = value => {
+    //行政区事件
+
     this.updateQueryState({
       RegionCode: value,
     });
   };
-  changeAttent=(value)=>{
+  changeAttent = value => {
     this.updateQueryState({
       AttentionCode: value,
     });
-  }
-  changeEnt=(value,data)=>{ //企业事件
+  };
+  changeEnt = (value, data) => {
+    //企业事件
     this.updateQueryState({
       EntCode: value,
     });
-  }
+  };
   //创建并获取模板   导出
   template = () => {
-    const { dispatch,location, } = this.props;
-    let par = location&&location.query&&JSON.parse(location.query.queryPar) ?  JSON.parse(location.query.queryPar) : {};  
+    const { dispatch, location } = this.props;
+    let par =
+      location && location.query && JSON.parse(location.query.queryPar)
+        ? JSON.parse(location.query.queryPar)
+        : {};
     dispatch({
       type: 'missingData/exportDefectPointDetail',
-      payload: { ...par,Status:this.state.status,PageIndex:undefined, PageSize:undefined },
+      payload: { ...par, Status: this.state.status, PageIndex: undefined, PageSize: undefined },
       callback: data => {
         downloadFile(`${data}`);
-       },
+      },
     });
   };
   //查询事件
@@ -286,8 +326,7 @@ export default class Index extends Component {
   //   this.getTableData();
   // };
 
-
-  regchildren=()=>{
+  regchildren = () => {
     const { regionList } = this.props;
     const selectList = [];
     if (regionList.length > 0) {
@@ -300,12 +339,12 @@ export default class Index extends Component {
       });
       return selectList;
     }
-  }
-  attentchildren=()=>{
+  };
+  attentchildren = () => {
     const { attentionList } = this.props;
     const selectList = [];
     if (attentionList.length > 0) {
-       attentionList.map(item => {
+      attentionList.map(item => {
         selectList.push(
           <Option key={item.AttentionCode} value={item.AttentionCode}>
             {item.AttentionName}
@@ -314,38 +353,37 @@ export default class Index extends Component {
       });
       return selectList;
     }
-  }
-  
-      /** 数据类型切换 */
- _handleDateTypeChange = value => {
-   
-    if( value === 'HourData'){
+  };
+
+  /** 数据类型切换 */
+  _handleDateTypeChange = value => {
+    if (value === 'HourData') {
       this.updateQueryState({
         DataType: value,
-        BeginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
+        BeginTime: moment()
+          .subtract(1, 'day')
+          .format('YYYY-MM-DD HH:mm:ss'),
         endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-       
-        });
-      }else{
-        this.updateQueryState({
-          DataType: value,
-          BeginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
-          endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-          
-          });
-      }
-    }
-  dateChange=(date)=>{
+      });
+    } else {
       this.updateQueryState({
-        BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        DataType: value,
+        BeginTime: moment()
+          .subtract(7, 'day')
+          .format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       });
     }
-    dateOk=()=>{ 
-
-   }
+  };
+  dateChange = date => {
+    this.updateQueryState({
+      BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+    });
+  };
+  dateOk = () => {};
   // queryComponents=(type)=>{
-  //   const { 
+  //   const {
   //      queryPar: {  BeginTime, EndTime, RegionCode,AttentionCode,DataType, },
   //   } = this.props;
   //   return  <><Form.Item label='数据类型'>
@@ -354,7 +392,7 @@ export default class Index extends Component {
   //         onChange={this._handleDateTypeChange}
   //         value={DataType}
   //         style={{ width: 200  }}
-  //       >  
+  //       >
   //      <Option key='0' value='HourData'>小时数据</Option>
   //      <Option key='1' value='DayData'> 日数据</Option>
 
@@ -395,72 +433,87 @@ export default class Index extends Component {
   //     </Form.Item>
   //     </>
   // }
-  reponseChange=(e)=>{
-    this.setState({status:e.target.value },()=>{
-      this.getTableData(e.target.value); 
-    })
-     
-  }
-  btnCompents=()=>{
+  reponseChange = e => {
+    this.setState({ status: e.target.value }, () => {
+      this.getTableData(e.target.value);
+    });
+  };
+  btnCompents = () => {
     const { exloading } = this.props;
-   return (
-     <Form.Item>
-      {/* <Button type="primary" onClick={this.queryClick}>
+    return (
+      <Form.Item>
+        {/* <Button type="primary" onClick={this.queryClick}>
         查询
       </Button> */}
-      <Button
-        style={{ margin: '0 5px' }}
-        icon={<ExportOutlined />}
-        onClick={this.template}
-        loading={exloading}
-      >
-        导出
-      </Button>
-     {!this.props.hideBreadcrumb&&<Button  onClick={() => { this.props.history.go(-1);  }} >
-           <RollbackOutlined />
-                  返回
-       </Button>}
-    </Form.Item>
-   );
-  }
-reponseComp = ()=>{
-
-  return <Form.Item label=''>
+        <Button
+          style={{ margin: '0 5px' }}
+          icon={<ExportOutlined />}
+          onClick={this.template}
+          loading={exloading}
+        >
+          导出
+        </Button>
+        {!this.props.hideBreadcrumb && (
+          <Button
+            onClick={() => {
+              this.props.history.go(-1);
+            }}
+          >
+            <RollbackOutlined />
+            返回
+          </Button>
+        )}
+      </Form.Item>
+    );
+  };
+  reponseComp = () => {
+    return (
+      <Form.Item label="">
         <Radio.Group value={this.state.status} onChange={this.reponseChange}>
           <Radio.Button value="">全部</Radio.Button>
           <Radio.Button value="1">已响应</Radio.Button>
           <Radio.Button value="0">待响应</Radio.Button>
         </Radio.Group>
-</Form.Item> 
-}
+      </Form.Item>
+    );
+  };
 
-// handleTableChange = (pagination, filters, sorter) => {
+  // handleTableChange = (pagination, filters, sorter) => {
 
-    // this.updateQueryState({
-    //   PageIndex: pagination.current,
-    //   PageSize: pagination.pageSize,
-    // });
+  // this.updateQueryState({
+  //   PageIndex: pagination.current,
+  //   PageSize: pagination.pageSize,
+  // });
   // setTimeout(() => {
   //   this.getTableData();
   // });
-// };
+  // };
   render() {
     const {
-      queryPar: { EntCode,PollutantType,PageSize,PageIndex },
+      queryPar: { EntCode, PollutantType, PageSize, PageIndex },
       location,
-      type
+      type,
     } = this.props;
     return (
-        <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb} title={`${location.query&&location.query.regionName} - ${location.query&&location.query.queryPar&&JSON.parse(location.query.queryPar)&&JSON.parse(location.query.queryPar).EntType==='1'? '缺失数据报警详情(企业)':'缺失数据报警详情(空气站)'}`}>
+      <BreadcrumbWrapper
+        hideBreadcrumb={this.props.hideBreadcrumb}
+        title={`${location.query && location.query.regionName} - ${
+          location.query &&
+          location.query.queryPar &&
+          JSON.parse(location.query.queryPar) &&
+          JSON.parse(location.query.queryPar).EntType === '1'
+            ? '缺失数据报警详情(企业)'
+            : '缺失数据报警详情(空气站)'
+        }`}
+      >
         <Card
           bordered={false}
           title={
             <>
               <Form layout="inline">
-                
                 {this.reponseComp()}
-                 {this.btnCompents()}
-              {/* {type==='ent'?
+                {this.btnCompents()}
+                {/* {type==='ent'?
               <>
               <Row>
               {this.queryComponents(type)}
@@ -531,7 +584,7 @@ reponseComp = ()=>{
             <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
-              columns={this.columns}
+              columns={this.columns.filter(item => !item.hidden)}
               dataSource={this.props.tableDatas}
             />
           </>
@@ -539,16 +592,17 @@ reponseComp = ()=>{
         <Modal
           title="任务详情"
           visible={this.state.visible}
-          wrapClassName='spreadOverModal'
+          wrapClassName="spreadOverModal"
           mask={false}
           footer={null}
           destroyOnClose={true}
-          onCancel={()=>{this.setState({visible:false})}}
+          onCancel={() => {
+            this.setState({ visible: false });
+          }}
         >
-            <EmergencyDetailInfo DGIMN={this.state.DGIMN}  TaskID={this.state.TaskID}/>
+          <EmergencyDetailInfo DGIMN={this.state.DGIMN} TaskID={this.state.TaskID} />
         </Modal>
-        </BreadcrumbWrapper>
+      </BreadcrumbWrapper>
     );
   }
 }
- 

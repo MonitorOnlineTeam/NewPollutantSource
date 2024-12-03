@@ -11,6 +11,9 @@ import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesLi
 import WarningDataAndChart from '@/pages/AbnormalIdentifyModel/AssistDataAnalysis/components/WarningDataAndChart.js';
 import ExceptionProblem from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/ExceptionProblem';
 import DescriptionModal from '@/pages/SystemDashboard/components/DescriptionModal.js';
+import { getDataTypeByConfigInfo } from '@/pages/AbnormalIdentifyModel/CONST.js';
+import DataTypeSelect from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/components/DataTypeSelect.js';
+import { convertTextByConfig } from '@/utils/utils';
 
 const { Option } = Select;
 
@@ -87,7 +90,7 @@ const PageContent = props => {
   const [entCode, setEntCode] = useState();
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
-  const [dataType, setDataType] = useState(props.dataType || 'region'); //region/ent/point
+  const [dataType, setDataType] = useState(props.dataType || getDataTypeByConfigInfo('region')); //region/ent/point
   const [rtnType, setRtnType] = useState(props.rtnType || 'nums');
   const [pieData, setPieData] = useState([{}, {}, {}, {}]);
   const [levelList, setLevelList] = useState([]);
@@ -577,7 +580,7 @@ const PageContent = props => {
       case 'ent':
         column = [
           {
-            title: '企业',
+            title: convertTextByConfig('企业'),
             dataIndex: 'Name',
             key: 'Name',
             render: (text, record) => {
@@ -600,7 +603,7 @@ const PageContent = props => {
       case 'point':
         column = [
           {
-            title: '企业',
+            title: convertTextByConfig('企业'),
             dataIndex: 'ParentName',
             key: 'ParentName',
           },
@@ -655,7 +658,7 @@ const PageContent = props => {
       dataTypeName = '行政区';
       break;
     case 'ent':
-      dataTypeName = '企业';
+      dataTypeName = convertTextByConfig('企业');
       break;
     case 'point':
       dataTypeName = '排放口';
@@ -821,16 +824,12 @@ const PageContent = props => {
               </Button>
             </Form.Item>
             <Form.Item name="dataType" style={{ marginLeft: 10 }}>
-              <Radio.Group
+              <DataTypeSelect
                 onChange={e => {
                   setDataType(e.target.value);
                   loadData(e.target.value);
                 }}
-              >
-                <Radio.Button value="region">行政区</Radio.Button>
-                <Radio.Button value="ent">企业</Radio.Button>
-                <Radio.Button value="point">排放口</Radio.Button>
-              </Radio.Group>
+              />
             </Form.Item>
             <Form.Item name="rtnType" style={{ marginLeft: 0 }}>
               <Radio.Group

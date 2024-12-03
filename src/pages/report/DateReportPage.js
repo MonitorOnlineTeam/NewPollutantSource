@@ -17,7 +17,7 @@ import { getDirLevel } from '@/utils/utils';
 import CascaderMultiple from '@/components/CascaderMultiple';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { timeDifference, getDataTruseMsg } from '@/utils/utils';
+import { timeDifference, getDataTruseMsg, convertTextByConfig } from '@/utils/utils';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -221,7 +221,7 @@ class DateReportPage extends PureComponent {
         dataIndex: 'pointName',
       });
       columns.unshift({
-        title: '企业名称',
+        title: convertTextByConfig('企业') + '名称',
         width: 150,
         dataIndex: 'entName',
       });

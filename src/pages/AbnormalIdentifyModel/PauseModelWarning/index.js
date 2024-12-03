@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-09-18 14:36:43
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-09-18 17:13:11
+ * @Last Modified time: 2024-11-28 16:01:37
  * @Description:  暂停线索时段
  */
 
@@ -15,6 +15,7 @@ import SdlTable from '@/components/SdlTable';
 import { API } from '@config/API';
 import moment from 'moment';
 import ModelTree from '@/components/ModelTree/index.js';
+import { convertTextByConfig } from '@/utils/utils';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   queryLoading: loading.effects['AbnormalIdentifyModel/GetCheckedRectificationList'],
@@ -81,7 +82,7 @@ const PauseModelWarning = props => {
         },
       },
       {
-        title: '企业',
+        title: convertTextByConfig('企业'),
         dataIndex: 'ParentName',
         key: 'ParentName',
         width: 180,
@@ -171,8 +172,9 @@ const PauseModelWarning = props => {
             }}
             autoComplete="off"
           >
-            <Form.Item label="企业" name="EntCode">
+            <Form.Item label={convertTextByConfig('企业')} name="EntCode">
               <EntAtmoList
+                placeholder="请选择"
                 regionCode={form.getFieldValue('regionCode')}
                 style={{ width: 200 }}
                 onChange={value => {

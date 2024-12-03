@@ -1507,7 +1507,7 @@ class NavigationTree extends Component {
                   <Checkbox onChange={(e)=>this.filterGrabChange(e.target.checked) }>过滤抓取点位</Checkbox>
                 </Row>
                 :
-                !configInfo.IsSingleEnterprise && (
+                configInfo.isShowRegion && (
                   <RegionList
                     style={{ width: '100%' }}
                     spinSty={{ top: -4, marginTop:8 }}
@@ -1639,7 +1639,6 @@ class NavigationTree extends Component {
                   />
                 ) : (
                     <div id="treeTableWrapper" style={{}}>
-                      {' '}
                       {this.state.panelDataListAys.length ? (
                         <Table
                           id="treeTable"

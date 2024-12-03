@@ -22,6 +22,9 @@ import WorkingAnalysis from '../index';
 import { MoreOutlined } from '@ant-design/icons';
 import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
 import PointCluesStatistics from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/ExceptionProblem/PointCluesStatistics.js';
+import { getDataTypeByConfigInfo } from '@/pages/AbnormalIdentifyModel/CONST.js';
+import { convertTextByConfig } from '@/utils/utils';
+import DataTypeSelect from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/components/DataTypeSelect.js';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   warningForm: AbnormalIdentifyModel.warningForm,
@@ -43,7 +46,7 @@ const PageContent = props => {
   const [stopRate, setStopRate] = useState(0);
   const [stopReportRate, setStopReportRate] = useState(0);
   const [dataSource, setDataSource] = useState([]);
-  const [dataType, setDataType] = useState(props.dataType || 'region'); //region/ent/point
+  const [dataType, setDataType] = useState(props.dataType || getDataTypeByConfigInfo('region')); //region/ent/point
   const [stopPieData, setStopPieData] = useState([{}, {}, {}, {}]);
   const [stopReportPie, setStopReportPie] = useState([{}, {}, {}, {}]);
   const [warningInfo, setWarningInfo] = useState([]);
@@ -594,7 +597,7 @@ const PageContent = props => {
       case 'ent':
         column = [
           {
-            title: '企业',
+            title: convertTextByConfig('企业'),
             dataIndex: 'Name',
             key: 'Name',
             render: (text, record) => {
@@ -617,7 +620,7 @@ const PageContent = props => {
       case 'point':
         column = [
           {
-            title: '企业',
+            title: convertTextByConfig('企业'),
             dataIndex: 'ParentName',
             key: 'ParentName',
           },
@@ -791,17 +794,13 @@ const PageContent = props => {
               </Button>
             </Form.Item>
             <Form.Item name="dataType" style={{ marginLeft: 20 }}>
-              <Radio.Group
-                defaultValue="region"
+              <DataTypeSelect
+                defaultValue={dataType}
                 onChange={e => {
                   setDataType(e.target.value);
                   loadData(e.target.value);
                 }}
-              >
-                <Radio.Button value="region">行政区</Radio.Button>
-                <Radio.Button value="ent">企业</Radio.Button>
-                <Radio.Button value="point">排放口</Radio.Button>
-              </Radio.Group>
+              />
             </Form.Item>
           </Form>
         </Card>
@@ -950,7 +949,7 @@ const PageContent = props => {
                         // }}
                       >
                         <Statistic
-                          title="企业数量"
+                          title={`${convertTextByConfig('企业')}数量`}
                           value={item.EntNums}
                           // valueStyle={{
                           //   color: '#1890ff',
