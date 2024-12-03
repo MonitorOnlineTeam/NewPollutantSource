@@ -946,9 +946,10 @@ export const convertTextByConfig = text => {
 
 // 处理系统配置
 export const processConfigInfo = config => {
-  const { groupEntName, singleEntName, systemName } = config;
-  let isGroupEnt = groupEntName === systemName; // 是否是集团项目
-  let IsSingleEnterprise = singleEntName === systemName; // 是否是单企业
+  const { groupEntName, singleEntName, SystemName } = config;
+  debugger
+  let isGroupEnt = groupEntName === SystemName; // 是否是集团项目
+  let IsSingleEnterprise = singleEntName === SystemName; // 是否是单企业
   let isShowRegion = isGroupEnt || IsSingleEnterprise; // 是否显示行政区
 
   return {
