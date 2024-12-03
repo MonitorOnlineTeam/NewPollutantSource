@@ -329,7 +329,7 @@ const Index = (props) => {
 
   const edit = (record) => {
     setFormVisible(true)
-    setTitle(`${record.ProjectCode}-编辑`)
+    setTitle(`${record.ProjectCode} - ${record.ProjectName}`)
     setRow(record)
     // form2.resetFields();
     // setFilesList1([])

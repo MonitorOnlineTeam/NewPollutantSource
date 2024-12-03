@@ -29,16 +29,16 @@ const LargeRegionSelect = props => {
     });
   };
 
-  // 获取运维大区及省份
-  const getLargeRegion = () => {
-    dispatch({
-      type: 'common/getLargeRegion',
-      payload: {},
-      callback: res => {
-        setProvinceAllList(res.provinceList);
-      },
-    });
-  };
+  // // 获取运维大区及省份
+  // const getLargeRegion = () => {
+  //   dispatch({
+  //     type: 'common/getLargeRegion',
+  //     payload: {},
+  //     callback: res => {
+  //       setProvinceAllList(res.provinceList);
+  //     },
+  //   });
+  // };
 
   if (type === 'ct') {
     return (

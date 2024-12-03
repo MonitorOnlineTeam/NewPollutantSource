@@ -185,6 +185,7 @@ const RecordModal = props => {
       visible={open}
       destroyOnClose
       footer={null}
+      mask={false}
       onCancel={() => {
         onCancel();
       }}

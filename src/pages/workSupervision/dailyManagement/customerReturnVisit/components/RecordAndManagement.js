@@ -1,3 +1,10 @@
+/*
+ * @Author: outman0611
+ * @Date: 2024-06-11 14:29:06
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-12-02 13:47:13
+ * @Description: 管理部门拜访记录
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import {
@@ -79,8 +86,8 @@ const RecordAndManagement = props => {
       type: 'wordSupervision/GetCustomerVisitInfo',
       payload: {
         ...body,
-        pageIndex: taskInfo.ID ? _pageIndex || pageIndex : undefined,
-        pageSize: taskInfo.ID ? _pageSize || pageSize : undefined,
+        pageIndex:  _pageIndex || pageIndex ,
+        pageSize: _pageSize || pageSize ,
       },
       callback: res => {
         setDataSource(res.Datas);
@@ -198,6 +205,12 @@ const RecordAndManagement = props => {
       },
       {
         title: '问题及建议',
+        dataIndex: 'ProblemsAndAdvice',
+        key: 'ProblemsAndAdvice',
+        ellipsis: true,
+      },
+      {
+        title: '备注',
         dataIndex: 'Remark',
         key: 'Remark',
         ellipsis: true,
@@ -330,7 +343,7 @@ const RecordAndManagement = props => {
                   <InputNumber allowClear={true} style={{ width: '100%' }} placeholder="请输入" />
                 </Form.Item>
                 <Form.Item>
-                  <Space style={{ marginLeft: 10 }}>
+                  <Space>
                     <Button
                       type="primary"
                       htmlType="submit"

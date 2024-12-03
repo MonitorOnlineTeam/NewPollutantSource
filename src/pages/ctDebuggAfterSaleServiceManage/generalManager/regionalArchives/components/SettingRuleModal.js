@@ -152,7 +152,7 @@ const SettingRuleModal = props => {
               <a
                 onClick={() => {
                   setHandleOpen(true);
-                  setCurrentRow(row);
+                  setCurrentRow({...row, RulesType: '0'});
                 }}
               >
                 <EditIcon />
@@ -227,13 +227,13 @@ const SettingRuleModal = props => {
       </Form>
     );
   };
-  console.log('dataSource', dataSource);
   return (
     <Modal
       title="设置省区经理日常管理规则"
       open={open}
       wrapClassName="spreadOverModal"
       footer={false}
+      mask={false}
       destroyOnClose
       onCancel={() => {
         onCancel();

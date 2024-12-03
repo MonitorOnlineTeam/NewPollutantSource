@@ -544,7 +544,7 @@ const Workbench = props => {
 
   // 渲染待办列表
   const renderTodoList = () => {
-    if (!todoList.length) {
+    if (todoList?.length<=0) {
       return <Empty style={{ marginTop: '30px' }} />;
     }
     return todoList.map(item => {
@@ -755,31 +755,31 @@ const Workbench = props => {
       //监督核查
       filterData(operaServiceBtnList, 1, supervisionVerificaList?.length);
     }
-    if (projectExecutionList?.length >= 0) {
+    if (projectExecutionList?.length > 0) {
       //项目执行
       filterData(operaServiceBtnList, 2, projectExecutionList?.length);
     }
-    if (customeSatisfactList?.length >= 0) {
+    if (customeSatisfactList?.length > 0) {
       //客户满意度
       filterData(operaServiceBtnList, 3, customeSatisfactList?.length);
     }
-    if (todoList?.length >= 0) {
+    if (todoList?.length > 0) {
       //经理日常管理任务
       filterData(operaServiceBtnList, 4, todoList?.length);
     }
-    if (elseList?.length >= 0) {
+    if (elseList?.length > 0) {
       //其他
       filterData(operaServiceBtnList, 5, elseList?.length);
     }
-    if (workAlarmPushList?.length >= 0) {
+    if (workAlarmPushList?.length > 0) {
       //数据报警
       filterData(myRemindBtnList, 10, workAlarmPushTotal);
     }
-    if (contractList?.length >= 0) {
+    if (contractList?.length > 0) {
       //合同到期
       filterData(myRemindBtnList, 11, contractList?.length);
     }
-    if (standgaswaringList?.length >= 0) {
+    if (standgaswaringList?.length > 0) {
       //标气报警
       filterData(myRemindBtnList, 12, standgaswaringList?.length);
     }
@@ -1954,6 +1954,7 @@ const Workbench = props => {
         <HandoverReportEditModal
           record={projectReportList}
           visible={handoverReportVisible}
+          title={ projectReportList?.ProjectCode?  `${projectReportList.ProjectCode} - ${projectReportList?.ProjectName}` : ''}
           onCancel={() => setHandoverReportVisible(false)}
           onFinish={() => {
             getCtWorkbenchMsg(5);

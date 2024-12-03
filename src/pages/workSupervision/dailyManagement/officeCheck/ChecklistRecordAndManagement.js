@@ -99,8 +99,8 @@ const ChecklistRecordAndManagement = props => {
       type: 'wordSupervision/GetOfficeCheckStatisticsList',
       payload: {
         ...body,
-        pageIndex: taskInfo.ID ? _pageIndex || pageIndex : undefined,
-        pageSize: taskInfo.ID ? _pageSize || pageSize : undefined,
+        pageIndex:  _pageIndex || pageIndex ,
+        pageSize: _pageSize || pageSize ,
       },
       callback: res => {
         setDataSource(res.Datas);
@@ -458,8 +458,9 @@ const ChecklistRecordAndManagement = props => {
             dataSource={dataSource}
             columns={getColumns()}
             pagination={
-              !taskInfo.ID
-                ? {
+              // !taskInfo.ID
+              //   ? 
+                {
                     total: tableTotal,
                     pageSize: pageSize,
                     current: pageIndex,
@@ -467,7 +468,7 @@ const ChecklistRecordAndManagement = props => {
                     showQuickJumper: true,
                     onChange: handleTableChange,
                   }
-                : false
+                // : false
             }
           />
         </Card>

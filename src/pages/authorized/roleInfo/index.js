@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-30 16:37:46
+ * @LastEditTime: 2024-11-26 09:08:59
  * @Description: 角色管理
  */
 import React, { Component, Fragment } from 'react';
@@ -231,7 +231,8 @@ class RoleIndex extends Component {
       settingEntAdmin: false,
       settingOperaAdmin: false,
       settingSystemAdmin: false,
-      roleID:undefined,
+      settingRegionAdmin: false,
+      roleID: undefined,
     };
   }
   getColumns = () => {
@@ -445,22 +446,22 @@ class RoleIndex extends Component {
               </Popover>
             </Tooltip>
             <Divider type="vertical" />
-                <Tooltip title="设置角色访问角色权限">
-                  <a
-                    onClick={() => {
-                      this.setState(
-                        {
-                          roleID: record.Roles_ID,
-                        },
-                        () => {
-                          this.settingRole(7, `设置${record.Roles_Name}访问角色权限`)
-                        },
-                      );
-                    }}
-                  >
-                    <DatabaseOutlined style={{ fontSize: 16 }} />
-                  </a>
-                </Tooltip>
+            <Tooltip title="设置角色访问角色权限">
+              <a
+                onClick={() => {
+                  this.setState(
+                    {
+                      roleID: record.Roles_ID,
+                    },
+                    () => {
+                      this.settingRole(8, `设置${record.Roles_Name}访问角色权限`)
+                    },
+                  );
+                }}
+              >
+                <DatabaseOutlined style={{ fontSize: 16 }} />
+              </a>
+            </Tooltip>
           </span>
         ),
       },
@@ -616,6 +617,9 @@ class RoleIndex extends Component {
           break;
         case 'setSystemAdmin':
           this.setState({ settingSystemAdmin: true });
+          break;
+        case 'settingRegionAdmin':
+          this.setState({ settingRegionAdmin: true });
           break;
       }
     });
@@ -785,14 +789,14 @@ class RoleIndex extends Component {
     }
     //  console.log('菜单id：', this.state.selectButton); //菜单权限列表
     //  console.log('权限按钮：',buttonAuthority); //菜单按钮权限列表
-   
-     let selectBtn = this.state.selectButton
-     let buttonCancelAuthority = this.state.buttonState.filter(item => item.State == 0); //按钮权限 取消选中或者未选中的
-     if(buttonCancelAuthority?.[0]){
+
+    let selectBtn = this.state.selectButton
+    let buttonCancelAuthority = this.state.buttonState.filter(item => item.State == 0); //按钮权限 取消选中或者未选中的
+    if (buttonCancelAuthority?.[0]) {
       buttonCancelAuthority = buttonCancelAuthority.map(item => item.ID); //过滤编辑取消选中的按钮
       selectBtn = selectBtn.filter(item => !buttonCancelAuthority.includes(item))
       // console.log('权限取消按钮：',selectBtn)
-     }
+    }
     let menuIDArr = [...selectBtn, ...buttonAuthority];
     menuIDArr = menuIDArr.filter((item, index) => menuIDArr.indexOf(item) === index); //数组去重 编辑只操作权限按钮会重复 获取的时候没处理 在这处理了 
     this.props.dispatch({
@@ -895,18 +899,18 @@ class RoleIndex extends Component {
       settingRoleVisible: true,
       settingRoleTitle: title,
       settingType: type,
-      mangerType: mangerType,    
+      mangerType: mangerType,
     });
     this.props.dispatch({
       type: 'roleinfo/getSetRegOrAppRoleId',
-      payload: { type: type, mangerType: mangerType,roleID:this.state.roleID },
+      payload: { type: type, mangerType: mangerType, roleID: this.state.roleID },
     });
   };
 
   settingRoleOk = (roleIdChecked, state, callback) => {
     this.props.dispatch({
       type: 'roleinfo/addSetRegOrAppRole',
-      payload: { type: this.state.settingType, RoleIdList: roleIdChecked, State: state, mangerType: this.state.mangerType,roleID:this.state.roleID },
+      payload: { type: this.state.settingType, RoleIdList: roleIdChecked, State: state, mangerType: this.state.mangerType, roleID: this.state.roleID },
       callback: () => {
         callback();
       },
@@ -1045,6 +1049,14 @@ class RoleIndex extends Component {
                     onClick={() => this.settingRole(6, '设置系统管理员角色', 3)}
                   >
                     设置系统管理员角色
+                  </Button>
+                )}
+                {this.state.settingRegionAdmin && (
+                  <Button
+                    type="primary"
+                    onClick={() => this.settingRole(7, '设置区域管理员角色', 4)}
+                  >
+                    设置区域管理员角色
                   </Button>
                 )}
               </Space>
@@ -1207,7 +1219,7 @@ class RoleIndex extends Component {
                 wrapClassName='spreadOverModal isFooterSty'
                 mask={false}
               >
-                <div style={{ width: '100%'}}>
+                <div style={{ width: '100%' }}>
                   {
                     <div style={{ marginBottom: 10 }}>
                       <Select

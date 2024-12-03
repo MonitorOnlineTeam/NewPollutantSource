@@ -105,6 +105,16 @@ const Index = (props) => {
                     {data?.Phone}
                    </Form.Item> 
                 </Col>
+                <Col span={8}>
+                    <Form.Item label='项目负责人'>
+                    {data?.Director}
+                   </Form.Item> 
+                </Col>
+                <Col span={8}>
+                    <Form.Item label='电话'>
+                    {data?.DirectorPhone}
+                   </Form.Item> 
+                </Col>
               </Row>
       </div>
     </Form>

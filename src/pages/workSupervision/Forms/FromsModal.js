@@ -17,6 +17,8 @@ import Branch_Inside from './Branch_Inside';
 import Branch_Other from './Branch_Other';
 import AttendanceLog from './AttendanceLog';
 import AccountsReceivable from './AccountsReceivable';
+import ManageDepentVisit from '@/pages/workSupervision/dailyManagement/manageDepentVisit/components/RecordAndManagement';
+
 import Office from '@/pages/workSupervision/dailyManagement/officeCheck/ChecklistRecordAndManagement';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
@@ -99,12 +101,22 @@ const FromsModal = props => {
             onSubmitCallback={() => onSubmitCallback && onSubmitCallback()}
           />
         );
+      // case 8:
+      //   // 现场工作
+      //   return (
+      //     <Fieldwork
+      //       taskInfo={taskInfo}
+      //       editData={editData}
+      //       onCancel={() => onCancel()}
+      //       onSubmitCallback={() => onSubmitCallback && onSubmitCallback()}
+      //     />
+      //   );
       case 8:
-        // 现场工作
         return (
-          <Fieldwork
+          <ManageDepentVisit
+            type={props.type == 1 ? '2' : '1'}
+            mode="management"
             taskInfo={taskInfo}
-            editData={editData}
             onCancel={() => onCancel()}
             onSubmitCallback={() => onSubmitCallback && onSubmitCallback()}
           />

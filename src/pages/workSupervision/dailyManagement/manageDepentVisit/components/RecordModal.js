@@ -1,10 +1,4 @@
-/*
- * @Author: JiaQi
- * @Date: 2024-03-27 16:18:02
- * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-24 14:58:07
- * @Description:  客户现场回访记录弹窗
- */
+
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import {
@@ -28,14 +22,14 @@ import {
 import moment from 'moment';
 import SdlTable from '@/components/SdlTable';
 import { EditOutlined, DeleteOutlined, ExportOutlined } from '@ant-design/icons';
-import LargeRegionSelect from '@/pages/workSupervision/dailyManagement/components/LargeRegionSelect';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import RegionList from '@/components/RegionList';
 
 const { RangePicker } = DatePicker;
 
 const dvaPropsData = ({ loading, customer }) => ({
-  queryLoading: loading.effects[`wordSupervision/GetCustomerVisitList`],
-  exportLoading: loading.effects[`wordSupervision/ExportCustomerVisitList`],
+  queryLoading: loading.effects[`wordSupervision/GetVisitEnvironmentalForRegionInfo`],
+  exportLoading: loading.effects[`wordSupervision/ExportVisitEnvironmentalForRegionInfo`],
 });
 
 const RecordModal = props => {
@@ -66,8 +60,8 @@ const RecordModal = props => {
       time: undefined,
       beginTime: values.time[0].startOf('months').format('YYYY-MM-DD HH:mm:ss'),
       endTime: values.time[1].endOf('months').format('YYYY-MM-DD 23:59:59'),
-      dataType: 1,
-      systemType: systemType,
+      // dataType: 1,
+      // systemType: systemType,
     };
   };
 
@@ -75,7 +69,7 @@ const RecordModal = props => {
   const getTableDataSource = (_pageIndex, _pageSize) => {
     const body = getParams();
     dispatch({
-      type: 'wordSupervision/GetCustomerVisitList',
+      type: 'wordSupervision/GetVisitEnvironmentalForRegionInfo',
       payload: {
         ...body,
         pageIndex: _pageIndex || pageIndex,
@@ -92,7 +86,7 @@ const RecordModal = props => {
   const onExport = () => {
     const body = getParams();
     dispatch({
-      type: 'wordSupervision/ExportCustomerVisitList',
+      type: 'wordSupervision/ExportVisitEnvironmentalForRegionInfo',
       payload: {
         ...body,
         pageIndex: 0,
@@ -107,42 +101,40 @@ const RecordModal = props => {
         title: '序号',
         align: 'center',
         ellipsis: true,
-        // width: 40,
         render: (text, record, index) => {
           return index + 1 + (pageIndex - 1) * pageSize;
         },
       },
       {
         title: '大区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
+        dataIndex: 'LargeRegion',
+        key: 'LargeRegion',
         ellipsis: true,
-        // width: 200,
         width:'auto',
       },
       {
         title: '省份',
-        dataIndex: 'CityName',
-        key: 'CityName',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
         ellipsis: true,
-        // width: 200,
         width:'auto',
 
       },
       {
         title: '任务派发时间',
-        dataIndex: 'CreateTime',
-        key: 'CreateTime',
+        dataIndex: 'BeginTime',
+        key: 'BeginTime',
         ellipsis: true,
-        // width: 200,
         width:'auto',
+        render: text => {
+          return text ? moment(text).format('YYYY-MM-DD') : '-';
+        },
       },
       {
         title: '是否完成',
-        dataIndex: 'IsCompleteTip',
-        key: 'IsCompleteTip',
+        dataIndex: 'StatusName',
+        key: 'StatusName',
         ellipsis: true,
-        // width: 100,
         width:'auto',
         render: (text, record) => {
           if (text === '是') {
@@ -152,22 +144,20 @@ const RecordModal = props => {
         },
       },
       {
-        title: '回访人',
-        dataIndex: 'CheckUserName',
-        key: 'CheckUserName',
+        title: '拜访人',
+        dataIndex: 'UserName',
+        key: 'UserName',
         ellipsis: true,
-        // width: 100,
         width:'auto',
       },
       {
         title: '任务结束时间',
-        dataIndex: 'ShowTime',
-        key: 'ShowTime',
+        dataIndex: 'EndTime',
+        key: 'EndTime',
         ellipsis: true,
-        // width: 200,
         width:'auto',
-        render: (text, record) => {
-          return text || '-';
+        render: text => {
+          return text ? moment(text).format('YYYY-MM-DD') : '-';
         },
       },
     ];
@@ -188,7 +178,7 @@ const RecordModal = props => {
   };
   return (
     <Modal
-      title="客户现场回访任务完成记录"
+      title="执法局拜访任务完成记录"
       wrapClassName="spreadOverModal"
       visible={open}
       destroyOnClose
@@ -204,28 +194,25 @@ const RecordModal = props => {
         layout="inline"
         initialValues={{
           ...queryParams,
-          isComplete: 0,
+          status: 0,
         }}
         style={{ marginTop: 10, marginBottom: 10 }}
       >
-        <Space wrap style={{ flexWrap: 'wrap' }}>
-          {systemType == 2 ? (
-            <LargeRegionSelect name={'LargeRegionCode'} type={'ct'} />
-          ) : (
-            <LargeRegionSelect name={'RegionCode'} type={''} />
-          )}
-          <Form.Item label="回访人" name="searcahUserName">
-            <Input placeholder="请输入回访人" allowClear />
+         <Form.Item label="省份" name="regionCode">
+          <RegionList placeholder='请选择省份' style={{width:180}} noFilter levelNum={1}/>
+          </Form.Item>
+          <Form.Item label="拜访人" name="userName">
+            <Input placeholder="请输入拜访人" allowClear />
           </Form.Item>
           <Form.Item name="time" label="任务派发时间">
             <RangePicker_
-              style={{ width: 220 }}
+              style={{ width: 180 }}
               picker="month"
               format="YYYY-MM"
               allowClear={false}
             />
           </Form.Item>
-          <Form.Item name="isComplete" label="是否完成">
+          <Form.Item name="status" label="是否完成">
             <Radio.Group style={{ width: 180 }}>
               <Radio value={0}>全部</Radio>
               <Radio value={1}>是</Radio>
@@ -264,7 +251,6 @@ const RecordModal = props => {
               </Button>
             </Space>
           </Form.Item>
-        </Space>
       </Form>
       <SdlTable
         loading={queryLoading}

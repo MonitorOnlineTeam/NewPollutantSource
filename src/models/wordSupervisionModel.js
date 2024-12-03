@@ -698,14 +698,14 @@ export default Model.extend({
         payload.type == 1
           ? { contractLoading: true }
           : payload.type == 2
-          ? { projectExecutionLoading: true }
-          : payload.type == 5
-          ? { elseLoading: true }
-          : payload.type == 11
-          ? { customeSatisfactLoading: true }
-          : payload.type == 12
-          ? { standgaswaringLoading: true }
-          : null,
+            ? { projectExecutionLoading: true }
+            : payload.type == 5
+              ? { elseLoading: true }
+              : payload.type == 11
+                ? { customeSatisfactLoading: true }
+                : payload.type == 12
+                  ? { standgaswaringLoading: true }
+                  : null,
       );
       const result = yield call(services.CtGetWorkbenchMsg, { ...payload, type: undefined });
       if (result.IsSuccess) {
@@ -716,7 +716,7 @@ export default Model.extend({
         //   contractList: data  || [],
         // });
         // callback && callback({ ctListTotal:data?.ctList?.length || 0, projectListTotal:data?.length || 0});
-      
+
         yield update({
           projectExecutionList: data?.ctList || [],
           contractList: data?.projectList || [],
@@ -737,14 +737,14 @@ export default Model.extend({
         payload.type == 1
           ? { contractLoading: false }
           : payload.type == 2
-          ? { projectExecutionLoading: false }
-          : payload.type == 5
-          ? { elseLoading: false }
-          : payload.type == 11
-          ? { customeSatisfactLoading: false }
-          : payload.type == 12
-          ? { standgaswaringLoading: false }
-          : null,
+            ? { projectExecutionLoading: false }
+            : payload.type == 5
+              ? { elseLoading: false }
+              : payload.type == 11
+                ? { customeSatisfactLoading: false }
+                : payload.type == 12
+                  ? { standgaswaringLoading: false }
+                  : null,
       );
     },
     //待办中心 项目执行-解决遗留问题
@@ -1122,5 +1122,130 @@ export default Model.extend({
         message.success('删除成功！');
       }
     },
-  },
+
+    // 管理部门拜访统计 - 省区
+    *GetVisitEnvironmentalForRegion({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ManagementDepartVisit.GetVisitEnvironmentalForRegion,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 管理部门拜访统计 - 省区 导出
+    *ExportVisitEnvironmentalForRegion({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ManagementDepartVisit.ExportVisitEnvironmentalForRegion,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+
+    // 管理部门拜访统计 - 省区详情
+    *GetVisitEnvironmentalForRegionInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ManagementDepartVisit.GetVisitEnvironmentalForRegionInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 管理部门拜访统计 - 省区详情 导出
+    *ExportVisitEnvironmentalForRegionInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ManagementDepartVisit.ExportVisitEnvironmentalForRegionInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+
+    // 部门拜访记录、部门拜访管理
+    *GetVisitEnvironmentalList({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ManagementDepartVisit.GetVisitEnvironmentalList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 部门拜访记录、部门拜访管理 导出
+    *ExportVisitEnvironmentalList({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ManagementDepartVisit.ExportVisitEnvironmentalList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+    // 管理部门拜访 添加编辑下拉列表数据
+    *GetVisitEnvironmentalParameter({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ManagementDepartVisit.GetVisitEnvironmentalParameter,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 管理部门拜访 添加或编辑
+    *AddOrEditVisitEnvironmental({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ManagementDepartVisit.AddOrEditVisitEnvironmental,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback && callback(result);
+      }
+    },
+    // 管理部门拜访 删除
+    *DeleteVisitEnvironmental({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ManagementDepartVisit.DeleteVisitEnvironmental,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('删除成功！');
+        callback && callback(result);
+      }
+    },
+    // 获取管理部门当月拜访的任务
+    *GetVisitEnvironmentalDailyWorks({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.ManagementDepartVisit.GetVisitEnvironmentalDailyWorks,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    }
+
+
+
+
+
+
+
+  }
 });

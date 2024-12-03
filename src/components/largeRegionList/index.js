@@ -2,12 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-07-04 11:25:06
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-24 17:01:32
- */
-/**
- * 功  能：服务大区 成套
- * 创建人：jab
- * 创建时间：2024.03
+ * @LastEditTime: 2024-11-28 13:38:08
  */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin } from 'antd';
@@ -47,7 +42,7 @@ const Index = (props) => {
 
 
 
-  const { name, label } = props;
+  const { name, label,rules } = props;
   const [largeRegionList, setLargeRegionList] = useState([]);
 
 
@@ -59,13 +54,13 @@ const Index = (props) => {
 
   }, []);
 
-
+  // const regionList = largeRegionList.filter(item=>item.ID==value)?.[0]?.ChildList onChange={(value,option)=>props.onChange(value,option,largeRegionList)}
   return (
-      <Form.Item name={name ? name : 'serviceAreaCode'} label={label ? label : '服务大区'}  className={props.formItemClassName}>
+      <Form.Item name={name ? name : 'serviceAreaCode'} label={label ? label : '服务大区'}  className={props.formItemClassName} rules={rules}>
         {props.largeRegionListLoading ?
           <Spin size='small'> <Select placeholder='请选择' style={{minWidth:130,width:'100%'}}/> </Spin>
           :
-          <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{minWidth:130, width:'100%'}}>
+          <Select placeholder='请选择' allowClear showSearch optionFilterProp="children"  style={{minWidth:130, width:'100%'}}>
             {largeRegionList.map(item => <Option value={item.ID}>{item.LargeRegion}</Option>)}
           </Select>
         }

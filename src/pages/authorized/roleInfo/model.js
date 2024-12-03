@@ -251,10 +251,10 @@ export default Model.extend({
         case 3: // 3业务专家
           serviceApi = AddSetExpertRole;
           break;
-       case 4: case 5: case 6: // 管理员角色
+       case 4: case 5: case 6: case 7:// 管理员角色
           serviceApi = AddSetManagerRole;
           break;
-          case 7: // 设置角色可访问角色权限
+          case 8: // 设置角色可访问角色权限
           serviceApi = AddViewRole;
           break;
       }
@@ -285,10 +285,10 @@ export default Model.extend({
         case 3: // 3业务专家
           serviceApi = GetSetExpertRoleId;
           break;
-        case 4: case 5: case 6: // 管理员角色
+        case 4: case 5: case 6: case 7 :// 管理员角色
           serviceApi = GetSetManagerRole;
           break;
-          case 7 :
+          case 8 :
           serviceApi = GetViewRoleList;
           break;
       }

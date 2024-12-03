@@ -170,34 +170,34 @@ const Index = (props) => {
           align: 'center',
           width: 100,
         },
-        {
-          title: '原则及重点问题描述',
-          align: 'center',
-          children: [
-            {
-              title: '量程一致性问题数量',
-              dataIndex: 'rangeNum',
-              key: 'rangeNum',
-              align: 'center',
-              width: 140,
-            },
-            {
-              title: '数据一致性问题数量',
-              dataIndex: 'dataNum',
-              key: 'dataNum',
-              align: 'center',
-              width: 140,
-            },
-            {
-              title: '参数一致性问题数量',
-              dataIndex: 'paramNum',
-              key: 'paramNum',
-              align: 'center',
-              width: 140,
-            },
-          ]
+        // {
+        //   title: '原则及重点问题描述',
+        //   align: 'center',
+        //   children: [
+        //     {
+        //       title: '量程一致性问题数量',
+        //       dataIndex: 'rangeNum',
+        //       key: 'rangeNum',
+        //       align: 'center',
+        //       width: 140,
+        //     },
+        //     {
+        //       title: '数据一致性问题数量',
+        //       dataIndex: 'dataNum',
+        //       key: 'dataNum',
+        //       align: 'center',
+        //       width: 140,
+        //     },
+        //     {
+        //       title: '参数一致性问题数量',
+        //       dataIndex: 'paramNum',
+        //       key: 'paramNum',
+        //       align: 'center',
+        //       width: 140,
+        //     },
+        //   ]
 
-        }
+        // }
       ]
     }]
 

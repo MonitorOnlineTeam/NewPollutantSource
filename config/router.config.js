@@ -4652,6 +4652,12 @@ const routes = [
                     component: './workSupervision/dailyManagement/officeCheck',
                   },
                   {
+                    // 管理部门拜访
+                    name: 'ManageDepentVisit',
+                    path: '/workSupervision/dailyManagement/manageDepentVisit/:systemType',
+                    component: './workSupervision/dailyManagement/manageDepentVisit',
+                  },
+                  {
                     // 客户现场回访
                     name: 'customerReturnVisit',
                     path: '/workSupervision/dailyManagement/customerReturnVisit/:systemType',

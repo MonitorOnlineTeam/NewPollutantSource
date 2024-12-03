@@ -22,6 +22,7 @@ import {
   Divider,
   Modal,
   DatePicker,
+  Space,
 } from 'antd';
 import SdlTable from '@/components/SdlTable';
 import {
@@ -31,6 +32,7 @@ import {
   ExportOutlined,
   ProfileOutlined,
   SettingOutlined,
+  SolutionOutlined,
 } from '@ant-design/icons';
 import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
@@ -95,7 +97,6 @@ const Index = props => {
     exportLoading,
     managerSelectLoading,
   } = props;
-  console.log('props', props);
   const [managerList, setManagerList] = useState({});
 
   const [provinceList, setProvincelist] = useState([]);
@@ -208,24 +209,52 @@ const Index = props => {
       ellipsis: true,
     },
     {
+      title: '运维/成套经理设置状态',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record, index) => {
+        return record.PointNum ||  record.OperationNum ||  record.CustomersNum ||  record.VisitNum ? '是' : '否'
+      },
+    },
+    {
+      title: '大区经理设置状态',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record, index) => {
+        return record.LarPointNum ||  record.LarOperationNum ||  record.LarCustomersNum ||  record.LarVisitNum ? '是' : '否'
+      },
+    },
+    {
       title: '操作',
       dataIndex: 'handle',
       key: 'handle',
       align: 'center',
       ellipsis: true,
       render: (text, row) => {
-        return (
-          <Tooltip title="设置">
+        return (<Space>
+          <Tooltip title="运维/成套经理设置">
             <a>
               <SettingOutlined
                 style={{ fontSize: 16 }}
                 onClick={() => {
                   setHandleOpen(true);
-                  setCurrentRow(row);
+                  setCurrentRow({...row, RulesType: '0'});
                 }}
               />
             </a>
           </Tooltip>
+          <Tooltip title="大区经理设置">
+            <a>
+              <SolutionOutlined
+                style={{ fontSize: 16 }}
+                onClick={() => {
+                  setHandleOpen(true);
+                  setCurrentRow({...row, RulesType: '1'});
+                }}
+              />
+            </a>
+          </Tooltip>
+          </Space>
         );
       },
     },
@@ -368,7 +397,7 @@ const Index = props => {
                 >
                   导出
                 </Button>
-                {buttonList.includes('disciplineCheck') && (
+                {buttonList.includes('managerDailyRules') && (
                   <Button
                     type="primary"
                     onClick={() => {

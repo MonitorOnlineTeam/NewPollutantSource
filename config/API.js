@@ -2599,6 +2599,30 @@ export const API = {
       // 纪律检查记录、管理 - 导出
       ExportDisciplineCheckInfo: before + '/CTProjectExecutionApi/ExportDisciplineCheckInfo',
     },
+    //管理部门拜访
+    ManagementDepartVisit: {
+      // 管理部门拜访统计 - 省区
+      GetVisitEnvironmentalForRegion: before + '/CTProjectExecutionApi/GetVisitEnvironmentalForRegion',
+      // 管理部门拜访统计 - 省区导出
+      ExportVisitEnvironmentalForRegion: before + '/CTProjectExecutionApi/ExportVisitEnvironmentalForRegion',
+      // 管理部门拜访统计 - 省区详情
+      GetVisitEnvironmentalForRegionInfo: before + '/CTProjectExecutionApi/GetVisitEnvironmentalForRegionInfo',
+      // 管理部门拜访统计 - 省区详情导出
+      ExportVisitEnvironmentalForRegionInfo: before + '/CTProjectExecutionApi/ExportVisitEnvironmentalForRegionInfo',
+      //部门拜访记录、部门拜访管理列表
+      GetVisitEnvironmentalList: before + '/CTProjectExecutionApi/GetVisitEnvironmentalList',
+      //部门拜访记录、部门拜访管理列表 导出
+      ExportVisitEnvironmentalList: before + '/CTProjectExecutionApi/ExportVisitEnvironmentalList',
+      //管理部门拜访 添加编辑 下拉列表数据
+      GetVisitEnvironmentalParameter: before + '/CTProjectExecutionApi/GetVisitEnvironmentalParameter',
+      //管理部门拜访 添加或编辑
+      AddOrEditVisitEnvironmental: before + '/CTProjectExecutionApi/AddOrEditVisitEnvironmental',
+      //删除管理部门拜访
+      DeleteVisitEnvironmental: before + '/CTProjectExecutionApi/DeleteVisitEnvironmental',
+      //获取管理部门当月拜访的任务
+      GetVisitEnvironmentalDailyWorks: before + '/CTProjectExecutionApi/GetVisitEnvironmentalDailyWorks',
+
+    },
   },
   CtAPI_WJQ: {
     // 基础服务

@@ -482,6 +482,7 @@ const Index = (props) => {
         LeaveEtime: values.time2?.[1] && moment(values.time2[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
         time2: undefined,
+        time3: undefined,
         pageIndex: PageIndex,
         pageSize: PageSize,
         allData: type,
@@ -537,7 +538,7 @@ const Index = (props) => {
       <Row align='middle'>
         <Col span={8}>
           <Spin size='small' spinning={largeRegionListLoading} className='formItemSpinSty'>
-            <Form.Item name='serviceAreaCode' label='大区名称'  className='form_label_width_97'>
+            <Form.Item name='serviceAreaCode' label='大区名称'   className='form_label_width_97'>
               <Select placeholder='请选择' onChange={largeRegionChange} allowClear>
                 {largeRegionList.map(item => <Option value={item.ID}>{item.LargeRegion}</Option>)}
               </Select>
@@ -602,7 +603,7 @@ const Index = (props) => {
       <Row align='middle'>
         <Col span={8}>
           <Spin size='small' spinning={largeRegionListLoading} className='formItemSpinSty'>
-            <Form.Item name='serviceAreaCode' label='大区名称'>
+            <Form.Item name='serviceAreaCode' label='大区名称' className='form_label_width_97'>
               <Select placeholder='请选择' onChange={largeRegionChange2} allowClear>
                 {largeRegionList.map(item => <Option value={item.ID}>{item.LargeRegion}</Option>)}
               </Select>
@@ -624,26 +625,26 @@ const Index = (props) => {
           </Form.Item>
         </Col>
         <Col span={8} >
-          <Form.Item name='customEnt' label='最终用户' >
+          <Form.Item name='customEnt' label='最终用户' className='form_label_width_97'>
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item name='time2' label='服务完成日期'>
             <RangePicker_ style={{ width: '100%' }}
-              allowClear={false}
               showTime={false}
               format="YYYY-MM-DD"
             />
           </Form.Item>
         </Col>
+
         <Col span={8} >
           <Form.Item name='investigator' className='minWidth' label='调查人' >
             <Input placeholder="请输入" allowClear />
           </Form.Item>
         </Col>
         {!isHome && <><Col span={8} >
-          <Form.Item name='investigationStatus' label='调查状态'>
+          <Form.Item name='investigationStatus' label='调查状态' className='form_label_width_97'>
             <Select placeholder='请选择' allowClear>
               <Option value={1}>待调查</Option>
               <Option value={2}>调查终止</Option>
@@ -663,6 +664,14 @@ const Index = (props) => {
           <Form.Item name='time' label='调查日期' >
             <RangePicker_
               style={{ width: '100%' }}
+              format="YYYY-MM-DD"
+            />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item name='time3' label='调查提交时间'>
+            <RangePicker_ style={{ width: '100%' }}
+              showTime={false}
               format="YYYY-MM-DD"
             />
           </Form.Item>

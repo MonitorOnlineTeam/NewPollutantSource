@@ -13,6 +13,9 @@ const Setting = props => {
 
   const { dispatch, open, onCancel, data, onSuccessCallback } = props;
 
+
+
+
   useEffect(() => {
     form.setFieldsValue(data);
   }, [data]);
@@ -28,6 +31,15 @@ const Setting = props => {
           CTOperation: data.CTOperation,
           LargeRegion: data.LargeRegion,
           ProjectRegion: data.ProjectRegion,
+          RulesType: data.RulesType==='0'? data.RulesType : !values.LarPointNum && !values.LarOperationNum && !values.LarCustomersNum && !values.LarVisitNum ? '0' : '1',
+          PointNum: data.PointNum,
+          OperationNum: data.OperationNum,
+          CustomersNum: data.CustomersNum,
+          VisitNum: data.VisitNum,
+          LarPointNum: data.LarPointNum,
+          LarOperationNum: data.LarOperationNum,
+          LarCustomersNum: data.LarCustomersNum,
+          LarVisitNum: data.LarVisitNum,
           ...values,
         },
         callback: res => {
@@ -36,10 +48,11 @@ const Setting = props => {
       });
     });
   };
+  const rulesType = data.RulesType;
 
   return (
     <Modal
-      title={`${data.ProvinceManager || data.UserName}（${data.CTOperation}）`}
+      title={`${data.ProvinceManager || data.UserName}（  ${rulesType==='0'?  `${data.CTOperation}经理` : `大区经理-${data.CTOperation}`}）`}
       open={open}
       keyboard={false}
       destroyOnClose
@@ -62,7 +75,7 @@ const Setting = props => {
         }}
       >
         <Form.Item
-          name="PointNum"
+          name={rulesType==='0' ? "PointNum" : "LarPointNum"}
           label="（现场检查）覆盖监测点个数（个/月）"
           // rules={[
           //   {
@@ -71,10 +84,10 @@ const Setting = props => {
           //   },
           // ]}
         >
-          <InputNumber placeholder="请输入" style={{ width: 120 }} />
+          <InputNumber  min={1} step={1} placeholder="请输入" style={{ width: 120 }} />
         </Form.Item>
         <Form.Item
-          name="OperationNum"
+          name={rulesType==='0' ? "OperationNum" : "LarOperationNum"}
           label="（现场检查）覆盖人员数量（人/月）"
           // rules={[
           //   {
@@ -83,10 +96,10 @@ const Setting = props => {
           //   },
           // ]}
         >
-          <InputNumber placeholder="请输入" style={{ width: 120 }} />
+          <InputNumber  min={1} step={1} placeholder="请输入" style={{ width: 120 }} />
         </Form.Item>
         <Form.Item
-          name="CustomersNum"
+          name={rulesType==='0' ? "CustomersNum" : "LarCustomersNum"}
           label="回访客户次数（次/月）"
           // rules={[
           //   {
@@ -95,8 +108,14 @@ const Setting = props => {
           //   },
           // ]}
         >
-          <InputNumber placeholder="请输入" style={{ width: 120 }} />
+          <InputNumber  min={1} step={1} placeholder="请输入" style={{ width: 120 }} />
         </Form.Item>
+       {/运维/.test(data.CTOperation) && <Form.Item
+          name={rulesType==='0' ? "VisitNum": "LarVisitNum"}
+          label="管理部门拜访次数（次/月）"
+        >
+          <InputNumber  min={1} step={1} placeholder="请输入" style={{ width: 120 }} />
+        </Form.Item>}
       </Form>
     </Modal>
   );

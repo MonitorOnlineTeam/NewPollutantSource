@@ -136,7 +136,7 @@ const Index = (props) => {
       key: 'BeginTime',
       align: 'center',
       render: (text, record) => { 
-        return text ? moment(text).format('YYYY-MM-DD 00:00:00') : undefined;
+        return text ? moment(text).format('YYYY-MM-DD') : undefined;
     }
     },
     {

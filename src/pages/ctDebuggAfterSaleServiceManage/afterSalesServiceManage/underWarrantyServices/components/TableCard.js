@@ -328,20 +328,26 @@ const TableCard = props => {
         width: 150,
       },
       {
-        title: '开始时间',
-        dataIndex: 'BeginTime',
+        title: '服务开始时间',
+        dataIndex: 'BeginTime', 
         key: 'BeginTime',
         ellipsis: true,
-        width: 180,
         align: 'center',
+        width: 110,
+        render: (text, record) => { 
+          return text ? moment(text).format('YYYY-MM-DD') : undefined;
+       }
       },
       {
-        title: '结束时间',
+        title: '服务结束时间',
         dataIndex: 'EndTime',
         key: 'EndTime',
         ellipsis: true,
-        width: 180,
         align: 'center',
+        width: 110,
+        render: (text, record) => { 
+          return text ? moment(text).format('YYYY-MM-DD') : undefined;
+      }
       },
       {
         title: '企业名称',

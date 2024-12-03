@@ -325,12 +325,10 @@ const OfficeInspection = props => {
                 <Select
                   placeholder="请选择大区"
                   style={{ width: '100%' }}
-                  disabled
                   showSearch
                   optionFilterProp="children"
-                // onChange={(value, option) => {
-                //   // debugger;
-                //   // formRef.current.setFieldsValue({
+                  disabled
+                //   onChange={(value, option) => {
                 //   setProvinceList(option['data-childList']);
                 //   form.setFieldsValue({
                 //     ProvinceName: option['data-childList'][0].RegionCode,
@@ -369,12 +367,12 @@ const OfficeInspection = props => {
                   style={{ width: '100%' }}
                   showSearch
                   optionFilterProp="children"
-                  disabled
-                // onChange={(value, option) => {
-                //   GetOfficeList();
-                //   form.setFieldsValue({
-                //     OfficeCode: undefined,
-                //   });
+                  // disabled
+                  // onChange={(value, option) => {
+                  //  GetOfficeList();
+                  //  form.setFieldsValue({
+                  //   OfficeCode: undefined,
+                  // });
                 // }}
                 >
                   {provinceList?.map(item => {

@@ -144,7 +144,7 @@ const Index = (props) => {
     {
       title: '非驻厂',
       align: 'center',
-      width: 180,
+      width:200,
       children: [
         {
           title: '污染源气绩效套数',
@@ -171,7 +171,7 @@ const Index = (props) => {
     {
       title: '驻厂',
       align: 'center',
-      width: 180,
+      width:200,
       children: [
         {
           title: '污染源气绩效套数',

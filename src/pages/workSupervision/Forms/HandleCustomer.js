@@ -14,10 +14,13 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 
-const dvaPropsData = ({ loading, wordSupervision }) => ({
+const dvaPropsData = ({ loading, wordSupervision, ctCommon }) => ({
   TYPE: wordSupervision.TYPE,
   otherCustomerList: wordSupervision.otherCustomerList,
   RegionalAndProvince: wordSupervision.RegionalAndProvince,
+  largeRegionListLoading: loading.effects[`ctCommon/GetLargeRegionList`],
+  regionalAndProvinceLoading: loading.effects[`wordSupervision/GetRegionalAndProvince`],
+  
   // messageList: wordSupervision.messageList,
   // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
   // messageListLoading: loading.effects['wordSupervision/GetWorkBenchMsg'],
@@ -25,12 +28,15 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 
 const HandleCustomer = props => {
   const [form] = Form.useForm();
-  const { otherCustomerList, RegionalAndProvince, CustomID, onOk, RegionCode, TYPE } = props;
+  const { otherCustomerList, RegionalAndProvince, CustomID, onOk, RegionCode, TYPE, regionalAndProvinceLoading, largeRegionListLoading, } = props;
   const [visible, setVisible] = useState(false);
   const [addOrEditVisible, setAddOrEditVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [editRowData, setEditRowData] = useState({});
   const [selectRow, setSelectRow] = useState([]);
+
+  const [largeRegionList, setLargeRegionList] = useState([]);
+  const [regionList, setRegionList] = useState([]);
   useEffect(() => {
     // setSelectedRowKeys([CustomID]);
     getOtherCustomerList();
@@ -73,8 +79,8 @@ const HandleCustomer = props => {
                 <a
                   onClick={() => {
                     setEditRowData(record);
-                    onHandleClick();
-                    form.setFieldsValue({...record})
+                    onHandleClick(record.Province);
+                    form.setFieldsValue({ ...record })
                   }}
                 >
                   <EditIcon />
@@ -108,7 +114,7 @@ const HandleCustomer = props => {
       type: 'wordSupervision/getOtherCustomerList',
       payload: {
         type: TYPE == 1 ? '2' : '1', // 1：运维 2：成套
-        ReionCode: RegionCode,
+        // ReionCode: RegionCode,
       },
     });
   };
@@ -119,7 +125,7 @@ const HandleCustomer = props => {
       type: 'wordSupervision/getCustomerList',
       payload: {
         type: TYPE == 1 ? '2' : '1', // 1：运维 2：成套
-        ReionCode: RegionCode,
+        // ReionCode: RegionCode,
       },
     });
   };
@@ -140,25 +146,39 @@ const HandleCustomer = props => {
   };
 
   // 获取已配置的省区和大区
-  const getRegionalAndProvince = () => {
+  const getRegionalAndProvince = (regionCode) => {
     props.dispatch({
       type: 'wordSupervision/GetRegionalAndProvince',
       payload: {},
       callback: res => {
-        let current = res.Datas.find(item => item.Province === RegionCode);
-        form.setFieldsValue({
-          Province: current.Province,
-          UserGroup_ID: current.UserGroup_ID,
-        });
+        let current = regionCode? res.Datas.find(item => item.Province === regionCode) : res.Datas.find(item => item.Province === RegionCode);
+        props.dispatch({
+          type: 'ctCommon/GetLargeRegionList',
+          payload: {},
+          callback: (largeRegData)=>{
+            setLargeRegionList(largeRegData)
+            const data = largeRegData?.filter(item => item.ID == current.UserGroup_ID)?.[0]?.ChildList
+            setRegionList(data || [])
+            setTimeout(()=>{
+              form.setFieldsValue({
+                Province: current.Province,
+                UserGroup_ID: current.UserGroup_ID,
+              },200);
+            })
+          }
+        })
+
       },
     });
   };
 
   //
-  const onHandleClick = () => {
+  const onHandleClick = (regionCode) => {
     setAddOrEditVisible(true);
-    getRegionalAndProvince();
+    getRegionalAndProvince(regionCode);
+
   };
+
 
   // 添加、编辑客户
   const InsOrUpdOtherCustomer = () => {
@@ -195,6 +215,18 @@ const HandleCustomer = props => {
       setSelectRow(selectedRows);
     },
   };
+
+  useEffect(()=>{
+    if(!addOrEditVisible){
+      setLargeRegionList([])
+      setRegionList([])
+      form.setFieldsValue({
+        Province: undefined,
+        UserGroup_ID: undefined,
+      })
+    }
+  },[addOrEditVisible])
+
   return (
     <>
       <Button type="primary" onClick={() => setVisible(true)}>
@@ -240,6 +272,7 @@ const HandleCustomer = props => {
           columns={getColumns()}
           dataSource={otherCustomerList}
           pagination={false}
+          scroll={{ y: 'calc(100vh - 365px)' }}
         />
       </Modal>
 
@@ -268,6 +301,35 @@ const HandleCustomer = props => {
           }}
           autoComplete="off"
         >
+
+          <Form.Item
+            label="大区"
+            name="UserGroup_ID"
+            rules={[
+              {
+                required: true,
+                message: '请选择大区!',
+              },
+            ]}
+          >
+            <Select placeholder="请选择大区"
+              loading={regionalAndProvinceLoading || largeRegionListLoading}
+              onChange={(value) => {
+                form.setFieldsValue({ Province: undefined });
+                const data = largeRegionList.filter(item => item.ID == value)?.[0]?.ChildList
+                setRegionList(data)
+              }}
+            >
+              {largeRegionList.map((item, index) => {
+                return (
+                  <Option value={item.ID} key={index} data-item={item}>
+                    {item.LargeRegion}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+
           <Form.Item
             label="省份"
             name="Province"
@@ -279,41 +341,23 @@ const HandleCustomer = props => {
             ]}
           >
             <Select
-              disabled
+              // disabled
+              loading={regionalAndProvinceLoading || largeRegionListLoading}
               placeholder="请选择省份"
-              onChange={(value, option) => {
-                form.setFieldsValue({ UserGroup_ID: option['data-item'].UserGroup_ID });
-              }}
+            // onChange={(value, option) => {
+            //   form.setFieldsValue({ UserGroup_ID: option['data-item'].UserGroup_ID });
+            // }}
             >
-              {RegionalAndProvince.map((item, index) => {
+              {regionList.map((item, index) => {
                 return (
-                  <Option value={item.Province} key={index} data-item={item}>
-                    {item.ProvinceName}
+                  <Option value={item.RegionCode} key={index} data-item={item}>
+                    {item.RegionName}
                   </Option>
                 );
               })}
             </Select>
           </Form.Item>
-          <Form.Item
-            label="大区"
-            name="UserGroup_ID"
-            rules={[
-              {
-                required: true,
-                message: '请选择大区!',
-              },
-            ]}
-          >
-            <Select placeholder="请选择大区" disabled>
-              {RegionalAndProvince.map((item, index) => {
-                return (
-                  <Option value={item.UserGroup_ID} key={index} data-item={item}>
-                    {item.UserGroup_Name}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
+
           {/* <Form.Item
             label="客户全称"
             name="CustomFullName"
