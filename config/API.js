@@ -1319,6 +1319,7 @@ export const API = {
 
     /*模型库管理*/
     //模型训练 - 数据接入
+    AutoPointRelaModel: before + '/ProjectMonitorDataApi/AutoPointRelaModel', // 模型自动匹配
     GetProjectMonitorDataList: before + '/ProjectMonitorDataApi/GetProjectMonitorDataList', //查看项目信息
     UpdProjectMonitorData: before + '/ProjectMonitorDataApi/UpdProjectMonitorData', //修改项目信息 修改执行方式
     AccessEntInfoList: before + '/DataFormatBaseDataApi/AccessEntInfoList', //接入企业数据执行

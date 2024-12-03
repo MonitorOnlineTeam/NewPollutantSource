@@ -53,7 +53,7 @@ export default Model.extend({
       }
     },
     //超标报警核实
-    *GetAlarmVerifyRate({ payload }, { call, put, update, select }) {
+    *GetAlarmVerifyRate({ payload, callback }, { call, put, update, select }) {
       const body = {
         RegionCode: payload.RegionCode,
         attentionCode: payload.attentionCode,
@@ -66,9 +66,11 @@ export default Model.extend({
         PollutantCodeList: payload.PollutantCodeList?.filter(item=>item!='全部合计') || [],
         OperationPersonnel: payload.operationpersonnel,
         regionLevel: payload.regionLevel && payload.regionLevel,
+        IsGroupEnt: payload.IsGroupEnt,
       };
       const result = yield call(GetAlarmVerifyRate, body, null);
       if (result.IsSuccess) {
+        callback && callback(result)
         yield update({
           AlarmList: result.Datas.data,
           column: result.Datas.column,
@@ -80,7 +82,7 @@ export default Model.extend({
         });
       }
     }, //超标报警核实详情
-    *GetAlarmVerifyRateDetail({ payload }, { call, put, update, select }) {
+    *GetAlarmVerifyRateDetail({ payload,callback }, { call, put, update, select }) {
       const body = {
         ...payload,
         RegionCode: payload.RegionCode,
@@ -96,6 +98,7 @@ export default Model.extend({
       };
       const result = yield call(GetAlarmVerifyRateDetail, body, null);
       if (result.IsSuccess) {
+        callback && callback(result)
         yield update({
           AlarmDetailList: result.Datas.data,
           column: result.Datas.column,
@@ -111,7 +114,7 @@ export default Model.extend({
         });
       }
     }, //超标报警核实详细
-    *GetAlarmVerifyDetail({ payload }, { call, put, update, select }) {
+    *GetAlarmVerifyDetail({ payload, callback }, { call, put, update, select }) {
       const body = {
         ...payload,
         RegionCode: payload.RegionCode,
@@ -130,6 +133,7 @@ export default Model.extend({
       };
       const result = yield call(GetAlarmVerifyDetail, body, null);
       if (result.IsSuccess) {
+        callback && callback(result)
         yield update({
           ManagementDetail: result.Datas,
           alarmVerifyQueryPar: payload,

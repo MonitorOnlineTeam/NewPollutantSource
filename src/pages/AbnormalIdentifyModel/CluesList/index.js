@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-09-18 15:38:41
+ * @Last Modified time: 2024-11-28 15:56:43
  * @Description：线索列表
  */
 
@@ -31,7 +31,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList';
 import EntAtmoList from '@/components/EntAtmoList';
 import { DetailIcon } from '@/utils/icon';
-import { isSystem } from '@/utils/utils';
+import { isSystem, convertTextByConfig } from '@/utils/utils';
 import { ModelNumberIdsDatas, ModalNameConversion, transformData } from '../CONST';
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import CluesDetails from './CluesDetails';
@@ -221,7 +221,7 @@ const CluesList = props => {
         },
       },
       {
-        title: '企业',
+        title: convertTextByConfig('企业'),
         dataIndex: 'EntNmae',
         key: 'EntNmae',
         width: 200,
@@ -667,41 +667,44 @@ const CluesList = props => {
               itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
             />
           </Form.Item>
-          <Form.Item label="行政区" name="regionCode">
-            <RegionList
-              // noFilter
-              // multiple
-              treeCheckable={true}
-              showCheckedStrategy={SHOW_PARENT}
-              maxTagCount={2}
-              maxTagTextLength={5}
-              maxTagPlaceholder="..."
-              style={{ width: 240 }}
-              onChange={value => {
-                form.setFieldsValue({ EntCode: undefined, DGIMN: undefined });
-                dispatch({
-                  type: 'AbnormalIdentifyModel/updateState',
-                  payload: {
-                    warningForm: {
-                      ...warningForm,
-                      [modelNumber]: {
-                        ...props.warningForm[modelNumber],
-                        regionCode: value,
-                        EntCode: undefined,
-                        DGIMN: undefined,
+          {configInfo.isShowRegion && (
+            <Form.Item label="行政区" name="regionCode">
+              <RegionList
+                // noFilter
+                // multiple
+                treeCheckable={true}
+                showCheckedStrategy={SHOW_PARENT}
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                style={{ width: 240 }}
+                onChange={value => {
+                  form.setFieldsValue({ EntCode: undefined, DGIMN: undefined });
+                  dispatch({
+                    type: 'AbnormalIdentifyModel/updateState',
+                    payload: {
+                      warningForm: {
+                        ...warningForm,
+                        [modelNumber]: {
+                          ...props.warningForm[modelNumber],
+                          regionCode: value,
+                          EntCode: undefined,
+                          DGIMN: undefined,
+                        },
                       },
                     },
-                  },
-                });
-                setPointList([]);
-              }}
-            />
-          </Form.Item>
+                  });
+                  setPointList([]);
+                }}
+              />
+            </Form.Item>
+          )}
           {
             <>
               {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
-              <Form.Item label="企业" name="EntCode">
+              <Form.Item label={convertTextByConfig('企业')} name="EntCode">
                 <EntAtmoList
+                  placeholder="请选择"
                   regionCode={
                     form.getFieldValue('regionCode')
                       ? form.getFieldValue('regionCode').toString()

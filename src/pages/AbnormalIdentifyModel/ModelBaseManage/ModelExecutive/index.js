@@ -211,7 +211,7 @@ const ModelExecutive = props => {
               <Divider orientation="right">
                 <Button
                   type="primary"
-                  loading={executionLoading}
+                  loading={true}
                   onClick={() => startExecution()}
                   disabled={logsLoading}
                 >

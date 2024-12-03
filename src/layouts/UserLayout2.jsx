@@ -19,9 +19,10 @@ const UserLayout2 = props => {
   // return sysName[port] ? sysName[port] : sysName[-1];
   // let isShowSysName =
 
-  console.log('configInfo', configInfo);
 
-  const isShowSysName = configInfo.SystemName !== '污染源智慧监测管理系统';
+  // const isShowSysName = configInfo.SystemName !== '污染源智慧监测管理系统';
+  // console.log('configInfo', configInfo)
+  const isShowSysName = configInfo.SystemNameKey !== -1;
 
   let imgSrc = isShowSysName
     ? `url(/newLogin/${configInfo.SystemName}/bg.jpg)`

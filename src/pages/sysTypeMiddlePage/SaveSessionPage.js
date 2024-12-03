@@ -3,7 +3,7 @@
  * @Date: 2024-08-06 09:36:37
  * @LastEditors: outman0611
  * @LastEditTime: 2024-11-21 15:26:12
- * @Description: 
+ * @Description:
  */
 
 import React, { PureComponent } from 'react';
@@ -26,7 +26,8 @@ class SaveSessionPage extends PureComponent {
     sessionStorage.setItem('sysPollutantCodes', sysInfo.CodeList);
     sessionStorage.setItem('sysName', sysInfo.Name);
     Cookie.set('sysMenuId', sysInfo.ID);
-    Cookie.set("sysName", sysInfo.Name);
+    Cookie.set('sysName', sysInfo.Name);
+    configInfo.sysName = sysInfo.Name;
     this.getMenuList(sysInfo.ID);
   }
 
@@ -39,12 +40,11 @@ class SaveSessionPage extends PureComponent {
         menu_id: menuId,
       },
       callback: response => {
-        let defaultNavigateUrl =
-            response.Datas[0].children?.[0]?.children?.[0]
-            ? response.Datas[0].children[0].children[0].NavigateUrl
-            : response.Datas[0].children && response.Datas[0].children.length
-            ? response.Datas[0].children[0].NavigateUrl
-            : response.Datas[0].NavigateUrl;
+        let defaultNavigateUrl = response.Datas[0].children?.[0]?.children?.[0]
+          ? response.Datas[0].children[0].children[0].NavigateUrl
+          : response.Datas[0].children && response.Datas[0].children.length
+          ? response.Datas[0].children[0].NavigateUrl
+          : response.Datas[0].NavigateUrl;
 
         let systemNavigateUrl = getFirstChildNavigateUrl(response.Datas[0]);
         Cookie.set('systemNavigateUrl', systemNavigateUrl);
@@ -74,8 +74,8 @@ class SaveSessionPage extends PureComponent {
           };
           const meunList = meunData(response?.Datas);
           sessionStorage.setItem('menuDatas', meunList?.length > 0 ? JSON.stringify(meunList) : '');
-          sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl)
-          router.push(defaultNavigateUrl)
+          sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl);
+          router.push(defaultNavigateUrl);
         }
       },
     });

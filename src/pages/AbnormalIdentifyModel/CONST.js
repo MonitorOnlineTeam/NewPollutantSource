@@ -271,6 +271,18 @@ export function transformData(data) {
     };
   });
 }
+
+// 根据配置信息返回dataType
+export const getDataTypeByConfigInfo = defaultDataType => {
+  let dataType = defaultDataType;
+  if (configInfo.isGroupEnt) {
+    dataType = 'ent';
+  } else if (configInfo.IsSingleEnterprise) {
+    dataType = 'point';
+  }
+  return dataType;
+};
+
 // export const ChartDefaultSelected = {/*  */
 //   // 疑似监测样品为空气
 //   '9104ab9f-d3f3-4bd9-a0d9-898d87def4dd': [

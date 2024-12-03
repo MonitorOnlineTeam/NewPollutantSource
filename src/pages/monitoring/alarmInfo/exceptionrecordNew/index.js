@@ -11,6 +11,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList';
 import SelectPollutantType from '@/components/SelectPollutantType';
+import { convertTextByConfig } from '@/utils/utils';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -55,6 +56,7 @@ const { RangePicker } = DatePicker;
 })
 class index extends PureComponent {
   pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
+  isGroupEnt = configInfo.isGroupEnt;
   state = {
     showTime: true,
     format: 'YYYY-MM-DD HH',
@@ -74,7 +76,7 @@ class index extends PureComponent {
     },
     columns: [
       {
-        title: '行政区',
+        title: convertTextByConfig('行政区'),
         dataIndex: 'RegionName',
         key: 'RegionName',
         width: 140,
@@ -86,7 +88,6 @@ class index extends PureComponent {
                 queryCondition.RegionCode =
                   record.RegionCode || this.props.form.getFieldValue('RegionCode');
                 queryCondition = JSON.stringify(queryCondition);
-
                 router.push(
                   `/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/cityLevel?regionCode=${
                     record.RegionCode ? record.RegionCode : ''
@@ -341,7 +342,7 @@ class index extends PureComponent {
         align: 'center',
       },
       {
-        title: '企业名称',
+        title: convertTextByConfig('企业') + '名称',
         dataIndex: 'EntName',
         key: 'EntName',
       },
@@ -448,6 +449,7 @@ class index extends PureComponent {
       type: 'exceptionrecordNew/getExceptionAlarmListForEnt',
       payload: {
         ...this.state.secondQueryCondition,
+        isGroupEnt: this.isGroupEnt,
       },
     });
   };
@@ -457,6 +459,7 @@ class index extends PureComponent {
       type: 'exceptionrecordNew/exportExceptionAlarmListForEnt',
       payload: {
         ...this.state.secondQueryCondition,
+        isGroupEnt: this.isGroupEnt,
       },
     });
   };
@@ -489,6 +492,7 @@ class index extends PureComponent {
         beginTime: beginTime,
         endTime: endTime,
         OperationPersonnel: this.state.operationpersonnel,
+        isGroupEnt: this.isGroupEnt,
       },
     });
     this.setState({
@@ -649,6 +653,9 @@ class index extends PureComponent {
     if (secondQueryCondition.ResponseStatus == '0') {
       _detailsColumns = _detailsColumns.filter(item => item.dataIndex !== 'CompleteTime');
     }
+    if (this.isGroupEnt) {
+      _detailsColumns = _detailsColumns.filter(item => item.dataIndex !== "ProvinceName" && item.dataIndex !== "CityName");
+    }
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
         <Card>
@@ -680,7 +687,7 @@ class index extends PureComponent {
                 })( */}
                 {/* <RangePicker style={{ width: 200 }} allowClear={false} showTime={showTime} format={format} style={{ width: '100%' }} /> */}
                 <RangePicker_
-                  format='YYYY-MM-DD' 
+                  format="YYYY-MM-DD"
                   allowClear={false}
                   onRef={ref => {
                     this.rangePicker = ref;
@@ -692,22 +699,13 @@ class index extends PureComponent {
                 />
                 {/* )} */}
               </FormItem>
-              <FormItem label="行政区">
-                {getFieldDecorator('RegionCode', {
-                  // initialValue: 'siteDaily',
-                })(
-                  // <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
-                  //   {
-                  //     _regionList.map(item => {
-                  //       return <Option key={item.key} value={item.value}>
-                  //         {item.title}
-                  //       </Option>
-                  //     })
-                  //   }
-                  // </Select>
-                  <RegionList style={{ width: 200 }} changeRegion={''} RegionCode={''} />,
-                )}
-              </FormItem>
+              {configInfo.isShowRegion && (
+                <FormItem label={'行政区'}>
+                  {getFieldDecorator('RegionCode', {})(
+                    <RegionList style={{ width: 200 }} changeRegion={''} RegionCode={''} />,
+                  )}
+                </FormItem>
+              )}
             </Row>
             <Row>
               <FormItem label="关注程度">
@@ -725,7 +723,7 @@ class index extends PureComponent {
                   </Select>,
                 )}
               </FormItem>
-              <FormItem label="企业类型" hidden={this.pollutantType}>
+              <FormItem label={`${convertTextByConfig('企业')}类型`} hidden={this.pollutantType}>
                 {getFieldDecorator('PollutantType', {
                   initialValue: this.pollutantType || 2,
                 })(
@@ -733,7 +731,11 @@ class index extends PureComponent {
                   //   <Option value="2">废气</Option>
                   //   <Option value="1">废水</Option>
                   // </Select>
-                 <SelectPollutantType singleHidden style={{ width: 231 }} placeholder="请选择企业类型" />
+                  <SelectPollutantType
+                    singleHidden
+                    style={{ width: 231 }}
+                    placeholder="请选择"
+                  />,
                 )}
               </FormItem>
               {/* <Form.Item label="运维状态">

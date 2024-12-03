@@ -8,6 +8,9 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import ReactEcharts from 'echarts-for-react';
 import AnalysisExceedTimeLimit from '../index';
 import WarningTableData from '@/pages/AbnormalIdentifyModel/Home/ModalPage/WarningTableData.js';
+import { getDataTypeByConfigInfo } from '@/pages/AbnormalIdentifyModel/CONST.js';
+import DataTypeSelect from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/components/DataTypeSelect.js';
+import { convertTextByConfig } from '@/utils/utils';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   loading: loading.effects['AbnormalIdentifyModel/GetOverDataAnalysis'],
@@ -26,7 +29,7 @@ const PageContent = props => {
   const [regionCode, setRegionCode] = useState();
   const [entCode, setEntCode] = useState();
   const [dataSource, setDataSource] = useState([]);
-  const [dataType, setDataType] = useState(props.dataType || 'region'); //region/ent/point
+  const [dataType, setDataType] = useState(props.dataType || getDataTypeByConfigInfo('region')); //region/ent/point
   const [entAndPointCount, setEntAndPointCount] = useState({
     EntCount: 0,
     PointCount: 0,
@@ -310,7 +313,7 @@ const PageContent = props => {
       case 'ent':
         column = [
           {
-            title: '企业',
+            title: convertTextByConfig('企业'),
             dataIndex: 'Name',
             key: 'Name',
             render: (text, record) => {
@@ -330,7 +333,7 @@ const PageContent = props => {
       case 'point':
         column = [
           {
-            title: '企业',
+            title: convertTextByConfig('企业'),
             dataIndex: 'ParentName',
             key: 'ParentName',
           },
@@ -378,7 +381,7 @@ const PageContent = props => {
       dataTypeName = '行政区';
       break;
     case 'ent':
-      dataTypeName = '企业';
+      dataTypeName = convertTextByConfig('企业');
       break;
     case 'point':
       dataTypeName = '排放口';
@@ -439,17 +442,13 @@ const PageContent = props => {
               </Button>
             </Form.Item>
             <Form.Item name="dataType" style={{ marginLeft: 20 }}>
-              <Radio.Group
-                defaultValue="region"
+              <DataTypeSelect
+                defaultValue={dataType}
                 onChange={e => {
                   setDataType(e.target.value);
                   loadData(e.target.value);
                 }}
-              >
-                <Radio.Button value="region">行政区</Radio.Button>
-                <Radio.Button value="ent">企业</Radio.Button>
-                <Radio.Button value="point">排放口</Radio.Button>
-              </Radio.Group>
+              />
             </Form.Item>
           </Form>
         </Card>
@@ -476,7 +475,10 @@ const PageContent = props => {
             />
             <Row justify="center">
               <Col span={12} style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
-                <Badge status="processing" text={`企业数量：${entAndPointCount.EntCount}个`} />
+                <Badge
+                  status="processing"
+                  text={`${convertTextByConfig('企业')}数量：${entAndPointCount.EntCount}个`}
+                />
               </Col>
               <Col span={12} style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
                 <Badge status="processing" text={`排放口数量：${entAndPointCount.PointCount}个`} />

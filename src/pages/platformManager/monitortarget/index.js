@@ -49,7 +49,7 @@ import { permissionButton } from '@/utils/utils';
 
 const { confirm } = Modal;
 
-@connect(({ loading, autoForm, common,global }) => ({
+@connect(({ loading, autoForm, common, global }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
@@ -62,11 +62,10 @@ export default class MonitorTarget extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      licencePermis:false,
-      pointQRPermis:false,
-      operationTaskPermis:false,
-      editElectronicFenceRadiusPermis:false,
-
+      licencePermis: false,
+      pointQRPermis: false,
+      operationTaskPermis: false,
+      editElectronicFenceRadiusPermis: false,
     };
   }
 
@@ -76,11 +75,18 @@ export default class MonitorTarget extends Component {
     const buttonList = permissionButton(this.props.location.pathname);
     buttonList.map(item => {
       switch (item) {
-        case 'licence': this.setState({ licencePermis: true });break;
-        case 'pointQR': this.setState({ pointQRPermis: true });break;
-        case 'operationTask': this.setState({ operationTaskPermis: true });break;
-        case 'editElectronicFenceRadius': this.setState({ editElectronicFenceRadiusPermis: true });break;
-
+        case 'licence':
+          this.setState({ licencePermis: true });
+          break;
+        case 'pointQR':
+          this.setState({ pointQRPermis: true });
+          break;
+        case 'operationTask':
+          this.setState({ operationTaskPermis: true });
+          break;
+        case 'editElectronicFenceRadius':
+          this.setState({ editElectronicFenceRadiusPermis: true });
+          break;
       }
     });
   }
@@ -257,7 +263,23 @@ export default class MonitorTarget extends Component {
       configInfo,
       dispatch,
       hideBreadcrumb,
+      location: {
+        query: { BlocCode },
+      },
     } = this.props;
+
+    let searchParams = [];
+    // 企业code
+    if (BlocCode) {
+      searchParams = [
+        {
+          Key: 'dbo__T_Bas_Enterprise__BlocCode',
+          Value: BlocCode,
+          Where: '$=',
+        },
+      ];
+    }
+
     //   console.log("this.props=", this.props);
     const searchConditions = searchConfigItems[configId] || [];
     const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
@@ -273,7 +295,6 @@ export default class MonitorTarget extends Component {
     //         size="large"
     //     />);
     // }
-    console.log()
     return (
       <BreadcrumbWrapper hideBreadcrumb={!!hideBreadcrumb}>
         <Card className={styles.contentContainer}>
@@ -283,6 +304,7 @@ export default class MonitorTarget extends Component {
             // 运维合并
             isCoustom
             selectType="3,是"
+            searchParams={searchParams}
           ></SearchWrapper>
           <AutoFormTable
             resizable
@@ -290,6 +312,7 @@ export default class MonitorTarget extends Component {
             style={{ marginTop: 10 }}
             // columns={columns}
             //scroll={{ y: 600 }}
+            searchParams={searchParams}
             configId={configId}
             rowChange={(key, row) => {
               console.log('key=', key);
@@ -308,7 +331,7 @@ export default class MonitorTarget extends Component {
                       this.showDeleteConfirm(row);
                     }}
                   >
-                    <DelIcon />{' '}
+                    <DelIcon />
                   </a>
                 </Tooltip>
                 <Divider type="vertical" />
@@ -321,7 +344,7 @@ export default class MonitorTarget extends Component {
                     <PointIcon />
                   </a>
                 </Tooltip>
-                {webConfig.entShowBtns.includes('licence') && !configInfo.IsOpera && (
+                {webConfig.entShowBtns.includes('standingBook') && !configInfo.IsOpera && (
                   <>
                     <Divider type="vertical" />
                     <Tooltip title="排放源清单台账">
@@ -339,36 +362,40 @@ export default class MonitorTarget extends Component {
                 )}
 
                 {/* {configId == "Station" && webConfig.entShowBtns.includes("licence") && <><Divider type="vertical" /> */}
-                {webConfig.entShowBtns.includes('licence') && this.state.licencePermis && !configInfo.IsOpera && (
-                  <>
-                    <Divider type="vertical" />
-                    <Tooltip title="排污许可证">
-                      <a
-                        onClick={() => {
-                          this.adddischargepermit('', row);
-                        }}
-                      >
-                        <CalendarTwoTone style={{ fontSize: 16 }} />{' '}
-                      </a>
-                    </Tooltip>
-                  </>
-                )}
+                {webConfig.entShowBtns.includes('licence') &&
+                  this.state.licencePermis &&
+                  !configInfo.IsOpera && (
+                    <>
+                      <Divider type="vertical" />
+                      <Tooltip title="排污许可证">
+                        <a
+                          onClick={() => {
+                            this.adddischargepermit('', row);
+                          }}
+                        >
+                          <CalendarTwoTone style={{ fontSize: 16 }} />{' '}
+                        </a>
+                      </Tooltip>
+                    </>
+                  )}
 
                 {// 只有企业显示机组
-                targetType == 1 && webConfig.entShowBtns.includes('QR') && this.state.pointQRPermis && (
-                  <>
-                    <Divider type="vertical" />
-                    <Tooltip title="生成监测点二维码">
-                      <a
-                        onClick={() => {
-                          this.CreatQRCode(row);
-                        }}
-                      >
-                        <QrcodeOutlined style={{ fontSize: 16 }} />
-                      </a>
-                    </Tooltip>
-                  </>
-                )}
+                targetType == 1 &&
+                  webConfig.entShowBtns.includes('QR') &&
+                  this.state.pointQRPermis && (
+                    <>
+                      <Divider type="vertical" />
+                      <Tooltip title="生成监测点二维码">
+                        <a
+                          onClick={() => {
+                            this.CreatQRCode(row);
+                          }}
+                        >
+                          <QrcodeOutlined style={{ fontSize: 16 }} />
+                        </a>
+                      </Tooltip>
+                    </>
+                  )}
                 {// 只有企业显示机组
                 targetType == 1 && webConfig.entShowBtns.includes('unit') && !configInfo.IsOpera && (
                   <>
@@ -389,45 +416,49 @@ export default class MonitorTarget extends Component {
                     </Tooltip>
                   </>
                 )}
-                {webConfig.entShowBtns.includes('operationTask') && configInfo.IsOpera && this.state.operationTaskPermis && (
-                  <>
-                    <Divider type="vertical" />
-                    <Tooltip title="运维任务">
-                      <a
-                        onClick={() => {
-                          router.push({
-                            pathname:
-                              '/platformconfig/monitortarget/AEnterpriseTest/1/1,2/operationInfo',
-                            query: {
-                              p: row['dbo.T_Bas_Enterprise.EntCode'],
-                              entName: row['dbo.T_Bas_Enterprise.EntName'],
-                            },
-                          });
-                        }}
-                      >
-                        <FundOutlined style={{ fontSize: 16 }} />{' '}
-                      </a>
-                    </Tooltip>
-                  </>
-                )}
-                {webConfig.entShowBtns.includes('electronicFence') && configInfo.IsOpera && this.state.editElectronicFenceRadiusPermis && (
-                  <>
-                    <Divider type="vertical" />
-                    <Tooltip title="修改电子围栏半径">
-                      <a
-                        onClick={() => {
-                          this.setState({
-                            electronicFenceVisible: true,
-                            electronicFenceTitle: `${row['dbo.T_Bas_Enterprise.EntName']}`,
-                            entId: row['dbo.T_Bas_Enterprise.EntCode'],
-                          });
-                        }}
-                      >
-                        <RotateRightOutlined style={{ fontSize: 16 }} />
-                      </a>
-                    </Tooltip>
-                  </>
-                )}
+                {webConfig.entShowBtns.includes('operationTask') &&
+                  configInfo.IsOpera &&
+                  this.state.operationTaskPermis && (
+                    <>
+                      <Divider type="vertical" />
+                      <Tooltip title="运维任务">
+                        <a
+                          onClick={() => {
+                            router.push({
+                              pathname:
+                                '/platformconfig/monitortarget/AEnterpriseTest/1/1,2/operationInfo',
+                              query: {
+                                p: row['dbo.T_Bas_Enterprise.EntCode'],
+                                entName: row['dbo.T_Bas_Enterprise.EntName'],
+                              },
+                            });
+                          }}
+                        >
+                          <FundOutlined style={{ fontSize: 16 }} />{' '}
+                        </a>
+                      </Tooltip>
+                    </>
+                  )}
+                {webConfig.entShowBtns.includes('electronicFence') &&
+                  configInfo.IsOpera &&
+                  this.state.editElectronicFenceRadiusPermis && (
+                    <>
+                      <Divider type="vertical" />
+                      <Tooltip title="修改电子围栏半径">
+                        <a
+                          onClick={() => {
+                            this.setState({
+                              electronicFenceVisible: true,
+                              electronicFenceTitle: `${row['dbo.T_Bas_Enterprise.EntName']}`,
+                              entId: row['dbo.T_Bas_Enterprise.EntCode'],
+                            });
+                          }}
+                        >
+                          <RotateRightOutlined style={{ fontSize: 16 }} />
+                        </a>
+                      </Tooltip>
+                    </>
+                  )}
               </Fragment>
             )}
             parentcode="platformconfig/monitortarget"

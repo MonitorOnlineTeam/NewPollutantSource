@@ -214,6 +214,13 @@ export default Model.extend({
         callback && callback(result.Datas);
       }
     },
+    //模型自动匹配
+    *AutoPointRelaModel({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.AbnormalIdentifyModel.AutoPointRelaModel, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
     // 模型选配
     *GetModelApolegamyList({ payload, callback }, { call, put, update }) {
       const result = yield call(

@@ -19,6 +19,7 @@ import SdlTable from '@/components/SdlTable';
 import ReactEcharts from 'echarts-for-react';
 import CluesListModal from '@/pages/AbnormalIdentifyModel/Home/ModalPage/CluesListModal.js';
 import PointCluesStatistics from './PointCluesStatistics';
+import { convertTextByConfig } from '@/utils/utils';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   warningForm: AbnormalIdentifyModel.warningForm,
@@ -258,7 +259,7 @@ const ExceptionProblem = props => {
         width: 40,
       },
       {
-        title: '企业',
+        title: convertTextByConfig('企业'),
         dataIndex: 'ParentName',
         key: 'ParentName',
         ellipsis: true,

@@ -38,6 +38,7 @@ const EmphasisEnt = props => {
         TopNum: 10,
         bTime: moment(time[0]).format('YYYY-MM-DD 00:00:00'),
         eTime: moment(time[1]).format('YYYY-MM-DD 23:59:59'),
+        IsGroupEnt: configInfo.isGroupEnt,
       },
       callback: res => {
         let data = res.map(item => {

@@ -204,32 +204,32 @@ export function downloadFile(sUrl) {
   //   }
   // }
   //下载路径 特殊字符串处理
-const replacements = {
-  '#': "%23",
-  '@': "%40",
-  '$': "%24",
-  '&': "%26",
-  '=': "%3D",
-  ':': "%3A",
-  ',': "%2C",
-  ';': "%3B",
-  '?': "%3F",
-  '+': "%2B"
-};
-// 转义特殊字符的函数
-function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-// 替换函数
-function replaceSpecialChars(str) {
-  for (const [key, value] of Object.entries(replacements)) {
+  const replacements = {
+    '#': '%23',
+    '@': '%40',
+    $: '%24',
+    '&': '%26',
+    '=': '%3D',
+    ':': '%3A',
+    ',': '%2C',
+    ';': '%3B',
+    '?': '%3F',
+    '+': '%2B',
+  };
+  // 转义特殊字符的函数
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+  // 替换函数
+  function replaceSpecialChars(str) {
+    for (const [key, value] of Object.entries(replacements)) {
       const escapedKey = escapeRegExp(key); // 转义键
       if (str.includes(key)) {
-          return str.replace(new RegExp(escapedKey, 'g'), value);
+        return str.replace(new RegExp(escapedKey, 'g'), value);
       }
+    }
+    return str; // 如果不包含任何键，则返回原字符串
   }
-  return str; // 如果不包含任何键，则返回原字符串
-}
   // 你的API URL
   fetch(replaceSpecialChars(sUrl), {
     method: 'GET',
@@ -546,6 +546,13 @@ export function getSysName(systemName) {
   }
   return sysName[-1];
 }
+
+// 根据端口返回系统名称对应的key
+export function getSysNameKey(systemName) {
+  const sysName = JSON.parse(systemName);
+  return sysName[port] ? port : -1;
+}
+
 // 根据系统名称判断是不是运维系统
 export function isOperaSystem(systemName) {
   const { NODE_ENV } = process.env;
@@ -905,20 +912,50 @@ export const setRem = () => {
   }
 };
 
+// 刷新token
 export const refreshToken = (
   dataObj = JSON.parse(window.localStorage.getItem('loginTokenData')),
 ) => {
   if (Cookie.get(cookieName)) {
-    window.refreshTokenTimer = setInterval(() => {
-      // console.log('new Date().getTime() - dataObj.time', new Date().getTime() - dataObj.time);
-      if (new Date().getTime() - dataObj.time >= dataObj.expires_in * 1000 * 0.9) {
-        getToken({
-          grant_type: 'password',
-          username: dataObj.username,
-          password: dataObj.password,
-          isReload: true,
-        });
-      }
-    }, 10000);
+    // window.refreshTokenTimer = setInterval(() => {
+    //   // console.log('new Date().getTime() - dataObj.time', new Date().getTime() - dataObj.time);
+    //   if (new Date().getTime() - dataObj.time >= dataObj.expires_in * 1000 * 0.9) {
+    //     getToken({
+    //       grant_type: 'password',
+    //       username: dataObj.username,
+    //       password: dataObj.password,
+    //       isReload: true,
+    //     });
+    //   }
+    // }, 10000);
   }
+};
+
+// 根据配置进行文字转换
+export const convertTextByConfig = text => {
+  if (configInfo.isGroupEnt) {
+    if (text === '企业' || text === '市') {
+      return '分厂';
+    }
+    if (text === '行政区' || text === '省') {
+      return '集团';
+    }
+  }
+  return text;
+};
+
+// 处理系统配置
+export const processConfigInfo = config => {
+  const { groupEntName, singleEntName, SystemName } = config;
+  debugger
+  let isGroupEnt = groupEntName === SystemName; // 是否是集团项目
+  let IsSingleEnterprise = singleEntName === SystemName; // 是否是单企业
+  let isShowRegion = isGroupEnt || IsSingleEnterprise; // 是否显示行政区
+
+  return {
+    ...config,
+    isGroupEnt, // 是否是集团项目
+    IsSingleEnterprise, // 是否是单企业项目
+    isShowRegion, // 是否显示行政区
+  };
 };

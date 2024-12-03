@@ -7,7 +7,7 @@ import { downloadFile, requestPost } from '@/utils/utils';
 import { API } from '@config/API';
 
 const initializeState = {
-  level: 1,
+  level: configInfo.IsSingleEnterprise ? 3 : 1,
   timeLabel: '本月',
   time: [moment().startOf('month'), moment()],
   regionCode: '',

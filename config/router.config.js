@@ -1106,6 +1106,12 @@ const routes = [
                 component: './platformManager/point/UnitInfoPage',
               },
               {
+                // 集团管理
+                name: 'monitortarget',
+                path: '/platformconfig/groupManage',
+                component: './platformManager/groupManage',
+              },
+              {
                 name: 'monitortarget',
                 path: '/platformconfig/monitortarget/:configId/:targetType',
                 component: './platformManager/monitortarget',
@@ -2381,6 +2387,13 @@ const routes = [
                     component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
                   },
                   {
+                    //超标数据查询 - 集团
+                    name: 'exceedDataDispositionRecord',
+                    path: '/monitoring/alarmInfo/exceedDataAlarmRecordGroup',
+                    component:
+                      './monitoring/alarmInfo/exceedDataAlarmRecord',
+                  },
+                  {
                     //超标数据报警记录查询
                     name: 'exceedDataAlarm',
                     path: '/monitoring/alarmInfo/exceedDataAlarmOnlyQuery',
@@ -2410,6 +2423,7 @@ const routes = [
                     component:
                       './monitoring/alarmInfo/exceedDataDispositionRecord/exceedDataDispositionRecord',
                   },
+                 
                 ],
               },
 
@@ -2469,6 +2483,13 @@ const routes = [
                   '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/cityLevel',
                 component: './monitoring/alarmInfo/exceptionrecordNew/cityLevel',
               },
+              // 异常报警响应查询 - 单企业
+              {
+                name: 'exceptionrecordCity', //异常数据报警 城市级页面
+                path:
+                  '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/singleEnt',
+                component: './monitoring/alarmInfo/exceptionrecordNew/singleEnt',
+              },
               // 异常报警响应查询 - 市
               {
                 name: 'exceptionrecordDetails',
@@ -2476,7 +2497,11 @@ const routes = [
                   '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/exceptionrecord/details',
                 component: './monitoring/alarmInfo/exceptionrecordNew/RegionDetails',
               },
-
+              {
+                //缺失数据报警  单企业
+                path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/singleEnt',
+                component: './monitoring/missingData/singleEnt',
+              },
               {
                 //缺失数据报警  企业
                 path: '/abnormaRecall/abnormalDataAnalysis/monitoring/missingData/ent',
@@ -5189,7 +5214,7 @@ const routes = [
                     path: '/ctManage/generalManager/resourceRetrievalCenter/problemsSolutions',
                     component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/resourceInfoProblemsSolutions',
                   },
-                
+
                 ],
               },
 

@@ -11,7 +11,7 @@ import Cookie from 'js-cookie';
 import config from '@/config';
 import { message } from 'antd';
 import { router } from 'umi';
-import { getSysName, isOperaSystem, refreshToken } from '@/utils/utils';
+import { getSysName, getSysNameKey, isOperaSystem, refreshToken, processConfigInfo } from '@/utils/utils';
 import { GetOperationSetting } from '@/pages/systemManger/operationBasConfig/service';
 
 /**
@@ -160,10 +160,16 @@ export default Model.extend({
         let configInfo = response.Datas;
         // configInfo.IsSingleEnterprise = true;
         // window.IsOperation = true;
-        window.configInfo = configInfo;
+        // configInfo.isGroupEnt = true;
+        // configInfo.isShowRegion = false;
         // configInfo.IsShowSysPage = '1';
+        configInfo.SystemNameKey = getSysNameKey(configInfo.SystemName);
         configInfo.SystemName = getSysName(configInfo.SystemName);
         configInfo.IsOpera = isOperaSystem(configInfo.SystemName); //是否为公司运维项目
+
+        configInfo = processConfigInfo(configInfo);
+        
+        window.configInfo = configInfo;
         // configInfo.IsOpera = false;
         localStorage.setItem(
           'sysConfigInfo',

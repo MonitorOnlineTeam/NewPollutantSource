@@ -20,7 +20,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import EntAtmoList from '@/components/EntAtmoList';
 import SdlTable from '@/components/SdlTable';
 import { DetailIcon } from '@/utils/icon';
-import { requestPost, requestGet } from '@/utils/utils';
+import { requestPost, requestGet, convertTextByConfig } from '@/utils/utils';
 import { API } from '@config/API';
 import DetailsModal from './DetailsModal';
 import moment from 'moment';
@@ -106,7 +106,7 @@ const RectificationTask = props => {
         },
       },
       {
-        title: '企业',
+        title: convertTextByConfig('企业'),
         dataIndex: 'EntName',
         key: 'EntName',
         width: 200,
@@ -227,8 +227,9 @@ const RectificationTask = props => {
               />
             </Form.Item>
 
-            <Form.Item label="企业" name="EntCode">
+            <Form.Item label={convertTextByConfig('企业')} name="EntCode">
               <EntAtmoList
+                placeholder="请选择"
                 regionCode={form.getFieldValue('regionCode')}
                 style={{ width: 200 }}
                 onChange={value => {

@@ -53,6 +53,7 @@ import RoleList from '@/components/RoleList';
 import OperationCompanyList from '@/components/OperationCompanyList';
 import RectificaRateDetail from '../DetailsModal';
 import ImageView from '@/components/ImageView';
+import { convertTextByConfig } from '@/utils/utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -208,7 +209,7 @@ const Index = props => {
   ];
   let regCityCommonCol = type => [
     {
-      title: '企业数',
+      title: convertTextByConfig('企业') + '数',
       dataIndex: 'CountEnt',
       key: 'CountEnt',
       align: 'center',
@@ -336,7 +337,7 @@ const Index = props => {
       },
     },
     {
-      title: '企业名称',
+      title: convertTextByConfig('企业')+'名称',
       dataIndex: 'EntName',
       key: 'EntName',
       align: 'center',
@@ -374,7 +375,7 @@ const Index = props => {
       },
     },
     {
-      title: '企业名称',
+      title: convertTextByConfig('企业') + '名称',
       dataIndex: 'EntName',
       key: 'EntName',
       width: 200,
@@ -582,9 +583,11 @@ const Index = props => {
             // }}
           />
         </Form.Item>
-        <Form.Item label="行政区" name="regionCode">
-          <RegionList style={{ width: 170 }} placeholder="请输入" />
-        </Form.Item>
+        {configInfo.isShowRegion && (
+          <Form.Item label="行政区" name="regionCode">
+            <RegionList style={{ width: 170 }} placeholder="请输入" />
+          </Form.Item>
+        )}
         <Form.Item>
           <Button
             type="primary"
