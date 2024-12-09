@@ -301,7 +301,7 @@ const Index = (props) => {
           },
         },
         itemStyle: { normal: { color: '#2f3648', barBorderRadius: [15, 15, 15, 15] }, },
-        barWidth: '50%',  // 柱形的宽度
+        barWidth: '10px',  // 柱形的宽度
         barGap: '-100%', // Make series be ove
         silent: true, //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
         barMinHeight: 215,
@@ -326,7 +326,7 @@ const Index = (props) => {
             barBorderRadius: [15, 15, 15, 15]
           },
         },
-        barWidth: '50%',   // 柱形的宽度
+        barWidth: '10px',   // 柱形的宽度
       },
 
 
@@ -475,7 +475,7 @@ const Index = (props) => {
         top: "48%",
         textStyle: {
           color: type == 1 ? color1[0] : type == 2 ? color2[0] : color3[0],
-          fontSize: fontSizeFn(16),
+          fontSize: fontSizeFn(14),
           align: "center",
           fontWeight: 'bold',
         },
@@ -488,7 +488,7 @@ const Index = (props) => {
           text: type == 1 ? '巡检完成率' : '校准完成率',
           textAlign: "center",
           fill: "#fff",
-          fontSize: fontSizeFn(12),
+          fontSize: fontSizeFn(11),
         }
       },
       series: [
@@ -596,7 +596,7 @@ const Index = (props) => {
   }
 
   const planOperaEcharts = useMemo(() => { //监听变量，第一个参数是函数，第二个参数是依赖，只有依赖变化时才会重新计算函数
-    return <div style={{ height: '100%', padding: '.3125rem 0 .625rem 1.3125rem' }}> {/**当图表有点击事件时 更新更新页面时  图表抖动 */}
+    return <div style={{ height: 'calc(100% - 2.75rem)', padding: '.3125rem 0 .625rem 1.3125rem' }}> {/**当图表有点击事件时 更新更新页面时  图表抖动 */}
       <Row type='flex' align='middle'>
         <ReactEcharts
           option={planOperaOption(1)}
@@ -719,14 +719,14 @@ const Index = (props) => {
       <Spin spinning={operationLoading}>
         <div className={styles.pointSty}>
           <CardHeader title='运维信息总览' />
-          <Table style={{ padding: '1rem .9375rem 0 0' }} columns={operationColumns} dataSource={operationDataSource} pagination={false} />
+          <Table style={{ padding: '.625rem 1rem .9375rem' }} columns={operationColumns} dataSource={operationDataSource} pagination={false} />
         </div>
       </Spin>
 
       {TaskPlanType == 1 ? <Spin spinning={operationTaskLoading}>
         <div className={styles.operaOrder}>
           <CardHeader title='近30日运维工单' />
-          <div style={{ height: '100%', padding: '1.25rem .625rem 0 0' }}>
+          <div style={{ height: '100%', padding: '.625rem 1rem .9375rem 1.875rem' }}>
             <ReactEcharts
               option={operaOrderOption}
               style={{ height: 'calc(100% - 2.75rem )', width: '100%' }}
@@ -774,7 +774,7 @@ const Index = (props) => {
       <Spin spinning={planCompleteListLoading}>
         <div className={styles.planComplete}>
           <CardHeader btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='近30日运维排名' />
-          <div style={{ height: '100%', padding: '1.3125rem 1.125rem 0 0' }}>
+          <div style={{ height: '100%', padding: '1rem .9375rem' }}>
             {!planCompleteListLoading && <ScrollTable data={[...planCompleteList]} column={[]} />}
             {/* <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/> */}
           </div>

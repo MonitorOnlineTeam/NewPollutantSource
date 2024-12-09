@@ -113,7 +113,7 @@ const Index = (props) => {
   // <BreadcrumbWrapper  hideBreadcrumb>
 
       <div className={styles.homePage}>
-        <Row style={{paddingTop:'.625rem',height:'100%', width: '100%'}}>   {/**地图部分 和 地图两侧*/}
+        <Row style={{height:'100%', width: '100%'}}>   {/**地图部分 和 地图两侧*/}
           <Col style={{maxWidth:'24.6875rem'}} className={`${fullScreen? `${styles.leftContent} ${styles.mapModalHide}`: `${styles.leftContent} ${styles.mapModalShow}` }` }>
              <LeftContent {...props}/>
            </Col>

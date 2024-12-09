@@ -37,7 +37,7 @@ const SystemDashboardPageWrapper = props => {
   }, []);
 
   useEffect(() => {
-    pageName === '智慧运维' &&
+    pageName.includes("运维") &&
       dispatch({
         //获取运维基础配置
         type: 'global/getOperationSetting',
@@ -57,7 +57,18 @@ const SystemDashboardPageWrapper = props => {
       callback: res => {
         let sysList = mergeData(allSysList, res);
         setSysList(sysList);
-        const pageInfo = sysList.find(item => item.key === pageName);
+        let pageInfo = sysList.find(item => item.key === pageName);
+
+        // 特殊处理
+        if (!sysList.length && res.length === 1) {
+          pageInfo = {
+            key: res[0].Name,
+            value: '',
+            title: res[0].Name,
+            ID: res[0].ID,
+          };
+        }
+
         setPageInfo(pageInfo);
         setCurrent(pageInfo.key);
       },

@@ -1,0 +1,23 @@
+.ProgressRateWrapper {
+  display: flex;
+  color: #fff;
+  // font-weight: 500;
+  font-size: .9375rem;
+  width: 100%;
+  .label {
+    width: 5.375rem;
+    margin-right: 1.25rem;
+  }
+  .progress {
+    flex: 1;
+    display: flex;
+    :global {
+      .ant-progress {
+        width: calc(100% - 3.125rem);
+      }
+    }
+  }
+  .value {
+    margin-left: 1.25rem;
+  }
+}

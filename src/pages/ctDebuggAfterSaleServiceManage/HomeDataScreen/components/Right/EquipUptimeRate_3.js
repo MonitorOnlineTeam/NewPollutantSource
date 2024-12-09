@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import styles from '../../styles.less';
-import HomeCard from '../HomeCard';
+import { HomeCard } from '@/components/HomeComponents';
 import ReactEcharts from 'echarts-for-react';
 
 let myChart;
@@ -17,7 +17,7 @@ const EquipUptimeRate = props => {
 
   return (
     <HomeCard
-      style={{ minHeight: 320 }}
+      style={{ minHeight: '20rem' }}
       title="设备运行完好率"
       timeTypes={['上月', '本年']}
       bodyStyle={{}}
@@ -28,7 +28,7 @@ const EquipUptimeRate = props => {
             <div className={styles.rate}>
               <span>-</span>
             </div>
-            <p className={styles.echartsTitle} style={{ marginTop: -6 }}>
+            <p className={styles.echartsTitle} style={{ marginTop: '-0.375rem' }}>
               设备完好率
             </p>
           </Col>
@@ -39,7 +39,7 @@ const EquipUptimeRate = props => {
             >
               <span style={{ color: '#FFC425' }}>-</span>
             </div>
-            <p className={styles.echartsTitle} style={{ marginTop: -6 }}>
+            <p className={styles.echartsTitle} style={{ marginTop: '-0.375rem' }}>
               设备故障率
             </p>
           </Col>

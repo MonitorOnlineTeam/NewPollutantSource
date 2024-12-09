@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal } from 'antd';
 import styles from '../../styles.less';
-import HomeCard from '../HomeCard';
+import { HomeCard, ProgressRate } from '@/components/HomeComponents';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import TimelinessQualityReport from '@/pages/ctDebuggAfterSaleServiceManage/reportsViews/timelinessQualityReport';
@@ -206,7 +206,7 @@ const TimelyPassRate = props => {
 
   return (
     <HomeCard
-      style={{ minHeight: 250 }}
+      style={{ minHeight: '15.625rem' }}
       title="服务报告及时合格率"
       timeTypes={['上月', '本年']}
       onChange={value => {
@@ -216,8 +216,12 @@ const TimelyPassRate = props => {
       bodyStyle={{}}
       loading={loading}
     >
-      <Row className={`${styles.TimelyPassRateWrapper}`} onClick={onOpenModal}>
-        <Col span={8}>
+      <div className={`${styles.TimelyPassRateWrapper}`} onClick={onOpenModal}>
+        <ProgressRate percent={ServiceReport.ReportTimelyQualifiedRate} text="及时合格率" />
+        <ProgressRate percent={ServiceReport.ReportTimelyRate} text="及时率" />
+        <ProgressRate percent={ServiceReport.ReportQualifiedRate} text="合格率" />
+
+        {/* <Col span={24}>
           <ReactEcharts
             ref={echart => {
               echart && setEcharts1(echart.echarts);
@@ -227,8 +231,8 @@ const TimelyPassRate = props => {
             style={{ height: '180px', width: '100%' }}
           />
           <p className={styles.echartsTitle}>及时合格率</p>
-        </Col>
-        <Col span={8}>
+        </Col> */}
+        {/* <Col span={24}>
           <ReactEcharts
             ref={echart => {
               echart && setEcharts2(echart.echarts);
@@ -249,8 +253,8 @@ const TimelyPassRate = props => {
             style={{ height: '180px', width: '100%' }}
           />
           <p className={styles.echartsTitle}>合格率</p>
-        </Col>
-      </Row>
+        </Col> */}
+      </div>
       <Modal
         title={`服务报告及时合格率`}
         wrapClassName="fullScreenModal"

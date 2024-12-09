@@ -3,7 +3,7 @@
  * @Date: 2024-07-04 11:25:06
  * @LastEditors: outman0611
  * @LastEditTime: 2024-11-21 15:27:48
- * @Description: 
+ * @Description:
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
@@ -21,50 +21,25 @@ import InstallDebugRate from './components/Right/InstallDebugRate_2';
 import EquipUptimeRate from './components/Right/EquipUptimeRate_3';
 import MapContent from './components/Center/MapContent';
 import AfterSaleService from './components/Center/AfterSaleService';
+import homeStyles from '@/pages/screenStyle.less';
+import SystemDashboardPageWrapper from '@/pages/SystemDashboard/components/SystemDashboardPageWrapper.js';
 
 const dvaPropsData = ({ loading, user }) => ({});
 
 const HomeDataScreen = props => {
   const { dispatch } = props;
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   return (
-    <div className={styles.CTScreenWrapper}>
-      <header className={styles.header}>可视化看板</header>
-      <Tooltip title="返回菜单">
-        <RollbackOutlined
-          style={{
-            position: 'absolute',
-            zIndex: 1,
-            border: '2px solid rgb(49 97 141)',
-            fontSize: 16,
-            padding: 4,
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            right: 22,
-            top: 34,
-            color: 'rgb(101, 217, 255)',
-          }}
-          onClick={() => {
-            let meunList = sessionStorage.getItem('menuDatas')
-              ? JSON.parse(sessionStorage.getItem('menuDatas'))
-              : [];
-            if (meunList?.length >= 1) {
-              router.push(meunList[1]);
-            } else {
-              router.push('/ctManage/workbench')
-            }
-          }}
-        />
-      </Tooltip>
-      <main>
+    <div className={`${homeStyles.HomePageWrapper} ${styles.CTScreenWrapper} `}>
+      <SystemDashboardPageWrapper noDate pageName="安装调试">
         <Row
           gutter={[8, 8]}
           style={{ marginLeft: 0, width: '100%' }}
           className={styles.contentWrapper}
         >
-          <Col style={{ width: '27%', minWidth: 400 }} className={styles.leftWrapper}>
+          <Col style={{ width: '27%', minWidth: '25rem' }} className={styles.leftWrapper}>
             {/* 设备信息总览 */}
             <DeviceInfoCount />
             {/* 项目执行情况 */}
@@ -80,7 +55,7 @@ const HomeDataScreen = props => {
             {/* 售后服务情况 */}
             {/* <AfterSaleService /> */}
           </Col>
-          <Col style={{ width: '27%', minWidth: 400 }} className={styles.rightWrapper}>
+          <Col style={{ width: '27%', minWidth: '25rem' }} className={styles.rightWrapper}>
             {/* 客户满意度 */}
             <CustomerSatisfaction />
             {/* 安装调试达标率 */}
@@ -90,7 +65,7 @@ const HomeDataScreen = props => {
             <AfterSaleService />
           </Col>
         </Row>
-      </main>
+      </SystemDashboardPageWrapper>
     </div>
   );
 };

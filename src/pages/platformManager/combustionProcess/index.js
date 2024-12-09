@@ -23,6 +23,7 @@ import moment from 'moment';
 import AssistDataAnalysis from '@/pages/AbnormalIdentifyModel/AssistDataAnalysis';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import SelectPmCemsSupplierModal from './SelectPmCemsSupplierModal';
+import { convertTextByConfig } from '@/utils/utils';
 
 const { Text, Link } = Typography;
 
@@ -149,7 +150,7 @@ const CombustionProcess = props => {
         },
       },
       {
-        title: '企业',
+        title: convertTextByConfig('企业'),
         dataIndex: 'entName',
         key: 'entName',
         width: 180,
@@ -271,7 +272,7 @@ const CombustionProcess = props => {
             }}
             autoComplete="off"
           >
-            <Form.Item label="企业" name="EntCode">
+            <Form.Item label={convertTextByConfig("企业")} name="EntCode">
               <EntAtmoList
                 regionCode={form.getFieldValue('regionCode')}
                 style={{ width: 200 }}

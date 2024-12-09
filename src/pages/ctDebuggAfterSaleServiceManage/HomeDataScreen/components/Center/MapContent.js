@@ -357,11 +357,11 @@ class MapContent extends PureComponent {
           style={{
             position: 'relative',
             transform: `translate(-50%, ${'calc(-50% - 14px)'})`,
-            padding: '0 10px',
+            padding: '8px 10px',
             cursor: 'text',
             width: 166,
             height: 100,
-            background: `url(/ctHomeDataScreen/regionTip.png)`,
+            background: `url(/homeMapBorder.png)`,
             backgroundSize: '100% 100%',
           }}
         >
@@ -369,7 +369,7 @@ class MapContent extends PureComponent {
             style={{
               opacity: 1,
               color: '#52F2FF',
-              height: 'calc(100% - 12px)',
+              height: 'calc(100%)',
             }}
           >
             <div
@@ -378,7 +378,10 @@ class MapContent extends PureComponent {
                 width: 'calc(100% - 28px)',
                 height: 24,
                 lineHeight: '24px',
-                fontWeight: 'bold',
+                // fontWeight: 'bold',
+                paddingLeft: 8,
+                fontSize: 13,
+                paddingTop: 2,
               }}
               title={position.ProviceName}
             >
@@ -397,35 +400,43 @@ class MapContent extends PureComponent {
                   },
                 );
               }}
-              style={{ color: '#4BF3F9', position: 'absolute', top: 6, right: 6, fontSize: 12 }}
+              style={{ color: '#4BF3F9', position: 'absolute', top: 15, right: 13, fontSize: 14 }}
             />
-            <div style={{ height: 'calc(100% - 24px)', display: 'flex', fontWeight: 'bold' }}>
+            <div
+              style={{
+                height: 'calc(100% - 24px)',
+                fontWeight: 'bold',
+                padding: '2px 8px 0',
+              }}
+            >
               <div
                 style={{
                   flex: 1,
                   display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
+                  justifyContent: 'space-between',
+                  fontSize: 13,
+                  color: '#fff',
                 }}
               >
-                <p style={{ color: '#30FDFF', fontSize: 18 }}>{position.EntCount}个</p>
-                <p style={{ fontSize: 12, color: '#fff' }}>企业数量</p>
+                <span style={{}}>企业数量: </span>
+                <span style={{ color: '#30FDFF', fontSize: 14 }}>{position.EntCount}个</span>
               </div>
               <div
                 style={{
                   flex: 1,
                   display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
+                  justifyContent: 'space-between',
+                  fontSize: 13,
+                  color: '#fff',
                 }}
               >
-                <p style={{ color: '#30FDFF', fontSize: 18 }}>{position.PointCount}个</p>
-                <p style={{ fontSize: 12, color: '#fff' }}>废气点位数量</p>
+                <p style={{}}>废气点位数量: </p>
+                <p style={{ color: '#31DAA3', fontSize: 14 }}>{position.PointCount}个</p>
               </div>
             </div>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <span
+            {/* <span
               className={styles.circle}
               style={{
                 display: 'inline-block',
@@ -436,7 +447,17 @@ class MapContent extends PureComponent {
                 boxShadow: ' 0 0 4px 4px rgba(0, 141, 253, .1)',
                 borderRadius: '50%',
               }}
-            ></span>
+            ></span> */}
+            <img
+              src="/location.png"
+              style={{
+                position: 'absolute',
+                top: '100%',
+                left: 'calc(50% - .625rem)',
+                width: '1.25rem',
+                height: '1.25rem',
+              }}
+            />
           </div>
         </div>
       );

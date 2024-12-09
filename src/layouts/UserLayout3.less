@@ -1,0 +1,100 @@
+.userLayoutWrapper {
+  width: 100vw;
+  height: 100vh;
+  background: url(/newLogin2/bg.jpg) no-repeat;
+  background-size: cover;
+  .content {
+    // background: url(/newLogin/contentBg.png) no-repeat;
+    // background-size: 100% 100%;
+    // background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding-bottom: 150px;
+    // padding: 4% 5%;
+
+    .sysName {
+      font-weight: 500;
+      font-size: 50px;
+      color: #1c242e;
+      line-height: 80px;
+      position: relative;
+      margin-bottom: 50px;
+      display: flex;
+      align-items: center;
+      z-index: 1;
+    }
+    .loginContent {
+      margin-bottom: 100px;
+      // width: 100%;
+      // background: url(/newLogin2/feature.png) no-repeat;
+    }
+    .featureImg {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      img {
+        width: 200%;
+        margin-bottom: -40px;
+      }
+    }
+
+    .loginFormContent {
+      background: url(/newLogin2/loginForm_bg.png) no-repeat;
+      height: 480px;
+      /* margin-top: 40px; */
+      width: 440px;
+      position: relative;
+
+      h1 {
+        font-family: Microsoft YaHei;
+        font-weight: 500;
+        font-size: 26px;
+        color: #193856;
+        line-height: 70px;
+        text-align: center;
+        padding: 30px;
+        background: url(/newLogin2/hgfl.png) no-repeat;
+        background-position: center;
+        margin: 0;
+      }
+
+      :global {
+        .ant-input-affix-wrapper-lg {
+          background: #f2f2f2;
+          border-radius: 10px;
+          border-color: #f2f2f2;
+          line-height: 34px;
+        }
+
+        .ant-input {
+          background: #f2f2f2;
+        }
+
+        .antd-pro-pages-user-login-components-login-index-submit {
+          background: linear-gradient(0deg, #00a0e3, #0c69b4);
+          border-radius: 30px;
+          margin-top: 20px !important;
+          height: 50px;
+          font-size: 20px;
+          font-weight: 500;
+        }
+
+        .antd-pro-pages-user-login-components-login-index-prefixIcon {
+          font-size: 20px;
+          position: relative;
+        }
+
+        .antd-pro-pages-user-login-components-login-index-login
+          .ant-input-affix-wrapper
+          .ant-input:not(:first-child) {
+          margin-left: 28px;
+        }
+      }
+    }
+  }
+}

@@ -97,7 +97,7 @@ const initializeState = {
 };
 
 export default Model.extend({
-  namespace: 'sysDashboard',
+  namespace: 'sysDashboard1',
   state: initializeState,
   effects: {
     // 获取系统中间页

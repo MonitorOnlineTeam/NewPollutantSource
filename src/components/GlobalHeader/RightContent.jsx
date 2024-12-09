@@ -75,7 +75,13 @@ const GlobalHeaderRight = props => {
   }
   const isShowSelectSystem = sessionStorage.getItem('isShowSelectSystem');
   const menu = (
-    <Menu selectedKeys={[sessionStorage.getItem('sysMenuId') || Cookie.get('sysMenuId') || sysPollutantTypeList?.[0]?.ID]}>
+    <Menu
+      selectedKeys={[
+        sessionStorage.getItem('sysMenuId') ||
+          Cookie.get('sysMenuId') ||
+          sysPollutantTypeList?.[0]?.ID,
+      ]}
+    >
       {sysPollutantTypeList.map(item => {
         return (
           <Menu.Item key={item.ID}>
@@ -84,7 +90,7 @@ const GlobalHeaderRight = props => {
               rel="noopener noreferrer"
               onClick={() => {
                 UpdateUserProject(undefined);
-                clearCommonData()
+                clearCommonData();
                 let url = item.Url ? new URL(item.Url) : item.Url;
                 if (item.ID !== sessionStorage.getItem('sysMenuId')) {
                   if (url && (url.protocol === 'http:' || url.protocol === 'https:')) {
@@ -161,16 +167,18 @@ const GlobalHeaderRight = props => {
       <Popover
         placement="bottom"
         zIndex={9999}
-        overlayClassName={styles.expandPopSty}
+        // overlayClassName={styles.expandPopSty}
         content={isFullscreen ? '退出全屏' : '全屏展示'}
       >
-        <span onClick={toggleFullscreen} style={{ cursor: 'pointer', paddingRight: 4 }}>
+        <a className={styles.action} onClick={toggleFullscreen}>
+          {/* <span onClick={toggleFullscreen} style={{ cursor: 'pointer', paddingRight: 4 }}> */}
           {isFullscreen ? (
             <CompressOutlined style={{ color: '#fff' }} />
           ) : (
             <ExpandOutlined style={{ color: '#fff' }} />
           )}
-        </span>
+          {/* </span> */}
+        </a>
       </Popover>
       <Avatar menu {...props} />
       {/* <SelectLang className={styles.action} /> */}

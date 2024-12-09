@@ -76,7 +76,7 @@ const Index = (props) => {
             <QuestionCircleOutlined style={{position:'absolute',right:-18,top:7}}/>
           </Popover>}
           </span>
-          <img  className={styles.titleImgSty} src='/title_bg2.png'/>
+          <img  className={styles.titleImgSty} src='/StandardScreen/card_title.png'/>
           {showBtn?
           <div className={styles.titleBtn}>
             {btnArr.map(item=>{

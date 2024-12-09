@@ -207,11 +207,11 @@ a:hover {
   // height: calc(100vh - 170px);
   // overflow-y: auto;
   border: none;
-  :global{
-  .ant-legacy-form-item{
-   margin-bottom: 8px;
+  :global {
+    .ant-legacy-form-item {
+      margin-bottom: 8px;
+    }
   }
- }
 }
 
 .center {
@@ -309,6 +309,12 @@ a:hover {
 }
 
 :global {
+  .ant-layout-header {
+    background: #1c2545;
+  }
+  .ant-pro-top-nav-header-main {
+    padding-left: 8px;
+  }
   .ant-layout .ant-layout-header:first-child {
     display: none;
   }
@@ -381,8 +387,7 @@ a:hover {
   }
 
   .ant-menu-dark .ant-menu-submenu-selected {
-    background-color: transparent;
-    /* background-color: white; */
+    background-color: #0e1228;
     font-weight: 900;
     color: #1890ff !important;
     border-bottom: 2px solid #1890ff !important;
@@ -1086,9 +1091,9 @@ a:hover {
   .ant-modal-body {
     padding: 12px 16px;
   }
-  .ant-card-body{
-    padding: 8px  24px;
-   }
+  .ant-card-body {
+    padding: 8px 24px;
+  }
 }
 .isFooterSty :global {
   //有底部提交按钮的弹框
@@ -1186,8 +1191,8 @@ a:hover {
   .ant-table-row:nth-child(2n + 1) .ant-table-cell-fix-right {
     background-color: #fff; //左侧固定
   }
-  textarea.ant-input{
-    margin-bottom:0;
+  textarea.ant-input {
+    margin-bottom: 0;
   }
 }
 .red {
@@ -1381,10 +1386,11 @@ a:hover {
       padding-right: 8px;
     }
   }
-  .ant-card-body{
+  .ant-card-body {
     padding: 8px 24px;
   }
-  .ant-picker,.ant-input-number{
+  .ant-picker,
+  .ant-input-number {
     width: 100% !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
@@ -1432,8 +1438,8 @@ a:hover {
   }
 }
 .smallCardWrapper :global {
-  .ant-pro-page-header-wrap-children-content>.ant-card>.ant-card-body{
-    padding:8px 24px;
+  .ant-pro-page-header-wrap-children-content > .ant-card > .ant-card-body {
+    padding: 8px 24px;
   }
 }
 @keyframes fades {
@@ -1454,23 +1460,24 @@ a:hover {
     transform: translateX(0);
   }
 }
-.ant-transfer-disabled .ant-transfer-list :global{
- background-color: transparent;
+.ant-transfer-disabled .ant-transfer-list :global {
+  background-color: transparent;
 }
 
-.darkthemePaginationSty  :global{
+.darkthemePaginationSty :global {
   padding: 12px 0;
-  .ant-pagination-item-active, .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
-    background-color: #1890FF;
+  .ant-pagination-item-active,
+  .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+    background-color: #1890ff;
     color: #fff;
-    a{
+    a {
       color: #fff;
     }
   }
 }
-.autoFormSmallCardHeadTitle  :global{
-  .ant-card-head-title{
-   padding: 8px 0 0 0;
+.autoFormSmallCardHeadTitle :global {
+  .ant-card-head-title {
+    padding: 8px 0 0 0;
   }
 }
 .ant-rate  :global{ //评分 五角星默认颜色

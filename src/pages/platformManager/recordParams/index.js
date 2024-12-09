@@ -22,6 +22,7 @@ import SdlTable from '@/components/SdlTable';
 import { API } from '@config/API';
 import moment from 'moment';
 import EquipmentParmars from '@/pages/platformManager/equipmentParmars/ContentPages.js';
+import { convertTextByConfig } from '@/utils/utils';
 
 const { Text, Link } = Typography;
 
@@ -109,7 +110,7 @@ const RecordParams = props => {
         },
       },
       {
-        title: '企业',
+        title: convertTextByConfig('企业'),
         dataIndex: 'entName',
         key: 'entName',
         width: 180,
@@ -231,7 +232,7 @@ const RecordParams = props => {
             }}
             autoComplete="off"
           >
-            <Form.Item label="企业" name="EntCode">
+            <Form.Item label={convertTextByConfig("企业")} name="EntCode">
               <EntAtmoList
                 regionCode={form.getFieldValue('regionCode')}
                 style={{ width: 200 }}

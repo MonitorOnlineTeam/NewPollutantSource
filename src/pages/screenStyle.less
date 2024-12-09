@@ -1,0 +1,56 @@
+// 标准首页大屏样式
+.HomePageWrapper {
+  // background: url(/StandardScreen/bg.jpg) no-repeat !important;
+  // background-size: cover !important;
+}
+
+// 图表图例
+.chartLegendWrapper {
+  // display: flex;
+  // // justify-content: space-between;
+  // height: 100%;
+  padding: .625rem 0;
+
+  .lengendItem {
+    display: flex;
+    justify-content: space-around;
+    line-height: 1.875rem;
+    height: 1.875rem;
+    width: 100%;
+    padding: .125rem .875rem;
+    font-weight: bold;
+    margin-bottom: 4%;
+    align-items: center;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    .label {
+      width: 8.5rem;
+      display: inline-block;
+      display: flex;
+      align-items: center;
+      i {
+        display: inline-block;
+        width: .75rem;
+        height: .75rem;
+        border-radius: .125rem;
+        margin-right: .625rem;
+      }
+      span {
+        // color: #a2e0ff;
+        display: inline-block;
+        flex: 1;
+        font-size: .9375rem;
+        // width: 6.25rem;
+      }
+    }
+    .value {
+      width: 3.75rem;
+      font-weight: bold;
+      font-size: .9375rem;
+      // color: #a2e0ff;
+      display: inline-block;
+      text-align: right;
+    }
+  }
+}

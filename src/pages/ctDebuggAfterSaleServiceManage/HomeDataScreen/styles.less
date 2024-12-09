@@ -6,13 +6,16 @@
 .CTScreenWrapper {
   height: 100vh;
   width: 100vw;
-  min-width: 1500px;
+  // min-width: 93.75rem;
   overflow: auto;
   color: #fff;
   position: relative;
-  background: url(/ctHomeDataScreen/bg.png) no-repeat;
+  // background: url(/ctHomeDataScreen/bg.png) no-repeat;
   // background-color: #030a22;
-  background-size: cover;
+  // background-size: cover;
+  // background: url(/StandardScreen/bg.jpg) no-repeat !important;
+  // background-size: cover !important;
+
   td.bg_white {
     background-color: #fff;
   }
@@ -25,7 +28,7 @@
   /*滚动条颜色*/
   @scrollbar-thumb-color: #305090;
   /*滚动条大小*/
-  @scrollbar-width: 9px;
+  @scrollbar-width: 0.5625rem;
 
   ::-webkit-scrollbar-track-piece {
     -webkit-border-radius: 0;
@@ -33,26 +36,26 @@
 
   ::-webkit-scrollbar {
     width: @scrollbar-width;
-    height: 9px;
+    height: 0.5625rem;
   }
 
   ::-webkit-scrollbar-track {
-    border-radius: 10px;
+    border-radius: 0.625rem;
     background-color: @scrollbar-track-color;
   }
 
   ::-webkit-scrollbar-thumb {
-    height: 50px;
+    height: 3.125rem;
     background-color: @scrollbar-thumb-color;
-    -webkit-border-radius: 4px;
-    outline-offset: -2px;
-    border: 2px solid @scrollbar-thumb-color;
+    -webkit-border-radius: 0.25rem;
+    outline-offset: -0.125rem;
+    border: 0.125rem solid @scrollbar-thumb-color;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    height: 50px;
+    height: 3.125rem;
     background-color: @scrollbar-thumb-color;
-    -webkit-border-radius: 4px;
+    -webkit-border-radius: 0.25rem;
   }
 
   .center {
@@ -69,36 +72,17 @@
       display: flex;
       flex-direction: column;
     }
-  }
-
-  header {
-    height: 60px;
-    text-align: center;
-    background: url(/ctHomeDataScreen/top.png) no-repeat;
-    background-size: 100% 100%;
-
-    font-size: 26px;
-    font-weight: bold;
-    color: #ffffff;
-    line-height: 50px;
-    display: flex;
-    justify-content: center;
-
-    .entName {
-      width: 28%;
-      font-size: 24px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+    .antd-pro-pages-system-dashboard-styles-dashboardPageWrapper {
+      background: url(/StandardScreen/bg.jpg) no-repeat !important;
     }
   }
-
   main {
-    padding: 10px;
-    height: calc(100vh - 80px);
+    padding: 0.625rem;
+    height: calc(100% - 3.75rem);
+    overflow: auto;
 
     .contentWrapper {
-      height: calc(100vh - 100px);
+      height: calc(100vh - 6.25rem);
     }
 
     // & > div {
@@ -111,23 +95,23 @@
       flex-direction: column;
 
       .headerWrapper {
-        margin-top: 4px;
-        padding-left: 32px;
-        height: 37px;
+        margin-top: 0.25rem;
+        padding-left: 2rem;
+        height: 2.3125rem;
         background: url(/currencyResOver/btbk.png);
         background-size: 100% 100%;
-        font-size: 16px;
+        font-size: 1rem;
 
         .title {
           color: #fff;
           font-weight: 500;
-          width: calc(100% - 140px);
+          width: calc(100% - 8.75rem);
         }
 
         .extra {
           position: absolute;
-          right: 26px;
-          top: 8px;
+          right: 1.625rem;
+          top: 0.5rem;
           :global {
             .ant-radio-button-wrapper {
               background: #021235;
@@ -135,9 +119,9 @@
               border-color: #1a65e1;
               font-weight: bold;
               border-radius: 0;
-              height: 26px;
-              line-height: 24px;
-              padding: 0 10px;
+              height: 1.625rem;
+              line-height: 1.5rem;
+              padding: 0 0.625rem;
             }
             .ant-radio-button-wrapper-checked {
               background-color: #1d70f5;
@@ -152,7 +136,7 @@
       }
 
       .boxContent {
-        padding: 0 16px;
+        padding: 0 1rem;
         flex: 1;
         background-color: #051031;
       }
@@ -160,58 +144,71 @@
 
     .echartsTitle {
       text-align: center;
-      margin-top: -18px;
+      margin-top: -1.125rem;
       font-weight: bold;
-      // font-size: 15px;
+      // font-size: .9375rem;
     }
 
     // 设备信息总览
     .DeviceInfoCountWrapper {
       height: 100%;
       cursor: pointer;
-      p {
-        width: 100px;
-        text-align: center;
-      }
-      .text {
-        color: #d1e4ff;
-        background: url(/ctHomeDataScreen/text_bg.png) no-repeat;
-        background-size: 100%;
-        background-position-y: 6px;
-        line-height: 26px;
-        font-weight: 500;
-      }
+      // p {
+      //   width: 6.25rem;
+      //   text-align: center;
+      // }
+      // .text {
+      //   color: #d1e4ff;
+      //   background: url(/ctHomeDataScreen/text_bg.png) no-repeat;
+      //   background-size: 100%;
+      //   background-position-y: .375rem;
+      //   line-height: 1.625rem;
+      //   font-weight: 500;
+      // }
 
-      .number {
-        font-family: 'YouSheBiaoTiHei';
-        font-size: 20px;
-      }
+      // .number {
+      //   font-family: 'YouSheBiaoTiHei';
+      //   font-size: 1.25rem;
+      // }
     }
 
     // 项目执行情况
     .ProjectExecutionWrapper {
-      & > div {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      .content {
+        flex: 1;
       }
-      .number {
-        background: url(/ctHomeDataScreen/circle.png);
-        text-align: center;
-        width: 120px;
-        height: 120px;
-        line-height: 120px;
-        font-size: 26px;
-      }
-      p {
-        text-align: center;
-        margin-top: 10px;
-        font-weight: 500;
-      }
+      // & > div {
+      //   display: flex;
+      //   flex-direction: column;
+      //   align-items: center;
+      // }
+      // .number {
+      //   background: url(/ctHomeDataScreen/circle.png);
+      //   text-align: center;
+      //   width: 7.5rem;
+      //   height: 7.5rem;
+      //   line-height: 7.5rem;
+      //   font-size: 1.625rem;
+      // }
+      // p {
+      //   text-align: center;
+      //   margin-top: .625rem;
+      //   font-weight: 500;
+      // }
     }
 
     // 服务报告及时合格率
     .TimelyPassRateWrapper {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 2.5rem 1.25rem;
+      align-items: center;
+      justify-content: space-around;
     }
 
     // 服务响应及时率
@@ -229,17 +226,17 @@
         text-align: center;
         .count {
           font-family: 'YouSheBiaoTiHei';
-          font-size: 24px;
-          margin-top: -6px;
+          font-size: 1.5rem;
+          margin-top: -0.375rem;
 
           span {
-            font-size: 16px;
+            font-size: 1rem;
           }
         }
 
         .text {
-          font-size: 13px;
-          margin-top: -6px;
+          font-size: 0.8125rem;
+          margin-top: -0.375rem;
         }
       }
     }
@@ -249,30 +246,45 @@
       display: flex;
       flex-direction: column;
       height: 100%;
-      .statisticsNum {
-        background: url(/ctHomeDataScreen/customer.png);
-        background-size: 100% 100%;
-        line-height: 46px;
-        padding: 0 20px;
-        margin-top: 10px;
-        .text {
-          margin-left: 40px;
-          font-weight: 500;
-        }
-
-        .number {
-          font-family: 'YouSheBiaoTiHei';
-          float: right;
-          background: linear-gradient(to top, #1ca1ff, #fff);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          font-size: 18px;
-        }
-      }
-      .echartsContent {
-        flex: 1;
+      padding: 1.25rem;
+      .itemBox {
+        background-color: #1d314c;
+        display: flex;
+        justify-content: space-between;
+        padding: 0.375rem 0.625rem;
         align-items: center;
+        font-weight: 500;
+        font-size: 0.875rem;
+
+        .rate {
+          color: #2dffeb;
+          font-size: 1.375rem;
+        }
       }
+      // .statisticsNum {
+      //   background: url(/ctHomeDataScreen/customer.png);
+      //   background-size: 100% 100%;
+      //   line-height: 2.875rem;
+      //   padding: 0 1.25rem;
+      //   margin-top: .625rem;
+      //   .text {
+      //     margin-left: 2.5rem;
+      //     font-weight: 500;
+      //   }
+
+      //   .number {
+      //     font-family: 'YouSheBiaoTiHei';
+      //     float: right;
+      //     background: linear-gradient(to top, #1ca1ff, #fff);
+      //     -webkit-background-clip: text;
+      //     -webkit-text-fill-color: transparent;
+      //     font-size: 1.125rem;
+      //   }
+      // }
+      // .echartsContent {
+      //   flex: 1;
+      //   align-items: center;
+      // }
     }
 
     // 设备运行完好率
@@ -281,7 +293,7 @@
       display: flex;
       align-items: center;
       .rate {
-        height: 180px;
+        height: 11.25rem;
         width: 100%;
         background: url(/ctHomeDataScreen/good.png) center center no-repeat;
         text-align: center;
@@ -291,8 +303,8 @@
 
         span {
           font-family: 'YouSheBiaoTiHei';
-          margin-top: -40px;
-          font-size: 28px;
+          margin-top: -2.5rem;
+          font-size: 1.75rem;
           color: #1afcff;
         }
       }
@@ -306,38 +318,38 @@
         background: url(/ctHomeDataScreen/title2_bg.png) no-repeat;
         background-size: contain;
         background-position: center;
-        width: 168px;
-        height: 24px;
-        margin: 10px 0;
-        padding-left: 25px;
-        font-size: 15px;
+        width: 10.5rem;
+        height: 1.5rem;
+        margin: 0.625rem 0;
+        padding-left: 1.5625rem;
+        font-size: 0.9375rem;
       }
 
       .listWrapper {
-        // padding: 0 20px;
-        // height: calc(100% - 24px - 20px);
+        // padding: 0 1.25rem;
+        // height: calc(100% - 1.5rem - 1.25rem);
         height: 100%;
         overflow: hidden;
         .header {
-          background: rgba(16, 41, 81, 0.6);
-          color: #03aae2;
-          line-height: 38px;
+          background: rgba(30, 60, 116, 0.6);
+          color: #26c3f8;
+          line-height: 2.625rem;
           text-align: center;
           font-weight: 500;
         }
 
         .listContent {
-          height: calc(100% - 48px);
+          height: calc(100% - 3rem);
           overflow: hidden;
         }
         .listItem {
-          line-height: 38px;
+          line-height: 2.375rem;
           text-align: center;
           font-weight: 500;
-          background-color: rgba(16, 41, 81, 0.3);
-          &:nth-child(2n) {
-            background-color: #010e33;
-          }
+          // background-color: rgba(16, 41, 81, 0.3);
+          // &:nth-child(2n) {
+          //   background-color: transparent;
+          // }
 
           & > div {
             &:first-child {
@@ -356,7 +368,7 @@
     .leftWrapper {
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 78px);
+      height: calc(100vh - 4.875rem);
       gap: 8;
 
       & > div {
@@ -367,10 +379,10 @@
     .centerWrapper {
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 78px);
-      min-height: 936px;
+      height: calc(100vh - 4.875rem);
+      min-height: 58.5rem;
       .mapWrapper {
-        min-height: 640px;
+        min-height: 40rem;
         flex: 2;
         position: relative;
         background: '#0b172f';
@@ -379,32 +391,32 @@
           position: fixed;
           z-index: 1000;
           width: 100%;
-          height: calc(100vh - 60px);
+          height: calc(100vh - 3.75rem);
           left: 0;
         }
 
         .mapOperationBtn {
           position: absolute;
-          top: 20px;
-          right: 20px;
-          width: 36px;
+          top: 1.25rem;
+          right: 1.25rem;
+          width: 2.25rem;
           img {
             cursor: pointer;
           }
         }
 
         .infoWindowContent {
-          border: 1px solid #007bfd;
-          border-radius: 8px;
+          border: 0.0625rem solid #007bfd;
+          border-radius: 0.5rem;
           .header {
             background: rgb(8, 99, 206, 0.4);
             padding-bottom: 0;
-            height: 30px;
-            line-height: 30px;
-            padding-left: 10px;
+            height: 1.875rem;
+            line-height: 1.875rem;
+            padding-left: 0.625rem;
 
             h2 {
-              font-size: 14px;
+              font-size: 0.875rem;
               color: #52f2ff;
               white-space: nowrap;
               overflow: hidden;
@@ -416,7 +428,7 @@
             }
 
             p {
-              margin-top: 10px;
+              margin-top: 0.625rem;
 
               span {
                 font-weight: 500;
@@ -425,15 +437,15 @@
             }
           }
           h3 {
-            font-size: 13px;
+            font-size: 0.8125rem;
             color: #fff;
-            border-bottom: 1px solid #0a7bcb;
-            width: 62px;
-            padding: 0 3px;
+            border-bottom: 0.0625rem solid #0a7bcb;
+            width: 3.875rem;
+            padding: 0 0.1875rem;
             background: linear-gradient(0deg, rgba(5, 78, 146, 0.8), #0a2262);
           }
           .desc {
-            padding: 10px;
+            padding: 0.625rem;
             overflow: hidden;
             background: rgba(4, 45, 111, 0.6);
             display: flex;
@@ -448,23 +460,23 @@
               p {
                 margin: 0;
                 padding: 0;
-                line-height: 26px;
-                font-size: 13px;
+                line-height: 1.625rem;
+                font-size: 0.8125rem;
                 // color: #5d5d5d;
 
                 span {
                   color: #70a7ff;
                   font-weight: bold;
-                  padding-left: 10px;
+                  padding-left: 0.625rem;
                   position: relative;
                   i {
-                    width: 6px;
-                    height: 6px;
+                    width: 0.375rem;
+                    height: 0.375rem;
                     background: #0895d7;
                     border-radius: 50%;
                     position: absolute;
-                    left: 0px;
-                    top: 6px;
+                    left: 0rem;
+                    top: 0.375rem;
                   }
                 }
               }
@@ -473,8 +485,8 @@
             .desc-r {
               width: 50%;
               display: inline-block;
-              /* width: 100px; */
-              height: 100px;
+              /* width: 6.25rem; */
+              height: 6.25rem;
               background: #ccc;
 
               img {
@@ -484,23 +496,23 @@
 
           .tableList {
             background: rgba(4, 45, 111, 0.6);
-            padding: 10px;
+            padding: 0.625rem;
 
             ul {
               background: #002259;
               display: flex;
               text-align: center;
-              height: 30px;
-              line-height: 30px;
+              height: 1.875rem;
+              line-height: 1.875rem;
 
               &.title {
                 background: #061f48;
                 color: rgb(3, 170, 226);
-                font-size: 13px;
+                font-size: 0.8125rem;
               }
               li {
                 flex: 1;
-                font-size: 13px;
+                font-size: 0.8125rem;
                 font-weight: bold;
               }
             }
@@ -528,13 +540,13 @@
         }
 
         .gobackBox {
-          width: 60px;
-          line-height: 29px;
+          width: 3.75rem;
+          line-height: 1.8125rem;
           background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
-          border: 1px solid #007bfd;
+          border: 0.0625rem solid #007bfd;
           position: absolute;
-          right: 10px;
-          top: 10px;
+          right: 0.625rem;
+          top: 0.625rem;
           color: #fff;
           text-align: center;
           font-weight: bold;
@@ -547,20 +559,20 @@
           // color: rgb(56,168,212);
           color: #fff;
           background: rgb(23, 30, 70);
-          margin-top: 5px;
-          margin-left: calc(-50% - 0px);
-          margin-right: calc(50% - 32px);
+          margin-top: 0.3125rem;
+          margin-left: calc(-50% - 0rem);
+          margin-right: calc(50% - 2rem);
           text-align: center;
-          padding: 2px 4px;
-          border-radius: 2px;
-          border: 1px solid rgba(56, 168, 212, 0.4);
+          padding: 0.125rem 0.25rem;
+          border-radius: 0.125rem;
+          border: 0.0625rem solid rgba(56, 168, 212, 0.4);
         }
 
         .pointTitlePopSty {
           background: #000001;
-          margin-left: calc(-50% - 0px);
-          margin-right: calc(50% - 32px);
-          border-radius: 1px;
+          margin-left: calc(-50% - 0rem);
+          margin-right: calc(50% - 2rem);
+          border-radius: 0.0625rem;
           div {
             margin-left: 0;
             margin-right: 0;
@@ -568,14 +580,14 @@
         }
 
         .titleInfoWindow {
-          padding: 6px;
+          padding: 0.375rem;
           background-color: #3c4860;
         }
         :global {
           .amap-info-content {
             position: relative;
             background: transparent;
-            border-radius: 1px;
+            border-radius: 0.0625rem;
             padding: 0;
             .amap-info-close {
               display: none;
@@ -583,17 +595,17 @@
           }
           .bottom-center .amap-info-sharp {
             //修改向下箭头的大小
-            bottom: 2px;
+            bottom: 0.125rem;
             left: 50%;
-            margin-left: -6px;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid #3c4860;
+            margin-left: -0.375rem;
+            border-left: 0.375rem solid transparent;
+            border-right: 0.375rem solid transparent;
+            border-top: 0.375rem solid #3c4860;
           }
         }
 
         .mapCountWrapper {
-          margin-left: 20px;
+          margin-left: 1.25rem;
           display: inline-block;
           &.fullScreen {
             width: 40vw;
@@ -608,32 +620,32 @@
             display: inline-block;
             background: url(/ctHomeDataScreen/number_btn_bg.png) no-repeat;
             background-size: 100% 100%;
-            width: 128px;
-            height: 34px;
-            line-height: 34px;
+            width: 8rem;
+            height: 2.125rem;
+            line-height: 2.125rem;
             text-align: center;
             font-weight: bold;
 
             .title {
               color: #9bdef0;
-              font-size: 16px;
-              line-height: 30px;
-              margin-top: 6px;
-              margin-bottom: 5px;
+              font-size: 1rem;
+              line-height: 1.875rem;
+              margin-top: 0.375rem;
+              margin-bottom: 0.3125rem;
             }
             .count {
               color: #00f1ff;
-              font-size: 20px;
-              line-height: 30px;
-              margin-bottom: 4px;
+              font-size: 1.25rem;
+              line-height: 1.875rem;
+              margin-bottom: 0.25rem;
             }
           }
         }
 
         .mapSearchWrapper {
           position: absolute;
-          top: 10px;
-          left: 20px;
+          top: 0.625rem;
+          left: 1.25rem;
 
           :global {
             .ant-radio-button-wrapper {
@@ -651,8 +663,8 @@
             .ant-picker {
               background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
               border-color: #007bfd;
-              height: 26px;
-              line-height: 26px;
+              height: 1.625rem;
+              line-height: 1.625rem;
               border-radius: 0;
             }
 
@@ -668,35 +680,35 @@
           // 搜索企业
           .SelectWrapper {
             // position: absolute;
-            // left: 20px;
-            // top: 48px;
+            // left: 1.25rem;
+            // top: 3rem;
             :global {
               .ant-select:not(.ant-select-customize-input) .ant-select-selector {
                 border-color: #007bfd;
                 background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
                 // background: rgba(10, 125, 254, 0.4);
                 color: #fff;
-                height: 26px;
-                line-height: 26px;
+                height: 1.625rem;
+                line-height: 1.625rem;
                 border-radius: 0;
               }
 
               .ant-select-single:not(.ant-select-customize-input)
                 .ant-select-selector
                 .ant-select-selection-search-input {
-                height: 26px;
-                line-height: 26px;
+                height: 1.625rem;
+                line-height: 1.625rem;
               }
 
               .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
-                line-height: 24px;
+                line-height: 1.5rem;
                 color: #70a7ff;
                 font-weight: bold;
               }
 
               .ant-select-selection-item {
                 font-weight: 500;
-                line-height: 24px;
+                line-height: 1.5rem;
               }
 
               .ant-select-clear {
@@ -706,34 +718,34 @@
 
               .ant-select-arrow {
                 color: #59deff;
-                font-size: 10px;
-                right: 6px;
+                font-size: 0.625rem;
+                right: 0.375rem;
               }
             }
           }
         }
         .goback {
           position: absolute;
-          top: 64px;
-          right: 70px;
+          top: 4rem;
+          right: 4.375rem;
         }
 
         .legend {
           position: absolute;
-          bottom: 26px;
-          right: 20px;
+          bottom: 1.625rem;
+          right: 1.25rem;
 
           .legendItem {
             background: url(/ctHomeDataScreen/legend_bg.png) no-repeat;
             color: #fff;
-            width: 88px;
-            height: 36px;
-            line-height: 40px;
+            width: 5.5rem;
+            height: 2.25rem;
+            line-height: 2.5rem;
             display: flex;
             /* flex-direction: row; */
             align-items: center;
             /* justify-content: space-around; */
-            padding: 0 10px;
+            padding: 0 0.625rem;
             font-weight: bold;
             background-size: 100% 100%;
           }
@@ -744,7 +756,7 @@
     .rightWrapper {
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 78px);
+      height: calc(100vh - 4.875rem);
       gap: 8;
 
       & > div {
@@ -774,7 +786,7 @@
 
 .datePickerPopup {
   // background: linear-gradient(0deg, rgba(10, 125, 254, 0.4), rgba(10, 124, 255, 0));
-  border: 1px solid rgb(0, 123, 253);
+  border: 0.0625rem solid rgb(0, 123, 253);
   border-bottom: 0;
 
   :global {
