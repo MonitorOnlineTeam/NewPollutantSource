@@ -35,26 +35,51 @@ const HomeCard = props => {
           });
           break;
         case '上月':
-          if(lastTime){
+          if (lastTime) {
             data.push({
               name: '上月',
-              time: [moment().subtract(2, 'months').date(21).startOf('day'), moment().subtract(1, 'months').date(20).endOf('day')],
+              time: [
+                moment()
+                  .subtract(2, 'months')
+                  .date(21)
+                  .startOf('day'),
+                moment()
+                  .subtract(1, 'months')
+                  .date(20)
+                  .endOf('day'),
+              ],
             });
-          }else{
+          } else {
             data.push({
               name: '上月',
-              time: [moment() .subtract(1, 'months').startOf('months'),moment().subtract(1, 'months').endOf('months') ],
+              time: [
+                moment()
+                  .subtract(1, 'months')
+                  .startOf('months'),
+                moment()
+                  .subtract(1, 'months')
+                  .endOf('months'),
+              ],
             });
           }
 
           break;
         case '本年':
-          if(lastTime){
+          if (lastTime) {
             data.push({
               name: '本年',
-              time: [ moment().subtract(1, 'year').date(20).endOf('day'), moment().subtract(2, 'months').date(21).startOf('day')],
+              time: [
+                moment()
+                  .subtract(1, 'year')
+                  .date(20)
+                  .endOf('day'),
+                moment()
+                  .subtract(2, 'months')
+                  .date(21)
+                  .startOf('day'),
+              ],
             });
-          }else{
+          } else {
             data.push({
               name: '本年',
               time: [moment().startOf('year'), moment().endOf('year')],

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-06-03 11:20:32
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-07-22 16:52:40
+ * @Last Modified time: 2024-12-09 14:28:09
  * @Description:  菜单组件
  */
 import React, { Component } from 'react';
@@ -214,7 +214,7 @@ class SdlMenu extends Component {
               </Menu>
             </div>
           </div>
-          <div style={{ minWidth: 320 }}></div>
+          <div style={{ width: 250 }}></div>
         </div>
       </div>
     );

@@ -179,7 +179,6 @@ class BasicLayout extends Component {
               <>
                 {isShowLogo && logoRender()} {/*  || (isLogoScroll && styles.layoutSty2) 带logo的*/}
                 <a className={isScroll && styles.layoutSty} href={currentMenu?.[0]?.path}>
-                  {' '}
                   <h1
                     style={{ width: isScroll && _settings.title?.length * 19 }}
                     title={_settings.title}

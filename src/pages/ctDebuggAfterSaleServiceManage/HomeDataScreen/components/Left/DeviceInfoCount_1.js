@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import styles from '../../styles.less';
-import HomeCard from '../HomeCard';
+import { HomeCard, StatisticNumber } from '@/components/HomeComponents';
 import moment from 'moment';
 import DeviceInfoCountModal from '../Modals/DeviceInfoCountModal';
+import homeStyles from '@/pages/screenStyle.less';
 
 let myChart;
 const dvaPropsData = ({ loading }) => ({
@@ -43,7 +44,7 @@ const DeviceInfoCount = props => {
 
   return (
     <HomeCard
-      style={{ minHeight: 200, flex: '0 1 200px' }}
+      style={{ minHeight: '12.5rem', flex: '0 1 12.5rem' }}
       title="设备信息总览"
       timeTypes={['本年', '去年']}
       onClick={onOpenModal}
@@ -55,18 +56,10 @@ const DeviceInfoCount = props => {
     >
       <Row className={`${styles.DeviceInfoCountWrapper}`} onClick={onOpenModal}>
         <Col span={12} className={styles.center}>
-          <img src="/ctHomeDataScreen/ent_big.png" />
-          <div>
-            <p className={styles.text}>企业数量</p>
-            <p className={styles.number}>{nums.EntNum}个</p>
-          </div>
+          <StatisticNumber value={nums.EntNum} text={'企业数量(个)'} uiDisplayType={1} />
         </Col>
         <Col span={12} className={styles.center}>
-          <img src="/ctHomeDataScreen/gas_big.png" />
-          <div>
-            <p className={styles.text}>废气点位数量</p>
-            <p className={styles.number}>{nums.PointNum}个</p>
-          </div>
+          <StatisticNumber value={nums.PointNum} text={'废气点位数量(个)'} uiDisplayType={1} />
         </Col>
       </Row>
       {open && (

@@ -8,6 +8,11 @@
   src: url('/iconFont/youshebiaotihei.ttf') format('truetype'); /* 根据你的字体文件格式调整format */
 }
 
+@font-face {
+  font-family: 'YouSheHeiTi';
+  src: url('/iconFont/yousheheiti.TTF') format('truetype'); /* 根据你的字体文件格式调整format */
+}
+
 .textDescModal {
   position: fixed;
   width: 100vw;
@@ -89,6 +94,7 @@
   color: #fff;
   position: relative;
   background: url(/SystemDashboard/page_bg.png) no-repeat;
+  // background: url(/StandardScreen/bg.jpg) no-repeat;
   background-size: cover;
   td.bg_white {
     background-color: #fff;
@@ -153,8 +159,8 @@
     text-align: center;
     background: url(/SystemDashboard/header_bg.png) no-repeat;
     background-size: 100% 170%;
-    // font-family: YouSheBiaoTiHei;
-    font-size: 1.875rem;
+    font-family: YouSheBiaoTiHei;
+    font-size: 2.625rem;
     font-weight: bold;
     // color: #4fd3ff;
     line-height: 3.125rem;
@@ -305,6 +311,7 @@
     overflow: auto;
     .contentWrapper {
       height: calc(100%);
+
     }
 
     // & > div {

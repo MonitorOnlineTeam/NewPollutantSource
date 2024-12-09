@@ -2,11 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal } from 'antd';
 import styles from '../../styles.less';
-import HomeCard from '../HomeCard';
+import screenStyles from '@/pages/screenStyle.less'
+import { HomeCard } from '@/components/HomeComponents';
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment';
 import InstallDebugger from '@/pages/ctDebuggAfterSaleServiceManage/reportsViews/InstStdAndCompReso/install';
+import { fontSizeFn } from '@/pages/SystemDashboard/CONST.js';
 
+const COLOR = ['#2998FF', '#21ECBB', '#FDAA2A','#DFE06D'];
 let myChart;
 const dvaPropsData = ({ loading, ctDataScreen }) => ({
   // loading: loading.effects['ctDataScreen/GetInstallationDebuggingAnalysis'],
@@ -50,12 +53,8 @@ const InstallDebugRate = props => {
   const onOpenModal = () => {
     setOpen(true);
   };
-
+  
   const getOption = () => {
-    if (!echarts) {
-      return {};
-    }
-
     let seriesData = [
       { value: InstallationDebuggingRate.Excellent, name: '优秀' },
       { value: InstallationDebuggingRate.Qualified, name: '合格' },
@@ -66,100 +65,52 @@ const InstallDebugRate = props => {
     let rate = InstallationDebuggingRate.Rate;
 
     let option = {
-      color: [
-        '#5CDC9F',
-        '#488CF7',
-        '#F46848',
-        '#E0D52B',
-        '#4EEFEF',
-        '#2358DC',
-        '#AFD7DE',
-        '#EAA017',
-        '#6c76f1',
-      ],
-      // tooltip: {
-      //   trigger: 'item',
-      //   valueFormatter: function(value) {
-      //     return value + '套';
-      //   },
-      //   // formatter: '{a} <br/>{b} ： {c} ({d}%)',
-      // },
+      color: COLOR,
       title: {
         text: '{val|' + rate + '%}',
         top: 'center',
         left: 'center',
         textStyle: {
           rich: {
+            // name: {
+            //   fontSize: fontSizeFn(14),
+            //   color: '#C3F0FF',
+            //   padding: [fontSizeFn(10), 0],
+            //   fontWeight: 'bold',
+            // },
             val: {
-              fontSize: 24,
-              fontWeight: 500,
+              fontSize: fontSizeFn(24),
+              fontWeight: 'bold',
               color: '#0693EF',
             },
           },
         },
       },
+      tooltip: {
+        // valueFormatter: function(value) {
+        //   return value + '个';
+        // },
+      },
+      angleAxis: {
+        max: 100,
+        show: false,
+      },
       series: [
         {
-          name: '安装调试占比',
+          name: '安装调试达标率',
           type: 'pie',
-          radius: [60, 100],
-          roseType: 'area',
+          // radius: [50, 250],
+          radius: ['50%', '60%'],
+          center: ['50%', '50%'],
+          // roseType: 'area',
+          label: { show: false },
           itemStyle: {
-            normal: {
-              shadowBlur: 10,
-              shadowColor: 'rgba(44,44,44,0.2)',
-            },
+            // borderRadius: 6,
+            // borderColor: '#2998FF',
+            // borderWidth: 2,
+            // padding: 4,
           },
-          label: {
-            show: true,
-            position: 'outside',
-            color: 'inherit', //继承饼图颜色
-            formatter: function(params) {
-              return '{b|' + params.name + '：}{c|' + params.value + '套}\n{hr|●}';
-            },
-            // padding: [0, -90],
-            rich: {
-              // a: {
-              //   fontSize: 18,
-              //   padding: [18, 0, 0, 0],
-              // },
-              b: {
-                fontFamily: 'Source Han Sans CN',
-                fontWeight: 500,
-                fontSize: 15,
-                color: '#fff',
-                padding: [-10, 0, 0, 6],
-              },
-              c: {
-                fontFamily: 'Microsoft YaHei',
-                fontWeight: 500,
-                fontSize: 15,
-                padding: [-10, 20, 0, 0],
-                align: 'left',
-                // color: '#0055FE',
-              },
-              hr: {
-                color: 'inherit',
-                // borderRadius: 100,
-                width: 4,
-                height: 4,
-                verticalAlign: 'top',
-                lineHeight: -20,
-                padding: [-5, -10, 0, -10],
-                // shadowColor: 'inherit',
-                // shadowBlur: 1,
-                // shadowOffsetX: '0',
-                // shadowOffsetY: '-26',
-              },
-            },
-          },
-          labelLine: {
-            length: 2,
-            length2: 30,
-            lineStyle: {
-              width: 2, // 引导线宽度
-            },
-          },
+          // padAngle: 4,
           data: seriesData,
         },
       ],
@@ -170,7 +121,7 @@ const InstallDebugRate = props => {
 
   return (
     <HomeCard
-      style={{ minHeight: 320 }}
+      style={{ minHeight: '20rem' }}
       title="安装调试达标率"
       lastTime
       timeTypes={['上月', '本年']}
@@ -181,17 +132,56 @@ const InstallDebugRate = props => {
       bodyStyle={{}}
       loading={loading}
     >
-      <ReactEcharts
-        ref={echart => {
-          echart && setEcharts(echart.echarts);
-        }}
-        option={getOption(1, 82.71)}
-        lazyUpdate={true}
-        style={{ height: '100%', width: '100%' }}
-        onEvents={{
-          click: onOpenModal,
-        }}
-      />
+      <Row style={{ height: '100%' }}>
+        <Col span={14}>
+          <ReactEcharts
+            ref={echart => {
+              echart && setEcharts(echart);
+            }}
+            option={getOption()}
+            style={{ height: '100%' }}
+            className="echarts-for-echarts"
+            theme="my_theme"
+            onEvents={{ click: onOpenModal }}
+          />
+        </Col>
+        <Col span={10} className={styles.center}>
+          <Row className={screenStyles.chartLegendWrapper}>
+            <Col span={24} className={screenStyles.lengendItem}>
+              <div className={screenStyles.label}>
+                <i style={{ backgroundColor: COLOR[0] }}></i>
+                <span className="textOverflow">优秀</span>
+              </div>
+              <div className={screenStyles.value}>{InstallationDebuggingRate.Excellent}</div>
+            </Col>
+            <Col span={24} className={screenStyles.lengendItem}>
+              <div className={screenStyles.label}>
+                <i style={{ backgroundColor: COLOR[1] }}></i>
+                <span className="textOverflow">合格</span>
+              </div>
+              <div className={screenStyles.value}>{InstallationDebuggingRate.Qualified}</div>
+            </Col>
+            <Col span={24} className={screenStyles.lengendItem}>
+              <div className={screenStyles.label}>
+                <i style={{ backgroundColor: COLOR[2] }}></i>
+                <span className="textOverflow">不合格</span>
+              </div>
+              <div className={screenStyles.value}>
+                {InstallationDebuggingRate.Unqualified}
+              </div>
+            </Col>
+            <Col span={24} className={screenStyles.lengendItem}>
+              <div className={screenStyles.label}>
+                <i style={{ backgroundColor: COLOR[2] }}></i>
+                <span className="textOverflow">无照片</span>
+              </div>
+              <div className={screenStyles.value}>
+                {InstallationDebuggingRate.NoPhotos}
+              </div>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
 
       <Modal
         title={`安装调试达标率`}
@@ -202,7 +192,7 @@ const InstallDebugRate = props => {
         onCancel={() => {
           setOpen(false);
         }}
-        bodyStyle={{ padding: 0,height:'calc(100vh - 46px)',overflowX:'hidden'}}
+        bodyStyle={{ padding: 0, height: 'calc(100vh - 46px)', overflowX: 'hidden' }}
       >
         {open && (
           <InstallDebugger

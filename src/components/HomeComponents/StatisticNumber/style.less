@@ -1,0 +1,72 @@
+@font-face {
+  font-family: 'dinPro';
+  src: url('/iconFont/D-DIN-PRO-400-Regular.otf') format('truetype'); /* 根据你的字体文件格式调整format */
+}
+.number {
+  font-family: 'dinPro';
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  background-image: -webkit-linear-gradient(#fff, #c1edfa, #01befc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  z-index: 1;
+}
+// 统计展示
+.statisticBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  // img{
+  //   wid
+  // }
+
+  .text {
+    // width: 100%;
+    color: #fff;
+    background-position-y: .375rem;
+    line-height: 1.625rem;
+    // font-weight: 500;
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .number {
+    font-family: 'dinPro';
+    font-size: 2rem;
+    font-weight: 600;
+    background-image: -webkit-linear-gradient(#fff, #c1edfa, #01befc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    z-index: 1;
+  }
+}
+.statisticBox1 {
+  .number {
+    margin-bottom: -1.25rem;
+  }
+  .text {
+    margin-top: -0.875rem;
+  }
+}
+
+.statisticBox2 {
+  .number {
+    margin-bottom: -3.375rem;
+  }
+}
+
+// 数值展示
+.numberBox {
+  display: flex;
+  .numberItem{
+    width: 2.5rem;
+    background-image: url(/StandardScreen/number_bg.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+  // .number {
+    
+  // }
+}

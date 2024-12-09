@@ -142,6 +142,7 @@ const routes = [
         path: '/sysTypeMiddlePage',
         component: './sysTypeMiddlePage',
       },
+      // 新中间页（替换）
       // {
       //   name: 'sysTypeMiddlePage',
       //   path: '/sysTypeMiddlePage',
@@ -179,6 +180,11 @@ const routes = [
         name: 'ctDataScreen',
         path: '/ctDataScreen',
         component: './ctDebuggAfterSaleServiceManage/HomeDataScreen',
+      },
+      {
+        name: 'newestHome',
+        path: '/newestHome',
+        component: './newestHome',
       },
       {
         // 驾驶舱
@@ -370,7 +376,7 @@ const routes = [
           },
         ],
       },
-      // 新登录
+      // // 新登录 （替换）
       // {
       //   path: '/user/login',
       //   component: '../layouts/UserLayout2',
@@ -379,6 +385,18 @@ const routes = [
       //       name: 'newLogin',
       //       path: '/user/login',
       //       component: './user/login/NewLogin',
+      //     },
+      //   ],
+      // },
+      // 新登录 （样式统一）
+      // {
+      //   path: '/user/login',
+      //   component: '../layouts/UserLayout3',
+      //   routes: [
+      //     {
+      //       name: 'newLogin',
+      //       path: '/user/login',
+      //       component: './user/login/NewLogin2',
       //     },
       //   ],
       // },
@@ -549,11 +567,11 @@ const routes = [
             path: '/home',
             component: './newHome',
           },
-          {
-            name: 'newestHome',
-            path: '/newestHome',
-            component: './newestHome',
-          },
+          // {
+          //   name: 'newestHome',
+          //   path: '/newestHome',
+          //   component: './newestHome',
+          // },
           // 空气质量分析
           {
             path: '/airQualityAnalysis',

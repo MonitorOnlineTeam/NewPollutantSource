@@ -137,6 +137,7 @@ const Training = props => {
                     setDetailsData({
                       ...record,
                       PollutantCode: col.PollutantCode,
+                      regionCode: '',
                       status: '',
                       level: 1,
                     });
@@ -167,6 +168,7 @@ const Training = props => {
                     setDetailsData({
                       ...record,
                       PollutantCode: col.PollutantCode,
+                      regionCode: '',
                       status: '1',
                       level: 1,
                     });
@@ -197,6 +199,7 @@ const Training = props => {
                     setDetailsData({
                       ...record,
                       PollutantCode: col.PollutantCode,
+                      regionCode: '',
                       status: '0',
                       level: 1,
                     });

@@ -1,5 +1,23 @@
 export const allSysList = [
   {
+    key: '废气运维',
+    value: '/newestHome',
+    title: '废气监测智慧运维管理平台',
+    ID: '1B90866D-523F-4D9D-A2CC-A3616C336C31',
+  },
+  {
+    key: '废水运维',
+    value: '/newestHome',
+    title: '废水监测智慧运维管理平台',
+    ID: '007A64F7-9FFA-4055-9156-9CF4E8FFB04B',
+  },
+  {
+    key: '安装调试',
+    value: '/ctDataScreen',
+    title: '污染源监测安装调试系统',
+    ID: '140496b1-ab85-474a-9278-3ca7c6df3f9b',
+  },
+  {
     key: '监控预警',
     value: '/systemDashboard/Monitoring',
     title: '污染源监测监控',
@@ -11,18 +29,18 @@ export const allSysList = [
     title: '污染源异常数据识别',
     ID: 'f6eb76ab-ce0b-4cfb-8626-2e0ec4435ec3',
   },
-  {
-    key: '智慧运维',
-    value: '/SystemDashboard/Operation',
-    title: '污染源智慧运维',
-    ID: '70748d49-ce43-4a68-ab27-6795b9934893',
-  },
-  {
-    key: '安装调试',
-    value: '/SystemDashboard/CT',
-    title: '污染源安装调试',
-    ID: '5c751d3e-4b5d-4e1e-ade4-eb35253ca748',
-  },
+  // {
+  //   key: '智慧运维',
+  //   value: '/SystemDashboard/Operation',
+  //   title: '污染源智慧运维',
+  //   ID: '70748d49-ce43-4a68-ab27-6795b9934893',
+  // },
+  // {
+  //   key: '安装调试',
+  //   value: '/SystemDashboard/CT',
+  //   title: '污染源安装调试',
+  //   ID: '5c751d3e-4b5d-4e1e-ade4-eb35253ca748',
+  // },
   {
     key: '监督核查',
     value: '/SystemDashboard/SupervisionVerifica',

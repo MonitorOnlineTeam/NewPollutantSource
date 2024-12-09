@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal } from 'antd';
 import styles from '../../styles.less';
-import HomeCard from '../HomeCard';
+import HomeCard from '@/components/HomeCard';
 import TimelyRate from '@/pages/ctDebuggAfterSaleServiceManage/reportsViews/timelyRate';
 import moment from 'moment';
 
@@ -41,7 +41,7 @@ const ServiceResponseRate = props => {
 
   return (
     <HomeCard
-      style={{ minHeight: 250 }}
+      style={{ minHeight: '15.625rem' }}
       title="服务响应及时率"
       bodyStyle={{
         display: 'flex',
@@ -56,27 +56,27 @@ const ServiceResponseRate = props => {
       loading={loading}
     >
       <div className={styles.ServiceResponseRateWrapper} onClick={onOpenModal}>
-        <div className={styles.center} style={{ width: 100, height: 84 }}>
+        <div className={styles.center} style={{ width: '6.25rem', height: '5.25rem' }}>
           <p className={styles.count}>
             {ServiceResponse.nottimelyCount}
             <span>次</span>
           </p>
           <p className={styles.text}>响应次数</p>
         </div>
-        <div style={{ width: 30, height: 25, position: 'relative', top: -108 }}></div>
+        <div style={{ width: '1.875rem', height: '1.5625rem', position: 'relative', top: '-6.75rem' }}></div>
         <div
           className={styles.center}
           style={{
-            width: 160,
-            height: 134,
+            width: '10rem',
+            height: '8.375rem',
             backgroundImage: 'url(/ctHomeDataScreen/ServiceResponseRate_1.png)',
           }}
         >
-          <p className={styles.count}>{ServiceResponse.rate}%</p>
+          <p className={styles.count} style={{color: '#F89F2B'}}>{ServiceResponse.rate}%</p>
           <p className={styles.text}>响应及时率</p>
         </div>
-        <div style={{ width: 30, height: 25, position: 'relative', top: -124 }}></div>
-        <div className={styles.center} style={{ width: 100, height: 84 }}>
+        <div style={{ width: '1.875rem', height: '1.5625rem', position: 'relative', top: '-7.75rem' }}></div>
+        <div className={styles.center} style={{ width: '6.25rem', height: '5.25rem' }}>
           <p className={styles.count}>
             {ServiceResponse.timelyCount}
             <span>次</span>

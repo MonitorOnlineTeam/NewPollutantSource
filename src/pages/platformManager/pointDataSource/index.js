@@ -24,6 +24,7 @@ import { API } from '@config/API';
 import moment from 'moment';
 import RegionList from '@/components/RegionList';
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
+import { convertTextByConfig } from '@/utils/utils';
 
 const textStyle = {
   width: '100%',
@@ -107,7 +108,7 @@ const PointDataSource = props => {
         ellipsis: true,
       },
       {
-        title: '企业',
+        title: convertTextByConfig('企业'),
         dataIndex: 'ParentName',
         key: 'ParentName',
         width: 220,
@@ -204,16 +205,18 @@ const PointDataSource = props => {
             }}
             autoComplete="off"
           >
-            <Form.Item label="行政区" name="regionCode">
-              <RegionList
-                style={{ width: 180 }}
-                onChange={value => {
-                  form.setFieldsValue({ EntCode: undefined, DGIMN: undefined });
-                  setPointList([]);
-                }}
-              />
-            </Form.Item>
-            <Form.Item label="企业" name="EntCode">
+            {configInfo.isShowRegion && (
+              <Form.Item label="行政区" name="regionCode">
+                <RegionList
+                  style={{ width: 180 }}
+                  onChange={value => {
+                    form.setFieldsValue({ EntCode: undefined, DGIMN: undefined });
+                    setPointList([]);
+                  }}
+                />
+              </Form.Item>
+            )}
+            <Form.Item label={convertTextByConfig('企业')} name="EntCode">
               <EntAtmoList
                 regionCode={form.getFieldValue('regionCode')}
                 style={{ width: 200 }}

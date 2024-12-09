@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import styles from '../../styles.less';
-import HomeCard from '../HomeCard';
+import { HomeCard, StatisticNumber } from '@/components/HomeComponents';
 import moment from 'moment';
 import ProjectExecutionModal from '../Modals/ProjectExecutionModal';
 
@@ -25,12 +25,12 @@ const ProjectExecution = props => {
   const getData = value => {
     dispatch({
       type: 'ctDataScreen/GetProjectExecutionAnalysis',
-      payload:  {
+      payload: {
         bTime: moment(value[0]).format('YYYY-MM-DD HH:mm:ss'),
         eTime: moment(value[1]).format('YYYY-MM-DD HH:mm:ss'),
       },
       callback: res => {
-        setDate(value?.[0]&&moment(value[0]))
+        setDate(value?.[0] && moment(value[0]));
         setNums(res);
       },
     });
@@ -42,31 +42,31 @@ const ProjectExecution = props => {
 
   return (
     <HomeCard
-      style={{ minHeight: 260 }}
+      style={{ minHeight: '16.25rem' }}
       title="项目执行情况"
       timeTypes={['本月', '本年']}
-      onChange={value => {
+      onTimeChange={value => {
         getData(value);
       }}
-      bodyStyle={{}}
+      // bodyStyle={{ display: 'flex' }}
       onClick={onOpenModal}
       loading={loading}
     >
-      <p style={{ textAlign: 'right', lineHeight: '36px', fontFamily: 500 }}>单位：套</p>
-      <Row className={`${styles.ProjectExecutionWrapper}`} onClick={onOpenModal}>
-        <Col span={8}>
-          <div className={styles.number}>{nums.InstallationNum}</div>
-          <p>安装调试</p>
-        </Col>
-        <Col span={8}>
-          <div className={styles.number}>{nums.DebuggingNum}</div>
-          <p>72小时调试</p>
-        </Col>
-        <Col span={8}>
-          <div className={styles.number}>{nums.AcceptanceNum}</div>
-          <p>待验收</p>
-        </Col>
-      </Row>
+      <div className={styles.ProjectExecutionWrapper}>
+        <p style={{ position: 'absolute', right: 0, top: '.625rem', fontFamily: 500 }}>单位：套</p>
+        <Row gutter={16} className={`${styles.content} center`} onClick={onOpenModal}>
+          <Col span={8}>
+            <StatisticNumber value={nums.InstallationNum} text={'安装调试'} uiDisplayType={2} />
+          </Col>
+          <Col span={8}>
+            <StatisticNumber value={nums.DebuggingNum} text={'72小时调试'} uiDisplayType={2} />
+          </Col>
+          <Col span={8}>
+            <StatisticNumber value={nums.AcceptanceNum} text={'待验收'} uiDisplayType={2} />
+          </Col>
+        </Row>
+      </div>
+
       {open && (
         <ProjectExecutionModal
           open={open}

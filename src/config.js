@@ -38,7 +38,7 @@ module.exports = {
   // footerText: '污染源智能分析平台   2018 sdl',
   // amapKey: '5e60171b820065e7e9a1d6ea45abaee9',
   amapKey:'1440c67033e5ede0f3a068605de5fb5f',
-  mapStyle:'amap://styles/6daa80e94c53325ff909a31f3d3d8809',
+  mapStyle:'amap://styles/f8d1a267619c89e767c125909e2659ae',
   securityJsCode:'75c46ff09b225e8981e7d78d094a5d66',
   // securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
   apiHost,
