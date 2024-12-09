@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Modal } from 'antd';
 import styles from '../../styles.less';
-import HomeCard from '@/components/HomeCard';
+import { HomeCard, StatisticNumber } from '@/components/HomeComponents';
 import TimelyRate from '@/pages/ctDebuggAfterSaleServiceManage/reportsViews/timelyRate';
 import moment from 'moment';
 
