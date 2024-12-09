@@ -160,7 +160,7 @@ const SystemDashboardPageWrapper = props => {
   };
 
   return (
-    <div className={`${styles.dashboardPageWrapper}`} ref={containerRef}>
+    <div className={`${styles.dashboardPageWrapper}`} ref={containerRef} style={{...props.style}}>
       <header className={styles.header}>{pageInfo.title}</header>
       <div className={styles.leftContent}>
         <div className={styles.menuSelectContent}>

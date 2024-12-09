@@ -118,7 +118,11 @@ const Index = props => {
     actoryBoundary: <ActoryBoundary />,
   };
   return (
-    <SystemDashboardPageWrapper pageName={type === 1 ? '废水运维' : '废气运维'} noDate>
+    <SystemDashboardPageWrapper
+      pageName={type === 1 ? '废水运维' : '废气运维'}
+      noDate
+      style={{ backgroundImage: 'url(/StandardScreen/bg.jpg)' }}
+    >
       <div className={styles.homeContent}>
         {tabList?.length > 1 && (
           <div className={styles.headerTabSty}>
