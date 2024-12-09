@@ -207,6 +207,27 @@ const Index = (props) => {
         align: 'center',
         ellipsis:true,
       },
+      {
+        title: '关联办事处',
+        dataIndex: 'ConnectionOfficeName',
+        key: 'ConnectionOfficeName',
+        align: 'center',
+        ellipsis:true,
+      },
+      {
+        title: '关联备件库',
+        dataIndex: 'StorehouseCodeName',
+        key: 'StorehouseCodeName',
+        align: 'center',
+        ellipsis:true,
+      },
+      {
+        title: '关联车辆',
+        dataIndex: 'ConnectionCarName',
+        key: 'ConnectionCarName',
+        align: 'center',
+        ellipsis:true,
+      },
   ];
 
   isList&&columns.push({
@@ -331,12 +352,10 @@ const Index = (props) => {
         <Form.Item label='行政区' name='RegionCode' >
           <RegionList levelNum={3} style={{ width: 150 }}/>
         </Form.Item>
-        <Spin spinning={props.entLoading} size='small' style={{top:5, }}>
         <Form.Item label='企业' name='EntCode' style={{ marginLeft:8,marginRight:8 }}>
           <EntAtmoList  style={{ width: 200}} />
         </Form.Item>
-        </Spin>
-        <Spin spinning={pointLoading} size='small' style={{top:5,left:20 }}>
+        <Spin spinning={pointLoading} size='small' style={{height:50}}>
           <Form.Item label='监测点名称' name='DGIMN' >
 
             <Select placeholder='请选择' allowClear  showSearch optionFilterProp="children" style={{ width: 150 }}>

@@ -14,8 +14,4 @@ export async function ExportSignInAndOffsiteSign(params) {
   const result = post(API.PerformanceApi.ExportSignInAndOffsiteSign, params);
   return result;
 }
-//工作类型
-export async function GetSignInType(params) {
-  const result = post(API.PerformanceApi.GetSignInType, params);
-  return result;
-}
+

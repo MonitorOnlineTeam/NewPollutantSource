@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-10-12 08:43:50
  * @LastEditors: outman0611
- * @LastEditTime: 2024-11-13 16:47:22
+ * @LastEditTime: 2024-12-09 17:28:05
  * @Description: 资源信息 和 问题及解决方案
  */
 
@@ -58,11 +58,8 @@ const dvaPropsData = ({ loading, generalManager, global }) => ({
 const Index = props => {
 
 
-  const type = props.location.pathname == '/ctManage/generalManager/resourceRetrievalCenter/resourceInfo' ? 1 : 2
-
-  const loading = type==1? props.loading1 : props.loading2;
   
-  const { dispatch } = props;
+  const { dispatch,type } = props;
   const [data,setData] = useState([])
   const [total, setTotal] = useState(0)
   const [pageIndex, setPageIndex] = useState(1)
@@ -73,7 +70,7 @@ const Index = props => {
     getData({pageIndex:pageIndex,pageSize:pageSize})
     dispatch({
       type: `${namespace}/updateState`, 
-      payload:{ resourceRetrievalCenterSelectIndex: props.location?.query?.selectIndex},
+      payload:{ resourceRetrievalCenterSelectIndex: props.selectIndex},
     })  
   }, []);
  const getData = (payload) =>{
@@ -112,11 +109,13 @@ const Index = props => {
     setPageSize(PageSize)
     getData({pageIndex:PageIndex,pageSize:PageSize,content:content})
   }
+
+  const loading = type==1 ? props.loading1 : props.loading2;
   return (<div className={styles.pageContentWrapper}>
-    <BreadcrumbWrapper title={type == 1 ? '资源信息' : '问题及解决方案'}>
-      <Card>
+    {/* <BreadcrumbWrapper title={type == 1 ? '资源信息' : '问题及解决方案'}> 
+      <Card>*/}
         <SerachInputComponents
-          placeholder={props?.location?.query?.placeholder}
+          placeholder={props.placeholder}
           className={styles.smallSearchInputSty}
           onSearch={onSearch}
           loading ={!!loading}
@@ -138,7 +137,7 @@ const Index = props => {
           )}
         />
 
-      </Card>
+      {/* </Card> */}
       {total > 0 && <Pagination
         className={'darkthemePaginationSty'}
         size="small"
@@ -149,7 +148,7 @@ const Index = props => {
         current={ pageIndex}
         onChange={ pageChange}
       />}
-    </BreadcrumbWrapper>
+    {/* </BreadcrumbWrapper> */}
   </div>
   );
 };

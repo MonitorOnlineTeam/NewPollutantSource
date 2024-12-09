@@ -61,6 +61,11 @@ const Index = (props) => {
                    </Form.Item> 
                 </Col>
                 <Col span={8}>
+                    <Form.Item label='最终用户'>
+                    {data?.CustomEnt}
+                   </Form.Item> 
+                </Col>
+                <Col span={8}>
                     <Form.Item label='大区名称'>
                     {data?.ServiceAreaName}
                    </Form.Item> 

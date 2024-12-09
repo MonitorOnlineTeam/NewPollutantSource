@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-31 16:17:51
+ * @LastEditTime: 2024-12-04 14:53:03
  * @Description: 部门管理
  */
 import React, { Component, Fragment } from 'react';
@@ -571,8 +571,7 @@ class DepartIndex extends Component {
               <DatabaseOutlined style={{ fontSize: 16 }} />
             </a>
           </Tooltip> */}
-            {/* {true && ( */}
-            {this.props.configInfo && this.props.configInfo.IsShowProjectRegion && (
+           {/* {this.props.configInfo && this.props.configInfo.IsShowProjectRegion && ( */}
               <>
                 <Divider type="vertical" />
                 <Tooltip title="设置点位访问权限">
@@ -592,7 +591,7 @@ class DepartIndex extends Component {
                   </a>
                 </Tooltip>
               </>
-            )}
+            {/* )} */}
             <Divider type="vertical" />
             <Tooltip title="报警关联">
               <a

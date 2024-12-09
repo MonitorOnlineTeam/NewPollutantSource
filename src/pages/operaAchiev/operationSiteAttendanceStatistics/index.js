@@ -33,7 +33,7 @@ const dvaPropsData = ({ loading, operationSiteAttendanceStatistics, global, }) =
   tableDatas: operationSiteAttendanceStatistics.tableDatas,
   queryPar: operationSiteAttendanceStatistics.queryPar,
   exportLoading: operationSiteAttendanceStatistics.exportLoading,
-  signInTypeLoading: loading.effects[`${namespace}/GetSignInType`],
+  signInTypeLoading: loading.effects[`operaAchiev/GetSignInType`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -58,7 +58,7 @@ const dvaDispatch = (dispatch) => {
     },
     GetSignInType: (payload,callback) => { //打卡类型
       dispatch({
-        type: `${namespace}/GetSignInType`,
+        type: `operaAchiev/GetSignInType`,
         payload: payload,
         callback:callback,
       })

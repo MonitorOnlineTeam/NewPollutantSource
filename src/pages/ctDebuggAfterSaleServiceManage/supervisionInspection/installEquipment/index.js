@@ -335,8 +335,11 @@ const Index = props => {
     return columns
   }
   const [viewPhotosVisible, setViewPhotosVisible] = useState(false);
+  const [viewPhotosTitle, setViewPhotosTitle] = useState();
+
   const viewPhotos = row => {
     setViewPhotosVisible(true);
+    setViewPhotosTitle(`查看安装照片（${row.ProjectCode} - ${row.EntName} - ${row.PointName} - ${row.SystemModelName}）`)
     props.dispatch({
       type: `${namespace}/GetAuditPhoto`,
       payload: {
@@ -518,12 +521,12 @@ const Index = props => {
   };
 
   const [examineVisible, setExamineVisible] = useState(false);
-  const [examineTitle, setExamineTitle] = useState('');
+  const [examineTitle, setExamineTitle] = useState();
   const [examineData, setExamineData] = useState();
 
   const examinePhotos = row => {
     setExamineVisible(true);
-    setExamineTitle(`审核安装照片（${row.EntName} - ${row.PointName} - ${row.SystemModelName} ）`);
+    setExamineTitle(`${row.EntName} - ${row.PointName} - ${row.SystemModelName}`);
     setExamineData(row);
   };
 
@@ -551,7 +554,7 @@ const Index = props => {
           />
           <Modal
             visible={viewPhotosVisible}
-            title={'安装照片'}
+            title={viewPhotosTitle}
             onCancel={() => {
               setViewPhotosVisible(false);
             }}

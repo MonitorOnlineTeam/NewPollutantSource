@@ -35,7 +35,7 @@ const dvaPropsData = ({ loading, operaCheckAttendanceQuery, global, }) => ({
   tableTotal: operaCheckAttendanceQuery.tableTotal,
   queryPar: operaCheckAttendanceQuery.queryPar,
   exportLoading: loading.effects[`${namespace}/ExportSignInAndOffsiteSign`],
-  workTypeLoading: loading.effects[`${namespace}/GetSignInType`],
+  workTypeLoading: loading.effects[`operaAchiev/GetSignInType`],
   clientHeight: global.clientHeight,
 })
 
@@ -61,7 +61,7 @@ const dvaDispatch = (dispatch) => {
     },
     GetSignInType: (payload,callback) => { //工作类型
       dispatch({
-        type: `${namespace}/GetSignInType`,
+        type: `operaAchiev/GetSignInType`,
         payload: payload,
         callback:callback,
       })

@@ -80,6 +80,7 @@ const RecordAndManagement = props => {
     getPageData(PageIndex, PageSize);
   };
 
+  
   // 获取页面数据
   const getPageData = (_pageIndex, _pageSize) => {
     const body = getParams();
@@ -96,15 +97,7 @@ const RecordAndManagement = props => {
       },
     });
   };
-  const getVisitEnvironmentalDailyWorksData = () => { //获取管理部门当月拜访的任务
-    dispatch({
-      type: 'wordSupervision/GetVisitEnvironmentalDailyWorks',
-      payload: {},
-      callback: res => {
-        setAddData(res.Datas || {});
-      },
-    });
-  }
+
   // 导出
   const onExport = () => {
     const body = getParams();
@@ -114,7 +107,17 @@ const RecordAndManagement = props => {
     });
   };
 
-  //
+
+  const getVisitEnvironmentalDailyWorksData = () => { //获取管理部门当月拜访的任务
+    dispatch({
+      type: 'wordSupervision/GetVisitEnvironmentalDailyWorks',
+      payload: {},
+      callback: res => {
+        setAddData(res.Datas || {});
+      },
+    });
+  }
+
   const onEdit = record => {
     // updateType();
     setEditData(record);
@@ -306,25 +309,25 @@ const RecordAndManagement = props => {
           .endOf('months'),
       ],
     };
-    if (taskInfo.ID) {
-      initialValues.time = [moment(taskInfo.BeginTime), moment(taskInfo.EndTime)];
+    if (data.ID) {
+      initialValues.time = [moment(data.BeginTime), moment(data.EndTime)];
       // initialValues.regionCode = taskInfo.RegionCode;
     }
     return (
       <>
-        {(data.ID) && (
+        {taskInfo.ID && (
           <Alert
             message={`任务类型：管理部门拜访任务单，派发时间：${data.BeginTime} ，有效期：${data.EndTime} ，任务单派发频次1次/月，每个任务单最少有（${data.standVisitNum || 0}次/月）记录。`}
             type="info"
             showIcon
-            style={{ marginRight: 30 }}
+            style={{marginRight:30}}
           />
         )}
         <Card
           bordered={false}
           bodyStyle={{ padding: 0 }}
-          headStyle={{ display: taskInfo.ID ? 'none' : 'block', padding: 0 }}
-          className={styles.manageDepentVisitRecordCardWrapper}
+          headStyle={{ display: data.ID ? 'none' : 'block', padding: 0 }}
+          className={styles.manageRecordCardWrapper}
           title={
             mode === 'record' && <Form
               form={form}
@@ -383,9 +386,9 @@ const RecordAndManagement = props => {
             style={{ margin: '8px 0' }}
             loading={addFlagLoading}
             onClick={() => {
-              if(addData.ID || taskInfo.ID){
-                setEditData({DailyTaskID: addData.ID,RegionalArea:addData.largeCode });
+              if(data.ID){
                 setEditOpen(true);
+                setEditData({DailyTaskID: data.ID,RegionalArea:data.largeCode });
               }else{
                 message.error('本月没有派工单，不允许添加！');
                 
@@ -448,13 +451,14 @@ const RecordAndManagement = props => {
     <Modal
       title={mode === 'record' ? '管理部门拜访记录' : '管理部门拜访管理'}
       wrapClassName={`spreadOverModal`}
+      bodyStyle={{
+        // padding: mode === 'record' || data.ID ? '12px' : '0 12px',
+        padding: '0 12px'
+      }}
       mask={false}
       open={open}
       destroyOnClose
       footer={null}
-      bodyStyle={{
-        padding: data.ID? '8px 12px' : '0 12px'
-      }}
       onCancel={() => {
         onCancel();
       }}

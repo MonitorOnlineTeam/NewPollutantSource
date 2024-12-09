@@ -426,6 +426,7 @@ class FieldConfig extends Component {
             placeholder="请选择外表"
             style={{ width: '100%' }}
             onChange={value => this.handelFOREIGHDT(value, index, dataIndex)}
+            showSearch optionFilterProp="children"
           >
             {
               this.handleForeighArr()
@@ -438,6 +439,7 @@ class FieldConfig extends Component {
           <Select
             style={{ width: '100%' }}
             onChange={value => this.changeDataSource(value, index, dataIndex)}
+            showSearch optionFilterProp="children"
           >
             {this.handleForeiGndfArr()}
           </Select>

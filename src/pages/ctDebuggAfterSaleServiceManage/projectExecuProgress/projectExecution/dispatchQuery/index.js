@@ -298,7 +298,7 @@ const Index = (props) => {
       className={styles['ant-advanced-search-form']}
       onFinish={() => {setPageIndex(1); onFinish(1, pageSize) }}
       initialValues={{
-        time:[moment().add(-6, 'months').startOf('day'), moment().endOf('day')],
+        time:[moment().add(-1, 'years').startOf('day'), moment().endOf('day')],
       }}
     >
       <Row align='middle'>

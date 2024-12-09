@@ -23,6 +23,8 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { getCurrentUserId } from '@/utils/utils';
 import { DelIcon, EditIcon } from '@/utils/icon';
 import OfficeInspection from '@/pages/workSupervision/Forms/OfficeInspection';
+import styles from "../siteInspecTempSet/style.less"
+
 const { RangePicker } = DatePicker;
 
 const { Text, Link } = Typography;
@@ -31,6 +33,7 @@ const dvaPropsData = ({ loading, provinceAllList, common }) => ({
   provinceAllList: common.provinceList,
   loading: loading.effects[`wordSupervision/GetOfficeCheckStatisticsList`],
   exportLoading: loading.effects[`wordSupervision/ExportOfficeCheckStatisticsList`],
+  addFlagLoading: loading.effects[`wordSupervision/GetOfficeChecklDailyWorks`],
 });
 
 const ChecklistRecordAndManagement = props => {
@@ -44,6 +47,7 @@ const ChecklistRecordAndManagement = props => {
   const [dataSource, setDataSource] = useState([]);
   const [editData, setEditData] = useState({});
   const [officeInspectionOpen, setOfficeInspectionOpen] = useState(false);
+  const [addData, setAddData] = useState({});
 
   const {
     dispatch,
@@ -54,11 +58,13 @@ const ChecklistRecordAndManagement = props => {
     provinceAllList,
     mode,
     taskInfo,
+    addFlagLoading,
   } = props;
 
   useEffect(() => {
     getLargeRegion();
     getPageData();
+    mode === 'management' && (!taskInfo.ID) &&  getOfficeChecklDailyWorksData();
   }, []);
 
   // 获取大区及省份
@@ -118,7 +124,16 @@ const ChecklistRecordAndManagement = props => {
     });
   };
 
-  //
+  const getOfficeChecklDailyWorksData = () => { //获取办事处检查当月的任务
+    dispatch({
+      type: 'wordSupervision/GetOfficeChecklDailyWorks',
+      payload: {},
+      callback: res => {
+        setAddData(res.Datas || {});
+      },
+    });
+  }
+
   const onEdit = record => {
     setEditData(record);
     // setTaskInfo({
@@ -337,7 +352,7 @@ const ChecklistRecordAndManagement = props => {
           .endOf('month'),
       ],
     };
-    if (taskInfo.ID) {
+    if (data.ID) {
       initialValues.time = [moment(taskInfo.BeginTime), moment(taskInfo.EndTime)];
       initialValues.regionCode = taskInfo.RegionCode;
     }
@@ -345,12 +360,11 @@ const ChecklistRecordAndManagement = props => {
     return (
       <div>
         <Form
-          id="searchForm"
           form={form}
           layout="inline"
           initialValues={initialValues}
           autoComplete="off"
-          // style={{ display: taskInfo.ID ? 'none' : 'block' }}
+          style={{ marginTop: 12 }}
         >
           <Space wrap>
             {mode !== 'management' && (
@@ -417,36 +431,39 @@ const ChecklistRecordAndManagement = props => {
       </div>
     );
   };
-
+  const data = taskInfo.ID ? taskInfo :  addData
   const getPageContent = () => {
     return (
       <>
         {taskInfo.ID && (
           <Alert
-            message={`任务类型：办事处检查任务单，派发时间：${taskInfo.CreateTime} ，有效期：${taskInfo.EndTime} ，任务单派发频次1次/月。`}
+            message={`任务类型：办事处检查任务单，派发时间：${data.BeginTime} ，有效期：${data.EndTime} ，任务单派发频次1次/月。`}
             type="info"
             showIcon
-            style={{ marginRight: 30 }}
+            style={{marginRight:30}}
           />
         )}
         <Card
           bordered={false}
           title={<SearchComponents />}
-          headStyle={{ display: taskInfo.ID ? 'none' : 'block' }}
-          className='queryCriterTitleSty'
+          bodyStyle={{ padding: 0 }}
+          headStyle={{ display: taskInfo.ID ? 'none' : 'block', padding: 0  }}
+          className={styles.manageRecordCardWrapper}
         >
-          {taskInfo.ID && (
+          {mode !== 'record'  && (
             <Button
               type="primary"
-              style={{ marginBottom: 8 }}
-              // loading={loading}
+              style={{ margin: '8px 0' }}
+              loading={addFlagLoading}
               onClick={() => {
-                // if(dataSource?.[0]){
+                if(data.ID){
                   setOfficeInspectionOpen(true);
-                // }else{
-                //   message.error('本月没有派工单，不允许添加！')
-                // }
+                  setEditData({DailyTaskID: data.ID,RegionCode:data.RegionCode });
 
+                }else{
+                  message.error('本月没有派工单，不允许添加！');
+                  
+                }
               }}
             >
               添加
@@ -505,7 +522,10 @@ const ChecklistRecordAndManagement = props => {
     <Modal
       title={mode === 'record' ? '办事处检查记录' : '办事处检查管理'}
       wrapClassName={`spreadOverModal`}
-      bodyStyle={{padding:'4px 16px'}}
+      bodyStyle={{
+        // padding: data.ID ? '12px 12px 0 12px' : '0 12px'
+        padding: '0 12px'
+      }}
       mask={false}
       open={open}
       destroyOnClose

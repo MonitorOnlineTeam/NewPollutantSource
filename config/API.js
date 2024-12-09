@@ -2517,6 +2517,8 @@ export const API = {
       before + '/DailyWorkManagerApi/ExportOfficeCheckStatisticsList',
     // 删除办事处检查记录
     DeleteOfficeCheckStatistics: before + '/DailyWorkManagerApi/DeleteOfficeCheckStatistics',
+    // 获取办事处检查当月的任务
+    GetOfficeChecklDailyWorks: before + '/CTProjectExecutionApi/GetOfficeChecklDailyWorks',
     // 获取运维大区和省区
     GetLargeRegion: before + '/DailyWorkBaseApi/GetLargeRegion',
     // 根据省份获取办事处
@@ -2582,6 +2584,8 @@ export const API = {
       GetCustomerVisitInfo: before + '/CTProjectExecutionApi/GetCustomerVisitInfo',
       // 客户现场回访记录，客户现场回访管理 - 导出
       ExportCustomerVisitInfo: before + '/CTProjectExecutionApi/ExportCustomerVisitInfo',
+      // 获取客户回访当月的任务
+      GetCustomerVisitDailyWorks: before + '/CTProjectExecutionApi/GetCustomerVisitDailyWorks',
     },
     // 纪律检查
     DisciplineCheck: {

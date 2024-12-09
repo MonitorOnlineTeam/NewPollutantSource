@@ -56,6 +56,7 @@ const AuditModalPage = props => {
     reloadPageData,
     WorkJLID,
     AssistantID,
+    title,
   } = props;
 
   useEffect(() => {}, []);
@@ -245,7 +246,7 @@ const AuditModalPage = props => {
 
   return (
     <Modal
-      title={`服务报告审核`}
+      title={`服务报告审核${title? ` - ${title}` :''}`}
       wrapClassName="spreadOverModal"
       open={isModalOpen}
       destroyOnClose

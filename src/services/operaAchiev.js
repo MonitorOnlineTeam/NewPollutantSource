@@ -134,3 +134,10 @@ export async function UpdatePersonalPerformanceRateInfo(params) {
   const result = await post(API.PerformanceApi.UpdatePersonalPerformanceRateInfo,params, null);
   return result;
 }
+
+//工作类型
+export async function GetSignInType(params) {
+  const result = post(API.PerformanceApi.GetSignInType, params);
+  return result;
+}
+

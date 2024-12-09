@@ -291,6 +291,17 @@ export default Model.extend({
       }
     },
 
+    *GetSignInType({ payload,callback }, { call, put, update }) { //工作类型
+      const result = yield call(services.GetSignInType, payload);
+      if (result.IsSuccess) {
+        callback&&callback(result.Datas)
+      }
+    },
+
+
+
+
+
   } 
 
 })

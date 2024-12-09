@@ -1,3 +1,10 @@
+/*
+ * @Author: outman0611
+ * @Date: 2024-07-04 11:25:06
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-12-09 14:59:12
+ * @Description: 
+ */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Divider, Modal, Descriptions } from 'antd';
@@ -9,7 +16,7 @@ const dvaPropsData = ({ loading }) => ({});
 const AuditModalPage = props => {
   const {
     dispatch,
-    data: { ID, ProjectCode, ItemCode, CheckStatuTip, AuditStatuTip },
+    data: { ID, ProjectCode, ItemCode,  CheckStatuTip, AuditStatuTip, CustomEnt },
     isModalOpen,
     onCancel,
   } = props;
@@ -30,7 +37,7 @@ const AuditModalPage = props => {
 
   return (
     <Modal
-      title={`${ProjectCode || ItemCode}-验收服务报告`}
+      title={`验收服务报告 - ${ProjectCode || ItemCode} - ${CustomEnt}`}
       wrapClassName="spreadOverModal"
       open={isModalOpen}
       destroyOnClose

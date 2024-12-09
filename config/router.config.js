@@ -5197,6 +5197,12 @@ const routes = [
                     component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter',
                   },
                   {
+                    //资源检索中心 详情 
+                    name: 'RsourceRetrievalCenter',
+                    path: '/ctManage/generalManager/resourceRetrievalCenter/detail',
+                    component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/detail',
+                  },
+                  {
                     // 专家信息
                     name: 'ExpertInfo',
                     path: '/ctManage/generalManager/resourceRetrievalCenter/expertInfo',

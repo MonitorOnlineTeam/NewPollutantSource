@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-10-11 14:38:13
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-12 18:05:50
+ * @LastEditTime: 2024-12-09 15:57:52
  * @Description: 通用管理 问题检索中心
  */
 import React, { useState, useEffect, Fragment } from 'react';
@@ -71,17 +71,19 @@ const Index = props => {
 
   }
   const onClick = () => {
-    switch (selectIndex) {
-      case 0:
-        router.push({ pathname: '/ctManage/generalManager/resourceRetrievalCenter/expertInfo', query: { placeholder: searchPlaceholder,selectIndex:selectIndex } })
-        break;
-      case 1:
-        router.push({ pathname: '/ctManage/generalManager/resourceRetrievalCenter/resourceInfo', query: { placeholder: searchPlaceholder,selectIndex:selectIndex  } })
-        break;
-      case 2:
-        router.push({ pathname: '/ctManage/generalManager/resourceRetrievalCenter/problemsSolutions', query: { placeholder: searchPlaceholder,selectIndex:selectIndex  } })
-        break;
-    }
+    // switch (selectIndex) {
+    //   case 0:
+    //     router.push({ pathname: '/ctManage/generalManager/resourceRetrievalCenter/expertInfo', query: { placeholder: searchPlaceholder,selectIndex:selectIndex } })
+    //     break;
+    //   case 1:
+    //     router.push({ pathname: '/ctManage/generalManager/resourceRetrievalCenter/resourceInfo', query: { placeholder: searchPlaceholder,selectIndex:selectIndex  } })
+    //     break;
+    //   case 2:
+    //     router.push({ pathname: '/ctManage/generalManager/resourceRetrievalCenter/problemsSolutions', query: { placeholder: searchPlaceholder,selectIndex:selectIndex  } })
+    //     break;
+    // }
+    router.push({ pathname: '/ctManage/generalManager/resourceRetrievalCenter/detail', query: { placeholder: JSON.stringify(placeholderCorres),selectIndex:selectIndex  } })
+    
   }
   const typeList = [
     { title: '专家信息', url: '/generalManager/zjxx.png' },
@@ -89,6 +91,8 @@ const Index = props => {
     { title: '问题及解决方案', url: '/generalManager/jjfa.png' },
   ]
   const intervalNum = 16
+
+
   return (
     <BreadcrumbWrapper>
       <div className={`${styles.resourceRetrievalCenterSty}`}>

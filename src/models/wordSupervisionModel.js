@@ -292,6 +292,17 @@ export default Model.extend({
         result.Message && message.error(result.Message);
       }
     },
+    // 获取办事处检查当月的任务
+    *GetOfficeChecklDailyWorks({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.GetOfficeChecklDailyWorks,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
     // 添加或编辑现场工作/其它工作/其他部门工作记录
     *InsOrUpdOtherWork({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.DailyManagement.InsOrUpdOtherWork, payload);
@@ -1040,7 +1051,17 @@ export default Model.extend({
         downloadFile(result.Datas);
       }
     },
-
+    // 获取办事处检查当月的任务
+    *GetCustomerVisitDailyWorks({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        API.DailyManagement.CustomerReturnVisit.GetCustomerVisitDailyWorks,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
     // 纪律检查统计列表
     *GetDisciplineCheckList({ payload, callback }, { call, put, update }) {
       const result = yield call(

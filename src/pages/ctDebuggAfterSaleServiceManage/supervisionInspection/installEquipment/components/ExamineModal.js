@@ -4,7 +4,7 @@
  * 创建时间：2024.04
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Upload, Popconfirm, Radio,Result, Steps, Image, Form, Tag, Skeleton, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin, Empty } from 'antd';
+import { Table, Input, InputNumber, Upload, Popconfirm, Radio, Result, Steps, Image, Form, Tag, Skeleton, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin, Empty,Popover } from 'antd';
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, AmazonCircleFilled, AuditOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 const { RangePicker } = DatePicker;
@@ -30,40 +30,42 @@ const Index = (props) => {
 
 
   const [form2] = Form.useForm();
+  const [form3] = Form.useForm();
 
 
 
-  const { addAuditInfoLoading,visible,title, data} = props;
- 
+  const { addAuditInfoLoading, visible, title, data } = props;
+
   const [isImageViewOpen, setIsImageViewOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [imageList, setImageList] = useState([]);
 
+  const [transferVisible, setTransferVisible] = useState(false);
 
 
   useEffect(() => {
-    if(visible){
-    form2.resetFields();
-    setFiles(cuid())
-    setFileList([])
-    SetCurrent(0)
-    props.dispatch({
-      type: `${namespace}/GetAuditPhoto`,
-      payload: {
-        systemModelId: data?.Col1,
-        dispatchId: data?.DispatchId,
-        pointId: data?.PointId,
-        equipmentAuditId: data?.EquipmentAuditId,
-      }
-    });
-  }
+    if (visible) {
+      form2.resetFields();
+      setFiles(cuid())
+      setFileList([])
+      SetCurrent(0)
+      props.dispatch({
+        type: `${namespace}/GetAuditPhoto`,
+        payload: {
+          systemModelId: data?.Col1,
+          dispatchId: data?.DispatchId,
+          pointId: data?.PointId,
+          equipmentAuditId: data?.EquipmentAuditId,
+        }
+      });
+    }
   }, [visible]);
 
 
 
 
 
-  const [files, setFiles] = useState() 
+  const [files, setFiles] = useState()
   const [fileList, setFileList] = useState([])
   const uploadProps = (name) => {
     return { // 核查问题照片附件 上传
@@ -95,21 +97,21 @@ const Index = (props) => {
           setFileList(fileList)
         }
         if (info.file.status === 'done') {
-            if(info.file?.response?.IsSuccess){
-              form2.setFieldsValue({ [name]: files })
-              message.success(`${info.file.name} 上传成功`);
-            }else{
-              message.error(info.file?.response?.Message)
-            }
-            setFileList(fileList)
+          if (info.file?.response?.IsSuccess) {
+            form2.setFieldsValue({ [name]: files })
+            message.success(`${info.file.name} 上传成功`);
+          } else {
+            message.error(info.file?.response?.Message)
+          }
+          setFileList(fileList)
         } else if (info.file.status === 'error' || info.file.status === 'removed') {
-          form2.setFieldsValue({[name]:fileList && fileList[0] ? files : undefined})//有上传成功的取前面的uid 没有则表示没有上传成功的图片
-          if(info.file.status === 'error'){
+          form2.setFieldsValue({ [name]: fileList && fileList[0] ? files : undefined })//有上传成功的取前面的uid 没有则表示没有上传成功的图片
+          if (info.file.status === 'error') {
             message.error(`${info.file.name} ${info.file && info.file.response && info.file.response.Message ? info.file.response.Message : '上传失败'}`);
-          }else{
+          } else {
             setFileList(fileList)
           }
-        } 
+        }
       },
       onRemove: (file) => {
         if (!file.error) {
@@ -124,7 +126,7 @@ const Index = (props) => {
       },
       onPreview: file => { //预览
         setIsImageViewOpen(true);
-        let imageListIndex = 0,imgList=[];
+        let imageListIndex = 0, imgList = [];
         fileList.map((item, index) => {
           if (item.uid === file.uid) {
             imageListIndex = index;
@@ -139,35 +141,35 @@ const Index = (props) => {
 
   }
   const examineComponents = () => {
-    return <div style={{padding:'14px 18px 0 18px'}}>
+    return <div style={{ padding: '14px 18px 0 18px' }}>
       <Form
-      form={form2}
-      name="advanced_search2"
-      className={'ant-advanced-search-form2'}
-    >
-      <Form.Item name='auditResults' label='审核结果'  rules={[{ required: true, message: '请选择审核结果！' }]}>
-        <Radio.Group>
-          <Radio value={1}>优秀</Radio>
-          <Radio value={2}>合格</Radio>
-          <Radio value={3}>不合格</Radio>
-          <Radio value={4}>无照片</Radio>
-          <Radio value={5}>/</Radio>
-        </Radio.Group>
-      </Form.Item>
-      <Form.Item name='opinion' label='审核意见' rules={[{ required: false, message: '请输入审核意见！' }]}>
-        <Input.TextArea rows={2} placeholder="请输入" allowClear />
-      </Form.Item>
-      <Form.Item name='auditFiles' label='附件'>
+        form={form2}
+        name="advanced_search2"
+        className={'ant-advanced-search-form2'}
+      >
+        <Form.Item name='auditResults' label='审核结果' rules={[{ required: true, message: '请选择审核结果！' }]}>
+          <Radio.Group>
+            <Radio value={1}>优秀</Radio>
+            <Radio value={2}>合格</Radio>
+            <Radio value={3}>不合格</Radio>
+            <Radio value={4}>无照片</Radio>
+            <Radio value={5}>/</Radio>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item name='opinion' label='审核意见' rules={[{ required: false, message: '请输入审核意见！' }]}>
+          <Input.TextArea rows={2} placeholder="请输入" allowClear />
+        </Form.Item>
+        {/* <Form.Item name='auditFiles' label='附件'>
         <Upload {...uploadProps('auditFiles')} style={{ width: '100%' }}>
           <div>
             <PlusOutlined />
             <div className="ant-upload-text">上传</div>
           </div>
         </Upload>
-      </Form.Item>
-    </Form>
-     <HandlingSugges type={2}/>
-      </div>
+      </Form.Item> */}
+      </Form>
+      <HandlingSugges type={2} />
+    </div>
   }
 
 
@@ -181,8 +183,8 @@ const Index = (props) => {
         SetCurrent(current + 1)
         break;
       case 1: //审核
-      const values = await form2.validateFields();
-      const par = {
+        const values = await form2.validateFields();
+        const par = {
           ...values,
           systemModelId: data.Col1,
           dispatchId: data.DispatchId,
@@ -190,22 +192,22 @@ const Index = (props) => {
           equipmentAuditId: data.EquipmentAuditId,
           workerID: data.WorkerID,
           projectCode: data.ProjectCode,
-          itemCode:  data.ItemCode,
-          entName:  data.EntName,
-          pointName:  data.PointName,
+          itemCode: data.ItemCode,
+          entName: data.EntName,
+          pointName: data.PointName,
           status: data.Status,
           managerId: data.ManagerId,
-      }
-      props.dispatch({
-        type: `${namespace}/AddAuditInfo`,
-        payload: {
-         ...par
-        },
-        callback:()=>{
-          SetCurrent(current + 1)
-          props.onFinish&&props.onFinish()
         }
-      });  
+        props.dispatch({
+          type: `${namespace}/AddAuditInfo`,
+          payload: {
+            ...par
+          },
+          callback: () => {
+            SetCurrent(current + 1)
+            props.onFinish && props.onFinish()
+          }
+        });
         break;
       case 2: //完成
         props.onCancel()
@@ -215,53 +217,92 @@ const Index = (props) => {
         break;
     }
   }
-  const prev = () =>{ //上一步
+  const prev = () => { //上一步
     SetCurrent(current - 1)
   }
-  const CompleteComponents = ()=>{
-    return  <Result
-    status="success"
-    title="审核完成"
-  />
+
+  const CompleteComponents = () => {
+    return <Result
+      status="success"
+      title="审核完成"
+    />
+  }
+  const transferClick = () => { //移交
+    setTransferVisible(true)
+  }
+  const transferForm = () => {
+    return <Form
+      form={form2}
+      name="advanced_search3"
+      className={'ant-advanced-search-form3'}
+      labelCol={{flex:'66px'}}
+    >
+      <Form.Item name='opinion' label='接收人' rules={[{ required: true, message: '请选择接收人！' }]}>
+        <Select
+          showSearch
+          allowClear
+          placeholder="请输入"
+          optionFilterProp="label"
+          fieldNames={{ label: 'ModelName', value: 'ModelGuid', children: 'ModelList' }}
+          options={[]}
+        />
+      </Form.Item>
+      <Form.Item name='opinion' label='备注' >
+        <Input.TextArea rows={4} placeholder="请输入" allowClear />
+      </Form.Item>
+    </Form>
   }
   return (
     <div className={styles.installEquipmentSty}>
-          <Modal
-            visible={visible}
-            title={title}
-            onCancel={() => { props.onCancel()}}
-            destroyOnClose
-            mask={false}
-            wrapClassName={`spreadOverModal ${styles.modalSty2}`}
-            footer={<div className="steps-action">
-              {current > 0 && current != steps.length - 1 && (
-                <Button
-                  onClick={() => prev()}
-                >
-                  上一步
-                </Button>
-              )}
-              {current <= steps.length - 1 && (
-                <Button type="primary" loading={current==1? addAuditInfoLoading : false} onClick={() => saveNext()}>
-                  {current < steps.length - 1 ? '下一步' : '完成'}
-                </Button>
-              )}
-            </div>}
-          >
-            <Steps current={current}>
-              {steps.map(item => <Step title={item} />)}
-            </Steps>
-              <div style={{marginTop:12}}>{current==0? <ViewPhotos /> : current==1 ? examineComponents()  : <CompleteComponents /> } </div>
-          </Modal>
-                  {/* 查看照片弹窗 */}
-        <ImageView
-          isOpen={isImageViewOpen}
-          images={imageList?.length ? imageList : []}
-          imageIndex={imageIndex}
-          onCloseRequest={() => {
-            setIsImageViewOpen(false);
-          }}
-          />
+      <Modal
+        visible={visible}
+        title={`审核安装照片${title? `（${title}）` : ''}`}
+        onCancel={() => { props.onCancel() }}
+        destroyOnClose
+        mask={false}
+        wrapClassName={`spreadOverModal ${styles.modalSty2}`}
+        footer={<div className="steps-action">
+          {current > 0 && current != steps.length - 1 && (
+            <Button
+              onClick={() => prev()}
+            >
+              上一步
+            </Button>
+          )}
+          {current <= steps.length - 1 && (
+            <Button type="primary" loading={current == 1 ? addAuditInfoLoading : false} onClick={() => saveNext()}>
+              {current < steps.length - 1 ? '下一步' : '完成'}
+            </Button>
+          )}
+          {/* {current == 1 && (
+              <Button type="primary" loading={false} onClick={() => transferClick()}>
+                {'移交'}
+              </Button>
+          )} */}
+        </div>}
+      >
+        <Steps current={current}>
+          {steps.map(item => <Step title={item} />)}
+        </Steps>
+        <div style={{ marginTop: 12 }}>{current == 0 ? <ViewPhotos /> : current == 1 ? examineComponents() : <CompleteComponents />} </div>
+      </Modal>
+      {/* 查看照片弹窗 */}
+      <ImageView
+        isOpen={isImageViewOpen}
+        images={imageList?.length ? imageList : []}
+        imageIndex={imageIndex}
+        onCloseRequest={() => {
+          setIsImageViewOpen(false);
+        }}
+      />
+         <Modal
+        visible={transferVisible}
+        title={`移交审核${title? `（${title}）` : ''}`}
+        onCancel={() => { setTransferVisible(false) }}
+        destroyOnClose
+        >
+         {transferForm()}
+        </Modal>
     </div>
   );
 };

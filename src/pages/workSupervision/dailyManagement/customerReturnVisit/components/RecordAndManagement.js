@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-06-11 14:29:06
  * @LastEditors: outman0611
- * @LastEditTime: 2024-12-02 13:47:13
+ * @LastEditTime: 2024-12-04 17:05:52
  * @Description: 管理部门拜访记录
  */
 import React, { useState, useEffect } from 'react';
@@ -20,6 +20,7 @@ import {
   Tooltip,
   Popconfirm,
   Divider,
+  message,
 } from 'antd';
 import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
@@ -29,11 +30,15 @@ import { getCurrentUserId } from '@/utils/utils';
 import { DelIcon, EditIcon } from '@/utils/icon';
 import CustomerInterview from '@/pages/workSupervision/Forms/CustomerInterview';
 import LargeRegionSelect from '@/pages/workSupervision/dailyManagement/components/LargeRegionSelect';
+import styles from "../../siteInspecTempSet/style.less"
+
 const { Text, Link } = Typography;
 
 const dvaPropsData = ({ loading, provinceAllList, common }) => ({
   loading: loading.effects[`wordSupervision/GetCustomerVisitInfo`],
   exportLoading: loading.effects[`wordSupervision/ExportCustomerVisitInfo`],
+  addFlagLoading: loading.effects[`wordSupervision/GetCustomerVisitDailyWorks`],
+
 });
 
 const RecordAndManagement = props => {
@@ -47,11 +52,13 @@ const RecordAndManagement = props => {
   const [editOpen, setEditOpen] = useState(false);
   const [largeRegionList, setLargeRegionList] = useState([]);
   const [provinceAllList, setProvinceAllList] = useState([]);
+  const [addData, setAddData] = useState({});
 
-  const { dispatch, loading, exportLoading, open, onCancel, mode, taskInfo, type } = props;
+  const { dispatch, loading, exportLoading, open, onCancel, mode, taskInfo, type,addFlagLoading, } = props;
 
   useEffect(() => {
     getPageData();
+    mode === 'management' && (!taskInfo.ID) &&  getCustomerVisitDailyWorksData();
   }, []);
 
   // 获取请求参数
@@ -105,7 +112,15 @@ const RecordAndManagement = props => {
     });
   };
 
-  //
+  const getCustomerVisitDailyWorksData = () => { //获取客户回访当月的任务
+    dispatch({
+      type: 'wordSupervision/GetCustomerVisitDailyWorks',
+      payload: {},
+      callback: res => {
+        setAddData(res.Datas || {});
+      },
+    });
+  }
   const onEdit = record => {
     updateType();
     setEditData(record);
@@ -278,7 +293,7 @@ const RecordAndManagement = props => {
 
     return columns;
   };
-
+  const data = taskInfo.ID ? taskInfo :  addData
   const getPageContent = () => {
     let initialValues = {
       time: [
@@ -289,31 +304,31 @@ const RecordAndManagement = props => {
       ],
     };
     if (taskInfo.ID) {
-      initialValues.time = [moment(taskInfo.BeginTime), moment(taskInfo.EndTime)];
+      initialValues.time = [moment(data.BeginTime), moment(data.EndTime)];
       // initialValues.regionCode = taskInfo.RegionCode;
     }
     return (
       <>
         {taskInfo.ID && (
           <Alert
-            message={`任务类型：客户回访任务单，派发时间：${taskInfo.CreateTime} ，有效期：${taskInfo.EndTime} ，任务单派发频次1次/月，每个任务单最少有（${taskInfo.standNum || 0}次/月）记录。`}
+            message={`任务类型：客户回访任务单，派发时间：${data.BeginTime} ，有效期：${data.EndTime} ，任务单派发频次1次/月，每个任务单最少有（${data.standNum || 0}次/月）记录。`}
             type="info"
             showIcon
-            style={{ marginRight: 30 }}
+            style={{marginRight:30}}
           />
         )}
         <Card
           bordered={false}
           bodyStyle={{ padding: 0 }}
-          headStyle={{ display: taskInfo.ID ? 'none' : 'block' }}
+          headStyle={{ display: taskInfo.ID ? 'none' : 'block', padding: 0  }}
+          className={styles.manageRecordCardWrapper}
           title={
             <Form
-              // id="searchForm"
               form={form}
               layout="inline"
               initialValues={initialValues}
               autoComplete="off"
-              // style={{ display: taskInfo.ID ? 'none' : 'block' }}
+              style={{ marginTop: 12 }}
             >
               <Space wrap>
                 <LargeRegionSelect
@@ -378,13 +393,21 @@ const RecordAndManagement = props => {
             </Form>
           }
         >
-          {taskInfo.ID && (
+          {mode !== 'record'  &&  (
             <Button
               type="primary"
-              style={{ margin: '10px 0' }}
+              style={{ margin: '8px 0' }}
+              loading={addFlagLoading}
               onClick={() => {
-                setEditData({});
-                setEditOpen(true);
+                if(data.ID){
+                  setEditOpen(true);
+                  // setEditData({DailyTaskID: data.ID,RegionalArea:data.largeCode,LargeRegion:data.LargeName });
+                  setEditData({DailyTaskID: data.ID});
+
+                }else{
+                  message.error('本月没有派工单，不允许添加！');
+                  
+                }
               }}
             >
               添加
@@ -442,6 +465,10 @@ const RecordAndManagement = props => {
     <Modal
       title={mode === 'record' ? '客户现场回访记录' : '客户现场回访管理'}
       wrapClassName={`spreadOverModal`}
+      bodyStyle={{
+        // padding: data.ID ? '12px 12px 0 12px' : '0 12px'
+        padding:  '0 12px'
+      }}
       mask={false}
       open={open}
       destroyOnClose

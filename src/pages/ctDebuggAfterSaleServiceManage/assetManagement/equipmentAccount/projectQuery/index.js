@@ -363,7 +363,7 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
       const par = queryPar ? queryPar :
-        { ...values, beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'), endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'), time: undefined, }
+        { ...values, beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD 00:00:00'), endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'), time: undefined, }
       props.getProjectInfoList({
         ...par,
         pageIndex: PageIndex,
@@ -485,14 +485,16 @@ const Index = (props) => {
       className={styles['ant-advanced-search-form']}
       onFinish={() => {setPageIndex(1); onFinish(1, pageSize) }}
       initialValues={{
-        time: [moment().subtract(6, 'months').startOf('d'), moment().endOf('d')],
+        time: [moment().subtract(1, 'years').startOf('d'), moment().endOf('d')],
       }}
     >
       <Row align='middle'>
         <Col span={8}>
           <Form.Item name='time' label='创建时间' >
             <RangePicker_ style={{ width: '100%' }}
-              showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
+              format= 'YYYY-MM-DD'
+              showTime={false}
+              // showTime={{ format: 'YYYY-MM-DD HH:mm:ss', defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment(' 23:59:59', ' HH:mm:ss')] }}
             />
           </Form.Item>
         </Col>
@@ -546,12 +548,12 @@ const Index = (props) => {
   return (
     <div className={styles.ctProjectQuerySty}>
       <BreadcrumbWrapper>
-        <Card title={searchComponents()}>
+        <Card title={searchComponents()} className='queryCriterTitleSty'>
           <SdlTable
             resizable
             loading={tableLoading}
             bordered
-            scroll={{ y: expand ? 'calc(100vh - 392px)' : 'calc(100vh - 352px)' }}
+            scroll={{ y: expand ? 'calc(100vh - 342px)' : 'calc(100vh - 302px)' }}
             dataSource={tableDatas}
             columns={columns}
             pagination={{

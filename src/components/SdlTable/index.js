@@ -449,9 +449,6 @@ class SdlTable extends PureComponent {
             scroll={
               this.props.scroll === false // || this.props.dataSource?.length==0
                 ? {}
-                :
-                this.props.dataSource?.length==0?
-                 {x:'100%',y:undefined}
                 : {
                     x:
                       (this.props.scroll && this.props.scroll.x && this.props.scroll.x) ||

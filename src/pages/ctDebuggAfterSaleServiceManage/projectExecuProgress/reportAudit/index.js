@@ -38,6 +38,7 @@ const reportAudit = props => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [provinceList, setProvinceList] = useState([]); // 大区、省份列表
   const [currentRowData, setCurrentRowData] = useState({});
+  const [currentTitle, setCurrentTitle] = useState({});
 
   const { queryLoading, dispatch, largeRegionList, provinceAllList } = props;
 
@@ -199,6 +200,8 @@ const reportAudit = props => {
                 onClick={() => {
                   setIsModalOpen(true);
                   setCurrentRowData(record);
+                  setCurrentTitle(`${record.ProjectCode || record.ItemCode} - ${record.CustomEnt}`);
+
                 }}
               >
                 <AuditOutlined style={{ fontSize: 16 }} />
@@ -362,6 +365,7 @@ const reportAudit = props => {
           WorkJLID={currentRowData.WorkJLID}
           AssistantID={currentRowData.AssistantID}
           isModalOpen={isModalOpen}
+          title={currentTitle}
           onCancel={() => {
             setIsModalOpen(false);
           }}

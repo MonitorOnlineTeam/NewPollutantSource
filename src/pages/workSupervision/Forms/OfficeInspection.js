@@ -121,7 +121,7 @@ const OfficeInspection = props => {
     // 遍历整个数据列表
     data.some(item => {
       // 尝试在 ChildList 中找到匹配的 RegionCode
-      let child = item.ChildList.find(child => child.RegionCode === code);
+      let child = item.ChildList.find(child => child.RegionCode == code);
 
       if (child) {
         // 如果找到了匹配的 RegionCode，则设置结果为对应的 LargeRegion 和 Child
@@ -142,6 +142,7 @@ const OfficeInspection = props => {
       payload: {},
       callback: res => {
         let RegionCode = taskInfo.RegionCode || editData.RegionCode;
+        console.log(RegionCode,'1111111111111111')
         let region = findLargeRegionByRegionCode(res, RegionCode);
         form.setFieldsValue({ LargeRegion: region.LargeRegion, RegionCode: RegionCode });
         setProvinceList(region.ChildList);

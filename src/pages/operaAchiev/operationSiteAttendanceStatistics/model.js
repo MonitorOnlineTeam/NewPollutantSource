@@ -87,15 +87,6 @@ export default Model.extend({
         yield update({ cityDetailExportLoading: false })
     },
 
-    *GetSignInType({ payload, callback }, { call, put, update }) { //获取现场签到统计信息
-
-       const result = yield call(services.GetSignInType, payload);
-        if (result.IsSuccess) {
-          callback&&callback(result.Datas)
-        } else {
-         result.Message && message.error(result.Message)
-       }
-    }
 
   }
 })

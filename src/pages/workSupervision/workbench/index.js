@@ -109,6 +109,8 @@ const dvaPropsData = ({ loading, wordSupervision, global }) => ({
   elseLoading: wordSupervision.elseLoading,
   elseList: wordSupervision.elseList,
   addOrUpdProjectReportInfoLoading: loading.effects[`handoverReport/addOrUpdProjectReportInfo`],
+  photoExportAuditPhotoLoading: loading.effects[`installEquipment/ExportAuditPhoto`],
+
 });
 
 const Workbench = props => {
@@ -189,6 +191,12 @@ const Workbench = props => {
   //上传运维交接报告
   const [handoverReportVisible, setHandoverReportVisible] = useState(false);
   const [handoverReportId, setHandoverReportId] = useState();
+
+ // 安装照片下拉菜单
+const [photoMenuVisible, setPhotoMenuVisible] = useState(false);
+const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
+
+
 
   const type = props.location.pathname === '/ctManage/workbench' ? 1 : '';
   const paddingBottomVal = 10;
@@ -544,7 +552,7 @@ const Workbench = props => {
 
   // 渲染待办列表
   const renderTodoList = () => {
-    if (todoList?.length<=0) {
+    if (todoList?.length <= 0) {
       return <Empty style={{ marginTop: '30px' }} />;
     }
     return todoList.map(item => {
@@ -755,31 +763,31 @@ const Workbench = props => {
       //监督核查
       filterData(operaServiceBtnList, 1, supervisionVerificaList?.length);
     }
-    if (projectExecutionList?.length > 0) {
+    if (projectExecutionList?.length >= 0) {
       //项目执行
       filterData(operaServiceBtnList, 2, projectExecutionList?.length);
     }
-    if (customeSatisfactList?.length > 0) {
+    if (customeSatisfactList?.length >= 0) {
       //客户满意度
       filterData(operaServiceBtnList, 3, customeSatisfactList?.length);
     }
-    if (todoList?.length > 0) {
+    if (todoList?.length >= 0) {
       //经理日常管理任务
       filterData(operaServiceBtnList, 4, todoList?.length);
     }
-    if (elseList?.length > 0) {
+    if (elseList?.length >= 0) {
       //其他
       filterData(operaServiceBtnList, 5, elseList?.length);
     }
-    if (workAlarmPushList?.length > 0) {
+    if (workAlarmPushList?.length >= 0) {
       //数据报警
       filterData(myRemindBtnList, 10, workAlarmPushTotal);
     }
-    if (contractList?.length > 0) {
+    if (contractList?.length >= 0) {
       //合同到期
       filterData(myRemindBtnList, 11, contractList?.length);
     }
-    if (standgaswaringList?.length > 0) {
+    if (standgaswaringList?.length >= 0) {
       //标气报警
       filterData(myRemindBtnList, 12, standgaswaringList?.length);
     }
@@ -1118,14 +1126,12 @@ const Workbench = props => {
                                         >
                                           <Col
                                             onClick={() => {
-                                              if (item.Type == 2) {
-                                                //遗留问题
+                                              if (item.Type == 2) {//遗留问题
                                                 // setRemainProblemsVisible(true);
                                                 setPopVisible(true);
                                                 popForm.resetFields();
                                                 setRemainProblemsData(item)
-                                              } else if (item.Type == 4) {
-                                                //安装照片审核
+                                              } else if (item.Type == 4) {  //安装照片审核
                                                 if (item.Col1 == 2) {
                                                   setInstallEquipmentVisible(true);
                                                   const dataArr = item.MsgID && JSON.parse(item.MsgID);
@@ -1134,8 +1140,7 @@ const Workbench = props => {
                                                     ...dataArr
                                                   });
                                                 }
-                                              } else if (item.Type == 7) {
-                                                //验收服务报告
+                                              } else if (item.Type == 7) { //验收服务报告
                                                 setReportAuditVisible(true);
                                                 const dataObj = item.Col2 ? JSON.parse(item.Col2) : {};
                                                 setReportAuditData({
@@ -1144,12 +1149,7 @@ const Workbench = props => {
                                               }
                                             }}
                                             style={{
-                                              width:
-                                                item.Type == 2
-                                                  ? 'calc(100% - 210px)'
-                                                  : item.Col1 == 1
-                                                    ? 'calc(100% - 180px)'
-                                                    : 'calc(100% - 140px)',
+                                              width: 'calc(100% - 148px)',
                                             }}
                                             className="textOverflow"
                                             title={item.Msg}
@@ -1157,94 +1157,54 @@ const Workbench = props => {
                                             {msgTypeTitle[item.Type]}
                                             {item.Msg}
                                           </Col>
-                                          <Col>
-                                            {item.Type == 2 ?
-                                              //  (
-                                              //   <Popover
-                                              //     visible={index == popSelectIndex && popVisible}
-                                              //     placement="leftTop"
-                                              //     title={'解决问题'}
-                                              //     trigger="click"
-                                              //     overlayStyle={{ width: 400 }}
-                                              //     content={
-                                              // <Form
-                                              //   name="basicPop"
-                                              //   form={popForm}
-                                              //   onFinish={() => solveProblem(item)}
-                                              //   labelCol={{flex:'80px'}}
-                                              // >
-                                              //   <Form.Item label="解决人" name="solveUserName" className='minWidth' rules={[{ required: true, message: '请输入解决人！' }]} >
-                                              //     <Input placeholder='请输入' allowClear />
-                                              //   </Form.Item>
-                                              //   <Form.Item
-                                              //     label="解决时间"
-                                              //     name="problemTime"
-                                              //     rules={[
-                                              //       {
-                                              //         required: true,
-                                              //         message: '请选择解决时间！',
-                                              //       },
-                                              //     ]}
-                                              //   >
-                                              //     <DatePicker
-                                              //       disabledDate={current =>
-                                              //         current && current > moment()
-                                              //       }
-                                              //       showTime
-                                              //       style={{ width: '100%' }}
-                                              //     />
-                                              //   </Form.Item>
-                                              //   <Row align="end">
-                                              //     <Button
-                                              //       onClick={() => {
-                                              //         setPopVisible(false);
-                                              //       }}
-                                              //       style={{ marginRight: 8 }}
-                                              //     >
-                                              //       取消
-                                              //   </Button>
-                                              //     <Button
-                                              //       type="primary"
-                                              //       htmlType="submit"
-                                              //       loading={updateprojectExecutionLoading}
-                                              //     >
-                                              //       提交
-                                              //   </Button>
-                                              //   </Row>
-                                              // </Form>
-                                              //     }
-                                              //   >
-                                              //     <Tag
-                                              //       color="#4090FF"
-                                              //       onClick={() => {
-                                              //         setSelectPopIndex(index);
-                                              //         setPopVisible(true);
-                                              //       }}
-                                              //       style={{ cursor: 'pointer', marginLeft: 8 }}
-                                              //     >
-                                              //       解决问题
-                                              //   </Tag>
-                                              //   </Popover>
-                                              // ) 
-                                              null
-                                              :
-                                              (
-                                                <>
-                                                  {item.Col1 == 1 && (
-                                                    <Popconfirm
-                                                      placement="left"
-                                                      title={'确定要删除这条安装照片信息吗？'}
-                                                      onConfirm={() => delInstallPhotos(item)}
-                                                      okText="是"
-                                                      cancelText="否"
-                                                    >
-                                                      <a>删除</a>
-                                                    </Popconfirm>
-                                                  )}
-                                                </>
-                                              )}
-                                          </Col>
                                           <Col>{item.CreateTime}</Col>
+
+                                          {item.Type == 4 && item.Col1 == 1 ? <Col flex="14px" style={{ textAlign: 'right', cursor: 'pointer' }}>
+                                            <Dropdown //item.Col1 == 1   可以删除
+                                              placement="bottomLeft"  
+                                              trigger={['click']}
+                                              visible={photoMenuVisible && index == photoMenuSelectIndex} 
+                                              onVisibleChange={(flag)=>{setPhotoMenuVisible(flag);setPhotoMenuSelectIndex(index)}}
+                                              overlay={<Menu
+                                              onClick={e => { 
+                                                if (e.key === '1') {
+                                                  const record = item.MsgID && JSON.parse(item.MsgID);
+                                                  // 导出
+                                                  props.dispatch({
+                                                    type: 'installEquipment/ExportAuditPhoto', 
+                                                    payload: {
+                                                        projectCode: record?.ProjectCode,
+                                                        dispatchId: record?.DispatchId,
+                                                        systemModelId: record?.Col1,
+                                                        pointId: record?.PointId,
+                                                        equipmentAuditId: record?.EquipmentAuditId,
+                                                        entName: record?.EntName,
+                                                        pointName: record?.PointName,
+                                    
+                                                    }
+                                                  });
+    
+                                                }
+                                              }}
+                                            >
+                                              {/* <Menu.Item key="1">
+                                                <Spin size='small' spinning={!!props.photoExportAuditPhotoLoading}>导出</Spin>
+                                                </Menu.Item> */}
+                                                <Menu.Item key="2">
+                                                <Popconfirm
+                                                  placement="left"
+                                                  title={'确定要删除这条安装照片信息吗？'}
+                                                  onConfirm={() => delInstallPhotos(item)}
+                                                  okText="是"
+                                                  cancelText="否"
+                                                >
+                                                  <a>删除</a>
+                                                </Popconfirm>
+                                            </Menu.Item>
+                                            </Menu>}>
+                                              <EllipsisOutlined />
+                                            </Dropdown>
+                                          </Col> : <Col flex="14px" />}
                                         </Row>
                                       ))
                                     ) : (
@@ -1864,7 +1824,6 @@ const Workbench = props => {
           </Form>
         </Modal>
         <InstallEquipmentExamineModal
-          title="安装照片审核"
           visible={installEquipmentVisible}
           onCancel={() => {
             setInstallEquipmentVisible(false);
@@ -1954,7 +1913,7 @@ const Workbench = props => {
         <HandoverReportEditModal
           record={projectReportList}
           visible={handoverReportVisible}
-          title={ projectReportList?.ProjectCode?  `${projectReportList.ProjectCode} - ${projectReportList?.ProjectName}` : ''}
+          title={projectReportList?.ProjectCode ? `${projectReportList.ProjectCode} - ${projectReportList?.ProjectName}` : ''}
           onCancel={() => setHandoverReportVisible(false)}
           onFinish={() => {
             getCtWorkbenchMsg(5);
