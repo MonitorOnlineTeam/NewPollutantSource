@@ -1185,7 +1185,7 @@ export const API = {
     // 获取模型快转
     GetSnapshotData: before + '/WarningV2/GetSnapshotData',
     // 获取全行业波动范围
-    StatisNormalRange: before + '/WarningV2/StatisNormalRange',
+    WarningV2StatisNormalRange: before + '/WarningV2/StatisNormalRange',
     // 获取全行业波动范围 - 导出
     ExportStatisNormalRange: before + '/WarningV2/ExportStatisNormalRange',
     // 数据工况 - 导出

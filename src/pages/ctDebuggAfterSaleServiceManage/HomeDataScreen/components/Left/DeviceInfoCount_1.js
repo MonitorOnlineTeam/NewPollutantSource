@@ -48,7 +48,7 @@ const DeviceInfoCount = props => {
       title="设备信息总览"
       timeTypes={['本年', '去年']}
       onClick={onOpenModal}
-      onChange={value => {
+      onTimeChange={value => {
         getData(value);
       }}
       bodyStyle={{}}

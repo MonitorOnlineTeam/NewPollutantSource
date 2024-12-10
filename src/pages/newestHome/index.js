@@ -105,7 +105,7 @@ const Index = props => {
 
   const tabClick = val => {
     SetSelectkey(val);
-    setTimeout(() => {
+    setTimeout(() => { 
       setType(val);
     }, 200);
   };

@@ -20,13 +20,15 @@
       color: #1c242e;
       line-height: 80px;
       position: relative;
-      margin-bottom: 50px;
+      margin-bottom: 70px;
       display: flex;
       align-items: center;
       z-index: 1;
+      font-weight: bold;
+      letter-spacing: 2px;
     }
     .loginContent {
-      margin-bottom: 100px;
+      // margin-bottom: 100px;
       // width: 100%;
       // background: url(/newLogin2/feature.png) no-repeat;
     }
@@ -40,6 +42,7 @@
       img {
         width: 200%;
         margin-bottom: -40px;
+        margin-right: -14%;
       }
     }
 
@@ -76,23 +79,25 @@
         }
 
         .antd-pro-pages-user-login-components-login-index-submit {
-          background: linear-gradient(0deg, #00a0e3, #0c69b4);
-          border-radius: 30px;
-          margin-top: 20px !important;
+          background: #2488f8;
+          border-radius: 6px;
+          margin-top: 36px;
           height: 50px;
           font-size: 20px;
           font-weight: 500;
         }
 
         .antd-pro-pages-user-login-components-login-index-prefixIcon {
-          font-size: 20px;
+          font-size: 28px;
+          margin: 0 6px;
           position: relative;
         }
 
-        .antd-pro-pages-user-login-components-login-index-login
-          .ant-input-affix-wrapper
-          .ant-input:not(:first-child) {
-          margin-left: 28px;
+        .antd-pro-pages-user-login-components-login-index-login {
+          padding: 0 16px;
+          .ant-input-affix-wrapper .ant-input:not(:first-child) {
+            margin-left: -4px;
+          }
         }
       }
     }

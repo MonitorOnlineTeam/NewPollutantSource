@@ -55,7 +55,7 @@ const CustomerSatisfaction = props => {
       style={{ minHeight: '17.5rem', flex: '0 1 17.5rem' }}
       title="客户满意度"
       timeTypes={['上月', '本年']}
-      onChange={value => {
+      onTimeChange={value => {
         getData(value);
       }}
       onClick={onOpenModal}
@@ -65,7 +65,7 @@ const CustomerSatisfaction = props => {
       <div className={styles.CustomerSatisfactionWrapper} onClick={onOpenModal}>
         <div className={styles.itemBox} style={{ marginTop: 10 }}>
           <span>调查次数(次)</span>
-          <Numbers count={336} />
+          <Numbers count={SatisfactionSurveyRate.SatisfactionSurveyCount} />
         </div>
         <div className={styles.itemBox}  style={{ marginTop: 10 }}>
           <span>工程师态度满意度</span>

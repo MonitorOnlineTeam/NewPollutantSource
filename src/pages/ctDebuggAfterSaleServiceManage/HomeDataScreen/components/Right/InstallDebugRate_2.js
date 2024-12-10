@@ -125,7 +125,7 @@ const InstallDebugRate = props => {
       title="安装调试达标率"
       lastTime
       timeTypes={['上月', '本年']}
-      onChange={value => {
+      onTimeChange={value => {
         getData(value);
       }}
       onClick={onOpenModal}

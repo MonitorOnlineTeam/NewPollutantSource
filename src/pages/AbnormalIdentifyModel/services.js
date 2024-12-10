@@ -166,7 +166,7 @@ export async function GetSnapshotData(params) {
 
 // 获取全企业波动范围
 export async function StatisNormalRange(params) {
-  const result = await post(API.AbnormalIdentifyModel.StatisNormalRange, params);
+  const result = await post(API.AbnormalIdentifyModel.WarningV2StatisNormalRange, params);
   return result;
 }
 

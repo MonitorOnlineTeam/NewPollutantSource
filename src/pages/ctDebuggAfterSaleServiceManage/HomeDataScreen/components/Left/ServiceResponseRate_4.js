@@ -49,7 +49,7 @@ const ServiceResponseRate = props => {
         alignItems: 'center',
       }}
       timeTypes={['上月', '本年']}
-      onChange={value => {
+      onTimeChange={value => {
         getData(value);
       }}
       onClick={onOpenModal}

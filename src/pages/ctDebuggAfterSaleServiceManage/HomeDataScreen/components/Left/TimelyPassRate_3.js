@@ -209,7 +209,7 @@ const TimelyPassRate = props => {
       style={{ minHeight: '15.625rem' }}
       title="服务报告及时合格率"
       timeTypes={['上月', '本年']}
-      onChange={value => {
+      onTimeChange={value => {
         getData(value);
       }}
       onClick={onOpenModal}

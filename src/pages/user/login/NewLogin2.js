@@ -1,4 +1,4 @@
-import { Alert, Button, message, Modal, Row, Col } from 'antd';
+import { Alert, Button, message, Modal, Row, Col, Checkbox } from 'antd';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
 import Link from 'umi/link';
@@ -167,10 +167,10 @@ class Login extends Component {
   renderMessage = content => (
     <Alert
       style={{
-        marginBottom: 24,
+        // marginBottom: 24,
         position: 'absolute',
-        top: 62,
-        left: 86,
+        top: 84,
+        left: 110,
       }}
       message={content}
       type="error"
@@ -241,7 +241,31 @@ class Login extends Component {
               />
             </Col>
           </Row>
-          <Submit loading={submitting} style={{ marginTop: 0, marginBottom: 0 }}>
+          <div style={{padding: '0 10px'}}>
+            {!provinceShow && (
+              <Checkbox
+                checked={this.props.isAgree}
+                onChange={e => {
+                  this.props.dispatch({
+                    type: 'userLogin/changeLoginStatus',
+                    payload: { isAgree: e.target.checked },
+                  });
+                }}
+              >
+                阅读并接受
+                <Button
+                  type="link"
+                  style={{ padding: 0 }}
+                  onClick={() => {
+                    this.setState({ agreementVisible: true });
+                  }}
+                >
+                  《用户监测数据许可协议》
+                </Button>
+              </Checkbox>
+            )}
+          </div>
+          <Submit loading={submitting}>
             登录
           </Submit>
         </LoginComponents>
