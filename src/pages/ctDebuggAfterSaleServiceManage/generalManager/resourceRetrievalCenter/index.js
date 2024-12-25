@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-10-11 14:38:13
  * @LastEditors: outman0611
- * @LastEditTime: 2024-12-09 15:57:52
+ * @LastEditTime: 2024-12-10 16:35:18
  * @Description: 通用管理 问题检索中心
  */
 import React, { useState, useEffect, Fragment } from 'react';
@@ -56,7 +56,7 @@ const Index = props => {
 
   const placeholderCorres = {
     0: '请输入专家信息，如专家姓名、联系方式、设备型号',
-    1: '请输入资源类别、标题、内容',
+    1: '请输入资源类别、标题',
     2: '请输入问题类别、名称、描述',
   }
   const { resourceRetrievalCenterSelectIndex } = props;

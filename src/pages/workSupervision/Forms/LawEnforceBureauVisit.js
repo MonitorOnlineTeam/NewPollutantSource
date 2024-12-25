@@ -2,8 +2,8 @@
  * @Author: outman0611
  * @Date: 2024-11-26 14:30:21
  * @LastEditors: outman0611
- * @LastEditTime: 2024-12-03 16:26:11
- * @Description: 执法局拜访任务单
+ * @LastEditTime: 2024-12-16 15:15:25
+ * @Description: 管理部门拜访任务单
  */
 
 import React, { useState, useEffect } from 'react';
@@ -77,10 +77,10 @@ const LawEnforceBureauVisit = props => {
             payload: { },
             callback:(res)=>{
                 setAchievingResultsList(res?.Datas || [])
+                setPurposeVisitValue(editData?.VisitPurpose)
             }
         });
     };
-
 
 
 
@@ -88,7 +88,7 @@ const LawEnforceBureauVisit = props => {
         const values = await form.validateFields();
         let body = {
             ...values,
-            VisitData: values.VisitData? moment(values.visitData).format('YYYY-MM-DD HH:mm:ss') : undefined,
+            VisitData: values.VisitData? moment(values.VisitData).format('YYYY-MM-DD HH:mm:ss') : undefined,
             Province: values.Province?.toString(),
             id: editData.ID,
             dailyTaskID: taskInfo.ID || editData.DailyTaskID,
@@ -243,7 +243,8 @@ const LawEnforceBureauVisit = props => {
                                    optionFilterProp="Name"
                                    onChange={(value)=>{
                                    setPurposeVisitValue(value)
-                                   form.setFieldValue('evaluate', undefined);
+                                   form.setFieldValue('Evaluate',undefined);
+                                   value==723 && form.setFieldValue('OtherPurpose',undefined);
                                  }}
                                 />
                             </Form.Item>
@@ -276,7 +277,7 @@ const LawEnforceBureauVisit = props => {
                                 name="Suggestion"
                                 rules={[{required: true, message: '请输入拜访部门人员建议！' }]}
                             >
-                                <TextArea rows={1} placeholder="请输入拜访部门人员建议"  allowClear/>
+                                <TextArea placeholder="请输入拜访部门人员建议" rows={1}  allowClear/>
                             </Form.Item>
                         </Col>
                         <Col span={12}>

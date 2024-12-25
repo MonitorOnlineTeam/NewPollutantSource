@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-10-12 08:43:50
  * @LastEditors: outman0611
- * @LastEditTime: 2024-12-09 17:22:00
+ * @LastEditTime: 2024-12-10 16:01:50
  * @Description: 专家信息
  */
 
@@ -105,7 +105,7 @@ const Index = props => {
     { title: '联系方式', url: '/generalManager/dh.png', attribute: 'Phone' },
     { title: '擅长设备型号', url: '/generalManager/sbxh.png', attribute: 'Model' },
   ]
-  return (<div className={styles.pageContentWrapper}  style={{padding:'0 12px'}}>
+  return (<div className={styles.pageContentWrapper}>
     {/* <BreadcrumbWrapper title='专家信息'> 
       <Card bodyStyle={{ paddingBottom: 24 }}>*/}
         <SerachInputComponents
@@ -116,7 +116,7 @@ const Index = props => {
         // defaultFocus
         />
         <Spin spinning={loading}>
-          <Row gutter={[intervalNum, intervalNum]} className='expertInfoItem' style={{padding:'12px 0'}}>
+          <Row gutter={[intervalNum, intervalNum]} className='expertInfoItem'>
             {data?.[0] ? data.map((item, index) =>
               (<Col span={6}>
                 <Card className={styles.cardSty} bordered={false} hoverable>

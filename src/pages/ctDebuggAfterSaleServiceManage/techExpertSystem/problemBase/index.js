@@ -19,6 +19,8 @@ import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import Detail from './Detail';
+
 const { Option } = Select;
 import { API } from '@config/API';
 import config from '@/config';
@@ -215,7 +217,8 @@ const Index = (props) => {
         }else{
            form2.resetFields();
            setFromVisible(false)
-        }
+        }  
+          setDetailVisible(false)
           onFinish(pageIndex, pageSize)
       })
 
@@ -473,40 +476,7 @@ const Index = (props) => {
           width={'80%'}
           bodyStyle={{padding:24}}
         >
-          <Form className='detailForm'>
-            <Row>
-              <Col span={12}>
-                <Form.Item label='问题类别'>
-                  {detailData?.QuestionTypeName}
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label='问题名称'>
-                  {detailData?.QuestionName}
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label='问题描述'>
-                  {detailData?.QuestionDesc}
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label='问题解答'>
-                  {detailData?.QuestionReply}
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label='创建人'>
-                  {detailData?.CreateUserName}
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label='创建时间'>
-                  {detailData?.CreateDate}
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
+         <Detail data={detailData} />
         </Modal>
       </BreadcrumbWrapper>
     </div>

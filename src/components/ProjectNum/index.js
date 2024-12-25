@@ -21,7 +21,12 @@ const Index = (props) => {
 
 
   const [projectCode, setProjectCode] = useState(props.projectCode);
-
+ 
+  useEffect(()=>{
+     if(props.projectCode==='reset'){
+       setProjectCode(undefined)
+     }
+  },[props.projectCode])
   const projectNumCol = [
     {
       title: '合同名称',
@@ -148,7 +153,7 @@ const Index = (props) => {
         </>
       }
       trigger="click"
-      placement='right'
+      placement={props.placement || "bottom"}
       visible={popVisible}
       onVisibleChange={visible => {
         setPopVisible(visible);
@@ -157,7 +162,6 @@ const Index = (props) => {
           setProjectNum()
         }
       }}
-      placement="bottom"
     // getPopupContainer={trigger => trigger.parentNode}
     >
       <Select
@@ -166,7 +170,8 @@ const Index = (props) => {
         value={projectCode}
         dropdownStyle={{ display: 'none' }}
         placeholder="请选择"
-        onClear={() => { setProjectCode(undefined); onChange && onChange(undefined) }}
+        onClear={() => { setProjectCode(undefined); onChange && onChange(undefined);}}
+        style={props.selectSty}
       ></Select>
     </Popover>
   );

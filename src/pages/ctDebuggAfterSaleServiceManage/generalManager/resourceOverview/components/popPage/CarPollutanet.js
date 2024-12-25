@@ -319,7 +319,7 @@ const Index = (props) => {
             mask={false}
             bodyStyle={{ padding: 0 }}
         >
-            <VehicleManager useDepartment={useDepartment} isModal />
+            <VehicleManager useDepartment={useDepartment} industry={industry} isModal />
         </Modal>
     </>
     );

@@ -547,7 +547,7 @@ class DateReportPage extends PureComponent {
                       ],
                     })(airTimeEle)}
                   </FormItem> */}
-                  <FormItem {...formLayout} label="统计时间"  hidden={getFieldValue('PollutantSourceType') == 5}>
+                  <FormItem  label="统计时间"  hidden={getFieldValue('PollutantSourceType') == 5}>
                     {getFieldDecorator('ReportTime', {
                       initialValue: this.props.dateReportForm?.reportType?.value == 'siteDaily' ? defaultSearchForm.dayReportTime :  defaultSearchForm.ReportTime,
                       rules: [
@@ -612,6 +612,7 @@ class DateReportPage extends PureComponent {
                 current: dateReportForm.current,
                 onChange: this.onTableChange,
                 total: dateReportForm.total,
+                pageSizeOptions: [],
               }}
             />
           </Card>

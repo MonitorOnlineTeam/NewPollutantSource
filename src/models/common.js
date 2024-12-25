@@ -65,7 +65,7 @@ export default Model.extend({
     *getEntByRegion({ payload }, { call, put, update, select }) {
       //企业列表
       yield update({ entLoading: true });
-      const response = yield call(services.GetEntByRegion, { ...payload,pollutantType : sessionStorage.getItem('sysPollutantCodes') || payload.PollutantType });
+      const response = yield call(services.GetEntByRegion, { ...payload, pollutantType: sessionStorage.getItem('sysPollutantCodes') || payload.PollutantType });
       if (response.IsSuccess) {
         yield update({
           entList: response.Datas,
@@ -79,7 +79,7 @@ export default Model.extend({
     *getEntNoFilterList({ payload, callback }, { call, put, update, select }) {
       //企业列表 未过滤的
       yield update({ noFilterEntLoading: true });
-      const response = yield call(services.GetEntNoFilterList, { ...payload,PollutantType : sessionStorage.getItem('sysPollutantCodes') || payload.PollutantType  });
+      const response = yield call(services.GetEntNoFilterList, { ...payload, PollutantType: sessionStorage.getItem('sysPollutantCodes') || payload.PollutantType });
       if (response.IsSuccess) {
         yield update({
           noFilterEntList: response.Datas,
@@ -280,7 +280,7 @@ export default Model.extend({
     },
     // 根据企业获取排口
     *getPointByEntCode({ payload, callback }, { call, update }) {
-      const result = yield call(services.getPointByEntCode, {...payload,PollutantTypeCode:sessionStorage.getItem('sysPollutantCodes') || payload.PollutantTypeCode  });
+      const result = yield call(services.getPointByEntCode, { ...payload, PollutantTypeCode: sessionStorage.getItem('sysPollutantCodes') || payload.PollutantTypeCode });
       if (result.IsSuccess) {
         yield update({
           pointListByEntCode: result.Datas,
@@ -296,6 +296,20 @@ export default Model.extend({
         yield update({
           pollutantListByDgimn: result.Datas,
         });
+      }
+    },
+    // 根据项目id 获取企业 
+    *GetEntByProjectInfo({ payload, callback }, { call, update }) {
+      const result = yield call(requestPost, API.CommonApi.GetEntByProjectInfo, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    // 根据企业id 获取点位
+    *GetPointByEntInfo({ payload, callback }, { call, update }) {
+      const result = yield call(requestPost, API.CommonApi.GetPointByEntInfo , payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
       }
     },
     // 根据所有菜单名称

@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-11-25 14:44:25
  * @LastEditors: outman0611
- * @LastEditTime: 2024-11-28 16:50:45
+ * @LastEditTime: 2024-12-17 10:10:08
  * @Description: 管理部门拜访
  */
 import React, { useState, useEffect } from 'react';
@@ -58,7 +58,7 @@ const ReturnVisit = props => {
       params: { systemType },
     },
   } = props;
-  const buttonList = permissionButton(`/workSupervision/dailyManagement/customerReturnVisit/${systemType}`);
+  const buttonList = permissionButton(`/workSupervision/dailyManagement/manageDepentVisit/${systemType}`);
 
   useEffect(() => {
     getTableDataSource();
@@ -249,7 +249,7 @@ const ReturnVisit = props => {
                 >
                   导出
                 </Button>
-                {buttonList.includes('customerSitefollowManagement') && (
+                {buttonList.includes('manageDepartvisitsManagement') && (
                   <Button
                     type="primary"
                     onClick={() => {
@@ -257,7 +257,7 @@ const ReturnVisit = props => {
                       setMode('management');
                     }}
                   >
-                    执法局拜访管理
+                    管理部门拜访管理
                   </Button>
                 )}
                 <Button
@@ -267,7 +267,7 @@ const ReturnVisit = props => {
                     setMode('record');
                   }}
                 >
-                  执法局拜访记录
+                  管理部门拜访记录
                 </Button>
               </Space>
             </Form.Item>

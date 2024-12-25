@@ -3,9 +3,7 @@ import { API } from '@config/API'
 // 获取日历信息
 export async function getCalendarInfo(params) {
   const result = await post(API.PredictiveMaintenanceApi.GetCalendarInfo, params, null);
-  return result.Datas === null ? {
-    Datas: [],
-  } : result;
+  return result;
 }
 
 // 获取异常详细信息 历史运维工单

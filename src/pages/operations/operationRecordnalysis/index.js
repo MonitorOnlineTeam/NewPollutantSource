@@ -49,6 +49,7 @@ const dvaPropsData = ({ loading, operationRecordnalysis, global, common, point, 
   accountDetailQueryPar: operationRecordnalysis.accountDetailQueryPar,
   accountDetailCol:operationRecordnalysis.accountDetailCol,
   imageListVisible: common.imageListVisible,
+  operationSettingInfo: global.operationSettingInfo,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -107,7 +108,7 @@ const Index = (props) => {
   const [accountForm] = Form.useForm();
 
 
-  const { taskTypeLoading, taskTypeList, tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, recordAnalyListQueryPar, accountTableDatas, accountTableTotal, accountTableLoading, accountDetailQueryPar, accountDetailCol,accountExportLoading, } = props;
+  const { taskTypeLoading, taskTypeList, tableDatas, tableTotal, tableLoading, exportLoading, tableDatas2, tableTotal2, tableLoading2, exportLoading2, recordAnalyListQueryPar, accountTableDatas, accountTableTotal, accountTableLoading, accountDetailQueryPar, accountDetailCol,accountExportLoading,operationSettingInfo:{OperationType} } = props;
 
   const pollutantType = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined
 
@@ -241,7 +242,7 @@ const Index = (props) => {
   }
   const onTaskTypeChange = (value,option) =>{
     form.setFieldsValue({ TaskType:option&&option.taskType })
-    form.setFieldsValue({ type: option&&option.type })
+    // form.setFieldsValue({ type: option&&option.type })
 
   }
   const searchComponents = (isRegDetail) => {
@@ -277,7 +278,7 @@ const Index = (props) => {
           </Form.Item>
         </Spin></>}
         <Form.Item name='TaskType' hidden></Form.Item>
-        <Form.Item name='type' hidden></Form.Item>
+        {/* <Form.Item name='type' hidden></Form.Item> */}
       <Form.Item>
         {!isRegDetail && <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
           查询
@@ -521,23 +522,23 @@ const Index = (props) => {
               width: 70,
               align: 'center',
               ellipsis: false,
+              className: 'bg_white',
               render: (text, row, index) => {
                 let workNumEle, taskWorkNum1, taskWorkNum2, taskTypeName;
-                return row.datePick.map(dateItem => {
+                 return row.datePick.map(dateItem => {
+                   console.log(dateItem)
                   if (dateItem.IsOpertaion && dateItem.data && dateItem.data[0] && dateItem.date == item.date) { //运营周期内有电子表单
                     let keys = ''
-                    keys = `${row.PointName}${item.date}${index}`;  
+                    keys = `${row.PointName}${item.date}${index}`;
                     return <RecordFormPopover dataSource={dateItem.data} keys={keys}/>
-                  }
-
-                  if (dateItem.IsOpertaion && dateItem.date == item.date) { //运营周期内
+                   }else if (dateItem.IsOpertaion && dateItem.date == item.date) { //运营周期内
                     return <Row align='middle' justify='center' style={{ background: '#bae7ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}></Row>
 
-                  } else if (!dateItem.IsOpertaion && dateItem.date == item.date) {
-                    return <Row align='middle' justify='center' style={{ background: '#fff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}> </Row>
-                  }
+                  } 
+                  // else if ((!dateItem.IsOpertaion && dateItem.date == item.date)) {//不在运营周期内
+                  //   return <Row align='middle' justify='center' style={{ background: '#fff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}> </Row>
+                  // }
                 })
-
 
               }
             }]
@@ -610,8 +611,6 @@ const Index = (props) => {
   }
 
 
-
-
   return (
     <div className={styles.operationRecordnalysisSty}>
       <BreadcrumbWrapper>
@@ -649,7 +648,7 @@ const Index = (props) => {
         <Modal //台账详情
           visible={accountVisible}
           title={accountTitle}
-          wrapClassName='spreadOverModal'
+          wrapClassName={`spreadOverModal`}
           mask={false}
           footer={null}
           width={'100%'}
@@ -662,7 +661,7 @@ const Index = (props) => {
               loading={accountTableLoading}
               bordered
               dataSource={accountTableDatas}
-              columns={accountColumns}
+              columns={OperationType==1? accountColumns : accountColumns.filter(item=>item.title!='运维负责人' && item.title!='运维负责人工号')}
               scroll={{ y: 'calc(100vh - 420px)' }}
               pagination={{
                 total: accountTableTotal,

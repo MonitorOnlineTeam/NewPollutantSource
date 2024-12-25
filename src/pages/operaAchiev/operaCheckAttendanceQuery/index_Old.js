@@ -1,4 +1,8 @@
-
+/**
+ * 功  能：绩效排名 / 签到考勤查询
+ * 创建人：jab
+ * 创建时间：2024.04.01
+ */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Spin,Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker } from 'antd';
 import SdlTable from '@/components/SdlTable'
@@ -108,14 +112,6 @@ const Index = (props) => {
       fixed:'left',
     },
     {
-        title: '运维/成套',
-        dataIndex: 'aaaaa',
-        key: 'aaaaa',
-        align: 'center',
-        width:130,
-        ellipsis: true,
-      },
-    {
       title: '工作类型',
       dataIndex: 'workTypeName',
       key: 'workTypeName',
@@ -131,21 +127,7 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-        title: '项目编号',
-        dataIndex: 'aaaaa',
-        key: 'aaaaa',
-        align: 'center',
-        ellipsis: true,
-      },
-      {
-        title: '项目名称',
-        dataIndex: 'aaaaa',
-        key: 'aaaaa',
-        align: 'center',
-        ellipsis: true,
-      },
-    {
-      title: '企业名称',
+      title: '运维企业',
       dataIndex: 'entName',
       key: 'entName',
       align: 'center',
@@ -335,17 +317,9 @@ const Index = (props) => {
     >
       <Row>
         <Col span={8}>
-          <Form.Item name="userId" label="姓名">
+          <Form.Item name="userId" label="姓名" className='minWidth'>
             <UserList />
           </Form.Item>
-        </Col>
-        <Col span={8}>
-            <Form.Item name='aaaaa' label='运维/成套' style={{ padding: '0 16px' }}>
-              <Select placeholder='请选择' allowClear>
-               <Option value={1}>运维</Option>
-               <Option value={2}>成套</Option>
-              </Select>
-            </Form.Item>
         </Col>
         <Col span={8}>
           <Spin spinning={workTypeLoading} size='small' className='formItemSpinSty'>
@@ -362,12 +336,12 @@ const Index = (props) => {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name='time' label='签到时间'   className='minWidth' style={{ padding: '0 16px' }}>
+          <Form.Item name='time' label='签到时间' >
             <RangePicker_
               allowClear={false}
               showTime={false}
               format="YYYY-MM-DD"
-              style={{ width: '100%' }}
+              style={{ minWidth: 260, width: '100%' }}
             />
           </Form.Item>
         </Col>

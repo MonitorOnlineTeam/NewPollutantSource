@@ -6,12 +6,15 @@
  * @desc: 运维日历页面
  */
 import React, { PureComponent } from 'react';
-import { Calendar, Badge, Card, Divider, Tag, Empty, message, List, Modal, Spin, Popover, Button, } from 'antd';
+import { Calendar, Badge, Card, Divider,Space, Tag,Select , Empty, message, List, Modal, Spin, Popover, Button, } from 'antd';
 import { connect } from 'dva';
 import { router } from 'umi';
 import moment from 'moment';
+import { Form } from '@ant-design/compatible';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '@/components/SdlTable'
+import ProjectNum from '@/components/ProjectNum'
+import EntAtmoList from '@/components/EntAtmoList';
 import styles from './index.less'
 import TaskRecordDetails from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout'
 import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatistics/components/EntAbnormalMapModal'
@@ -28,30 +31,37 @@ import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatist
   calendarInfoLoading: loading.effects["operations/getCalendarInfo"],
   queryPar: abnormalWorkStatistics.queryPar,
   entAbnormalNumVisible: abnormalWorkStatistics.entAbnormalNumVisible,
+  getEntByProjectInfoLoading: loading.effects["common/GetEntByProjectInfo"],
+  getPointByEntInfoLoading: loading.effects["common/GetPointByEntInfo"],
+
 }))
+@Form.create()
 class CalendarPage extends PureComponent {
   constructor(props) {
     super(props);
     this.pollutantType = sessionStorage.getItem('sysPollutantCodes'),
-    this.state = {
-      date: moment(),
-      mode: "month",
-      dateFormat: "YYYY年MM月DD日",
-      currentCellInfo: {},
-      listData: [],
-      visible: false,
-      columns: [],
-      modalTableCurrent: 1,
-      currentClickTagParams: {},
-      taskRecordDetailVisible: false,
-      TaskID: null,
-      DGIMN: null,
-      // pageInfo: {
-      //   pageIndex: 1,
-      //   pageSize: 10
-      // }
-      abnormalTitle: '',
-    };
+      this.state = {
+        date: moment(),
+        mode: "month",
+        dateFormat: "YYYY年MM月DD日",
+        currentCellInfo: {},
+        listData: [],
+        visible: false,
+        columns: [],
+        modalTableCurrent: 1,
+        currentClickTagParams: {},
+        taskRecordDetailVisible: false,
+        TaskID: null,
+        DGIMN: null,
+        // pageInfo: {
+        //   pageIndex: 1,
+        //   pageSize: 10
+        // }
+        abnormalTitle: '',
+        projectCode:undefined,
+        entList:[],
+        pointList:[],
+      };
   }
 
   componentDidMount() {
@@ -350,7 +360,7 @@ class CalendarPage extends PureComponent {
         ...this.state.currentClickTagParams,
         pageIndex: this.state.modalTableCurrent,
         pageSize: 10,
-        pollutantType:this.pollutantType,
+        pollutantType: this.pollutantType,
       }
     })
   }
@@ -358,12 +368,15 @@ class CalendarPage extends PureComponent {
   // 获取日历数据
   getCalendarInfo = () => {
     const { mode, date } = this.state;
+    const values = this.props.form.getFieldsValue();
     this.props.dispatch({
       type: 'operations/getCalendarInfo',
       payload: {
         Mode: mode,
         CalendarDate: date.format('YYYY-MM-01 00:00:00'),
-        pollutantType:this.pollutantType,
+        pollutantType: this.pollutantType,
+        ...values,
+        projectID:this.state.projectCode
       }
     })
   }
@@ -504,8 +517,7 @@ class CalendarPage extends PureComponent {
         exceptionType: type,
         FutureType: undefined
       }
-
-
+    const values = this.props.form.getFieldsValue()
     this.props.dispatch({
       type: "operations/getAbnormalDetailList",
       payload: {
@@ -516,8 +528,10 @@ class CalendarPage extends PureComponent {
         pageSize: abnormalForm.pageSize,
         IsQueryAllUser: true,
         IsPaging: true,
-        pollutantType:this.pollutantType,
-        ...payload
+        pollutantType: this.pollutantType,
+        ...payload,
+        ...values,
+        projectID:this.state.projectCode
       }
     })
 
@@ -565,12 +579,112 @@ class CalendarPage extends PureComponent {
     const { abnormalDetailList, abnormalForm, loading, calendarInfoLoading, modalTableDataSource, modalTableTotal } = this.props;
     const { currentCellInfo, dateFormat, listData, columns, modalTableCurrent, taskRecordDetailVisible, abnormalTitle, } = this.state;
     const cardTitle = `${currentCellInfo.text} - ${moment(currentCellInfo.date).format(dateFormat)}`;
+    const { getFieldDecorator } = this.props.form;
     return (
       <BreadcrumbWrapper>
         <div className={styles.calendarWrapper}>
           <div style={{ display: "flex" }}>
             <div style={{ flex: 5, marginRight: 10 }}>
               <Card className="contentContainer">
+                <Form
+                  name="advanced_search"
+                  layout='inline'
+                  onSubmit={()=>this.getCalendarInfo()}
+                >
+
+                  <Form.Item  label='项目编号'>
+                      <ProjectNum
+                        placement="bottomLeft"
+                        selectSty={{width:150}}
+                        projectCode={this.state.projectCode}
+                        onChange={(record) => {
+                          this.setState({projectCode:record?.ID || undefined})
+                          this.props.form.setFieldsValue({ entCode: undefined,DGIMN:undefined });
+                          if(record?.ID){
+                          this.props.dispatch({
+                            type: "common/GetEntByProjectInfo",
+                            payload: {
+                              projectID: record.ID
+                            },
+                            callback:(data)=>{
+                              data && this.setState({
+                                entList:data
+                              })
+                            }
+                          })
+                       }else{
+                        this.setState({
+                          entList:[],
+                          pointList:[]
+                        })
+                       }
+                      }
+                      }
+                    />
+                  </Form.Item>
+                  <Form.Item  label='企业'>
+                  {getFieldDecorator('entCode', {
+                      initialValue: undefined,
+                    })(
+                      <Select loading={this.props.getEntByProjectInfoLoading}  options={this.state.entList} placeholder="请选择" style={{ width: 150}}
+                         fieldNames={{ label: 'EntName', value: 'EntCode'}} 
+                         showSearch
+                         allowClear
+                         optionFilterProp="EntName"
+                         onChange={(value) => {
+                          this.props.form.setFieldsValue({ DGIMN: undefined });
+                          if(value){
+                          this.props.dispatch({
+                            type: "common/GetPointByEntInfo",
+                            payload: {
+                              entCode: value
+                            },
+                            callback:(data)=>{
+                              data && this.setState({
+                                pointList:data
+                              })
+                            }
+                          })
+                        }else{
+                          this.setState({
+                            pointList:[]
+                          })
+                        }
+                      }}
+                    />
+                    )}
+      
+                  </Form.Item>
+                  <Form.Item  label='监测点'>
+                   
+                   {getFieldDecorator('DGIMN', {
+                       initialValue: undefined,
+                     })(
+                       <Select  
+                         loading={this.props.getPointByEntInfoLoading}
+                         options={this.state.pointList}
+                         fieldNames={{ label: 'PointName', value: 'DGIMN'}} 
+                         showSearch
+                         allowClear
+                         optionFilterProp="PointName"
+                         placeholder="请选择"
+                         style={{ width: 150 }}
+                        
+                     />
+                     )}
+       
+                   </Form.Item>
+                  <Form.Item>
+                <Space>
+                  <Button htmlType='submit' type="primary" loading={calendarInfoLoading}>
+                    查询
+                  </Button>
+                  <Button  onClick={()=>{ this.props.form.resetFields();this.setState({projectCode:'reset',entList:[],pointList:[]})}}>
+                    重置
+                  </Button>
+                  </Space>
+                  </Form.Item>
+                </Form>
                 <Spin spinning={calendarInfoLoading} style={{ top: '25%' }}>
                   <Calendar
                     dateCellRender={this.cellRender}

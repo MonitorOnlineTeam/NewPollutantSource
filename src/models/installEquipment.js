@@ -7,10 +7,10 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'installEquipment',
   state: {
-    installEquipmentTableDatas:[],
-    installEquipmentTableTotal:0,
+    installEquipmentTableDatas: [],
+    installEquipmentTableTotal: 0,
     installEquipmentQueryPar: {},
-    installPhotoData:[],
+    installPhotoData: [],
   },
   effects: {
     //获取设备安装审核信息
@@ -18,8 +18,8 @@ export default Model.extend({
       const result = yield call(services.GetEquipmentAuditList, { ...payload });
       if (result.IsSuccess) {
         yield update({
-          installEquipmentTableDatas:result.Datas,
-          installEquipmentTableTotal:result.Total,
+          installEquipmentTableDatas: result.Datas,
+          installEquipmentTableTotal: result.Total,
           installEquipmentQueryPar: payload,
         })
       } else {
@@ -27,8 +27,18 @@ export default Model.extend({
       }
     },
     //设备安装审核信息 导出
-    *ExportEquipmentAudit({ payload,callback }, { call, put, update }) { 
+    *ExportEquipmentAudit({ payload, callback }, { call, put, update }) {
       const result = yield call(services.ExportEquipmentAudit, payload);
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      } else {
+        result.Message && message.error(result.Message);
+      }
+    },
+    //单条设备安装 导出
+    *ExportAuditPhoto({ payload, callback }, { call, put, update }) {
+      const result = yield call(services.ExportAuditPhoto, payload);
       if (result.IsSuccess) {
         message.success('下载成功');
         downloadFile(`${result.Datas}`);
@@ -41,7 +51,7 @@ export default Model.extend({
       const result = yield call(services.GetAuditPhoto, { ...payload });
       if (result.IsSuccess) {
         yield update({
-          installPhotoData:result.Datas,
+          installPhotoData: result.Datas,
         })
       } else {
         result.Message && message.error(result.Message)
@@ -56,15 +66,13 @@ export default Model.extend({
         result.Message && message.error(result.Message)
       }
     },
-    
-    //单条设备安装 导出
-    *ExportAuditPhoto({ payload,callback }, { call, put, update }) { 
-      const result = yield call(services.ExportAuditPhoto, payload);
+    // 移交安装照片审核
+    *TransferReview({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.TransferReview, { ...payload });
       if (result.IsSuccess) {
-        message.success('下载成功');
-        downloadFile(`${result.Datas}`);
+        callback && callback(result.Datas)
       } else {
-        result.Message && message.error(result.Message);
+        result.Message && message.error(result.Message)
       }
     },
 

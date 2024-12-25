@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-10-11 14:38:13
  * @LastEditors: outman0611
- * @LastEditTime: 2024-12-09 16:02:19
+ * @LastEditTime: 2024-12-10 14:45:02
  * @Description: 通用管理 问题检索中心-详情
  */
 import React, { useState, useEffect, Fragment } from 'react';
@@ -60,12 +60,15 @@ const Index = props => {
 const {location:{query:{placeholder,selectIndex}} } = props;
 
 
-
+const [type, setType] = useState(1)
   return (
     <BreadcrumbWrapper>
       <Card bodyStyle={{ padding: '12px 12px 0 12px' }}>
         <Tabs
           defaultActiveKey={selectIndex}
+          onChange={(value)=>{
+            setType(value)
+          }}
           items={[
             {
               label: `专家信息`,
@@ -80,7 +83,7 @@ const {location:{query:{placeholder,selectIndex}} } = props;
             {
               label: `问题与解决方案`,
               key: 2,
-              children:  <ResourceInfoProblemsSolutions type={2} placeholder={JSON.parse(placeholder)?.[12]} selectIndex={selectIndex}/>,
+              children:  <ResourceInfoProblemsSolutions type={2} placeholder={JSON.parse(placeholder)?.[2]} selectIndex={selectIndex}/>,
             },
           ]}
         />

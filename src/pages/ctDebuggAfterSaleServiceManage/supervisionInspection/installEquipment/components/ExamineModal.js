@@ -4,7 +4,7 @@
  * 创建时间：2024.04
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Upload, Popconfirm, Radio, Result, Steps, Image, Form, Tag, Skeleton, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin, Empty,Popover } from 'antd';
+import { Table, Input, InputNumber, Upload, Popconfirm, Radio, Result, Steps, Image, Form, Tag, Skeleton, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin, Empty, Popover } from 'antd';
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, AmazonCircleFilled, AuditOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 const { RangePicker } = DatePicker;
@@ -19,9 +19,12 @@ import styles from "../style.less"
 const { Step } = Steps;
 const namespace = 'installEquipment'
 
-const dvaPropsData = ({ loading, installEquipment, global, }) => ({
+const dvaPropsData = ({ loading, common, global, }) => ({
   auditPhotoLoading: loading.effects[`${namespace}/GetAuditPhoto`],
   addAuditInfoLoading: loading.effects[`${namespace}/AddAuditInfo`],
+  transferReviewLoading: loading.effects[`${namespace}/TransferReview`],
+  getAlluserLoading: loading.effects[`common/getAlluser`],
+  allUser:common.allUser,
   configInfo: global.configInfo,
 })
 
@@ -34,13 +37,14 @@ const Index = (props) => {
 
 
 
-  const { addAuditInfoLoading, visible, title, data } = props;
+  const { addAuditInfoLoading, transferReviewLoading,getAlluserLoading,allUser, visible, title, data } = props;
 
   const [isImageViewOpen, setIsImageViewOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [imageList, setImageList] = useState([]);
 
   const [transferVisible, setTransferVisible] = useState(false);
+  const [transferFlag, setTransferFlag] = useState(false);
 
 
   useEffect(() => {
@@ -58,6 +62,11 @@ const Index = (props) => {
           equipmentAuditId: data?.EquipmentAuditId,
         }
       });
+      props.dispatch({
+        type: `common/getAlluser`,
+        payload: {}
+      });
+      
     }
   }, [visible]);
 
@@ -205,6 +214,7 @@ const Index = (props) => {
           },
           callback: () => {
             SetCurrent(current + 1)
+            setTransferFlag(false)
             props.onFinish && props.onFinish()
           }
         });
@@ -224,39 +234,75 @@ const Index = (props) => {
   const CompleteComponents = () => {
     return <Result
       status="success"
-      title="审核完成"
+      title={`${transferFlag? '移交' : '审核'}完成`}
     />
   }
+
+  
+  useEffect(()=>{
+    !transferVisible && form3.resetFields();
+  },[transferVisible])
+  
   const transferClick = () => { //移交
     setTransferVisible(true)
   }
+
+  const transferOk = () => {//移交提交
+    return form3.validateFields().then((values) => {
+      const par = {
+        ...values,
+        systemModelId: data.Col1,
+        dispatchId: data.DispatchId,
+        pointId: data.PointId,
+        equipmentAuditId: data.EquipmentAuditId,
+        status: data.Status,
+      }
+      props.dispatch({
+        type: `${namespace}/TransferReview`,
+        payload: {
+          ...par
+        },
+        callback: () => {
+          setTransferVisible(false)
+          SetCurrent(current + 1)
+          setTransferFlag(true)
+          props.onFinish && props.onFinish()
+        }
+      });
+    })
+      .catch((info) => {
+        console.log('Validate Failed:', info);
+      });
+  }
   const transferForm = () => {
     return <Form
-      form={form2}
+      form={form3}
       name="advanced_search3"
       className={'ant-advanced-search-form3'}
-      labelCol={{flex:'66px'}}
+      labelCol={{ flex: '66px' }}
     >
-      <Form.Item name='opinion' label='接收人' rules={[{ required: true, message: '请选择接收人！' }]}>
+      <Form.Item name='userId' label='接收人' rules={[{ required: true, message: '请选择接收人！' }]}>
         <Select
           showSearch
           allowClear
           placeholder="请输入"
-          optionFilterProp="label"
-          fieldNames={{ label: 'ModelName', value: 'ModelGuid', children: 'ModelList' }}
-          options={[]}
+          optionFilterProp="User_Name"
+          fieldNames={{ label: 'User_Name', value: 'User_ID' }}
+          loading={getAlluserLoading}
+          options={allUser}
         />
       </Form.Item>
-      <Form.Item name='opinion' label='备注' >
+      <Form.Item name='remark' label='备注' >
         <Input.TextArea rows={4} placeholder="请输入" allowClear />
       </Form.Item>
     </Form>
   }
+
   return (
     <div className={styles.installEquipmentSty}>
       <Modal
         visible={visible}
-        title={`审核安装照片${title? `（${title}）` : ''}`}
+        title={`审核安装照片${title ? `（${title}）` : ''}`}
         onCancel={() => { props.onCancel() }}
         destroyOnClose
         mask={false}
@@ -274,11 +320,11 @@ const Index = (props) => {
               {current < steps.length - 1 ? '下一步' : '完成'}
             </Button>
           )}
-          {/* {current == 1 && (
-              <Button type="primary" loading={false} onClick={() => transferClick()}>
-                {'移交'}
-              </Button>
-          )} */}
+          {current == 1 && (
+            <Button type="primary"  onClick={() => transferClick()}>
+              {'移交'}
+            </Button>
+          )}
         </div>}
       >
         <Steps current={current}>
@@ -295,14 +341,16 @@ const Index = (props) => {
           setIsImageViewOpen(false);
         }}
       />
-         <Modal
+      <Modal
         visible={transferVisible}
-        title={`移交审核${title? `（${title}）` : ''}`}
-        onCancel={() => { setTransferVisible(false) }}
+        title={`移交审核${title ? `（${title}）` : ''}`}
         destroyOnClose
-        >
-         {transferForm()}
-        </Modal>
+        onCancel={() => { setTransferVisible(false);  }}
+        onOk={() => transferOk()}
+        confirmLoading={transferReviewLoading}
+      >
+        {transferForm()}
+      </Modal>
     </div>
   );
 };

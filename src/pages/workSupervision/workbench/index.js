@@ -577,12 +577,12 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
           <Col flex="1" className={styles.taskName} onClick={() => onTodoItemClick(item)}>
             {item.TaskContent}
           </Col>
-          <Col flex="200px">
+          {/* <Col flex="200px">
             <span className={styles.ellipsis} title={item.CreateUser}>
               {item.CreateUser}
             </span>
-          </Col>
-          <Col flex="100px">{moment(item.CreateTime).format('YYYY-MM-DD')}</Col>
+          </Col> */}
+          <Col flex="110px">{item.CreateTime && moment(item.CreateTime).format('YYYY-MM-DD HH:mm')}</Col>
           <Col flex="40px" style={{ textAlign: 'right', cursor: 'pointer' }}>
             <Dropdown placement="bottomLeft" overlay={menu}>
               <EllipsisOutlined />
@@ -985,7 +985,7 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
               {item.Msg}
             </Col>
             <Col flex="12px" />
-            <Col flex="127px">{item.CreateTime}</Col>
+            <Col flex="110px">{item.CreateTime && moment(item.CreateTime).format('YYYY-MM-DD HH:mm')}</Col>
           </Row>
         ))
       ) : (
@@ -1149,7 +1149,7 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
                                               }
                                             }}
                                             style={{
-                                              width: 'calc(100% - 148px)',
+                                              width: 'calc(100% - 134px)',
                                             }}
                                             className="textOverflow"
                                             title={item.Msg}
@@ -1157,7 +1157,7 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
                                             {msgTypeTitle[item.Type]}
                                             {item.Msg}
                                           </Col>
-                                          <Col>{item.CreateTime}</Col>
+                                          <Col>{item.CreateTime && moment(item.CreateTime).format('YYYY-MM-DD HH:mm')}</Col>
 
                                           {item.Type == 4 && item.Col1 == 1 ? <Col flex="14px" style={{ textAlign: 'right', cursor: 'pointer' }}>
                                             <Dropdown //item.Col1 == 1   可以删除
@@ -1252,8 +1252,8 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
                                             style={{
                                               width:
                                                 item.Col1 == 1
-                                                  ? 'calc(100% - 180px)'
-                                                  : 'calc(100% - 140px)',
+                                                  ? 'calc(100% - 166px)'
+                                                  : 'calc(100% - 126px)',
                                             }}
                                             className="textOverflow"
                                             title={item.Msg}
@@ -1261,7 +1261,7 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
                                             {msgTypeTitle[item.Type]} {item.Msg}{' '}
                                           </Col>
                                           <Col></Col>
-                                          <Col>{item.CreateTime}</Col>
+                                          <Col>{item.CreateTime && moment(item.CreateTime).format('YYYY-MM-DD HH:mm')}</Col>
                                           {item.Col1 == 1 && (
                                             <Popconfirm
                                               placement="left"
@@ -1338,13 +1338,13 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
                                           <Col style={{ paddingTop: 4 }}>
                                             <img src="/work_alarm.png" />
                                           </Col>
-                                          <Col style={{ width: 'calc(100% - 100px)' }}>
+                                          <Col style={{ width: 'calc(100% - 128px)' }}>
                                             <div>{item.message}</div>
                                             <div
                                               className="statusSty"
                                               style={{ color: '#666', fontSize: 13, paddingTop: 4 }}
                                             >
-                                              <span>报警生成时间：{item.alarmCreateTime}</span>
+                                              <span>报警生成时间：{item.alarmCreateTime && moment(item.alarmCreateTime).format('YYYY-MM-DD HH:mm')}</span>
                                               {item.alarmType == 0 || item.alarmType == 12 ? (
                                                 <>
                                                   <Tag
@@ -1355,7 +1355,7 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
                                                   {item.status == 3 && (
                                                     <>
                                                       <span>响应人：{item.userName}</span>{' '}
-                                                      <span>响应时间：{item.responseTime}</span>
+                                                      <span>响应时间：{item.responseTime && moment(item.responseTime).format('YYYY-MM-DD HH:mm')}</span>
                                                     </>
                                                   )}
                                                 </>
@@ -1369,7 +1369,7 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
                                                     {item.status == 3 && (
                                                       <>
                                                         <span>核实人：{item.userName}</span>{' '}
-                                                        <span>核实时间：{item.responseTime}</span>
+                                                        <span>核实时间：{item.responseTime && moment(item.responseTime).format('YYYY-MM-DD HH:mm')}</span>
                                                       </>
                                                     )}
                                                   </>

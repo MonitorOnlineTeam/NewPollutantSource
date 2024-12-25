@@ -2,7 +2,8 @@
  * @Author: outman0611
  * @Date: 2024-09-09 14:03:35
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-09 14:11:45
+ * @LastEditTime: 2024-12-19 13:40:42
+ * @Description: 现场工作质量检查
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
@@ -25,7 +26,7 @@ const WorkPage = props => {
 
   return (
     <BreadcrumbWrapper>
-      <Content WorkType={WorkType} CTOperation={CTOperation} />
+      <Content  CTOperation={CTOperation} />
     </BreadcrumbWrapper>
   );
 };

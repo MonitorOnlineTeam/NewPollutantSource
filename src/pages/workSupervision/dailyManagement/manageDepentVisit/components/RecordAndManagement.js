@@ -218,11 +218,14 @@ const RecordAndManagement = props => {
         key: 'EvaluateName',
         width: 100,
         align: 'center',
+        render: (text,record)=> {
+          return record?.OtherPurpose || text;
+        },
       },
       {
         title: '具体成果',
-        dataIndex: 'VisitPurposeName',
-        key: 'VisitPurposeName',
+        dataIndex: 'SpecificResults',
+        key: 'SpecificResults',
         width: 120,
         align: 'center',
       },
@@ -234,7 +237,7 @@ const RecordAndManagement = props => {
         align: 'center',
       },
       {
-        title: '当地是有有运维',
+        title: '当地是否有运维',
         dataIndex: 'IsOperationsName',
         key: 'IsOperationsName',
       },
@@ -383,7 +386,7 @@ const RecordAndManagement = props => {
         >
           {mode !== 'record'  && <Button
             type="primary"
-            style={{ margin: '8px 0' }}
+            style={{ margin: '12px 0' }}
             loading={addFlagLoading}
             onClick={() => {
               if(data.ID){
@@ -403,6 +406,7 @@ const RecordAndManagement = props => {
             align="center"
             dataSource={dataSource}
             columns={getColumns()}
+            scroll={{y:'calc(100vh - 256px)'}}
             // resizable
             pagination={
               !taskInfo.ID
@@ -453,7 +457,7 @@ const RecordAndManagement = props => {
       wrapClassName={`spreadOverModal`}
       bodyStyle={{
         // padding: mode === 'record' || data.ID ? '12px' : '0 12px',
-        padding: '0 12px'
+        padding:  mode === 'record'? '12px 12px 0 12px' : '0 12px'
       }}
       mask={false}
       open={open}

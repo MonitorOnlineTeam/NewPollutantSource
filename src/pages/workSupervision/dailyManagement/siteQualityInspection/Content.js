@@ -37,7 +37,7 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
   exportLoading: loading.effects['wordSupervision/exportTaskRecord'],
 });
 
-const Work = props => {
+const Index = props => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
 
@@ -336,4 +336,4 @@ const Work = props => {
   );
 };
 
-export default connect(dvaPropsData)(Work);
+export default connect(dvaPropsData)(Index);

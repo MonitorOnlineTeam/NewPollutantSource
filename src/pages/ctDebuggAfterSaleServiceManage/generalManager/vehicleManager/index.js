@@ -67,7 +67,7 @@ const Index = (props) => {
 
 
 
-  const { queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,isModal,useDepartment,  } = props;
+  const { queryPar, tableDatas, tableTotal,  tableLoading, exportLoading,isModal,useDepartment,industry,  } = props;
 
 
 
@@ -202,6 +202,7 @@ const Index = (props) => {
       const values = await form.validateFields();
       props.GetCarList(queryPar?{...queryPar, pageIndex: PageIndex, pageSize: PageSize} : {
         ...values,
+        industry:industry,
         pageIndex: PageIndex,
         pageSize: PageSize,
       })

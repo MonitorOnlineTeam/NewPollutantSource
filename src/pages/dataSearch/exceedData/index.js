@@ -4,7 +4,7 @@
  * 创建时间：2020.10.14
  */
 import React, { PureComponent, Fragment } from 'react';
-import { ExportOutlined,UpOutlined,DownOutlined, } from '@ant-design/icons';
+import { ExportOutlined, UpOutlined, DownOutlined, } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -22,6 +22,7 @@ import {
     Modal,
     InputNumber,
     Input,
+    Spin,
 } from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
@@ -46,92 +47,94 @@ const { TabPane } = Tabs;
 const pageUrl = {
     GetAttentionDegreeList: 'enterpriseMonitoringModel/GetAttentionDegreeList',
     getRegions: 'autoForm/getRegions',
-    GetPollutantByType:'exceedDataModel/GetPollutantByType',
-    GetExceedDataList:'exceedDataModel/GetExceedDataList',
-    GetMoalExceedDataList:'exceedDataModel/GetMoalExceedDataList',
-    GetExceedNum:'exceedDataModel/GetExceedNum',
-    ExportExceedDataList:'exceedDataModel/ExportExceedDataList',
-    ExportExceedNum:'exceedDataModel/ExportExceedNum',
+    GetPollutantByType: 'exceedDataModel/GetPollutantByType',
+    GetExceedDataList: 'exceedDataModel/GetExceedDataList',
+    GetMoalExceedDataList: 'exceedDataModel/GetMoalExceedDataList',
+    GetExceedNum: 'exceedDataModel/GetExceedNum',
+    ExportExceedDataList: 'exceedDataModel/ExportExceedDataList',
+    ExportExceedNum: 'exceedDataModel/ExportExceedNum',
 }
-@connect(({ loading, autoForm,enterpriseMonitoringModel ,exceedDataModel}) => ({
-    loading:loading.effects['exceedDataModel/GetExceedDataList'],
-    loadingEnt:loading.effects['exceedDataModel/GetMoalExceedDataList'],
-    loadingCount:loading.effects['exceedDataModel/GetExceedNum'],
+@connect(({ loading, autoForm, enterpriseMonitoringModel, exceedDataModel }) => ({
+    loading: loading.effects['exceedDataModel/GetExceedDataList'],
+    loadingEnt: loading.effects['exceedDataModel/GetMoalExceedDataList'],
+    loadingCount: loading.effects['exceedDataModel/GetExceedNum'],
+    loadingRegion: loading.effects[pageUrl.GetExceedDataList],
     regionList: autoForm.regionList,
     attention: enterpriseMonitoringModel.attention,
-    PollutantByType:exceedDataModel.PollutantByType,
+    PollutantByType: exceedDataModel.PollutantByType,
     priseList: exceedDataModel.priseList,
-    ExceedDataList:exceedDataModel.ExceedDataList,
-    PageSize:exceedDataModel.PageSize,
-    PageIndex:exceedDataModel.PageIndex,
-    total:exceedDataModel.total,
-    RegionPageIndex:exceedDataModel.RegionPageIndex,
-    ReginPageSize:exceedDataModel.ReginPageSize,
-    RegionTotal:exceedDataModel.RegionTotal,
-    RegionDataList:exceedDataModel.RegionDataList,
-    EntCountList:exceedDataModel.EntCountList,
-    ExceedNumList:exceedDataModel.ExceedNumList,
-    ModalPageSize:exceedDataModel.ModalPageSize,
-    ModalPageIndex:exceedDataModel.ModalPageIndex,
-    Modaltotal:exceedDataModel.Modaltotal,
-    ExceedPageSize:exceedDataModel.ExceedPageSize,
+    ExceedDataList: exceedDataModel.ExceedDataList,
+    PageSize: exceedDataModel.PageSize,
+    PageIndex: exceedDataModel.PageIndex,
+    total: exceedDataModel.total,
+    RegionPageIndex: exceedDataModel.RegionPageIndex,
+    ReginPageSize: exceedDataModel.ReginPageSize,
+    RegionTotal: exceedDataModel.RegionTotal,
+    RegionDataList: exceedDataModel.RegionDataList,
+    EntCountList: exceedDataModel.EntCountList,
+    ExceedNumList: exceedDataModel.ExceedNumList,
+    ModalPageSize: exceedDataModel.ModalPageSize,
+    ModalPageIndex: exceedDataModel.ModalPageIndex,
+    Modaltotal: exceedDataModel.Modaltotal,
+    ExceedPageSize: exceedDataModel.ExceedPageSize,
     ExceedPageIndex: exceedDataModel.ExceedPageIndex,
     ExceedTotal: exceedDataModel.ExceedTotal,
 }))
 class index extends PureComponent {
-    
+
     constructor(props) {
         super(props);
         this.newTabIndex = 0;
-        this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
+        this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
         this.state = {
             // regionValue: '',
             // attentionValue: '',
             // outletValue: '',
             visible: false,
             visibleMoni: false,
-            visibleEnt:false,
+            visibleEnt: false,
             time: props.time || [moment().add(-1, "day").startOf('day'), moment().endOf('day')],
             dataType: "Hour",
-            entType: this.pollutantType  || 2,
-            pollutionWaterList:[],
-            pollutionGasList:[],
-            activeKey:'1',
-            panes:[],
-            enterpriseValue:'',
-            selectPollution:[],
+            entType: this.pollutantType || 2,
+            pollutionWaterList: [],
+            pollutionGasList: [],
+            activeKey: '1',
+            panes: [],
+            enterpriseValue: '',
+            selectPollution: [],
             RegionCode: '',
-            ModelRcode:'',
+            ModelRcode: '',
             AttentionCode: '',
             PollutantTypeCode: '',
-            operationpersonnel:'',
+            operationpersonnel: '',
             DataType: '',
             BeginTime: '',
             EndTime: '',
             TabType: '',
             PollutantList: [],
-            regionCode:'',
-            EntCountList:[],
-            modalSelectPollution:[],
-            modalPollutantList:[],
-            modalSelectPollution2:[],
-            modalregionCode:'',
-            entModalTitle:'',
-            entCountModalTotle:'',
-            entCountModalTotle2:'',
-            pagePollutantType:'',
-            exportRegion:'',
-            modalEntCode:'',
-            expand:false,
-            tableExportLoading:false,
+            regionCode: '',
+            EntCountList: [],
+            modalSelectPollution: [],
+            modalPollutantList: [],
+            modalSelectPollution2: [],
+            modalregionCode: '',
+            entModalTitle: '',
+            entCountModalTotle: '',
+            entCountModalTotle2: '',
+            pagePollutantType: '',
+            exportRegion: '',
+            modalEntCode: '',
+            expand: false,
+            tableExportLoading: false,
+            regionDetailVisible: false,
         };
     }
 
     componentDidMount() {
         this.initData();
 
-        if(this.props.regionCode) {
-            this.props.form.setFieldsValue({'Region': this.props.regionCode})
+        if (this.props.regionCode) {
+            this.props.form.setFieldsValue({ 'Region': this.props.regionCode })
         }
     }
 
@@ -153,26 +156,25 @@ class index extends PureComponent {
         this.props.dispatch({
             type: pageUrl.GetPollutantByType,
             payload: {
-                type:this.pollutantType || 2
+                type: this.pollutantType || 2
             },
-        }).then(()=>{
+        }).then(() => {
             // console.log(this.props.PollutantByType)
-            if(this.props.PollutantByType.length > 0)
-            {
+            if (this.props.PollutantByType.length > 0) {
                 let selectPollution = []
-                let pollutantList =[]
-                this.props.PollutantByType.map(item =>{
-                    pollutantList.push({PollutantCode:item.PollutantCode})
-                    selectPollution.push({PollutantName:item.PollutantName,PollutantCode:item.PollutantCode, Unit: item.Unit})
+                let pollutantList = []
+                this.props.PollutantByType.map(item => {
+                    pollutantList.push({ PollutantCode: item.PollutantCode })
+                    selectPollution.push({ PollutantName: item.PollutantName, PollutantCode: item.PollutantCode, Unit: item.Unit })
                 })
                 const { entType, dataType, time } = this.state
                 this.setState({
-                    selectPollution:selectPollution,
-                    PollutantList:pollutantList,
-                    BeginTime:moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
-                    DataType:dataType == 'Hour'?'HourData':'DayData',
-                    EndTime:moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
-                    PollutantTypeCode:entType
+                    selectPollution: selectPollution,
+                    PollutantList: pollutantList,
+                    BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+                    DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
+                    EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
+                    PollutantTypeCode: entType
                 })
                 this.props.dispatch({
                     type: pageUrl.GetExceedDataList,
@@ -182,105 +184,101 @@ class index extends PureComponent {
                         // RegionCode: '',
                         AttentionCode: '',
                         PollutantTypeCode: entType,
-                        DataType: dataType == 'Hour'?'HourData':'DayData',
+                        DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
                         BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
                         EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
                         TabType: entType,
                         PollutantList: pollutantList
                     }
                 }).then(() => {
-                    if(this.props.entCode) {
+                    if (this.props.entCode) {
                         this.paneAdd(this.props.regionCode, this.props.regionName)
                     }
                 })
             }
         })
 
-       
+
     };
-    handleSummit=(e)=>{
+    handleSummit = (e) => {
         const { PollutantByType } = this.props
-        const {operationpersonnel,expand,} = this.state
+        const { operationpersonnel, expand, } = this.state
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-          if (!err) {
-            let pollutionData = []
-            let selectPollution = []
-            if(expand){
-             PollutantByType.map(item=>{
-                let obj = {}
-                let Min = null
-                let Max = null
-                if (values[item.PollutantCode] != '') {
-                    let pollution = {}
-                    pollution['Unit'] = item.Unit
-                    pollution['PollutantName'] = item.PollutantName
-                    pollution['PollutantCode'] = values[item.PollutantCode].toString()
-                    selectPollution.push(pollution)
-                    if(values[item.PollutantCode+'Min'] != undefined)
-                    {
-                        Min = values[item.PollutantCode+'Min']
-                    }
-                    if(values[item.PollutantCode+'Max'] != undefined)
-                    {
-                        Max = values[item.PollutantCode+'Max']
-                    }
-                    if(Min == null && Max == null)
-                    {
-                        obj = {
-                            PollutantCode:values[item.PollutantCode].toString()
-                        }
-                    }
-                    if(Min != null || Max != null)
-                    {
-                        obj = {
-                            PollutantCode:values[item.PollutantCode].toString(),
-                            ExceedMultiple:{
-                                Min:Min != null ? Number(Min): Min,
-                                Max:Max != null ? Number(Max): Max
+            if (!err) {
+                let pollutionData = []
+                let selectPollution = []
+                if (expand) {
+                    PollutantByType.map(item => {
+                        let obj = {}
+                        let Min = null
+                        let Max = null
+                        if (values[item.PollutantCode] != '') {
+                            let pollution = {}
+                            pollution['Unit'] = item.Unit
+                            pollution['PollutantName'] = item.PollutantName
+                            pollution['PollutantCode'] = values[item.PollutantCode].toString()
+                            selectPollution.push(pollution)
+                            if (values[item.PollutantCode + 'Min'] != undefined) {
+                                Min = values[item.PollutantCode + 'Min']
                             }
+                            if (values[item.PollutantCode + 'Max'] != undefined) {
+                                Max = values[item.PollutantCode + 'Max']
+                            }
+                            if (Min == null && Max == null) {
+                                obj = {
+                                    PollutantCode: values[item.PollutantCode].toString()
+                                }
+                            }
+                            if (Min != null || Max != null) {
+                                obj = {
+                                    PollutantCode: values[item.PollutantCode].toString(),
+                                    ExceedMultiple: {
+                                        Min: Min != null ? Number(Min) : Min,
+                                        Max: Max != null ? Number(Max) : Max
+                                    }
+                                }
+                            }
+                            pollutionData.push(obj)
                         }
-                    }
-                    pollutionData.push(obj)
+                    })
+                } else {
+                    pollutionData = PollutantByType.map(item => { return { PollutantCode: item.PollutantCode } })
+                    selectPollution = PollutantByType.map(item => { return { PollutantName: item.PollutantName, PollutantCode: item.PollutantCode, Unit: item.Unit } })
                 }
-            })
-        }else{
-            pollutionData = PollutantByType.map(item=>{return{ PollutantCode: item.PollutantCode }})
-            selectPollution = PollutantByType.map(item=>{return{ PollutantName: item.PollutantName, PollutantCode: item.PollutantCode, Unit: item.Unit}})
-        }
 
-              this.setState({
-                  selectPollution: selectPollution,
-                  RegionCode: values.Region == undefined ? '' : values.Region,
-                  AttentionCode: values.attention == undefined ? '' : values.attention,
-                  PollutantTypeCode: values.outlet == undefined ? '' : values.outlet,
-                  DataType: values.dataType == undefined ? '' : values.dataType == 'Hour' ? 'HourData' : 'DayData',
-                  BeginTime: values.dateTime[0] && moment(values.dateTime[0]).format("YYYY-MM-DD 00:00:00"),
-                  EndTime: values.dateTime[1] && moment(values.dateTime[1]).format("YYYY-MM-DD 23:59:59"),
-                  TabType: values.outlet == undefined ? '' : values.outlet,
-                  PollutantList: pollutionData,
-                  entType: values.outlet == undefined ? '' : values.outlet,
-              })
-
-            this.props.dispatch({
-                type:pageUrl.GetExceedDataList,
-                payload:{
+                this.setState({
+                    selectPollution: selectPollution,
                     RegionCode: values.Region == undefined ? '' : values.Region,
-                    entCode: this.props.entCode,
                     AttentionCode: values.attention == undefined ? '' : values.attention,
                     PollutantTypeCode: values.outlet == undefined ? '' : values.outlet,
-                    DataType: values.dataType == undefined ? '' : values.dataType == 'Hour'?'HourData':'DayData',
-                    BeginTime: values.dateTime?.[0].format('YYYY-MM-DD HH:mm:ss'),
-                    EndTime: values.dateTime?.[1].format('YYYY-MM-DD HH:mm:ss'),
+                    DataType: values.dataType == undefined ? '' : values.dataType == 'Hour' ? 'HourData' : 'DayData',
+                    BeginTime: values.dateTime[0] && moment(values.dateTime[0]).format("YYYY-MM-DD 00:00:00"),
+                    EndTime: values.dateTime[1] && moment(values.dateTime[1]).format("YYYY-MM-DD 23:59:59"),
                     TabType: values.outlet == undefined ? '' : values.outlet,
                     PollutantList: pollutionData,
-                    operationpersonnel:operationpersonnel,
-                }
-            })
-          }
+                    entType: values.outlet == undefined ? '' : values.outlet,
+                })
+
+                this.props.dispatch({
+                    type: pageUrl.GetExceedDataList,
+                    payload: {
+                        RegionCode: values.Region == undefined ? '' : values.Region,
+                        entCode: this.props.entCode,
+                        AttentionCode: values.attention == undefined ? '' : values.attention,
+                        PollutantTypeCode: values.outlet == undefined ? '' : values.outlet,
+                        DataType: values.dataType == undefined ? '' : values.dataType == 'Hour' ? 'HourData' : 'DayData',
+                        BeginTime: values.dateTime?.[0].format('YYYY-MM-DD HH:mm:ss'),
+                        EndTime: values.dateTime?.[1].format('YYYY-MM-DD HH:mm:ss'),
+                        TabType: values.outlet == undefined ? '' : values.outlet,
+                        PollutantList: pollutionData,
+                        operationpersonnel: operationpersonnel,
+                    }
+                })
+            }
         });
 
-        
+
 
 
     }
@@ -288,94 +286,93 @@ class index extends PureComponent {
     // 导出
     exportReport = (e) => {
         const { PollutantByType } = this.props
-        const {operationpersonnel, expand,} = this.state
+        const { operationpersonnel, expand, } = this.state
         e.preventDefault();
-        this.setState({tableExportLoading:true})
+        this.setState({ tableExportLoading: true })
         this.props.form.validateFields((err, values) => {
-          if (!err) {
-            let pollutionData = []
-            let selectPollution = []
-            if(expand){
-             PollutantByType.map(item=>{
-                let obj = {}
-                let Min = null
-                let Max = null
-                if (values[item.PollutantCode] != '') {
-                    let pollution = {}
-                    pollution['Unit'] = item.Unit
-                    pollution['PollutantName'] = item.PollutantName
-                    pollution['PollutantCode'] = values[item.PollutantCode].toString()
-                    selectPollution.push(pollution)
-                    if(values[item.PollutantCode+'Min'] != undefined)
-                    {
-                        Min = values[item.PollutantCode+'Min']
-                    }
-                    if(values[item.PollutantCode+'Max'] != undefined)
-                    {
-                        Max = values[item.PollutantCode+'Max']
-                    }
-                    if(Min == null && Max == null)
-                    {
-                        obj = {
-                            PollutantCode:values[item.PollutantCode].toString()
-                        }
-                    }
-                    if(Min != null || Max != null)
-                    {
-                        obj = {
-                            PollutantCode:values[item.PollutantCode].toString(),
-                            ExceedMultiple:{
-                                Min:Min != null ? Number(Min): Min,
-                                Max:Max != null ? Number(Max): Max
+            if (!err) {
+                let pollutionData = []
+                let selectPollution = []
+                if (expand) {
+                    PollutantByType.map(item => {
+                        let obj = {}
+                        let Min = null
+                        let Max = null
+                        if (values[item.PollutantCode] != '') {
+                            let pollution = {}
+                            pollution['Unit'] = item.Unit
+                            pollution['PollutantName'] = item.PollutantName
+                            pollution['PollutantCode'] = values[item.PollutantCode].toString()
+                            selectPollution.push(pollution)
+                            if (values[item.PollutantCode + 'Min'] != undefined) {
+                                Min = values[item.PollutantCode + 'Min']
                             }
+                            if (values[item.PollutantCode + 'Max'] != undefined) {
+                                Max = values[item.PollutantCode + 'Max']
+                            }
+                            if (Min == null && Max == null) {
+                                obj = {
+                                    PollutantCode: values[item.PollutantCode].toString()
+                                }
+                            }
+                            if (Min != null || Max != null) {
+                                obj = {
+                                    PollutantCode: values[item.PollutantCode].toString(),
+                                    ExceedMultiple: {
+                                        Min: Min != null ? Number(Min) : Min,
+                                        Max: Max != null ? Number(Max) : Max
+                                    }
+                                }
+                            }
+                            pollutionData.push(obj)
                         }
-                    }
-                    pollutionData.push(obj)
+                    })
+                } else {
+                    pollutionData = PollutantByType.map(item => { return { PollutantCode: item.PollutantCode } })
+                    selectPollution = PollutantByType.map(item => { return { PollutantName: item.PollutantName, PollutantCode: item.PollutantCode, Unit: item.Unit } })
                 }
-               })
-             }else{
-                pollutionData = PollutantByType.map(item=>{return{ PollutantCode: item.PollutantCode }})
-                selectPollution = PollutantByType.map(item=>{return{ PollutantName: item.PollutantName, PollutantCode: item.PollutantCode,Unit: item.Unit }})
-            }
-              this.setState({
-                  selectPollution: selectPollution,
-                  RegionCode: values.Region == undefined ? '' : values.Region,
-                  AttentionCode: values.attention == undefined ? '' : values.attention,
-                  PollutantTypeCode: values.outlet == undefined ? '' : values.outlet,
-                  DataType: values.dataType == undefined ? '' : values.dataType == 'Hour' ? 'HourData' : 'DayData',
-                  BeginTime: values.dateTime[0] && moment(values.dateTime[0]).format("YYYY-MM-DD 00:00:00"),
-                  EndTime: values.dateTime[1] && moment(values.dateTime[1]).format("YYYY-MM-DD 23:59:59"),
-                  TabType: values.outlet == undefined ? '' : values.outlet,
-                  PollutantList: pollutionData
-              })
-            this.props.dispatch({
-                type:pageUrl.ExportExceedDataList,
-                payload:{
-                    RegionCode: this.state.exportRegion,
+                this.setState({
+                    selectPollution: selectPollution,
+                    RegionCode: values.Region == undefined ? '' : values.Region,
                     AttentionCode: values.attention == undefined ? '' : values.attention,
                     PollutantTypeCode: values.outlet == undefined ? '' : values.outlet,
-                    DataType: values.dataType == undefined ? '' : values.dataType == 'Hour'?'HourData':'DayData',
+                    DataType: values.dataType == undefined ? '' : values.dataType == 'Hour' ? 'HourData' : 'DayData',
                     BeginTime: values.dateTime[0] && moment(values.dateTime[0]).format("YYYY-MM-DD 00:00:00"),
                     EndTime: values.dateTime[1] && moment(values.dateTime[1]).format("YYYY-MM-DD 23:59:59"),
-                    TabType:this.state.exportRegion? this.state.exportRegion : '1',
-                    // TabType: values.outlet == undefined ? '1' : this.state.exportRegion,
-                    PollutantList: pollutionData,
-                    operationpersonnel:operationpersonnel,
-                },
-                callback:()=>{
-                    this.setState({tableExportLoading:false})
-                }
-            })
-          }
+                    TabType: values.outlet == undefined ? '' : values.outlet,
+                    PollutantList: pollutionData
+                })
+                this.props.dispatch({
+                    type: pageUrl.ExportExceedDataList,
+                    payload: {
+                        RegionCode: this.state.exportRegion,
+                        AttentionCode: values.attention == undefined ? '' : values.attention,
+                        PollutantTypeCode: values.outlet == undefined ? '' : values.outlet,
+                        DataType: values.dataType == undefined ? '' : values.dataType == 'Hour' ? 'HourData' : 'DayData',
+                        BeginTime: values.dateTime[0] && moment(values.dateTime[0]).format("YYYY-MM-DD 00:00:00"),
+                        EndTime: values.dateTime[1] && moment(values.dateTime[1]).format("YYYY-MM-DD 23:59:59"),
+                        TabType: this.state.exportRegion ? this.state.exportRegion : '1',
+                        // TabType: values.outlet == undefined ? '1' : this.state.exportRegion,
+                        PollutantList: pollutionData,
+                        operationpersonnel: operationpersonnel,
+                    },
+                    callback: () => {
+                        this.setState({ tableExportLoading: false })
+                    }
+                })
+            }
         });
     }
 
-    paneAdd = (region,text)=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution,operationpersonnel} = this.state
+    paneAdd = (region, text) => {
+        const { panes, RegionCode, AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, operationpersonnel } = this.state
         const activeKey = `${region}newTab${this.newTabIndex++}`;
+        this.setState({
+            regionDetailVisible:true
+        })
         this.props.dispatch({
-            type:pageUrl.GetExceedDataList,
-            payload:{
+            type: pageUrl.GetExceedDataList,
+            payload: {
                 RegionCode: RegionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -384,15 +381,14 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: region,
                 PollutantList: PollutantList,
-                operationpersonnel:operationpersonnel,
+                operationpersonnel: operationpersonnel,
                 EntCode: this.props.entCode,
                 //PageSize:10,
                 //PageIndex:1
             }
-        }).then(()=>{
+        })
+         .then(() => {
             // if(this.props.RegionDataList.length > 0)
-            if(true)
-            {
                 const fixed = false
                 const columns = [
                     {
@@ -428,8 +424,8 @@ class index extends PureComponent {
                         key: 'DataType',
                     }
                 ]
-                selectPollution.map(item=>{
-                    let addColumns ={}
+                selectPollution.map(item => {
+                    let addColumns = {}
                     addColumns = {
                         title: item.PollutantName,
                         align: 'center',
@@ -440,9 +436,9 @@ class index extends PureComponent {
                                 width: 100,
                                 align: 'center',
                                 fixed: fixed,
-                                dataIndex:'PointNum-'+item.PollutantCode,
-                                key: 'PointNum-'+item.PollutantCode,
-                                render:(text,record)=>{
+                                dataIndex: 'PointNum-' + item.PollutantCode,
+                                key: 'PointNum-' + item.PollutantCode,
+                                render: (text, record) => {
                                     return record.PollutantData[`PointNum-${item.PollutantCode}`]
                                 }
                             },
@@ -451,12 +447,12 @@ class index extends PureComponent {
                                 width: 100,
                                 align: 'center',
                                 fixed: fixed,
-                                dataIndex: 'ExceedNum-'+item.PollutantCode,
-                                key: 'ExceedNum-'+item.PollutantCode,
-                                render: (text,record) => {
-                                    return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,record.EntCode,item.PollutantName)}>
+                                dataIndex: 'ExceedNum-' + item.PollutantCode,
+                                key: 'ExceedNum-' + item.PollutantCode,
+                                render: (text, record) => {
+                                    return <a onClick={this.exCountHandle.bind(this, record.PollutantData['PolCode-' + item.PollutantCode], record.RegionCode, false, record.EntCode, item.PollutantName)}>
                                         {record.PollutantData[`ExceedNum-${item.PollutantCode}`]}
-                                        </a>
+                                    </a>
                                 }
                             },
                             {
@@ -464,117 +460,117 @@ class index extends PureComponent {
                                 width: 100,
                                 align: 'center',
                                 fixed: fixed,
-                                dataIndex: 'MaxMultiple-'+item.PollutantCode,
-                                key: 'MaxMultiple-'+item.PollutantCode,
-                                render:(text,record)=>{
-                                        return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`]&&!record.PollutantData[`MaxMultiple-${item.PollutantCode}`]===0?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
-     
+                                dataIndex: 'MaxMultiple-' + item.PollutantCode,
+                                key: 'MaxMultiple-' + item.PollutantCode,
+                                render: (text, record) => {
+                                    return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`] && !record.PollutantData[`MaxMultiple-${item.PollutantCode}`] === 0 ? '-' : toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
+
 
                                 }
                             },
                         ]
                     }
-        
+
                     columns.push(addColumns)
                 })
+                this.setState({
+                   panes:[{ 
+                    title: text, content: <SdlTable columns={columns} dataSource={this.props.RegionDataList} scroll={{y:'calc(100vh - 252px)'}}/>, 
+                   }],
+                   regionCode: region,
+                   exportRegion: region
+                 });
+                // let key = ''
+                // let indexx = 0
+                // panes.map((item, index) => {
+                //     if (item.title == text) {
+                //         indexx = index
+                //         return key = item.key
+                //     }
+                // })
+                // if (key != '') {
+                //     let obj = {
+                //         title: text, content: <SdlTable  columns={columns} dataSource={this.props.RegionDataList}
+                //         // pagination={
+                //         //     {
+                //         //         showSizeChanger: true,
+                //         //         showQuickJumper: true,
+                //         //defaultPageSize:20,
+                //         // pageSizeOptions: ['20', '30', '40', '50'],
+                //         // }
+                //         // }
+                //         // pagination={{
+                //         //     showSizeChanger: true,
+                //         //     showQuickJumper: true,
+                //         //     pageSize: this.props.ReginPageSize,
+                //         //     current: this.props.RegionPageIndex,
+                //         //     onChange: this.RegiononChange,
+                //         //     onShowSizeChange: this.onShowSizeChange,
+                //         //     pageSizeOptions: ['10','20', '30', '40', '100'],
+                //         //     total: this.props.RegionTotal,
+                //         //   }}
+                //         />, key: key, closable: true
+                //     }
 
-                let key = ''
-                let indexx = 0
-                panes.map((item,index) => {
-                    if (item.title == text) {
-                        indexx = index
-                        return key = item.key
-                    }
-                })
-                // console.log("哈哈哈哈哈哈")
-                // console.log(columns)
-                // console.log(this.props.RegionDataList)
-                if (key != '') {
-                    let obj = {
-                        title: text, content: <SdlTable columns={columns} dataSource={this.props.RegionDataList}
-                        // pagination={
-                        //     {
-                        //         showSizeChanger: true,
-                        //         showQuickJumper: true,
-                                //defaultPageSize:20,
-                                // pageSizeOptions: ['20', '30', '40', '50'],
-                            // }
-                        // }
-                        // pagination={{
-                        //     showSizeChanger: true,
-                        //     showQuickJumper: true,
-                        //     pageSize: this.props.ReginPageSize,
-                        //     current: this.props.RegionPageIndex,
-                        //     onChange: this.RegiononChange,
-                        //     onShowSizeChange: this.onShowSizeChange,
-                        //     pageSizeOptions: ['10','20', '30', '40', '100'],
-                        //     total: this.props.RegionTotal,
-                        //   }}
-                        />, key: key, closable: true
-                    }
-
-                    panes.splice(indexx,1,obj);
-                    this.setState({ panes, activeKey:key,regionCode:region,exportRegion:region });
-                }
-                if (key == '') {
-                    panes.push({
-                        title: text, content: <SdlTable columns={columns} dataSource={this.props.RegionDataList}
-                        // pagination={
-                        //     {
-                        //         showSizeChanger: true,
-                        //         showQuickJumper: true,
-                                //defaultPageSize:20,
-                            //     pageSizeOptions: ['20', '30', '40', '50'],
-                            // }
-                        // }
-                        // pagination={{
-                        //     showSizeChanger: true,
-                        //     showQuickJumper: true,
-                        //     pageSize: this.props.ReginPageSize,
-                        //     current: this.props.RegionPageIndex,
-                        //     onChange: this.RegiononChange,
-                        //     onShowSizeChange: this.onShowSizeChange,
-                        //     pageSizeOptions: ['10','20', '30', '40', '100'],
-                        //     total: this.props.RegionTotal,
-                        //   }}
-                        />, key: activeKey, closable: true
-                    });
-                    this.setState({ panes, activeKey,regionCode:region ,exportRegion:region});
-                }
-            }
+                //     panes.splice(indexx, 1, obj);
+                //     this.setState({ panes,activeKey: key, regionCode: region, exportRegion: region }); 
+                // }
+                // if (key == '') {
+                //     panes.push({
+                //         title: text, content: <SdlTable columns={columns} dataSource={this.props.RegionDataList}
+                //         // pagination={
+                //         //     {
+                //         //         showSizeChanger: true,
+                //         //         showQuickJumper: true,
+                //         //defaultPageSize:20,
+                //         //     pageSizeOptions: ['20', '30', '40', '50'],
+                //         // }
+                //         // }
+                //         // pagination={{
+                //         //     showSizeChanger: true,
+                //         //     showQuickJumper: true,
+                //         //     pageSize: this.props.ReginPageSize,
+                //         //     current: this.props.RegionPageIndex,
+                //         //     onChange: this.RegiononChange,
+                //         //     onShowSizeChange: this.onShowSizeChange,
+                //         //     pageSizeOptions: ['10','20', '30', '40', '100'],
+                //         //     total: this.props.RegionTotal,
+                //         //   }}
+                //         />, key: activeKey, closable: true
+                //     });
+                //     this.setState({ panes, activeKey, regionCode: region, exportRegion: region });
+                // }
         })
     }
     //超标企业数查询
-    exEntHandle =(pointCode,rCode)=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,operationpersonnel} = this.state
+    exEntHandle = (pointCode, rCode) => {
+        const { panes, RegionCode, AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, regionCode, operationpersonnel } = this.state
         this.setState({
-            visible:true,
-           
+            visible: true,
+
         })
         let arr = []
-        PollutantList.map(item=>{
-            if(item.PollutantCode == pointCode)
-            {
+        PollutantList.map(item => {
+            if (item.PollutantCode == pointCode) {
                 return arr.push(item)
             }
         })
 
-        let modalSelectPollution  = []
-        selectPollution.map(item=>{
-            if(item.PollutantCode == arr[0].PollutantCode)
-            {
+        let modalSelectPollution = []
+        selectPollution.map(item => {
+            if (item.PollutantCode == arr[0].PollutantCode) {
                 return modalSelectPollution.push(item)
             }
-        })  
+        })
         this.props.dispatch({
             //获取企业列表
             type: 'exceedDataModel/GetEntByRegion',
-            payload: { RegionCode: rCode=='All'?'':rCode },
+            payload: { RegionCode: rCode == 'All' ? '' : rCode },
         });
-        
+
         this.props.dispatch({
-            type:pageUrl.GetMoalExceedDataList,
-            payload:{
+            type: pageUrl.GetMoalExceedDataList,
+            payload: {
                 RegionCode: RegionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -583,114 +579,105 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: rCode,
                 PollutantList: arr,
-                PageSize:20,
-                PageIndex:1,
-                EntCode:'',
-                operationpersonnel:operationpersonnel
+                PageSize: 20,
+                PageIndex: 1,
+                EntCode: '',
+                operationpersonnel: operationpersonnel
             }
-        }).then(()=>{
-            if(this.props.EntCountList.length >0)
-            {
+        }).then(() => {
+            if (this.props.EntCountList.length > 0) {
                 let title = ''
-                if(rCode == 'All')
-                {
+                if (rCode == 'All') {
                     title = '全部合计'
                 }
-                else{
+                else {
                     title = this.props.EntCountList[0].Region
                 }
-                
+
                 this.setState({
-                    
-                    modalSelectPollution:modalSelectPollution,
-                    modalPollutantList:arr,
-                    regionCode:rCode,
-                    entModalTitle:title + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName+'值超标情况统计:'
+
+                    modalSelectPollution: modalSelectPollution,
+                    modalPollutantList: arr,
+                    regionCode: rCode,
+                    entModalTitle: title + moment(BeginTime).format('YYYY年MM月DD日 HH时') + '至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName + '值超标情况统计:'
                 })
             }
-            else
-            {
+            else {
                 this.setState({
-                    
-                    modalSelectPollution:modalSelectPollution,
-                    regionCode:rCode,
-                    entModalTitle:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName+'值超标情况统计:'
+
+                    modalSelectPollution: modalSelectPollution,
+                    regionCode: rCode,
+                    entModalTitle: "" + moment(BeginTime).format('YYYY年MM月DD日 HH时') + '至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName + '值超标情况统计:'
                 })
             }
         })
     }
     //超标次数弹框
-    exCountHandle=(pointCode,rCode,flag,EntCode,name)=>{
-        if(flag)
-        {
+    exCountHandle = (pointCode, rCode, flag, EntCode, name) => {
+        if (flag) {
             this.setState({
-                visibleEnt:true,
-                modalregionCode:rCode,
-                modalEntCode:EntCode
+                visibleEnt: true,
+                modalregionCode: rCode,
+                modalEntCode: EntCode
 
             })
         }
-        if(!flag){
+        if (!flag) {
             this.setState({
-                visibleMoni:true,
-                modalregionCode:rCode,
-                modalEntCode:EntCode
+                visibleMoni: true,
+                modalregionCode: rCode,
+                modalEntCode: EntCode
             })
         }
-        const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,PollutantList ,selectPollution ,regionCode,operationpersonnel} = this.state
+        const { AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, PollutantList, selectPollution, regionCode, operationpersonnel } = this.state
         let arr = []
-        PollutantList.map(item=>{
-            if(item.PollutantCode == pointCode)
-            {
+        PollutantList.map(item => {
+            if (item.PollutantCode == pointCode) {
                 return arr.push(item)
             }
         })
-        let modalSelectPollution  = []
+        let modalSelectPollution = []
         let pollutantTypeCode = ''
-        if(arr.length > 0)
-        {
-            selectPollution.map(item=>{
-                if(item.PollutantCode == arr[0].PollutantCode)
-                {
+        if (arr.length > 0) {
+            selectPollution.map(item => {
+                if (item.PollutantCode == arr[0].PollutantCode) {
                     return modalSelectPollution.push(item)
                 }
-            }) 
+            })
             pollutantTypeCode = PollutantTypeCode
             this.setState({
-                pagePollutantType:pollutantTypeCode
+                pagePollutantType: pollutantTypeCode
             })
         }
-        else{
+        else {
             modalSelectPollution.push({
-                PollutantName:name
+                PollutantName: name
             })
             arr.push({
-                PollutantCode:pointCode
+                PollutantCode: pointCode
             })
-            if(PollutantTypeCode == '1')
-            {
+            if (PollutantTypeCode == '1') {
                 pollutantTypeCode = '2'
             }
-            else
-            {
+            else {
                 pollutantTypeCode = '1'
             }
             this.setState({
-                pagePollutantType:pollutantTypeCode
+                pagePollutantType: pollutantTypeCode
             })
-        } 
+        }
         this.setState({
-            ModelRcode:rCode == 'All' ? '':rCode,
+            ModelRcode: rCode == 'All' ? '' : rCode,
         })
         this.props.dispatch({
             //获取企业列表
             type: 'exceedDataModel/GetEntByRegion',
-            payload: { RegionCode: rCode=='All'?'':rCode },
+            payload: { RegionCode: rCode == 'All' ? '' : rCode },
         });
         this.props.dispatch({
-            type:pageUrl.GetExceedNum,
-            payload:{
-                RegionCode: rCode == 'All' ? '':rCode,
+            type: pageUrl.GetExceedNum,
+            payload: {
+                RegionCode: rCode == 'All' ? '' : rCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: pollutantTypeCode,
                 DataType: DataType,
@@ -698,64 +685,58 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: arr,
-                PageSize:20,
-                PageIndex:1,
-                EntCode:EntCode == '' ?'':EntCode,
-                operationpersonnel:operationpersonnel
+                PageSize: 20,
+                PageIndex: 1,
+                EntCode: EntCode == '' ? '' : EntCode,
+                operationpersonnel: operationpersonnel
             }
-        }).then(()=>{
-            if(this.props.ExceedNumList.length >0)
-            {
+        }).then(() => {
+            if (this.props.ExceedNumList.length > 0) {
                 let title = ''
-                if(rCode == 'All')
-                {
+                if (rCode == 'All') {
                     title = '全部合计'
                 }
-                else{
-                    if(flag)
-                    {
+                else {
+                    if (flag) {
                         title = this.props.ExceedNumList[0].EntName
                     }
-                    else{
+                    else {
                         title = this.props.ExceedNumList[0].RegionName
                     }
-                    
+
                 }
-                if(flag)
-                {
+                if (flag) {
                     this.setState({
                         //visibleEnt:true,
-                        modalSelectPollution2:modalSelectPollution,
-                        modalPollutantList:arr,
-                        entCountModalTotle2:title + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
-                    }) 
+                        modalSelectPollution2: modalSelectPollution,
+                        modalPollutantList: arr,
+                        entCountModalTotle2: title + moment(BeginTime).format('YYYY年MM月DD日 HH时') + '至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName + '超标次数统计'
+                    })
                 }
-                else{
+                else {
                     this.setState({
                         //visibleMoni:true,
-                        modalSelectPollution2:modalSelectPollution,
-                        modalPollutantList:arr,
-                        entCountModalTotle:title + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
+                        modalSelectPollution2: modalSelectPollution,
+                        modalPollutantList: arr,
+                        entCountModalTotle: title + moment(BeginTime).format('YYYY年MM月DD日 HH时') + '至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName + '超标次数统计'
                     })
                 }
             }
-            else
-            {
-                if(flag)
-                {
+            else {
+                if (flag) {
                     this.setState({
                         //visibleEnt:true,
-                        regionCode:rCode,
-                        modalSelectPollution2:modalSelectPollution,
-                        entCountModalTotle2:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
-                    }) 
+                        regionCode: rCode,
+                        modalSelectPollution2: modalSelectPollution,
+                        entCountModalTotle2: "" + moment(BeginTime).format('YYYY年MM月DD日 HH时') + '至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName + '超标次数统计'
+                    })
                 }
-                else{
+                else {
                     this.setState({
                         //visibleMoni:true,
-                        regionCode:rCode,
-                        modalSelectPollution2:modalSelectPollution,
-                        entCountModalTotle:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
+                        regionCode: rCode,
+                        modalSelectPollution2: modalSelectPollution,
+                        entCountModalTotle: "" + moment(BeginTime).format('YYYY年MM月DD日 HH时') + '至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName + '超标次数统计'
                     })
                 }
             }
@@ -807,11 +788,11 @@ class index extends PureComponent {
     };
     onRef1 = (ref) => {
         this.childrenHand = ref;
-      }
+    }
 
     cardTitle = () => {
         const { PollutantByType } = this.props
-        const { getFieldDecorator  } = this.props.form;
+        const { getFieldDecorator } = this.props.form;
         const { expand } = this.state;
         return <>
             <Form onSubmit={this.handleSummit} layout="inline">
@@ -842,8 +823,8 @@ class index extends PureComponent {
                             //     }}>
                             //     {this.children()}
                             // </Select>
-                         <RegionList  noFilter style={{ width: 200}}/>
-                            
+                            <RegionList noFilter style={{ width: 200 }} />
+
                         )
                     }
 
@@ -869,7 +850,7 @@ class index extends PureComponent {
                     }
 
                 </Form.Item>
-                <Form.Item label="企业类型"  hidden={this.pollutantType}>
+                <Form.Item label="企业类型" hidden={this.pollutantType}>
                     {
                         getFieldDecorator('outlet', {
                             initialValue: this.pollutantType || 2
@@ -895,9 +876,9 @@ class index extends PureComponent {
                             //     <Option value="2">废气</Option>
                             //     <Option value="1">废水</Option>
                             // </Select>
-                            <SelectPollutantType 
-                               singleHidden
-                               style={{ width: 200,}}
+                            <SelectPollutantType
+                                singleHidden
+                                style={{ width: 200, }}
                                 placeholder="企业类型"
                                 maxTagCount={2}
                                 maxTagTextLength={5}
@@ -910,7 +891,7 @@ class index extends PureComponent {
                                         }
                                     })
                                     this.setState({
-                                        entType:value
+                                        entType: value
                                     })
                                 }}
                             />
@@ -918,13 +899,13 @@ class index extends PureComponent {
                     }
 
                 </Form.Item>
-              
+
                 <Form.Item label='数据类型' >
                     {
                         getFieldDecorator('dataType', {
                             initialValue: 'Hour'
                         })(
-                            <Radio.Group  onChange={(e) => {
+                            <Radio.Group onChange={(e) => {
                                 this.setState({
                                     dataType: e.target.value,
                                     time: e.target.value === 'Day' ? [moment().add(-1, "month").startOf('day')] : [moment().add(-24, "hour").startOf('day'), moment().endOf('day')]
@@ -960,10 +941,10 @@ class index extends PureComponent {
                         getFieldDecorator('dateTime', {
                             initialValue: this.state.time
                         })(
-                            <RangePicker_ format='YYYY-MM-DD'  allowClear={false} onRef={this.onRef1} dateValue={this.state.time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
+                            <RangePicker_ format='YYYY-MM-DD' allowClear={false} onRef={this.onRef1} dateValue={this.state.time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
                                 (dates, dataType) => {
                                     this.setState({
-                                        time: [dates[0].startOf('day'),dates[1].endOf('day')],
+                                        time: [dates[0].startOf('day'), dates[1].endOf('day')],
                                     })
                                 }
                             } />
@@ -972,20 +953,20 @@ class index extends PureComponent {
                 </Form.Item>
 
 
-            
+
                 <Form.Item >
-                    <Button style={{ marginRight: 8 }}  type="primary" htmlType='submit'>查询</Button>
-                    <Button style={{ marginRight: 6 }} htmlType='submit' onClick={this.exportReport}  loading={this.state.tableExportLoading}><ExportOutlined />导出</Button>
-                    <a onClick={() => {this.setState({expand:!expand}) }} >
-                      {expand ? <>收起 <UpOutlined /></> : <>展开 <DownOutlined /></>}
-                      </a>
+                    <Button style={{ marginRight: 8 }} type="primary" htmlType='submit'>查询</Button>
+                    <Button style={{ marginRight: 6 }} htmlType='submit' onClick={this.exportReport} loading={this.state.tableExportLoading}><ExportOutlined />导出</Button>
+                    <a onClick={() => { this.setState({ expand: !expand }) }} >
+                        {expand ? <>收起 <UpOutlined /></> : <>展开 <DownOutlined /></>}
+                    </a>
                 </Form.Item>
 
                 {expand && <div>
                     {/* <Form.Item label='监测因子'></Form.Item> */}
-                 
+
                     {
-                        this.state.entType == '1' && 
+                        this.state.entType == '1' &&
                         PollutantByType.map((item, i) =>
                             (i + 1) % 6 == 0 ?
                                 <span>
@@ -1010,9 +991,9 @@ class index extends PureComponent {
                                                         getFieldDecorator(item.PollutantCode + 'Min', {})(
                                                             <span style={{ marginLeft: -10 }}>
                                                                 <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }}  onChange={(value) => {
-                                                                this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
-                                                            }}/>
+                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
+                                                                    this.props.form.setFieldsValue({ [item.PollutantCode + 'Min']: value })
+                                                                }} />
                                                                 <span style={{ fontSize: 14 }}>至</span>
                                                             </span>
                                                         )
@@ -1052,8 +1033,8 @@ class index extends PureComponent {
                                                         <span style={{ marginLeft: -10 }}>
                                                             <span style={{ fontSize: 14 }}>超标倍数:</span>
                                                             <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
-                                                                this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
-                                                            }}/>
+                                                                this.props.form.setFieldsValue({ [item.PollutantCode + 'Min']: value })
+                                                            }} />
                                                             <span style={{ fontSize: 14 }}>至</span>
                                                         </span>
                                                     )
@@ -1074,63 +1055,13 @@ class index extends PureComponent {
 
                         )
                     }
-                     <Row className={style.exceedDataForm2}>
-                    {
-                       
-                        this.state.entType == '2' &&
-                        PollutantByType.map((item, i) =>
-                            (i + 1) % 6 == 0 ? < Col  xxl={6} xl={8} lg={12}>
-                                {/* <br /> */}
-                                <div>
-                                        <Form.Item>
-                                            {
-                                                getFieldDecorator(item.PollutantCode, {
-                                                    initialValue: item.PollutantCode
-                                                })
-                                                    (
-                                                        <Checkbox.Group>
-                                                            <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
-                                                        </Checkbox.Group>
-                                                    )
-                                            }
-                                        </Form.Item>
+                    <Row className={style.exceedDataForm2}>
+                        {
 
-                                        <Form.Item>
-                                            {/* {
-                                                getFieldDecorator(item.PollutantCode + 'Value', {})(
-                                                    <span>
-                                                        <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                        <InputNumber size='small' style={{ width: 50, marginRight: 5 }} />
-                                                        <span style={{ fontSize: 14 }}>至</span>
-                                                        <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
-                                                    </span>
-                                                )
-                                            } */}
-                                            <Form.Item>
-                                                {
-                                                    getFieldDecorator(item.PollutantCode + 'Min', {})(
-                                                        <span style={{ marginLeft: -10 }}>
-                                                            <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                            <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
-                                                                this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
-                                                            }}/>
-                                                            <span style={{ fontSize: 14 }}>至</span>
-                                                        </span>
-                                                    )
-                                                }
-                                            </Form.Item>
-                                            <Form.Item>
-                                                {
-                                                    getFieldDecorator(item.PollutantCode + 'Max', {})(
-                                                        <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
-                                                    )
-                                                }
-                                            </Form.Item>
-                                        </Form.Item>
-
-                                </div>
-                            </Col>
-                                : < Col xxl={6} xl={8} lg={12}>
+                            this.state.entType == '2' &&
+                            PollutantByType.map((item, i) =>
+                                (i + 1) % 6 == 0 ? < Col xxl={6} xl={8} lg={12}>
+                                    {/* <br /> */}
                                     <div>
                                         <Form.Item>
                                             {
@@ -1144,6 +1075,7 @@ class index extends PureComponent {
                                                     )
                                             }
                                         </Form.Item>
+
                                         <Form.Item>
                                             {/* {
                                                 getFieldDecorator(item.PollutantCode + 'Value', {})(
@@ -1161,8 +1093,8 @@ class index extends PureComponent {
                                                         <span style={{ marginLeft: -10 }}>
                                                             <span style={{ fontSize: 14 }}>超标倍数:</span>
                                                             <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
-                                                                this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
-                                                            }}/>
+                                                                this.props.form.setFieldsValue({ [item.PollutantCode + 'Min']: value })
+                                                            }} />
                                                             <span style={{ fontSize: 14 }}>至</span>
                                                         </span>
                                                     )
@@ -1178,22 +1110,71 @@ class index extends PureComponent {
                                         </Form.Item>
 
                                     </div>
-
                                 </Col>
-                        )
-                       
-                    }
-                     </Row>
-           
+                                    : < Col xxl={6} xl={8} lg={12}>
+                                        <div>
+                                            <Form.Item>
+                                                {
+                                                    getFieldDecorator(item.PollutantCode, {
+                                                        initialValue: item.PollutantCode
+                                                    })
+                                                        (
+                                                            <Checkbox.Group>
+                                                                <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
+                                                            </Checkbox.Group>
+                                                        )
+                                                }
+                                            </Form.Item>
+                                            <Form.Item>
+                                                {/* {
+                                                getFieldDecorator(item.PollutantCode + 'Value', {})(
+                                                    <span>
+                                                        <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                        <InputNumber size='small' style={{ width: 50, marginRight: 5 }} />
+                                                        <span style={{ fontSize: 14 }}>至</span>
+                                                        <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
+                                                    </span>
+                                                )
+                                            } */}
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode + 'Min', {})(
+                                                            <span style={{ marginLeft: -10 }}>
+                                                                <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
+                                                                    this.props.form.setFieldsValue({ [item.PollutantCode + 'Min']: value })
+                                                                }} />
+                                                                <span style={{ fontSize: 14 }}>至</span>
+                                                            </span>
+                                                        )
+                                                    }
+                                                </Form.Item>
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator(item.PollutantCode + 'Max', {})(
+                                                            <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
+                                                        )
+                                                    }
+                                                </Form.Item>
+                                            </Form.Item>
+
+                                        </div>
+
+                                    </Col>
+                            )
+
+                        }
+                    </Row>
+
                 </div>}
             </Form>
         </>;
     }
-    RegiononChange =(PageIndex, PageSize) => {
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,operationpersonnel} = this.state
+    RegiononChange = (PageIndex, PageSize) => {
+        const { panes, RegionCode, AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, regionCode, operationpersonnel } = this.state
         this.props.dispatch({
-            type:pageUrl.GetExceedDataList,
-            payload:{
+            type: pageUrl.GetExceedDataList,
+            payload: {
                 RegionCode: RegionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1202,18 +1183,18 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: PollutantList,
-                PageSize:PageSize,
-                PageIndex:PageIndex,
-                operationpersonnel:operationpersonnel
+                PageSize: PageSize,
+                PageIndex: PageIndex,
+                operationpersonnel: operationpersonnel
             }
         })
     }
 
-    onShowSizeChange= (PageIndex, PageSize) => {
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution,operationpersonnel} = this.state
+    onShowSizeChange = (PageIndex, PageSize) => {
+        const { panes, RegionCode, AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, operationpersonnel } = this.state
         this.props.dispatch({
-            type:pageUrl.GetExceedDataList,
-            payload:{
+            type: pageUrl.GetExceedDataList,
+            payload: {
                 RegionCode: RegionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1222,17 +1203,17 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: TabType,
                 PollutantList: PollutantList,
-                PageSize:PageSize,
-                PageIndex:PageIndex,
-                operationpersonnel:operationpersonnel
+                PageSize: PageSize,
+                PageIndex: PageIndex,
+                operationpersonnel: operationpersonnel
             }
         })
     }
     onChange = (PageIndex, PageSize) => {
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution,operationpersonnel} = this.state
+        const { panes, RegionCode, AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, operationpersonnel } = this.state
         this.props.dispatch({
-            type:pageUrl.GetExceedDataList,
-            payload:{
+            type: pageUrl.GetExceedDataList,
+            payload: {
                 RegionCode: RegionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1241,52 +1222,51 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: TabType,
                 PollutantList: PollutantList,
-                PageSize:PageSize,
-                PageIndex:PageIndex,
-                operationpersonnel:operationpersonnel
+                PageSize: PageSize,
+                PageIndex: PageIndex,
+                operationpersonnel: operationpersonnel
             }
         })
     }
 
-    onChangeHandle=(activeKey)=>{
+    onChangeHandle = (activeKey) => {
         let arr = activeKey.split('new')
-        this.setState({ activeKey,exportRegion:arr[0]});
+        this.setState({ activeKey, exportRegion: arr[0] });
     }
-    onEdit=(targetKey, action)=>{
+    onEdit = (targetKey, action) => {
         this[action](targetKey);
         // let arr = this.state.activeKey.split('new')
         // this.setState({ exportRegion:arr[0]});
-        this.setState({ exportRegion:''});
+        this.setState({ exportRegion: '' });
     }
     remove = targetKey => {
         let { activeKey } = this.state;
         let lastIndex;
         this.state.panes.forEach((pane, i) => {
-          if (pane.key === targetKey) {
-            lastIndex = i - 1;
-          }
+            if (pane.key === targetKey) {
+                lastIndex = i - 1;
+            }
         });
         const panes = this.state.panes.filter(pane => pane.key !== targetKey);
         if (panes.length && activeKey === targetKey) {
-          if (lastIndex >= 0) {
-            activeKey = panes[lastIndex].key;
-          } else {
-            activeKey = panes[0].key;
-          }
+            if (lastIndex >= 0) {
+                activeKey = panes[lastIndex].key;
+            } else {
+                activeKey = panes[0].key;
+            }
         }
-        else{
+        else {
             activeKey = '1'
         }
         this.setState({ panes, activeKey });
-      };
+    };
 
     pageContent = () => {
         const fixed = false
-        
-        const {ExceedDataList ,loading} = this.props
-        const {selectPollution} = this.state
-        if(selectPollution.length==0)
-        {
+
+        const { ExceedDataList, loading } = this.props
+        const { selectPollution } = this.state
+        if (selectPollution.length == 0) {
             return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
         }
         const columns = [
@@ -1298,7 +1278,7 @@ class index extends PureComponent {
                 dataIndex: 'Region',
                 key: 'Region',
                 render: (text, record) => {
-                    return <a onClick={this.paneAdd.bind(this,record.RegionCode,text)}> {text} </a>
+                    return <a onClick={this.paneAdd.bind(this, record.RegionCode, text)}> {text} </a>
                 }
             },
             {
@@ -1326,8 +1306,8 @@ class index extends PureComponent {
                 key: 'DataType',
             },
         ]
-        selectPollution.map(item=>{
-            let addColumns ={}
+        selectPollution.map(item => {
+            let addColumns = {}
             addColumns = {
                 title: `${item.PollutantName}`,
                 align: 'center',
@@ -1338,12 +1318,12 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'EntNum-'+item.PollutantCode,
-                        key: 'EntNum-'+item.PollutantCode,
-                        render: (text,record) => {
-                            return <a onClick={this.exEntHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode)}>
+                        dataIndex: 'EntNum-' + item.PollutantCode,
+                        key: 'EntNum-' + item.PollutantCode,
+                        render: (text, record) => {
+                            return <a onClick={this.exEntHandle.bind(this, record.PollutantData['PolCode-' + item.PollutantCode], record.RegionCode)}>
                                 {record.PollutantData[`EntNum-${item.PollutantCode}`]}
-                                </a>
+                            </a>
                         }
                     },
                     {
@@ -1351,9 +1331,9 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex:'PointNum-'+item.PollutantCode,
-                        key: 'PointNum-'+item.PollutantCode,
-                        render:(text,record)=>{
+                        dataIndex: 'PointNum-' + item.PollutantCode,
+                        key: 'PointNum-' + item.PollutantCode,
+                        render: (text, record) => {
                             return record.PollutantData[`PointNum-${item.PollutantCode}`]
                         }
                     },
@@ -1362,12 +1342,12 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'ExceedNum-'+item.PollutantCode,
-                        key: 'ExceedNum-'+item.PollutantCode,
-                        render: (text,record) => {
-                            return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,record.EntCode,item.PollutantName)}>
+                        dataIndex: 'ExceedNum-' + item.PollutantCode,
+                        key: 'ExceedNum-' + item.PollutantCode,
+                        render: (text, record) => {
+                            return <a onClick={this.exCountHandle.bind(this, record.PollutantData['PolCode-' + item.PollutantCode], record.RegionCode, false, record.EntCode, item.PollutantName)}>
                                 {record.PollutantData[`ExceedNum-${item.PollutantCode}`]}
-                                </a>
+                            </a>
                         }
                     },
                     {
@@ -1375,10 +1355,10 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'MaxMultiple-'+item.PollutantCode,
-                        key: 'MaxMultiple-'+item.PollutantCode,
-                        render:(text,record)=>{
-                                return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`]&&!record.PollutantData[`MaxMultiple-${item.PollutantCode}`]===0?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
+                        dataIndex: 'MaxMultiple-' + item.PollutantCode,
+                        key: 'MaxMultiple-' + item.PollutantCode,
+                        render: (text, record) => {
+                            return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`] && !record.PollutantData[`MaxMultiple-${item.PollutantCode}`] === 0 ? '-' : toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
 
 
                         }
@@ -1391,55 +1371,53 @@ class index extends PureComponent {
 
         // console.log(columns)
         let widthArr = []
-        columns.map(x=>{
-            if(x.width != undefined)
-            {
+        columns.map(x => {
+            if (x.width != undefined) {
                 widthArr.push(x.width)
             }
-            if(x.children)
-            {
-                x.children.map(y=>{
+            if (x.children) {
+                x.children.map(y => {
                     widthArr.push(y.width)
                 })
             }
         })
-        let scrollWith = widthArr.reduce((prev,curr)=>{
+        let scrollWith = widthArr.reduce((prev, curr) => {
             return prev + curr
-        })   
+        })
         return <>{
-            <Tabs 
-            hideAdd
-            type="editable-card"
-            onChange={this.onChangeHandle}
-            activeKey={this.state.activeKey}
-            onEdit={this.onEdit}
-            onTabClick={this.onTabClick}
+            <Tabs
+                hideAdd
+                type="editable-card"
+                onChange={this.onChangeHandle}
+                activeKey={this.state.activeKey}
+                onEdit={this.onEdit}
+                onTabClick={this.onTabClick}
             >
                 <TabPane tab={this.state.entType == 1 ? '废水' : '废气'} key={1} closable={false}>
                     {
-                            <SdlTable columns={columns} dataSource={ExceedDataList}
-                            scroll={{ x: scrollWith }}
+                        <SdlTable columns={columns} dataSource={ExceedDataList}
+                            scroll={{ x: scrollWith, y:'calc(100vh - 372px)' }}
                             loading={loading}
-                                pagination={{
-                                    showSizeChanger: true,
-                                    showQuickJumper: true,
-                                    pageSize: this.props.PageSize,
-                                    current: this.props.PageIndex,
-                                    onChange: this.onChange,
-                                    onShowSizeChange:this.onShowSizeChange,
-                                    pageSizeOptions: ['20', '30', '40', '100'],
-                                    total: this.props.total,
-                                }}
-                            />
+                            pagination={{
+                                showSizeChanger: true,
+                                showQuickJumper: true,
+                                pageSize: this.props.PageSize,
+                                current: this.props.PageIndex,
+                                onChange: this.onChange,
+                                onShowSizeChange: this.onShowSizeChange,
+                                pageSizeOptions: ['20', '30', '40', '100'],
+                                total: this.props.total,
+                            }}
+                        />
                     }
                 </TabPane>
-                {
+                {/* {
                     this.state.panes.map(pane => (
                         <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
                             {pane.content}
                         </TabPane>
                     ))
-                }
+                }  */}
             </Tabs>
         }
         </>
@@ -1450,16 +1428,16 @@ class index extends PureComponent {
         this.setState({
             visible: false,
             visibleMoni: false,
-            enterpriseValue:undefined
+            enterpriseValue: undefined
         })
     }
     //超标次数弹框
-    entExCountHandle = ()=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,operationpersonnel} = this.state
+    entExCountHandle = () => {
+        const { panes, RegionCode, AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, regionCode, modalPollutantList, enterpriseValue, operationpersonnel } = this.state
         this.props.dispatch({
-            type:pageUrl.GetMoalExceedDataList,
-            payload:{
-                EntCode:enterpriseValue,
+            type: pageUrl.GetMoalExceedDataList,
+            payload: {
+                EntCode: enterpriseValue,
                 RegionCode: RegionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1468,29 +1446,29 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
-                PageSize:20,
-                PageIndex:1,
-                operationpersonnel:operationpersonnel
+                PageSize: 20,
+                PageIndex: 1,
+                operationpersonnel: operationpersonnel
             }
         })
         this.setState({
-            visibleEnt:true
+            visibleEnt: true
         })
     }
     //关闭弹框
-    entCancelHandel =()=>{
+    entCancelHandel = () => {
         this.setState({
-            visibleEnt:false
+            visibleEnt: false
         })
     }
     //企业数查询按钮
-    EntButtonCountHandle =()=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,operationpersonnel} = this.state
-       
+    EntButtonCountHandle = () => {
+        const { panes, RegionCode, AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, regionCode, modalPollutantList, enterpriseValue, operationpersonnel } = this.state
+
         this.props.dispatch({
-            type:pageUrl.GetMoalExceedDataList,
-            payload:{
-                EntCode:enterpriseValue,
+            type: pageUrl.GetMoalExceedDataList,
+            payload: {
+                EntCode: enterpriseValue,
                 RegionCode: RegionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1499,19 +1477,19 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
-                PageSize:20,
-                PageIndex:1,
-                operationpersonnel:operationpersonnel
+                PageSize: 20,
+                PageIndex: 1,
+                operationpersonnel: operationpersonnel
             }
         })
     }
     //企业数查询导出
-    EntButtonCountHandleExpor=()=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,operationpersonnel} = this.state
+    EntButtonCountHandleExpor = () => {
+        const { panes, RegionCode, AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, regionCode, modalPollutantList, enterpriseValue, operationpersonnel } = this.state
         this.props.dispatch({
-            type:pageUrl.ExportExceedDataList,
-            payload:{
-                EntCode:enterpriseValue,
+            type: pageUrl.ExportExceedDataList,
+            payload: {
+                EntCode: enterpriseValue,
                 RegionCode: RegionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1520,18 +1498,18 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
-                operationpersonnel:operationpersonnel,
+                operationpersonnel: operationpersonnel,
             }
         })
     }
     //企业数查询分页
-    EntButtonCountHandlePageChange =(PageIndex, PageSize)=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,modalregionCode,operationpersonnel} = this.state
-       
+    EntButtonCountHandlePageChange = (PageIndex, PageSize) => {
+        const { panes, RegionCode, AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, regionCode, modalPollutantList, enterpriseValue, modalregionCode, operationpersonnel } = this.state
+
         this.props.dispatch({
-            type:pageUrl.GetMoalExceedDataList,
-            payload:{
-                EntCode:enterpriseValue,
+            type: pageUrl.GetMoalExceedDataList,
+            payload: {
+                EntCode: enterpriseValue,
                 RegionCode: RegionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1540,19 +1518,19 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
-                PageSize:PageSize,
-                PageIndex:PageIndex,
-                operationpersonnel:operationpersonnel
+                PageSize: PageSize,
+                PageIndex: PageIndex,
+                operationpersonnel: operationpersonnel
             }
         })
     }
-    EntButtonCountShowSizeChange=(PageIndex, PageSize)=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValuem,operationpersonnel} = this.state
-        
+    EntButtonCountShowSizeChange = (PageIndex, PageSize) => {
+        const { panes, RegionCode, AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, regionCode, modalPollutantList, enterpriseValuem, operationpersonnel } = this.state
+
         this.props.dispatch({
-            type:pageUrl.GetMoalExceedDataList,
-            payload:{
-                EntCode:enterpriseValue,
+            type: pageUrl.GetMoalExceedDataList,
+            payload: {
+                EntCode: enterpriseValue,
                 RegionCode: RegionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1561,20 +1539,20 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
-                PageSize:PageSize,
-                PageIndex:PageIndex,
-                operationpersonnel:operationpersonnel
+                PageSize: PageSize,
+                PageIndex: PageIndex,
+                operationpersonnel: operationpersonnel
             }
         })
     }
     //超标次数按钮查询
-    ExButtonCountHandle =()=>{
-        const { panes,ModelRcode ,AttentionCode,modalEntCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,operationpersonnel} = this.state
-      
+    ExButtonCountHandle = () => {
+        const { panes, ModelRcode, AttentionCode, modalEntCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, regionCode, modalPollutantList, enterpriseValue, operationpersonnel } = this.state
+
         this.props.dispatch({
-            type:pageUrl.GetExceedNum,
-            payload:{
-                EntCode:enterpriseValue==undefined? modalEntCode:enterpriseValue,
+            type: pageUrl.GetExceedNum,
+            payload: {
+                EntCode: enterpriseValue == undefined ? modalEntCode : enterpriseValue,
                 RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1583,19 +1561,19 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: modalPollutantList,
-                PageSize:20,
-                PageIndex:1,
-                operationpersonnel:operationpersonnel
+                PageSize: 20,
+                PageIndex: 1,
+                operationpersonnel: operationpersonnel
             }
         })
     }
     //超标次数按钮导出
-    ExButtonCountHandleExport =()=>{
-        const { panes,ModelRcode,modalEntCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,operationpersonnel} = this.state
+    ExButtonCountHandleExport = () => {
+        const { panes, ModelRcode, modalEntCode, AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, regionCode, modalPollutantList, enterpriseValue, operationpersonnel } = this.state
         this.props.dispatch({
-            type:pageUrl.ExportExceedNum,
-            payload:{
-                EntCode:enterpriseValue==undefined? modalEntCode:enterpriseValue,
+            type: pageUrl.ExportExceedNum,
+            payload: {
+                EntCode: enterpriseValue == undefined ? modalEntCode : enterpriseValue,
                 RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1604,19 +1582,19 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: modalPollutantList,
-                operationpersonnel:operationpersonnel,
+                operationpersonnel: operationpersonnel,
             }
         })
     }
     //超标次数按钮分页
-    ExButtonCountHandlePageChange=(PageIndex, PageSize)=>{
-        const {AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime ,modalPollutantList,enterpriseValue,modalregionCode,pagePollutantType,operationpersonnel} = this.state
+    ExButtonCountHandlePageChange = (PageIndex, PageSize) => {
+        const { AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, modalPollutantList, enterpriseValue, modalregionCode, pagePollutantType, operationpersonnel } = this.state
         // console.log(modalregionCode)
-      this.props.dispatch({
-            type:pageUrl.GetExceedNum,
-            payload:{
-                EntCode:enterpriseValue,
-                RegionCode:modalregionCode=='All'?'': modalregionCode,
+        this.props.dispatch({
+            type: pageUrl.GetExceedNum,
+            payload: {
+                EntCode: enterpriseValue,
+                RegionCode: modalregionCode == 'All' ? '' : modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: pagePollutantType,
                 DataType: DataType,
@@ -1624,20 +1602,20 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: modalPollutantList,
-                PageSize:PageSize,
-                PageIndex:PageIndex,
-                operationpersonnel:operationpersonnel
+                PageSize: PageSize,
+                PageIndex: PageIndex,
+                operationpersonnel: operationpersonnel
             }
         })
     }
 
-    ExButtonCountShowSizeChange=(PageIndex, PageSize)=>{
-        const {AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime ,modalPollutantList,enterpriseValue,modalregionCode,pagePollutantType,operationpersonnel} = this.state
+    ExButtonCountShowSizeChange = (PageIndex, PageSize) => {
+        const { AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, modalPollutantList, enterpriseValue, modalregionCode, pagePollutantType, operationpersonnel } = this.state
         this.props.dispatch({
-            type:pageUrl.GetExceedNum,
-            payload:{
-                EntCode:enterpriseValue,
-                RegionCode: modalregionCode == 'All'?'':modalregionCode,
+            type: pageUrl.GetExceedNum,
+            payload: {
+                EntCode: enterpriseValue,
+                RegionCode: modalregionCode == 'All' ? '' : modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: pagePollutantType,
                 DataType: DataType,
@@ -1645,18 +1623,18 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: modalPollutantList,
-                PageSize:PageSize,
-                PageIndex:PageIndex,
-                operationpersonnel:operationpersonnel
+                PageSize: PageSize,
+                PageIndex: PageIndex,
+                operationpersonnel: operationpersonnel
             }
         })
     }
-    EntexportReport =()=>{
-        const { panes,ModelRcode,modalEntCode,modalregionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,operationpersonnel} = this.state
+    EntexportReport = () => {
+        const { panes, ModelRcode, modalEntCode, modalregionCode, AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, PollutantList, selectPollution, regionCode, modalPollutantList, enterpriseValue, operationpersonnel } = this.state
         this.props.dispatch({
-            type:pageUrl.ExportExceedNum,
-            payload:{
-                EntCode:modalEntCode,
+            type: pageUrl.ExportExceedNum,
+            payload: {
+                EntCode: modalEntCode,
                 RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1665,17 +1643,17 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: modalPollutantList,
-                operationpersonnel:operationpersonnel
+                operationpersonnel: operationpersonnel
             }
         })
     }
     //分页
-    EntPageChange=(PageIndex, PageSize)=>{
-        const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType ,modalregionCode ,regionCode,modalPollutantList,modalEntCode,operationpersonnel} = this.state
-         this.props.dispatch({
-            type:pageUrl.GetExceedNum,
-            payload:{
-                EntCode:modalEntCode,
+    EntPageChange = (PageIndex, PageSize) => {
+        const { AttentionCode, PollutantTypeCode, DataType, BeginTime, EndTime, TabType, modalregionCode, regionCode, modalPollutantList, modalEntCode, operationpersonnel } = this.state
+        this.props.dispatch({
+            type: pageUrl.GetExceedNum,
+            payload: {
+                EntCode: modalEntCode,
                 RegionCode: modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1684,19 +1662,19 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: modalPollutantList,
-                PageSize:PageSize,
-                PageIndex:PageIndex,
-                operationpersonnel:operationpersonnel
+                PageSize: PageSize,
+                PageIndex: PageIndex,
+                operationpersonnel: operationpersonnel
             }
         })
     }
-    EntPageShowSizeChange = (PageIndex, PageSize)=>{
-        const {  AttentionCode,modalEntCode ,PollutantTypeCode,DataType,BeginTime,EndTime,modalregionCode,PollutantList  ,modalPollutantList,enterpriseValue,operationpersonnel} = this.state
-        
-         this.props.dispatch({
-            type:pageUrl.GetExceedNum,
-            payload:{
-                EntCode:modalEntCode,
+    EntPageShowSizeChange = (PageIndex, PageSize) => {
+        const { AttentionCode, modalEntCode, PollutantTypeCode, DataType, BeginTime, EndTime, modalregionCode, PollutantList, modalPollutantList, enterpriseValue, operationpersonnel } = this.state
+
+        this.props.dispatch({
+            type: pageUrl.GetExceedNum,
+            payload: {
+                EntCode: modalEntCode,
                 RegionCode: modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1705,15 +1683,15 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: modalPollutantList,
-                PageSize:PageSize,
-                PageIndex:PageIndex,
-                operationpersonnel:operationpersonnel
+                PageSize: PageSize,
+                PageIndex: PageIndex,
+                operationpersonnel: operationpersonnel
             }
         })
     }
     render() {
-        const { loading,EntCountList ,loadingEnt,ExceedNumList,loadingCount,RegionPageIndex} = this.props
-        const {modalSelectPollution,modalSelectPollution2} = this.state
+        const { loading, EntCountList, loadingEnt, ExceedNumList, loadingCount, RegionPageIndex } = this.props
+        const { modalSelectPollution, modalSelectPollution2 } = this.state
         const fixed = false
         const columns = [
             {
@@ -1750,8 +1728,8 @@ class index extends PureComponent {
             },
         ]
 
-        modalSelectPollution.map(item=>{
-            let addColumns ={}
+        modalSelectPollution.map(item => {
+            let addColumns = {}
             addColumns = {
                 title: item.PollutantName,
                 align: 'center',
@@ -1762,9 +1740,9 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex:'PointNum-'+item.PollutantCode,
-                        key: 'PointNum-'+item.PollutantCode,
-                        render:(text,record)=>{
+                        dataIndex: 'PointNum-' + item.PollutantCode,
+                        key: 'PointNum-' + item.PollutantCode,
+                        render: (text, record) => {
                             return record.PollutantData[`PointNum-${item.PollutantCode}`]
                         }
                     },
@@ -1773,12 +1751,12 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'ExceedNum-'+item.PollutantCode,
-                        key: 'ExceedNum-'+item.PollutantCode,
-                        render: (text,record) => {
-                            return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,record.EntCode,item.PollutantName)}>
+                        dataIndex: 'ExceedNum-' + item.PollutantCode,
+                        key: 'ExceedNum-' + item.PollutantCode,
+                        render: (text, record) => {
+                            return <a onClick={this.exCountHandle.bind(this, record.PollutantData['PolCode-' + item.PollutantCode], record.RegionCode, false, record.EntCode, item.PollutantName)}>
                                 {record.PollutantData[`ExceedNum-${item.PollutantCode}`]}
-                                </a>
+                            </a>
                         }
                     },
                     {
@@ -1786,10 +1764,10 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'MaxMultiple-'+item.PollutantCode,
-                        key: 'MaxMultiple-'+item.PollutantCode,
-                        render:(text,record)=>{
-                                return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`]&&!record.PollutantData[`MaxMultiple-${item.PollutantCode}`]===0?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
+                        dataIndex: 'MaxMultiple-' + item.PollutantCode,
+                        key: 'MaxMultiple-' + item.PollutantCode,
+                        render: (text, record) => {
+                            return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`] && !record.PollutantData[`MaxMultiple-${item.PollutantCode}`] === 0 ? '-' : toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
 
 
                         }
@@ -1842,8 +1820,8 @@ class index extends PureComponent {
                 key: 'OverTime',
             }
         ]
-        modalSelectPollution2.map(item=>{
-            let addColumns ={}
+        modalSelectPollution2.map(item => {
+            let addColumns = {}
             addColumns = {
                 title: `${item.PollutantName} (${item.Unit})`,
                 align: 'center',
@@ -1857,7 +1835,7 @@ class index extends PureComponent {
                         dataIndex: 'MonitorValue',
                         key: 'MonitorValue',
                         render: (text) => {
-                            return text == null?'-':text
+                            return text == null ? '-' : text
                         }
                     },
                     {
@@ -1868,7 +1846,7 @@ class index extends PureComponent {
                         dataIndex: 'StandValue',
                         key: 'StandValue',
                         render: (text) => {
-                            return text == null?'-':text
+                            return text == null ? '-' : text
                         }
                     },
                     {
@@ -1879,29 +1857,29 @@ class index extends PureComponent {
                         dataIndex: 'Multiple',
                         key: 'Multiple',
                         render: (text) => {
-                            return text == null?'-':text
+                            return text == null ? '-' : text
                         }
                     },
                 ]
             }
             columns3.push(addColumns)
         })
-
         return <>
             <div id="siteParamsPage" className={style.cardTitle}>
                 <BreadcrumbWrapper>
                     <Card
                         extra={
                             <>
-                                    {
-                                        this.cardTitle()
-                                    }
+                                {
+                                    this.cardTitle()
+                                }
                             </>
                         }
                         className={style.dataTable}
+                        size='small'
                     >
                         {/* {loading ? <PageLoading /> : this.pageContent()} */}
-                       { this.pageContent() }
+                        {this.pageContent()}
                     </Card>
                     <Modal
                         centered
@@ -1912,7 +1890,7 @@ class index extends PureComponent {
                         onCancel={this.CancelHandel}
                         destroyOnClose
                     >
-                        <div style={{marginBottom:10}}>
+                        <div style={{ marginBottom: 10 }}>
                             <Select
                                 allowClear
                                 showSearch
@@ -1936,23 +1914,23 @@ class index extends PureComponent {
                                 }}>
                                 {this.entList()}
                             </Select>
-                            <Button type='primary' style={{marginRight:10}} onClick={this.EntButtonCountHandle}> 查询</Button>
+                            <Button type='primary' style={{ marginRight: 10 }} onClick={this.EntButtonCountHandle}> 查询</Button>
                             <Button onClick={this.EntButtonCountHandleExpor}><ExportOutlined /> 导出</Button>
                         </div>
                         {
                             <SdlTable scroll={{ y: 500 }} loading={loadingEnt} columns={columns} dataSource={EntCountList} pagination={{
                                 showSizeChanger: true,
                                 showQuickJumper: true,
-                                pageSize: this.props. ExceedPageSize,
-                                current: this.props. ExceedPageIndex,
+                                pageSize: this.props.ExceedPageSize,
+                                current: this.props.ExceedPageIndex,
                                 onChange: this.EntButtonCountHandlePageChange,
-                                onShowSizeChange:this.EntButtonCountShowSizeChange,
+                                onShowSizeChange: this.EntButtonCountShowSizeChange,
                                 pageSizeOptions: ['20', '30', '40', '100'],
                                 total: this.props.ExceedTotal,
-                              }} />
+                            }} />
                         }
-                        
-                        
+
+
                     </Modal>
                     <Modal
                         centered
@@ -1963,7 +1941,7 @@ class index extends PureComponent {
                         onCancel={this.CancelHandel}
                         destroyOnClose
                     >
-                        <div style={{marginBottom:10}}>
+                        <div style={{ marginBottom: 10 }}>
                             <Select
                                 allowClear
                                 showSearch
@@ -1987,22 +1965,22 @@ class index extends PureComponent {
                                 }}>
                                 {this.entList()}
                             </Select>
-                            <Button type='primary' style={{marginRight:10}} onClick={this.ExButtonCountHandle}> 查询</Button>
+                            <Button type='primary' style={{ marginRight: 10 }} onClick={this.ExButtonCountHandle}> 查询</Button>
                             <Button onClick={this.ExButtonCountHandleExport}><ExportOutlined /> 导出</Button>
                         </div>
                         {
                             <SdlTable scroll={{ y: 500 }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
                                 showSizeChanger: true,
                                 showQuickJumper: true,
-                                pageSize: this.props. ModalPageSize,
-                                current: this.props. ModalPageIndex,
+                                pageSize: this.props.ModalPageSize,
+                                current: this.props.ModalPageIndex,
                                 onChange: this.ExButtonCountHandlePageChange,
-                                onShowSizeChange:this.ExButtonCountShowSizeChange,
+                                onShowSizeChange: this.ExButtonCountShowSizeChange,
                                 pageSizeOptions: ['20', '30', '40', '100'],
                                 total: this.props.Modaltotal,
-                              }} />
+                            }} />
                         }
-                        
+
                     </Modal>
                     <Modal
                         centered
@@ -2012,22 +1990,47 @@ class index extends PureComponent {
                         width={1300}
                         onCancel={this.entCancelHandel}
                     >
-                        <div style={{marginBottom:10}}>
+                        <div style={{ marginBottom: 10 }}>
                             <Button onClick={this.EntexportReport}><ExportOutlined /> 导出</Button>
                         </div>
                         {
                             <SdlTable scroll={{ y: 500 }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
                                 showSizeChanger: true,
                                 showQuickJumper: true,
-                                pageSize: this.props. ModalPageSize,
-                                current: this.props. ModalPageIndex,
+                                pageSize: this.props.ModalPageSize,
+                                current: this.props.ModalPageIndex,
                                 onChange: this.EntPageChange,
-                                onShowSizeChange:this.EntPageShowSizeChange,
+                                onShowSizeChange: this.EntPageShowSizeChange,
                                 pageSizeOptions: ['20', '30', '40', '100'],
-                                total: this.props. Modaltotal,
-                              }} />
+                                total: this.props.Modaltotal,
+                            }} />
                         }
-                        
+
+                    </Modal>
+                    <Modal
+                        title={this.state.panes?.[0]?.title}
+                        wrapClassName={'spreadOverModal'} 
+                        bodyStyle={{paddingBottom:0,overflowY:'hidden'}}
+                        destroyOnClose
+                        visible={this.state.regionDetailVisible}
+                        footer={false}
+                        mask={false}
+                        onCancel={() => { this.setState({ regionDetailVisible: false, panes:[] }) }}
+                    >  
+                     {
+                     this.props.loadingRegion ?
+                     <PageLoading style={{paddingBottom:2}}/>
+                     :
+                        <>
+                        {
+                            this.state.panes.map(pane => (
+                                <div key={pane.key} >
+                                    {pane.content}
+                                </div>
+                            ))
+                        }
+                        </>
+                    }
                     </Modal>
                 </BreadcrumbWrapper>
             </div>

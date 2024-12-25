@@ -102,7 +102,6 @@ const Index = (props) => {
       <Modal
         title={questionTypeTitle}
         visible={helpVisible}
-        confirmLoading={detailLoading}
         onCancel={() => { sethelpVisible(false) }}
         className={styles.helpCenterModal}
         destroyOnClose

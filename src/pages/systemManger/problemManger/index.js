@@ -468,13 +468,13 @@ const Index = (props) => {
               </Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item label="问题名称" name="QuestionName" rules={[{ required: true, }]} >
-                <TextArea showCount maxLength={50} rows={1} placeholder='请输入' />
+              <Form.Item label="问题名称" name="QuestionName" rules={[{ required: true, message: '请输入问题名称！'}]} >
+                <TextArea showCount maxLength={50} rows={1} placeholder='请输入' allowClear/>
               </Form.Item>
             </Col>
             {/* <Col span={24}>
               <Spin size='small' spinning={loadingFirstLevel} style={{ top: -5 }}>
-                <Form.Item label="一级类别" name="FirstLevel" rules={[{ required: true, message: '请选择一级类别' }]}>
+                <Form.Item label="一级类别" name="FirstLevel" rules={[{ required: true, message: '请选择一级类别！' }]}>
 
                   <Select placeholder='请选择' allowClear >
                     {
@@ -487,7 +487,7 @@ const Index = (props) => {
               </Spin>
             </Col>
             <Col span={24}>
-              <Form.Item label="二级类别" name="SecondLevel" rules={[{ required: true, message: '请选择二级类别' }]}>
+              <Form.Item label="二级类别" name="SecondLevel" rules={[{ required: true, message: '请选择二级类别！' }]}>
                 <Select placeholder='请选择' >
                   {
                     secondLevelList[0] && secondLevelList.map(item => {
@@ -499,8 +499,8 @@ const Index = (props) => {
             </Col> */}
             <Col span={24}>
               <Spin size='small' spinning={loadingQuestionType} style={{ top: -5 }}>
-                <Form.Item label="类别" name="FirstLevel" rules={[{ required: true, message: '请选择二级类别' }]}>
-                  <Cascader options={questionTypeList} />
+                <Form.Item label="类别" name="FirstLevel" rules={[{ required: true, message: '请选择类别！' }]}>
+                  <Cascader  options={questionTypeList} placeholder='请选择'/>
                 </Form.Item>
               </Spin>
             </Col>

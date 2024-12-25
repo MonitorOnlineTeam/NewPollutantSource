@@ -10,75 +10,90 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'operationRecordnalysis',
   state: {
-    taskTypeList:[],
+    taskTypeList: [],
     tableDatas: [],
-    tableLoading:false,
+    tableLoading: false,
     tableTotal: 0,
     tableDatas2: [],
     tableTotal2: 0,
-    tableLoading2:false,
-    exportLoading:false,
-    exportLoading2:false,
-    recordAnalyListQueryPar:{},
-    accountTableDatas:[],
-    accountTableTotal:0,
-    accountDetailQueryPar:{},
-    accountDetailCol:[],
+    tableLoading2: false,
+    exportLoading: false,
+    exportLoading2: false,
+    recordAnalyListQueryPar: {},
+    accountTableDatas: [],
+    accountTableTotal: 0,
+    accountDetailQueryPar: {},
+    accountDetailCol: [],
   },
   effects: {
     *getTaskTypeList({ payload, callback }, { call, put, update }) { //获取工单类型
       const result = yield call(services.GetTaskTypeList, payload);
       if (result.IsSuccess) {
-        yield update({taskTypeList: result.Datas,})
+        yield update({ taskTypeList: result.Datas, })
       } else {
         result.Message && message.error(result.Message)
       }
     },
     *getOperationRecordAnalyList({ payload, callback }, { call, put, update }) { //列表
-      payload.RegionCode? yield update({  tableLoading2:true }) : yield update({  tableLoading:true })
-      const result = yield call(services.GetOperationRecordAnalyList, payload);  
+      payload.RegionCode ? yield update({ tableLoading2: true }) : yield update({ tableLoading: true })
+      const result = yield call(services.GetOperationRecordAnalyList, payload);
       if (result.IsSuccess) {
-        if(payload.RegionCode){
+        if (payload.RegionCode) {
           yield update({
             tableTotal2: result.Total,
-            tableDatas2: result.Datas&&result.Datas.DataList ? result.Datas.DataList : [],
-            tableLoading2:false,
-          }) 
-        }else{
+            tableDatas2: result.Datas && result.Datas.DataList ? result.Datas.DataList : [],
+            tableLoading2: false,
+          })
+        } else {
           yield update({
-           tableTotal: result.Total,
-           tableDatas: result.Datas&&result.Datas.DataList ? result.Datas.DataList : [],
-           tableLoading:false,
-        })
-      }
-        callback(result.Datas&&result.Datas.ColumnList&&result.Datas.ColumnList[0] ? result.Datas.ColumnList[0] : [],payload)
+            tableTotal: result.Total,
+            tableDatas: result.Datas && result.Datas.DataList ? result.Datas.DataList : [],
+            tableLoading: false,
+          })
+        }
+        callback(result.Datas && result.Datas.ColumnList && result.Datas.ColumnList[0] ? result.Datas.ColumnList[0] : [], payload)
       } else {
         result.Message && message.error(result.Message)
-        yield update({ tableLoading2: false, tableLoading:false, })
+        yield update({ tableLoading2: false, tableLoading: false, })
       }
     },
     *getOperationRecordAnalyInfoList({ payload, callback }, { call, put, update }) { //列表 台账详情
       const result = yield call(services.GetOperationRecordAnalyInfoList, payload);
       if (result.IsSuccess) {
+        const uniqueDatePick = result.Datas.map(item => ({
+          ...item, // 复制对象的所有属性
+          datePick: item.datePick.filter(dp => dp.data.length > 0) // 过滤掉 data 数组为空的对象
+        }))
+        // 如果需要将所有非空的 datePick 组合成一个新的数组，并且去除重复的 key
+        const combinedDatePick = uniqueDatePick.flatMap(item => item.datePick)
+          .reduce((acc, current) => {
+            // 只添加那些 key 不在 acc 中的对象
+            if (!acc.some(item => item.date === current.date)) {
+              acc.push(current);
+            }
+            return acc;
+          }, []);
         yield update({
           accountTableTotal: result.Total,
           accountTableDatas: result.Datas ? result.Datas : [],
-          accountDetailQueryPar:payload,
-          accountDetailCol:result.Datas[0]&&result.Datas[0].datePick
+          accountDetailQueryPar: payload,
+          accountDetailCol: combinedDatePick
+
+
         })
       } else {
         result.Message && message.error(result.Message)
       }
     },
     *exportOperationRecordAnalyList({ payload, callback }, { call, put, update }) { // 运维分析列表 导出
-      payload.RegionCode? yield update({  exportLoading2:true }) : yield update({  exportLoading:true })
+      payload.RegionCode ? yield update({ exportLoading2: true }) : yield update({ exportLoading: true })
       const result = yield call(services.ExportOperationRecordAnalyList, payload);
       if (result.IsSuccess) {
-        payload.RegionCode? yield update({  exportLoading2:false }) : yield update({  exportLoading:false })
+        payload.RegionCode ? yield update({ exportLoading2: false }) : yield update({ exportLoading: false })
         message.success(result.Message)
         downloadFile(`${result.Datas}`)
       } else {
-        yield update({  exportLoading2:false, exportLoading:false  })
+        yield update({ exportLoading2: false, exportLoading: false })
         result.Message && message.error(result.Message)
       }
     },

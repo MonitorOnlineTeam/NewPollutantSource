@@ -480,6 +480,8 @@ const Index = (props) => {
         eTime: values.time?.[1] && moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         LeaveBtime: values.time2?.[0] && moment(values.time2[0]).format('YYYY-MM-DD 00:00:00'),
         LeaveEtime: values.time2?.[1] && moment(values.time2[1]).format('YYYY-MM-DD 23:59:59'),
+        SubBtime: values.time3?.[0] && moment(values.time3[0]).format('YYYY-MM-DD 00:00:00'),
+        SubEtime: values.time3?.[1] && moment(values.time3[1]).format('YYYY-MM-DD 23:59:59'),
         time: undefined,
         time2: undefined,
         time3: undefined,
@@ -668,14 +670,14 @@ const Index = (props) => {
             />
           </Form.Item>
         </Col>
-         {/* <Col span={8}>
-          <Form.Item name='aaaaa' label='调查提交时间'>
+          <Col span={8}>
+          <Form.Item name='time3' label='调查提交时间'>
             <RangePicker_ style={{ width: '100%' }}
               showTime={false}
               format="YYYY-MM-DD"
             />
           </Form.Item>
-        </Col> */}
+        </Col> 
         <Col span={8} >
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={tableLoading2}>

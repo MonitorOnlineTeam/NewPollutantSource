@@ -178,7 +178,7 @@ const RecordModal = props => {
   };
   return (
     <Modal
-      title="执法局拜访任务完成记录"
+      title="管理部门拜访任务完成记录"
       wrapClassName="spreadOverModal"
       visible={open}
       destroyOnClose
@@ -196,24 +196,23 @@ const RecordModal = props => {
           ...queryParams,
           status: 0,
         }}
-        style={{ marginTop: 10, marginBottom: 10 }}
       >
          <Form.Item label="省份" name="regionCode">
           <RegionList placeholder='请选择省份' style={{width:180}} noFilter levelNum={1}/>
           </Form.Item>
           <Form.Item label="拜访人" name="userName">
-            <Input placeholder="请输入拜访人" allowClear />
+            <Input placeholder="请输入拜访人" allowClear style={{width:180}}/>
           </Form.Item>
           <Form.Item name="time" label="任务派发时间">
             <RangePicker_
-              style={{ width: 180 }}
+              style={{ width: 188 }}
               picker="month"
               format="YYYY-MM"
               allowClear={false}
             />
           </Form.Item>
           <Form.Item name="status" label="是否完成">
-            <Radio.Group style={{ width: 180 }}>
+            <Radio.Group style={{ width: 176 }}>
               <Radio value={0}>全部</Radio>
               <Radio value={1}>是</Radio>
               <Radio value={2}>否</Radio>
@@ -270,5 +269,6 @@ const RecordModal = props => {
     </Modal>
   );
 };
+
 
 export default connect(dvaPropsData)(RecordModal);

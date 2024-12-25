@@ -159,6 +159,15 @@ const Training = props => {
       FileUuid: uploadId,
       FileActualType: '0',
     },
+    beforeUpload: (file) => {
+      console.log(file)
+      const fileType = file?.type; //获取文件类型 type  image/*
+      // const fileName = file?.name; //文件名称
+      if (!(/^image/g.test(fileType))) {
+        message.error(`请上传图片格式文件!`);
+        return false;
+      }
+    },
     onChange(info) {
       const fileArr = [];
       info.fileList.forEach(file => {
@@ -261,7 +270,7 @@ const Training = props => {
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
                 </p>
-                <p className="ant-upload-text">单击或拖动文件到此区域进行上传</p>
+                <p className="ant-upload-text">单击或拖动图片文件到此区域进行上传</p>
                 <p className="ant-upload-hint">上传CIS培训记录表截图即可，支持单个或批量上传。</p>
               </Dragger>
             </Col>

@@ -140,6 +140,8 @@ export const API = {
     AddSetUser: before + '/UserApi/AddSetUser', //设置人员信息 3 整改人员清单 4 照片审核人员清单
     GetSetUser: before + '/UserApi/GetSetUser', //获取设置人员信息 3 整改人员清单 4 照片审核人员清单
     GetLargeRegion: before + '/DailyWorkBaseApi/GetLargeRegion', // 获取运维大区和省区
+    GetEntByProjectInfo: before + '/WorkOrderApi/GetEntByProjectInfo', //根据项目id 获取企业 
+    GetPointByEntInfo: before + '/WorkOrderApi/GetPointByEntInfo', //根据企业id 获取点位
   },
   UploadApi: {
     GetAttachmentList: before + '/UploadApi/GetAttachmentList', //获取附件ID获取所有附件
@@ -2453,9 +2455,10 @@ export const API = {
     /*设备安装审核*/
     GetEquipmentAuditList: before + '/CustomerSatisfaction/GetEquipmentAuditList', //获取设备安装审核信息
     ExportEquipmentAudit: before + '/CustomerSatisfaction/ExportEquipmentAudit', //设备安装审核信息 导出
+    ExportAuditPhoto: before + '/UploadApi/ExportAuditPhoto', //单条设备安装 导出
     GetAuditPhoto: before + '/CustomerSatisfaction/GetAuditPhoto', //获取设备安装审核照片详细
     AddAuditInfo: before + '/CustomerSatisfaction/AddAuditInfo', //安装照片审核
-    ExportAuditPhoto: before + '/UploadApi/ExportAuditPhoto', //单条设备安装 导出
+    TransferReview: before + '/CustomerSatisfaction/TransferReview', //移交安装照片审核
   },
   //通用管理 Api
   GeneralManagerApi: {

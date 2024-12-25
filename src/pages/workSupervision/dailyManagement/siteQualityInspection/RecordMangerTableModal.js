@@ -1,9 +1,9 @@
 /*
- * @Author: JiaQi
- * @Date: 2023-04-23 09:54:18
- * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-23 16:21:11
- * @Description：现场检查记录
+ * @Author: outman0611
+ * @Date: 2024-12-18 15:10:07
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-12-23 16:26:15
+ * @Description: 现场检查记录
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
@@ -29,6 +29,8 @@ import SdlTable from '@/components/SdlTable';
 import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import LargeRegionList from '@/components/largeRegionList';
+import SiteQualityInspection from '@/pages/workSupervision/Forms/SiteQualityInspection';
+
 const { TextArea } = Input;
 
 
@@ -37,10 +39,11 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
   queryLoading: loading.effects['wordSupervision/InsOrUpdOtherWork'],
 });
 
-const HandleWorkModal = props => {
+const RecordAndManagement = props => {
   const [form] = Form.useForm();
-  const { open, onCancel, modalType, queryLoading, exportLoading } = props;
+  const { open, onCancel, modalType, queryLoading, exportLoading, taskInfo } = props;
 
+ 
 
   useEffect(() => {
     form.setFieldsValue({
@@ -49,10 +52,21 @@ const HandleWorkModal = props => {
     });
   }, [editData]);
 
+
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+  const [tableTotal, setTableTotal] = useState(0);
+  const [dataSource, setDataSource] = useState([1]);
+  const [addData, setAddData] = useState({});
   const [editData, setEditData] = useState({});
+  const [editDetailDataOpen, setEditDetailDataOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState();
+
   const onEdit = record => {
+    setEditDetailDataOpen(true);
+    setIsEdit(true)
     setEditData(record);
-    setHandleWorkModalOpen(true);
+
   };
   // 获取列头
   const getColumns = () => {
@@ -138,25 +152,25 @@ const HandleWorkModal = props => {
                 <DetailIcon />
               </a>
             </Tooltip>
-          }else{
+          } else {
             return <>
-           <Tooltip title="编辑">
-              <a onClick={() => { onEdit(record) }}   >
-                <EditIcon />
-              </a>
-            </Tooltip>
+              <Tooltip title="编辑">
+                <a onClick={() => { onEdit(record) }}   >
+                  <EditIcon />
+                </a>
+              </Tooltip>
               <Divider type="vertical" />
               <Tooltip title="详情">
-              <a onClick={() => { onEdit(record) }}   >
-                <DetailIcon />
-              </a>
-            </Tooltip>
-            <Divider type="vertical" />
+                <a onClick={() => { onEdit(record) }}   >
+                  <DetailIcon />
+                </a>
+              </Tooltip>
+              <Divider type="vertical" />
               <Tooltip title="删除">
-                <Popconfirm placement="left"  title="确认是否删除?" okText="是"   cancelText="否"
+                <Popconfirm placement="left" title="确认是否删除?" okText="是" cancelText="否"
                   onConfirm={() => {
                     onDelete(record.ID);
-                  }} 
+                  }}
                 >
                   <a>
                     <DelIcon />
@@ -192,14 +206,40 @@ const HandleWorkModal = props => {
       },
     });
   };
+
   //分页
-  const [pageIndex, setPageIndex] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
-  const handleTableChange = async (PageIndex, PageSize) => {
+  const handleTableChange =  (PageIndex, PageSize) => {
     setPageSize(PageSize);
     setPageIndex(PageIndex);
-    onFinish(PageIndex, PageSize);
+    getPageData(PageIndex, PageSize);
   };
+
+  const onDelete = (id) => {
+    // // 删除后重新加载当前页数据
+    // const { current, pageSize } = pagination;
+    // const newTotal = pagination.total - 1;
+    // if ((current - 1) * pageSize + 1 > newTotal) {
+    //   // 如果删除后剩余条目不足以填满当前页，则跳转到上一页或第一页
+    //   setPagination((prevPagination) => ({
+    //     ...prevPagination,
+    //     current: Math.max(1, Math.ceil(newTotal / pageSize)),
+    //     total: newTotal,
+    //   }));
+    // } else {
+    //   // 否则保持在当前页并刷新数据
+    //   setPagination((prevPagination) => ({
+    //     ...prevPagination,
+    //     total: newTotal,
+    //   }));
+    // }
+    props.dispatch({
+      type: 'wordSupervision/InsOrUpdOtherWork',
+      payload: body,
+      callback: () => {
+        form.resetFields();
+      },
+    });
+  }
   const SearchComponents = () => {
     return <Form
       name="basic"
@@ -270,6 +310,9 @@ const HandleWorkModal = props => {
       </Row>
     </Form>
   }
+
+  const data = taskInfo?.ID ? taskInfo : addData
+
   return (<>
     <Modal
       title={modalType == 1 ? '现场检查管理' : modalType == 2 ? '现场检查记录' : ''}
@@ -282,84 +325,72 @@ const HandleWorkModal = props => {
         onCancel && onCancel()
       }}
     >
-      <div className='queryCriterTitleSty'><SearchComponents /></div>
+      <div className='queryCriterTitleSty'>
+        {taskInfo?.ID ?
+        <>
+          <Alert
+            message={`任务类型：现场检查任务单，派发时间：${data.BeginTime} ，有效期：${data.EndTime} ，任务单派发频次1次/月，应至少股改监测点${data.standVisitNum || 0}个，服务人员${data.standVisitNum || 0}人`}
+            type="info"
+            showIcon
+            style={{ marginRight: 30 }}
+          />
+          <Button onClick={()=>{
+            setEditDetailDataOpen(true)
+            setEditData({DailyTaskID: data.ID,RegionalArea:data.largeCode });
+            }}>添加</Button>
+          </>
+          :
+          modalType == 2 && <SearchComponents />
+        }
+
+
+      </div>
       <SdlTable
         loading={queryLoading}
         align="center"
         columns={getColumns()}
-        // dataSource={dataSource}
+        dataSource={dataSource}
         scroll={{ x: 840 }}
-        pagination={{
-          // total: tableTotal,
-          pageSize: pageSize,
-          current: pageIndex,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          onChange: handleTableChange,
-        }}
+        pagination={
+          !taskInfo.ID
+            ? {
+              total: tableTotal,
+              pageSize: pageSize,
+              current: pageIndex,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              onChange: handleTableChange,
+            }
+            : false
+        }
       />
     </Modal>
     <Modal
-      title={editData.ID ? '编辑' : '添加'}
-      width={800}
-      open={false}
-      destroyOnClose
-      onOk={() => {
-        onFinish();
-      }}
-      onCancel={() => {
-        form.resetFields();
-        onCancel();
-      }}
-    >
-      <Form
-        form={form}
-        labelCol={{ span: 5 }}
-        wrapperCol={{ span: 16 }}
-        initialValues={{}}
-        // onFinish={onFinish}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="工作时间"
-          name="WorkTime"
-          rules={[
-            {
-              required: true,
-              message: '请选择工作时间！',
-            },
-          ]}
+          centered
+          open={editDetailDataOpen}
+          footer={null}
+          wrapClassName="spreadOverModal noTitleSty"
+          mask={false}
+          destroyOnClose
+          onCancel={() => setEditDetailDataOpen(false)}
         >
-          <DatePicker
-            disabledDate={current => {
-              return current && current > moment().endOf('day');
+          <SiteQualityInspection
+            taskInfo={taskInfo}
+            editData={editData}
+            isEdit={isEdit}
+            onCancel={() => {
+              setEditDetailDataOpen(false);
             }}
-            style={{ width: '100%' }}
+            onSubmitCallback={() => {
+              getPageData();
+            }}
           />
-        </Form.Item>
-
-        <Form.Item
-          label="工作结果"
-          name="WorkResults"
-          rules={[
-            {
-              required: true,
-              message: '请选择工作结果！',
-            },
-          ]}
-        >
-          <Radio.Group>
-            <Radio value={1}>完成</Radio>
-            <Radio value={0}>未完成</Radio>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item label="内容描述" name="ContentDes">
-          <TextArea rows={3} placeholder="请输入内容描述" />
-        </Form.Item>
-      </Form>
-    </Modal>
+        </Modal>
   </>
   );
 };
+RecordAndManagement.defaultProps = {
+  taskInfo: {},
+};
 
-export default connect(dvaPropsData)(HandleWorkModal);
+export default connect(dvaPropsData)(RecordAndManagement);

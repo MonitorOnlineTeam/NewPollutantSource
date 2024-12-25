@@ -18,11 +18,10 @@ import moment from 'moment';
 import { ExportOutlined } from '@ant-design/icons';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { getCurrentUserId } from '@/utils/utils';
+import { getCurrentUserId,downloadFile } from '@/utils/utils';
 import { DelIcon, EditIcon } from '@/utils/icon';
 import Training from '@/pages/workSupervision/Forms/Training';
 import ImageLightboxView from '@/components/ImageLightboxView';
-
 const { Text, Link } = Typography;
 
 const dvaPropsData = ({ loading, provinceAllList, common }) => ({
@@ -197,7 +196,11 @@ const ChecklistRecordAndManagement = props => {
           // let fileList = getAttachmentDataSource(text);
           // console.log('fileList', fileList);
           // return <AttachmentView dataSource={fileList} />;
-          let images = record.FilesList.ImgList;
+          let images = record?.FilesList?.ImgList;
+          if(images[0] && /.doc/.test(images[0])){ //word
+            return <a onClick={()=>{downloadFile(`/${images[0]}`)}}>查看附件</a>;
+            
+          }
           return <ImageLightboxView images={images} />;
         },
       },
@@ -361,7 +364,7 @@ const ChecklistRecordAndManagement = props => {
             align="center"
             dataSource={dataSource}
             columns={getColumns()}
-            scroll={{x:800}}
+            scroll={{x:800,y:'calc(100vh - 312px)'}}
             pagination={{
               total: tableTotal,
               pageSize: pageSize,

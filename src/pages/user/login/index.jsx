@@ -157,7 +157,7 @@ class Login extends Component {
         if (xhr.responseText && JSON.parse(xhr.responseText).version !== version) {
             if (window.location.href.indexOf("#reloaded") == -1) {
               location.href = location.href + "#reloaded";
-              window.location.reload(true);
+              window.location.reload();
             }
         }
       }
@@ -165,7 +165,7 @@ class Login extends Component {
     xhr.send();
   }
   componentDidMount() {
-    this.reloadPage()
+    // this.reloadPage()
     this.timer = setInterval(() => {
       this.child && this.child.current && this.child.current.click(); // 3分钟刷新一次
     }, 1000 * 60 * 3);
