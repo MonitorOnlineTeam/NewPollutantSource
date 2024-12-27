@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { Card, Modal, Form, Row, Col, InputNumber, Select, DatePicker, message } from 'antd';
+import { Card, Modal, Form, Row, Col, InputNumber, Select, DatePicker, message, Spin } from 'antd';
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
@@ -30,6 +30,7 @@ const layout = {
 
 @connect(({ loading, autoForm, CO2Emissions }) => ({
   loading: loading.effects['autoForm/getAutoFormData'],
+  getEditLoading: loading.effects['autoForm/getFormData'],
   getConfigLoading: loading.effects['autoForm/getPageConfig'],
   fileList: autoForm.fileList,
   tableInfo: autoForm.tableInfo,
@@ -44,7 +45,6 @@ class index extends PureComponent {
     this.state = {
       searchForm: {},
       isModalVisible: false,
-      editData: {},
       KEY: undefined,
       FileUuid: undefined,
     };
@@ -135,7 +135,7 @@ class index extends PureComponent {
   // 保存
   onHandleSubmit = () => {
     this.formRef.current.validateFields().then(values => {
-      const { editData, KEY } = this.state;
+      const { KEY } = this.state;
       console.log('KEY=', KEY);
       let actionType = KEY ? 'autoForm/saveEdit' : 'autoForm/add';
 
@@ -180,15 +180,13 @@ class index extends PureComponent {
         'dbo.T_Bas_CO2PowerDischarge.PowerDischargeCode': this.state.KEY,
       },
       callback: res => {
-        this.setState(
-          {
-            editData: res,
-            isModalVisible: true,
-          },
-          () => {
-            this.getCO2EnergyType();
-          },
-        );
+        this.formRef.current.setFieldsValue({
+          ...res,
+          MonitorTime: moment(res.MonitorTime),
+          EntCode: res['dbo.EntView.EntCode'],
+          CrewCode: res['dbo.T_Bas_CO2PowerDischarge.CrewCode'],
+        });
+        this.getCO2EnergyType();
       },
     });
   };
@@ -229,8 +227,8 @@ class index extends PureComponent {
   };
 
   render() {
-    const { isModalVisible, editData, FileUuid, KEY } = this.state;
-    const { tableInfo, cementTableCO2Sum, unitInfoList } = this.props;
+    const { isModalVisible, FileUuid, KEY } = this.state;
+    const { tableInfo, cementTableCO2Sum, unitInfoList, getEditLoading } = this.props;
     const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CO2PowerDischarge.tCO2');
@@ -242,9 +240,9 @@ class index extends PureComponent {
             getPageConfig
             configId={CONFIG_ID}
             onAdd={() => {
+              this.formRef.current.resetFields();
               this.setState({
                 isModalVisible: true,
-                editData: {},
                 KEY: undefined,
                 FileUuid: undefined,
               });
@@ -258,6 +256,7 @@ class index extends PureComponent {
                   FileUuid: FileUuid,
                   rowTime: record['dbo.T_Bas_CO2PowerDischarge.MonitorTime'],
                   rowType: record['dbo.T_Bas_CO2PowerDischarge.PowerDischargeType'],
+                  isModalVisible: true,
                 },
                 () => {
                   this.getFormData(FileUuid);
@@ -281,155 +280,148 @@ class index extends PureComponent {
           />
         </Card>
         <Modal
-          destroyOnClose
+          // destroyOnClose
           width={900}
           title={KEY ? '编辑' : '添加'}
           visible={isModalVisible}
           onOk={this.checkIsAdd}
           onCancel={this.handleCancel}
         >
-          <Form
-            {...layout}
-            ref={this.formRef}
-            initialValues={{
-              ...editData,
-              MonitorTime: moment(editData.MonitorTime),
-              EntCode: editData['dbo.EntView.EntCode'],
-              CrewCode: editData['dbo.T_Bas_CO2PowerDischarge.CrewCode'],
-            }}
-          >
-            <Row>
-              <Col span={12}>
-                <Form.Item
-                  name="EntCode"
-                  label="企业"
-                  rules={[{ required: true, message: '请选择企业!' }]}
-                >
-                  <Select
-                    placeholder="请选择企业"
-                    onChange={this.getCO2EnergyType}
-                    showSearch
-                    filterOption={(input, option) =>
-                      option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    }
+          <Spin spinning={getEditLoading}>
+            <Form {...layout} ref={this.formRef}>
+              <Row>
+                <Col span={12}>
+                  <Form.Item
+                    name="EntCode"
+                    label="企业"
+                    rules={[{ required: true, message: '请选择企业!' }]}
                   >
-                    {EntView.map(item => {
-                      return (
-                        <Option
-                          value={item['dbo.EntView.EntCode']}
-                          key={item['dbo.EntView.EntCode']}
-                        >
-                          {item['dbo.EntView.EntName']}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="MonitorTime"
-                  label="时间"
-                  rules={[{ required: true, message: '请选择时间!' }]}
-                >
-                  <DatePicker picker="month" style={{ width: '100%' }} />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="PowerDischargeType"
-                  label="种类"
-                  rules={[{ required: true, message: '请选择种类!' }]}
-                >
-                  <Select placeholder="请选择种类" onChange={() => this.countEmissions()}>
-                    {SELECT_LIST.map(item => {
-                      return (
-                        <Option value={item.key} key={item.key}>
-                          {item.value}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="ActivityData"
-                  label="活动数据（MWh）"
-                  rules={[{ required: true, message: '请填写活动数据!' }]}
-                >
-                  <InputNumber
-                    style={{ width: '100%' }}
-                    min={0}
-                    placeholder="请填写活动数据"
-                    onChange={Debounce(() => this.countEmissions(), maxWait)}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="CrewCode"
-                  label="机组"
-                  rules={[{ required: true, message: '请选择机组!' }]}
-                >
-                  <Select placeholder="请选择机组">
-                    {unitInfoList.map(item => {
-                      return (
-                        <Option value={item.CrewCode} key={item.CrewCode}>
-                          {item.CrewName}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="Emission"
-                  label="排放因子（tCO₂/MWh）"
-                  rules={[{ required: true, message: '请填写排放因子!' }]}
-                >
-                  <InputNumber
-                    style={{ width: '100%' }}
-                    min={0}
-                    placeholder="请填写排放因子"
-                    onChange={Debounce(() => this.countEmissions(), maxWait)}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="tCO2"
-                  label="排放量（tCO₂）"
-                  label={
-                    <span>
-                      排放量（tCO₂）
-                      <QuestionTooltip content="排放量 = 活动数据 × 排放因子" />
-                    </span>
-                  }
-                  rules={[{ required: true, message: '请填写排放量!' }]}
-                >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放量" />
-                </Form.Item>
-              </Col>
-              <Col span={24}>
-                <Form.Item
-                  labelCol={{ span: 5 }}
-                  wrapperCol={{ span: 7 }}
-                  name="AttachmentID"
-                  label="验证材料"
-                  // rules={[{ required: true, message: '请填写排放量!' }]}
-                >
-                  <FileUpload
-                    fileUUID={FileUuid}
-                    uploadSuccess={fileUUID => {
-                      this.formRef.current.setFieldsValue({ AttachmentID: fileUUID });
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
+                    <Select
+                      placeholder="请选择企业"
+                      onChange={this.getCO2EnergyType}
+                      showSearch
+                      filterOption={(input, option) =>
+                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {EntView.map(item => {
+                        return (
+                          <Option
+                            value={item['dbo.EntView.EntCode']}
+                            key={item['dbo.EntView.EntCode']}
+                          >
+                            {item['dbo.EntView.EntName']}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="MonitorTime"
+                    label="时间"
+                    rules={[{ required: true, message: '请选择时间!' }]}
+                  >
+                    <DatePicker picker="month" style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="PowerDischargeType"
+                    label="种类"
+                    rules={[{ required: true, message: '请选择种类!' }]}
+                  >
+                    <Select placeholder="请选择种类" onChange={() => this.countEmissions()}>
+                      {SELECT_LIST.map(item => {
+                        return (
+                          <Option value={item.key} key={item.key}>
+                            {item.value}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="ActivityData"
+                    label="活动数据（MWh）"
+                    rules={[{ required: true, message: '请填写活动数据!' }]}
+                  >
+                    <InputNumber
+                      style={{ width: '100%' }}
+                      min={0}
+                      placeholder="请填写活动数据"
+                      onChange={Debounce(() => this.countEmissions(), maxWait)}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="CrewCode"
+                    label="机组"
+                    rules={[{ required: true, message: '请选择机组!' }]}
+                  >
+                    <Select placeholder="请选择机组">
+                      {unitInfoList.map(item => {
+                        return (
+                          <Option value={item.CrewCode} key={item.CrewCode}>
+                            {item.CrewName}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="Emission"
+                    label="排放因子（tCO₂/MWh）"
+                    rules={[{ required: true, message: '请填写排放因子!' }]}
+                  >
+                    <InputNumber
+                      style={{ width: '100%' }}
+                      min={0}
+                      placeholder="请填写排放因子"
+                      onChange={Debounce(() => this.countEmissions(), maxWait)}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="tCO2"
+                    label="排放量（tCO₂）"
+                    label={
+                      <span>
+                        排放量（tCO₂）
+                        <QuestionTooltip content="排放量 = 活动数据 × 排放因子" />
+                      </span>
+                    }
+                    rules={[{ required: true, message: '请填写排放量!' }]}
+                  >
+                    <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放量" />
+                  </Form.Item>
+                </Col>
+                <Col span={24}>
+                  <Form.Item
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 7 }}
+                    name="AttachmentID"
+                    label="验证材料"
+                    // rules={[{ required: true, message: '请填写排放量!' }]}
+                  >
+                    <FileUpload
+                      fileUUID={FileUuid}
+                      uploadSuccess={fileUUID => {
+                        this.formRef.current.setFieldsValue({ AttachmentID: fileUUID });
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </Spin>
         </Modal>
       </BreadcrumbWrapper>
     );

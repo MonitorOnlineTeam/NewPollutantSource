@@ -155,7 +155,7 @@ class ModalContent extends Component {
 
   render() {
     const { warningInfoList } = this.props;
-    return <>{this.getRenderPageByModalType()}</>;
+    return this.getRenderPageByModalType();
   }
 }
 

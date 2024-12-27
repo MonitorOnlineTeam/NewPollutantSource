@@ -7,6 +7,7 @@ import QuestionTooltip from "@/components/QuestionTooltip"
 import ErrorValueChart from "./ErrorValueChart"
 import CheckModal from "../components/CheckModal"
 import _ from "lodash"
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -213,7 +214,7 @@ class BlindCheckPage extends PureComponent {
                 name="time"
                 label="开始/结束时间"
               >
-                <RangePicker showTime />
+                <RangePicker_ showTime style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={8}>

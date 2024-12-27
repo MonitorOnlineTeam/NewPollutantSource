@@ -32,13 +32,10 @@ class AvatarDropdown extends React.Component {
     }
     if (key === 'logout') {
       if (dispatch) {
-        // Cookie.set(configToken.cookieName, null);
-        // Cookie.set('currentUser', null);
         dispatch({
           type: 'login/logout',
         });
       }
-
       return;
     }
 
@@ -60,6 +57,24 @@ class AvatarDropdown extends React.Component {
 
   render() {
     const { currentUser = {}, menu, changePwdVisible, projectList } = this.props;
+    let hideDropdown = sessionStorage.getItem('hideDropdown');
+    // 如果hideDropdown为true，只显示头像和用户名，不显示下拉菜单
+    if (hideDropdown) {
+      return (
+        <span className={`${styles.action} ${styles.account}`}>
+          <Avatar
+            size="small"
+            className={styles.avatar}
+            src={'/avatar.png'}
+            alt="avatar"
+          />
+          <span className={styles.name}>
+            <span title={currentUser.UserName}>{currentUser.UserName}</span>
+          </span>
+        </span>
+      );
+    }
+
     if (!menu) {
       return (
         <span className={`${styles.action} ${styles.account}`}>
