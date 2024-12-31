@@ -307,7 +307,7 @@ class AutoFormTable extends PureComponent {
       notOperate,
       onlyAppendHandleRows,
       addPermis,
-      delPermis, 
+      delPermis,
       editPermis,
     } = this.props;
     this._SELF_.btnEl = [];
@@ -615,7 +615,7 @@ class AutoFormTable extends PureComponent {
     let num = 0;
     if (this._SELF_.btnEl.length || this.props.appendHandleRows) {
       let leftMenuWidth = config.isShowTabs && defaultSettings.layout === 'sidemenu' ? 255 : 0;
-      const isFixed = scrollXWidth > window.innerWidth - 64 - 48 - leftMenuWidth ? 'right' : '';
+      const isFixed = scrollXWidth > window.innerWidth - 64 - 20 - 48 - leftMenuWidth ? 'right' : '';
       _columns.length && this.props.notOperate ?
         this._SELF_.btnEl.filter(item => item.type === 'view')[0] && _columns.push({
           align: 'center',

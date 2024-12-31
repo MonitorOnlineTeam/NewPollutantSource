@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'dva';
-import { Row } from 'antd';
+import { Row, Spin } from 'antd';
 import { router } from 'umi';
 import styles from '../styles.less';
 import AvatarDropdown from '@/components/GlobalHeader/AvatarDropdown.jsx';
@@ -14,6 +14,7 @@ const dvaPropsData = ({ loading, sysDashboard, user }) => ({
   time: sysDashboard.time,
   timeLabel: sysDashboard.timeLabel,
   currentMenu: user.currentMenu,
+  loading: loading.effects['sysDashboard/GetSysList'],
 });
 
 const SystemDashboardPageWrapper = props => {
@@ -24,7 +25,7 @@ const SystemDashboardPageWrapper = props => {
   const [current, setCurrent] = useState({});
   const [customTimeModalOpen, setCustomTimeModalOpen] = useState(false);
 
-  const { dispatch, timeLabel, children, pageName, currentMenu, time } = props;
+  const { dispatch, timeLabel, children, pageName, currentMenu, time, loading } = props;
 
   // rem等比适配配置文件
   useEffect(() => {
@@ -37,7 +38,7 @@ const SystemDashboardPageWrapper = props => {
   }, []);
 
   useEffect(() => {
-    pageName.includes("运维") &&
+    pageName.includes('运维') &&
       dispatch({
         //获取运维基础配置
         type: 'global/getOperationSetting',
@@ -160,7 +161,7 @@ const SystemDashboardPageWrapper = props => {
   };
 
   return (
-    <div className={`${styles.dashboardPageWrapper}`} ref={containerRef} style={{...props.style}}>
+    <div className={`${styles.dashboardPageWrapper}`} ref={containerRef} style={{ ...props.style }}>
       <header className={styles.header}>{pageInfo.title}</header>
       <div className={styles.leftContent}>
         <div className={styles.menuSelectContent}>
@@ -232,8 +233,10 @@ const SystemDashboardPageWrapper = props => {
       </div>
       <div className={styles.rightContent}>
         <FullscreenToggle containerRef={containerRef} style={{ marginRight: 14, marginTop: 4 }} />
-        <div className={styles.goSystem} onClick={gobackSys}>
-          系统入口
+        <div className={styles.goSystem}>
+          <Spin spinning={loading}>
+            <span onClick={gobackSys}>系统入口</span>
+          </Spin>
         </div>
         <img src="/SystemDashboard/infoIcon.png" className={styles.message} />
         <div className={styles.userInfoContent}>

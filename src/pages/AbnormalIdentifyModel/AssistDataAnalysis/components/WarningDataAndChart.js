@@ -625,7 +625,7 @@ const WarningDataAndChart = props => {
           let currentData = allTypeDataList[dataIndex];
           let flag = currentData[seriesId + '_Flag'];
           if (flag === '正常(N)' || flag === '' || flag === '正常(n)') {
-            return 5;
+            return 0;
           } else {
             return 20;
           }
@@ -642,6 +642,8 @@ const WarningDataAndChart = props => {
     let continuousItem2 = []; // 停运工况缺失
     let continuousItem3 = []; // 停炉工况
     let continuousItem4 = []; // 启炉工况
+    let continuousItem5 = []; // 质控标记
+
     // 人为干预和故障数据
     let RenAndGuData = [];
     if (showIndex > -1) {
@@ -828,6 +830,45 @@ const WarningDataAndChart = props => {
 
             markAreaData.push(continuousItem);
             continuousItem = [];
+          }
+        }
+        // 绘制质控标记
+        {
+          let flag = item.JZJYFlag;
+          let color = 'rgba(179, 143, 104, 0.2)';
+          // 开始
+          if (flag && !continuousItem5.length) {
+            continuousItem5.push({
+              name: flag,
+              xAxis: item.MonitorTime,
+              itemStyle: {
+                color: color,
+              },
+            });
+          }
+          // 结束
+          if (!flag && continuousItem5.length) {
+            continuousItem5.push({
+              name: flag,
+              xAxis: item.MonitorTime,
+              itemStyle: {
+                color: color,
+              },
+            });
+
+            markAreaData.push(continuousItem5);
+            continuousItem5 = [];
+          } else if (flag && idx === allTypeDataList.length - 1) {
+            continuousItem5.push({
+              name: flag,
+              xAxis: item.MonitorTime,
+              itemStyle: {
+                color: color,
+              },
+            });
+
+            markAreaData.push(continuousItem5);
+            continuousItem5 = [];
           }
         }
         // 绘制人为干预、设备故障时间线
@@ -1030,12 +1071,15 @@ const WarningDataAndChart = props => {
             let status = dataParams ? dataParams.split('§')[0] : '';
             // 标记
             let dataFlag = currentData[item.seriesId + '_Flag'] || '';
+            // 质控标记
+            let JZJYFlag = currentData[item.seriesId + '_JZJYFlag'] || '';
 
             value += `
               <p style="line-height: 20px; margin-bottom: 0;">
                 ${item.marker} ${item.seriesName}： ${item.value}
                 ${units[item.seriesName]}
                 ${dataFlag}
+                ${JZJYFlag}
                 <span style="font-weight: bold; color: ${status === '0' ? '#ff4d4f' : '#faad14'}">${
               status === '0' ? '超标' : status !== '' ? '异常' : ''
             }</span>

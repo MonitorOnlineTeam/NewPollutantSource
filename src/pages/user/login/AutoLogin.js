@@ -22,6 +22,8 @@ export default class AutoLogin extends Component {
     const { username, password, hideDropdown } = this.props.location.query;
     if (hideDropdown) {
       sessionStorage.setItem('hideDropdown', hideDropdown);
+    }else{
+      sessionStorage.removeItem('hideDropdown');
     }
     
     this.props.dispatch({

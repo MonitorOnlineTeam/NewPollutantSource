@@ -97,7 +97,7 @@ class index extends PureComponent {
         let suffix = fileName.split(".")[1];
         this.setState({
           fileType: suffix,
-          filePath: fileName
+          filePath: '/wwwroot/Upload/' + fileName
         }, () => {
           this.onOpenViewFileModal()
         })
@@ -164,6 +164,7 @@ class index extends PureComponent {
           bodyStyle={{ padding: 0 }}
           onOk={this.onSubmitForm}
           onCancel={() => { this.setState({ visible: false }) }}
+          width={600}
         >
           <SdlForm
             configId={CONFIG_ID}

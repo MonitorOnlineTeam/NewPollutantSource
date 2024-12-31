@@ -12,16 +12,7 @@ class OpenFileModal extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      searchParams: props.searchParams
     };
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.searchParams !== prevProps.searchParams) {
-      this.setState({
-        searchParams: this.props.searchParams
-      })
-    }
   }
 
   onCloseModal = () => {
@@ -36,7 +27,6 @@ class OpenFileModal extends PureComponent {
 
   render() {
     const { fileType, filePath, viewFileModalVisible } = this.props;
-    const { searchParams } = this.state;
     return (
       <Modal
         width={"70vw"}
@@ -47,7 +37,7 @@ class OpenFileModal extends PureComponent {
       >
         <FileViewer
           fileType={fileType}
-          filePath={`/wwwroot/Upload/${filePath}`}
+          filePath={`${filePath}`}
           // errorComponent={message.error("文件打开失败")}
           errorComponent={CustomErrorComponent}
           onError={() => {

@@ -62,7 +62,7 @@ export async function JudgeIsRepeat(params) {
 
 //  获取模板下载地址
 export async function GetGHGUploadTempletUrl(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetGHGUploadTempletUrl?IndustryCode='+ params.IndustryCode, {});
+  const result = await post('/rest/PollutantSourceApi/GreenhouseGasAnalysis/GetGHGUploadTempletUrl?IndustryCode='+ params.IndustryCode, {});
   return result;
 }
 

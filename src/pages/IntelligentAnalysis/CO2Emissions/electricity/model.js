@@ -136,7 +136,7 @@ export default Model.extend({
     *GetGHGUploadTempletUrl({ payload, callback }, { call }) {
       const result = yield call(services.GetGHGUploadTempletUrl, payload);
       if (result.IsSuccess) {
-        window.open('/api/' + result.Datas)
+        window.open('/'+result.Datas)
       } else {
         response.Message && message.error(response.Message)
       }

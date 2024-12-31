@@ -314,13 +314,21 @@ class index extends PureComponent {
             getPageConfig
             configId={CONFIG_ID}
             onAdd={() => {
-              this.formRef.current.resetFields();
-              this.setState({
-                isModalVisible: true,
-                KEY: undefined,
-                FileUuid: undefined,
-                FileUuid2: undefined,
-              });
+              this.setState(
+                {
+                  isModalVisible: true,
+                  KEY: undefined,
+                  FileUuid: undefined,
+                  FileUuid2: undefined,
+                },
+                () => {
+                  setTimeout(() => {
+                    if (this.formRef.current) {
+                      this.formRef.current.resetFields();
+                    }
+                  });
+                },
+              );
               this.resetUnitInfoList();
             }}
             onEdit={(record, key) => {
@@ -364,7 +372,7 @@ class index extends PureComponent {
           onOk={this.checkIsAdd}
           onCancel={this.handleCancel}
         >
-          <Spin spinning={getEditLoading}>
+          <Spin spinning={!!getEditLoading}>
             <Form style={{ marginTop: 24 }} {...layout} ref={this.formRef}>
               <Row>
                 <Col span={12}>

@@ -371,7 +371,9 @@ a:hover {
   }
 
   // 菜单选中样式
-
+  .ant-menu-submenu-title {
+    color: #fff;
+  }
   .ant-menu-item .anticon + span,
   .ant-menu-submenu-title .anticon + span {
     font-weight: 500;
@@ -386,12 +388,38 @@ a:hover {
     // border-bottom: 2px solid #1890FF;
   }
 
-  .ant-menu-dark .ant-menu-submenu-selected {
-    background-color: #0e1228;
-    font-weight: 900;
-    color: #1890ff !important;
+  // .ant-menu-item-selected,
+  .ant-menu-submenu.ant-menu-submenu-selected {
+    // background-color: #0e1228;
+    // font-weight: 900;
+    // color: #1890ff !important;
+
+    background-color: #1c61e0 !important;
+    font-weight: bold !important;
+    color: #fff !important;
     border-bottom: 2px solid #1890ff !important;
   }
+  .ant-menu-horizontal,
+  .ant-menu-submenu-popup.ant-menu-submenu-placement-bottomLeft {
+    & > .ant-menu-item:hover,
+    .ant-menu-item-active,
+    .ant-menu-submenu-active,
+    .ant-menu-submenu-open,
+    .ant-menu-submenu-title:hover {
+      // color: #1597fc !important;
+      background-color: #141a38;
+
+      a {
+        color: #1597fc !important;
+      }
+      // border-bottom: 2px solid #1890FF;
+    }
+  }
+  // .ant-menu-horizontal > .ant-menu-submenu-open,
+  // .ant-menu-horizontal > .ant-menu-submenu-active {
+  //   color: #1597fc !important;
+  //   background-color: #141a38 !important;
+  // }
 
   // 地图气泡样式
   .amap-logo {
@@ -1483,8 +1511,10 @@ a:hover {
     padding: 8px 0 0 0;
   }
 }
-.ant-rate  :global{ //评分 五角星默认颜色
-  .ant-rate-star-first, .ant-rate-star-second{ 
+.ant-rate :global {
+  //评分 五角星默认颜色
+  .ant-rate-star-first,
+  .ant-rate-star-second {
     color: #e2e2e2;
-   }
+  }
 }
