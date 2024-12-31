@@ -79,7 +79,7 @@ export default config => {
       return [/moment[/\\]locale$/, /zh-cn/];
     });
 
-  config.optimization // share the same chunks across different modules
+    config.optimization // share the same chunks across different modules
     .runtimeChunk(false)
     .splitChunks({
       chunks: 'all',
@@ -87,12 +87,12 @@ export default config => {
       minChunks: 3,
       automaticNameDelimiter: '.',
       cacheGroups: {
-        vendor: {
+        vendors: {
           name: 'vendors',
-          test({ resource }) {
-            return /[\/]node_modules[\/]/.test(resource);
-          },
+          test: /[\\/]node_modules[\\/]/,
           priority: 10,
+          chunks: 'all',
+          enforce: true,
         },
       },
     });
