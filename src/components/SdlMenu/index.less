@@ -20,8 +20,9 @@
   }
 
   :global {
-    .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
-      background-color: transparent;
+    .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected,
+    .ant-menu-item-active {
+      background-color: transparent !important;
       color: #0e90fe !important;
       font-weight: 500;
     }
@@ -123,24 +124,23 @@
     .ant-layout-header {
       background-color: @bgColor;
     }
-    
+
     .ant-menu-item .anticon,
     .ant-menu-submenu-title .anticon {
       font-size: 16px;
     }
 
-    .ant-menu.ant-menu-dark .ant-menu-item-selected,
-    .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected {
-      background-color: #0e1228;
-    }
     .ant-menu-dark .ant-menu-item,
     .ant-menu-dark .ant-menu-item > span > a {
-      color: #fff;
+      color: #fff !important;
     }
-    .ant-menu-dark .ant-menu-item-selected > span > a,
-    .ant-menu-dark .ant-menu-item-selected .ant-menu-item-icon,
-    .ant-menu-dark .ant-menu-item-selected .anticon {
-      color: #1597fc;
+
+    .ant-menu.ant-menu-dark .ant-menu-item-selected,
+    .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected {
+      background-color: #1c61e0 !important;
+      font-weight: bold !important;
+      color: #fff !important;
+      border-bottom: 2px solid #1890ff !important;
     }
 
     .ant-menu-vertical .ant-menu-submenu-selected {

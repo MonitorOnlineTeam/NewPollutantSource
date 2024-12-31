@@ -143,8 +143,8 @@ class Login extends Component {
     Cookie.remove(config.cookieName);
     Cookie.remove('currentUser');
     Cookie.remove('newToken');
-    // Cookie.remove('sysMenuId');
-    // sessionStorage.clear();
+    Cookie.remove('sysMenuId');
+    sessionStorage.clear();
     dispatch({ type: 'global/updateState', payload: { sysPollutantTypeList: [] } });
   };
   componentDidMount() {
@@ -241,7 +241,7 @@ class Login extends Component {
               />
             </Col>
           </Row>
-          <div style={{padding: '0 10px'}}>
+          <div style={{ padding: '0 10px' }}>
             {!provinceShow && (
               <Checkbox
                 checked={this.props.isAgree}
@@ -265,9 +265,7 @@ class Login extends Component {
               </Checkbox>
             )}
           </div>
-          <Submit loading={submitting}>
-            登录
-          </Submit>
+          <Submit loading={submitting}>登录</Submit>
         </LoginComponents>
         <Modal
           footer={false}

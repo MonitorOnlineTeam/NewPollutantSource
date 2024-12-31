@@ -14,6 +14,7 @@ import {
   Input,
   Button,
   message,
+  Spin,
 } from 'antd';
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
@@ -43,6 +44,7 @@ const layout = {
 
 @connect(({ loading, autoForm, CO2Emissions }) => ({
   loading: loading.effects['autoForm/getAutoFormData'],
+  getEditLoading: loading.effects['autoForm/getFormData'],
   getConfigLoading: loading.effects['autoForm/getPageConfig'],
   fileList: autoForm.fileList,
   tableInfo: autoForm.tableInfo,
@@ -58,7 +60,6 @@ class index extends PureComponent {
     this.state = {
       searchForm: {},
       isModalVisible: false,
-      editData: {},
       KEY: undefined,
       FileUuid: undefined,
       currentTypeData: {},
@@ -253,15 +254,15 @@ class index extends PureComponent {
         'dbo.T_Bas_CO2Desulphurization.DesulphurizationCode': this.state.KEY,
       },
       callback: res => {
-        this.setState(
-          {
-            editData: res,
-            isModalVisible: true,
-          },
-          () => {
-            this.getCO2EnergyType(true);
-          },
-        );
+        this.formRef.current.setFieldsValue({
+          ...res,
+          MonitorTime: moment(res.MonitorTime),
+          EntCode: res['dbo.EntView.EntCode'],
+          GetType: res.GetType,
+          CrewCode: res['dbo.T_Bas_CO2Desulphurization.CrewCode'],
+          DesulfurizerType: res['dbo.T_Bas_CO2Desulphurization.DesulfurizerType'],
+        });
+        this.getCO2EnergyType(true);
       },
     });
   };
@@ -287,7 +288,6 @@ class index extends PureComponent {
   render() {
     const {
       isModalVisible,
-      editData,
       FileUuid,
       FileUuid2,
       currentTypeData,
@@ -296,7 +296,7 @@ class index extends PureComponent {
       editTotalData,
       KEY,
     } = this.state;
-    const { tableInfo, Dictionaries, cementTableCO2Sum, unitInfoList } = this.props;
+    const { tableInfo, Dictionaries, cementTableCO2Sum, unitInfoList, getEditLoading } = this.props;
     const { EntView = [] } = this.props.configIdList;
 
     const TYPES = Dictionaries.two || [];
@@ -314,13 +314,21 @@ class index extends PureComponent {
             getPageConfig
             configId={CONFIG_ID}
             onAdd={() => {
-              this.setState({
-                isModalVisible: true,
-                editData: {},
-                KEY: undefined,
-                FileUuid: undefined,
-                FileUuid2: undefined,
-              });
+              this.setState(
+                {
+                  isModalVisible: true,
+                  KEY: undefined,
+                  FileUuid: undefined,
+                  FileUuid2: undefined,
+                },
+                () => {
+                  setTimeout(() => {
+                    if (this.formRef.current) {
+                      this.formRef.current.resetFields();
+                    }
+                  });
+                },
+              );
               this.resetUnitInfoList();
             }}
             onEdit={(record, key) => {
@@ -333,6 +341,7 @@ class index extends PureComponent {
                   FileUuid2: FileUuid2,
                   rowTime: record['dbo.T_Bas_CO2Desulphurization.MonitorTime'],
                   rowType: record['dbo.T_Bas_CO2Desulphurization.DesulfurizerType'],
+                  isModalVisible: true,
                 },
                 () => {
                   this.getFormData();
@@ -356,131 +365,120 @@ class index extends PureComponent {
           />
         </Card>
         <Modal
-          destroyOnClose
+          // destroyOnClose
           width={900}
           title={KEY ? '编辑' : '添加'}
           visible={isModalVisible}
           onOk={this.checkIsAdd}
           onCancel={this.handleCancel}
         >
-          <Form
-            style={{ marginTop: 24 }}
-            {...layout}
-            ref={this.formRef}
-            initialValues={{
-              ...editData,
-              MonitorTime: moment(editData.MonitorTime),
-              EntCode: editData['dbo.EntView.EntCode'],
-              GetType: editData.GetType,
-              CrewCode: editData['dbo.T_Bas_CO2Desulphurization.CrewCode'],
-              DesulfurizerType: editData['dbo.T_Bas_CO2Desulphurization.DesulfurizerType'],
-            }}
-          >
-            <Row>
-              <Col span={12}>
-                <Form.Item
-                  name="EntCode"
-                  label="企业"
-                  rules={[{ required: true, message: '请选择企业!' }]}
-                >
-                  <Select
-                    placeholder="请选择企业"
-                    onChange={this.getCO2EnergyType}
-                    showSearch
-                    filterOption={(input, option) =>
-                      option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    }
+          <Spin spinning={!!getEditLoading}>
+            <Form style={{ marginTop: 24 }} {...layout} ref={this.formRef}>
+              <Row>
+                <Col span={12}>
+                  <Form.Item
+                    name="EntCode"
+                    label="企业"
+                    rules={[{ required: true, message: '请选择企业!' }]}
                   >
-                    {EntView.map(item => {
-                      return (
-                        <Option
-                          value={item['dbo.EntView.EntCode']}
-                          key={item['dbo.EntView.EntCode']}
-                        >
-                          {item['dbo.EntView.EntName']}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="MonitorTime"
-                  label="时间"
-                  rules={[{ required: true, message: '请选择时间!' }]}
-                >
-                  <DatePicker
-                    picker="month"
-                    style={{ width: '100%' }}
-                    onChange={this.getCO2EnergyType}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="DesulfurizerType"
-                  label="脱硫剂类型"
-                  rules={[{ required: true, message: '请选择脱硫剂类型!' }]}
-                >
-                  <Select placeholder="请选择脱硫剂类型" onChange={this.onTypesChange}>
-                    {TYPES.map(item => {
-                      return (
-                        <Option value={item.code} key={item.code} data-unit={item.typeUnit}>
-                          {item.name}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="CrewCode"
-                  label="机组"
-                  rules={[{ required: true, message: '请选择机组!' }]}
-                >
-                  <Select placeholder="请选择机组">
-                    {unitInfoList.map(item => {
-                      return (
-                        <Option value={item.CrewCode} key={item.CrewCode}>
-                          {item.CrewName}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="CarbonateConsumption"
-                  label={<p>脱硫剂中碳酸盐消耗量{typeUnit ? <span>({typeUnit})</span> : ''}</p>}
-                  rules={[{ required: true, message: '请填写脱硫剂中碳酸盐消耗量!' }]}
-                >
-                  <InputNumber
-                    style={{ width: '100%' }}
-                    placeholder="消耗量"
-                    onChange={Debounce(() => this.countEmissions(), maxWait)}
-                  />
-                </Form.Item>
-              </Col>
+                    <Select
+                      placeholder="请选择企业"
+                      onChange={this.getCO2EnergyType}
+                      showSearch
+                      filterOption={(input, option) =>
+                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {EntView.map(item => {
+                        return (
+                          <Option
+                            value={item['dbo.EntView.EntCode']}
+                            key={item['dbo.EntView.EntCode']}
+                          >
+                            {item['dbo.EntView.EntName']}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="MonitorTime"
+                    label="时间"
+                    rules={[{ required: true, message: '请选择时间!' }]}
+                  >
+                    <DatePicker
+                      picker="month"
+                      style={{ width: '100%' }}
+                      onChange={this.getCO2EnergyType}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="DesulfurizerType"
+                    label="脱硫剂类型"
+                    rules={[{ required: true, message: '请选择脱硫剂类型!' }]}
+                  >
+                    <Select placeholder="请选择脱硫剂类型" onChange={this.onTypesChange}>
+                      {TYPES.map(item => {
+                        return (
+                          <Option value={item.code} key={item.code} data-unit={item.typeUnit}>
+                            {item.name}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="CrewCode"
+                    label="机组"
+                    rules={[{ required: true, message: '请选择机组!' }]}
+                  >
+                    <Select placeholder="请选择机组">
+                      {unitInfoList.map(item => {
+                        return (
+                          <Option value={item.CrewCode} key={item.CrewCode}>
+                            {item.CrewName}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="CarbonateConsumption"
+                    label={<p>脱硫剂中碳酸盐消耗量{typeUnit ? <span>({typeUnit})</span> : ''}</p>}
+                    rules={[{ required: true, message: '请填写脱硫剂中碳酸盐消耗量!' }]}
+                  >
+                    <InputNumber
+                      style={{ width: '100%' }}
+                      placeholder="消耗量"
+                      onChange={Debounce(() => this.countEmissions(), maxWait)}
+                    />
+                  </Form.Item>
+                </Col>
 
-              <Col span={12}>
-                <Form.Item
-                  // labelCol={{ span: 5 }}
-                  // wrapperCol={{ span: 7 }}
-                  name="DevAttachmentID"
-                  label="证明材料"
-                >
-                  <FileUpload
-                    fileUUID={FileUuid2}
-                    uploadSuccess={fileUUID => {
-                      this.formRef.current.setFieldsValue({ DevAttachmentID: fileUUID });
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-              {/* <Col span={12}>
+                <Col span={12}>
+                  <Form.Item
+                    // labelCol={{ span: 5 }}
+                    // wrapperCol={{ span: 7 }}
+                    name="DevAttachmentID"
+                    label="证明材料"
+                  >
+                    <FileUpload
+                      fileUUID={FileUuid2}
+                      uploadSuccess={fileUUID => {
+                        this.formRef.current.setFieldsValue({ DevAttachmentID: fileUUID });
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                {/* <Col span={12}>
                 <Form.Item
                   name="GetType"
                   label="获取方式"
@@ -495,53 +493,54 @@ class index extends PureComponent {
                   </Select>
                 </Form.Item>
               </Col> */}
-              <Col span={12}>
-                <Form.Item
-                  name="CarbonateEmission"
-                  // label={<p>碳酸盐排放因子{currentTypeData['排放因子Unit'] ? <span>({currentTypeData['低位发热量Unit']})</span> : ''}</p>}
-                  label="碳酸盐排放因子（tCO₂/t）"
-                  rules={[{ required: true, message: '请填写碳酸盐排放因子!' }]}
-                >
-                  <InputNumber
-                    style={{ width: '100%' }}
-                    min={0}
-                    placeholder="请填写碳酸盐排放因子"
-                    onChange={Debounce(() => this.countEmissions(), maxWait)}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="tCO2"
-                  label={
-                    <span>
-                      排放量（tCO₂）
-                      <QuestionTooltip content="排放量 = 脱硫剂中碳酸盐消耗量 × 碳酸盐排放因子" />
-                    </span>
-                  }
-                  rules={[{ required: true, message: '请填写排放量!' }]}
-                >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放量" />
-                </Form.Item>
-              </Col>
-              <Col span={24}>
-                <Form.Item
-                  labelCol={{ span: 5 }}
-                  wrapperCol={{ span: 7 }}
-                  name="AttachmentID"
-                  label="验证材料"
-                  // rules={[{ required: true, message: '请填写排放量!' }]}
-                >
-                  <FileUpload
-                    fileUUID={FileUuid}
-                    uploadSuccess={fileUUID => {
-                      this.formRef.current.setFieldsValue({ AttachmentID: fileUUID });
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
+                <Col span={12}>
+                  <Form.Item
+                    name="CarbonateEmission"
+                    // label={<p>碳酸盐排放因子{currentTypeData['排放因子Unit'] ? <span>({currentTypeData['低位发热量Unit']})</span> : ''}</p>}
+                    label="碳酸盐排放因子（tCO₂/t）"
+                    rules={[{ required: true, message: '请填写碳酸盐排放因子!' }]}
+                  >
+                    <InputNumber
+                      style={{ width: '100%' }}
+                      min={0}
+                      placeholder="请填写碳酸盐排放因子"
+                      onChange={Debounce(() => this.countEmissions(), maxWait)}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="tCO2"
+                    label={
+                      <span>
+                        排放量（tCO₂）
+                        <QuestionTooltip content="排放量 = 脱硫剂中碳酸盐消耗量 × 碳酸盐排放因子" />
+                      </span>
+                    }
+                    rules={[{ required: true, message: '请填写排放量!' }]}
+                  >
+                    <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放量" />
+                  </Form.Item>
+                </Col>
+                <Col span={24}>
+                  <Form.Item
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 7 }}
+                    name="AttachmentID"
+                    label="验证材料"
+                    // rules={[{ required: true, message: '请填写排放量!' }]}
+                  >
+                    <FileUpload
+                      fileUUID={FileUuid}
+                      uploadSuccess={fileUUID => {
+                        this.formRef.current.setFieldsValue({ AttachmentID: fileUUID });
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </Spin>
         </Modal>
       </BreadcrumbWrapper>
     );

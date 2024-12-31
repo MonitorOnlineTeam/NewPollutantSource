@@ -224,7 +224,7 @@ class TableData extends React.Component {
       <div style={{ marginTop: 10 }}>
         <Form className="search-form-container" layout="inline" onFinish={this.onFinish}>
           <Row gutter={[8, 8]} style={{ flex: 1 }} >
-            <Col xxl={7} xl={10} lg={14} md={16} sm={24} xs={24}>
+            {/* <Col xxl={7} xl={10} lg={14} md={16} sm={24} xs={24}> */}
               <Form.Item label="监测时间" className='queryConditionForm'>
                 <RangePicker_
                   onRef={this.onRef1}
@@ -234,13 +234,13 @@ class TableData extends React.Component {
                   callback={(dates, dataType) => this.dateCallback(dates, dataType)} //父组件事件回调子组件的值
                   allowClear={false} showTime={true} style={{ width: "100%" }} />
               </Form.Item>
-            </Col>
-            <Col xxl={4} xl={4} lg={4} md={3} sm={24} xs={24}>
+            {/* </Col>
+            <Col xxl={4} xl={4} lg={4} md={3} sm={24} xs={24}> */}
               <Form.Item className='queryConditionForm'>
                 <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
                 <Button type="primary" loading={false} onClick={() => { this.exportData() }} style={{ marginRight: 5 }}>导出</Button>
               </Form.Item>
-            </Col>
+            {/* </Col> */}
           </Row>
         </Form>
       </div>

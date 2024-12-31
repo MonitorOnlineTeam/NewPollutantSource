@@ -6,6 +6,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import FileViewer from 'react-file-viewer';
 import { CustomErrorComponent } from 'custom-error';
+import Cookie from 'js-cookie';
 
 const { Meta } = Card;
 const { Option } = Select;
@@ -66,6 +67,22 @@ class index extends PureComponent {
   render() {
     const { isModalVisible, fileViewVisible, fileInfo } = this.state;
     const { CO2ReportList, entList, loading } = this.props;
+    
+    // Get current user from cookie
+    const currentUser = Cookie.get('currentUser') ? JSON.parse(Cookie.get('currentUser')) : {};
+    console.log('currentUser', currentUser)
+    const UserId = currentUser.UserId;
+
+    // Filter CO2ReportList based on userName
+    const filteredReportList = CO2ReportList.filter(item => {
+      // if (UserId === 'a62c7a31-f1f7-421b-bcd8-51c74c951e8e') {
+      //   return item.FileName.includes('江西铜业');
+      // } else if (UserId === 'a4e43e7f-3ce3-4b59-ba01-a41c69e667e8') {
+      //   return item.FileName.includes('五洲');
+      // }
+      return true; // Show all for other users
+    });
+
     return (
       <BreadcrumbWrapper>
         <Row style={{ background: '#f0f2f5' }}>
@@ -76,7 +93,7 @@ class index extends PureComponent {
         <div style={{ background: '#f0f2f5', height: 'calc(100vh - 162px)', paddingTop: 20 }}>
           <Spin spinning={loading}>
             <Row gutter={16} style={{ width: '100%' }}>
-              {CO2ReportList.map(item => {
+              {filteredReportList.map(item => {
                 return (
                   <Col span={8}>
                     <Card

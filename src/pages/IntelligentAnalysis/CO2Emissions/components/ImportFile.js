@@ -1,8 +1,8 @@
 /*
  * @Author: Jiaqi 
  * @Date: 2022-06-30 15:39:45 
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-09-05 10:30:24
+ * @Last Modified by: JiaQi
+ * @Last Modified time: 2024-12-30 16:04:42
  * @Description: 核算法导入组件
  */
 import React, { PureComponent } from 'react';
@@ -47,7 +47,7 @@ class ImportFile extends PureComponent {
       headers: {
         Authorization: "Bearer " + Cookie.get(config.cookieName)
       },
-      action: '/api/rest/PollutantSourceApi/BaseDataApi/PostCO2GHGData',
+      action: '/rest/PollutantSourceApi/GreenhouseGasAnalysis/PostCO2GHGData',
       data: {
       },
       beforeUpload: (file) => {

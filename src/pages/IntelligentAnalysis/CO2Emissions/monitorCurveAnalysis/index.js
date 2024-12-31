@@ -2,7 +2,7 @@
  * 功  能：监测数据曲线对比分析
  * 创建时间：2023.01.30
  */
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useRef } from 'react';
 import {
   Table,
   Input,
@@ -71,8 +71,9 @@ const dvaDispatch = dispatch => {
 };
 const Index = props => {
   const [form] = Form.useForm();
-
-  const { entList, entLoading, chartDatas, tableTotal, chartDataLoading, showMode, date, EntCode } = props;
+  const echartsRef = useRef(null);
+  const isFirstLoad = useRef(true);
+  const { entList, entLoading, chartDatas, tableTotal, chartDataLoading, date, EntCode } = props;
   useEffect(() => {
     props.getAllEnterprise({}, data => {
       data && data[0] && form.setFieldsValue({ EntCode: EntCode || data[0].EntCode });
@@ -82,10 +83,8 @@ const Index = props => {
 
   const onFinish = async () => {
     //查询
-
     try {
       const values = await form.validateFields();
-
       props.getComparisonOfMonData(
         {
           ...values,
@@ -217,36 +216,44 @@ const Index = props => {
   const getPageContent = () => {
     return (
       <Card title={searchComponents()}>
-        <Spin spinning={chartDataLoading}>
-          {chartDatas && Object.keys(chartDatas).length ? (
-            <ReactEcharts
-              option={getOption()}
-              lazyUpdate
-              notMerge
-              style={{
-                width: '100%',
-                height: 'calc(100vh - 260px)',
-                minHeight: '200px',
-                marginTop: 20,
-              }}
-            />
-          ) : (
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-          )}
-        </Spin>
+        {chartDataLoading ? (
+          <Row className={'center'}>
+            <Spin spinning={true} style={{ marginTop: 20 }}></Spin>
+          </Row>
+        ) : chartDatas && Object.keys(chartDatas).length ? (
+          <ReactEcharts
+            option={getOption()}
+            lazyUpdate
+            notMerge
+            style={{
+              width: '100%',
+              height: 'calc(100vh - 260px)',
+              minHeight: '200px',
+              marginTop: 20,
+            }}
+            ref={echartsRef}
+            onEvents={{
+              finished: () => {
+                if (isFirstLoad.current) {
+                  const chart = echartsRef.current?.getEchartsInstance();
+                  chart?.resize();
+                  isFirstLoad.current = false;
+                }
+              },
+            }}
+          />
+        ) : (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        )}
       </Card>
     );
   };
 
-  return (
-    <div>
-      {showMode === 'modal' ? (
-        getPageContent()
-      ) : (
-        <BreadcrumbWrapper>{getPageContent()}</BreadcrumbWrapper>
-      )}
-    </div>
-  );
+  // if (showMode === 'modal') {
+  //   return getPageContent();
+  // }
+
+  return <BreadcrumbWrapper>{getPageContent()}</BreadcrumbWrapper>;
 };
 export default connect(
   dvaPropsData,

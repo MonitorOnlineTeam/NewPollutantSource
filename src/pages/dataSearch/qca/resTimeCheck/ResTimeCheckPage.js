@@ -21,6 +21,7 @@ import moment from 'moment';
 import QuestionTooltip from '@/components/QuestionTooltip';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -539,7 +540,7 @@ ${params[1].seriesName} ：${params[1].value} ${currentRowData.Unit ? currentRow
           <Row gutter={[24, 0]}>
             <Col span={10}>
               <Form.Item name="time" label="开始/结束时间">
-                <RangePicker showTime />
+                <RangePicker_ showTime style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={8}>

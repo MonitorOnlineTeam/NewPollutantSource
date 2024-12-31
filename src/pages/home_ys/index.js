@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:27:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2023-11-08 16:44:58
+ * @Last Modified time: 2024-12-23 15:58:28
  * @desc: 首页
  */
 import React, { Component } from 'react';
@@ -38,14 +38,14 @@ import config from '@/config';
 import HomeCommon from '@/components/home_ys/HomeCommon';
 import CO2Rate from './yanshi/CO2Rate';
 import ModalContent from './yanshi/ModalContent';
-import YSYLiveVideo from '@/components/Video/YSY/Live'
+import YSYLiveVideo from '@/components/Video/YSY/Live';
 
 const RadioButton = Radio.Button;
-const { RunningRate, TransmissionEffectiveRate, amapKey } = config;
+const { RunningRate, TransmissionEffectiveRate, amapKey, mapStyle, securityJsCode } = config;
 let _thismap;
 let Map, Marker, Polygon, Markers, InfoWindow;
 
-@connect(({ loading, home_ys, global }) => ({
+@connect(({ loading, home_ys, global, user }) => ({
   loading: loading.effects['home_ys/getHomePage'],
   pollutantTypeList: home_ys.pollutantTypeList,
   currentEntInfo: home_ys.currentEntInfo,
@@ -58,6 +58,7 @@ let Map, Marker, Polygon, Markers, InfoWindow;
   yanshiVisible: home_ys.yanshiVisible,
   yanshiModalTitle: home_ys.yanshiModalTitle,
   configInfo: global.configInfo,
+  currentMenu: user.currentMenu,
 }))
 class index extends Component {
   constructor(props) {
@@ -95,8 +96,7 @@ class index extends Component {
           }
         }
       },
-      complete: () => {
-      },
+      complete: () => {},
     };
   }
   componentWillMount() {
@@ -135,13 +135,18 @@ class index extends Component {
       type: 'home_ys/getPollutantTypeList',
       payload: {},
     });
+    // 获取菜单
+    dispatch({
+      type: 'user/fetchCurrent',
+      payload: {},
+    });
     this.getHomePageVideo();
     this.setState({
       did: true,
     });
 
     window._AMapSecurityConfig = {
-      securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
+      securityJsCode: securityJsCode,
     };
   }
 
@@ -502,6 +507,36 @@ class index extends Component {
     });
   };
 
+  getFirstChildDeepestPath = item => {
+    // 递归函数，用于获取最深层的path
+    if (item.children && item.children.length > 0) {
+      return this.getFirstChildDeepestPath(item.children[0]);
+    } else {
+      return item.path;
+    }
+  };
+
+  // 获取第一个子节点的最深层的路由
+  getPathFromData = data => {
+    // 确保数据在索引 1 的位置存在
+    if (data[1]) {
+      if (data[1].children && data[1].children.length > 0) {
+        // 如果有子节点，获取第一个子节点的最深层 path
+        return this.getFirstChildDeepestPath(data[1].children[0]);
+      } else {
+        // 如果没有子节点，直接返回当前节点的 path
+        return data[1].path;
+      }
+    }
+    return null; // 如果不存在可返回 null 或其他默认值
+  };
+
+  // 返回系统
+  gobackSys = () => {
+    const deepestPath = this.getPathFromData(this.props.currentMenu);
+    router.push(deepestPath);
+  };
+
   render() {
     const {
       pointName,
@@ -543,7 +578,7 @@ class index extends Component {
           <a
             className={styles.backMenu}
             onClick={() => {
-              router.push(Cookie.get('systemNavigateUrl'));
+              this.gobackSys();
             }}
           >
             系统功能
@@ -623,11 +658,9 @@ class index extends Component {
                 events={this.mapEvents}
                 zoom={5}
                 mapStyle={
-                  theme === 'dark'
-                    ? 'amap://styles/32ae1bcea26191a8dd684f71c172af1f'
-                    : 'amap://styles/61a40971c06013b16bdb985232b21664'
+                  theme === 'dark' ? mapStyle : 'amap://styles/61a40971c06013b16bdb985232b21664'
                 }
-                amapkey={'5e60171b820065e7e9a1d6ea45abaee9'}
+                amapkey={amapKey}
                 center={mapCenter}
               >
                 <InfoWindow
@@ -769,10 +802,11 @@ class index extends Component {
           title={yanshiModalTitle}
           width={'100vw'}
           visible={this.props.yanshiVisible}
-          bodyStyle={{ height: 'calc(100vh - 55px)', padding: '10px 0' }}
+          // bodyStyle={{ height: 'calc(100vh - 55px)', padding: '10px 0' }}
           footer={false}
           mask={false}
-          className={styles.fullScreenModal}
+          wrapClassName={'fullScreenModal'}
+          // className={styles.fullScreenModal}
           // wrapClassName={styles.myModal}
           onCancel={() => {
             this.props.dispatch({
@@ -783,7 +817,7 @@ class index extends Component {
             });
           }}
         >
-          <ModalContent />
+           <ModalContent />
         </Modal>
       </div>
     );

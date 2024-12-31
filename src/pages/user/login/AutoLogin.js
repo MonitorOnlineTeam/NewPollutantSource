@@ -19,7 +19,13 @@ export default class AutoLogin extends Component {
   }
 
   login = () => {
-    const { username, password } = this.props.location.query;
+    const { username, password, hideDropdown } = this.props.location.query;
+    if (hideDropdown) {
+      sessionStorage.setItem('hideDropdown', hideDropdown);
+    }else{
+      sessionStorage.removeItem('hideDropdown');
+    }
+    
     this.props.dispatch({
       type: 'userLogin/login',
       payload: {

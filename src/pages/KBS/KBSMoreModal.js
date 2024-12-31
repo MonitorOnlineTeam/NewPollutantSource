@@ -81,7 +81,7 @@ class KBSMoreModal extends PureComponent {
         let suffix = fileName.split(".")[1];
         let id = data["dbo.T_Bas_Repository.ID"];
         this.updViewForKBM(id, "down")
-        window.open(`/wwwroot/${fileName}`);
+        window.open(`/wwwroot/upload/${fileName}`);
       } else {
         message.error("文件不存在！")
       }
