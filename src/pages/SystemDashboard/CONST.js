@@ -29,12 +29,12 @@ export const allSysList = [
     title: '污染源异常数据识别',
     ID: 'f6eb76ab-ce0b-4cfb-8626-2e0ec4435ec3',
   },
-  // {
-  //   key: '智慧运维',
-  //   value: '/SystemDashboard/Operation',
-  //   title: '污染源智慧运维',
-  //   ID: '70748d49-ce43-4a68-ab27-6795b9934893',
-  // },
+  {
+    key: '智慧运维',
+    value: '/SystemDashboard/Operation',
+    title: '污染源智慧运维',
+    ID: '70748d49-ce43-4a68-ab27-6795b9934893',
+  },
   // {
   //   key: '安装调试',
   //   value: '/SystemDashboard/CT',
