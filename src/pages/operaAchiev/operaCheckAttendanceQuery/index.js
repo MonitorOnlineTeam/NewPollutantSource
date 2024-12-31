@@ -93,8 +93,8 @@ const Index = (props) => {
     },
     {
       title: '姓名',
-      dataIndex: 'UserName',
-      key: 'UserName',
+      dataIndex: 'userName',
+      key: 'userName',
       align: 'center',
       ellipsis: true,
       fixed:'left',
@@ -109,8 +109,8 @@ const Index = (props) => {
     },
     {
         title: '运维/成套',
-        dataIndex: 'aaaaa',
-        key: 'aaaaa',
+        dataIndex: 'operationTypeName',
+        key: 'operationTypeName',
         align: 'center',
         width:130,
         ellipsis: true,
@@ -132,15 +132,15 @@ const Index = (props) => {
     },
     {
         title: '项目编号',
-        dataIndex: 'aaaaa',
-        key: 'aaaaa',
+        dataIndex: 'projectCode',
+        key: 'projectCode',
         align: 'center',
         ellipsis: true,
       },
       {
         title: '项目名称',
-        dataIndex: 'aaaaa',
-        key: 'aaaaa',
+        dataIndex: 'ProjectName',
+        key: 'ProjectName',
         align: 'center',
         ellipsis: true,
       },
@@ -164,8 +164,8 @@ const Index = (props) => {
         },
         {
           title: '结果',
-          dataIndex: 'signInexceptType',
-          key: 'signInexceptType',
+          dataIndex: 'signInReslut',
+          key: 'signInReslut',
           align: 'center',
           ellipsis: true,
           render:(text, record, index)=>{
@@ -190,8 +190,8 @@ const Index = (props) => {
         },
         {
           title: '地点',
-          dataIndex: 'signInPosition',
-          key: 'signInPosition',
+          dataIndex: 'signInPlaceName',
+          key: 'signInPlaceName',
           align: 'center',
           ellipsis: true,
 
@@ -228,8 +228,8 @@ const Index = (props) => {
         },
         {
           title: '结果',
-          dataIndex: 'signOutexceptType',
-          key: 'signOutexceptType',
+          dataIndex: 'signOutReslut',
+          key: 'signOutReslut',
           align: 'center',
           ellipsis: true,
           render:(text, record, index)=>{
@@ -254,8 +254,8 @@ const Index = (props) => {
         },
         {
           title: '地点',
-          dataIndex: 'signOutPosition',
-          key: 'signOutPosition',
+          dataIndex: 'signOutPlaceName',
+          key: 'signOutPlaceName',
           align: 'center',
           ellipsis: true,
 
@@ -340,7 +340,7 @@ const Index = (props) => {
           </Form.Item>
         </Col>
         <Col span={8}>
-            <Form.Item name='aaaaa' label='运维/成套' style={{ padding: '0 16px' }}>
+            <Form.Item name='operationType' label='运维/成套' style={{ padding: '0 16px' }}>
               <Select placeholder='请选择' allowClear>
                <Option value={1}>运维</Option>
                <Option value={2}>成套</Option>

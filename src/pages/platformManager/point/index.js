@@ -207,6 +207,14 @@ export default class MonitorPoint extends Component {
           pointConfigIdEdit = `GasOutputSimple`;
           pointConfigId = `${pointConfigIdEdit}New`;
         }
+      }else if(configId=='AEnterprisePollutDischarge'){ //排污单位管理
+        if(type==1){
+          pointConfigIdEdit = `WaterOutputPollutDischarge`;
+          pointConfigId = `${pointConfigIdEdit}New`;
+        }else{
+          pointConfigIdEdit = `GasOutputPollutDischarge`;
+          pointConfigId = `${pointConfigIdEdit}New`;
+        }
       }else{
 
       const { SystemPollutantTypeConfigId } = configInfo;
@@ -1143,7 +1151,7 @@ export default class MonitorPoint extends Component {
       saveSortLoading,
       configInfo,
     } = this.props;
-    const provinceShow = (configInfo && configInfo.IsShowProjectRegion)  || configId=='AEnterpriseSimple';
+    const provinceShow = (configInfo && configInfo.IsShowProjectRegion)  || configId=='AEnterpriseSimple' || configId=='AEnterprisePollutDischarge';
     // const IsModelProject = Cookie.get('sysMenuId') === '5cd1884a-3f42-426f-8893-5cae720bddf3'; //是否为模型项目
     const { getFieldDecorator } = this.props.form;
     const searchConditions = searchConfigItems[pointConfigId] || [];
@@ -1385,6 +1393,7 @@ export default class MonitorPoint extends Component {
                           }}><ToolOutlined style={{fontSize:16}}/></a>
                         </Tooltip></> : ''
                     } */}
+                  { configId!='AEnterprisePollutDischarge' && <>
                     <>
                       {' '}
                       <Divider type="vertical" />
@@ -1422,6 +1431,8 @@ export default class MonitorPoint extends Component {
                         <HddOutlined style={{ fontSize: 16 }} />
                       </a>
                     </Tooltip>
+                    </>
+                }
                     {/* {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="v  ertical" />  <Dropdown trigger={['click']} placement='bottomCenter' overlay={ menu }>
                          <a className="ant-dropdown-link" onClick={e => {e.preventDefault();this.setState({row:row})}}>
                          <Tooltip title="更多">  <EllipsisOutlined /></Tooltip>
@@ -1573,17 +1584,17 @@ export default class MonitorPoint extends Component {
                         {this.getDataVerification()}
                       </TabPane>
                     )}
-                    <TabPane tab="设备参数项" key="4">
+                    { configId!='AEnterprisePollutDischarge' && <TabPane tab="设备参数项" key="4">
                       {this.getEquipmentPar()}
-                    </TabPane>
+                    </TabPane>}
                     {!provinceShow && (
                       <TabPane tab="监测点系数" key="5">
                         {this.getPointCoefficient()}
                       </TabPane>
                     )}
-                    <TabPane tab="电子围栏半径" key="6">
+                    { configId!='AEnterprisePollutDischarge' &&  <TabPane tab="电子围栏半径" key="6">
                       {this.radiusElectronicFence()}
-                    </TabPane>
+                    </TabPane>}
                   </>
                 )}
               </Tabs>

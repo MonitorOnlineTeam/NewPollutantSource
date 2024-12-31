@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-12-04 14:53:03
+ * @LastEditTime: 2024-12-26 10:02:18
  * @Description: 部门管理
  */
 import React, { Component, Fragment } from 'react';
@@ -375,7 +375,7 @@ class DepartIndex extends Component {
               </a>
             </Tooltip>
             <Divider type="vertical" />
-            <Tooltip title="删除">
+             <Tooltip title="删除">
               <Popconfirm
                 title="确认要删除吗?"
                 onConfirm={() => {
@@ -455,7 +455,7 @@ class DepartIndex extends Component {
               </a>
             </Tooltip>
             <Divider type="vertical" />
-            <Tooltip title="删除">
+            {record.DelStatus && <><Tooltip title="删除">
               <Popconfirm
                 title="确认要删除吗?"
                 onConfirm={() => {
@@ -493,6 +493,8 @@ class DepartIndex extends Component {
               </Popconfirm>
             </Tooltip>
             <Divider type="vertical" />
+            </>
+           }
             <Tooltip title="分配用户">
               <a
                 onClick={() => {

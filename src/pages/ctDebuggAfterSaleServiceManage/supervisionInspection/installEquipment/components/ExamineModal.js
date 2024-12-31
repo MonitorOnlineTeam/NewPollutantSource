@@ -196,6 +196,7 @@ const Index = (props) => {
         const par = {
           ...values,
           systemModelId: data.Col1,
+          systemModelName: data.SystemModelName,
           dispatchId: data.DispatchId,
           pointId: data.PointId,
           equipmentAuditId: data.EquipmentAuditId,
@@ -206,6 +207,8 @@ const Index = (props) => {
           pointName: data.PointName,
           status: data.Status,
           managerId: data.ManagerId,
+          num: data.Num,
+          serviceArea: data.ServiceAreaName,
         }
         props.dispatch({
           type: `${namespace}/AddAuditInfo`,

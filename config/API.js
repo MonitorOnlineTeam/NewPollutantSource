@@ -2036,6 +2036,7 @@ export const API = {
     DeleteSparePartsInfo: before + '/ConsumablesApi/DeleteSparePartsInfo', //删除备品备件编码
     ImportSparePartsList: before + '/ConsumablesApi/ImportSparePartsList', //导入备品备件编码
     DownLoadSparePartsTemplateInfo: before + '/ConsumablesApi/DownLoadSparePartsTemplateInfo', //下载备品备件编码模板
+    GetStorehouseCodeList: before + '/ConsumablesApi/GetStorehouseCodeList', //获取所有仓库信息
     /*标准气体编码 试剂信息编码*/
     GetReferenceMaterialsList: before + '/ConsumablesApi/GetReferenceMaterialsList', //获取标准气体编码、试剂信息编码
     AddReferenceMaterialsInfo: before + '/ConsumablesApi/AddReferenceMaterialsInfo', //添加标准气体编码、试剂信息编码

@@ -236,6 +236,7 @@ const Dispose = props => {
       visible={isModalOpen}
       destroyOnClose
       footer={null}
+      mask={false}
       onCancel={() => {
         setStepCurrent(0);
         onCancel();

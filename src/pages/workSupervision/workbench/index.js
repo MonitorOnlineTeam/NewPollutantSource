@@ -34,6 +34,8 @@ import SuperviseRectificationDetail from '@/pages/operations/superviseRectificat
 import superviseRectificaSty from '@/pages/operations/superviseRectification/style.less';
 import RemainProblems from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/remainProblems';
 import InstallEquipmentExamineModal from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment/components/ExamineModal';
+import InstallEquipmentViewPhotos from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment/components/ViewPhotos';
+import InstallEquipmentHandlingSugges from '@/pages/ctDebuggAfterSaleServiceManage/supervisionInspection/installEquipment/components/HandlingSugges';
 import CustomerSatisfacHandleModal from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery/components/HandleModal';
 import CustomerSatisfaInvestigateModal from '@/pages/ctDebuggAfterSaleServiceManage/customerSatisfaction/customerSatisfacQuery/components/InvestigateModal';
 import ReportAuditModal from '@/pages/ctDebuggAfterSaleServiceManage/projectExecuProgress/reportAudit/components/AuditModalPage';
@@ -172,6 +174,7 @@ const Workbench = props => {
 
 
   const [installEquipmentVisible, setInstallEquipmentVisible] = useState(false);
+  const [installEquipmentTitle, setInstallEquipmentTitle] = useState();
   const [installEquipmentData, setInstallEquipmentData] = useState({});
 
   const [reportAuditVisible, setReportAuditVisible] = useState(false);
@@ -195,8 +198,9 @@ const Workbench = props => {
  // 安装照片下拉菜单
 const [photoMenuVisible, setPhotoMenuVisible] = useState(false);
 const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
-
-
+//安装照片 助理查看安装照片
+const [viewPhotosVisible, setViewPhotosVisible] = useState(false);
+const [viewPhotosTitle, setViewPhotosTitle] = useState();
 
   const type = props.location.pathname === '/ctManage/workbench' ? 1 : '';
   const paddingBottomVal = 10;
@@ -845,6 +849,7 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
   const [delInstallPhotosLoading, setDelInstallPhotosLoading] = useState(false);
   const delInstallPhotos = item => {
     setDelInstallPhotosLoading(true);
+    setPhotoMenuVisible(false);
     props.dispatch({
       type: 'wordSupervision/DelWorkbenchMsg',
       payload: {
@@ -852,6 +857,7 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
       },
       callback: () => {
         setDelInstallPhotosLoading(false);
+    
         getCtWorkbenchMsg(2);
       },
     });
@@ -1132,12 +1138,25 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
                                                 popForm.resetFields();
                                                 setRemainProblemsData(item)
                                               } else if (item.Type == 4) {  //安装照片审核
+                                                const row = item.MsgID && JSON.parse(item.MsgID);
                                                 if (item.Col1 == 2) {
                                                   setInstallEquipmentVisible(true);
-                                                  const dataArr = item.MsgID && JSON.parse(item.MsgID);
+                                                  setInstallEquipmentTitle( setExamineTitle(`${row.EntName} - ${row.PointName}${ row.SystemModelName ? ` - ${row.SystemModelName}` : ''} `))
                                                   //Col1代表systemModelId
                                                   setInstallEquipmentData({
-                                                    ...dataArr
+                                                    ...row
+                                                  });
+                                                }else if(item.Col1 == 3){ //安装照片 助理
+                                                  setViewPhotosVisible(true);
+                                                  setViewPhotosTitle(`查看安装照片（${row.ProjectCode} - ${row.EntName} - ${row.PointName}${ row.SystemModelName ? ` - ${row.SystemModelName}` : ''} ）`)
+                                                  props.dispatch({
+                                                    type: `installEquipment/GetAuditPhoto`,
+                                                    payload: {
+                                                      systemModelId: row.Col1,
+                                                      dispatchId: row.DispatchId,
+                                                      pointId: row.PointId,
+                                                      equipmentAuditId: row.EquipmentAuditId,
+                                                    },
                                                   });
                                                 }
                                               } else if (item.Type == 7) { //验收服务报告
@@ -1159,8 +1178,8 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
                                           </Col>
                                           <Col>{item.CreateTime && moment(item.CreateTime).format('YYYY-MM-DD HH:mm')}</Col>
 
-                                          {item.Type == 4 && item.Col1 == 1 ? <Col flex="14px" style={{ textAlign: 'right', cursor: 'pointer' }}>
-                                            <Dropdown //item.Col1 == 1   可以删除
+                                          {item.Type == 4 && ( item.Col1 == 1 || item.Col1 == 3) ? <Col flex="14px" style={{ textAlign: 'right', cursor: 'pointer' }}>
+                                            <Dropdown //item.Col1 == 3   助理
                                               placement="bottomLeft"  
                                               trigger={['click']}
                                               visible={photoMenuVisible && index == photoMenuSelectIndex} 
@@ -1181,20 +1200,23 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
                                                         entName: record?.EntName,
                                                         pointName: record?.PointName,
                                     
+                                                    },
+                                                    callback:()=>{
+                                                      setPhotoMenuVisible(false);
                                                     }
                                                   });
     
                                                 }
                                               }}
                                             >
-                                              {/* <Menu.Item key="1">
+                                               {(item.Col1 == 2 ||  item.Col1 == 3) && <Menu.Item key="1">
                                                 <Spin size='small' spinning={!!props.photoExportAuditPhotoLoading}>导出</Spin>
-                                                </Menu.Item> */}
+                                               </Menu.Item> }
                                                 <Menu.Item key="2">
                                                 <Popconfirm
                                                   placement="left"
                                                   title={'确定要删除这条安装照片信息吗？'}
-                                                  onConfirm={() => delInstallPhotos(item)}
+                                                  onConfirm={() =>{delInstallPhotos(item)}}
                                                   okText="是"
                                                   cancelText="否"
                                                 >
@@ -1825,6 +1847,7 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
         </Modal>
         <InstallEquipmentExamineModal
           visible={installEquipmentVisible}
+          title={installEquipmentTitle}
           onCancel={() => {
             setInstallEquipmentVisible(false);
           }}
@@ -1833,6 +1856,21 @@ const [photoMenuSelectIndex, setPhotoMenuSelectIndex] = useState(-1);
             getCtWorkbenchMsg(2);
           }}
         />
+             <Modal
+            visible={viewPhotosVisible}
+            title={viewPhotosTitle}
+            onCancel={() => {
+              setViewPhotosVisible(false);
+            }}
+            footer={null}
+            destroyOnClose
+            wrapClassName={`spreadOverModal ${styles.modalSty}`}
+            mask={false}
+          >
+            <InstallEquipmentViewPhotos />
+
+            <InstallEquipmentHandlingSugges type={1} />
+          </Modal>
 
         <CustomerSatisfaInvestigateModal
           visible={customSatisfactVisible}

@@ -1,3 +1,10 @@
+/*
+ * @Author: outman0611
+ * @Date: 2024-08-16 18:00:06
+ * @LastEditors: outman0611
+ * @LastEditTime: 2024-12-31 09:47:05
+ * @Description: 
+ */
 import Model from '@/utils/model';
 import * as services from '../services/installEquipment';
 import moment from 'moment';
@@ -45,6 +52,7 @@ export default Model.extend({
       } else {
         result.Message && message.error(result.Message);
       }
+      callback && callback()
     },
     //获取设备安装审核照片详细
     *GetAuditPhoto({ payload, callback }, { call, put, update, select }) {
