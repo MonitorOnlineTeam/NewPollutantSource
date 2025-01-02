@@ -189,7 +189,12 @@ const Index = props => {
   const executionMethod = record => {
     setExecutionMethodVisible(true);
     setExecutionMethodTitle(record.ProjectName);
-    form.setFieldsValue({ ImplementType: record.ImplementType });
+    form.setFieldsValue({
+      ImplementType: record.ImplementType,
+      time: record.BeginTime ? [moment(record.BeginTime), moment(record.EndTime)] : [],
+      Cycle: record.Cycle,
+      FirstDate: record.FirstDate ? moment(record.FirstDate) : undefined,
+    });
     setStartConfirmVisible(false);
   };
 
@@ -255,8 +260,8 @@ const Index = props => {
         ...values,
         ID: row.ID,
         FirstDate: values.FirstDate && moment(values.FirstDate).format('YYYY-MM-DD HH:mm:ss'),
-        BeginTime: values.time?.[0] && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        EndTime: values.time?.[1] && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        BeginTime: values.time?.[0] && moment(values.time[0]).format('YYYY-MM-DD HH:00:00'),
+        EndTime: values.time?.[1] && moment(values.time[1]).format('YYYY-MM-DD HH:00:00'),
         time: undefined,
       },
       callback: res => {
@@ -334,7 +339,7 @@ const Index = props => {
                 <Radio value={2}>周期执行</Radio>
               </Radio.Group>
             </Form.Item>
-            <Form.Item label="周期" name="DataCycle">
+            <Form.Item label="周期" name="Cycle">
               <InputNumber placeholder="请输入" style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item label="首次执行时间" name="FirstDate">
@@ -342,7 +347,7 @@ const Index = props => {
             </Form.Item>
             {row.TaskCode == 6 && (
               <Form.Item label="首次执行时间段" name="time">
-                <RangePicker_ format="YYYY-MM-DD" style={{ width: '100%' }} />
+                <RangePicker_ format="YYYY-MM-DD HH" showTime style={{ width: '100%' }} />
               </Form.Item>
             )}
           </Form>
