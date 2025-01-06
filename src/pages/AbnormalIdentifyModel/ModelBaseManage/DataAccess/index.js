@@ -106,7 +106,7 @@ const Index = props => {
             style={{ cursor: 'pointer' }}
             onClick={() => executionMethod(record)}
           >
-            <div style={{ width: '60px' }}>{text == 1 ? '单次' : '每周一次'}</div>{' '}
+            <div style={{ width: '60px' }}>{text == 1 ? '单次' : '周期执行'}</div>{' '}
             <CaretDownOutlined />
           </Row>
         );
@@ -343,7 +343,7 @@ const Index = props => {
               <InputNumber placeholder="请输入" style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item label="首次执行时间" name="FirstDate">
-              <DatePicker showTime format="YYYY-MM-DD HH:mm" style={{ width: '100%' }} />
+              <DatePicker showTime format="YYYY-MM-DD HH" style={{ width: '100%' }} />
             </Form.Item>
             {row.TaskCode == 6 && (
               <Form.Item label="首次执行时间段" name="time">
