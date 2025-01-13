@@ -82,20 +82,86 @@ export default config => {
     config.optimization // share the same chunks across different modules
     .runtimeChunk(false)
     .splitChunks({
-      chunks: 'all',
-      minSize: 30000,
-      minChunks: 3,
-      automaticNameDelimiter: '.',
+      chunks: 'async',
+      minSize: 20000,
+      minChunks: 1,
+      maxSize: 0,
+      name: true,
+      maxAsyncRequests: 10,
+      maxInitialRequests: 30,
+      automaticNameDelimiter: '~',
       cacheGroups: {
+        react: {
+          name: "react",
+          test: /[\\/]node_modules[\\/](react)[\\/]/,
+          priority: -9,
+          enforce: true,
+        },
+        reactDom: {
+          name: "react-dom",
+          test: /[\\/]node_modules[\\/](react-dom)[\\/]/,
+          priority: -9,
+          enforce: true,
+        },
         vendors: {
-          name: 'vendors',
+          name: "vendors",
           test: /[\\/]node_modules[\\/]/,
+          priority: -11,
+          enforce: true,
+        },
+        antd: {
+          name: "antd",
+          test: /[\\/]node_modules[\\/](@ant-design|antd|antd-mobile)[\\/]/,
+          priority: -10,
+          enforce: true,
+        },
+        echarts: { // 1.27MB
+          name: "echarts",
+          test: /[\\/]node_modules[\\/](echarts|echarts-gl)[\\/]/,
           priority: 10,
-          chunks: 'all',
+          enforce: true,
+        },
+        lodash: {
+          name: "lodash",
+          test: /[\\/]node_modules[\\/]lodash[\\/]/,
+          priority: -2,
+        },
+        bizcharts: { // 1.27MB
+          name: "bizcharts",
+          test: /[\\/]node_modules[\\/](BizCharts)[\\/]/,
+          priority: 10,
+          enforce: true,
+        },
+        antv: { // 1.27MB
+          name: "antv",
+          test: /[\\/]node_modules[\\/](bizcharts|@antv_data-set)[\\/]/,
+          priority: 11,
+          enforce: true,
+        },
+        antdesigns: { // 702KB
+          name: "antdesigns",
+          test: /[\\/]node_modules[\\/](@ant-design|antd|antd-mobile)[\\/]/,
+          priority: 10,
           enforce: true,
         },
       },
+
     });
+    // .splitChunks({
+    //   chunks: 'all',
+    //   minSize: 30000,
+    //   minChunks: 3,
+    //   automaticNameDelimiter: '.',
+    //   cacheGroups: {
+    //     vendors: {
+    //       name: 'vendors',
+    //       test: /[\\/]node_modules[\\/]/,
+    //       priority: 10,
+    //       chunks: 'all',
+    //       enforce: true,
+    //     },
+    //   },
+    // });
 };
 
 const getAntdSerials = color => {

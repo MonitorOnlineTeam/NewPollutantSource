@@ -136,6 +136,7 @@ const Training = props => {
     headers: {
       Authorization: 'Bearer ' + Cookie.get(config.cookieName),
     },
+    fileList: fileList,
     ...uploadFileListProps,
     // onChange(info) {
     //   console.log('info', info);
@@ -160,7 +161,6 @@ const Training = props => {
       FileActualType: '0',
     },
     beforeUpload: (file) => {
-      console.log(file)
       const fileType = file?.type; //获取文件类型 type  image/*
       // const fileName = file?.name; //文件名称
       if (!(/^image/g.test(fileType))) {
@@ -172,7 +172,6 @@ const Training = props => {
       const fileArr = [];
       info.fileList.forEach(file => {
         const { status, uid, name, response, url, percent } = file;
-
         if (status === 'done') {
           fileArr.push({
             uid: response?.Datas?.fNameList[0]

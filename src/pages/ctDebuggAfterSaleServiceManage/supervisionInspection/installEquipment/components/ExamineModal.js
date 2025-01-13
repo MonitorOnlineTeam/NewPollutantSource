@@ -208,7 +208,7 @@ const Index = (props) => {
           status: data.Status,
           managerId: data.ManagerId,
           num: data.Num,
-          serviceArea: data.ServiceAreaName,
+          serviceArea: data.ServiceAreaName || data.ServiceArea,
         }
         props.dispatch({
           type: `${namespace}/AddAuditInfo`,

@@ -124,6 +124,7 @@ import moment from 'moment'
               FormData: {...formData,BeginTime:moment(formData.BeginTime).format('YYYY-MM-DD HH:00:00'),EndTime:moment(formData.EndTime).format('YYYY-MM-DD HH:59:59')},
               callback: result => {
                   if (result.IsSuccess) {
+                    message.success(result.Message);
                       this.setState({
                           visible: false,
                       }, () => {

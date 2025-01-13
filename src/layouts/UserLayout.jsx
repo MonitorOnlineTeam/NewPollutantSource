@@ -80,16 +80,36 @@ const UserLayout = props => {
         >
           {
             <div className={styles.lang}>
+              <Popover
+                  placement="rightTop"
+                  content={
+                        <div>
+                          <img width={200} alt="" src="/yunweicode.png" />
+                        </div>
+                  }
+                  title="手机端下载"
+                  trigger="hover"
+                >
+                  <QrcodeOutlined
+                    style={{
+                      position: 'absolute',
+                      cursor: 'pointer',
+                      right: '58px',
+                      top: '22px',
+                      fontSize: 16,
+                    }}
+                  />
+                </Popover>
               {/* {
               configInfo && configInfo.IsShowQRcode === "true" &&
               <SelectLang />
             } */}
-              {configInfo && configInfo.IsShowQRcode === 'true' && IsOpera ? (
+              {/* {configInfo && configInfo.IsShowQRcode === 'true' && IsOpera ? (
                 <Popover
                   placement="rightTop"
                   content={
                     <Row gutter={48}>
-                      {!configInfo.IsShowProjectRegion && (
+                       {!configInfo.IsShowProjectRegion && (
                         <Col span={12} style={{ textAlign: 'center' }}>
                           <div style={{ marginBottom: '10px' }}>
                             <Button type="danger" icon={<DownloadOutlined />} size="small">
@@ -101,16 +121,16 @@ const UserLayout = props => {
                             <div style={{ paddingTop: 6, fontSize: 16 }}>企业业主使用</div>
                           </div>
                         </Col>
-                      )}
+                      )} 
                       <Col
                         span={!configInfo.IsShowProjectRegion ? 12 : 24}
                         style={{ textAlign: 'center' }}
                       >
-                        <div style={{ marginBottom: '10px' }}>
+                         <div style={{ marginBottom: '10px' }}>
                           <Button type="danger" icon={<DownloadOutlined />} size="small">
                             运维APP下载
                           </Button>
-                        </div>
+                        </div> 
                         <div>
                           <img width={200} alt="" src="/yunweicode.png" />
                           {!configInfo.IsShowProjectRegion && (
@@ -126,7 +146,7 @@ const UserLayout = props => {
                             >
                               运维工程师使用
                             </div>
-                          )}
+                          )} 
                         </div>
                       </Col>
                     </Row>
@@ -156,7 +176,7 @@ const UserLayout = props => {
                 >
                   <QrcodeOutlined style={{ marginRight: '20px' }} />
                 </Popover>
-              )}
+              )} */}
             </div>
           }
 

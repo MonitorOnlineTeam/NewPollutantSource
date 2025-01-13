@@ -61,8 +61,8 @@ class SummaryReportPage extends PureComponent {
     };
     this.SELF = {
       formLayout: {
-        labelCol: { span: 8 },
-        wrapperCol: { span: 16 },
+        // labelCol: { span: 8 },
+        // wrapperCol: { span: 16 },
       },
       defaultSearchForm: {
         PollutantSourceType: 1,
@@ -528,10 +528,10 @@ class SummaryReportPage extends PureComponent {
       <BreadcrumbWrapper>
         {/* <Spin spinning={exportLoading || entAndPointLoading} delay={500}> */}
           <Card className="contentContainer" bodyStyle={{padding:'10px 24px'}}>
-            <Form>
-              <Row>
-                <Col xxl={4} md={6} xs={24}>
-                  <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
+            <Form layout='inline'>
+              {/* <Row>
+                <Col xxl={4} md={6} xs={24}> */}
+                  <FormItem {...formLayout} label="报表类型">
                     {getFieldDecorator('reportType', {
                       initialValue: 'daily',
                     })(
@@ -548,9 +548,9 @@ class SummaryReportPage extends PureComponent {
                       </Select>,
                     )}
                   </FormItem>
-                </Col>
-                <Col sm={24} md={3} style={{ display:sessionStorage.getItem('sysPollutantCodes') && 'none' }}>
-                  <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
+                {/* </Col> */}
+                {/* <Col sm={24} md={3} style={{ display:sessionStorage.getItem('sysPollutantCodes') && 'none' }}> */}
+                  <FormItem {...formLayout} label="类型" style={{ display:sessionStorage.getItem('sysPollutantCodes') && 'none' }}>
                     {getFieldDecorator('PollutantSourceType', {
                       // initialValue: defaultSearchForm.PollutantSourceType,
                       initialValue: pollutantTypeList.length
@@ -572,10 +572,10 @@ class SummaryReportPage extends PureComponent {
                       />,
                     )}
                   </FormItem>
-                </Col>
-                {/* <Col xl={6} sm={24} md={12} style={{ display: configInfo.GroupRegionState === "1" ? "block" : "none" }}> */}
-                <Col md={5} sm={24} style={{ display: IfShowRegionInReport }}>
-                  <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
+                {/* </Col> */}
+                {/* <Col xl={6} sm={24} md={12} style={{ display: configInfo.GroupRegionState === "1" ? "inline-block" : "none" }}> */}
+                {/* <Col md={5} sm={24} style={{ display: IfShowRegionInReport }}> */}
+                  <FormItem {...formLayout} label="行政区" style={{  display: IfShowRegionInReport  }}>
                     {getFieldDecorator('Regions', {
                       // initialValue: defaultSearchForm.Regions,
                       initialValue: this.state.defaultRegionCode,
@@ -598,11 +598,11 @@ class SummaryReportPage extends PureComponent {
                       />,
                     )}
                   </FormItem>
-                </Col>
+                {/* </Col> */}
                 {/* {getFieldValue('PollutantSourceType') == 5 && ( // 大气站显示监控目标 */}
                   
-                  <Col xxl={7} md={8} xs={24}>
-                    <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
+                  {/* <Col xxl={7} md={8} xs={24}> */}
+                    <FormItem {...formLayout} label="监控目标">
                       {getFieldDecorator('DGIMN', {
                         initialValue: this.props.form.getFieldValue('DGIMN'),
                         rules: [
@@ -617,23 +617,26 @@ class SummaryReportPage extends PureComponent {
                         //   pollutantTypes={this.props.form.getFieldValue('PollutantSourceType')}
                         //   {...this.props}
                         // />,
-                        <TreeSelect {...tProps} />,
+                        <TreeSelect {...tProps} style={{width:360}}/>,
                       )}
                     </FormItem>
-                  </Col>
+                  {/* </Col> */}
                 {/* )} */}
-                <Col
+                {/* <Col
                   xxl={5}
                   md={6}
                   xs={24}
                   style={{
                     display:
                       getFieldValue('PollutantSourceType') == 5 && reportType != 'quarter'
-                        ? 'block'
+                        ? 'inline-block'
                         : 'none',
                   }}
-                >
-                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                > */}
+                  <FormItem {...formLayout} label="统计时间"  style={{  display:
+                      getFieldValue('PollutantSourceType') == 5 && reportType != 'quarter'
+                        ? 'inline-block'
+                        : 'none', }}>
                     {getFieldDecorator('airReportTime', {
                       initialValue: defaultSearchForm.airReportTime,
                       rules: [
@@ -644,8 +647,8 @@ class SummaryReportPage extends PureComponent {
                       ],
                     })(airTimeEle)}
                   </FormItem>
-                </Col>
-                <Col
+                {/* </Col> */}
+                {/* <Col
                   xxl={5}
                   md={6}
                   xs={24}
@@ -653,10 +656,13 @@ class SummaryReportPage extends PureComponent {
                     display:
                       getFieldValue('PollutantSourceType') == 5 || reportType == 'quarter'
                         ? 'none'
-                        : 'block',
+                        : 'inline-block',
                   }}
-                >
-                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                > */}
+                  <FormItem {...formLayout} label="统计时间" style={{  display:
+                      getFieldValue('PollutantSourceType') == 5 || reportType == 'quarter'
+                        ? 'none'
+                        : 'inline-block', }}>
                     {getFieldDecorator('ReportTime', {
                       initialValue: defaultSearchForm.ReportTime,
                       rules: [
@@ -667,14 +673,14 @@ class SummaryReportPage extends PureComponent {
                       ],
                     })(timeEle)}
                   </FormItem>
-                </Col>
-                <Col
+                {/* </Col> */}
+                {/* <Col
                 xxl={5}
                 md={6}
                 xs={24}
-                  style={{ display: reportType === 'quarter' ? 'block' : 'none' }}
-                >
-                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                  style={{ display: reportType === 'quarter' ? 'inline-block' : 'none' }}
+                > */}
+                  <FormItem {...formLayout} label="统计时间" style={{ display: reportType === 'quarter' ? 'inline-block' : 'none' }}>
                     {/* {getFieldDecorator('quarterReportTime', {
                       initialValue: 1,
                       rules: [
@@ -732,14 +738,14 @@ class SummaryReportPage extends PureComponent {
                         <Option value={4}>第四季度</Option>
                       </Select>
                     </InputGroup>
-                  </FormItem>
-                </Col>
-                <Col xxl={4} md={10} xs={24}>
-                  <FormItem label="" style={{ width: '100%', marginLeft: 5 }}>
+                  </FormItem> 
+                {/* </Col> */}
+                {/* <Col xxl={4} md={10} xs={24}> */}
+                  <FormItem label="">
                     {/* {getFieldDecorator("", {})( */}
                     <Button
                       type="primary"
-                      style={{ marginRight: 10 }}
+                      style={{ marginRight: 12 }}
                       onClick={this.statisticsReport}
                       loading={loading}
                     >
@@ -751,8 +757,8 @@ class SummaryReportPage extends PureComponent {
                     </Button>
                     {/* )} */}
                   </FormItem>
-                </Col>
-              </Row>
+                {/* </Col> */}
+              {/* </Row> */}
             </Form>
             {/* <p className={style.title}>{moment(this.state.currentDate).format(format)} {reportText}</p> */}
             <SdlTable

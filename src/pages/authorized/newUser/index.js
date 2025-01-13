@@ -2,7 +2,7 @@
  * @Author: jab
  * @Date: 2020-12-1
  * @LastEditors: outman0611
- * @LastEditTime: 2024-10-29 10:57:36
+ * @LastEditTime: 2025-01-10 15:38:26
  * @Description: 用户管理 新页面
  */
 import React, { Component, Fragment } from 'react';
@@ -103,6 +103,7 @@ export default class UserInfoIndex extends Component {
       operaEditVisible: false,
       operaEditData:{},
     };
+    this.isMonitor = sessionStorage.getItem('sysName')==='污染源监测监控系统' || Cookie.get('sysName')==='污染源监测监控系统';
     this.operateCol = [{
       title: <span>操作</span>,
       dataIndex: '',
@@ -147,7 +148,7 @@ export default class UserInfoIndex extends Component {
             <Tooltip title="详情">
               <a
                 onClick={() => {
-                  if (this.props.configInfo?.IsOpera) {
+                  if (this.props.configInfo?.IsOpera || this.isMonitor) {
                     this.setState({
                       operaEditVisible: true,
                       operaEditData:row
@@ -986,7 +987,7 @@ export default class UserInfoIndex extends Component {
             rowSelection={rowSelection}
             loading={this.props.loading}
             columns={
-              this.props.configInfo?.IsOpera?
+              this.props.configInfo?.IsOpera || this.isMonitor?
                 this.opreaColumns
                 : this.columns
             }

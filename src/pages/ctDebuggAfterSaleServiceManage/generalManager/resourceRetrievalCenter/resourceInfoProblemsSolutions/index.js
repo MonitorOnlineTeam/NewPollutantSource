@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-10-12 08:43:50
  * @LastEditors: outman0611
- * @LastEditTime: 2024-12-11 09:18:39
+ * @LastEditTime: 2025-01-10 14:36:33
  * @Description: 资源信息 和 问题及解决方案
  */
 
@@ -159,8 +159,8 @@ const Index = props => {
           <Space direction="vertical" size={10}> 
             <div style={{ fontSize: 18, fontWeight: 500, color: '#1890FF',cursor: 'pointer' }} title={item.QuestionName} onClick={()=>questionDetail(item)}> { truncateString(item.QuestionName,50) }</div>
              {type == 1 ? <Space>{item.FirstLevel?.split(',')?.map(tagItem => <Tag>{tagItem}</Tag>)}</Space> : <Tag>{item.QuestionTypeName}</Tag>}
-             {/* { type==1 ? <div style={{ cursor: 'pointer' }} onClick={()=>questionDetail(item)} dangerouslySetInnerHTML={{ __html:item.Content }} /> : <div style={{ cursor: 'pointer' }} onClick={()=>questionDetail(item)}>{item.QuestionDesc}</div>}  */}
-             { type==2 && <div style={{ cursor: 'pointer' }} onClick={()=>questionDetail(item)}>{item.QuestionDesc}</div>} 
+             { type==1 ? <div style={{ cursor: 'pointer' }} onClick={()=>questionDetail(item)} dangerouslySetInnerHTML={{ __html:item.Content }} /> : <div style={{ cursor: 'pointer' }} onClick={()=>questionDetail(item)}>{item.QuestionDesc}</div>} 
+             {/* { type==2 && <div style={{ cursor: 'pointer' }} onClick={()=>questionDetail(item)}>{item.QuestionDesc}</div>}  */}
             <Space size={16}><span>发布人：{item.CreateUserName}</span> <span>发布时间：{type == 1 ? item.CreateTime : item.CreateDate}</span> </Space>
           </Space>
         </List.Item>

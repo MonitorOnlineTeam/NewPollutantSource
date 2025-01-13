@@ -91,7 +91,7 @@ const UserLayout = props => {
             height: IsShhy ? 'calc(100vh - 120px)' : '100vh',
           }}
         >
-            <div className={styles.lang}>
+           <div className={styles.lang}>
                 <div
                   style={{
                     position: 'absolute',

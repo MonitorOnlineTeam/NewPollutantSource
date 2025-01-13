@@ -253,17 +253,218 @@ export default class OverVerifyLst extends Component {
   componentDidMount() {
     this.initData();
     // 根据企业类型查询监测因子
-    this.getPollutantByType(this.pollutantType || 2, this.getExceptionList);
+    // this.getPollutantByType(this.pollutantType || 2, this.getExceptionList);
   }
   // 根据企业类型查询监测因子
-  getPollutantByType = (val, cb) => {
+  // getPollutantByType = (val, cb) => {
+  //   const { dispatch, overVerifyRateForm } = this.props;
+  //   this.props.dispatch({
+  //     type: 'overVerifyRate/getPollutantByType',
+  //     payload: {
+  //       PollutantType: val,
+  //     },
+  //     callback: res => {
+  //       let newCloum = [
+  //         {
+  //           title: <span>行政区</span>,
+  //           dataIndex: 'regionName',
+  //           key: 'regionName',
+  //           align: 'center',
+  //           width: 200,
+  //           render: (text, record) => {
+  //             const { level, overVerifyRateForm: { RegionCode } } = this.props;
+  //             return <Link
+  //               to={level == 2 ?
+  //                 {
+  //                   pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+  //                   query: { regionCode: text == '全部合计' ? RegionCode : record.regionCode },
+  //                 } :
+  //                 {
+  //                   pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/cityLevel',
+  //                   query: { regionCode: record.regionCode },
+  //                 }
+  //               }
+  //             >
+  //               {text}
+  //             </Link>
+  //             // return (
+  //             //   <Link
+  //             //     to={
+  //             //       {
+  //             //         pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/cityLevel',
+  //             //         query: { regionCode: record.regionCode },
+  //             //       }
+  //             //     }
+  //             //   >
+  //             //     {text}
+  //             //   </Link>
+  //             // );
+  //           },
+  //         },
+  //         // {
+  //         //   title: <span>{'数据超标报警企业数'}</span>,
+  //         //   dataIndex: 'entCount',
+  //         //   key: 'entCount',
+  //         //   align: 'center',
+  //         // },
+  //         // {
+  //         //   title: <span>数据超标报警监测点数</span>,
+  //         //   dataIndex: 'pointCount',
+  //         //   key: 'pointCount',
+  //         //   align: 'center',
+  //         // },
+  //       ];
+  //       this.props.level == 2 && newCloum.splice(0, 1, {
+  //         title: '省',
+  //         dataIndex: 'ProvinceName',
+  //         key: 'ProvinceName',
+  //         align: 'center',
+  //         render: (text, record, index) => {
+  //           if (text == '全部合计') {
+  //             return { props: { colSpan: 0 }, };
+  //           }
+  //           return text;
+  //         },
+  //       },
+  //         {
+  //           title: '市',
+  //           dataIndex: 'CityName',
+  //           key: 'CityName',
+  //           align: 'center',
+  //           render: (text, record) => {
+  //             const { overVerifyRateForm: { RegionCode } } = this.props;
+  //             return {
+  //               props: { colSpan: record.ProvinceName == '全部合计' ? 2 : 1 },
+  //               children: <Link to={
+  //                 {
+  //                   pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+  //                   query: { regionCode: record.ProvinceName == '全部合计' ? RegionCode : record.CityCode },
+  //                 }
+  //               }
+  //               >
+  //                 {record.ProvinceName == '全部合计' ? '全部合计' : text}
+  //               </Link>
+  //             }
+
+  //           },
+  //         })
+  //       res = [{ PollutantName: '全部合计', PollutantCode: '全部合计' }, ...res]
+  //       res.map(item => {
+  //         newCloum.push({
+  //           title: <span>{item.PollutantName}</span>,
+  //           dataIndex: item.PollutantCode,
+  //           key: item.PollutantCode,
+  //           width: 420,
+  //           align: 'center',
+  //           children: [
+  //             {
+  //               title: <span>报警次数</span>,
+  //               width: 100,
+  //               dataIndex: item.PollutantCode + '_alarmCount',
+  //               key: item.PollutantCode + '_alarmCount',
+  //               align: 'center',
+  //               render: (text, record) => {
+  //                 return <a onClick={() => { this.entAlarmNum(record, item.PollutantCode, '2') }}>{text}</a>
+  //               }
+  //             },
+  //             {
+  //               title: <span>已核实报警次数</span>,
+  //               width: 110,
+  //               dataIndex: item.PollutantCode + '_respondedCount',
+  //               key: item.PollutantCode + '_respondedCount',
+  //               align: 'center',
+  //               render: (text, record) => {
+  //                 return <a onClick={() => { this.entAlarmNum(record, item.PollutantCode, '1') }}>{text}</a>
+  //               }
+  //             },
+  //             {
+  //               title: <span>待核实报警次数</span>,
+  //               width: 110,
+  //               dataIndex: item.PollutantCode + '_noRespondedCount',
+  //               key: item.PollutantCode + '_noRespondedCount',
+  //               align: 'center',
+  //               render: (text, record) => {
+  //                 return <a onClick={() => { this.entAlarmNum(record, item.PollutantCode, '0') }}>{text}</a>
+  //               }
+  //             },
+  //             {
+  //               title: <span>核实率</span>,
+  //               width: 100,
+  //               dataIndex: item.PollutantCode + '_RespondedRate',
+  //               key: item.PollutantCode + '_RespondedRate',
+  //               align: 'center',
+  //               render: (text, record) => {
+  //                 return <div>{text == '-' ? text : text ? `${text}%` : ''}</div>;
+  //               },
+  //             },
+  //           ],
+  //         });
+  //       });
+  //       // newCloum.push({
+  //       //   title: <span>核实率</span>,
+  //       //   dataIndex: 'AllRespondedRate',
+  //       //   key: 'AllRespondedRate',
+  //       //   align: 'center',
+  //       //   render: (text, record) => {
+  //       //     return <div>{text == '-' ? text : `${text}%`}</div>;
+  //       //   },
+  //       // });
+  //       this.setState(
+  //         { checkedValues: res.map(item => item.PollutantCode), columns: newCloum },
+  //         () => {
+  //           this.updateQueryState({
+  //             PollutantCodeList: this.state.checkedValues,
+  //           });
+  //           cb && cb();
+  //         },
+  //       );
+  //     },
+  //   });
+  // };
+  initData = () => {
+    const { dispatch, location, Atmosphere, type, level, query } = this.props;
+
+
+    // dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: level==2?query&&query.regionCode : '', PointMark: '2' } }); //获取行政区列表
+
+    dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: level == 2 ? query && query.regionCode : '' } }); //获取关注列表
+    this.updateQueryState({
+      RegionCode: level == 2 ? query && query.regionCode : '',
+      regionLevel: level,
+      PollutantType: this.pollutantType || 2
+    });
+    setTimeout(() => {
+      this.getTableData();
+    });
+    //获取核实结果
+    dispatch({
+      type: pageUrl.GetOverToExamineOperation,
+      payload: { PollutantType: this.pollutantType },
+      callback: (data) => {
+        if (data.length > 0) {
+          this.setState({
+            alarmDealTypeListCode: data.map(poll => poll.code)
+          })
+        }
+
+      }
+    })
+  };
+  updateQueryState = payload => {
+    const { overVerifyRateForm, dispatch } = this.props;
+
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { overVerifyRateForm: { ...overVerifyRateForm, ...payload } },
+    });
+  };
+
+  getTableData = () => {
     const { dispatch, overVerifyRateForm } = this.props;
-    this.props.dispatch({
-      type: 'overVerifyRate/getPollutantByType',
-      payload: {
-        PollutantType: val,
-      },
-      callback: res => {
+    dispatch({
+      type: pageUrl.getData,
+      payload: { ...overVerifyRateForm },
+      callback:(res)=>{
         let newCloum = [
           {
             title: <span>行政区</span>,
@@ -287,32 +488,8 @@ export default class OverVerifyLst extends Component {
               >
                 {text}
               </Link>
-              // return (
-              //   <Link
-              //     to={
-              //       {
-              //         pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/cityLevel',
-              //         query: { regionCode: record.regionCode },
-              //       }
-              //     }
-              //   >
-              //     {text}
-              //   </Link>
-              // );
             },
           },
-          // {
-          //   title: <span>{'数据超标报警企业数'}</span>,
-          //   dataIndex: 'entCount',
-          //   key: 'entCount',
-          //   align: 'center',
-          // },
-          // {
-          //   title: <span>数据超标报警监测点数</span>,
-          //   dataIndex: 'pointCount',
-          //   key: 'pointCount',
-          //   align: 'center',
-          // },
         ];
         this.props.level == 2 && newCloum.splice(0, 1, {
           title: '省',
@@ -348,7 +525,6 @@ export default class OverVerifyLst extends Component {
 
             },
           })
-        res = [{ PollutantName: '全部合计', PollutantCode: '全部合计' }, ...res]
         res.map(item => {
           newCloum.push({
             title: <span>{item.PollutantName}</span>,
@@ -400,70 +576,8 @@ export default class OverVerifyLst extends Component {
             ],
           });
         });
-        // newCloum.push({
-        //   title: <span>核实率</span>,
-        //   dataIndex: 'AllRespondedRate',
-        //   key: 'AllRespondedRate',
-        //   align: 'center',
-        //   render: (text, record) => {
-        //     return <div>{text == '-' ? text : `${text}%`}</div>;
-        //   },
-        // });
-        this.setState(
-          { checkedValues: res.map(item => item.PollutantCode), columns: newCloum },
-          () => {
-            this.updateQueryState({
-              PollutantCodeList: this.state.checkedValues,
-            });
-            cb && cb();
-          },
-        );
-      },
-    });
-  };
-  initData = () => {
-    const { dispatch, location, Atmosphere, type, level, query } = this.props;
-
-
-    // dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: level==2?query&&query.regionCode : '', PointMark: '2' } }); //获取行政区列表
-
-    dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: level == 2 ? query && query.regionCode : '' } }); //获取关注列表
-    this.updateQueryState({
-      RegionCode: level == 2 ? query && query.regionCode : '',
-      regionLevel: level,
-      PollutantType: this.pollutantType || 2
-    });
-    setTimeout(() => {
-      this.getTableData();
-    });
-    //获取核实结果
-    dispatch({
-      type: pageUrl.GetOverToExamineOperation,
-      payload: { PollutantType: this.pollutantType },
-      callback: (data) => {
-        if (data.length > 0) {
-          this.setState({
-            alarmDealTypeListCode: data.map(poll => poll.code)
-          })
-        }
-
+        this.setState({  columns: newCloum });
       }
-    })
-  };
-  updateQueryState = payload => {
-    const { overVerifyRateForm, dispatch } = this.props;
-
-    dispatch({
-      type: pageUrl.updateState,
-      payload: { overVerifyRateForm: { ...overVerifyRateForm, ...payload } },
-    });
-  };
-
-  getTableData = () => {
-    const { dispatch, overVerifyRateForm } = this.props;
-    dispatch({
-      type: pageUrl.getData,
-      payload: { ...overVerifyRateForm },
     });
   };
 
@@ -813,7 +927,7 @@ export default class OverVerifyLst extends Component {
                   </Button>
                 </Form.Item>
               </Row>
-                <div style={{ marginTop: 10 }}>
+                {/* <div style={{ marginTop: 10 }}>
                   {getFieldDecorator('PollutantCodeList', {
                     initialValue: checkedValues,
                   })(
@@ -830,7 +944,7 @@ export default class OverVerifyLst extends Component {
                       })}
                     </Checkbox.Group> ,
                   )}
-                </div>
+                </div> */}
               </> :
                 <Form.Item>
                   <Button
@@ -854,7 +968,7 @@ export default class OverVerifyLst extends Component {
           rowKey={(record, index) => `complete${index}`}
           loading={this.props.loading}
           columns={this.state.columns}
-          dataSource={this.props.tableDatas.data}
+          dataSource={this.props.tableDatas?.data}
           pagination={false}
         />
 

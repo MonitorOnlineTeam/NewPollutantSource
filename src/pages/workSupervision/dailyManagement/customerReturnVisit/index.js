@@ -59,8 +59,7 @@ const ReturnVisit = props => {
       params: { systemType },
     },
   } = props;
-  const buttonList = permissionButton(`/workSupervision/dailyManagement/manageDepentVisit/${systemType}`);
-  console.log(systemType)
+  const buttonList = permissionButton(`/workSupervision/dailyManagement/customerReturnVisit/${systemType}`);
   useEffect(() => {
     getTableDataSource();
     props.dispatch({

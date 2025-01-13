@@ -150,7 +150,8 @@ const GlobalHeaderRight = props => {
           placement="bottom"
           content={
             <div>
-              <QRCode value={getIp} size={200} />
+              {/* <QRCode value={getIp} size={200} /> */}
+              <img width={200} alt="" src="/yunweicode.png" />
             </div>
           }
           title="手机端下载"

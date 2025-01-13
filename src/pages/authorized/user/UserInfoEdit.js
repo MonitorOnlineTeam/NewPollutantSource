@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-12-23 15:12:59
+ * @LastEditTime: 2025-01-10 15:35:49
  * @Description: 用户修改
  */
 import React, { Component } from 'react';
@@ -13,6 +13,7 @@ import { connect } from 'dva';
 import router from 'umi/router';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlForm from '@/pages/AutoFormManager/SdlForm'
+import Cookie from 'js-cookie';
 import OperaFormComponents from './OperaFormComponents'
 const { Search } = Input;
 
@@ -26,7 +27,6 @@ const {
     Item,
 } = Menu;
 const { TreeNode } = Tree;
-
 
 @connect(({ userinfo, loading,global }) => ({
     treeData: userinfo.DepartTree,
@@ -62,6 +62,7 @@ export default class UserInfoEdit extends Component {
 
         this.postFormDatas = this.postFormDatas.bind(this)
         this.onSubmitForm = this.onSubmitForm.bind(this)
+        this.isMonitor = sessionStorage.getItem('sysName')==='污染源监测监控系统' || Cookie.get('sysName')==='污染源监测监控系统';
     }
 
     componentDidMount() {
@@ -89,7 +90,7 @@ export default class UserInfoEdit extends Component {
     }
     componentDidUpdate(prevProps, prevState) {
         if (this.props.operaBasicInfoForm !== prevProps.operaBasicInfoForm) {
-            if (this.props.configInfo.IsOpera) {
+            if (this.props.configInfo.IsOpera || this.isMonitor) {
                 const queryData = this.props.location.query
                 this.props.dispatch({
                     type: 'userinfo/updateState',
@@ -160,7 +161,7 @@ export default class UserInfoEdit extends Component {
     onChecks = checkedKeys => {
         var that = this;
         this.setState({ checkedKeys });
-        if (this.props.configInfo.IsOpera) {
+        if (this.props.configInfo.IsOpera || this.isMonitor) {
              let checkedData = checkedKeys.checked;
             this.setState({checkedKeys: checkedData,checkedKeysSel: checkedData }); 
         } else {
@@ -217,7 +218,7 @@ export default class UserInfoEdit extends Component {
             message.error('部门不能为空');
             return;
         }
-        if (this.props.configInfo.IsOpera) {
+        if (this.props.configInfo.IsOpera || this.isMonitor) {
             this.props.operaBasicInfoForm.validateFields((err, values) => {
                 if (!err) {
                     dispatch({
@@ -355,7 +356,7 @@ export default class UserInfoEdit extends Component {
                                 >返回
                                 </Button>
                                 <Card bordered={false} title="基本信息" style={{ height: 'calc(100vh - 160px)', display: this.state.baseState }}>
-                                    {this.props.configInfo.IsOpera ?
+                                    {this.props.configInfo.IsOpera || this.isMonitor?
                                         <OperaFormComponents isEdit formValidateFieldsCallback={(values) => { //单独写一个组件 因为getFieldDecorator每次都会render整个组件 导致卡顿
                                             this.setState({
                                                 activeKey: 'roles',

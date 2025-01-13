@@ -31,7 +31,7 @@ const dvaPropsData = ({ loading, operaCheckAttendanceQuery, global, }) => ({
   tableTotal: operaCheckAttendanceQuery.tableTotal,
   queryPar: operaCheckAttendanceQuery.queryPar,
   exportLoading: loading.effects[`${namespace}/ExportSignInAndOffsiteSign`],
-  workTypeLoading: loading.effects[`operaAchiev/GetSignInType`],
+  workTypeLoading: loading.effects[`${namespace}/GetAllWorkTypeList`],
   clientHeight: global.clientHeight,
 })
 
@@ -55,9 +55,9 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    GetSignInType: (payload,callback) => { //工作类型
+    GetAllWorkTypeList: (payload,callback) => { //工作类型
       dispatch({
-        type: `operaAchiev/GetSignInType`,
+        type: `${namespace}/GetAllWorkTypeList`,
         payload: payload,
         callback:callback,
       })
@@ -78,8 +78,8 @@ const Index = (props) => {
   const [workTypeList,setWorkTypeList] = useState([])
   useEffect(() => {
     onFinish(pageIndex,pageSize);
-    props.GetSignInType({},(res)=>{
-      res?.allList&&setWorkTypeList(res?.allList)
+    props.GetAllWorkTypeList({},(res)=>{
+      setWorkTypeList(res)
     })
   }, []);
 
@@ -252,21 +252,21 @@ const Index = (props) => {
           ellipsis: true,
 
         },
-        {
-          title: '地点',
-          dataIndex: 'signOutPlaceName',
-          key: 'signOutPlaceName',
-          align: 'center',
-          ellipsis: true,
+        // {
+        //   title: '地点',
+        //   dataIndex: 'signOutPlaceName',
+        //   key: 'signOutPlaceName',
+        //   align: 'center',
+        //   ellipsis: true,
 
-        },
-        {
-          title: '详细地址',
-          dataIndex: 'signOutAddress',
-          key: 'signOutAddress',
-          align: 'center',
-          ellipsis: true,
-        },
+        // },
+        // {
+        //   title: '详细地址',
+        //   dataIndex: 'signOutAddress',
+        //   key: 'signOutAddress',
+        //   align: 'center',
+        //   ellipsis: true,
+        // },
         {
           title: '签退照片',
           dataIndex: 'signOutFile',

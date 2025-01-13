@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-11-20 16:38:36
+ * @LastEditTime: 2025-01-10 15:38:11
  * @Description: 用户添加
  */
 import React, { Component } from 'react';
@@ -13,6 +13,7 @@ import { connect } from 'dva';
 import router from 'umi/router';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlForm from '@/pages/AutoFormManager/SdlForm'
+import Cookie from 'js-cookie';
 import OperaFormComponents from './OperaFormComponents'
 import styles from './style.less';
 
@@ -59,8 +60,9 @@ export default class UserInfoAdd extends Component {
             FormDatas: [],
             leafTreeDatas: [],
         };
-
         this.postFormDatas = this.postFormDatas.bind(this)
+        this.isMonitor = sessionStorage.getItem('sysName')==='污染源监测监控系统' || Cookie.get('sysName')==='污染源监测监控系统';
+
     }
 
     componentDidMount() {
@@ -101,7 +103,7 @@ export default class UserInfoAdd extends Component {
     };
 
     onChecks = checkedKeys => {
-        if(this.props.configInfo.IsOpera){//运维
+        if(this.props.configInfo.IsOpera || this.isMonitor){//运维
             let checkedData = checkedKeys.checked;
             this.setState({checkedKeys: checkedData,checkedKeysSel: checkedData });
         }else{
@@ -165,7 +167,7 @@ export default class UserInfoAdd extends Component {
             message.error('部门不能为空');
             return;
         }
-        if(this.props.configInfo.IsOpera){
+        if(this.props.configInfo.IsOpera || this.isMonitor){
             this.props.operaBasicInfoForm.validateFields((err, values) => {
                 if (!err) {
                     
@@ -287,7 +289,7 @@ export default class UserInfoAdd extends Component {
                                 >返回
                                 </Button>
                                 <Card bordered={false} title="基本信息" style={{ display: this.state.baseState }}>
-                                 {this.props.configInfo.IsOpera?
+                                 {this.props.configInfo.IsOpera || this.isMonitor?
                                     <OperaFormComponents formValidateFieldsCallback={(values)=>{ //单独写一个组件 因为getFieldDecorator每次都会render整个组件 导致卡顿
                                         this.setState({
                                         activeKey: 'roles',
@@ -420,7 +422,7 @@ export default class UserInfoAdd extends Component {
                                                 selectedKeys={this.state.selectedKeys}
                                                 autoExpandParent
                                                 defaultExpandAll
-                                                checkStrictly={this.props.configInfo.IsOpera}
+                                                checkStrictly={this.props.configInfo.IsOpera || this.isMonitor}
                                             >
                                                 {this.renderTreeNodes(this.props.treeData)}
                                             </Tree>

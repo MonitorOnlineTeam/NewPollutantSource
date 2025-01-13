@@ -402,13 +402,14 @@ class index extends PureComponent {
                     }
                 } /></Row>}
             <div style={{ marginTop: 10 }}>
-                {!regionLevel && <>   <Checkbox.Group defaultValue={pollutantCodeList.map(item => item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
+                {!regionLevel && <>   
+                {/* <Checkbox.Group defaultValue={pollutantCodeList.map(item => item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
                     {
                         pollutantCodeList.map(poll =>
                             <Checkbox value={poll.PollutantCode}>{poll.PollutantName}</Checkbox>
                         )
                     }
-                </Checkbox.Group>
+                </Checkbox.Group> */}
 
                     <Button type="primary" style={{ marginRight: 10 }} onClick={() => { this.getChartAndTableData() }}>查询</Button></>}
                 <Button style={{ marginRight: 10 }} onClick={this.exportReport} loading={exportRegion == '1' ? exportLoading1 : exportLoading2}><ExportOutlined />导出</Button>
@@ -985,16 +986,15 @@ class index extends PureComponent {
             columns.push(addColumns)
         })
 
-        return <>{
-
-            <Tabs
+        return <>
+            {/* <Tabs
                 hideAdd
                 type="editable-card"
                 onChange={this.onChangeHandle}
                 activeKey={this.state.activeKey}
                 onEdit={this.onEdit}
             >
-                <TabPane tab={this.state.entType == 1 ? '废水' : '废气'} key={1} closable={false}>
+                <TabPane tab={this.state.entType == 1 ? '废水' : '废气'} key={1} closable={false}> */}
                     <SdlTable columns={columns} dataSource={AlarmList}
                         loading={loading}
                         // pagination={{
@@ -1010,7 +1010,7 @@ class index extends PureComponent {
                             false
                         }
                     />
-                </TabPane>
+                {/* </TabPane>
                 {
                     this.state.panes.map(pane => (
                         <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
@@ -1018,12 +1018,9 @@ class index extends PureComponent {
                         </TabPane>
                     ))
                 }
-            </Tabs>
-
-
-        }
+            </Tabs> */}
         </>
-        //
+
     }
 
     RegCancelHandel = () => {

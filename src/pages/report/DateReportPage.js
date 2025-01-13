@@ -561,7 +561,7 @@ class DateReportPage extends PureComponent {
                   <FormItem label="" >
                     <Button
                       type="primary"
-                      style={{ margin: '0 10px' }}
+                      style={{ marginRight: 12 }}
                       loading={loading}
                       onClick={() => {
                         const { dateReportForm, dispatch } = this.props;

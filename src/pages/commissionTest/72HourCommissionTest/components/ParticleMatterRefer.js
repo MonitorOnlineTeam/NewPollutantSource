@@ -769,6 +769,7 @@ const Index = (props) => {
                 formData.append('firstColumn', value.colVal);
                 formData.append('PollutantCode', '');
                 formData.append('TimeList', timeData.toString().replaceAll('|,', '|'));
+                formData.append('recordType',recordType);
                 fetch(API.CtDebugServiceApi.ImportData, {
                     method: 'POST',
                     body: formData,

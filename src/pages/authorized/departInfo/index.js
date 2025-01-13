@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2024-12-26 10:02:18
+ * @LastEditTime: 2025-01-10 08:54:44
  * @Description: 部门管理
  */
 import React, { Component, Fragment } from 'react';
@@ -455,7 +455,7 @@ class DepartIndex extends Component {
               </a>
             </Tooltip>
             <Divider type="vertical" />
-            {record.DelStatus && <><Tooltip title="删除">
+            {!record.DelStatus && <><Tooltip title="删除">
               <Popconfirm
                 title="确认要删除吗?"
                 onConfirm={() => {

@@ -281,7 +281,7 @@ const Index = (props) => {
         RangeRemark: values2[`${code}Remark`],
         CouType: data?.CouType,//颗粒物有无显示屏 实时数据一致性核查表
         AnalyzerCou: data?.AnalyzerCou,
-        AnalyzerCouUnit: data?.AnalyzerCou,
+        AnalyzerCouUnit: data?.AnalyzerCouUnit,
         DASCou: data?.DASCou,
         DASCouUnit: data?.DASCouUnit,
         // DASStatus: data?.DASStatus, //这个字段不用了

@@ -39,7 +39,12 @@ export default Model.extend({
       }
     },
 
-    
+    *GetAllWorkTypeList({ payload,callback }, { call, put, update }) { //签到考勤查询信息 导出
+      const result = yield call(services.GetAllWorkTypeList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas)
+      } 
+    },
 
 
 

@@ -857,7 +857,6 @@ const [viewPhotosTitle, setViewPhotosTitle] = useState();
       },
       callback: () => {
         setDelInstallPhotosLoading(false);
-    
         getCtWorkbenchMsg(2);
       },
     });
@@ -1141,7 +1140,7 @@ const [viewPhotosTitle, setViewPhotosTitle] = useState();
                                                 const row = item.MsgID && JSON.parse(item.MsgID);
                                                 if (item.Col1 == 2) {
                                                   setInstallEquipmentVisible(true);
-                                                  setInstallEquipmentTitle( setExamineTitle(`${row.EntName} - ${row.PointName}${ row.SystemModelName ? ` - ${row.SystemModelName}` : ''} `))
+                                                  setInstallEquipmentTitle(`${row.EntName} - ${row.PointName}${ row.SystemModelName ? ` - ${row.SystemModelName}` : ''} `)
                                                   //Col1代表systemModelId
                                                   setInstallEquipmentData({
                                                     ...row
@@ -1209,7 +1208,7 @@ const [viewPhotosTitle, setViewPhotosTitle] = useState();
                                                 }
                                               }}
                                             >
-                                               {(item.Col1 == 2 ||  item.Col1 == 3) && <Menu.Item key="1">
+                                                { item.Col1 == 3 && <Menu.Item key="1">
                                                 <Spin size='small' spinning={!!props.photoExportAuditPhotoLoading}>导出</Spin>
                                                </Menu.Item> }
                                                 <Menu.Item key="2">

@@ -168,6 +168,13 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
+      title: '签约客户',
+      dataIndex: 'SignName',
+      key: 'SignName',
+      align: 'center',
+      ellipsis: true,
+    },
+    {
       title: '最终用户',
       dataIndex: 'CustomEnt',
       key: 'CustomEnt',

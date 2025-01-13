@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-09-02 10:15:47
  * @LastEditors: outman0611
- * @LastEditTime: 2024-09-02 10:26:14
+ * @LastEditTime: 2025-01-09 08:45:00
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tabs, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Spin   } from 'antd';
@@ -42,9 +42,9 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getInspectorTypeCode: (payload) => { // 督查类别 下拉列表
+    GetMonitorCategorySystemList: (payload) => { // CEMS型号
       dispatch({
-        type: `${namespace}/getInspectorTypeCode`,
+        type: `${namespace}/GetMonitorCategorySystemList`,
         payload: payload,
       })
     },
@@ -57,7 +57,7 @@ const  dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
   useEffect(() => {
-    props.getInspectorTypeCode({})
+    props.GetMonitorCategorySystemList({})
   }, []);
 
   

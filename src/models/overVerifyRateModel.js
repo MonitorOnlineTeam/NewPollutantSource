@@ -47,7 +47,7 @@ export default Model.extend({
   },
   subscriptions: {},
   effects: {
-    *getDefectModel({ payload }, { call, put, update, select }) {
+    *getDefectModel({ payload,callback }, { call, put, update, select }) {
       //列表
       const response = yield call(GetDefectModel, { ...payload,PollutantCodeList: payload.PollutantCodeList.filter(item=>item!='全部合计') || [], });
       if (response.IsSuccess) {
@@ -55,6 +55,7 @@ export default Model.extend({
           tableDatas: response.Datas,
           total: response.Total,
         });
+        callback && callback(response.Datas?.column)
       }
     },
     *getDefectPointDetail({ payload }, { call, put, update, select }) {

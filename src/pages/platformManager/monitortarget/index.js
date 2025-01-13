@@ -295,6 +295,7 @@ export default class MonitorTarget extends Component {
     //         size="large"
     //     />);
     // }
+    const sysName = sessionStorage.getItem('sysName') || Cookie.get('sysName');
     return (
       <BreadcrumbWrapper hideBreadcrumb={!!hideBreadcrumb}>
         <Card className={styles.contentContainer}>
@@ -397,7 +398,7 @@ export default class MonitorTarget extends Component {
                     </>
                   )}
                 {// 只有企业显示机组
-                targetType == 1 && webConfig.entShowBtns.includes('unit') && !configInfo.IsOpera && (
+                targetType == 1 && webConfig.entShowBtns.includes('unit') && sysName!='污染源监测监控系统' && !configInfo.IsOpera && (
                   <>
                     <Divider type="vertical" />
                     <Tooltip title="机组信息">
@@ -411,7 +412,7 @@ export default class MonitorTarget extends Component {
                           );
                         }}
                       >
-                        <DatabaseOutlined />
+                        <DatabaseOutlined  style={{ fontSize: 16 }}/>
                       </a>
                     </Tooltip>
                   </>

@@ -1571,7 +1571,7 @@ export default class MonitorPoint extends Component {
                   {this.getTabInfo()}
                 </TabPane>
                 {// 监控
-                !configInfo.IsOpera && (
+                !configInfo.IsOpera && configId!='AEnterprisePollutDischarge' && (
                   <TabPane tab="仪器信息" key="7">
                     {this.getInstrumentInfo()}
                   </TabPane>

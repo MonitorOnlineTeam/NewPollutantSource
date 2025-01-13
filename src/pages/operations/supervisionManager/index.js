@@ -733,7 +733,7 @@ const Index = (props) => {
         ETime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
         InspectorType: inspectorType,
-        pollutantType : pollutantTypeCode,
+        // pollutantType : pollutantTypeCode,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
         pageSize: pageSizes ? pageSizes : pageSize,
       })
@@ -751,7 +751,7 @@ const Index = (props) => {
       time: undefined,
       InspectorType: inspectorType,
       apiName: props.exportApiName,
-      pollutantType : pollutantTypeCode,
+      // pollutantType : pollutantTypeCode,
     })
   }
   const formatData = (data, type) => {

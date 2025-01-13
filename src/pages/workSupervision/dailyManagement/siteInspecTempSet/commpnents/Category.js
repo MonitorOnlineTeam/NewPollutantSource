@@ -26,13 +26,12 @@ const namespace = 'siteInspecTempSet'
 const dvaPropsData = ({ loading, siteInspecTempSet, global, common }) => ({
   tableDatas: siteInspecTempSet.inspectorTypeItemList,
   tableTotal: siteInspecTempSet.inspectorTypeItemListTotal,
-  tableLoading: loading.effects[`${namespace}/getInspectorTypeItemList`],
-  saveLoading: loading.effects[`${namespace}/addOrEditInspectorTypeItem`],
-  inspectorTypeloading: loading.effects[`${namespace}/getInspectorTypeCode`],
-  clientHeight: global.clientHeight,
-  MaxNum: siteInspecTempSet.MaxNum,
-  inspectorTypeList: siteInspecTempSet.inspectorTypeList,
+  tableLoading: loading.effects[`${namespace}/GetOnsiteInspectionTypeList`],
+  saveLoading: loading.effects[`${namespace}/AddOrUpdateOnsiteInspectionType`],
+  getMonitorCategorySystemListLoading: loading.effects[`${namespace}/GetMonitorCategorySystemList`],
+  cemsModelNameList: siteInspecTempSet.cemsModelNameList,
   assessmentMethodList: siteInspecTempSet.assessmentMethodList,
+  clientHeight: global.clientHeight,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -43,30 +42,30 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getInspectorTypeItemList: (payload) => { // 列表
+    GetOnsiteInspectionTypeList: (payload) => { // 列表
       dispatch({
-        type: `${namespace}/getInspectorTypeItemList`,
+        type: `${namespace}/GetOnsiteInspectionTypeList`,
         payload: payload,
       })
     },
-    addOrEditInspectorTypeItem: (payload, callback) => { // 添加 or 编辑
+    AddOrUpdateOnsiteInspectionType: (payload, callback) => { // 添加 or 编辑
       dispatch({
-        type: `${namespace}/addOrEditInspectorTypeItem`,
+        type: `${namespace}/AddOrUpdateOnsiteInspectionType`,
         payload: payload,
         callback: callback
       })
     },
 
-    deleteInspectorType: (payload, callback) => { // 删除
+    DeleteOnsiteInspectionType: (payload, callback) => { // 删除
       dispatch({
-        type: `${namespace}/deleteInspectorType`,
+        type: `${namespace}/DeleteOnsiteInspectionType`,
         payload: payload,
         callback: callback
       })
     },
-    changeInspectorTypeStatus: (payload, callback) => { // 更改状态
+    ChangeOnsiteInspectionTypeStatus: (payload, callback) => { // 更改状态
       dispatch({
-        type: `${namespace}/changeInspectorTypeStatus`,
+        type: `${namespace}/ChangeOnsiteInspectionTypeStatus`,
         payload: payload,
         callback: callback
       })
@@ -74,11 +73,10 @@ const dvaDispatch = (dispatch) => {
   }
 }
 const Index = (props) => {
-  const pchildref = useRef();
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
   const [scoreDis, setScoreDis] = useState(false);
-  const { tableDatas, tableTotal, tableLoading, clientHeight, saveLoading, MaxNum, inspectorTypeloading, inspectorTypeList, assessmentMethodList } = props;
+  const { tableDatas, tableTotal, tableLoading, clientHeight, saveLoading, getMonitorCategorySystemListLoading, cemsModelNameList, assessmentMethodList } = props;
 
 
   useEffect(() => {
@@ -88,39 +86,29 @@ const Index = (props) => {
 
 
 
-
-  const [ID, setID] = useState()
   const [title, setTitle] = useState('添加')
 
   const columns = [
     {
       title: '序号',
-      dataIndex: 'TypeNum',
-      key: 'TypeNum',
       align: 'center',
     },
     {
       title: 'CEMS型号',
-      dataIndex: 'PollutantTypeName',
-      key: 'PollutantTypeName',
+      dataIndex: 'CemsModelName',
+      key: 'CemsModelName',
       align: 'center',
     },
     {
       title: '检查项目',
-      dataIndex: 'InspectorTypeName',
-      key: 'InspectorTypeName',
-      align: 'center',
-    },
-    {
-      title: '督查类别描述',
-      dataIndex: 'InspectorTypeDescribe',
-      key: 'InspectorTypeDescribe',
+      dataIndex: 'InspectionProject',
+      key: 'InspectionProject',
       align: 'center',
     },
     {
       title: '使用状态',
-      dataIndex: 'Status',
-      key: 'Status',
+      dataIndex: 'UseStatus',
+      key: 'UseStatus',
       align: 'center',
       width:100,
       render: (text, record) => {
@@ -134,22 +122,19 @@ const Index = (props) => {
     },
     {
       title: '排序',
-      dataIndex: 'AssessmentMethodName',
-      key: 'AssessmentMethodName',
+      dataIndex: 'Sort',
+      key: 'Sort',
       align: 'center',
       width:80,
     },
     {
       title: '操作',
-      dataIndex: 'pointName',
-      key: 'pointName',
       align: 'center',
       render: (text, record) => {
         return (
           <>
             <Tooltip title="编辑">
               <a onClick={() => {
-                setTitle('编辑')
                 edit(record)
               }}  >
                 <EditOutlined style={{ fontSize: 16 }} />
@@ -172,49 +157,40 @@ const Index = (props) => {
   const onFinish = async (pageIndexs, pageSizes) => {  //查询
     try {
       const values = await form.validateFields();
-      props.getInspectorTypeItemList({
+      console.log(11111)
+      props.GetOnsiteInspectionTypeList({
         ...values,
-        pageIndex: pageIndexs,
-        pageSize: pageSizes
       })
-
-
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
   const del = (row) => {
-    props.deleteInspectorType({ ID: row.ID }, () => {
-      setPageIndex(1)
+    props.DeleteOnsiteInspectionType({ ID: row.ID }, () => {
+      // setPageIndex(1)
       onFinish(1, pageSize)
     })
   }
   const statusChange = (row) => {
-    props.changeInspectorTypeStatus({ ID: row.ID, Status: row.Status }, () => { onFinish(pageIndex, pageSize) })
+    props.ChangeOnsiteInspectionTypeStatus({ ID: row.ID, UseStatus: row.UseStatus }, () => { onFinish(pageIndex, pageSize) })
   }
 
   const edit = (row) => {
-    form2.setFieldsValue({ ...row })
-    row.AssessmentMethodName === '计分' ? setScoreDis(false) : setScoreDis(true)
     setVisible(true)
+    setTitle('编辑')
+    form2.setFieldsValue({ ...row })
+
   }
   const add = () => {
-    form2.resetFields()
-    form2.setFieldsValue({
-      TypeNum: MaxNum,
-      InspectorType: inspectorTypeList[0] && inspectorTypeList[0].ChildID,
-      AssessmentMethod: assessmentMethodList[1] && assessmentMethodList[1].ChildID,
-
-    })
-    setTitle('添加')
-    setScoreDis(false)
     setVisible(true)
+    form2.resetFields()
+    setTitle('添加')
   }
 
   const save = async () => {
     try {
       const values = await form2.validateFields();
-      props.addOrEditInspectorTypeItem({
+      props.AddOrUpdateOnsiteInspectionType({
         ...values,
       }, () => {
         setVisible(false)
@@ -230,15 +206,7 @@ const Index = (props) => {
 
 
 
-  const assessMethod = form2.getFieldValue('AssessmentMethod')
 
-  const assessMethodChange = (val) => {
-    if (val == 490) {
-      setScoreDis(false)
-    } else {
-      setScoreDis(true)
-    }
-  }
 
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSize, setPageSize] = useState(20)
@@ -258,16 +226,16 @@ const Index = (props) => {
         layout='inline'
         style={{paddingBottom:8}}
       >
-        <Form.Item label='系统型号' name='aaa'>
+        <Form.Item label='系统型号' name='cemsModelName'>
           <Input placeholder='请输入' allowClear/>
         </Form.Item>
-        <Form.Item label='检查项目' name='aaa'>
+        <Form.Item label='检查项目' name='inspectionProject'>
           <Input placeholder='请输入' allowClear/>
         </Form.Item>
-        <Form.Item label='使用状态' name='bbb' >
+        <Form.Item label='使用状态' name='useStatus' >
           <Select placeholder='请选择' allowClear  style={{width:100}}>
             <Option value={1}>启用</Option>
-            <Option value={0}>停用</Option>
+            <Option value={2}>停用</Option>
           </Select>
         </Form.Item>
         <Form.Item>
@@ -288,14 +256,15 @@ const Index = (props) => {
         dataSource={tableDatas}
         columns={columns}
         resizable
-        pagination={{
-          total: tableTotal,
-          pageSize: pageSize,
-          current: pageIndex,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          onChange: handleTableChange,
-        }}
+        pagination={false}
+        // pagination={{
+        //   total: tableTotal,
+        //   pageSize: pageSize,
+        //   current: pageIndex,
+        //   showSizeChanger: true,
+        //   showQuickJumper: true,
+        //   onChange: handleTableChange,
+        // }}
       />
       <Modal
         title={title}
@@ -312,23 +281,23 @@ const Index = (props) => {
           form={form2}
           name="advanced_search2"
           initialValues={{
-            Status: 1,
+            UseStatus: 1,
           }}
         >
-              <Form.Item label='CEMS型号' name='InspectorType' rules={[{ required: true, message: '请选择CEMS型号！' }]}>
-                <Select placeholder='请选择' showSearch optionFilterProp="children"  loading={inspectorTypeloading} fieldNames={{label:'Name',value:'ChildID'}} options={inspectorTypeList} />
+              <Form.Item label='CEMS型号' name='CemsModel' rules={[{ required: true, message: '请选择CEMS型号！' }]}>
+                <Select  placeholder='请选择' showSearch optionFilterProp="children"  loading={getMonitorCategorySystemListLoading} fieldNames={{label:'Name',value:'ChildID'}} options={cemsModelNameList} />
               </Form.Item>
-            <Form.Item label="检查项目" name="bb" rules={[{ required: true, message: '请输入检查项目！' }]}>
-              <Input placeholder='请输入'  />
+            <Form.Item label="检查项目" name="InspectionProject" rules={[{ required: true, message: '请输入检查项目！' }]}>
+              <Input  placeholder='请输入'  allowClear/>
             </Form.Item>
-            <Form.Item label="使用状态" name="Status" rules={[{ required: true, message: '请选择使用状态！' }]}>
+            <Form.Item label="使用状态" name="UseStatus" rules={[{ required: true, message: '请选择使用状态！' }]}>
               <Radio.Group>
                 <Radio value={1}>启用</Radio>
                 <Radio value={0}>停用</Radio>
               </Radio.Group>
             </Form.Item>
-            <Form.Item label="排序" name="Fraction" rules={[{ required: true, message: '请输入排序！' }]}>
-              <InputNumber placeholder='请输入' disabled={scoreDis} />
+            <Form.Item label="排序" name="Sort" rules={[{ required: true, message: '请输入排序！' }]}>
+              <InputNumber min={0} placeholder='请输入' disabled={scoreDis} />
             </Form.Item>
           <Form.Item name="ID" hidden />
         </Form>

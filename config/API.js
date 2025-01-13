@@ -2182,6 +2182,7 @@ export const API = {
     GetSignInList: before + '/OperationSignInApi/GetSignInList', //获取现场签到统计信息
     ExportSignInList: before + '/OperationSignInApi/ExportSignInList', //现场签到统计信息 导出
     GetSignInType: before + '/OperationSignInApi/GetSignInType', //获取打卡类型
+    GetAllWorkTypeList: before + '/OperationSignInApi/GetAllWorkTypeList', //获取所有工作类型  运维+成套
     /*签到考勤查询*/
     GetSignInAndOffsiteSignList: before + '/OperationSignInApi/GetSignInAndOffsiteSignList', //获取签到考勤信息
     ExportSignInAndOffsiteSign: before + '/OperationSignInApi/ExportSignInAndOffsiteSign', //签到考勤信息 导出
@@ -2632,6 +2633,27 @@ export const API = {
       GetVisitEnvironmentalDailyWorks: before + '/CTProjectExecutionApi/GetVisitEnvironmentalDailyWorks',
 
     },
+    
+    SiteQualityInspeTemplate:{
+      //获取现场检查类别清单
+      GetOnsiteInspectionTypeList: before + '/CTProjectExecutionApi/GetOnsiteInspectionTypeList',
+      //添加现场检查类别清单
+      AddOrUpdateOnsiteInspectionType: before + '/CTProjectExecutionApi/AddOrUpdateOnsiteInspectionType',
+      //更改现场检查类别清单状态
+      ChangeOnsiteInspectionTypeStatus: before + '/CTProjectExecutionApi/ChangeOnsiteInspectionTypeStatus',
+      //删除现场检查类别清单
+      DeleteOnsiteInspectionType: before + '/CTProjectExecutionApi/DeleteOnsiteInspectionType',
+      //现场检查模板列表
+      GetOnsiteInspectionInfoList: before + '/CTProjectExecutionApi/GetOnsiteInspectionInfoList',
+      //添加或修改现场检查模板
+      AddOrUpdateOnsiteInspectionInfo: before + '/CTProjectExecutionApi/AddOrUpdateOnsiteInspectionInfo',                        
+      //更新现场检查模板使用状态
+      ChangeOnsiteInspectionInfoStatus: before + '/CTProjectExecutionApi/ChangeOnsiteInspectionInfoStatus',    
+      //现场检查模板明细
+      GetOnsiteInspectionInfoDetail: before + '/CTProjectExecutionApi/GetOnsiteInspectionInfoDetail',             
+      //删除现场检查模板
+      DeleteOnsiteInspectionInfo: before + '/CTProjectExecutionApi/DeleteOnsiteInspectionInfo',             
+    }
   },
   CtAPI_WJQ: {
     // 基础服务

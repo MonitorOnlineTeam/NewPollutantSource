@@ -2,7 +2,7 @@
  * @Author: outman0611
  * @Date: 2024-06-11 14:29:31
  * @LastEditors: outman0611
- * @LastEditTime: 2024-11-01 15:24:16
+ * @LastEditTime: 2025-01-09 14:46:07
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Timeline } from 'antd';
@@ -597,8 +597,8 @@ const Index = (props) => {
                 {/* <Popconfirm disabled={!(updateflag && flag && !isCheckUser)} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
                 <a style={{ cursor: updateflag && flag && !isCheckUser? 'pointer' : 'not-allowed', color: updateflag && flag && !isCheckUser? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
               </Popconfirm>  */}
-                <Popconfirm disabled={!isCheckUser ? false : true} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                  <a style={{ cursor: !isCheckUser ? 'pointer' : 'not-allowed', color: !isCheckUser ? '#1890ff' : 'rgba(0, 0, 0, 0.25) ', }}><DelIcon style={{ fontSize: 16 }} /></a>
+                <Popconfirm title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+                  <a><DelIcon style={{ fontSize: 16 }} /></a>
                 </Popconfirm>
               </Tooltip></>}
             <Divider type="vertical" />

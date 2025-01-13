@@ -589,7 +589,10 @@ class CalendarPage extends PureComponent {
                 <Form
                   name="advanced_search"
                   layout='inline'
-                  onSubmit={()=>this.getCalendarInfo()}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    this.getCalendarInfo();
+                  }}
                 >
 
                   <Form.Item  label='项目编号'>
@@ -676,7 +679,7 @@ class CalendarPage extends PureComponent {
                    </Form.Item>
                   <Form.Item>
                 <Space>
-                  <Button htmlType='submit' type="primary" loading={calendarInfoLoading}>
+                  <Button htmlType='submit'  type="primary" loading={calendarInfoLoading}>
                     查询
                   </Button>
                   <Button  onClick={()=>{ this.props.form.resetFields();this.setState({projectCode:'reset',entList:[],pointList:[]})}}>

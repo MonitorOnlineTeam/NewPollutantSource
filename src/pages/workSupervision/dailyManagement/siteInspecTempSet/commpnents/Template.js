@@ -28,13 +28,14 @@ const namespace = 'siteInspecTempSet'
 const dvaPropsData = ({ loading, siteInspecTempSet, global, common }) => ({
   tableDatas: siteInspecTempSet.inspectorTemplateList,
   tableTotal: siteInspecTempSet.inspectorTemplateListTotal,
-  tableLoading: loading.effects[`${namespace}/getInspectorTemplateList`],
-  inspectorTypeList: siteInspecTempSet.inspectorTypeList,//督查类别
-  inspectorTypeDescloading: loading.effects[`${namespace}/getInspectorTypeList`],
-  inspectorTypeDescList: siteInspecTempSet.inspectorTypeDescList,//类别描述
-  saveloading: loading.effects[`${namespace}/addOrEditInspectorTemplate`],
+  tableLoading: loading.effects[`${namespace}/GetOnsiteInspectionInfoList`],
+  saveloading: loading.effects[`${namespace}/AddOrUpdateOnsiteInspectionInfo`],
   inspectorTemplateView: siteInspecTempSet.inspectorTemplateView,
-  detailLoading: loading.effects[`${namespace}/getInspectorTemplateView`],
+  detailLoading: loading.effects[`${namespace}/GetOnsiteInspectionInfoDetail`],
+  getMonitorCategorySystemListLoading: loading.effects[`${namespace}/GetMonitorCategorySystemList`],
+  cemsModelNameList: siteInspecTempSet.cemsModelNameList,
+  getOnsiteInspectionTypeListLoading: loading.effects[`${namespace}/GetOnsiteInspectionTypeList`],
+  inspectorTypeItemList: siteInspecTempSet.inspectorTypeItemList,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -45,44 +46,37 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getInspectorTemplateList: (payload) => { // 列表
+    GetOnsiteInspectionInfoList: (payload) => { // 列表
       dispatch({
-        type: `${namespace}/getInspectorTemplateList`,
+        type: `${namespace}/GetOnsiteInspectionInfoList`,
         payload: payload,
       })
     },
 
-    addOrEditInspectorTemplate: (payload, callback) => { // 添加 or 编辑
+    AddOrUpdateOnsiteInspectionInfo: (payload, callback) => { // 添加 or 编辑
       dispatch({
-        type: `${namespace}/addOrEditInspectorTemplate`,
+        type: `${namespace}/AddOrUpdateOnsiteInspectionInfo`,
         payload: payload,
         callback: callback
       })
     },
-    deleteInspectorTemplate: (payload, callback) => { // 删除
+    DeleteOnsiteInspectionInfo: (payload, callback) => { // 删除
       dispatch({
-        type: `${namespace}/deleteInspectorTemplate`,
+        type: `${namespace}/DeleteOnsiteInspectionInfo`,
         payload: payload,
         callback: callback
       })
     },
-    getInspectorTypeList: (payload, callback) => { // 类别描述
+    ChangeOnsiteInspectionInfoStatus: (payload, callback) => { // 更改状态
       dispatch({
-        type: `${namespace}/getInspectorTypeList`,
+        type: `${namespace}/ChangeOnsiteInspectionInfoStatus`,
         payload: payload,
         callback: callback
       })
     },
-    changeInspectorTemplateStatus: (payload, callback) => { // 更改状态
+    GetOnsiteInspectionInfoDetail: (payload, callback) => { // 详细
       dispatch({
-        type: `${namespace}/changeInspectorTemplateStatus`,
-        payload: payload,
-        callback: callback
-      })
-    },
-    getInspectorTemplateView: (payload, callback) => { // 详细
-      dispatch({
-        type: `${namespace}/getInspectorTemplateView`,
+        type: `${namespace}/GetOnsiteInspectionInfoDetail`,
         payload: payload,
         callback: callback,
       })
@@ -93,7 +87,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
-  const { tableDatas, tableLoading, clientHeight, type, tableTotal, detailLoading, inspectorTypeDescloading, saveloading, inspectorTypeList, inspectorTypeDescList, inspectorTemplateView } = props;
+  const { tableDatas, tableLoading, clientHeight, type, tableTotal, detailLoading, inspectorTypeDescloading, saveloading, inspectorTypeList, inspectorTypeDescList, inspectorTemplateView,getOnsiteInspectionTypeListLoading,getMonitorCategorySystemListLoading,cemsModelNameList, inspectorTypeItemList} = props;
 
 
   useEffect(() => {
@@ -112,20 +106,20 @@ const Index = (props) => {
   const columns = [
     {
       title: '表单编号',
-      dataIndex: 'InspectorNum',
-      key: 'InspectorNum',
+      dataIndex: 'Num',
+      key: 'Num',
       align: 'center',
     },
     {
       title: 'CEMS型号',
-      dataIndex: 'PollutantTypeName',
-      key: 'PollutantTypeName',
+      dataIndex: 'CemsName',
+      key: 'CemsName',
       align: 'center',
     },
     {
       title: '检查表名称',
-      dataIndex: 'InspectorName',
-      key: 'InspectorName',
+      dataIndex: 'InspectionName',
+      key: 'InspectionName',
       align: 'center',
     },
     {
@@ -140,8 +134,8 @@ const Index = (props) => {
 
     {
       title: '使用状态',
-      dataIndex: 'Status',
-      key: 'Status',
+      dataIndex: 'UseStatus',
+      key: 'UseStatus',
       align: 'center',
       render: (text, record) => {
         if (text == 1) {
@@ -174,7 +168,6 @@ const Index = (props) => {
           <>
             <Tooltip title="编辑">
               <a onClick={() => {
-                setTitle('编辑')
                 edit(record)
               }}  >
                 <EditOutlined style={{ fontSize: 16 }} />
@@ -199,17 +192,17 @@ const Index = (props) => {
     }
   ]
   const statusChange = (row) => {
-    props.changeInspectorTemplateStatus({ InspectorNum: row.InspectorNum, Status: row.Status }, () => { onFinish(pageIndex, pageSize) })
+    props.ChangeOnsiteInspectionInfoStatus({ Num: row.Num }, () => { onFinish(pageIndex, pageSize) })
   }
 
 
   const onFinish = async (pageIndexs, pageSizes) => {  //查询
     try {
       const values = await form.validateFields();
-      props.getInspectorTemplateList({
+      props.GetOnsiteInspectionInfoList({
         ...values,
-        pageIndex: pageIndexs,
-        pageSize: pageSizes
+        // pageIndex: pageIndexs,
+        // pageSize: pageSizes
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -217,27 +210,22 @@ const Index = (props) => {
   }
 
   const del = (row) => {
-    props.deleteInspectorTemplate({ ID: row.InspectorNum }, () => {
-      setPageIndex(1)
+    props.DeleteOnsiteInspectionInfo({ Num: row.Num }, () => {
+      // setPageIndex(1)
       onFinish(1, pageSize)
     })
   }
 
-  const [editInspectorNum, setEditInspectorNum] = useState()
-  const [status, setStatus] = useState(0)
-
   const edit = (row) => {
-    setVisible(true)
-    setEditInspectorNum(row.InspectorNum)
-    setStatus(row.Status)
-    getInspectorTypeList(row.PollutantType, () => { //先获取描述内容列表
-      props.getInspectorTemplateView({
-        InspectorNum: row.InspectorNum,
+      setVisible(true)
+      setTitle('编辑')
+      props.GetOnsiteInspectionInfoDetail({
+        Num: row.Num,
       }, (data) => {
         if (data) {
           form2.setFieldsValue({
-            PollutantType: data.PollutantTypeName == '废气' ? 2 : 1,
-            InspectorName: data.InspectorName,
+            ...data,
+            Num:row.Num,
             EffectiveDate: data.EffectiveDate && moment(data.EffectiveDate),
           })
         }
@@ -247,9 +235,7 @@ const Index = (props) => {
         if (inspectorTypeModelList && inspectorTypeModelList[0]) {
           const echoData = inspectorTypeModelList.map(item => {
             return {
-              Sort: item.Sort,
-              InspectorTypeId: item.InspectorTypeId,
-              InspectorContent: item.InspectorContent,
+              ...item,
               ID: cuid(),
               editable: true,
               type: 'edit',
@@ -259,38 +245,29 @@ const Index = (props) => {
           setData([...echoData])
           echoData.map(item => {
             form2.setFieldsValue({
-              [`InspectorTypeId${item.ID}`]: item.InspectorTypeId,
-              [`InspectorContent${item.ID}`]: item.InspectorContent,
+              [`MainId${item.ID}`]: item.MainId,
+              [`InspectionProject${item.ID}`]: item.InspectionProject,
+              [`Require${item.ID}`]: item.Require,
+              [`SetValue${item.ID}`]: item.SetValue,
+              [`DisplayValue${item.ID}`]: item.DisplayValue,
             })
           })
         }
       })
 
-
-
-    })
-
   }
 
   const detail = (row) => {
     setDetailVisible(true)
-    props.getInspectorTemplateView({
-      InspectorNum: row.InspectorNum,
+    setDetailTitle()
+    props.GetOnsiteInspectionInfoDetail({
+      Num: row.Num,
     }, (data) => { })
   }
 
-  const getInspectorTypeList = (type, callback) => {
-    props.getInspectorTypeList({ PollutantType: type }, () => {
-      form2.resetFields();
-      form2.setFieldsValue({ PollutantType: type })
-      callback && callback();
-    })
-  }
   const add = () => {
     setVisible(true)
     setTitle('添加')
-    setData([])
-    getInspectorTypeList(2)
   }
 
 
@@ -300,20 +277,21 @@ const Index = (props) => {
       const inspectorTemplateList = data.map((item, index) => {
         return {
           Sort: index + 1,
-          InspectorTypeId: values[`InspectorTypeId${item.ID}`],
-          InspectorContent: values[`InspectorContent${item.ID}`],
+          MainId: values[`MainId${item.ID}`],
+          InspectionProject: values[`InspectionProject${item.ID}`],
+          Require: values[`Require${item.ID}`],
+          SetValue: values[`SetValue${item.ID}`],
+          DisplayValue: values[`DisplayValue${item.ID}`],
         }
       })
       const par = {
-        InspectorNum: title === '编辑' ? editInspectorNum : undefined,
-        PollutantType: values.PollutantType,
-        InspectorName: values.InspectorName,
+        Num:values.Num,
+        CemsModel: values.CemsModel,
+        InspectionName: values.InspectionName,
         EffectiveDate: values.EffectiveDate ? moment(values.EffectiveDate).startOf('days').format("YYYY-MM-DD HH:mm:ss") : null,
-        InspectorTemplateList: inspectorTemplateList,
-        Status: status,
+        ChildList: inspectorTemplateList,
       }
-
-      props.addOrEditInspectorTemplate({
+      props.AddOrUpdateOnsiteInspectionInfo({
         ...par,
       }, () => {
         setVisible(false)
@@ -333,7 +311,6 @@ const Index = (props) => {
 
 
 
-
   const columns2 = [
     {
       title: '序号',
@@ -344,31 +321,31 @@ const Index = (props) => {
     },
     {
       title: '检查项目',
-      dataIndex: `${visible ? "InspectorTypeId" : 'InspectorTypeName'}`,
+      dataIndex: 'MainId',
       align: 'center',
       editable: true,
       width: 400,
     },
     {
       title: '要求',
-      dataIndex: 'InspectorContent',
-      key: 'InspectorContent',
+      dataIndex: 'Require',
+      key: 'Require',
       align: 'center',
       editable: true,
       width: 'auto',
     },
     {
       title: '设定值',
-      dataIndex: 'aa',
-      key: 'aa',
+      dataIndex: 'SetValue',
+      key: 'SetValue',
       align: 'center',
       editable: true,
       width: 120,
     },
     {
       title: '显示值',
-      dataIndex: 'bb',
-      key: 'bb',
+      dataIndex: 'DisplayValue',
+      key: 'DisplayValue',
       align: 'center',
       editable: true,
       width: 120,
@@ -401,7 +378,57 @@ const Index = (props) => {
     };
   });
 
-
+  const columns3= [
+    {
+      title: '序号',
+      dataIndex: 'Sort',
+      key: 'Sort',
+      align: 'center',
+      width: 54,
+    },
+    {
+      title: '检查项目',
+      dataIndex: 'Inspection',
+      align: 'center',
+      width: 300,
+      colSpan: 2,
+      render: (value, record) => {
+        let obj = {
+          children: <div>{value}</div>,
+          props: { rowSpan: record.Count },
+        };
+        return obj;
+      }
+    },
+    {
+      title: '监测点位',
+      dataIndex: 'InspectionProject',
+      align: 'InspectionProject',
+      align: 'center',
+      colSpan: 0,
+    },
+    {
+      title: '要求',
+      dataIndex: 'Require',
+      key: 'Require',
+      align: 'center',
+      width: 'auto',
+    },
+    {
+      title: '设定值',
+      dataIndex: 'SetValue',
+      key: 'SetValue',
+      align: 'center',
+      width: 120,
+    },
+    {
+      title: '显示值',
+      dataIndex: 'DisplayValue',
+      key: 'DisplayValue',
+      align: 'center',
+      width: 120,
+    },
+  ]
   const cancel = (record) => {
     const newData = [...data];
     const index = newData.findIndex((item) => record.Sort === item.Sort);
@@ -413,8 +440,6 @@ const Index = (props) => {
   const handleAdd = () => {
     const newData = {
       Sort: data.length + 1,
-      InspectorTypeId: "",
-      InspectorTypeName: "",
       ID: cuid(),
       editable: true,
       type: 'add',
@@ -430,11 +455,10 @@ const Index = (props) => {
   }
 
   const onValuesChange = (hangedValues, allValues) => {
-    if (Object.keys(hangedValues).join() == 'PollutantType') {
-      getInspectorTypeList(hangedValues.PollutantType)
-    }
   }
   const [detailVisible, setDetailVisible] = useState(false)
+  const [detailTitle, setDetailTitle] = useState('')
+
   return (
     <div>
       <Form
@@ -446,13 +470,13 @@ const Index = (props) => {
         layout='inline'
         style={{ paddingBottom: 8 }}
       >
-        <Form.Item label='系统型号' name='aaa'>
+        <Form.Item label='系统型号' name='CemsModel'>
           <Input placeholder='请输入' allowClear />
         </Form.Item>
-        <Form.Item label='检查项目' name='bbb'>
+        <Form.Item label='检查项目' name='InspectionProject'>
           <Input placeholder='请输入' allowClear />
         </Form.Item>
-        <Form.Item label='使用状态' name='Status' >
+        <Form.Item label='使用状态' name='UseStatus' >
           <Select placeholder='请选择' allowClear style={{ width: 100 }}>
             <Option value={1}>启用</Option>
             <Option value={0}>停用</Option>
@@ -473,16 +497,17 @@ const Index = (props) => {
       <SdlTable
         resizable
         loading={tableLoading}
-        dataSource={[1]}
+        dataSource={tableDatas}
         columns={columns}
-        pagination={{
-          total: tableTotal,
-          pageSize: pageSize,
-          current: pageIndex,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          onChange: handleTableChange,
-        }}
+        pagination={false}
+        // pagination={{
+        //   total: tableTotal,
+        //   pageSize: pageSize,
+        //   current: pageIndex,
+        //   showSizeChanger: true,
+        //   showQuickJumper: true,
+        //   onChange: handleTableChange,
+        // }}
       />
       <Modal
         title={title}
@@ -490,7 +515,7 @@ const Index = (props) => {
         onOk={save}
         okText='保存'
         destroyOnClose={true}
-        onCancel={() => { setVisible(false); }}
+        onCancel={() => { setVisible(false);setData([]);form2.resetFields() }}
         width='80%'
         confirmLoading={title === '添加' ? saveloading : saveloading || detailLoading}
         wrapClassName={`spreadOverModal isFooterSty ${styles.telModalSty}`}
@@ -500,27 +525,25 @@ const Index = (props) => {
           <Form
             form={form2}
             name="advanced_search2"
-            className={styles.addForm}
             onValuesChange={onValuesChange}
-
+            layout='inline'
           >
-            <Row>
-              <Form.Item label="CEMS型号" name="PollutantType" >
-                <Select placeholder='请选择' style={{ width: 150 }} showSearch optionFilterProp="children" loading={false} fieldNames={{ label: 'Name', value: 'ChildID' }} options={inspectorTypeList} />
+              <Form.Item label='CEMS型号' name='CemsModel' rules={[{ required: true, message: '请选择CEMS型号！' }]}>
+                <Select style={{width:200}} placeholder='请选择' showSearch optionFilterProp="Name"  loading={getMonitorCategorySystemListLoading} fieldNames={{label:'Name',value:'ChildID'}} options={cemsModelNameList} />
               </Form.Item>
-              <Form.Item label='检查表名称' name='InspectorName' rules={[{ required: true, message: '请输入督查表名称' }]} style={{ margin: '0 16px' }}>
+              <Form.Item label='检查表名称' name='InspectionName' rules={[{ required: true, message: '请输入检查表名称' }]}>
                 <Input placeholder='请输入' allowClear />
               </Form.Item>
-              <Form.Item label="生效日期" name="EffectiveDate"  >
-                <DatePicker />
+              <Form.Item label="生效日期" name="EffectiveDate"  rules={[{ required: true, message: '请选择生效日期' }]}>
+                <DatePicker allowClear/>
               </Form.Item>
-            </Row>
-            <div className={'addEditTable'} >
+              <Form.Item name='Num' hidden />
+            <div className={'addEditTable'} style={{marginTop:12}}>
               <SdlTable
                 loading={tableLoading}
                 className={`compactTableSty add`}
                 rowClassName={false}
-                scroll={{ x: 980, y: 'calc(100vh - 294px)' }}
+                scroll={{ x: 980, y: 'calc(100vh - 296px)' }}
                 bordered
                 dataSource={data}
                 columns={addCol}
@@ -530,11 +553,11 @@ const Index = (props) => {
                     cell: ({ editing, dataIndex, title, inputType, record, index, children, ...restProps }) => {
                       const inputNode = title === '检查项目' ?
                         <Space>
-                          <Form.Item name={`${dataIndex}aa`} rules={[{ required: true, message: `请选择污染物监测系统` }]} style={{ margin: 0 }} >
-                            <Select placeholder={`请选择污染物监测系统`} allowClear showSearch optionFilterProp="children" loading={false} fieldNames={{ label: 'Name', value: 'ChildID' }} options={inspectorTypeList} />
+                          <Form.Item name={`MainId${record.ID}`} rules={[{ required: true, message: `请选择检查项目` }]} style={{ margin: 0 }} >
+                            <Select style={{width:180}} placeholder={`请选择检查项目`} allowClear showSearch optionFilterProp="InspectionProject" loading={getOnsiteInspectionTypeListLoading} fieldNames={{ label: 'InspectionProject', value: 'ID' }} options={inspectorTypeItemList.filter(item=>item.UseStatus==1)} />
                           </Form.Item>
-                          <Form.Item name={`${dataIndex}bb`} rules={[{ required: true, message: `请输入监测点位` }]} style={{ margin: 0 }} >
-                            <Input rows={1} placeholder={`请输入监测点位`} />
+                          <Form.Item name={`InspectionProject${record.ID}`} rules={[{ required: true, message: `请输入监测点位` }]} style={{ margin: 0 }} >
+                            <Input  placeholder={`请输入监测点位`} />
                           </Form.Item>
                         </Space>
                         :
@@ -580,17 +603,14 @@ const Index = (props) => {
         wrapClassName={`spreadOverModal ${styles.detailModal}`}
       >
         <Spin spinning={false}>
-          <Descriptions>
-            <Descriptions.Item label="CEMS型号">Zhou Maomao</Descriptions.Item>
-            <Descriptions.Item label="检查表名称">1810000000</Descriptions.Item>
-            <Descriptions.Item label="生效日期">Hangzhou, Zhejiang</Descriptions.Item>
-          </Descriptions>
+              <Row justify='center' style={{paddingBottom:8}}><span style={{fontSize:18}}>{inspectorTemplateView?.InspectionName}</span></Row>
           <SdlTable
             bordered
             resizable
-            scroll={{ x: 980, y: 'calc(100vh - 294px)' }}
-            dataSource={inspectorTemplateView.InspectorTypeModelList}
-            columns={columns2.filter(item => item.title != '操作')}
+            rowClassName={null}
+            scroll={{ x: 980, y: 'calc(100vh - 208px)' }}
+            dataSource={inspectorTemplateView?.InspectorTypeModelList}
+            columns={columns3}
             pagination={false}
           />
         </Spin >

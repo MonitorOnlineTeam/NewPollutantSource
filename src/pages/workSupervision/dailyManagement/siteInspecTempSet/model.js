@@ -1,152 +1,114 @@
 import moment from 'moment';
-import * as services from './service';
 import Cookie from 'js-cookie';
 import Model from '@/utils/model';
 import { message } from 'antd';
 import { router } from 'umi';
 import config from '@/config'
 import { downloadFile,requestPost } from '@/utils/utils';
-
+import {  API } from '@config/API';
 export default Model.extend({
   namespace: 'siteInspecTempSet',
   state: {
     inspectorTypeItemList: [],
-    entList: [],
-    MaxNum: 0,
-    inspectorTypeList: [],
-    assessmentMethodList: [],
+    inspectorTypeList: [], 
+    cemsModelNameList: [],//系统型号
     inspectorTemplateList: [],
     inspectorTemplateListTotal: 0,
-    inspectorTypeDescList:[],//类别描述
     inspectorTemplateView:[],
   },
   effects: {
     //督查类别清单 列表
-    *getInspectorTypeItemList({ payload, }, { call, update, select, put }) {
-      const result = yield call( requestPost, `${API.AbnormalIdentifyModel.GetDataMissAnalysis}`,payload);
+    *GetOnsiteInspectionTypeList({ payload, }, { call, update, select, put }) {
+      const result = yield call(requestPost, API.DailyManagement.SiteQualityInspeTemplate.GetOnsiteInspectionTypeList,payload);
       if (result.IsSuccess) {
         yield update({
-          inspectorTypeItemList: result.Datas.rtnList,
-          MaxNum: result.Datas.MaxNum,
+          inspectorTypeItemList: result.Datas,
           inspectorTypeItemListTotal: result.Total,
         });
-      } else {
-        result.Message && message.error(result.Message)
-      }
+      } 
     },
     //督查类别清单 添加or修改
-    *addOrEditInspectorTypeItem({ payload, callback }, { call, update, select, put }) {
-      const result = yield call(services.AddOrEditInspectorTypeItem, { ...payload });
+    *AddOrUpdateOnsiteInspectionType({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(requestPost, API.DailyManagement.SiteQualityInspeTemplate.AddOrUpdateOnsiteInspectionType,payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
-      } else {
-        result.Message && message.error(result.Message)
-      }
+      } 
     },
 
-    //督查类别 下拉列表
-    *getInspectorTypeCode({ payload, callback }, { call, update, select, put }) {
-      const result = yield call(services.GetInspectorTypeCode, { ...payload });
+    //系统型号 下拉列表
+    *GetMonitorCategorySystemList({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(requestPost, API.CtAssetManagementApi.GetMonitorCategorySystemList,payload);
       if (result.IsSuccess) {
         yield update({
-          inspectorTypeList: result.Datas.InspectorType ? result.Datas.InspectorType : [],
-          assessmentMethodList: result.Datas.AssessmentMethod ? result.Datas.AssessmentMethod : [],
+          cemsModelNameList: result.Datas?.CategoryList || [],
         });
-      } else {
-        result.Message && message.error(result.Message)
       }
     },
     //督查类别清单 删除
-    *deleteInspectorType({ payload, callback }, { call, update, select, put }) {
-      const result = yield call(services.DeleteInspectorType, { ...payload });
+    *DeleteOnsiteInspectionType({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(requestPost, API.DailyManagement.SiteQualityInspeTemplate.DeleteOnsiteInspectionType,payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
-      } else {
-        result.Message && message.error(result.Message)
-      }
+      } 
     },
     //督查类别清单 更改状态
-    *changeInspectorTypeStatus({ payload, callback }, { call, update, select, put }) {
-      const result = yield call(services.ChangeInspectorTypeStatus, { ...payload });
+    *ChangeOnsiteInspectionTypeStatus({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(requestPost, API.DailyManagement.SiteQualityInspeTemplate.ChangeOnsiteInspectionTypeStatus, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
-      } else {
-        result.Message && message.error(result.Message)
-      }
+      } 
     },
 
     /***********督查模板****************/
 
     //列表
-    *getInspectorTemplateList({ payload, }, { call, update, select, put }) {
-      const result = yield call(services.GetInspectorTemplateList, { ...payload });
+    *GetOnsiteInspectionInfoList({ payload, }, { call, update, select, put }) {
+      const result = yield call(requestPost, API.DailyManagement.SiteQualityInspeTemplate.GetOnsiteInspectionInfoList, { ...payload });
       if (result.IsSuccess) {
         yield update({
           inspectorTemplateList: result.Datas,
           inspectorTemplateListTotal: result.Total,
         });
-      } else {
-        result.Message && message.error(result.Message)
       }
     },
     // 添加or修改
-    *addOrEditInspectorTemplate({ payload, callback }, { call, update, select, put }) {
+    *AddOrUpdateOnsiteInspectionInfo({ payload, callback }, { call, update, select, put }) {
       
-      if(payload.InspectorTemplateList&&payload.InspectorTemplateList[0]){
-       const result = yield call(services.AddOrEditInspectorTemplate, { ...payload });
+      if(payload.ChildList&&payload.ChildList[0]){
+        const result = yield call(requestPost, API.DailyManagement.SiteQualityInspeTemplate.AddOrUpdateOnsiteInspectionInfo, { ...payload });
         if (result.IsSuccess) {
          message.success(result.Message)
         callback()
-       } else {
-        result.Message && message.error(result.Message)
        }
       }else{
       message.warning('模板数据不能为空')
     }
     },
     // 删除
-    *deleteInspectorTemplate({ payload, callback }, { call, update, select, put }) {
-      const result = yield call(services.DeleteInspectorTemplate, { ...payload });
+    *DeleteOnsiteInspectionInfo({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(requestPost, API.DailyManagement.SiteQualityInspeTemplate.DeleteOnsiteInspectionInfo, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
-      } else {
-        result.Message && message.error(result.Message)
-      }
-    },
-    // 类别描述
-    *getInspectorTypeList({ payload, callback }, { call, update, select, put }) {
-      const result = yield call(services.GetInspectorTypeList, { ...payload });
-      if (result.IsSuccess) {
-        yield update({
-          inspectorTypeDescList: result.Datas,
-        });
-        callback()
-      } else {
-        result.Message && message.error(result.Message)
-      }
+      } 
     },
     // 更改模板状态
-    *changeInspectorTemplateStatus({ payload, callback }, { call, update, select, put }) {
-      const result = yield call(services.ChangeInspectorTemplateStatus, { ...payload });
+    *ChangeOnsiteInspectionInfoStatus({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(requestPost, API.DailyManagement.SiteQualityInspeTemplate.ChangeOnsiteInspectionInfoStatus, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
-      } else {
-        result.Message && message.error(result.Message)
-      }
+      } 
     },
     // 督查模板详细
-    *getInspectorTemplateView({ payload, callback }, { call, update, select, put }) {
-      const result = yield call(services.GetInspectorTemplateView, { ...payload });
+    *GetOnsiteInspectionInfoDetail({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(requestPost, API.DailyManagement.SiteQualityInspeTemplate.GetOnsiteInspectionInfoDetail, { ...payload });
       if (result.IsSuccess) {
-        yield update({ inspectorTemplateView: result.Datas.rtnlist,  });
-        callback(result.Datas.rtnlist)
-      } else {
-        result.Message && message.error(result.Message)
+        yield update({ inspectorTemplateView: result.Datas?.rtnlist || [],  });
+        callback(result.Datas?.rtnlist)
       }
     },
   }
