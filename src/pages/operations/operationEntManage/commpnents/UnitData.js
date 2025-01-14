@@ -294,6 +294,7 @@ export default class EntTransmissionEfficiency extends Component {
       },
       callback: res => {
         callback()
+        // this.getOperationCompanyPointList({});
       },
     });
   };
@@ -418,7 +419,7 @@ export default class EntTransmissionEfficiency extends Component {
           title={`设置点位访问权限 - ${this.state.pointPermissionTitle}`}
           visible={this.state.pointPermissionVisible}
           destroyOnClose
-          onCancel={() => { this.setState({ pointPermissionVisible: false }) }}
+          onCancel={() => { this.setState({ pointPermissionVisible: false,pointPermissionCheckedKeys:[] }) }}
           width={1100}
           footer={null}
           bodyStyle={{
@@ -449,7 +450,7 @@ export default class EntTransmissionEfficiency extends Component {
                   <Button type="primary" loading={this.props.checkPointLoading || this.props.getEntPointLoading || !!this.props.addSetOperationCompanyPointLoading } onClick={this.pointAccessClick}>查询</Button>
                 </Input.Group>
               </Row>
-              {this.props.checkPointLoading || this.props.getEntPointLoading ? (
+              { this.props.getEntPointLoading || this.props.checkPointLoading? (
                 <Spin
                   style={{
                     width: '100%',
@@ -467,6 +468,8 @@ export default class EntTransmissionEfficiency extends Component {
                     treeData={this.props.entAndPointList}
                     checkedKeys={this.state.pointPermissionCheckedKeys}
                     targetKeysChange={(key, type, callback) => {
+                      const entKeyArray = this.props.entAndPointList.map(obj => obj.key);
+                      key = key.filter(value => !entKeyArray.includes(value));// 过滤key值包含企业key的值  全选某个企业会出现包含企业key值的情况
                       this.setState({ pointPermissionCheckedKeys: key }, () => {
                       this.pointPermissionOK(type == 1 ? 1 : 2, callback)
                       })

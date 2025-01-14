@@ -12,7 +12,7 @@ import path from 'path';
 // const API_HOST = 'http://172.16.12.39:9090/'; // 39
 // const API_HOST = 'http://172.16.12.60:6001/';  // 60
 // const API_HOST = 'http://172.16.12.91:61007/' //宝武集团 正式
-// const API_HOST = 'http://172.16.12.132:49011' //中石化 正式
+// const API_HOST = 'http://172.16.12.132:49011' //中石油 正式
 const API_HOST_109 = 'http://172.16.12.109:61001/'; //调试服务导出PDF api
 
 // const API_HOST = 'http://172.16.12.134:61003/';  // 运维正式

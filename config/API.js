@@ -2249,7 +2249,7 @@ export const API = {
   CtCommonApi: {
     GetEntAndPointList: before + '/CTBaseDataApi/GetEntAndPointList', //站点信息
     GetTestPollutantList: before + '/DebuggingBase/GetTestPollutantList', //站点信息
-    GetLargeRegionList: before + '/CTBaseDataApi/GetLargeRegionList', // 获取大区
+    GetLargeRegionList: before + '/DepartmentApi/GetLargeRegionList', // 获取大区
   },
 
   //项目执行进度 Api

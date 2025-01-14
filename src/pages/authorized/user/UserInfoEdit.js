@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2025-01-10 15:35:49
+ * @LastEditTime: 2025-01-14 09:09:20
  * @Description: 用户修改
  */
 import React, { Component } from 'react';
@@ -104,7 +104,7 @@ export default class UserInfoEdit extends Component {
                     User_Sex: queryData.userSex && Number(queryData.userSex),
                     Phone: queryData.userPhone,
                     Email: queryData.email,
-                    SendPush: queryData.sendPush && queryData.sendPush.split(','),
+                    SendPush: queryData.sendPush? queryData.sendPush.split(',') : [],
                     UserType: queryData.userType,
                     OperationCompany: queryData.companyID,
                     BusinessAttribute: queryData.businessAttributeCode && queryData.businessAttributeCode.split(','),

@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2025-01-06 10:01:46
+ * @LastEditTime: 2025-01-14 09:27:03
  * @Description: 用户信息添加编辑表单 运维
  */
 import React, { Component } from 'react';
@@ -81,7 +81,14 @@ export default class Index extends Component {
         }
 
     }
-
+    componentWillMount () {
+        this.props.dispatch({
+            type: 'userinfo/updateState',
+            payload: {
+                userType: undefined,
+            },
+        });
+    } 
     render() {
         const { form: { getFieldDecorator }, userType, isEdit } = this.props;
         const UserType = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser'))?.UserType
@@ -94,8 +101,8 @@ export default class Index extends Component {
             { label: '手机号', field: 'Phone', validator: { pattern: /^1[3456789]\d{9}$/, message: '手机号格式不正确!' }, },
             { label: '邮箱', field: 'Email', validator: { type: 'email', message: '邮箱格式不正确!', } },
             { label: '推送类型', field: 'SendPush', inputNode: 'select', mode: "multiple", list: [{ value: "1", label: "短信推送" }, { value: "2", label: "APP推送" }, { value: "3", label: "网页推送" }, { value: "5", label: "微信推送" }] },
-            { label: '用户类型', field: 'UserType', inputNode: 'select', required: true, disabled: (UserType == 2 || UserType == 3) && IsSystemRole != 1, list: [{ value: "1", label: '雪迪龙' }, { value: "2", label: "运维单位" }, { value: "3", label: "其他" }] },
-            { label: '运维公司', field: 'OperationCompany', inputNode: 'select', hidden: !userType || userType == 3, required: this.state.operationCompanyRequired, list: this.props.operationCompanyList.map(item => ({ value: item['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'], label: item['dbo.T_Bas_OperationMaintenanceEnterprise.Company'] })),  loading: this.props.operationCompanyLoading },
+            { label: '用户类型', field: 'UserType', inputNode: 'select', required: true, disabled: (UserType == 2 || UserType == 3) && IsSystemRole != 1, list: [{ value: "1", label: '雪迪龙' }, { value: "2", label: "运维单位" }, { value: "3", label: "其他" }], initialValue: UserType!=1 ?  UserType : undefined},
+            { label: '运维公司', field: 'OperationCompany', inputNode: 'select', hidden:  userType == 3 || UserType == 3 || (!userType && UserType != 2), required: this.state.operationCompanyRequired, list: this.props.operationCompanyList.map(item => ({ value: item['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'], label: item['dbo.T_Bas_OperationMaintenanceEnterprise.Company'] })),  loading: this.props.operationCompanyLoading },
             { label: '业务属性', field: 'BusinessAttribute', inputNode: 'select', hidden: userType != 1, mode: "multiple", list: [{ value: "1", "value": "职能-售后服务" }, { value: "2", label: "售后服务-安装调试" }, { value: "3", label: "售后服务-非驻厂运营" }, { value: "4", label: "售后服务-驻厂运营" }, { value: "5", label: "其他" }] },
             { label: '行业属性', field: 'IndustryAttribute', inputNode: 'select', hidden: userType != 1, mode: "multiple", list: [{ value: "5", "value": "大气" }, { value: "6", label: "地表水" }, { value: "10", label: "过程分析" }, { value: "2", label: "污染源气" }, { value: "1", label: "污染源水" }, { value: "11", label: "其他" }] },
             { label: '所属大区', field: 'Question', inputNode: 'select', hidden: userType != 1, list: this.state.largeRegionList.map(item => ({ value: item['ID'], label: item['LargeRegion'] })), loading: this.props.largeRegionListLoading },
