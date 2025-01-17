@@ -58,7 +58,7 @@ const SystemDashboardPageWrapper = props => {
       callback: res => {
         let sysList = mergeData(allSysList, res);
         setSysList(sysList);
-        let pageInfo = sysList.find(item => item.key === pageName);
+        let pageInfo = sysList.find(item => item.key.includes(pageName));
 
         // 特殊处理
         if (!sysList.length && res.length === 1) {

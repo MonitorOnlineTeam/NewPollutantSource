@@ -67,8 +67,8 @@ class Index extends Component {
                 <Radio.Button value={2}>列表</Radio.Button>
               </Radio.Group>
              </div>
-              {tabType == 1 && <OperationRecord DGIMN={this.state.dgimn} PollutantType={this.props.type} {...this.props} />}
-              {tabType == 2 && <OperationRecordList DGIMN={ this.state.dgimn}  PollutantType={this.state.type} {...this.props}/>} 
+              {tabType == 1 && <OperationRecord DGIMN={this.state.dgimn} PollutantType={this.state.type} {...this.props} />}
+              {tabType == 2 && <OperationRecordList DGIMN={ this.state.dgimn}  PollutantType={this.state.type} {...this.props}/>}
                {/* <Tabs
                 defaultActiveKey="1"
                 items={[

@@ -36,6 +36,7 @@ export default Model.extend({
     standgaswaringLoading: false,
     elseList: [],
     elseLoading: false,
+    cemsModelList: [], // 系统型号
   },
   effects: {
     // 获取工作台待办
@@ -671,10 +672,7 @@ export default Model.extend({
               })
           );
         };
-        const allMenuData = menuFilterTree(
-          allMenuList,
-          menuList.map(item => item.id),
-        );
+        const allMenuData = menuFilterTree(allMenuList, menuList.map(item => item.id));
         yield update({
           menuList: menuList,
           allMenuList: allMenuData,
@@ -709,20 +707,20 @@ export default Model.extend({
         payload.type == 1
           ? { contractLoading: true }
           : payload.type == 2
-            ? { projectExecutionLoading: true }
-            : payload.type == 5
-              ? { elseLoading: true }
-              : payload.type == 11
-                ? { customeSatisfactLoading: true }
-                : payload.type == 12
-                  ? { standgaswaringLoading: true }
-                  : null,
+          ? { projectExecutionLoading: true }
+          : payload.type == 5
+          ? { elseLoading: true }
+          : payload.type == 11
+          ? { customeSatisfactLoading: true }
+          : payload.type == 12
+          ? { standgaswaringLoading: true }
+          : null,
       );
       const result = yield call(services.CtGetWorkbenchMsg, { ...payload, type: undefined });
       if (result.IsSuccess) {
         const data = result.Datas;
         //旧
-        // yield update({  
+        // yield update({
         //   projectExecutionList: data?.ctList   || [],
         //   contractList: data  || [],
         // });
@@ -748,14 +746,14 @@ export default Model.extend({
         payload.type == 1
           ? { contractLoading: false }
           : payload.type == 2
-            ? { projectExecutionLoading: false }
-            : payload.type == 5
-              ? { elseLoading: false }
-              : payload.type == 11
-                ? { customeSatisfactLoading: false }
-                : payload.type == 12
-                  ? { standgaswaringLoading: false }
-                  : null,
+          ? { projectExecutionLoading: false }
+          : payload.type == 5
+          ? { elseLoading: false }
+          : payload.type == 11
+          ? { customeSatisfactLoading: false }
+          : payload.type == 12
+          ? { standgaswaringLoading: false }
+          : null,
       );
     },
     //待办中心 项目执行-解决遗留问题
@@ -1260,13 +1258,78 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result);
       }
-    }
-
-
-
-
-
-
-
-  }
+    },
+    // 现场检查记录和现场检查管理
+    *GetOnsiteInspectionRecordList({ payload, callback }, { call, put }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.SiteQualityInspection.GetOnsiteInspectionRecordList,
+        payload,
+      );
+      result.IsSuccess && callback(result);
+    },
+    // 导出现场检查记录
+    *ExportOnsiteInspectionRecord({ payload, callback }, { call, put }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.SiteQualityInspection.ExportOnsiteInspectionRecord,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
+    },
+    // 根据项目ID获取企业和排口
+    *GetProjectPointRelationList({ payload, callback }, { call, put }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.CTBaseDataApi.GetProjectPointRelationList,
+        payload,
+      );
+      result.IsSuccess && callback(result.Datas);
+    },
+    // 现场质量检查 - 详情/表格内容
+    *GetOnsiteInspectionRecordView({ payload, callback }, { call, put }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.SiteQualityInspection.GetOnsiteInspectionRecordView,
+        payload,
+      );
+      result.IsSuccess && callback(result.Datas);
+    },
+    // 获取系统型号
+    *GetMonitorCategorySystemList({ payload, callback }, { call, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAssetManagementApi.GetMonitorCategorySystemList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        yield update({
+          cemsModelList: result.Datas?.CategoryList || [],
+        });
+      }
+    },
+    // 添加/修改现场检查
+    *AddOrUpdateOnsiteInspectionRecord({ payload, callback }, { call, update }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.SiteQualityInspection.AddOrUpdateOnsiteInspectionRecord,
+        payload,
+      );
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
+    // 删除现场检查
+    *DeleteOnsiteInspectionRecord({ payload, callback }, { call, put }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.SiteQualityInspection.DeleteOnsiteInspectionRecord,
+        payload,
+      );
+      result.IsSuccess && callback(result);
+    },
+  },
 });

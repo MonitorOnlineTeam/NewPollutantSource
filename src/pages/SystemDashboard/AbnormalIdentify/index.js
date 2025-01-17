@@ -17,11 +17,27 @@ const dvaPropsData = ({ loading, sysDashboard }) => ({
 
 const HomeDataScreen = props => {
   const [fullScreen, setFullScreen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const isGroupEnt = props.location.query.isGroupEnt;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    // 处理集团项目
+    if (isGroupEnt) {
+      window.configInfo.isGroupEnt = true;
+      window.configInfo.isShowRegion = false;
+    } else {
+      window.configInfo.isGroupEnt = false;
+      window.configInfo.isShowRegion = true;
+    }
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
-    <SystemDashboardPageWrapper pageName="异常数据识别">
+    <SystemDashboardPageWrapper pageName={isGroupEnt ? '异常识别集团' : '异常识别监管'}>
       <Col
         style={{ width: '27%', display: fullScreen ? 'none' : 'flex' }}
         className={styles.leftWrapper}

@@ -140,7 +140,7 @@ export const API = {
     AddSetUser: before + '/UserApi/AddSetUser', //设置人员信息 3 整改人员清单 4 照片审核人员清单
     GetSetUser: before + '/UserApi/GetSetUser', //获取设置人员信息 3 整改人员清单 4 照片审核人员清单
     GetLargeRegion: before + '/DailyWorkBaseApi/GetLargeRegion', // 获取运维大区和省区
-    GetEntByProjectInfo: before + '/WorkOrderApi/GetEntByProjectInfo', //根据项目id 获取企业 
+    GetEntByProjectInfo: before + '/WorkOrderApi/GetEntByProjectInfo', //根据项目id 获取企业
     GetPointByEntInfo: before + '/WorkOrderApi/GetPointByEntInfo', //根据企业id 获取点位
   },
   UploadApi: {
@@ -1513,7 +1513,7 @@ export const API = {
     // GetSummaryYearReport: before + '/MonBasicDataApi/GetSummaryYearReport', //获取站点汇总年报报表
     // GetSummaryReportExcel: before + '/MonBasicDataApi/GetSummaryReportExcel', //导出站点汇总站点日报、月报、年报报表
     GetSummaryAllTypeReportData: before + '/MonBasicDataApi/GetSummaryAllTypeReportData', //获取站点汇总日报报表 新
-    ExportSummaryAllTypeReportData: before + '/MonBasicDataApi/ExportSummaryAllTypeReportData', //站点报表导出 新 
+    ExportSummaryAllTypeReportData: before + '/MonBasicDataApi/ExportSummaryAllTypeReportData', //站点报表导出 新
     GetSummaryAllTypeData: before + '/MonBasicDataApi/GetSummaryAllTypeData', // 获取站点汇总报表 新
     ExportSummaryAllTypeData: before + '/MonBasicDataApi/ExportSummaryAllTypeData', //汇总报表导出 新
     /*废气排放量总览*/
@@ -2633,7 +2633,7 @@ export const API = {
       GetVisitEnvironmentalDailyWorks: before + '/CTProjectExecutionApi/GetVisitEnvironmentalDailyWorks',
 
     },
-    
+
     SiteQualityInspeTemplate:{
       //获取现场检查类别清单
       GetOnsiteInspectionTypeList: before + '/CTProjectExecutionApi/GetOnsiteInspectionTypeList',
@@ -2646,13 +2646,13 @@ export const API = {
       //现场检查模板列表
       GetOnsiteInspectionInfoList: before + '/CTProjectExecutionApi/GetOnsiteInspectionInfoList',
       //添加或修改现场检查模板
-      AddOrUpdateOnsiteInspectionInfo: before + '/CTProjectExecutionApi/AddOrUpdateOnsiteInspectionInfo',                        
+      AddOrUpdateOnsiteInspectionInfo: before + '/CTProjectExecutionApi/AddOrUpdateOnsiteInspectionInfo',
       //更新现场检查模板使用状态
-      ChangeOnsiteInspectionInfoStatus: before + '/CTProjectExecutionApi/ChangeOnsiteInspectionInfoStatus',    
+      ChangeOnsiteInspectionInfoStatus: before + '/CTProjectExecutionApi/ChangeOnsiteInspectionInfoStatus',
       //现场检查模板明细
-      GetOnsiteInspectionInfoDetail: before + '/CTProjectExecutionApi/GetOnsiteInspectionInfoDetail',             
+      GetOnsiteInspectionInfoDetail: before + '/CTProjectExecutionApi/GetOnsiteInspectionInfoDetail',
       //删除现场检查模板
-      DeleteOnsiteInspectionInfo: before + '/CTProjectExecutionApi/DeleteOnsiteInspectionInfo',             
+      DeleteOnsiteInspectionInfo: before + '/CTProjectExecutionApi/DeleteOnsiteInspectionInfo',
     }
   },
   CtAPI_WJQ: {
@@ -2660,6 +2660,10 @@ export const API = {
     CTBaseDataApi: {
       // 获取超时服务原因与重复服务原因
       GetReasonList: before + '/CTBaseDataApi/GetReasonList',
+      // 获取所有项目
+      GetCheckInProjectList: before + '/CTBaseDataApi/GetCheckInProjectList',
+      // 根据项目ID获取企业和排口
+      GetProjectPointRelationList: before + '/CTProjectExecutionApi/GetProjectPointRelationList',
     },
     // 驾驶舱
     CTDataScreenApi: {
@@ -2760,7 +2764,6 @@ export const API = {
       // 导出 - 超时服务基础数据
       ExportRepeatServiceInfo: before + '/CTStatisticsApi/ExportRepeatServiceInfo',
     },
-
     // 服务热线电话
     HotPhone: {
       // 获取服务热线列表
@@ -2855,7 +2858,30 @@ export const API = {
       ExportTimelyPassRateListByUser:
         before + '/CTProjectExecutionApi/ExportTimelyPassRateListByUser',
     },
+    // 现场质量检查
+    SiteQualityInspection: {
+      // 现场质量检查 - 省区
+      GetOnsiteInspectionRecordForRegion: before + '/CTProjectExecutionApi/GetOnsiteInspectionRecordForRegion',
+      // 现场质量检查 - 省区 - 导出
+      ExportOnsiteInspectionRecordForRegion: before + '/CTProjectExecutionApi/ExportOnsiteInspectionRecordForRegion',
+      // 现场质量检查 - 省区详情
+      GetOnsiteInspectionRecordForRegionInfo: before + '/CTProjectExecutionApi/GetOnsiteInspectionRecordForRegionInfo',
+      // 现场质量检查 - 省区详情 - 导出
+      ExportOnsiteInspectionRecordForRegionInfo: before + '/CTProjectExecutionApi/ExportOnsiteInspectionRecordForRegionInfo',
+      // 现场质量检查、现场检查记录
+      GetOnsiteInspectionRecordList: before + '/CTProjectExecutionApi/GetOnsiteInspectionRecordList',
+       // 导出现场检查记录
+      ExportOnsiteInspectionRecord: before + '/CTProjectExecutionApi/ExportOnsiteInspectionRecord',
+      // 现场质量检查 - 详情/表格内容
+      GetOnsiteInspectionRecordView: before + '/CTProjectExecutionApi/GetOnsiteInspectionRecordView',
+      // 添加/修改现场检查
+      AddOrUpdateOnsiteInspectionRecord: before + '/CTProjectExecutionApi/AddOrUpdateOnsiteInspectionRecord',
+      // 删除现场检查
+      DeleteOnsiteInspectionRecord: before + '/CTProjectExecutionApi/DeleteOnsiteInspectionRecord',
+      // 根据系统型号获取检查类型
+      GetInspectionTypeByCemsModel: before + '/CTProjectExecutionApi/GetInspectionTypeByCemsModel',
+     
+    }
   },
 };
-
 export const UPLOAD = {};

@@ -138,24 +138,24 @@ const Index = (props) => {
        return text == '合计' ? <span style={{color:'rgba(0, 0, 0, 0.85)'}}>{text}</span> :  <a onClick={() => regDetail(record,par)}>{text}</a>
       }
     },
-    {
-      title: '运维企业数',
-      dataIndex: 'EntCount',
-      key: 'EntCount',
-      align: 'center',
-      fixed:'left',
-      width:100,
-      ellipsis: true,
-    },
-    {
-      title: '运维监测点数',
-      dataIndex: 'PointCount',
-      key: 'PointCount',
-      align: 'center',
-      fixed:'left',
-      width:100,
-      ellipsis: true,
-    },
+    // {
+    //   title: '运维企业数',
+    //   dataIndex: 'EntCount',
+    //   key: 'EntCount',
+    //   align: 'center',
+    //   fixed:'left',
+    //   width:100,
+    //   ellipsis: true,
+    // },
+    // {
+    //   title: '运维监测点数',
+    //   dataIndex: 'PointCount',
+    //   key: 'PointCount',
+    //   align: 'center',
+    //   fixed:'left',
+    //   width:100,
+    //   ellipsis: true,
+    // },
   ];
   const [columns, setColumns] = useState([]);
   const getChildren = (children, key, firstTitle, par, ) => {
@@ -336,24 +336,24 @@ const Index = (props) => {
         }
       }
     },
-    {
-      title: '运维企业数',
-      dataIndex: 'EntCount',
-      key: 'EntCount',
-      align: 'center',
-      fixed:'left',
-      width:100,
-      ellipsis: true,
-    },
-    {
-      title: '运维监测点数',
-      dataIndex: 'PointCount',
-      key: 'PointCount',
-      align: 'center',
-      fixed:'left',
-      width:100,
-      ellipsis: true,
-    },
+    // {
+    //   title: '运维企业数',
+    //   dataIndex: 'EntCount',
+    //   key: 'EntCount',
+    //   align: 'center',
+    //   fixed:'left',
+    //   width:100,
+    //   ellipsis: true,
+    // },
+    // {
+    //   title: '运维监测点数',
+    //   dataIndex: 'PointCount',
+    //   key: 'PointCount',
+    //   align: 'center',
+    //   fixed:'left',
+    //   width:100,
+    //   ellipsis: true,
+    // },
   ];
   const [columns2, setColumns2] = useState([]);
 
@@ -393,20 +393,20 @@ const Index = (props) => {
       fixed:'left',
       ellipsis: true,
     },
-    {
-      title: '运维负责人',
-      dataIndex: 'OprationName',
-      key: 'OprationName',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '运维负责人工号',
-      dataIndex: 'OprationAccount',
-      key: 'OprationAccount',
-      align: 'center',
-      ellipsis: true,
-    },
+    // {
+    //   title: '运维负责人',
+    //   dataIndex: 'OprationName',
+    //   key: 'OprationName',
+    //   align: 'center',
+    //   ellipsis: true,
+    // },
+    // {
+    //   title: '运维负责人工号',
+    //   dataIndex: 'OprationAccount',
+    //   key: 'OprationAccount',
+    //   align: 'center',
+    //   ellipsis: true,
+    // },
     {
       title: '上传台账数',
       dataIndex: 'RecordNum',
@@ -534,7 +534,7 @@ const Index = (props) => {
                    }else if (dateItem.IsOpertaion && dateItem.date == item.date) { //运营周期内
                     return <Row align='middle' justify='center' style={{ background: '#bae7ff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}></Row>
 
-                  } 
+                  }
                   // else if ((!dateItem.IsOpertaion && dateItem.date == item.date)) {//不在运营周期内
                   //   return <Row align='middle' justify='center' style={{ background: '#fff', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}> </Row>
                   // }
@@ -602,7 +602,7 @@ const Index = (props) => {
     setAccountPageSize(PageSize)
     accountFinish(PageIndex, PageSize, { ...accountDetailQueryPar, pageIndex: PageIndex, pageSize: PageSize })
   }
-  const accountExport = async () => { //详情导出 
+  const accountExport = async () => { //详情导出
     const values = await accountForm.validateFields();
     props.exportOperationRecordAnalyInfoList({
       ...recordAnalyListQueryPar,

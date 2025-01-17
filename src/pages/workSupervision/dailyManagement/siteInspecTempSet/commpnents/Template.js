@@ -1,29 +1,56 @@
-
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Descriptions, Select, Tag, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Space } from 'antd';
-import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, QuestionCircleOutlined, ProfileOutlined, EditOutlined } from '@ant-design/icons';
-import { connect } from "dva";
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import {
+  Table,
+  Input,
+  InputNumber,
+  Popconfirm,
+  Form,
+  Typography,
+  Card,
+  Button,
+  Descriptions,
+  Select,
+  Tag,
+  Progress,
+  message,
+  Row,
+  Col,
+  Tooltip,
+  Divider,
+  Modal,
+  DatePicker,
+  Radio,
+  Spin,
+  Space,
+} from 'antd';
+import SdlTable from '@/components/SdlTable';
+import {
+  PlusOutlined,
+  UpOutlined,
+  DownOutlined,
+  ExportOutlined,
+  QuestionCircleOutlined,
+  ProfileOutlined,
+  EditOutlined,
+} from '@ant-design/icons';
+import { connect } from 'dva';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 const { RangePicker } = DatePicker;
-import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
+import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon';
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
-import RegionList from '@/components/RegionList'
-import styles from "../style.less"
+import RegionList from '@/components/RegionList';
+import styles from '../style.less';
 import Cookie from 'js-cookie';
-import NumTips from '@/components/NumTips'
+import NumTips from '@/components/NumTips';
 import cuid from 'cuid';
 import classNames from 'classnames';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'siteInspecTempSet'
-
-
-
+const namespace = 'siteInspecTempSet';
 
 const dvaPropsData = ({ loading, siteInspecTempSet, global, common }) => ({
   tableDatas: siteInspecTempSet.inspectorTemplateList,
@@ -35,73 +62,92 @@ const dvaPropsData = ({ loading, siteInspecTempSet, global, common }) => ({
   getMonitorCategorySystemListLoading: loading.effects[`${namespace}/GetMonitorCategorySystemList`],
   cemsModelNameList: siteInspecTempSet.cemsModelNameList,
   getOnsiteInspectionTypeListLoading: loading.effects[`${namespace}/GetOnsiteInspectionTypeList`],
-  inspectorTypeItemList: siteInspecTempSet.inspectorTypeItemList,
-})
+});
 
-const dvaDispatch = (dispatch) => {
+const dvaDispatch = dispatch => {
   return {
-    updateState: (payload) => {
+    updateState: payload => {
       dispatch({
         type: `${namespace}/updateState`,
         payload: payload,
-      })
+      });
     },
-    GetOnsiteInspectionInfoList: (payload) => { // 列表
+    GetOnsiteInspectionInfoList: payload => {
+      // 列表
       dispatch({
         type: `${namespace}/GetOnsiteInspectionInfoList`,
         payload: payload,
-      })
+      });
     },
 
-    AddOrUpdateOnsiteInspectionInfo: (payload, callback) => { // 添加 or 编辑
+    AddOrUpdateOnsiteInspectionInfo: (payload, callback) => {
+      // 添加 or 编辑
       dispatch({
         type: `${namespace}/AddOrUpdateOnsiteInspectionInfo`,
         payload: payload,
-        callback: callback
-      })
+        callback: callback,
+      });
     },
-    DeleteOnsiteInspectionInfo: (payload, callback) => { // 删除
+    DeleteOnsiteInspectionInfo: (payload, callback) => {
+      // 删除
       dispatch({
         type: `${namespace}/DeleteOnsiteInspectionInfo`,
         payload: payload,
-        callback: callback
-      })
+        callback: callback,
+      });
     },
-    ChangeOnsiteInspectionInfoStatus: (payload, callback) => { // 更改状态
+    ChangeOnsiteInspectionInfoStatus: (payload, callback) => {
+      // 更改状态
       dispatch({
         type: `${namespace}/ChangeOnsiteInspectionInfoStatus`,
         payload: payload,
-        callback: callback
-      })
+        callback: callback,
+      });
     },
-    GetOnsiteInspectionInfoDetail: (payload, callback) => { // 详细
+    GetOnsiteInspectionInfoDetail: (payload, callback) => {
+      // 详细
       dispatch({
         type: `${namespace}/GetOnsiteInspectionInfoDetail`,
         payload: payload,
         callback: callback,
-      })
+      });
     },
-  }
-}
-const Index = (props) => {
+    GetInspectionTypeByCemsModel: (payload, callback) => {
+      dispatch({
+        type: `siteInspecTempSet/GetInspectionTypeByCemsModel`,
+        payload: payload,
+        callback: callback,
+      });
+    },
+  };
+};
+const Index = props => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
-  const { tableDatas, tableLoading, clientHeight, type, tableTotal, detailLoading, inspectorTypeDescloading, saveloading, inspectorTypeList, inspectorTypeDescList, inspectorTemplateView,getOnsiteInspectionTypeListLoading,getMonitorCategorySystemListLoading,cemsModelNameList, inspectorTypeItemList} = props;
-
+  const {
+    tableDatas,
+    tableLoading,
+    clientHeight,
+    type,
+    tableTotal,
+    detailLoading,
+    inspectorTypeDescloading,
+    saveloading,
+    inspectorTypeList,
+    inspectorTypeDescList,
+    inspectorTemplateView,
+    getOnsiteInspectionTypeListLoading,
+    getMonitorCategorySystemListLoading,
+    cemsModelNameList,
+  } = props;
 
   useEffect(() => {
     onFinish(pageIndex, pageSize);
-
   }, []);
 
-
-
-
-
-
-  const [ID, setID] = useState()
-  const [title, setTitle] = useState('添加')
+  const [ID, setID] = useState();
+  const [title, setTitle] = useState('添加');
 
   const columns = [
     {
@@ -128,7 +174,7 @@ const Index = (props) => {
       key: 'EffectiveDate',
       align: 'center',
       render: (text, record) => {
-        return text && moment(text).format("YYYY-MM-DD")
+        return text && moment(text).format('YYYY-MM-DD');
       },
     },
 
@@ -139,10 +185,30 @@ const Index = (props) => {
       align: 'center',
       render: (text, record) => {
         if (text == 1) {
-          return <span onClick={() => { statusChange(record) }}><Tag style={{ cursor: 'pointer' }} color="blue">启用</Tag></span>;
+          return (
+            <span
+              onClick={() => {
+                statusChange(record);
+              }}
+            >
+              <Tag style={{ cursor: 'pointer' }} color="blue">
+                启用
+              </Tag>
+            </span>
+          );
         }
         if (text == 0) {
-          return <span onClick={() => { statusChange(record) }}><Tag style={{ cursor: 'pointer' }} color="red">停用</Tag></span>;
+          return (
+            <span
+              onClick={() => {
+                statusChange(record);
+              }}
+            >
+              <Tag style={{ cursor: 'pointer' }} color="red">
+                停用
+              </Tag>
+            </span>
+          );
         }
       },
     },
@@ -167,109 +233,156 @@ const Index = (props) => {
         return (
           <>
             <Tooltip title="编辑">
-              <a onClick={() => {
-                edit(record)
-              }}  >
+              <a
+                onClick={() => {
+                  edit(record);
+                }}
+              >
                 <EditOutlined style={{ fontSize: 16 }} />
               </a>
             </Tooltip>
             <Divider type="vertical" />
             <Tooltip title="详情">
-              <a onClick={() => { detail(record) }}>
+              <a
+                onClick={() => {
+                  detail(record);
+                }}
+              >
                 <ProfileOutlined style={{ fontSize: 16 }} />
               </a>
             </Tooltip>
             <Divider type="vertical" />
             <Tooltip title="删除">
-              <Popconfirm placement="top" title="确定要删除这条数据吗？" onConfirm={() => del(record)} okText="是" cancelText="否">
-                <a> <DelIcon /> </a>
+              <Popconfirm
+                placement="top"
+                title="确定要删除这条数据吗？"
+                onConfirm={() => del(record)}
+                okText="是"
+                cancelText="否"
+              >
+                <a>
+                  {' '}
+                  <DelIcon />{' '}
+                </a>
               </Popconfirm>
             </Tooltip>
           </>
-        )
-      }
+        );
+      },
+    },
+  ];
+  const statusChange = row => {
+    props.ChangeOnsiteInspectionInfoStatus({ Num: row.Num, status: row.UseStatus }, () => {
+      onFinish(pageIndex, pageSize);
+    });
+  };
 
-    }
-  ]
-  const statusChange = (row) => {
-    props.ChangeOnsiteInspectionInfoStatus({ Num: row.Num }, () => { onFinish(pageIndex, pageSize) })
-  }
-
-
-  const onFinish = async (pageIndexs, pageSizes) => {  //查询
+  const onFinish = async (pageIndexs, pageSizes) => {
+    //查询
     try {
       const values = await form.validateFields();
       props.GetOnsiteInspectionInfoList({
         ...values,
         // pageIndex: pageIndexs,
         // pageSize: pageSizes
-      })
+      });
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
-  }
+  };
 
-  const del = (row) => {
+  // 根据CEMS型号获取检查项目列表
+  const [inspectionTypeList, setInspectionTypeList] = useState([]);
+  const GetInspectionTypeByCemsModel = CemsModel => {
+    props.GetInspectionTypeByCemsModel({ cemsModel: CemsModel }, data => {
+      setInspectionTypeList(data);
+    });
+  };
+
+  const del = row => {
     props.DeleteOnsiteInspectionInfo({ Num: row.Num }, () => {
       // setPageIndex(1)
-      onFinish(1, pageSize)
-    })
-  }
+      onFinish(1, pageSize);
+    });
+  };
 
-  const edit = (row) => {
-      setVisible(true)
-      setTitle('编辑')
-      props.GetOnsiteInspectionInfoDetail({
+  const [originalData, setOriginalData] = useState(null);
+  const [currentData, setCurrentData] = useState({});
+  const edit = row => {
+    setVisible(true);
+    setTitle('编辑');
+    setCurrentData(row);
+    props.GetOnsiteInspectionInfoDetail(
+      {
         Num: row.Num,
-      }, (data) => {
+      },
+      data => {
         if (data) {
           form2.setFieldsValue({
             ...data,
-            Num:row.Num,
+            Num: row.Num,
             EffectiveDate: data.EffectiveDate && moment(data.EffectiveDate),
-          })
-        }
+          });
 
-        let echoData = []
-        const inspectorTypeModelList = data.InspectorTypeModelList;
-        if (inspectorTypeModelList && inspectorTypeModelList[0]) {
-          const echoData = inspectorTypeModelList.map(item => {
-            return {
+          // 获取检查项目列表
+          GetInspectionTypeByCemsModel(data.CemsModel);
+
+          let echoData = [];
+          const inspectorTypeModelList = data.InspectorTypeModelList;
+          if (inspectorTypeModelList && inspectorTypeModelList[0]) {
+            const echoData = inspectorTypeModelList.map(item => ({
               ...item,
               ID: cuid(),
               editable: true,
               type: 'edit',
-            }
+            }));
+            setData([...echoData]);
 
-          })
-          setData([...echoData])
-          echoData.map(item => {
-            form2.setFieldsValue({
-              [`MainId${item.ID}`]: item.MainId,
-              [`InspectionProject${item.ID}`]: item.InspectionProject,
-              [`Require${item.ID}`]: item.Require,
-              [`SetValue${item.ID}`]: item.SetValue,
-              [`DisplayValue${item.ID}`]: item.DisplayValue,
-            })
-          })
+            // 缓存原始数据
+            setOriginalData({
+              cemsModel: data.CemsModel,
+              data: echoData,
+              formValues: inspectorTypeModelList.reduce((acc, item) => ({
+                ...acc,
+                [`MainId${item.ID}`]: item.MainId,
+                [`InspectionProject${item.ID}`]: item.InspectionProject,
+                [`Require${item.ID}`]: item.Require,
+                [`SetValue${item.ID}`]: item.SetValue,
+                [`DisplayValue${item.ID}`]: item.DisplayValue,
+              }), {}),
+            });
+
+            echoData.map(item => {
+              form2.setFieldsValue({
+                [`MainId${item.ID}`]: item.MainId,
+                [`InspectionProject${item.ID}`]: item.InspectionProject,
+                [`Require${item.ID}`]: item.Require,
+                [`SetValue${item.ID}`]: item.SetValue,
+                [`DisplayValue${item.ID}`]: item.DisplayValue,
+              });
+            });
+          }
         }
-      })
+      },
+    );
+  };
 
-  }
-
-  const detail = (row) => {
-    setDetailVisible(true)
-    setDetailTitle()
-    props.GetOnsiteInspectionInfoDetail({
-      Num: row.Num,
-    }, (data) => { })
-  }
+  const detail = row => {
+    setDetailVisible(true);
+    setDetailTitle();
+    props.GetOnsiteInspectionInfoDetail(
+      {
+        Num: row.Num,
+      },
+      data => {},
+    );
+  };
 
   const add = () => {
-    setVisible(true)
-    setTitle('添加')
-  }
-
+    setVisible(true);
+    setTitle('添加');
+    setCurrentData({});
+  };
 
   const save = async () => {
     const values = await form2.validateFields();
@@ -282,34 +395,34 @@ const Index = (props) => {
           Require: values[`Require${item.ID}`],
           SetValue: values[`SetValue${item.ID}`],
           DisplayValue: values[`DisplayValue${item.ID}`],
-        }
-      })
+        };
+      });
       const par = {
-        Num:values.Num,
+        UseStatus: currentData.UseStatus,
+        Num: values.Num,
         CemsModel: values.CemsModel,
         InspectionName: values.InspectionName,
-        EffectiveDate: values.EffectiveDate ? moment(values.EffectiveDate).startOf('days').format("YYYY-MM-DD HH:mm:ss") : null,
+        EffectiveDate: values.EffectiveDate
+          ? moment(values.EffectiveDate)
+              .startOf('days')
+              .format('YYYY-MM-DD HH:mm:ss')
+          : null,
         ChildList: inspectorTemplateList,
-      }
-      props.AddOrUpdateOnsiteInspectionInfo({
-        ...par,
-      }, () => {
-        setVisible(false)
-        onFinish(pageIndex, pageSize)
-      })
+      };
+      props.AddOrUpdateOnsiteInspectionInfo(
+        {
+          ...par,
+        },
+        () => {
+          setVisible(false);
+          onFinish(pageIndex, pageSize);
+        },
+      );
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
     }
-  }
-  const [visible, setVisible] = useState(false)
-
-
-
-
-
-
-
-
+  };
+  const [visible, setVisible] = useState(false);
 
   const columns2 = [
     {
@@ -355,21 +468,29 @@ const Index = (props) => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        return <span onClick={() => { cancel(record) }}> {/*编辑的删除 */}
-          <a>删除</a>
-        </span>
-      }
-    }
-  ]
-  const addCol = columns2.map((col) => {
+        return (
+          <span
+            onClick={() => {
+              cancel(record);
+            }}
+          >
+            {/*编辑的删除 */}
+            <a>删除</a>
+          </span>
+        );
+      },
+    },
+  ];
+  const addCol = columns2.map(col => {
     if (!col.editable) {
       return col;
     }
     return {
       ...col,
-      onCell: (record) => ({
+      onCell: record => ({
         record,
-        inputType: col.title === '检查项目' ? 'select' : col.title === '要求' ? 'textArea' : 'input',
+        inputType:
+          col.title === '检查项目' ? 'select' : col.title === '要求' ? 'textArea' : 'input',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: true,
@@ -378,106 +499,148 @@ const Index = (props) => {
     };
   });
 
-  const columns3= [
+  const getMergeRows = (text, record, index, dataSource = []) => {
+    if (!dataSource || !Array.isArray(dataSource) || !record) {
+      return 1;
+    }
+
+    let rowSpan = 1;
+    if (index !== 0 && record.Inspection === dataSource[index - 1]?.Inspection) {
+      rowSpan = 0;
+    } else {
+      for (let i = index + 1; i < dataSource.length; i++) {
+        if (record.Inspection === dataSource[i]?.Inspection) {
+          rowSpan++;
+        } else {
+          break;
+        }
+      }
+    }
+    return rowSpan;
+  };
+
+  const columns3 = [
     {
       title: '序号',
       dataIndex: 'Sort',
       key: 'Sort',
       align: 'center',
-      width: 54,
+      width: 40,
+      render: (text, record, index) => {
+        const dataSource = props.inspectorTemplateView?.InspectorTypeModelList || [];
+        const obj = {
+          props: {},
+        };
+
+        // 计算实际序号
+        let actualIndex = 1;
+        for (let i = 0; i < index; i++) {
+          if (dataSource[i]?.Inspection !== dataSource[i - 1]?.Inspection) {
+            actualIndex++;
+          }
+        }
+
+        obj.children = record.Inspection !== dataSource[index - 1]?.Inspection ? actualIndex : '';
+        obj.props.rowSpan = getMergeRows(text, record, index, dataSource);
+        return obj;
+      },
     },
     {
       title: '检查项目',
       dataIndex: 'Inspection',
+      key: 'Inspection',
       align: 'center',
-      width: 300,
       colSpan: 2,
-      render: (value, record) => {
-        let obj = {
-          children: <div>{value}</div>,
-          props: { rowSpan: record.Count },
+      render: (text, record, index) => {
+        const obj = {
+          children: text,
+          props: {},
         };
+        obj.props.rowSpan = getMergeRows(
+          text,
+          record,
+          index,
+          props.inspectorTemplateView?.InspectorTypeModelList,
+        );
         return obj;
-      }
+      },
     },
     {
       title: '监测点位',
       dataIndex: 'InspectionProject',
-      align: 'InspectionProject',
+      key: 'InspectionProject',
       align: 'center',
       colSpan: 0,
+      width: 120,
     },
     {
       title: '要求',
       dataIndex: 'Require',
       key: 'Require',
       align: 'center',
-      width: 'auto',
     },
     {
       title: '设定值',
       dataIndex: 'SetValue',
       key: 'SetValue',
       align: 'center',
-      width: 120,
     },
     {
       title: '显示值',
       dataIndex: 'DisplayValue',
       key: 'DisplayValue',
       align: 'center',
-      width: 120,
     },
-  ]
-  const cancel = (record) => {
+  ];
+  const cancel = record => {
     const newData = [...data];
-    const index = newData.findIndex((item) => record.Sort === item.Sort);
+    const index = newData.findIndex(item => record.Sort === item.Sort);
     const item = newData[index];
     newData.splice(index, 1);
     setData(newData);
   };
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
   const handleAdd = () => {
     const newData = {
       Sort: data.length + 1,
       ID: cuid(),
       editable: true,
       type: 'add',
-    }
-    setData([...data, newData])
-  }
-  const [pageIndex, setPageIndex] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
+    };
+    setData([...data, newData]);
+  };
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const handleTableChange = (PageIndex, PageSize) => {
-    setPageIndex(PageIndex)
-    setPageSize(PageSize)
-    onFinish(PageIndex, PageSize)
-  }
+    setPageIndex(PageIndex);
+    setPageSize(PageSize);
+    onFinish(PageIndex, PageSize);
+  };
 
-  const onValuesChange = (hangedValues, allValues) => {
-  }
-  const [detailVisible, setDetailVisible] = useState(false)
-  const [detailTitle, setDetailTitle] = useState('')
+  const onValuesChange = (hangedValues, allValues) => {};
+  const [detailVisible, setDetailVisible] = useState(false);
+  const [detailTitle, setDetailTitle] = useState('');
 
   return (
     <div>
       <Form
         form={form}
         name="advanced_search"
-        onFinish={() => { onFinish(pageIndex, pageSize) }}
-        initialValues={{
+        onFinish={() => {
+          onFinish(pageIndex, pageSize);
         }}
-        layout='inline'
+        initialValues={{}}
+        layout="inline"
         style={{ paddingBottom: 8 }}
       >
-        <Form.Item label='系统型号' name='CemsModel'>
-          <Input placeholder='请输入' allowClear />
+        <Form.Item label="系统型号" name="CemsModel">
+          <Input placeholder="请输入" allowClear />
         </Form.Item>
-        <Form.Item label='检查项目' name='InspectionProject'>
-          <Input placeholder='请输入' allowClear />
+        <Form.Item label="检查项目" name="InspectionProject">
+          <Input placeholder="请输入" allowClear />
         </Form.Item>
-        <Form.Item label='使用状态' name='UseStatus' >
-          <Select placeholder='请选择' allowClear style={{ width: 100 }}>
+        <Form.Item label="使用状态" name="UseStatus">
+          <Select placeholder="请选择" allowClear style={{ width: 100 }}>
             <Option value={1}>启用</Option>
             <Option value={0}>停用</Option>
           </Select>
@@ -486,12 +649,17 @@ const Index = (props) => {
           <Button type="primary" loading={tableLoading} htmlType="submit">
             查询
           </Button>
-          <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
+          <Button
+            style={{ margin: '0 8px' }}
+            onClick={() => {
+              form.resetFields();
+            }}
+          >
             重置
           </Button>
           <Button type="primary" icon={<PlusOutlined />} style={{ marginRight: 8 }} onClick={add}>
             添加
-            </Button>
+          </Button>
         </Form.Item>
       </Form>
       <SdlTable
@@ -513,10 +681,14 @@ const Index = (props) => {
         title={title}
         visible={visible}
         onOk={save}
-        okText='保存'
+        okText="保存"
         destroyOnClose={true}
-        onCancel={() => { setVisible(false);setData([]);form2.resetFields() }}
-        width='80%'
+        onCancel={() => {
+          setVisible(false);
+          setData([]);
+          form2.resetFields();
+        }}
+        width="80%"
         confirmLoading={title === '添加' ? saveloading : saveloading || detailLoading}
         wrapClassName={`spreadOverModal isFooterSty ${styles.telModalSty}`}
         mask={false}
@@ -526,19 +698,52 @@ const Index = (props) => {
             form={form2}
             name="advanced_search2"
             onValuesChange={onValuesChange}
-            layout='inline'
+            layout="inline"
           >
-              <Form.Item label='CEMS型号' name='CemsModel' rules={[{ required: true, message: '请选择CEMS型号！' }]}>
-                <Select style={{width:200}} placeholder='请选择' showSearch optionFilterProp="Name"  loading={getMonitorCategorySystemListLoading} fieldNames={{label:'Name',value:'ChildID'}} options={cemsModelNameList} />
-              </Form.Item>
-              <Form.Item label='检查表名称' name='InspectionName' rules={[{ required: true, message: '请输入检查表名称' }]}>
-                <Input placeholder='请输入' allowClear />
-              </Form.Item>
-              <Form.Item label="生效日期" name="EffectiveDate"  rules={[{ required: true, message: '请选择生效日期' }]}>
-                <DatePicker allowClear/>
-              </Form.Item>
-              <Form.Item name='Num' hidden />
-            <div className={'addEditTable'} style={{marginTop:12}}>
+            <Form.Item
+              label="CEMS型号"
+              name="CemsModel"
+              rules={[{ required: true, message: '请选择CEMS型号！' }]}
+            >
+              <Select
+                style={{ width: 200 }}
+                placeholder="请选择"
+                showSearch
+                disabled={title === '编辑'}
+                optionFilterProp="Name"
+                loading={getMonitorCategorySystemListLoading}
+                fieldNames={{ label: 'Name', value: 'ChildID' }}
+                options={cemsModelNameList}
+                onChange={value => {
+                  if (title === '编辑' && value === originalData?.cemsModel) {
+                    // 如果是编辑模式且切换回原来的型号，恢复原始数据
+                    setData(originalData.data);
+                    form2.setFieldsValue(originalData.formValues);
+                  } else {
+                    // 只清空表格数据
+                    setData([]);
+                  }
+                  // 获取新的检查类型数据
+                  GetInspectionTypeByCemsModel(value);
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              label="检查表名称"
+              name="InspectionName"
+              rules={[{ required: true, message: '请输入检查表名称' }]}
+            >
+              <Input placeholder="请输入" allowClear style={{ width: 300 }} />
+            </Form.Item>
+            <Form.Item
+              label="生效日期"
+              name="EffectiveDate"
+              rules={[{ required: true, message: '请选择生效日期' }]}
+            >
+              <DatePicker allowClear />
+            </Form.Item>
+            <Form.Item name="Num" hidden />
+            <div className={'addEditTable'} style={{ marginTop: 12 }}>
               <SdlTable
                 loading={tableLoading}
                 className={`compactTableSty add`}
@@ -550,42 +755,81 @@ const Index = (props) => {
                 pagination={false}
                 components={{
                   body: {
-                    cell: ({ editing, dataIndex, title, inputType, record, index, children, ...restProps }) => {
-                      const inputNode = title === '检查项目' ?
-                        <Space>
-                          <Form.Item name={`MainId${record.ID}`} rules={[{ required: true, message: `请选择检查项目` }]} style={{ margin: 0 }} >
-                            <Select style={{width:180}} placeholder={`请选择检查项目`} allowClear showSearch optionFilterProp="InspectionProject" loading={getOnsiteInspectionTypeListLoading} fieldNames={{ label: 'InspectionProject', value: 'ID' }} options={inspectorTypeItemList.filter(item=>item.UseStatus==1)} />
-                          </Form.Item>
-                          <Form.Item name={`InspectionProject${record.ID}`} rules={[{ required: true, message: `请输入监测点位` }]} style={{ margin: 0 }} >
-                            <Input  placeholder={`请输入监测点位`} />
-                          </Form.Item>
-                        </Space>
-                        :
-                        title === '要求' ?
-                          <TextArea rows={1} placeholder={`请输入`} allowClear />
-                          :
-                          <InputNumber rows={1} placeholder={`请输入`} allowClear />
-                      return <td {...restProps}>
-                        {editing ?
-                          title === '检查项目' ?
-                            inputNode
-                            :
-                            <Form.Item name={`${dataIndex}${record.ID}`} rules={[{ required: true, message: `请输入${title}` }]} style={{ margin: 0 }} >
-                              {inputNode}
+                    cell: ({
+                      editing,
+                      dataIndex,
+                      title,
+                      inputType,
+                      record,
+                      index,
+                      children,
+                      ...restProps
+                    }) => {
+                      const inputNode =
+                        title === '检查项目' ? (
+                          <Space>
+                            <Form.Item
+                              name={`MainId${record.ID}`}
+                              rules={[{ required: true, message: `请选择检查项目` }]}
+                              style={{ margin: 0 }}
+                            >
+                              <Select
+                                style={{ width: 220 }}
+                                placeholder={`请选择检查项目`}
+                                allowClear
+                                showSearch
+                                optionFilterProp="InspectionProject"
+                                // loading={getOnsiteInspectionTypeListLoading}
+                                fieldNames={{ label: 'InspectionProject', value: 'ID' }}
+                                options={inspectionTypeList}
+                              />
                             </Form.Item>
-                          :
-                          children
-                        }
-                      </td>
-                    }
+                            <Form.Item
+                              name={`InspectionProject${record.ID}`}
+                              rules={[{ required: true, message: `请输入监测点位` }]}
+                              style={{ margin: 0 }}
+                            >
+                              <Input placeholder={`请输入监测点位`} />
+                            </Form.Item>
+                          </Space>
+                        ) : title === '要求' ? (
+                          <TextArea rows={1} placeholder={`请输入`} allowClear />
+                        ) : (
+                          <Input rows={1} placeholder={`请输入`} allowClear />
+                        );
+                      return (
+                        <td {...restProps}>
+                          {editing ? (
+                            title === '检查项目' ? (
+                              inputNode
+                            ) : (
+                              <Form.Item
+                                name={`${dataIndex}${record.ID}`}
+                                rules={[{ required: true, message: `请输入${title}` }]}
+                                style={{ margin: 0 }}
+                              >
+                                {inputNode}
+                              </Form.Item>
+                            )
+                          ) : (
+                            children
+                          )}
+                        </td>
+                      );
+                    },
                   },
-
                 }}
               />
             </div>
-            <Button style={{ marginTop: 8 }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleAdd()} >
+            <Button
+              style={{ marginTop: 8 }}
+              type="dashed"
+              block
+              icon={<PlusOutlined />}
+              onClick={() => handleAdd()}
+            >
               添加
-       </Button>
+            </Button>
           </Form>
         </Spin>
       </Modal>
@@ -594,16 +838,20 @@ const Index = (props) => {
         title={'详情'}
         visible={detailVisible}
         onOk={save}
-        okText='保存'
+        okText="保存"
         destroyOnClose={true}
-        onCancel={() => { setDetailVisible(false); }}
-        width='80%'
+        onCancel={() => {
+          setDetailVisible(false);
+        }}
+        width="80%"
         footer={null}
         mask={false}
         wrapClassName={`spreadOverModal ${styles.detailModal}`}
       >
         <Spin spinning={false}>
-              <Row justify='center' style={{paddingBottom:8}}><span style={{fontSize:18}}>{inspectorTemplateView?.InspectionName}</span></Row>
+          <Row justify="center" style={{ paddingBottom: 8 }}>
+            <span style={{ fontSize: 18 }}>{inspectorTemplateView?.InspectionName}</span>
+          </Row>
           <SdlTable
             bordered
             resizable
@@ -613,10 +861,12 @@ const Index = (props) => {
             columns={columns3}
             pagination={false}
           />
-        </Spin >
+        </Spin>
       </Modal>
     </div>
-
   );
 };
-export default connect(dvaPropsData, dvaDispatch)(Index);
+export default connect(
+  dvaPropsData,
+  dvaDispatch,
+)(Index);

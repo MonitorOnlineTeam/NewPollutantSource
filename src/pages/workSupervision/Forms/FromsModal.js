@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:56:52
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-23 15:14:18
+ * @Last Modified time: 2025-01-15 16:48:40
  * @Description: 任务单电子表单 - 操作弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -18,8 +18,9 @@ import Branch_Other from './Branch_Other';
 import AttendanceLog from './AttendanceLog';
 import AccountsReceivable from './AccountsReceivable';
 import ManageDepentVisit from '@/pages/workSupervision/dailyManagement/manageDepentVisit/components/RecordAndManagement';
-
+import SiteQualityInspection from './SiteQualityInspection';
 import Office from '@/pages/workSupervision/dailyManagement/officeCheck/ChecklistRecordAndManagement';
+import RecordMangerTable from '@/pages/workSupervision/dailyManagement/siteQualityInspection/RecordMangerTable';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   formsModalVisible: wordSupervision.formsModalVisible,
@@ -50,9 +51,18 @@ const FromsModal = props => {
 
   // 根据任务类型获取标题
   const getContentByTaskType = () => {
-    // 3.运维回访客户、4.成套回访客户.5.办事处检查、6、人员培训、7、检查考勤和日志、8、现场工作、9、部门内其他工作事项、10、支持其他部门工作、11、应收账款催收
+    // 1. 成套现场检查 3.运维回访客户、4.成套回访客户.5.办事处检查、6、人员培训、7、检查考勤和日志、8、现场工作、9、部门内其他工作事项、10、支持其他部门工作、11、应收账款催收
     let title = '';
     switch (taskInfo.TaskType) {
+      case 1:
+        // 成套现场检查
+        return (
+          <RecordMangerTable
+            modalType={1}
+            taskInfo={taskInfo}
+            editData={editData}
+          />
+        );
       case 3:
       case 4:
         return (

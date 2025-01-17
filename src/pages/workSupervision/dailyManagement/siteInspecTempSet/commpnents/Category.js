@@ -157,7 +157,6 @@ const Index = (props) => {
   const onFinish = async (pageIndexs, pageSizes) => {  //查询
     try {
       const values = await form.validateFields();
-      console.log(11111)
       props.GetOnsiteInspectionTypeList({
         ...values,
       })

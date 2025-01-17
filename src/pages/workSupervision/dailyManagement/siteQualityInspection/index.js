@@ -26,7 +26,7 @@ const WorkPage = props => {
 
   return (
     <BreadcrumbWrapper>
-      <Content  CTOperation={CTOperation} />
+      <Content CTOperation={CTOperation} />
     </BreadcrumbWrapper>
   );
 };

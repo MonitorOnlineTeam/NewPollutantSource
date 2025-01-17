@@ -163,7 +163,7 @@ export default class UserInfoEdit extends Component {
         this.setState({ checkedKeys });
         if (this.props.configInfo.IsOpera || this.isMonitor) {
              let checkedData = checkedKeys.checked;
-            this.setState({checkedKeys: checkedData,checkedKeysSel: checkedData }); 
+            this.setState({checkedKeys: checkedData,checkedKeysSel: checkedData });
         } else {
             const leafTree = [];
             checkedKeys.map(item => {
@@ -482,7 +482,8 @@ export default class UserInfoEdit extends Component {
                                                 checkedKeys={this.state.checkedKeys}
                                                 onSelect={this.onSelects}
                                                 selectedKeys={this.state.selectedKeys}
-                                                checkStrictly={this.props.configInfo.IsOpera}
+                                                // checkStrictly={this.props.configInfo.IsOpera}
+                                                checkStrictly={true}
                                             >
                                                 {this.renderTreeNodes(this.props.treeData)}
                                             </Tree>

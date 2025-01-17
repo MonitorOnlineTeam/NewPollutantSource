@@ -24,10 +24,16 @@ export const allSysList = [
     ID: '179c308a-a895-4a7a-9c40-4f30dd5ff0bc',
   },
   {
-    key: '异常数据识别',
+    key: '异常识别监管',
     value: '/SystemDashboard/AbnormalIdentify',
-    title: '污染源异常数据识别',
+    title: '污染源异常数据识别监管版',
     ID: 'f6eb76ab-ce0b-4cfb-8626-2e0ec4435ec3',
+  },
+  {
+    key: '异常识别集团',
+    value: '/SystemDashboard/AbnormalIdentify?isGroupEnt=true',
+    title: '污染源异常数据识别集团版',
+    ID: '8849f69d-ad48-4ddc-b8da-5b54990d9565',
   },
   {
     key: '智慧运维',

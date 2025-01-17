@@ -630,7 +630,7 @@ class CalendarPage extends PureComponent {
                       initialValue: undefined,
                     })(
                       <Select loading={this.props.getEntByProjectInfoLoading}  options={this.state.entList} placeholder="请选择" style={{ width: 150}}
-                         fieldNames={{ label: 'EntName', value: 'EntCode'}} 
+                         fieldNames={{ label: 'EntName', value: 'EntCode'}}
                          showSearch
                          allowClear
                          optionFilterProp="EntName"
@@ -656,26 +656,26 @@ class CalendarPage extends PureComponent {
                       }}
                     />
                     )}
-      
+
                   </Form.Item>
                   <Form.Item  label='监测点'>
-                   
+
                    {getFieldDecorator('DGIMN', {
                        initialValue: undefined,
                      })(
-                       <Select  
+                       <Select
                          loading={this.props.getPointByEntInfoLoading}
                          options={this.state.pointList}
-                         fieldNames={{ label: 'PointName', value: 'DGIMN'}} 
+                         fieldNames={{ label: 'PointName', value: 'DGIMN'}}
                          showSearch
                          allowClear
                          optionFilterProp="PointName"
                          placeholder="请选择"
                          style={{ width: 150 }}
-                        
+
                      />
                      )}
-       
+
                    </Form.Item>
                   <Form.Item>
                 <Space>

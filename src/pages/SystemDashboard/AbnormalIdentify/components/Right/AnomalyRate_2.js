@@ -198,7 +198,6 @@ const AnomalyRate = props => {
 
     return {};
   };
-  console.log('echarts1', echarts1);
   return (
     <HomeCard
       title="疑似异常占比分析"

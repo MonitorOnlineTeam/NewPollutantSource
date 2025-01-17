@@ -129,7 +129,7 @@ const LawEnforceBureauVisit = props => {
                     <Row style={{ width: '100%' }}>
                         <Col span={12}>
 
-                              <LargeRegionList 
+                              <LargeRegionList
                                  label='大区'
                                  name='RegionalArea'
                                  rules={[
@@ -139,7 +139,7 @@ const LawEnforceBureauVisit = props => {
                                         },
                                     ]}
                                />
-    
+
                         </Col>
                         <Col span={12}>
                             <Form.Item
@@ -152,7 +152,7 @@ const LawEnforceBureauVisit = props => {
                                     },
                                 ]}
                             >
-                                <SdlCascader noFilter  selectType='2,是' />
+                                <SdlCascader noFilter  selectType='2,否' />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -256,7 +256,7 @@ const LawEnforceBureauVisit = props => {
                         </Col>}
                         {purposeVisitValue!=723 && <Col span={12}>
                             <Form.Item name="Evaluate" label="取得效果" rules={[{required: true, message: '请选择取得效果！' }]}>
-                                <Select 
+                                <Select
                                     placeholder="请选择取得效果" loading={visitEnvironmentalParameterLoading}
                                     fieldNames={{ label: 'Name', value: 'ChildID'}}
                                     showSearch
@@ -292,22 +292,22 @@ const LawEnforceBureauVisit = props => {
                                 </Radio.Group>
                             </Form.Item>
                         </Col>
-            
-                        
 
-         
-     
+
+
+
+
                         <Col span={12}>
                             <Form.Item name="VisitType" label="拜访分类" rules={[{required: true, message: '请选择拜访分类！' }]}>
-                                <Select 
+                                <Select
                                     placeholder="请选择拜访分类" allowClear loading={visitEnvironmentalParameterLoading}
                                     fieldNames={{ label: 'Name', value: 'ChildID'}}
                                     options={achievingResultsList?.VisitTypeList}
                                 />
                             </Form.Item>
                         </Col>
-         
-                        
+
+
 
 
                     </Row>

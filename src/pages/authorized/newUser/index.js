@@ -56,6 +56,8 @@ import SdlTable from '@/components/SdlTable';
 import SelectPollutantType from '@/components/SelectPollutantType';
 import TreeTransfer from '@/components/TreeTransfer';
 import styles from './style.less';
+import { permissionButton } from '@/utils/utils';
+
 const { confirm } = Modal;
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
@@ -104,6 +106,7 @@ export default class UserInfoIndex extends Component {
       operaEditData:{},
     };
     this.isMonitor = sessionStorage.getItem('sysName')==='污染源监测监控系统' || Cookie.get('sysName')==='污染源监测监控系统';
+    const buttonList = permissionButton(props.match.path);
     this.operateCol = [{
       title: <span>操作</span>,
       dataIndex: '',
@@ -112,23 +115,27 @@ export default class UserInfoIndex extends Component {
       render: (text, row) => {
         return (
           <Fragment>
-            <Tooltip title="设置点位访问权限">
-              <a
-                onClick={() => {
-                  this.setState(
-                    {
-                      selectedRow: row,
-                    },
-                    () => {
-                      this.showDataModal();
-                    },
-                  );
-                }}
-              >
-                <DatabaseOutlined style={{ fontSize: 16 }} />
-              </a>
-            </Tooltip>
-            <Divider type="vertical" />
+            {
+              buttonList.includes('setPointAccess') && (
+              <Fragment>
+                <Tooltip title="设置点位访问权限">
+                  <a
+                    onClick={() => {
+                    this.setState(
+                      {
+                        selectedRow: row,
+                      },
+                      () => {
+                        this.showDataModal();
+                      },
+                    );
+                    }}
+                  >
+                    <DatabaseOutlined style={{ fontSize: 16 }} />
+                  </a>
+                </Tooltip>
+              </Fragment>
+            )}
             <Tooltip title="编辑">
               <a
                 onClick={() => {

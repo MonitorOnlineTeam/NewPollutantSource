@@ -44,6 +44,7 @@ const dvaPropsData = ({ loading, operationRecordList, global, common, operationf
   // recordTypeList: operationform.recordTypeList,
   currentRecordType: operationform.currentRecordType,
   currentDate: operationform.currentDate,
+  maintenanceSelectValue: operationform.maintenanceSelectValue,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -95,10 +96,10 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
 
-  const { DGIMN, PollutantType, tableDatas, tableTotal, tableLoading, regQueryPar, exportLoading, taskTypeLoading, taskTypeList, recordListCol, currentRecordType, currentDate } = props;
+  const { DGIMN, PollutantType, tableDatas, tableTotal, tableLoading, regQueryPar, exportLoading, taskTypeLoading, taskTypeList, recordListCol, currentRecordType, currentDate, maintenanceSelectValue } = props;
 
-  const [taskType,setTaskType] = useState()
-
+  const [taskType,setTaskType] = useState(maintenanceSelectValue)
+  console.log('props11', props)
   useEffect(() => {
     form.resetFields();
     props.getTaskTypeList({ DGIMN: DGIMN, PollutantType: PollutantType });
@@ -172,7 +173,7 @@ const Index = (props) => {
         //             let keys = ''
         //             keys = `${key}${index}`;
         //             console.log(keys, popKey, popVisible)
-        //             return  <RecordFormPopover keys={keys} text={text}/>  
+        //             return  <RecordFormPopover keys={keys} text={text}/>
         //           }
         //         }
         //       }
@@ -212,20 +213,23 @@ const Index = (props) => {
       name="advanced_search"
       layout='inline'
       initialValues={{
-        TaskType:undefined,
+        TaskType:maintenanceSelectValue,
         time: currentDate,
       }}
       className={styles["ant-advanced-search-form"]}
       onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
     >
       <Form.Item name='TaskType' >
-        <Select // label='运维内容' 
+        <Select // label='运维内容'
           placeholder='请选择' allowClear style={{ width: 220 }}
           loading={taskTypeLoading}
           fieldNames={{ label: 'TypeName', value: 'ID' }}
           options={taskTypeList}
           onChange={(value) => {
             setTaskType(value)
+            props.updateState('operationform',{
+              maintenanceSelectValue: value
+            })
             // props.updateState('operationform',{
             //   currentRecordType: value
             // })

@@ -4,68 +4,74 @@
  * @LastEditors: outman0611
  * @LastEditTime: 2024-11-28 13:38:08
  */
-import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Spin } from 'antd';
-import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, ProfileOutlined, AmazonCircleFilled, } from '@ant-design/icons';
-import { connect } from "dva";
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-const { RangePicker } = DatePicker;
+import React from 'react';
+import { Form, Select, Spin } from 'antd';
+import { connect } from 'dva';
 
-const { Option } = Select;
+const namespace = 'ctCommon';
 
-const namespace = 'ctCommon'
-
-
-const dvaPropsData = ({ loading, ctAfterSalesServiceManagement, global, }) => ({
+const dvaPropsData = ({ loading, ctCommon }) => ({
   largeRegionListLoading: loading.effects[`${namespace}/GetLargeRegionList`],
-})
+  largeRegionList: ctCommon.largeRegionList || [],
+});
 
 const dvaDispatch = (dispatch) => {
   return {
-    updateState: (payload) => {
+    GetLargeRegionList: (payload) => {
       dispatch({
-        type: `${namespace}/updateState`,
-        payload: payload,
-      })
+        type: `${namespace}/GetLargeRegionList`,
+        payload,
+      });
     },
-    GetLargeRegionList: (payload, callback) => { //服务大区
-      dispatch({
-        type: `ctCommon/GetLargeRegionList`,
-        payload: payload,
-        callback: callback,
-      })
-    },
-  }
-}
-const Index = (props) => {
+  };
+};
 
+const LargeRegionList = props => {
+  const {
+    name = 'serviceAreaCode',
+    label = '服务大区',
+    rules,
+    largeRegionListLoading,
+    formItemClassName,
+    GetLargeRegionList,
+    largeRegionList,
+    ...rest
+  } = props;
 
-
-  const { name, label,rules } = props;
-  const [largeRegionList, setLargeRegionList] = useState([]);
-
-
-
-  useEffect(() => {
-    props.GetLargeRegionList({}, (res) => {
-      setLargeRegionList(res)
-    })
-
+  React.useEffect(() => {
+    if (!largeRegionList.length) {
+      GetLargeRegionList({});
+    }
   }, []);
 
-  // const regionList = largeRegionList.filter(item=>item.ID==value)?.[0]?.ChildList onChange={(value,option)=>props.onChange(value,option,largeRegionList)}
   return (
-      <Form.Item name={name ? name : 'serviceAreaCode'} label={label ? label : '服务大区'}  className={props.formItemClassName} rules={rules}>
-        {props.largeRegionListLoading ?
-          <Spin size='small'> <Select placeholder='请选择' style={{minWidth:130,width:'100%'}}/> </Spin>
-          :
-          <Select placeholder='请选择' allowClear showSearch optionFilterProp="children"  style={{minWidth:130, width:'100%'}}>
-            {largeRegionList.map(item => <Option value={item.ID}>{item.LargeRegion}</Option>)}
-          </Select>
-        }
-      </Form.Item>
-
+    <Form.Item
+      name={name}
+      label={label}
+      className={formItemClassName}
+      rules={rules}
+    >
+      {largeRegionListLoading ? (
+        <Spin size='small'>
+          <Select placeholder='请选择' style={{minWidth:130, width:'100%'}}/>
+        </Spin>
+      ) : (
+        <Select
+          placeholder='请选择'
+          allowClear
+          showSearch
+          optionFilterProp="children"
+          style={{minWidth:130, width:'100%'}}
+        >
+          {largeRegionList.map(item => (
+            <Select.Option key={item.ID} value={item.ID}>
+              {item.LargeRegion}
+            </Select.Option>
+          ))}
+        </Select>
+      )}
+    </Form.Item>
   );
 };
-export default connect(dvaPropsData, dvaDispatch)(Index);
+
+export default connect(dvaPropsData, dvaDispatch)(LargeRegionList);

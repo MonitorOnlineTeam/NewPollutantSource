@@ -6,7 +6,7 @@
 
 .formContent {
   padding: 0 10%;
-  
+
   tr[data-row-key="PlateNumber"] {
     td :nth-child(2){
       text-align: left;
@@ -50,4 +50,35 @@ th.hideColumn{
     background-color: #fff;
   }
 
+}
+
+.siteQualityInspectionForm {
+  :global {
+    // 覆盖禁用状态下的字体颜色
+    .ant-input[disabled],
+    .ant-input-number-disabled .ant-input-number-input,
+    .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector,
+    .ant-picker.ant-picker-disabled,
+    .ant-radio-disabled + span,
+    .ant-input-disabled,
+    .ant-input-number-disabled,
+    .ant-select-disabled .ant-select-selection-item,
+    .ant-picker-disabled,
+    .ant-radio-wrapper-disabled,
+    .ant-input-disabled::placeholder,
+    .ant-input-number-disabled input::placeholder,
+    .ant-select-disabled .ant-select-selection-placeholder,
+    .ant-picker-disabled .ant-picker-input input::placeholder,
+    .ant-input[disabled]::placeholder,
+    // 添加日期选择器的样式
+    .ant-picker-disabled .ant-picker-input > input,
+    .ant-picker-disabled .ant-picker-suffix {
+      color: rgba(0, 0, 0, 0.85) !important;
+    }
+
+    // 确保 TextArea 也遵循相同的样式
+    .ant-input-disabled.ant-input-textarea {
+      color: rgba(0, 0, 0, 0.85) !important;
+    }
+  }
 }
