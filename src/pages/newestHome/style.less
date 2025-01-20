@@ -287,7 +287,7 @@
           color: @selectColor;
         }
         .ant-select-arrow{
-          top:70%;
+          // top:70%;
         }
         .ant-select-selection-item,
         .ant-select-item-option-content,
@@ -298,7 +298,12 @@
         .ant-select-dropdown {
           background-color: @cardBagCol !important;
           border: 0.0625rem solid @selectColor !important;
-          width: 5.625rem;
+          width: 5rem;
+        }
+        .ant-select-selector{
+          height: 1.375rem;
+        }
+        .ant-select-single.ant-select-sm:not(.ant-select-customize-input) .ant-select-selector{
         }
         .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
           //悬浮

@@ -220,12 +220,13 @@ const Index = (props) => {
 
   const initData = () => {
     onFinish()
-    setTimeout(() => {
-      props.getInspectorOperationInfoList({ ID: '', InspectorType: inspectorType, PollutantType: pollutantType || 2 }, (data) => {
-        foramtProblemFilesList(data)
-      })
-      // props.getMonitoringTypeList({})
-    })
+    // TODO：不确定这个是否需要，可能存在问题
+    // setTimeout(() => {
+    //   props.getInspectorOperationInfoList({ ID: '', InspectorType: inspectorType, PollutantType: pollutantType || 2 }, (data) => {
+    //     foramtProblemFilesList(data)
+    //   })
+    //   // props.getMonitoringTypeList({})
+    // })
   }
 
   let columns = [
@@ -733,7 +734,7 @@ const Index = (props) => {
         ETime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
         InspectorType: inspectorType,
-        // pollutantType : pollutantTypeCode,
+        pollutantType : isDetailModal ? undefined : pollutantTypeCode,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
         pageSize: pageSizes ? pageSizes : pageSize,
       })
@@ -750,8 +751,8 @@ const Index = (props) => {
       ETime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
       time: undefined,
       InspectorType: inspectorType,
-      apiName: props.exportApiName,
-      // pollutantType : pollutantTypeCode,
+      // apiName: props.exportApiName,
+      pollutantType :  isDetailModal ? undefined : pollutantTypeCode,
     })
   }
   const formatData = (data, type) => {

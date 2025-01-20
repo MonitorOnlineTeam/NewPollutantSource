@@ -161,5 +161,17 @@ export default Model.extend({
         callback(result.Datas);
       }
     },
+    // 复制现场检查模板
+    *CopyOnsiteInspectionInfo({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(
+        requestPost,
+        API.CtAPI_WJQ.SiteQualityInspection.CopyOnsiteInspectionInfo,
+        payload,
+      );
+      if (result.IsSuccess) {
+        message.success(result.Message);
+        callback();
+      }
+    },
   },
 });

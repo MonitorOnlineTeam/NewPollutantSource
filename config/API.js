@@ -2880,6 +2880,8 @@ export const API = {
       DeleteOnsiteInspectionRecord: before + '/CTProjectExecutionApi/DeleteOnsiteInspectionRecord',
       // 根据系统型号获取检查类型
       GetInspectionTypeByCemsModel: before + '/CTProjectExecutionApi/GetInspectionTypeByCemsModel',
+      // 复制现场检查模板
+      CopyOnsiteInspectionInfo: before + '/CTProjectExecutionApi/CopyOnsiteInspectionInfo',
      
     }
   },

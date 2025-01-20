@@ -30,7 +30,7 @@ import { getCurrentUserId } from '@/utils/utils';
 import { DelIcon, EditIcon } from '@/utils/icon';
 import CustomerInterview from '@/pages/workSupervision/Forms/CustomerInterview';
 import LargeRegionSelect from '@/pages/workSupervision/dailyManagement/components/LargeRegionSelect';
-import styles from "../../siteInspecTempSet/style.less"
+import styles from '../../siteInspecTempSet/style.less';
 
 const { Text, Link } = Typography;
 
@@ -38,7 +38,6 @@ const dvaPropsData = ({ loading, provinceAllList, common }) => ({
   loading: loading.effects[`wordSupervision/GetCustomerVisitInfo`],
   exportLoading: loading.effects[`wordSupervision/ExportCustomerVisitInfo`],
   addFlagLoading: loading.effects[`wordSupervision/GetCustomerVisitDailyWorks`],
-
 });
 
 const RecordAndManagement = props => {
@@ -54,11 +53,21 @@ const RecordAndManagement = props => {
   const [provinceAllList, setProvinceAllList] = useState([]);
   const [addData, setAddData] = useState({});
 
-  const { dispatch, loading, exportLoading, open, onCancel, mode, taskInfo, type,addFlagLoading, } = props;
+  const {
+    dispatch,
+    loading,
+    exportLoading,
+    open,
+    onCancel,
+    mode,
+    taskInfo,
+    type,
+    addFlagLoading,
+  } = props;
 
   useEffect(() => {
     getPageData();
-    mode === 'management' && (!taskInfo.ID) &&  getCustomerVisitDailyWorksData();
+    mode === 'management' && !taskInfo.ID && getCustomerVisitDailyWorksData();
   }, []);
 
   // 获取请求参数
@@ -93,8 +102,8 @@ const RecordAndManagement = props => {
       type: 'wordSupervision/GetCustomerVisitInfo',
       payload: {
         ...body,
-        pageIndex:  _pageIndex || pageIndex ,
-        pageSize: _pageSize || pageSize ,
+        pageIndex: _pageIndex || pageIndex,
+        pageSize: _pageSize || pageSize,
       },
       callback: res => {
         setDataSource(res.Datas);
@@ -112,7 +121,8 @@ const RecordAndManagement = props => {
     });
   };
 
-  const getCustomerVisitDailyWorksData = () => { //获取客户回访当月的任务
+  const getCustomerVisitDailyWorksData = () => {
+    //获取客户回访当月的任务
     dispatch({
       type: 'wordSupervision/GetCustomerVisitDailyWorks',
       payload: {},
@@ -120,7 +130,7 @@ const RecordAndManagement = props => {
         setAddData(res.Datas || {});
       },
     });
-  }
+  };
   const onEdit = record => {
     updateType();
     setEditData(record);
@@ -186,6 +196,16 @@ const RecordAndManagement = props => {
         key: 'Depart',
       },
       {
+        title: '职务',
+        dataIndex: 'Post',
+        key: 'Post',
+      },
+      {
+        title: '联系方式',
+        dataIndex: 'Phone',
+        key: 'Phone',
+      },
+      {
         title: '客户满意度（1-5）',
         children: [
           {
@@ -229,6 +249,9 @@ const RecordAndManagement = props => {
         dataIndex: 'Remark',
         key: 'Remark',
         ellipsis: true,
+        render: text => {
+          return text ? <Tooltip title={text}>{text}</Tooltip> : '-';
+        },
       },
       {
         title: '回访人',
@@ -293,15 +316,10 @@ const RecordAndManagement = props => {
 
     return columns;
   };
-  const data = taskInfo.ID ? taskInfo :  addData
+  const data = taskInfo.ID ? taskInfo : addData;
   const getPageContent = () => {
     let initialValues = {
-      time: [
-        moment()
-          .startOf('months'),
-        moment()
-          .endOf('months'),
-      ],
+      time: [moment().startOf('months'), moment().endOf('months')],
     };
     if (taskInfo.ID) {
       initialValues.time = [moment(data.BeginTime), moment(data.EndTime)];
@@ -311,16 +329,18 @@ const RecordAndManagement = props => {
       <>
         {taskInfo.ID && (
           <Alert
-            message={`任务类型：客户回访任务单，派发时间：${data.BeginTime} ，有效期：${data.EndTime} ，任务单派发频次1次/月，每个任务单最少有（${data.standNum || 0}次/月）记录。`}
+            message={`任务类型：客户回访任务单，派发时间：${data.BeginTime} ，有效期：${
+              data.EndTime
+            } ，任务单派发频次1次/月，每个任务单最少有（${data.standNum || 0}次/月）记录。`}
             type="info"
             showIcon
-            style={{marginRight:30}}
+            style={{ marginRight: 30 }}
           />
         )}
         <Card
           bordered={false}
           bodyStyle={{ padding: 0 }}
-          headStyle={{ display: taskInfo.ID ? 'none' : 'block', padding: 0  }}
+          headStyle={{ display: taskInfo.ID ? 'none' : 'block', padding: 0 }}
           className={styles.manageRecordCardWrapper}
           title={
             <Form
@@ -393,20 +413,18 @@ const RecordAndManagement = props => {
             </Form>
           }
         >
-          {mode !== 'record'  &&  (
+          {mode !== 'record' && (
             <Button
               type="primary"
               style={{ margin: '8px 0' }}
               loading={addFlagLoading}
               onClick={() => {
-                if(data.ID){
+                if (data.ID) {
                   setEditOpen(true);
                   // setEditData({DailyTaskID: data.ID,RegionalArea:data.largeCode,LargeRegion:data.LargeName });
-                  setEditData({DailyTaskID: data.ID});
-
-                }else{
+                  setEditData({ DailyTaskID: data.ID });
+                } else {
                   message.error('本月没有派工单，不允许添加！');
-                  
                 }
               }}
             >
@@ -467,7 +485,7 @@ const RecordAndManagement = props => {
       wrapClassName={`spreadOverModal`}
       bodyStyle={{
         // padding: data.ID ? '12px 12px 0 12px' : '0 12px'
-        padding:  '0 12px'
+        padding: '0 12px',
       }}
       mask={false}
       open={open}

@@ -744,8 +744,14 @@ const Index = (props) => {
                 setWorkOrderExecuTimeVal(value)
                 GetOperationTaskStatisticsInfoByDayRequest(value)
               }}
+              style={{
+                position: 'absolute',
+                right: '.625rem',
+                top: '.8125rem',
+                padding: '0',
+              }}
             />
-            <div style={{ height: '100%', padding: '1.125rem .625rem 0 0' }}>
+            <div style={{ height: '100%', padding: '1.125rem .625rem 0 1rem' }}>
               <Row gutter={workOrderExecuTimeVal == 1 ? 0 : 16} style={{ justifyContent: workOrderExecuTimeVal == 1 ? 'space-between' : 'center', paddingRight: '.5rem' }}>
                 <Col style={{ cursor: 'pointer' }} onClick={() => operaOrderOptionDayClick('完成')}><div><span style={workOrderExecuDotSty}></span>完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.completeCount}</span>个</div></Col>
                 <Col style={{ cursor: 'pointer' }} onClick={() => operaOrderOptionDayClick('超时完成')}><div><span style={workOrderExecuDotSty}></span>超时完成</div> <div><span style={workOrderExecuNumSty}>{workOrderExecuData.overTimeCompleteCount}</span>个</div></Col>

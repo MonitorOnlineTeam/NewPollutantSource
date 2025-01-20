@@ -266,8 +266,8 @@ const OfficeCheck = props => {
             hideBreadcrumb
             match={props.match}
             time={form.getFieldValue('time')}
-            queryApiName={API.DailyManagement.FieldCheckApi.GetSiteInspectionList}
-            exportApiName={API.DailyManagement.FieldCheckApi.ExportSystemFacilityVerificationList}
+            // queryApiName={API.DailyManagement.FieldCheckApi.GetSiteInspectionList}
+            // exportApiName={API.DailyManagement.FieldCheckApi.ExportSystemFacilityVerificationList}
           />
         </Modal>
       )}
