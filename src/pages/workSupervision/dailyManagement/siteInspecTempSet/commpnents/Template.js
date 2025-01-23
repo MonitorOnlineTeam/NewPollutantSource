@@ -112,9 +112,18 @@ const dvaDispatch = dispatch => {
         callback: callback,
       });
     },
+    // 根据CEMS型号获取检查项目
     GetInspectionTypeByCemsModel: (payload, callback) => {
       dispatch({
         type: `siteInspecTempSet/GetInspectionTypeByCemsModel`,
+        payload: payload,
+        callback: callback,
+      });
+    },
+    // 复制现场检查模板
+    CopyOnsiteInspectionInfo: (payload, callback) => {
+      dispatch({
+        type: `siteInspecTempSet/CopyOnsiteInspectionInfo`,
         payload: payload,
         callback: callback,
       });
@@ -306,8 +315,6 @@ const Index = props => {
     });
   };
 
-  const [originalData, setOriginalData] = useState(null);
-  const [currentData, setCurrentData] = useState({});
   const edit = row => {
     setVisible(true);
     setTitle('编辑');
@@ -342,14 +349,17 @@ const Index = props => {
             setOriginalData({
               cemsModel: data.CemsModel,
               data: echoData,
-              formValues: inspectorTypeModelList.reduce((acc, item) => ({
-                ...acc,
-                [`MainId${item.ID}`]: item.MainId,
-                [`InspectionProject${item.ID}`]: item.InspectionProject,
-                [`Require${item.ID}`]: item.Require,
-                [`SetValue${item.ID}`]: item.SetValue,
-                [`DisplayValue${item.ID}`]: item.DisplayValue,
-              }), {}),
+              formValues: inspectorTypeModelList.reduce(
+                (acc, item) => ({
+                  ...acc,
+                  [`MainId${item.ID}`]: item.MainId,
+                  [`InspectionProject${item.ID}`]: item.InspectionProject,
+                  [`Require${item.ID}`]: item.Require,
+                  [`SetValue${item.ID}`]: item.SetValue,
+                  [`DisplayValue${item.ID}`]: item.DisplayValue,
+                }),
+                {},
+              ),
             });
 
             echoData.map(item => {
@@ -499,17 +509,24 @@ const Index = props => {
     };
   });
 
-  const getMergeRows = (text, record, index, dataSource = []) => {
+  const getMergeRows = (text, record, index, dataSource = [], compareFields = ['Inspection']) => {
     if (!dataSource || !Array.isArray(dataSource) || !record) {
       return 1;
     }
 
     let rowSpan = 1;
-    if (index !== 0 && record.Inspection === dataSource[index - 1]?.Inspection) {
+    const isSameAsPrevious = compareFields.every(
+      field => index !== 0 && record[field] === dataSource[index - 1]?.[field]
+    );
+
+    if (isSameAsPrevious) {
       rowSpan = 0;
     } else {
       for (let i = index + 1; i < dataSource.length; i++) {
-        if (record.Inspection === dataSource[i]?.Inspection) {
+        const isSameAsNext = compareFields.every(
+          field => record[field] === dataSource[i]?.[field]
+        );
+        if (isSameAsNext) {
           rowSpan++;
         } else {
           break;
@@ -561,6 +578,7 @@ const Index = props => {
           record,
           index,
           props.inspectorTemplateView?.InspectorTypeModelList,
+          ['Inspection']
         );
         return obj;
       },
@@ -572,6 +590,20 @@ const Index = props => {
       align: 'center',
       colSpan: 0,
       width: 120,
+      render: (text, record, index) => {
+        const obj = {
+          children: text,
+          props: {},
+        };
+        obj.props.rowSpan = getMergeRows(
+          text,
+          record,
+          index,
+          props.inspectorTemplateView?.InspectorTypeModelList,
+          ['InspectionProject']
+        );
+        return obj;
+      },
     },
     {
       title: '要求',
@@ -621,6 +653,11 @@ const Index = props => {
   const [detailVisible, setDetailVisible] = useState(false);
   const [detailTitle, setDetailTitle] = useState('');
 
+  // 添加新的 state 来存储选中行
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [originalData, setOriginalData] = useState(null);
+  const [currentData, setCurrentData] = useState({});
+
   return (
     <div>
       <Form
@@ -636,9 +673,9 @@ const Index = props => {
         <Form.Item label="系统型号" name="CemsModel">
           <Input placeholder="请输入" allowClear />
         </Form.Item>
-        <Form.Item label="检查项目" name="InspectionProject">
+        {/* <Form.Item label="检查项目" name="InspectionProject">
           <Input placeholder="请输入" allowClear />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item label="使用状态" name="UseStatus">
           <Select placeholder="请选择" allowClear style={{ width: 100 }}>
             <Option value={1}>启用</Option>
@@ -660,22 +697,43 @@ const Index = props => {
           <Button type="primary" icon={<PlusOutlined />} style={{ marginRight: 8 }} onClick={add}>
             添加
           </Button>
+
+          <Button type="primary" disabled={!selectedRow} style={{ marginRight: 8 }}>
+            <Popconfirm
+              title="确定要复制该模板吗？"
+              onConfirm={() => {
+                props.CopyOnsiteInspectionInfo(
+                  {
+                    Num: selectedRow.Num,
+                  },
+                  () => {
+                    onFinish(1, pageSize);
+                    setSelectedRow(null);
+                  },
+                );
+              }}
+              okText="是"
+              cancelText="否"
+            >
+              复制添加
+            </Popconfirm>
+          </Button>
         </Form.Item>
       </Form>
       <SdlTable
+        rowKey="Num"
         resizable
         loading={tableLoading}
         dataSource={tableDatas}
         columns={columns}
         pagination={false}
-        // pagination={{
-        //   total: tableTotal,
-        //   pageSize: pageSize,
-        //   current: pageIndex,
-        //   showSizeChanger: true,
-        //   showQuickJumper: true,
-        //   onChange: handleTableChange,
-        // }}
+        rowSelection={{
+          type: 'radio',
+          selectedRowKeys: selectedRow ? [selectedRow.Num] : [],
+          onChange: (selectedRowKeys, selectedRows) => {
+            setSelectedRow(selectedRows[0]);
+          },
+        }}
       />
       <Modal
         title={title}

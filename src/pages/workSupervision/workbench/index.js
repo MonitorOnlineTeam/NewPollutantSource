@@ -418,11 +418,11 @@ const Workbench = props => {
       callback: callback && callback(),
     });
   };
-
+  console.log('TYPE', TYPE)
   // 任务点击
   const onTodoItemClick = todoItem => {
     // 运维现场检查弹窗
-    if (todoItem.TaskType === 1 && TYPE === 2) {
+    if (todoItem.TaskType === 1 && TYPE !== 1) {
       onInspectionInfo(todoItem);
     } else {
       setCurrentTodoItem(todoItem);
@@ -479,10 +479,10 @@ const Workbench = props => {
           {TaskType === 1
             ? [
                 <li>
-                  <span>任务要求：</span>需覆盖{standMNNum}个监测点，{standPersonNum}名运维人员。
+                  <span>任务要求：</span>需覆盖{standMNNum}个监测点，{standPersonNum}名{TYPE === 1 ? '服务' : '运维'}人员。
                 </li>,
                 <li>
-                  <span>完成情况：</span>已覆盖{overMNNum}个监测点，{overPersonNum}名运维人员。
+                  <span>完成情况：</span>已覆盖{overMNNum}个监测点，{overPersonNum}名{TYPE === 1 ? '服务' : '运维'}人员。
                 </li>,
                 // 成套不显示
                 <li style={{ display: TYPE === 1 ? 'none' : 'block' }}>

@@ -143,7 +143,7 @@ export default class MonitorPoint extends Component {
       editOperationStatusData: {},
       associationPointList: [], // 窑尾关联的排口
       modifyPointOpratioinStatusPermis: false,
-      devicePointName:'',
+      devicePointName: '',
     };
   }
 
@@ -151,7 +151,14 @@ export default class MonitorPoint extends Component {
     // 1.监控目标ID
     // 2.污染物类型
     // 3.获取监测点数据
-    const { dispatch, match,configInfo,      match: {  params: { targetName, configId }}, } = this.props;
+    const {
+      dispatch,
+      match,
+      configInfo,
+      match: {
+        params: { targetName, configId },
+      },
+    } = this.props;
     const buttonList = permissionButton(`/platformconfig/monitortarget/${configId}/1`);
     buttonList.map(item => {
       switch (item) {
@@ -198,38 +205,41 @@ export default class MonitorPoint extends Component {
     // 25	市控
 
     try {
-      const {   match: {  params: { targetName, configId }} }  = this.props;
-      if(configId=='AEnterpriseSimple'){ //权限测试
-        if(type==1){
+      const {
+        match: {
+          params: { targetName, configId },
+        },
+      } = this.props;
+      if (configId == 'AEnterpriseSimple') {
+        //权限测试
+        if (type == 1) {
           pointConfigIdEdit = `WaterOutputSimple`;
           pointConfigId = `${pointConfigIdEdit}New`;
-        }else{
+        } else {
           pointConfigIdEdit = `GasOutputSimple`;
           pointConfigId = `${pointConfigIdEdit}New`;
         }
-      }else if(configId=='AEnterprisePollutDischarge'){ //排污单位管理
-        if(type==1){
+      } else if (configId == 'AEnterprisePollutDischarge') {
+        //排污单位管理
+        if (type == 1) {
           pointConfigIdEdit = `WaterOutputPollutDischarge`;
           pointConfigId = `${pointConfigIdEdit}New`;
-        }else{
+        } else {
           pointConfigIdEdit = `GasOutputPollutDischarge`;
           pointConfigId = `${pointConfigIdEdit}New`;
         }
-      }else{
-
-      const { SystemPollutantTypeConfigId } = configInfo;
-      const configIds = SystemPollutantTypeConfigId.split(',');
-      let thisConfigId = null;
-      if (configIds.length > 0) {
-        thisConfigId = configIds.filter(m => m.split(':')[0] == type);
-        if (thisConfigId.length > 0) {
-          pointConfigIdEdit = thisConfigId[0].split(':')[1];
-          pointConfigId = `${pointConfigIdEdit}New`;
+      } else {
+        const { SystemPollutantTypeConfigId } = configInfo;
+        const configIds = SystemPollutantTypeConfigId.split(',');
+        let thisConfigId = null;
+        if (configIds.length > 0) {
+          thisConfigId = configIds.filter(m => m.split(':')[0] == type);
+          if (thisConfigId.length > 0) {
+            pointConfigIdEdit = thisConfigId[0].split(':')[1];
+            pointConfigId = `${pointConfigIdEdit}New`;
+          }
         }
       }
-    }
-
-
     } catch (e) {
       // sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
     }
@@ -927,7 +937,7 @@ export default class MonitorPoint extends Component {
       deviceManagerVisible: true,
       deviceManagerMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
       deviceManagerGasType: row['dbo.T_Bas_CommonPoint.Col4'],
-      devicePointName:row['dbo.T_Bas_CommonPoint.PointName'],
+      devicePointName: row['dbo.T_Bas_CommonPoint.PointName'],
     });
   };
   editOperationStatus = row => {
@@ -1151,7 +1161,10 @@ export default class MonitorPoint extends Component {
       saveSortLoading,
       configInfo,
     } = this.props;
-    const provinceShow = (configInfo && configInfo.IsShowProjectRegion)  || configId=='AEnterpriseSimple' || configId=='AEnterprisePollutDischarge';
+    const provinceShow =
+      (configInfo && configInfo.IsShowProjectRegion) ||
+      configId == 'AEnterpriseSimple' ||
+      configId == 'AEnterprisePollutDischarge';
     // const IsModelProject = Cookie.get('sysMenuId') === '5cd1884a-3f42-426f-8893-5cae720bddf3'; //是否为模型项目
     const { getFieldDecorator } = this.props.form;
     const searchConditions = searchConfigItems[pointConfigId] || [];
@@ -1173,18 +1186,14 @@ export default class MonitorPoint extends Component {
     const menu = (
       <Menu onClick={this.onMenuClick}>
         <Menu.Item key="3">
-          {' '}
           <Tooltip title="设置Cems参数">
-            {' '}
             <a>
               <ToolOutlined style={{ fontSize: 16 }} />
-            </a>{' '}
+            </a>
           </Tooltip>
         </Menu.Item>
         <Menu.Item key="4">
-          {' '}
           <Tooltip title="修改设备编号(MN)">
-            {' '}
             <a>
               <HighlightOutlined style={{ fontSize: 16 }} />
             </a>
@@ -1192,10 +1201,9 @@ export default class MonitorPoint extends Component {
         </Menu.Item>
         <Menu.Item key="5">
           <Tooltip title="设备管理">
-            {' '}
             <a>
               <FileTextOutlined style={{ fontSize: 16 }} />
-            </a>{' '}
+            </a>
           </Tooltip>
         </Menu.Item>
       </Menu>
@@ -1218,8 +1226,8 @@ export default class MonitorPoint extends Component {
       },
     };
     // const radiusFlag = tabKey == 6 && !isSuperAdministrator;
-    const titles = this.state.devicePointName
-      // pollutantType == 1 ? '废水' : deviceManagerGasType == 1 ? '废气-常规CEMS' : '废气-VOCS';
+    const titles = this.state.devicePointName;
+    // pollutantType == 1 ? '废水' : deviceManagerGasType == 1 ? '废气-常规CEMS' : '废气-VOCS';
 
     return (
       <BreadcrumbWrapper title="监测点维护">
@@ -1393,46 +1401,45 @@ export default class MonitorPoint extends Component {
                           }}><ToolOutlined style={{fontSize:16}}/></a>
                         </Tooltip></> : ''
                     } */}
-                  { configId!='AEnterprisePollutDischarge' && <>
-                    <>
-                      {' '}
-                      <Divider type="vertical" />
-                      <Tooltip title="修改设备编号(MN)">
-                        <a
-                          onClick={() => {
-                            this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
-                          }}
-                        >
-                          <HighlightOutlined style={{ fontSize: 16 }} />
-                        </a>
-                      </Tooltip>
-                    </>
+
                     <Divider type="vertical" />
-                    {this.state.modifyPointOpratioinStatusPermis && (
-                      <>
-                        <Tooltip title="修改点位运维状态">
-                          <a
-                            onClick={() => {
-                              this.editOperationStatus(row);
-                            }}
-                          >
-                            <FileProtectOutlined style={{ fontSize: 16 }} />
-                          </a>
-                        </Tooltip>
-                        <Divider type="vertical" />
-                      </>
-                    )}
-                    <Tooltip title="设备管理">
+                    <Tooltip title="修改设备编号(MN)">
                       <a
                         onClick={() => {
-                          this.deviceManager(row);
+                          this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
                         }}
                       >
-                        <HddOutlined style={{ fontSize: 16 }} />
+                        <HighlightOutlined style={{ fontSize: 16 }} />
                       </a>
                     </Tooltip>
-                    </>
-                }
+                    {configId != 'AEnterprisePollutDischarge' && (
+                      <>
+                        <Divider type="vertical" />
+                        {this.state.modifyPointOpratioinStatusPermis && (
+                          <>
+                            <Tooltip title="修改点位运维状态">
+                              <a
+                                onClick={() => {
+                                  this.editOperationStatus(row);
+                                }}
+                              >
+                                <FileProtectOutlined style={{ fontSize: 16 }} />
+                              </a>
+                            </Tooltip>
+                            <Divider type="vertical" />
+                          </>
+                        )}
+                        <Tooltip title="设备管理">
+                          <a
+                            onClick={() => {
+                              this.deviceManager(row);
+                            }}
+                          >
+                            <HddOutlined style={{ fontSize: 16 }} />
+                          </a>
+                        </Tooltip>
+                      </>
+                    )}
                     {/* {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="v  ertical" />  <Dropdown trigger={['click']} placement='bottomCenter' overlay={ menu }>
                          <a className="ant-dropdown-link" onClick={e => {e.preventDefault();this.setState({row:row})}}>
                          <Tooltip title="更多">  <EllipsisOutlined /></Tooltip>
@@ -1571,7 +1578,7 @@ export default class MonitorPoint extends Component {
                   {this.getTabInfo()}
                 </TabPane>
                 {// 监控
-                !configInfo.IsOpera && configId!='AEnterprisePollutDischarge' && (
+                !configInfo.IsOpera && configId != 'AEnterprisePollutDischarge' && (
                   <TabPane tab="仪器信息" key="7">
                     {this.getInstrumentInfo()}
                   </TabPane>
@@ -1584,17 +1591,21 @@ export default class MonitorPoint extends Component {
                         {this.getDataVerification()}
                       </TabPane>
                     )}
-                    { configId!='AEnterprisePollutDischarge' && <TabPane tab="设备参数项" key="4">
-                      {this.getEquipmentPar()}
-                    </TabPane>}
+                    {configId != 'AEnterprisePollutDischarge' && (
+                      <TabPane tab="设备参数项" key="4">
+                        {this.getEquipmentPar()}
+                      </TabPane>
+                    )}
                     {!provinceShow && (
                       <TabPane tab="监测点系数" key="5">
                         {this.getPointCoefficient()}
                       </TabPane>
                     )}
-                    { configId!='AEnterprisePollutDischarge' &&  <TabPane tab="电子围栏半径" key="6">
-                      {this.radiusElectronicFence()}
-                    </TabPane>}
+                    {configId != 'AEnterprisePollutDischarge' && (
+                      <TabPane tab="电子围栏半径" key="6">
+                        {this.radiusElectronicFence()}
+                      </TabPane>
+                    )}
                   </>
                 )}
               </Tabs>

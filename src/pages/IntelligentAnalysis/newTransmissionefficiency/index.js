@@ -421,7 +421,7 @@ export default class EntTransmissionEfficiency extends Component {
                     allowClear
                   />
                 </Form.Item>
-                <Form.Item>
+                {/* <Form.Item>
                   <Select
                     placeholder="请选择考核类型"
                     onChange={this.asseChange}
@@ -431,17 +431,8 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="2">全部考核</Option>
                     <Option value="1">国家考核</Option>
                   </Select>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item>
-                  {/* <Select
-                    allowClear
-                    placeholder="请选择行政区"
-                    onChange={this.changeRegion}
-                    value={this.props.RegionCode ? this.props.RegionCode : undefined}
-                    style={{ width: 200, marginLeft: 10 }}
-                  >
-                    {this.children()}
-                  </Select> */}
                   <RegionList style={{ width: 200 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined} />
                 </Form.Item>
                 {/*  <Form.Item>
