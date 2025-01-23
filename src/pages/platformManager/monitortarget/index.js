@@ -46,6 +46,7 @@ import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import webConfig from '@public/webConfig';
 import MonitorEntElectronicFence from './components/MonitorEntElectronicFence';
 import { permissionButton } from '@/utils/utils';
+import Cookie from 'js-cookie';
 
 const { confirm } = Modal;
 
