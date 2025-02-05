@@ -1134,6 +1134,10 @@ export const API = {
   AbnormalIdentifyModel: {
     // 获取线索列表
     GetWarningList: before + '/WarningV2/GetWarningList',
+    // 线索列表导出
+    ExportWarningList: before + '/WarningV2/ExportWarningList',
+    // 根据场景类别获取模型标记
+    GetMoldFlagList: before + '/MoldV2/GetMoldFlagList',
     // 获取模型列表
     GetMoldList: before + '/MoldV2/GetMoldList',
     // 获取级别和分类

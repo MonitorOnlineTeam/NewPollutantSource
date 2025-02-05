@@ -26,6 +26,7 @@ import TableText from '@/components/TableText';
 import moment from 'moment';
 import UpdateDataFlag from './UpdateDataFlag';
 import StopRecord from '@/pages/monitoring/StopRecord/stopRecord.js';
+import DataViewByDataType from './DataViewByDataType';
 
 const { CheckableTag } = Tag;
 
@@ -131,6 +132,9 @@ const WarningDataAndChart = props => {
 
   useEffect(() => {
     if (DGIMN) {
+      setCurrentBrushRangeDate([]);
+      setBrushRangeIndex([]);
+      setDataZoomPosition([]);
       getPollutantListByDgimn();
     }
   }, [DGIMN]);
@@ -1347,7 +1351,6 @@ const WarningDataAndChart = props => {
       setCurrentBrushRangeDate([]);
       setBrushRangeIndex([]);
     }
-
     // GetAllTypeDataList();
   };
 
@@ -1403,20 +1406,49 @@ const WarningDataAndChart = props => {
 
   const renderEcharts = useMemo(() => {
     return (
-      <ReactEcharts
-        ref={e => {
-          if (e) {
-            setEchartRef(e);
-          }
-        }}
-        theme="light"
-        option={getOption()}
-        lazyUpdate
-        // notMerge
-        id="rightLine"
-        onEvents={onEvents}
-        style={{ marginTop: 34, width: '100%', height: props.chartHeight || 'calc(100vh - 304px)' }}
-      />
+      <>
+        <ReactEcharts
+          ref={e => {
+            if (e) {
+              setEchartRef(e);
+              const echartInstance = e.getEchartsInstance();
+              // echartInstance.dispatchAction({
+              //   type: 'takeGlobalCursor',
+              //   key: 'brush',
+              //   brushOption: {
+              //     brushType: 'lineX', // 指定选框类型
+              //   },
+              // });
+
+              if (dataZoomPosition.length)
+                echartInstance.dispatchAction({
+                  type: 'dataZoom',
+                  // 可选，dataZoom 组件的 index，多个 dataZoom 组件时有用，默认为 0
+                  // dataZoomIndex: number,
+                  // 开始位置的百分比，0 - 100
+                  // start: number,
+                  // // 结束位置的百分比，0 - 100
+                  // end: number,
+                  // 开始位置的数值
+                  startValue: dataZoomPosition[0],
+                  // 结束位置的数值
+                  endValue: dataZoomPosition[1],
+                });
+            }
+          }}
+          theme="light"
+          option={getOption(true)}
+          lazyUpdate
+          // notMerge
+          id="rightLine"
+          onEvents={onEvents}
+          style={{
+            marginTop: 34,
+            width: '100%',
+            height: props.chartHeight || 'calc(100vh - 304px)',
+          }}
+        />
+      </>
     );
   }, [allTypeDataList, echartRef]);
 
@@ -1487,6 +1519,13 @@ const WarningDataAndChart = props => {
     });
   };
 
+  // 打开历史数据弹窗，查看小时、分钟数据
+  const [historyDataModalOpen, setHistoryDataModalOpen] = useState(false);
+  const [dataType, setDataType] = useState();
+  const openHistoryDataModal = dataType => {
+    setHistoryDataModalOpen(true);
+    setDataType(dataType);
+  };
   return (
     <>
       {describe && (
@@ -1619,7 +1658,12 @@ const WarningDataAndChart = props => {
           props.displayType !== 'modal' && (
             <Button
               type="primary"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                setCurrentBrushRangeDate([]);
+                setBrushRangeIndex([]);
+                setDataZoomPosition([]);
+                setIsModalOpen(true);
+              }}
               // style={{ position: 'absolute', right: 12, top: 0 }}
             >
               编辑图表
@@ -1662,6 +1706,40 @@ const WarningDataAndChart = props => {
             onEvents={onEvents}
             style={{ marginTop: 34, width: '100%', height: 'calc(100vh - 304px)', ...chartStyle }}
           /> */}
+          {currentBrushRangeDate.length ? (
+            <Alert
+              size="small"
+              style={{ marginTop: 10 }}
+              message={
+                <div>
+                  {`已选择时间：${currentBrushRangeDate[0]} - ${currentBrushRangeDate[1]}`},
+                  可查看该范围的
+                  <Button
+                    type="primary"
+                    size="small"
+                    style={{ marginLeft: 10 }}
+                    loading={updateLoading}
+                    onClick={e => openHistoryDataModal('realtime')}
+                  >
+                    实时数据
+                  </Button>
+                  <Button
+                    type="primary"
+                    size="small"
+                    style={{ marginLeft: 10 }}
+                    loading={updateLoading}
+                    onClick={e => openHistoryDataModal('minute')}
+                  >
+                    分钟数据
+                  </Button>
+                </div>
+              }
+              type="info"
+              showIcon
+            />
+          ) : (
+            ''
+          )}
           {renderEcharts}
 
           <Row justify="center" style={{ width: '100%', marginTop: -10 }}>
@@ -1703,6 +1781,42 @@ const WarningDataAndChart = props => {
             <Spin tip="加载中..." />
           </div>
         </Row>
+      )}
+      {console.log('props', props)}
+      {historyDataModalOpen && (
+        <DataViewByDataType
+          open={historyDataModalOpen}
+          time={[moment(currentBrushRangeDate[0]), moment(currentBrushRangeDate[1])]}
+          pollutantCodes={form.getFieldValue('pollutantCodes')}
+          DGIMN={DGIMN}
+          dataType={dataType}
+          onCancel={() => {
+            // 清除框选范围
+            if (echartRef && echartRef.getEchartsInstance) {
+              const echartsInstance = echartRef.getEchartsInstance();
+              // 清除框选范围
+              echartsInstance.dispatchAction({
+                type: 'brush',
+                command: 'clear',
+                areas: [],
+              });
+              // 关闭框选工具
+              echartsInstance.dispatchAction({
+                type: 'takeGlobalCursor',
+                key: 'brush',
+                brushOption: {
+                  brushType: false,
+                },
+              });
+            }
+
+            // 重置相关状态
+            setHistoryDataModalOpen(false);
+            setCurrentBrushRangeDate([]);
+            setBrushRangeIndex([]);
+            setDataZoomPosition([]);
+          }}
+        />
       )}
 
       <Modal

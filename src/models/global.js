@@ -168,7 +168,6 @@ export default Model.extend({
         configInfo.IsOpera = isOperaSystem(configInfo.SystemName); //是否为公司运维项目
 
         configInfo = processConfigInfo(configInfo);
-        
         window.configInfo = configInfo;
         // configInfo.IsOpera = false;
         localStorage.setItem(

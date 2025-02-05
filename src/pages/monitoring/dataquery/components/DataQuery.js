@@ -575,7 +575,7 @@ class DataQuery extends Component {
           // className={!this.props.style ? 'contentContainer' : null}
           title={
             <div>
-              <div>{entName + '-' + pointName}</div>
+              {entName && pointName && <div>{entName + '-' + pointName}</div>}
               <div style={{ marginTop: 8 }}>
                 <Form layout="inline">
                   <Form.Item style={{ marginRight: 4 }}>

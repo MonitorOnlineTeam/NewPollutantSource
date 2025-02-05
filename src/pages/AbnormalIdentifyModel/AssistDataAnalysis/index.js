@@ -10,6 +10,8 @@ import CorrelationCoefficient from './components/CorrelationCoefficient';
 import WarningDataAndChart from './components/WarningDataAndChart';
 import DataPhenomena from './components/DataPhenomena';
 import AbruptChange from './components/AbruptChange';
+import EquipmentParmars from '@/pages/platformManager/equipmentParmars/ContentPages.js';
+import MonitoringStandard from '@/components/MonitoringStandard';
 
 const dvaPropsData = ({ loading, dataModel }) => ({});
 
@@ -93,6 +95,12 @@ const AssistDataAnalysis = props => {
               // tableHeight={displayType === 'modal' ? 'calc(100vh - 320px)' : ''}
             />
           </Tabs.TabPane>
+          <Tabs.TabPane tab="备案参数" key="8" style={{ overflowY: 'auto' }}>
+            <EquipmentParmars DGIMN={DGIMN} type={'smoke'} />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="监测标准" key="9" style={{ overflowY: 'auto' }}>
+            <MonitoringStandard DGIMN={DGIMN} pollutantType={'2'} />
+          </Tabs.TabPane>
         </Tabs>
       </Card>
     );
@@ -120,7 +128,7 @@ const AssistDataAnalysis = props => {
         onItemClick={value => {
           if (value[0].IsEnt === false) {
             setDGIMN(value[0].key);
-            setEntCode(value[0].EntCode)
+            setEntCode(value[0].EntCode);
           }
         }}
       />

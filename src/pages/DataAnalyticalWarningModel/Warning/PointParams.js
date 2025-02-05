@@ -105,6 +105,7 @@ const PointParams = props => {
           form.setFieldsValue({
             ...range,
             ...res.paramsObj,
+            Amplitude: res.Amplitude,
           });
           setImages(res.image);
         },
@@ -146,9 +147,9 @@ const PointParams = props => {
       range,
       paramsObj,
       version: location.query.v,
+      Amplitude: values.Amplitude,
     };
-    console.log('body', body);
-    // return;
+    // console.log('body', body);
     props.dispatch({
       type: 'dataModel/SavePointParamsRange',
       payload: body,
@@ -271,15 +272,56 @@ const PointParams = props => {
                       );
                     })}
                   </Row>
-                  <Divider orientation="right" style={{ color: '#d9d9d9' }}>
+                  {/* <Divider orientation="right" style={{ color: '#d9d9d9' }}>
                     <Space>
                       <Button type="primary" htmlType="submit" loading={saveLoading}>
                         提交
                       </Button>
                     </Space>
-                  </Divider>
+                  </Divider> */}
                 </Card>
                 {/* <Divider /> */}
+                <Card
+                  style={{ marginTop: 16 }}
+                  bordered={false}
+                  bodyStyle={{ paddingTop: 20 }}
+                  title={<div className={styles.title}>污染物波动振幅</div>}
+                  // loading={loadLoading}
+                >
+                  <Row>
+                    {PollutantList.map(item => {
+                      return (
+                        <Col span={12}>
+                          <Form.Item
+                            label={item.pollutantName}
+                            name={['Amplitude', item.pollutantCode]}
+                          >
+                            <InputNumber style={{ width: '100%' }} placeholder="请输入波动振幅" />
+                          </Form.Item>
+                        </Col>
+                      );
+                    })}
+                  </Row>
+                </Card>
+                <div
+                  style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    padding: '10px 24px',
+                    background: '#fff',
+                    textAlign: 'right',
+                    boxShadow: '0 -2px 8px rgba(0, 0, 0, 0.15)',
+                    zIndex: 1,
+                  }}
+                >
+                  <Space>
+                    <Button type="primary" onClick={onFinish} loading={saveLoading}>
+                      提交
+                    </Button>
+                  </Space>
+                </div>
                 <Card
                   style={{ marginTop: 16, display: 'none' }}
                   bordered={false}

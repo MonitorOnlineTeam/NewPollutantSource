@@ -66,10 +66,10 @@ const Index = (props) => {
     <BreadcrumbWrapper>
     <Card size='small'>
     <Tabs tabPosition={'left'}>
-          <TabPane tab="督查类别清单" key="1">
+          <TabPane tab="检查类别清单" key="1">
             <Category />
           </TabPane>
-          <TabPane tab="督查表模板管理" key="2">
+          <TabPane tab="检查表模板管理" key="2">
            <Template />
           </TabPane>
         </Tabs>

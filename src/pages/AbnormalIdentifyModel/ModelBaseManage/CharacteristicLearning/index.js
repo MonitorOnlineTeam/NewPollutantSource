@@ -49,6 +49,9 @@ import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import ReactEcharts from 'echarts-for-react';
 import { PollutantListConst } from '@/pages/AbnormalIdentifyModel/CONST';
+import AssistDataAnalysis from '@/pages/AbnormalIdentifyModel/AssistDataAnalysis';
+import FluctuateRange from '@/pages/AbnormalIdentifyModel/FluctuateRange';
+
 const { Option } = Select;
 
 const namespace = 'ModelBaseManage';
@@ -199,9 +202,26 @@ const Index = props => {
         }}
       >
         {title}
+        {title === '波动范围' && (
+          <Button
+            type="primary"
+            size="small"
+            style={{ marginLeft: 10 }}
+            onClick={() => onViewIndustryFluctuateRange()}
+          >
+            行业波动范围
+          </Button>
+        )}
       </div>
     );
   };
+
+  // 查看行业波动范围弹窗
+  const [industryFluctuateRangeVisible, setIndustryFluctuateRangeVisible] = useState(false);
+  const onViewIndustryFluctuateRange = () => {
+    setIndustryFluctuateRangeVisible(true);
+  };
+
   const getOption = data => {
     let echarts = echarts2,
       colors = ['#5abffc', '#58cdfd', 'rgba(36,220,247,.4)'];
@@ -368,6 +388,20 @@ const Index = props => {
           ...grid,
           left: 40,
         },
+        toolbox: {
+          feature: {
+            dataZoom: {
+              show: true,
+              yAxisIndex: 'none',
+              title: {
+                zoom: '区域缩放',
+                back: '区域缩放还原',
+              },
+            },
+            restore: { show: true, title: '还原' },
+            saveAsImage: { show: true, title: '保存为图片' },
+          },
+        },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -382,6 +416,7 @@ const Index = props => {
                 波动下限：${currentData.LowerLimit} <br/>
                 波动上限：${currentData.UpperLimit} <br/>
                 波动范围：${currentData.InterRange} <br/>
+                <span style="color: #faad14;font-weight: bold">点击查看该排放口所有因子的波动范围</span>
               `;
             return tooltipText;
           },
@@ -439,10 +474,34 @@ const Index = props => {
         grid: {
           ...grid,
         },
+        toolbox: {
+          feature: {
+            dataZoom: {
+              show: true,
+              yAxisIndex: 'none',
+              title: {
+                zoom: '区域缩放',
+                back: '区域缩放还原',
+              },
+            },
+            restore: { show: true, title: '还原' },
+            saveAsImage: { show: true, title: '保存为图片' },
+          },
+        },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
             type: 'shadow',
+          },
+          formatter: function(params) {
+            let dataIndex = params[0].dataIndex;
+            let currentData = data.Datas[dataIndex];
+            let tooltipText = `企业：${currentData.EntName} <br/>
+                排放口：${currentData.PointName} <br/>
+                振幅范围：${currentData.Amplitude} <br/>
+                <span style="color: #faad14;font-weight: bold">点击查看该排放口所有因子的波动范围</span>
+              `;
+            return tooltipText;
           },
         },
         xAxis: {
@@ -486,6 +545,14 @@ const Index = props => {
         </Form.Item>
       </Form>
     );
+  };
+
+  // 显示波动范围弹窗
+  const [currentData, setCurrentData] = useState({});
+  const [visible, setVisible] = useState(false);
+  const onShowAbnormalJudgmentPage = row => {
+    setCurrentData(row);
+    setVisible(true);
   };
 
   return (
@@ -568,7 +635,18 @@ const Index = props => {
                                   filterItem => filterItem.PollutantCode == item.PollutantCode,
                                 )?.[0],
                             )}
-                            style={{ height: '180px', width: '100%' }}
+                            style={{ height: '300px', width: '100%' }}
+                            onEvents={{
+                              click: event => {
+                                // if (titleItem === '波动范围') {
+                                if (true) {
+                                  let itemDatas = chartData.find(
+                                    filterItem => filterItem.PollutantCode == item.PollutantCode,
+                                  );
+                                  onShowAbnormalJudgmentPage(itemDatas.Datas[event.dataIndex]);
+                                }
+                              },
+                            }}
                           />
                         ),
                       };
@@ -579,6 +657,28 @@ const Index = props => {
             );
           })}
         </Row>
+        <Modal
+          title={`行业波动范围`}
+          wrapClassName="spreadOverModal"
+          destroyOnClose
+          visible={industryFluctuateRangeVisible}
+          footer={false}
+          onCancel={() => setIndustryFluctuateRangeVisible(false)}
+          bodyStyle={{ padding: 0 }}
+        >
+          <FluctuateRange hideBreadcrumb IndustryTypeCode={undefined} />
+        </Modal>
+        <Modal
+          title={`波动范围（${currentData.EntName} - ${currentData.PointName}）`}
+          wrapClassName="spreadOverModal"
+          destroyOnClose
+          visible={visible}
+          footer={false}
+          onCancel={() => setVisible(false)}
+          bodyStyle={{ padding: 0 }}
+        >
+          <AssistDataAnalysis displayType="modal" DGIMN={currentData.DGIMN} defaultActiveKey="0" />
+        </Modal>
         <Modal
           visible={logVisible}
           title={'训练日志'}

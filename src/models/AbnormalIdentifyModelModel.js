@@ -273,6 +273,8 @@ export default Model.extend({
         regionCode: payload.regionCode ? payload.regionCode.toString() : undefined,
         pageSize: currentForm.pageSize,
         pageIndex: currentForm.pageIndex,
+        OrderByField: currentForm.OrderByField,
+        IsAsc: currentForm.IsAsc,
       });
       if (result.IsSuccess) {
         callback && callback(result);
@@ -310,6 +312,14 @@ export default Model.extend({
           },
         },
       });
+    },
+    // 导出线索列表
+    *ExportWarningList({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestPost, API.AbnormalIdentifyModel.ExportWarningList, payload);
+      if (result.IsSuccess) {
+        message.success('导出成功！');
+        downloadFile(result.Datas);
+      }
     },
     // 根据企业获取排口
     *GetNoFilterPointByEntCode({ payload, callback }, { call, select, update }) {
@@ -995,6 +1005,20 @@ export default Model.extend({
         payload,
       );
       result.IsSuccess && callback(result);
+    },
+    // 根据场景类别获取模型标记
+    *GetMoldFlagList({ payload, callback }, { call, select, update }) {
+      const result = yield call(requestPost, API.AbnormalIdentifyModel.GetMoldFlagList, payload);
+      result.IsSuccess && callback(result.Datas);
+    },
+    // 获取历史数据
+    *GetHistoryData({ payload, callback }, { call, select, update }) {
+      const result = yield call(
+        requestPost,
+        API.WholeProcessMonitorApi.GetAllTypeDataList,
+        payload,
+      );
+      result.IsSuccess && callback(result.Datas);
     },
     // // 获取整改单列表
     // *GetCheckedRectificationList({ payload, callback }, { call, select, update }) {

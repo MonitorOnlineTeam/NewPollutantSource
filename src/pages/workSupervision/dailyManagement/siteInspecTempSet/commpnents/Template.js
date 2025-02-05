@@ -627,19 +627,49 @@ const Index = props => {
   const cancel = record => {
     const newData = [...data];
     const index = newData.findIndex(item => record.Sort === item.Sort);
-    const item = newData[index];
     newData.splice(index, 1);
+    
+    // 重新计算序号
+    newData.forEach((item, idx) => {
+      item.Sort = idx + 1;
+    });
+    
     setData(newData);
   };
   const [data, setData] = useState([]);
   const handleAdd = () => {
-    const newData = {
-      Sort: data.length + 1,
+    // 获取当前数据
+    const newData = [...data];
+    
+    // 获取上一行的值（如果存在）
+    const lastRow = newData[newData.length - 1];
+    const lastMainId = lastRow ? form2.getFieldValue(`MainId${lastRow.ID}`) : null;
+    
+    // 创建新行
+    const newRow = {
+      Sort: newData.length + 1,  // 设置序号为当前长度+1
       ID: cuid(),
+      key: cuid(),
       editable: true,
       type: 'add',
+      InspectionProject: '',
+      Requirement: '',
+      Remark: '',
     };
-    setData([...data, newData]);
+    
+    // 添加新行到数据中
+    newData.push(newRow);
+    setData(newData);
+
+    // 如果存在上一行的选择，则自动设置新行的值
+    if (lastMainId) {
+      // 使用 setTimeout 确保表单项已经渲染
+      setTimeout(() => {
+        form2.setFieldsValue({
+          [`MainId${newRow.ID}`]: lastMainId,
+        });
+      }, 0);
+    }
   };
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -837,24 +867,27 @@ const Index = props => {
                                 allowClear
                                 showSearch
                                 optionFilterProp="InspectionProject"
-                                // loading={getOnsiteInspectionTypeListLoading}
                                 fieldNames={{ label: 'InspectionProject', value: 'ID' }}
                                 options={inspectionTypeList}
                               />
                             </Form.Item>
                             <Form.Item
                               name={`InspectionProject${record.ID}`}
-                              rules={[{ required: true, message: `请输入监测点位` }]}
+                              rules={[{ required: true, message: `不能为空` }]}
                               style={{ margin: 0 }}
                             >
-                              <Input placeholder={`请输入监测点位`} />
+                              <Input placeholder={`请输入`} />
                             </Form.Item>
                           </Space>
                         ) : title === '要求' ? (
                           <TextArea rows={1} placeholder={`请输入`} allowClear />
+                        ) : title === '设定值' || title === '显示值' ? (
+                          // 设定值和显示值不设为必填
+                          <Input rows={1} placeholder={`请输入`} allowClear />
                         ) : (
                           <Input rows={1} placeholder={`请输入`} allowClear />
                         );
+
                       return (
                         <td {...restProps}>
                           {editing ? (
@@ -863,7 +896,12 @@ const Index = props => {
                             ) : (
                               <Form.Item
                                 name={`${dataIndex}${record.ID}`}
-                                rules={[{ required: true, message: `请输入${title}` }]}
+                                rules={[
+                                  // 根据不同的列设置不同的校验规则
+                                  title !== '设定值' && title !== '显示值' 
+                                    ? { required: true, message: `请输入${title}` }
+                                    : undefined
+                                ].filter(Boolean)}
                                 style={{ margin: 0 }}
                               >
                                 {inputNode}
