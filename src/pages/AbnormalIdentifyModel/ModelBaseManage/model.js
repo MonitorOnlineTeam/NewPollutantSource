@@ -18,6 +18,13 @@ export default Model.extend({
   },
   effects: {
     // 数据接入
+    // 新建项目
+    *AddMXProject({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.AbnormalIdentifyModel.AddMXProject, payload);
+      if (result.IsSuccess) {
+        callback && callback(result);
+      }
+    },
     // 数据接入信息
     *GetProjectMonitorDataList({ payload, callback }, { call, put, update }) {
       const result = yield call(
@@ -217,6 +224,13 @@ export default Model.extend({
     //模型自动匹配
     *AutoPointRelaModel({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.AbnormalIdentifyModel.AutoPointRelaModel, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      }
+    },
+    //统计监测数据
+    *JsHourDataInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(requestPost, API.AbnormalIdentifyModel.JsHourDataInfo, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       }

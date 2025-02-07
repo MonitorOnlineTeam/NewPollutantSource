@@ -789,7 +789,7 @@ class MonitoringStandard extends Component {
           columns={pollutantType == '5' ? columnsDay : columns}
           dataSource={standardTableDatas}
           className={styles.tableSty}
-          scroll={{ y: this.props.isPoint && this.props.clientHeight - 420 }}
+          scroll={{ y: this.props.isPoint && this.props.clientHeight - 331 }}
         //  pagination={{ pageSize: 20 }}
         />
         <Modal

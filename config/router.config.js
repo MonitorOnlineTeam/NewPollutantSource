@@ -376,7 +376,7 @@ const routes = [
           },
         ],
       },
-      // // 新登录 （替换）
+      // 新登录 （替换）
       // {
       //   path: '/user/login',
       //   component: '../layouts/UserLayout2',
@@ -2441,7 +2441,7 @@ const routes = [
                     component:
                       './monitoring/alarmInfo/exceedDataDispositionRecord/exceedDataDispositionRecord',
                   },
-                 
+
                 ],
               },
 
@@ -4582,6 +4582,12 @@ const routes = [
                 routes: [
                   // 模型训练
                   {
+                    // 新增项目
+                    name: 'AddProject',
+                    path: '/AbnormalIdentifyModel/ModelBaseManage/AddProject',
+                    component: './AbnormalIdentifyModel/ModelBaseManage/AddProject',
+                  },
+                  {
                     // 数据接入
                     name: 'DataAccess',
                     path: '/AbnormalIdentifyModel/ModelBaseManage/DataAccess',
@@ -5215,7 +5221,7 @@ const routes = [
                     component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter',
                   },
                   {
-                    //资源检索中心 详情 
+                    //资源检索中心 详情
                     name: 'RsourceRetrievalCenter',
                     path: '/ctManage/generalManager/resourceRetrievalCenter/detail',
                     component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/detail',

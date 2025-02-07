@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-01-22 10:44:32
+ * @Last Modified time: 2025-02-06 14:46:22
  * @Description：线索列表
  */
 
@@ -908,6 +908,9 @@ const CluesList = props => {
               <Option key={'4'} value={'03'}>
                 氮氧化物
               </Option>
+              <Option key={'5'} value={'s01'}>
+                O₂
+              </Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -1159,7 +1162,12 @@ const CluesList = props => {
         </Form>
         <div style={{ marginTop: 10, marginBottom: 10, textAlign: 'right' }}>
           {/* <Space> */}
-          <Button loading={exportLoading} style={{ border: 0 }} size="small" onClick={() => ExportWarningList()}>
+          <Button
+            loading={exportLoading}
+            style={{ border: 0 }}
+            size="small"
+            onClick={() => ExportWarningList()}
+          >
             <UploadOutlined /> 导出
           </Button>
           <Divider type="vertical" />

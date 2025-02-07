@@ -321,7 +321,6 @@ export default class MonitorPoint extends Component {
           'dbo.T_Bas_CommonPoint.PointCode': PointCode,
         },
         callback: res => {
-          debugger;
           // 获取关联对应窑头数据
           // const IsModelProject =
           //   sessionStorage.getItem('sysMenuId') === '5cd1884a-3f42-426f-8893-5cae720bddf3'; //是否为模型项目，用来判断是否显示工艺信息
@@ -1456,9 +1455,10 @@ export default class MonitorPoint extends Component {
             visible={this.state.visible}
             onOk={this.onSubmitForm.bind(this)}
             onCancel={this.handleCancel}
-            width={'80%'}
+            // width={'80%'}
+            wrapClassName="spreadOverModal"
             destroyOnClose
-            bodyStyle={{ paddingBottom: 0 }}
+            bodyStyle={this.state.isView ? {} : { paddingTop: 0, maxHeight: 'calc(100vh - 64px)' }}
             footer={
               tabKey == 2 //污染物信息
                 ? null

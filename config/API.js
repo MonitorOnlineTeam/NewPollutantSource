@@ -1325,6 +1325,7 @@ export const API = {
 
     /*模型库管理*/
     //模型训练 - 数据接入
+    AddMXProject: before + '/ProjectMonitorDataApi/AddMXProject', // 新建项目
     AutoPointRelaModel: before + '/ProjectMonitorDataApi/AutoPointRelaModel', // 模型自动匹配
     GetProjectMonitorDataList: before + '/ProjectMonitorDataApi/GetProjectMonitorDataList', //查看项目信息
     UpdProjectMonitorData: before + '/ProjectMonitorDataApi/UpdProjectMonitorData', //修改项目信息 修改执行方式
@@ -1335,7 +1336,9 @@ export const API = {
     AccessMonitorPollutantList: before + '/DataFormatBaseDataApi/AccessMonitorPollutantList', //接入站点污染物关联信息执行
     AccessHourData: before + '/DataFormatBaseDataApi/AccessHourData', //接入小时数据执行
     AccessPreprocessing: before + '/DataFormatBaseDataApi/AccessPreprocessing', //清洗工况数据
+    AccessHourDataExcel: before + '/DataFormatBaseDataApi/AccessHourDataExcel', // 导入小时数据
     //清洗数据
+    JsHourDataInfo: before + '/ProjectMonitorDataApi/JsHourDataInfo', //统计监测数据
     GetProjectLogsList: before + '/ProjectMonitorDataApi/GetProjectLogsList', //企业信息、排放口信息、备案参数日志信息
     GetProjectLogsInfoList: before + '/ProjectMonitorDataApi/GetProjectLogsInfoList', //企业信息、排放口信息、备案参数日志详情信息
     GetMonitorPollutantLogsList: before + '/ProjectMonitorDataApi/GetMonitorPollutantLogsList', //污染物日志信息
