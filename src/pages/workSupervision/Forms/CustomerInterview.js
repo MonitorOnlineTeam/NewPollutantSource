@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:57:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-01-24 17:11:57
+ * @Last Modified time: 2025-02-08 09:54:28
  * @Description: 回访客户任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -356,7 +356,7 @@ const CustomerInterview = props => {
                         {customerList.map(item => {
                           return (
                             <Option value={item.ID} key={item.ID} data-item={item}>
-                              {item.CustomName}
+                              {item.CustomFullName}
                             </Option>
                           );
                         })}

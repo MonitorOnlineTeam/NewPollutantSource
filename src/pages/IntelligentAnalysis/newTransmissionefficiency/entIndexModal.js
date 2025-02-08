@@ -491,19 +491,19 @@ export default class EntIndexModal extends Component {
                     allowClear
                   />
                 </Form.Item>
-                <Form.Item>
+                {/* <Form.Item>
                   <Select
                     placeholder="请选择考核类型"
                     onChange={this.asseChange}
                     value={this.props.assessment}
                     style={{ width: 200 }}
                   >
-                    {/* <Option value="1">国家考核</Option>
-                    <Option value="2">兵团考核</Option> */}
+                    // <Option value="1">国家考核</Option>
+                    // <Option value="2">兵团考核</Option>
                     <Option value="2">全部考核</Option>
                     <Option value="1">国家考核</Option>
                   </Select>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item>
                   <RegionList
                     style={{ width: 200 }}
