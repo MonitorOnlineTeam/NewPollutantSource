@@ -1,0 +1,89 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { connect } from 'dva';
+import { Row, Col } from 'antd';
+import styles from '@/pages/SystemDashboard/styles.less';
+import HomeCard from '@/pages/SystemDashboard/components/HomeCard';
+import DeviceInfoCountModal from '@/pages/ctDebuggAfterSaleServiceManage/HomeDataScreen/components/Modals/DeviceInfoCountModal.js';
+
+let myChart;
+const dvaPropsData = ({ sysDashboard, loading }) => ({
+  time: sysDashboard.time,
+  CTCountAnalysis: sysDashboard.CTCountAnalysis,
+  loading: loading.effects[`sysDashboard/GetInstallationDebuggingMap`],
+});
+
+const DeviceInfoCount = props => {
+  const [open, setOpen] = useState(false);
+
+  const { dispatch, CTCountAnalysis, loading, time } = props;
+
+  useEffect(() => {}, []);
+
+  const onOpenModal = () => {
+    setOpen(true);
+  };
+
+  return (
+    <HomeCard title="安装调试总览" bodyStyle={{}} loading={loading}>
+      <Row className={`${styles.CTOverviewCard}`} onClick={onOpenModal}>
+        <div className={styles.statisticsNum}>
+          <span className={styles.text}>排污单位数量</span>
+          <span className={styles.number}>{CTCountAnalysis.EntCount}家</span>
+        </div>
+        <Row className={styles.pointClassifyContent}>
+          <Col span={12} className={styles.pointClassifyItem}>
+            <img src="/SystemDashboard/installAndDebugger/pointNum1.png" />
+            <div className={styles.numberContent}>
+              <p className={styles.num} style={{ color: '#00a3ff' }}>
+                {CTCountAnalysis.PointCount}
+                <span className={styles.overViewUnit}>个</span>
+              </p>
+              <p className={styles.text}>排口数量</p>
+            </div>
+          </Col>
+          <Col span={12} className={styles.pointClassifyItem}>
+            <img src="/SystemDashboard/installAndDebugger/pointNum2.png" />
+            <div className={styles.numberContent}>
+              <p className={styles.num} style={{ color: '#FF3737' }}>
+                {CTCountAnalysis.GuideInstallationCount}
+                <span className={styles.overViewUnit}>套</span>
+              </p>
+              <p className={styles.text}>安装完成设备</p>
+            </div>
+          </Col>
+          <Col span={12} className={styles.pointClassifyItem}>
+            <img src="/SystemDashboard/installAndDebugger/pointNum3.png" />
+            <div className={styles.numberContent}>
+              <p className={styles.num} style={{ color: '#2EEB9D' }}>
+                {CTCountAnalysis.DebuggingCount}
+                <span className={styles.overViewUnit}>套</span>
+              </p>
+              <p className={styles.text}>调试完成设备</p>
+            </div>
+          </Col>
+          <Col span={12} className={styles.pointClassifyItem}>
+            <img src="/SystemDashboard/installAndDebugger/pointNum4.png" />
+            <div className={styles.numberContent}>
+              <p className={styles.num} style={{ color: '#FFCC00' }}>
+                {CTCountAnalysis.CheckedCount}
+                <span className={styles.overViewUnit}>套</span>
+              </p>
+              <p className={styles.text}>验收完成设备</p>
+            </div>
+          </Col>
+        </Row>
+      </Row>
+      {open && (
+        <DeviceInfoCountModal
+          open={open}
+          time={time}
+          onCancel={() => {
+            setOpen(false);
+          }}
+        />
+      )}
+    </HomeCard>
+  );
+};
+
+export default connect(dvaPropsData)(DeviceInfoCount);
