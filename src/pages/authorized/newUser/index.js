@@ -328,6 +328,18 @@ export default class UserInfoIndex extends Component {
           return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>;
         },
       },
+      {
+        title: '是/否绑定微信',
+        dataIndex: 'IsWechat',
+        key: 'IsWechat',
+        align: 'center',
+        ellipsis: true,
+        render: (text) => {
+          return text === "是" ? 
+            <span style={{color: '#52c41a'}}>{text}</span> : 
+            <span style={{color: '#ff4d4f'}}>{text}</span>;
+        },
+      },
      ... this.operateCol
     ];
   }
@@ -340,12 +352,13 @@ export default class UserInfoIndex extends Component {
     if (rolesList.length <= 0) {
       this.getRolesTree();
     }
-    if (userGoDetail) {
-      this.getUserList(queryPar);
-    } else {
-      this.restClick();
-      this.getUserList();
-    }
+    this.getUserList(queryPar);
+    // if (userGoDetail) {
+    //   this.getUserList(queryPar);
+    // } else {
+    //   this.restClick();
+    //   this.getUserList();
+    // }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -381,10 +394,10 @@ export default class UserInfoIndex extends Component {
     }
   }
   componentWillUnmount() {
-    this.props.dispatch({
-      type: 'global/updateState',
-      payload: { userGoDetail: false },
-    });
+    // this.props.dispatch({
+    //   type: 'global/updateState',
+    //   payload: { userGoDetail: false },
+    // });
   }
   showDataModal = () => {
     if (this.state.selectedRow.length == 0) {
@@ -519,6 +532,9 @@ export default class UserInfoIndex extends Component {
         queryPar: null,
       },
     });
+    setTimeout(() => {
+      this.getUserList();
+    }, 100);
   };
   loginNameChange = e => {
     const { dispatch, userPar } = this.props;
@@ -853,11 +869,9 @@ export default class UserInfoIndex extends Component {
             )}
             <Form.Item>
               <Button type="primary" onClick={this.queryClick} style={{ marginLeft: 8 }}>
-                {' '}
                 查询
               </Button>
               <Button onClick={this.restClick} style={{ marginLeft: 8 }}>
-                {' '}
                 重置
               </Button>
             </Form.Item>
@@ -897,9 +911,8 @@ export default class UserInfoIndex extends Component {
                   <Menu>
                     <Menu.Item>
                       <div onClick={this.exports}>
-                        {' '}
                         <ExportOutlined style={{ paddingRight: 4 }} />
-                        导出{' '}
+                        导出
                       </div>
                     </Menu.Item>
                   </Menu>

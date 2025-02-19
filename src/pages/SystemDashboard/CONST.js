@@ -26,7 +26,7 @@ export const allSysList = [
   {
     key: '异常识别监管',
     value: '/SystemDashboard/AbnormalIdentify',
-    title: '污染源异常数据识别监管版',
+    title: '污染源异常数据识别',
     ID: 'f6eb76ab-ce0b-4cfb-8626-2e0ec4435ec3',
   },
   {

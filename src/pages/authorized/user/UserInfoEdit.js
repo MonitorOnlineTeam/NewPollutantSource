@@ -319,9 +319,9 @@ export default class UserInfoEdit extends Component {
         const title = this.state.selectKey === 'base' ? '基本信息' : (this.state.selectKey === 'roles' ? '角色设置' : '部门设置');
         return (
             <BreadcrumbWrapper title={`编辑 - ${title}`}>
-                <div className="contentContainer" style={{ width: '100%', background: '#fff' }}>
+                <div className="contentContainer" style={{ width: '100%', background: '#fff'}}>
                     {
-                        <Layout style={{ padding: '14px 0', background: '#fff' }}>
+                        <Layout style={{ padding: '14px 0', background: '#fff', minHeight: '100%' }}>
                             <Sider width={270} style={{ background: '#fff' }}>
                                 <Menu
                                     mode="inline"
@@ -397,7 +397,7 @@ export default class UserInfoEdit extends Component {
                                             </FormItem> */}
 
 
-                                            <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
+                                            <Divider orientation="right">
                                                 <Button
                                                     type="primary"
                                                     onClick={() => {
@@ -419,7 +419,11 @@ export default class UserInfoEdit extends Component {
                                         </SdlForm>
                                     }
                                 </Card>
-                                <Card bordered={false} title="角色设置" style={{ height: 'calc(100vh - 160px)', display: this.state.rolesState }}>
+                                <Card bordered={false} title="角色设置" style={{ height: 'calc(100vh - 160px)', display: this.state.rolesState }}
+                                    bodyStyle={{
+                                        paddingBottom: 0
+                                    }}
+                                >
                                     {
                                         this.props.UserRolesLoading ? <Spin
                                             style={{
@@ -431,21 +435,24 @@ export default class UserInfoEdit extends Component {
                                             }}
                                             size="large"
                                         /> :
+                                        <div style={{ height: 'calc(100vh - 284px)', overflowY: 'auto' }}>
                                             <Tree
                                                 checkable
                                                 onExpand={this.onExpand}
-                                                expandedKeys={this.state.expandedKeys}
-                                                autoExpandParent={this.state.autoExpandParent}
+                                                // expandedKeys={this.state.expandedKeys}
+                                                // autoExpandParent={this.state.autoExpandParent}
                                                 onCheck={this.onCheck}
                                                 checkedKeys={this.state.checkedKey}
                                                 onSelect={this.onSelect}
                                                 selectedKeys={this.state.selectedKey}
+                                                defaultExpandAll
                                             >
                                                 {this.renderTreeNodes(this.props.RolesTreeData)}
                                             </Tree>
+                                        </div>
                                     }
 
-                                    <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
+                                    <Divider orientation="right">
                                         <Button
                                             type="primary"
                                             onClick={() => {
@@ -460,7 +467,11 @@ export default class UserInfoEdit extends Component {
                                         </Button>
                                     </Divider>
                                 </Card>
-                                <Card bordered={false} title="部门设置" style={{ height: 'calc(100vh - 160px)', display: this.state.departState }}>
+                                <Card bordered={false} title="部门设置" style={{ height: 'calc(100vh - 160px)', display: this.state.departState }}
+                                    bodyStyle={{
+                                        paddingBottom: 0
+                                    }}
+                                >
                                     {
                                         this.props.UserDepLoading ? <Spin
                                             style={{
@@ -472,24 +483,26 @@ export default class UserInfoEdit extends Component {
                                             }}
                                             size="large"
                                         /> :
-
+                                        <div style={{ height: 'calc(100vh - 284px)', overflowY: 'auto' }}>
                                             <Tree
                                                 checkable
                                                 onExpand={this.onExpand}
-                                                expandedKeys={this.state.expandedKeys}
-                                                autoExpandParent={this.state.autoExpandParent}
+                                                // expandedKeys={this.state.expandedKeys}
+                                                // autoExpandParent={this.state.autoExpandParent}
                                                 onCheck={this.onChecks}
                                                 checkedKeys={this.state.checkedKeys}
                                                 onSelect={this.onSelects}
                                                 selectedKeys={this.state.selectedKeys}
                                                 // checkStrictly={this.props.configInfo.IsOpera}
                                                 checkStrictly={true}
+                                                defaultExpandAll
                                             >
                                                 {this.renderTreeNodes(this.props.treeData)}
                                             </Tree>
+                                        </div>
                                     }
 
-                                    <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
+                                    <Divider orientation="right">
                                         <Button
                                             type="primary"
                                             onClick={this.postFormDatas}

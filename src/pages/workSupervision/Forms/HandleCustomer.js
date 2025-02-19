@@ -2,13 +2,13 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:58:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-02-08 10:43:31
+ * @Last Modified time: 2025-02-18 10:04:41
  * @Description: 客户操作页面
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { Button, Modal, Form, Input, Select, Tooltip, Divider, Popconfirm } from 'antd';
+import { Button, Modal, Form, Input, Select, Tooltip, Divider, Popconfirm, Cascader } from 'antd';
 import SdlTable from '@/components/SdlTable';
 import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon';
 import Cookie from 'js-cookie';
@@ -72,6 +72,12 @@ const HandleCustomer = props => {
         align: 'center',
       },
       {
+        title: '城市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
+      },
+      {
         title: '大区',
         dataIndex: 'UserGroup_Name',
         key: 'UserGroup_Name',
@@ -105,8 +111,7 @@ const HandleCustomer = props => {
                   cancelText="否"
                 >
                   <a>
-                    {' '}
-                    <DelIcon />{' '}
+                    <DelIcon />
                   </a>
                 </Popconfirm>
               </Tooltip>
@@ -166,20 +171,20 @@ const HandleCustomer = props => {
         props.dispatch({
           type: 'ctCommon/GetLargeRegionList',
           payload: {},
-          callback: largeRegData => {
-            setLargeRegionList(largeRegData);
-            const data = largeRegData?.filter(item => item.ID == current.UserGroup_ID)?.[0]
-              ?.ChildList;
-            setRegionList(data || []);
-            setTimeout(() => {
-              form.setFieldsValue(
-                {
-                  Province: current.Province,
-                  UserGroup_ID: current.UserGroup_ID,
-                },
-                200,
-              );
-            });
+          callback: res => {
+            // setLargeRegionList(res.Datas);
+            // const data = largeRegData?.filter(item => item.ID == current.UserGroup_ID)?.[0]
+            //   ?.ChildList;
+            // setRegionList(data || []);
+            // setTimeout(() => {
+            //   form.setFieldsValue(
+            //     {
+            //       Province: current.Province,
+            //       UserGroup_ID: current.UserGroup_ID,
+            //     },
+            //     200,
+            //   );
+            // });
           },
         });
       },
@@ -210,6 +215,7 @@ const HandleCustomer = props => {
           UpdateUser: currentUser.UserId,
           UpdateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
           ...values,
+          Province: values.Province.toString(),
         },
         callback: () => {
           setAddOrEditVisible(false);
@@ -326,16 +332,20 @@ const HandleCustomer = props => {
             <Select
               placeholder="请选择大区"
               loading={regionalAndProvinceLoading || largeRegionListLoading}
-              onChange={value => {
+              onChange={(value, option) => {
                 form.setFieldsValue({ Province: undefined });
-                const data = largeRegionList.filter(item => item.ID == value)?.[0]?.ChildList;
-                setRegionList(data);
+                // const data = largeRegionList.filter(item => item.ID == value)?.[0]?.ChildList;
+                setRegionList(option['data-childList']);
               }}
             >
-              {largeRegionList.map((item, index) => {
+              {RegionalAndProvince.map((item, index) => {
                 return (
-                  <Option value={item.ID} key={index} data-item={item}>
-                    {item.LargeRegion}
+                  <Option
+                    value={item.RegionCode}
+                    key={item.RegionCode}
+                    data-childList={item.ChildList}
+                  >
+                    {item.RegionName}
                   </Option>
                 );
               })}
@@ -352,7 +362,14 @@ const HandleCustomer = props => {
               },
             ]}
           >
-            <Select
+            <Cascader
+              loading={regionalAndProvinceLoading || largeRegionListLoading}
+              options={regionList}
+              placeholder="请选择省/市!"
+              fieldNames={{ label: 'RegionName', value: 'RegionCode', children: 'ChildList' }}
+            />
+
+            {/* <Select
               // disabled
               loading={regionalAndProvinceLoading || largeRegionListLoading}
               placeholder="请选择省/市"
@@ -367,7 +384,7 @@ const HandleCustomer = props => {
                   </Option>
                 );
               })}
-            </Select>
+            </Select> */}
           </Form.Item>
 
           {/* <Form.Item

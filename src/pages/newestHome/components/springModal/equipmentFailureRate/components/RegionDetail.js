@@ -4,27 +4,51 @@
  * 创建时间：2021.2.25
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio } from 'antd';
-import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, QuestionCircleOutlined, RollbackOutlined } from '@ant-design/icons';
-import { connect } from "dva";
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import {
+  Table,
+  Input,
+  InputNumber,
+  Popconfirm,
+  Form,
+  Typography,
+  Card,
+  Button,
+  Select,
+  Progress,
+  message,
+  Row,
+  Col,
+  Tooltip,
+  Divider,
+  Modal,
+  DatePicker,
+  Radio,
+  Space,
+} from 'antd';
+import SdlTable from '@/components/SdlTable';
+import {
+  PlusOutlined,
+  UpOutlined,
+  DownOutlined,
+  ExportOutlined,
+  QuestionCircleOutlined,
+  RollbackOutlined,
+} from '@ant-design/icons';
+import { connect } from 'dva';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 const { RangePicker } = DatePicker;
-import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
+import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon';
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
-import RegionList from '@/components/RegionList'
-import styles from "../style.less"
+import RegionList from '@/components/RegionList';
+import styles from '../style.less';
 import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
-import Point from './Point'
+import Point from './Point';
 
-const namespace = 'equipmentFailureRate'
-
-
-
+const namespace = 'equipmentFailureRate';
 
 const dvaPropsData = ({ loading, equipmentFailureRate, global }) => ({
   tableDatas: equipmentFailureRate.regDetailTableDatas,
@@ -32,66 +56,63 @@ const dvaPropsData = ({ loading, equipmentFailureRate, global }) => ({
   exportLoading: equipmentFailureRate.exportRegDetailLoading,
   clientHeight: global.clientHeight,
   queryPar: equipmentFailureRate.queryPar,
-})
+});
 
-const dvaDispatch = (dispatch) => {
+const dvaDispatch = dispatch => {
   return {
-    updateState: (payload) => {
+    updateState: payload => {
       dispatch({
         type: `${namespace}/updateState`,
         payload: payload,
-      })
+      });
     },
-    regDetailGetFailureRateList: (payload) => { // 行政区详情
+    regDetailGetFailureRateList: payload => {
+      // 行政区详情
       dispatch({
         type: `${namespace}/regDetailGetFailureRateList`,
         payload: payload,
-      })
+      });
     },
-    exportFailureRateList: (payload) => { // 导出
+    exportFailureRateList: payload => {
+      // 导出
       dispatch({
         type: `${namespace}/exportFailureRateList`,
         payload: payload,
-      })
+      });
     },
-  }
-}
-const Index = (props) => {
+  };
+};
+const Index = props => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
   const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar } = props;
 
-
   useEffect(() => {
     initData();
-
   }, []);
-
 
   const initData = () => {
     props.regDetailGetFailureRateList({
       ...queryPar,
       pointType: 2,
-    })
+    });
   };
-
 
   const exports = async () => {
     const values = await form.validateFields();
     props.exportFailureRateList({
       ...queryPar,
       pointType: 2,
-    })
-
+    });
   };
   const columns = [
     {
       title: '序号',
       align: 'center',
       render: (text, record, index) => {
-        return index + 1
-      }
+        return index + 1;
+      },
     },
     {
       title: '省/市',
@@ -101,8 +122,16 @@ const Index = (props) => {
       ellipsis: true,
       width: 150,
       render: (text, record, index) => {
-        return <a onClick={() => { pointDetail(record) }} >{text}</a>
-      }
+        return (
+          <a
+            onClick={() => {
+              pointDetail(record);
+            }}
+          >
+            {text}
+          </a>
+        );
+      },
     },
     // {
     //   title: '运维企业数',
@@ -126,38 +155,59 @@ const Index = (props) => {
       align: 'center',
       sorter: (a, b) => a.failureRate - b.failureRate,
       render: (text, record) => {
-        return <Progress percent={text && text} size="small" style={{ width: '85%' }} status='normal' format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>} />
-      }
-    }
-  ]
-  const [pointVisible, setPointVisible] = useState(false)
-  const [regionName, setRegionName] = useState()
-  const pointDetail = (row) => {
-    setPointVisible(true)
+        return (
+          <Progress
+            percent={text && text}
+            size="small"
+            style={{ width: '85%' }}
+            status="normal"
+            format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+          />
+        );
+      },
+    },
+  ];
+  const [pointVisible, setPointVisible] = useState(false);
+  const [regionName, setRegionName] = useState();
+  const pointDetail = row => {
+    setPointVisible(true);
     props.updateState({
       queryPar: {
         ...queryPar,
-        regionCode: row.regionCode? row.regionCode : queryPar.regionCode,
-      }
-    })
-    setRegionName(row.regionName)
-  }
+        regionCode: row.regionCode ? row.regionCode : queryPar.regionCode,
+      },
+    });
+    setRegionName(row.regionName);
+  };
 
-  const [sparePartsVisible, setSparePartsVisible] = useState(false)
-
-
-
-
+  const [sparePartsVisible, setSparePartsVisible] = useState(false);
 
   return (
     <div className={styles.equipmentFailureRateSty}>
-
-      <Form.Item style={{ paddingBottom: '16px' }}>
-        <Button icon={<ExportOutlined />} loading={exportLoading} style={{ margin: '0 8px', }} onClick={() => { exports() }}>
+      {/* <Form.Item style={{ paddingBottom: '16px' }}> */}
+      <Space style={{ marginBottom: '14px' }}>
+        <Button
+          icon={<ExportOutlined />}
+          loading={exportLoading}
+          style={{ margin: '0 8px' }}
+          onClick={() => {
+            exports();
+          }}
+        >
           导出
-    </Button>
-        <Button onClick={() => { props.onGoBack() }}> <RollbackOutlined />返回 </Button>
-      </Form.Item>
+        </Button>
+        {props.onGoBack && (
+          <Button
+            onClick={() => {
+              props.onGoBack();
+            }}
+          >
+            <RollbackOutlined />
+            返回
+          </Button>
+        )}
+      </Space>
+      {/* </Form.Item> */}
       <SdlTable
         loading={tableLoading}
         bordered
@@ -168,14 +218,19 @@ const Index = (props) => {
       <Modal
         title={`${regionName} - 监测点`}
         visible={pointVisible}
-        onCancel={() => { setPointVisible(false) }}
+        onCancel={() => {
+          setPointVisible(false);
+        }}
         footer={null}
         destroyOnClose
-        width='90%'
+        width="90%"
       >
         <Point />
       </Modal>
     </div>
   );
 };
-export default connect(dvaPropsData, dvaDispatch)(Index);
+export default connect(
+  dvaPropsData,
+  dvaDispatch,
+)(Index);

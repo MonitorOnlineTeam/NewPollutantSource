@@ -165,7 +165,8 @@ export default Model.extend({
         // configInfo.IsShowSysPage = '1';
         configInfo.SystemNameKey = getSysNameKey(configInfo.SystemName);
         configInfo.SystemName = getSysName(configInfo.SystemName);
-        configInfo.IsOpera = isOperaSystem(configInfo.SystemName); //是否为公司运维项目
+        // configInfo.IsOpera = isOperaSystem(configInfo.SystemName); //是否为公司运维项目
+        configInfo.IsOpera = isOperaSystem(sessionStorage.getItem('sysName')); //是否为公司运维项目
 
         configInfo = processConfigInfo(configInfo);
         window.configInfo = configInfo;

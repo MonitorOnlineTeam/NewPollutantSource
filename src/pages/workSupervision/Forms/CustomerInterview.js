@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:57:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-02-08 09:54:28
+ * @Last Modified time: 2025-02-18 16:33:59
  * @Description: 回访客户任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -21,6 +21,7 @@ import {
   Space,
   Table,
   Radio,
+  message,
 } from 'antd';
 import styles from './styles.less';
 import HandleCustomer from './HandleCustomer';
@@ -50,7 +51,7 @@ const dataSource = [
 const { TextArea } = Input;
 
 const dvaPropsData = ({ loading, common, wordSupervision }) => ({
-  TYPE: wordSupervision.TYPE, // 1: 成套 “”：运维
+  TYPE: wordSupervision.TYPE, // 1: 成套 ""：运维
   customerList: wordSupervision.customerList,
   allUser: common.allUser,
   // otherCustomerList: wordSupervision.otherCustomerList,
@@ -140,6 +141,7 @@ const CustomerInterview = props => {
               return (
                 <Row justify="center">
                   <Form.Item
+                    // label={record.type}
                     name={record.dataIndex}
                     style={{ marginBottom: 0 }}
                     // labelCol={{ span: 0 }}
@@ -147,7 +149,7 @@ const CustomerInterview = props => {
                     rules={[
                       {
                         required: true,
-                        message: '不能为空！',
+                        message: `请选择${record.type}满意度！`,
                       },
                     ]}
                   >
@@ -168,28 +170,35 @@ const CustomerInterview = props => {
 
   //
   const onFinish = async () => {
-    const values = await form.validateFields();
-    console.log('values', values);
-    
-    return;
-    let body = {
-      ...values,
-      Province: values.Province.toString(),
-      ReturnTime: moment(values.ReturnTime).format('YYYY-MM-DD 00:00:00'),
-      UserGroup_Name: undefined,
-      ProvinceName: undefined,
-      DailyTaskID: taskInfo.ID || editData.DailyTaskID,
-      Visiter: JSON.parse(userCookie).UserId,
-      ID: editData.ID,
-    };
-    props.dispatch({
-      type: 'wordSupervision/InsOrUpdReturnVisitCustomers',
-      payload: body,
-      callback: () => {
-        onSubmitCallback();
-        onCancel();
-      },
-    });
+    try {
+      const values = await form.validateFields();
+      console.log('values', values);
+      let body = {
+        ...values,
+        Province: values.Province.toString(),
+        ReturnTime: moment(values.ReturnTime).format('YYYY-MM-DD 00:00:00'),
+        UserGroup_Name: undefined,
+        ProvinceName: undefined,
+        DailyTaskID: taskInfo.ID || editData.DailyTaskID,
+        Visiter: JSON.parse(userCookie).UserId,
+        ID: editData.ID,
+      };
+      props.dispatch({
+        type: 'wordSupervision/InsOrUpdReturnVisitCustomers',
+        payload: body,
+        callback: () => {
+          onSubmitCallback();
+          onCancel();
+        },
+      });
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+      // 获取第一个错误字段的错误信息并显示
+      const firstError = errorInfo.errorFields?.[0];
+      if (firstError) {
+        message.error(firstError.errors[0]);
+      }
+    }
   };
 
   const [achievingResultsList, setAchievingResultsList] = useState([]);
@@ -208,7 +217,7 @@ const CustomerInterview = props => {
 
   const userCookie = Cookie.get('currentUser');
   if (userCookie) {
-    form.setFieldsValue({ ReturnUser: JSON.parse(userCookie).UserName });
+    form.setFieldsValue({ Visiter: JSON.parse(userCookie).UserName });
   }
 
   const getLargeRegionListRequest = option => {
@@ -290,7 +299,6 @@ const CustomerInterview = props => {
             <Col span={12}>
               <Form.Item
                 label="省/市"
-                // name="ProvinceName"
                 name="Province"
                 rules={[
                   {
@@ -347,16 +355,15 @@ const CustomerInterview = props => {
                           form.setFieldsValue({
                             RegionalArea: option['data-item']?.UserGroup_ID,
                             UserGroup_Name: option['data-item']?.UserGroup_Name,
-                            ProvinceName: option['data-item']?.ProvinceName,
-                            // Province: option['data-item']?.Province,
+                            Province: option['data-item']?.Province.split(',').slice(0, 2),
                           });
-                          getLargeRegionListRequest(option);
+                          // getLargeRegionListRequest(option);
                         }}
                       >
                         {customerList.map(item => {
                           return (
                             <Option value={item.ID} key={item.ID} data-item={item}>
-                              {item.CustomFullName}
+                              {item.CustomFullName || item.CustomName}
                             </Option>
                           );
                         })}
@@ -368,17 +375,17 @@ const CustomerInterview = props => {
                       RegionCode={taskInfo.RegionCode || editData.RegionCode}
                       CustomID={customID}
                       onOk={data => {
+                        console.log('data', data);
                         setCustomID(data.ID);
                         form.setFieldsValue({
                           CustomID: data.ID,
                           UserGroup_Name: data.UserGroup_Name,
-                          ProvinceName: data.ProvinceName,
                           RegionalArea: data.UserGroup_ID,
-                          // Province: data.Province,
+                          Province: data.Province.split(','),
                         });
-                        getLargeRegionListRequest({
-                          'data-item': { UserGroup_ID: data.UserGroup_ID, Province: data.Province },
-                        });
+                        // getLargeRegionListRequest({
+                        //   'data-item': { UserGroup_ID: data.UserGroup_ID, Province: data.Province },
+                        // });
                       }}
                     />
                   </Col>
@@ -422,6 +429,10 @@ const CustomerInterview = props => {
                     required: true,
                     message: '手机不能为空！',
                   },
+                  {
+                    pattern: /^1[3-9]\d{9}$/,
+                    message: '请输入正确的手机号码！'
+                  }
                 ]}
               >
                 <Input placeholder="请填写手机" />

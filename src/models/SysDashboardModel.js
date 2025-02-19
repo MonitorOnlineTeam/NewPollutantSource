@@ -166,7 +166,7 @@ export default Model.extend({
     *GetEquipmentExceptionsOverview({ payload, callback }, { call, put, update }) {
       const result = yield call(
         requestPost,
-        API.VisualKanbanApi.GetEquipmentExceptionsOverview,
+        API.VisualKanbanApi.GetStatePointEquipmentExceptionsOverview,
         payload,
       );
       if (result.IsSuccess) {

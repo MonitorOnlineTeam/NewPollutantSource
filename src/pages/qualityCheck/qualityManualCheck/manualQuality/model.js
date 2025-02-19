@@ -7,12 +7,25 @@ import moment from 'moment';
 export default Model.extend({
   namespace: 'qcManual',
   state: {
+
+  //   case "02":
+  //     oldCode = "a21026";
+  //     break;
+  // case "03":
+  //     oldCode = "a21002";
+  //     break;
+  // case "s01":
+  //     oldCode = "a19001";
+  //     break;
+  // case "30":
+  //     oldCode = "a05001";
     pollutantCodeList: {
       a21026: { name: 'SO₂', unit: 'mg/m³' },
       '02': { name: 'SO₂', unit: 'mg/m³' },
       '03': { name: 'NOx', unit: 'mg/m³' },
       a21002: { name: 'NOx', unit: 'mg/m³' },
       a19001: { name: 'O₂', unit: '%' },
+      's01': { name: 'O₂', unit: '%' },
       '30': { name: 'CO₂', unit: 'mg/m³' }, // 二氧化碳
       a05001: { name: 'CO₂', unit: 'mg/m³' }, // 二氧化碳
       a05002: { name: 'CH₄', unit: 'mg/m³' }, // 甲烷
@@ -56,7 +69,7 @@ export default Model.extend({
         console.log('gasData1=', result.Datas);
         if (gasData.length) {
           gasData.map(item => {
-            let index = item.GasBottleNum - 1;
+            let index = item.GasBottleNum ? item.GasBottleNum - 1 : 0 ;
             if (!gasDataTemp[index].GasCode) {
               gasDataTemp[index] = item;
               gasDataTemp[index].bottleName = item.PollutantName;

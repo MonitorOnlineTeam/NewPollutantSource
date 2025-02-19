@@ -38,6 +38,12 @@ const SystemDashboardPageWrapper = props => {
   }, []);
 
   useEffect(() => {
+    // 判断是否需要重定向到YS页面
+    if (location.pathname === '/SystemDashboard/AbnormalIdentify' && window.location.port === '61008') {
+      router.push('/SystemDashboard_YS/AbnormalIdentify');
+      return;
+    }
+
     pageName.includes('运维') &&
       dispatch({
         //获取运维基础配置

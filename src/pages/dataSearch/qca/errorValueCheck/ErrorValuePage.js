@@ -1,20 +1,37 @@
 import React, { PureComponent } from 'react';
-import { Card, Tabs, Spin, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag, Tooltip } from "antd";
-import SdlTable from '@/components/SdlTable'
-import { connect } from "dva"
-import moment from "moment"
-import QuestionTooltip from "@/components/QuestionTooltip"
-import ErrorValueChart from "./ErrorValueChart"
-import CheckModal from "../components/CheckModal"
-import _ from "lodash"
+import {
+  Card,
+  Tabs,
+  Spin,
+  Form,
+  DatePicker,
+  Row,
+  Col,
+  Button,
+  Space,
+  Input,
+  Select,
+  Modal,
+  Tag,
+  Tooltip,
+} from 'antd';
+import SdlTable from '@/components/SdlTable';
+import { connect } from 'dva';
+import moment from 'moment';
+import QuestionTooltip from '@/components/QuestionTooltip';
+import ErrorValueChart from './ErrorValueChart';
+import CheckModal from '../components/CheckModal';
+import _ from 'lodash';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 const Option = Select.Option;
 const workMode = {
-  "1": "定时", "2": "远程", 3: "现场"
-}
+  '1': '定时',
+  '2': '远程',
+  3: '现场',
+};
 
 @connect(({ qcaCheck, loading }) => ({
   errorValueCheckTableData: qcaCheck.errorValueCheckTableData,
@@ -29,7 +46,7 @@ class BlindCheckPage extends PureComponent {
     // entName: "",
     // DGIMN: "",
     pollutantCodes: [],
-  }
+  };
   _SELF_ = {
     columns: [
       {
@@ -45,22 +62,31 @@ class BlindCheckPage extends PureComponent {
         dataIndex: 'Result',
         render: (text, record, index) => {
           if (text == 2) {
-            return <Tooltip title={record.FlagName}>
-              <a style={{ color: "#7b7b7b" }}>无效</a>
-            </Tooltip>
+            return (
+              <Tooltip title={record.FlagName}>
+                <a style={{ color: '#7b7b7b' }}>无效</a>
+              </Tooltip>
+            );
           }
-          return <a style={{ color: text == 0 ? "#87d068" : "#f5222d" }} onClick={(e) => {
-            this.setState({
-              currentRowData: record
-            })
-            this.props.dispatch({
-              type: "qcaCheck/updateState",
-              payload: {
-                checkModalVisible: true
-              }
-            })
-          }}>{text == 0 ? "合格" : "不合格"}</a>
-        }
+          return (
+            <a
+              style={{ color: text == 0 ? '#87d068' : '#f5222d' }}
+              onClick={e => {
+                this.setState({
+                  currentRowData: record,
+                });
+                this.props.dispatch({
+                  type: 'qcaCheck/updateState',
+                  payload: {
+                    checkModalVisible: true,
+                  },
+                });
+              }}
+            >
+              {text == 0 ? '合格' : '不合格'}
+            </a>
+          );
+        },
       },
       {
         title: '监测项目',
@@ -78,18 +104,20 @@ class BlindCheckPage extends PureComponent {
         title: '测量浓度',
         dataIndex: 'Check',
         render: (text, record) => {
-          return this.getFlagText(text, record)
-        }
+          return this.getFlagText(text, record);
+        },
       },
       {
         title: '量程范围',
         dataIndex: 'SpanValue',
       },
       {
-        title: <span>
-          相对误差（%）
-          <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入盲样标准气体，仪器的读数与盲样标准气体初始测量值之间的偏差相对于满量程的百分比。（测量浓度-标准浓度）/量程范围*100%（参考75标准中示值误差计算公式）" />
-        </span>,
+        title: (
+          <span>
+            相对误差（%）
+            <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入盲样标准气体，仪器的读数与盲样标准气体初始测量值之间的偏差相对于满量程的百分比。（测量浓度-标准浓度）/量程范围*100%（参考75标准中示值误差计算公式）" />
+          </span>
+        ),
         dataIndex: 'Offset',
         width: 180,
       },
@@ -98,7 +126,7 @@ class BlindCheckPage extends PureComponent {
         dataIndex: 'standard',
       },
     ],
-  }
+  };
 
   componentDidMount() {
     this.getPollutantList();
@@ -107,20 +135,32 @@ class BlindCheckPage extends PureComponent {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.pollutantList !== this.props.pollutantList) {
       const { location } = this.props;
-      if (location && location.query.type === 'alarm') { //从报警信息页面跳转
-        this.formRef.current.setFieldsValue({ PollutantCode: [location.query.code] })
-        this.formRef.current.setFieldsValue({ time: [moment(location.query.startTime), moment(location.query.endTime)] })
+      if (location && location.query.type === 'alarm') {
+        //从报警信息页面跳转
+        this.formRef.current.setFieldsValue({ PollutantCode: [location.query.code] });
+        this.formRef.current.setFieldsValue({
+          time: [moment(location.query.startTime), moment(location.query.endTime)],
+        });
         this.getTableDataSource();
       } else {
         let pollutantList = this.props.pollutantList.map(item => item.PollutantCode);
-        if (this.props.pointType === "1") {
-          let intersection = _.intersection(pollutantList, ["011", "060"])
+        if (this.props.pointType === '1') {
+          let intersection = _.intersection(pollutantList, ['011', '060']);
           // 废水
-          this.formRef.current.setFieldsValue({ PollutantCode: intersection })
+          this.formRef.current.setFieldsValue({ PollutantCode: intersection });
         } else {
-          let intersection = _.intersection(pollutantList, ["a21002", "a19001", "a21026", 'a05001'])
+          let intersection = _.intersection(pollutantList, [
+            '03',
+            'a21002',
+            's01',
+            'a19001',
+            '02',
+            'a21026',
+            '30',
+            'a05001',
+          ]);
           // 废气
-          this.formRef.current.setFieldsValue({ PollutantCode: intersection })
+          this.formRef.current.setFieldsValue({ PollutantCode: intersection });
         }
         this.getTableDataSource();
       }
@@ -132,68 +172,99 @@ class BlindCheckPage extends PureComponent {
   }
 
   getFlagText = (text, record) => {
-    let WorkMode = '', workModeLabel = '';
-    if (record.WorkMode === 2) { WorkMode = 'rd'; workModeLabel = '远程质控' };
-    if (record.WorkMode === 3) { WorkMode = 'hd'; workModeLabel = '现场质控' }
-    return WorkMode ? <Tooltip title={<div style={{ color: "#fff", fontWeight: 500 }}>
-      <p>{workModeLabel}</p>
-      <p>质控人：{record.PersonName}</p>
-    </div>}>
-      {text}
-      <span style={{ marginLeft: 10, fontWeight: 600 }}>{WorkMode}</span>
-    </Tooltip> : text
-  }
+    let WorkMode = '',
+      workModeLabel = '';
+    if (record.WorkMode === 2) {
+      WorkMode = 'rd';
+      workModeLabel = '远程质控';
+    }
+    if (record.WorkMode === 3) {
+      WorkMode = 'hd';
+      workModeLabel = '现场质控';
+    }
+    return WorkMode ? (
+      <Tooltip
+        title={
+          <div style={{ color: '#fff', fontWeight: 500 }}>
+            <p>{workModeLabel}</p>
+            <p>质控人：{record.PersonName}</p>
+          </div>
+        }
+      >
+        {text}
+        <span style={{ marginLeft: 10, fontWeight: 600 }}>{WorkMode}</span>
+      </Tooltip>
+    ) : (
+      text
+    );
+  };
 
   // 获取污染物类型
   getPollutantList = () => {
     this.props.dispatch({
-      type: "qcaCheck/getPollutantListByDgimn",
+      type: 'qcaCheck/getPollutantListByDgimn',
       payload: {
         DGIMN: this.props.DGIMN,
-        State: 1
-      }
-    })
-  }
+        State: 1,
+      },
+    });
+  };
 
   // 获取表格数据
   getTableDataSource = () => {
     const { DGIMN } = this.props;
     const fieldsValue = this.formRef.current.getFieldsValue();
     this.props.dispatch({
-      type: "qcaCheck/getErrorValueDataList",
+      type: 'qcaCheck/getErrorValueDataList',
       payload: {
-        beginTime: fieldsValue["time"] ? fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss') : undefined,
-        endTime: fieldsValue["time"] ? fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        beginTime: fieldsValue['time']
+          ? fieldsValue['time'][0].format('YYYY-MM-DD HH:mm:ss')
+          : undefined,
+        endTime: fieldsValue['time']
+          ? fieldsValue['time'][1].format('YYYY-MM-DD HH:mm:ss')
+          : undefined,
         DGIMN: DGIMN,
-        PollutantCode: fieldsValue["PollutantCode"]
-      }
-    })
-  }
+        PollutantCode: fieldsValue['PollutantCode'],
+      },
+    });
+  };
 
   // 导出
   onExport = () => {
     const { DGIMN } = this.props;
     const fieldsValue = this.formRef.current.getFieldsValue();
     this.props.dispatch({
-      type: "qcaCheck/qcaCheckExport",
+      type: 'qcaCheck/qcaCheckExport',
       payload: {
-        beginTime: fieldsValue["time"] ? fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss') : undefined,
-        endTime: fieldsValue["time"] ? fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        beginTime: fieldsValue['time']
+          ? fieldsValue['time'][0].format('YYYY-MM-DD HH:mm:ss')
+          : undefined,
+        endTime: fieldsValue['time']
+          ? fieldsValue['time'][1].format('YYYY-MM-DD HH:mm:ss')
+          : undefined,
         DGIMN: DGIMN,
-        PollutantCode: fieldsValue["PollutantCode"],
-        exportType: "exportErrorValueCheck"
-      }
-    })
-  }
-
+        PollutantCode: fieldsValue['PollutantCode'],
+        exportType: 'exportErrorValueCheck',
+      },
+    });
+  };
 
   render() {
     const { columns } = this._SELF_;
     const { currentRowData } = this.state;
-    const { checkModalVisible, exportLoading, DGIMN, errorValueCheckTableData, pollutantList, tableLoading, pointName, date } = this.props;
-    let pollutantCodeList = "";
+    const {
+      checkModalVisible,
+      exportLoading,
+      DGIMN,
+      errorValueCheckTableData,
+      pollutantList,
+      tableLoading,
+      pointName,
+      date,
+    } = this.props;
+    let pollutantCodeList = '';
     if (this.formRef.current) {
-      pollutantCodeList = this.formRef.current.getFieldValue("PollutantCode")
+      pollutantCodeList = this.formRef.current.getFieldValue('PollutantCode');
     }
     return (
       <Card>
@@ -203,44 +274,47 @@ class BlindCheckPage extends PureComponent {
           initialValues={{
             time: date || [moment().subtract(29, 'days'), moment()],
           }}
-        // onFieldsChange={(changedFields, allFields) => {
-        //   console.log('changedFields=', changedFields)
-        //   console.log('allFieldss=', allFields)
-        // }}
+          // onFieldsChange={(changedFields, allFields) => {
+          //   console.log('changedFields=', changedFields)
+          //   console.log('allFieldss=', allFields)
+          // }}
         >
           <Row gutter={[24, 0]}>
             <Col span={10}>
-              <Form.Item
-                name="time"
-                label="开始/结束时间"
-              >
+              <Form.Item name="time" label="开始/结束时间">
                 <RangePicker_ showTime style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item
-                name="PollutantCode"
-                label="污染物"
-              >
+              <Form.Item name="PollutantCode" label="污染物">
                 <Select mode="multiple" placeholder="请选择污染物">
-                  {
-                    pollutantList.map(item => {
-                      return <Option key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>
-                    })
-                  }
+                  {pollutantList.map(item => {
+                    return (
+                      <Option key={item.PollutantCode} value={item.PollutantCode}>
+                        {item.PollutantName}
+                      </Option>
+                    );
+                  })}
                 </Select>
               </Form.Item>
             </Col>
             <Space align="baseline">
-              <Button type="primary" onClick={this.getTableDataSource}>查询</Button>
-              <Button type="primary" loading={exportLoading} onClick={this.onExport}>导出</Button>
+              <Button type="primary" onClick={this.getTableDataSource}>
+                查询
+              </Button>
+              <Button type="primary" loading={exportLoading} onClick={this.onExport}>
+                导出
+              </Button>
             </Space>
           </Row>
         </Form>
         {/* <Spin spinning={tableLoading}> */}
         <Tabs type="card">
           <TabPane tab="示值误差核查" key="1">
-            <SdlTable loading={tableLoading} dataSource={errorValueCheckTableData} columns={columns}
+            <SdlTable
+              loading={tableLoading}
+              dataSource={errorValueCheckTableData}
+              columns={columns}
               onRow={record => {
                 return {
                   onClick: event => {
@@ -248,14 +322,14 @@ class BlindCheckPage extends PureComponent {
                       return;
                     }
                     this.setState({
-                      currentRowData: record
-                    })
+                      currentRowData: record,
+                    });
                     this.props.dispatch({
-                      type: "qcaCheck/updateState",
+                      type: 'qcaCheck/updateState',
                       payload: {
-                        checkModalVisible: true
-                      }
-                    })
+                        checkModalVisible: true,
+                      },
+                    });
                   }, // 点击行
                 };
               }}
@@ -267,7 +341,14 @@ class BlindCheckPage extends PureComponent {
         </Tabs>
         {/* </Spin> */}
         {/* 详情弹窗 */}
-        {checkModalVisible && <CheckModal QCAType="3106" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
+        {checkModalVisible && (
+          <CheckModal
+            QCAType="3106"
+            DGIMN={DGIMN}
+            currentRowData={currentRowData}
+            pointName={pointName}
+          />
+        )}
       </Card>
     );
   }

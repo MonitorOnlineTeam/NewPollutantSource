@@ -411,10 +411,10 @@ class index extends PureComponent {
     // });
 
     // 获取关注列表
-    this.props.dispatch({
-      type: 'exceptionrecordNew/getAttentionDegreeList',
-      payload: { RegionCode: '' },
-    });
+    // this.props.dispatch({
+    //   type: 'exceptionrecordNew/getAttentionDegreeList',
+    //   payload: { RegionCode: '' },
+    // });
 
     this.getExceptionList([
       moment()
@@ -708,7 +708,7 @@ class index extends PureComponent {
               )}
             </Row>
             <Row>
-              <FormItem label="关注程度">
+              {/* <FormItem label="关注程度">
                 {getFieldDecorator('AttentionCode', {
                   initialValue: undefined,
                 })(
@@ -722,8 +722,8 @@ class index extends PureComponent {
                     })}
                   </Select>,
                 )}
-              </FormItem>
-              <FormItem label={`${convertTextByConfig('企业')}类型`} hidden={this.pollutantType}>
+              </FormItem> */}
+              <FormItem label={`${convertTextByConfig('企业')}类型`} hidden={this.pollutantType} style={{ marginRight: 10 }}>
                 {getFieldDecorator('PollutantType', {
                   initialValue: this.pollutantType || 2,
                 })(
@@ -762,7 +762,6 @@ class index extends PureComponent {
                 <Button
                   loading={loading}
                   type="primary"
-                  style={{ marginLeft: 10 }}
                   onClick={this.getExceptionList}
                 >
                   查询

@@ -18,6 +18,7 @@ import { ExclamationCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import styles from '../../styles.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import PointParams from '@/pages/DataAnalyticalWarningModel/Warning/PointParams';
 // import styles from '../styles.less';
 const { Panel } = Collapse;
 const { confirm } = Modal;
@@ -68,7 +69,7 @@ const Index = props => {
   const [runState, setRunState] = useState(false);
   const [progressNum, setProgressNum] = useState(0);
   const [rerunDate, setRerunDate] = useState([moment().subtract('year', 1), moment()]);
-
+  const [paramsModalVisible, setParamsModalVisible] = useState(false);
   useEffect(() => {
     return () => {
       clearTimeout(timer);
@@ -293,7 +294,7 @@ const Index = props => {
         DGIMN: DGIMN,
       },
       callback: () => {
-        setProgressNum(0)
+        setProgressNum(0);
         setRunState(true);
         setTimeout(() => {
           getRunStatus();
@@ -321,8 +322,7 @@ const Index = props => {
         </Row>
       );
     }
-    console.log('runState', runState);
-    console.log('progressNum', progressNum);
+
     return (
       <Spin
         spinning={runState}
@@ -361,6 +361,15 @@ const Index = props => {
           >
             重新运行
           </Button>
+          <Button
+            type="primary"
+            style={{ marginLeft: 10 }}
+            onClick={() => {
+              setParamsModalVisible(true);
+            }}
+          >
+            参数调整
+          </Button>
           <Divider style={{ margin: '18px 0' }} />
         </Row>
         {content}
@@ -388,6 +397,24 @@ const Index = props => {
           <Spin spinning={loading || !!reloadLoading}>{getPageContent()}</Spin>
         </div>
       )}
+
+      <Modal
+        title="参数调整"
+        centered
+        open={paramsModalVisible}
+        footer={null}
+        wrapClassName="spreadOverModal"
+        destroyOnClose
+        bodyStyle={{ padding: 0 }}
+        onCancel={() => setParamsModalVisible(false)}
+      >
+        {/* location.query.v */}
+        <PointParams
+          DGIMN={DGIMN}
+          location={{ query: { v: '2' } }}
+          onOK={() => setParamsModalVisible(false)}
+        />
+      </Modal>
     </>
   );
 };

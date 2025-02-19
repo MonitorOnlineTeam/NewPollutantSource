@@ -4,28 +4,54 @@
  * 创建时间：2021.2.24
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Spin, Typography, Card, Button, Select, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Checkbox, } from 'antd';
-import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, QuestionCircleOutlined, RollbackOutlined } from '@ant-design/icons';
-import { connect } from "dva";
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import {
+  Table,
+  Input,
+  InputNumber,
+  Popconfirm,
+  Form,
+  Spin,
+  Typography,
+  Card,
+  Button,
+  Select,
+  Progress,
+  message,
+  Row,
+  Col,
+  Tooltip,
+  Divider,
+  Modal,
+  DatePicker,
+  Radio,
+  Checkbox,
+} from 'antd';
+import SdlTable from '@/components/SdlTable';
+import {
+  PlusOutlined,
+  UpOutlined,
+  DownOutlined,
+  ExportOutlined,
+  QuestionCircleOutlined,
+  RollbackOutlined,
+} from '@ant-design/icons';
+import { connect } from 'dva';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 const { RangePicker } = DatePicker;
-import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
+import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon';
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
-import RegionList from '@/components/RegionList'
-import styles from "../style.less"
+import RegionList from '@/components/RegionList';
+import styles from '../style.less';
 import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
-import RegionDetail from './RegionDetail'
+import RegionDetail from './RegionDetail';
 import point from '@/models/point';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
-const namespace = 'equipmentAbnormalRate'
-
-
+const namespace = 'equipmentAbnormalRate';
 
 const dvaPropsData = ({ loading, equipmentAbnormalRate, global, point }) => ({
   tableDatas: equipmentAbnormalRate.regTableDatas,
@@ -38,84 +64,99 @@ const dvaPropsData = ({ loading, equipmentAbnormalRate, global, point }) => ({
   coommonCol2: equipmentAbnormalRate.coommonCol2,
   failcoommonCol2: equipmentAbnormalRate.failcoommonCol2,
   configInfo: global.configInfo,
-})
+});
 
-const dvaDispatch = (dispatch) => {
+const dvaDispatch = dispatch => {
   return {
-    updateState: (payload) => {
+    updateState: payload => {
       dispatch({
         type: `${namespace}/updateState`,
         payload: payload,
-      })
+      });
     },
-    regGetExecptionRateList: (payload,callback) => { // 行政区
+    regGetExecptionRateList: (payload, callback) => {
+      // 行政区
       dispatch({
         type: `${namespace}/regGetExecptionRateList`,
         payload: payload,
-        callback:callback,
-      })
+        callback: callback,
+      });
     },
-    getParamCodeList: (payload, callback) => { // 设备参数类别
+    getParamCodeList: (payload, callback) => {
+      // 设备参数类别
       dispatch({
         type: `point/getParamCodeList`,
         payload: payload,
-        callback: callback
-      })
+        callback: callback,
+      });
     },
-    exportExecptionRateList: (payload) => { // 导出
+    exportExecptionRateList: payload => {
+      // 导出
       dispatch({
         type: `${namespace}/exportExecptionRateList`,
         payload: payload,
-      })
+      });
     },
-  }
-}
-const Index = (props) => {
+  };
+};
+const Index = props => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar, paramCodeListLoading,configInfo, coommonCol, coommonCol2,failcoommonCol2,deviceType,operationSetType, } = props;
+  const {
+    tableDatas,
+    tableLoading,
+    exportLoading,
+    clientHeight,
+    type,
+    time,
+    queryPar,
+    paramCodeListLoading,
+    configInfo,
+    coommonCol,
+    coommonCol2,
+    failcoommonCol2,
+    deviceType,
+    operationSetType,
+  } = props;
 
   const provinceShow = configInfo && configInfo.IsShowProjectRegion;
   useEffect(() => {
     initData();
   }, []);
 
-
-
-  const [parType, setParType] = useState([])
+  const [parType, setParType] = useState([]);
   const initData = () => {
-    if(operationSetType!=1){
-    props.getParamCodeList({ pollutantType: type }, (data) => {
-      setParType(data)
-      form.setFieldsValue({ parameterCategory: data.map(item => item.value) })
-    })
-  }
-  }
+    if (operationSetType != 1) {
+      props.getParamCodeList({ pollutantType: type }, data => {
+        setParType(data);
+        form.setFieldsValue({ parameterCategory: data.map(item => item.value) });
+      });
+    }
+  };
 
   const exports = async () => {
     const values = await form.validateFields();
     props.exportExecptionRateList({
       ...values,
       time: undefined,
-      beginTime: moment(values.time[0]).format("YYYY-MM-DD 00:00:00"),
-      endTime: moment(values.time[1]).format("YYYY-MM-DD 23:59:59"),
+      beginTime: moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+      endTime: moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
       parameterCategory: values.parameterCategory ? values.parameterCategory.toString() : '',
       pointType: statisType,
-      type:operationSetType,
-      taskType: deviceType
-    })
-
+      type: operationSetType,
+      taskType: deviceType,
+    });
   };
-  const assessmentCentreCol =  deviceType == 1 ? coommonCol2 : failcoommonCol2
-  const col = operationSetType==1?  assessmentCentreCol : coommonCol  //1评估中心
+  const assessmentCentreCol = deviceType == 1 ? coommonCol2 : failcoommonCol2;
+  const col = operationSetType == 1 ? assessmentCentreCol : coommonCol; //1评估中心
   const column = [
     {
       title: '序号',
       align: 'center',
       render: (text, record, index) => {
-        return index + 1
-      }
+        return index + 1;
+      },
     },
     {
       title: '省',
@@ -124,15 +165,23 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record, index) => {
-        if(statisType == 1 ){
-           return <a onClick={() => { regionDetail(record) }} >{text}</a>
-        }else{
-            if (record.largeRegionName == '全部合计') {
-              return { props: { colSpan: 0 } };
-            }
-            return text;
+        if (statisType == 1) {
+          return (
+            <a
+              onClick={() => {
+                regionDetail(record);
+              }}
+            >
+              {text}
+            </a>
+          );
+        } else {
+          if (record.largeRegionName == '全部合计') {
+            return { props: { colSpan: 0 } };
+          }
+          return text;
         }
-      }
+      },
     },
     // {
     //   title: '运维企业数',
@@ -149,32 +198,32 @@ const Index = (props) => {
     //   sorter: (a, b) => a.pointCount - b.pointCount,
 
     // },
-    ...col
-  ]
+    ...col,
+  ];
 
-  const [columns, setColumns] = useState([])
-  const onFinish = async () => {  //查询
+  const [columns, setColumns] = useState([]);
+  const onFinish = async () => {
+    //查询
 
     try {
       const values = await form.validateFields();
       const par = {
         ...values,
         time: undefined,
-        beginTime: moment(values.time[0]).format("YYYY-MM-DD 00:00:00"),
-        endTime: moment(values.time[1]).format("YYYY-MM-DD 23:59:59"),
+        beginTime: moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+        endTime: moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
         parameterCategory: values.parameterCategory ? values.parameterCategory.toString() : '',
         pointType: statisType,
-        type:operationSetType,
-      }
-      props.regGetExecptionRateList({ ...par })
-
+        type: operationSetType,
+      };
+      props.regGetExecptionRateList({ ...par });
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
-  }
-  useEffect(()=>{
+  };
+  useEffect(() => {
     if (statisType == 1) {
-      setColumns(column)
+      setColumns(column);
     } else {
       column.splice(1, 0, {
         title: '大区',
@@ -182,114 +231,152 @@ const Index = (props) => {
         key: 'largeRegionName',
         align: 'center',
         render: (text, record, index) => {
-         return { props: { colSpan: text == '全部合计'? 2 : 1 }, children: text };
-        }
-      })
-      setColumns(column)
+          return { props: { colSpan: text == '全部合计' ? 2 : 1 }, children: text };
+        },
+      });
+      setColumns(column);
     }
-  },[statisType,queryPar])
+  }, [statisType, queryPar]);
 
-  const [regionDetailVisible, setRegionDetailVisible] = useState(false)
-
-  const regionDetail = (row) => {
-    setRegionDetailVisible(true)
+  const [regionDetailVisible, setRegionDetailVisible] = useState(false);
+  const [currentRegionDetail, setCurrentRegionDetail] = useState({});
+  const regionDetail = row => {
+    setRegionDetailVisible(true);
+    setCurrentRegionDetail(row);
     props.updateState({
       queryPar: {
         ...queryPar,
         regionCode: row.regionCode,
-        type:operationSetType,
-      }
-    })
-  }
-
-
+        type: operationSetType,
+      },
+    });
+  };
 
   const onValuesChange = (hangedValues, allValues) => {
     if (Object.keys(hangedValues).join() == 'pollutantType') {
       if (hangedValues.pollutantType) {
-        props.getParamCodeList({ pollutantType: hangedValues.pollutantType }, (data) => {
-          setParType(data)
-          form.setFieldsValue({ parameterCategory: data.map(item => item.value) })
-        })
+        props.getParamCodeList({ pollutantType: hangedValues.pollutantType }, data => {
+          setParType(data);
+          form.setFieldsValue({ parameterCategory: data.map(item => item.value) });
+        });
       } else {
-        setParType([])
-        form.setFieldsValue({ parameterCategory: '' })
+        setParType([]);
+        form.setFieldsValue({ parameterCategory: '' });
       }
     }
-  }
+  };
 
-  const [statisType, setStatisType] = useState(1)
+  const [statisType, setStatisType] = useState(1);
   const statisTypeChange = ({ target: { value } }) => {
-    setStatisType(value)
-  }
+    setStatisType(value);
+  };
 
   useEffect(() => {
-    props.updateState({ tableDatas: [] })
+    props.updateState({ tableDatas: [] });
     onFinish();
-  }, [statisType])
-
+  }, [statisType]);
+  
   return (
     <div>
-      {!regionDetailVisible ? <><Form
-        form={form}
-        name="advanced_search"
-        onFinish={() => { onFinish() }}
-        initialValues={{
-          pollutantType: type,
-          time: time,
-          pointType: 1,
-        }}
-        loading={tableLoading}
-        onValuesChange={onValuesChange}
-      >
-        <Row>
-          <Form.Item label='日期' name='time' style={{ paddingRight: '16px' }}>
-            <RangePicker_ allowClear={false} style={{ width: '100%' }}
-                format='YYYY-MM-DD'
-               />
-          </Form.Item>
-          <Form.Item label='监测点类型' name='pollutantType' style={{ paddingRight: '16px' }}>
-            <Select placeholder='请选择' style={{ width: 150 }} allowClear>
-              <Option value={2}>废气</Option>
-              <Option value={1}>废水</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType='submit' loading={paramCodeListLoading || tableLoading} >
-              查询
-    </Button>
-            <Button icon={<ExportOutlined />} loading={exportLoading} style={{ margin: '0 8px', }} onClick={() => { exports() }}>
-              导出
-    </Button>
-          </Form.Item>
-          {!provinceShow && <Form.Item>
-            <Radio.Group onChange={(e) => { statisTypeChange(e) }} defaultValue={1} buttonStyle="solid">
-              <Radio.Button value={1}>按省统计</Radio.Button>
-              <Radio.Button value={4}>按大区统计</Radio.Button>
-            </Radio.Group>
-          </Form.Item>}
-        </Row>
-        {form.getFieldValue('pollutantType') && operationSetType!=1 && <Form.Item label='设备参数类别' name='parameterCategory'>
-          {paramCodeListLoading ? <Spin size='small' /> :
-            <Checkbox.Group options={parType} />
-          }
-        </Form.Item>}
-      </Form>
+      {!regionDetailVisible ? (
+        <>
+          <Form
+            form={form}
+            name="advanced_search"
+            onFinish={() => {
+              onFinish();
+            }}
+            initialValues={{
+              pollutantType: type,
+              time: time,
+              pointType: 1,
+            }}
+            loading={tableLoading}
+            onValuesChange={onValuesChange}
+          >
+            <Row>
+              <Form.Item label="日期" name="time" style={{ paddingRight: '16px' }}>
+                <RangePicker_ allowClear={false} style={{ width: '100%' }} format="YYYY-MM-DD" />
+              </Form.Item>
+              <Form.Item label="监测点类型" name="pollutantType" style={{ paddingRight: '16px' }}>
+                <Select placeholder="请选择" style={{ width: 150 }} allowClear>
+                  <Option value={2}>废气</Option>
+                  <Option value={1}>废水</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={paramCodeListLoading || tableLoading}
+                >
+                  查询
+                </Button>
+                <Button
+                  icon={<ExportOutlined />}
+                  loading={exportLoading}
+                  style={{ margin: '0 8px' }}
+                  onClick={() => {
+                    exports();
+                  }}
+                >
+                  导出
+                </Button>
+              </Form.Item>
+              {!provinceShow && (
+                <Form.Item>
+                  <Radio.Group
+                    onChange={e => {
+                      statisTypeChange(e);
+                    }}
+                    defaultValue={1}
+                    buttonStyle="solid"
+                  >
+                    <Radio.Button value={1}>按省统计</Radio.Button>
+                    <Radio.Button value={4}>按大区统计</Radio.Button>
+                  </Radio.Group>
+                </Form.Item>
+              )}
+            </Row>
+            {form.getFieldValue('pollutantType') && operationSetType != 1 && (
+              <Form.Item label="设备参数类别" name="parameterCategory">
+                {paramCodeListLoading ? (
+                  <Spin size="small" />
+                ) : (
+                  <Checkbox.Group options={parType} />
+                )}
+              </Form.Item>
+            )}
+          </Form>
 
-        <SdlTable
-          loading={paramCodeListLoading || tableLoading}
-          bordered
-          dataSource={tableDatas}
-          columns={columns}
-          pagination={false}
-        />
-      </>
-        :
-
-        <RegionDetail operationSetType={operationSetType} deviceType={deviceType}  onGoBack={() => { setRegionDetailVisible(false) }} />  // 行政区详情弹框 
+          <SdlTable
+            loading={paramCodeListLoading || tableLoading}
+            bordered
+            dataSource={tableDatas}
+            columns={columns}
+            pagination={false}
+          />
+        </>
+      ) : (
+        <Modal
+          title={props.deviceType == 1 ? `设备完好率 - ${currentRegionDetail.regionName}` : `设备故障率 - ${currentRegionDetail.regionName}`}
+          wrapClassName="spreadOverModal"
+          mask={false}
+          visible={regionDetailVisible}
+          footer={false}
+          onCancel={() => {
+            setRegionDetailVisible(false);
+          }}
+          destroyOnClose
+        >
+          <RegionDetail operationSetType={operationSetType} deviceType={deviceType} />
+        </Modal>
+      ) // 行政区详情弹框
       }
-
     </div>
   );
 };
-export default connect(dvaPropsData, dvaDispatch)(Index);
+export default connect(
+  dvaPropsData,
+  dvaDispatch,
+)(Index);

@@ -137,17 +137,17 @@ const routes = [
         path: '/hometangy',
         component: './hometangy',
       },
-      {
-        name: 'sysTypeMiddlePage',
-        path: '/sysTypeMiddlePage',
-        component: './sysTypeMiddlePage',
-      },
-      // 新中间页（替换）
       // {
       //   name: 'sysTypeMiddlePage',
       //   path: '/sysTypeMiddlePage',
-      //   component: './sysTypeMiddlePage/index2.js',
+      //   component: './sysTypeMiddlePage',
       // },
+      // 新中间页（替换）
+      {
+        name: 'sysTypeMiddlePage',
+        path: '/sysTypeMiddlePage',
+        component: './sysTypeMiddlePage/index2.js',
+      },
       {
         name: 'sessionMiddlePage',
         path: '/sessionMiddlePage',
@@ -226,6 +226,37 @@ const routes = [
             name: 'Monitoring',
             path: '/SystemDashboard/QualityControl',
             component: './SystemDashboard/QualityControl',
+          },
+        ],
+      },
+      {
+        // 驾驶舱 - 演示
+        name: 'SystemDashboard',
+        path: '/SystemDashboard_YS',
+        routes: [
+          {
+            // 运维
+            name: 'Operation',
+            path: '/SystemDashboard_YS/Operation',
+            component: './SystemDashboard_YS/Operation',
+          },
+          {
+            //监控
+            name: 'Monitoring',
+            path: '/SystemDashboard_YS/Monitoring',
+            component: './SystemDashboard_YS/Monitoring',
+          },
+          {
+            //监控分析
+            name: 'MonitoringAnalysis',
+            path: '/SystemDashboard_YS/MonitoringAnalysis',
+            component: './SystemDashboard_YS/MonitoringAnalysis',
+          },
+          {
+            // 异常识别模型
+            name: 'Operation',
+            path: '/SystemDashboard_YS/AbnormalIdentify',
+            component: './SystemDashboard_YS/AbnormalIdentify',
           },
         ],
       },
@@ -389,26 +420,26 @@ const routes = [
       //   ],
       // },
       // 新登录 （样式统一）
-      // {
-      //   path: '/user/login',
-      //   component: '../layouts/UserLayout3',
-      //   routes: [
-      //     {
-      //       name: 'newLogin',
-      //       path: '/user/login',
-      //       component: './user/login/NewLogin2',
-      //     },
-      //   ],
-      // },
+      {
+        path: '/user/login',
+        component: '../layouts/UserLayout3',
+        routes: [
+          {
+            name: 'newLogin',
+            path: '/user/login',
+            component: './user/login/NewLogin2',
+          },
+        ],
+      },
       {
         path: '/user',
         component: '../layouts/UserLayout',
         routes: [
-          {
-            name: 'login',
-            path: '/user/login',
-            component: './user/login',
-          },
+          // {
+          //   name: 'login',
+          //   path: '/user/login',
+          //   component: './user/login',
+          // },
           {
             name: 'register-result',
             path: '/user/register-result',
@@ -461,6 +492,17 @@ const routes = [
               //   path: '/Demo/yuanxing/1',
               //   component: './Demo/yuanxing/index2',
               // },
+            ],
+          },
+          {
+            path: '/YS',
+            name: 'YS',
+            routes: [
+              {
+                name: 'Rank',
+                path: '/YS/Rank/:type',
+                component: './YS/Rank',
+              },
             ],
           },
           // 唐银钢铁项目 - 台账
@@ -2408,8 +2450,7 @@ const routes = [
                     //超标数据查询 - 集团
                     name: 'exceedDataDispositionRecord',
                     path: '/monitoring/alarmInfo/exceedDataAlarmRecordGroup',
-                    component:
-                      './monitoring/alarmInfo/exceedDataAlarmRecord',
+                    component: './monitoring/alarmInfo/exceedDataAlarmRecord',
                   },
                   {
                     //超标数据报警记录查询
@@ -2441,7 +2482,6 @@ const routes = [
                     component:
                       './monitoring/alarmInfo/exceedDataDispositionRecord/exceedDataDispositionRecord',
                   },
-
                 ],
               },
 
@@ -5218,33 +5258,37 @@ const routes = [
                     // 资源检索中心
                     name: 'RsourceRetrievalCenter',
                     path: '/ctManage/generalManager/resourceRetrievalCenter',
-                    component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter',
+                    component:
+                      './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter',
                   },
                   {
                     //资源检索中心 详情
                     name: 'RsourceRetrievalCenter',
                     path: '/ctManage/generalManager/resourceRetrievalCenter/detail',
-                    component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/detail',
+                    component:
+                      './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/detail',
                   },
                   {
                     // 专家信息
                     name: 'ExpertInfo',
                     path: '/ctManage/generalManager/resourceRetrievalCenter/expertInfo',
-                    component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/expertInfo',
+                    component:
+                      './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/expertInfo',
                   },
                   {
                     // 资源信息
                     name: 'ResourceInfo',
                     path: '/ctManage/generalManager/resourceRetrievalCenter/resourceInfo',
-                    component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/resourceInfoProblemsSolutions',
+                    component:
+                      './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/resourceInfoProblemsSolutions',
                   },
                   {
                     // 问题及解决方案
                     name: 'ProblemsSolutions',
                     path: '/ctManage/generalManager/resourceRetrievalCenter/problemsSolutions',
-                    component: './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/resourceInfoProblemsSolutions',
+                    component:
+                      './ctDebuggAfterSaleServiceManage/generalManager/resourceRetrievalCenter/resourceInfoProblemsSolutions',
                   },
-
                 ],
               },
 

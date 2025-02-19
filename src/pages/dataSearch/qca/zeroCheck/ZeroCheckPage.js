@@ -227,15 +227,20 @@ class ZeroCheckPage extends PureComponent {
         this.getTableDataSource();
       } else {
         let pollutantList = this.props.pollutantList.map(item => item.PollutantCode);
+        debugger
         if (this.props.pointType === '1') {
           let intersection = _.intersection(pollutantList, ['011', '060']);
           // 废水
           this.formRef.current.setFieldsValue({ PollutantCode: intersection });
         } else {
           let intersection = _.intersection(pollutantList, [
+            '03',
             'a21002',
+            's01',
             'a19001',
+            '02',
             'a21026',
+            '30',
             'a05001',
             'a05002',
             'a05003',

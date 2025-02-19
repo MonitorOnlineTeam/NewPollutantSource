@@ -389,13 +389,13 @@ const RecordAndManagement = props => {
                 <Form.Item name="customerName" label="客户名称">
                   <Input style={{ width: 200 }} placeholder="客户名称" allowClear />
                 </Form.Item>
-                <Form.Item
+                {/* <Form.Item
                   name="Score"
                   label="客户满意度小于"
                   style={{ display: mode === 'record' ? 'block' : 'none' }}
                 >
                   <InputNumber allowClear={true} style={{ width: '100%' }} placeholder="请输入" />
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item>
                   <Space>
                     <Button

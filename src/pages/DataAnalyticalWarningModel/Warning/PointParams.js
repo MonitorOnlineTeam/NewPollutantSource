@@ -70,7 +70,7 @@ const dvaPropsData = ({ loading, dataModel }) => ({
 const PointParams = props => {
   const [form] = Form.useForm();
   const { dispatch, loadLoading, saveLoading, location } = props;
-  const [DGIMN, setDGIMN] = useState();
+  const [DGIMN, setDGIMN] = useState(props.DGIMN);
   const [visible, setVisible] = useState(false);
   const [images, setImages] = useState([]);
   const [currentPoint, setCurrentPoint] = useState();
@@ -155,9 +155,277 @@ const PointParams = props => {
       payload: body,
       callback: () => {
         loadData();
+        props.onOK && props.onOK();
       },
     });
   };
+
+  const getPageContent = () => {
+    return (
+      <div className={styles.CardPageWrapper} style={{ backgroundColor: props.DGIMN ? '#fff' : '' }}>
+        <Form
+          name="basic"
+          form={form}
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 14 }}
+          style={{ paddingTop: '10px' }}
+          initialValues={{}}
+          onFinish={onFinish}
+          autoComplete="off"
+        >
+          <Spin spinning={loadLoading}>
+            <Card
+              bordered={false}
+              // loading={loadLoading}
+              bodyStyle={{ paddingTop: 20 }}
+              title={
+                <div className={styles.title}>
+                  污染物波动范围
+                  <Tooltip
+                    title={'点击查看监测因子波动范围'}
+                    // overlayStyle={this.props.overlayStyle}
+                  >
+                    <QuestionCircleOutlined
+                      style={{ marginLeft: 6, color: '#808080', cursor: 'pointer' }}
+                      onClick={() => {
+                        setVisible(true);
+                      }}
+                    />
+                  </Tooltip>
+                </div>
+              }
+            >
+              <Row>
+                {PollutantList.map(item => {
+                  return (
+                    <Col span={12}>
+                      <Form.Item
+                        label={item.pollutantName}
+                        style={{
+                          marginBottom: 0,
+                        }}
+                      >
+                        <Form.Item
+                          name={item.pollutantCode + 'Min'}
+                          style={{
+                            display: 'inline-block',
+                            width: 'calc(50% - 40px)',
+                          }}
+                        >
+                          <InputNumber style={{ width: '100%' }} />
+                        </Form.Item>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '24px',
+                            lineHeight: '32px',
+                            textAlign: 'center',
+                          }}
+                        >
+                          -
+                        </span>
+                        <Form.Item
+                          name={item.pollutantCode + 'Max'}
+                          style={{
+                            display: 'inline-block',
+                            width: 'calc(50% - 40px)',
+                          }}
+                        >
+                          <InputNumber
+                            min={item.pollutantCode + 'Min' || 0}
+                            style={{ width: '100%' }}
+                          />
+                        </Form.Item>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '48px',
+                            lineHeight: '32px',
+                            marginLeft: 8,
+                            fontSize: 13,
+                          }}
+                        >
+                          {item.unit}
+                        </span>
+                      </Form.Item>
+                    </Col>
+                  );
+                })}
+              </Row>
+              {/* <Divider orientation="right" style={{ color: '#d9d9d9' }}>
+               <Space>
+                 <Button type="primary" htmlType="submit" loading={saveLoading}>
+                   提交
+                 </Button>
+               </Space>
+             </Divider> */}
+            </Card>
+            {/* <Divider /> */}
+            <Card
+              style={{ marginTop: 16 }}
+              bordered={false}
+              bodyStyle={{ paddingTop: 20 }}
+              title={<div className={styles.title}>污染物波动振幅</div>}
+              // loading={loadLoading}
+            >
+              <Row>
+                {PollutantList.map(item => {
+                  return (
+                    <Col span={12}>
+                      <Form.Item
+                        label={item.pollutantName}
+                        name={['Amplitude', item.pollutantCode]}
+                      >
+                        <InputNumber style={{ width: '100%' }} placeholder="请输入波动振幅" />
+                      </Form.Item>
+                    </Col>
+                  );
+                })}
+              </Row>
+            </Card>
+            <div
+              style={{
+                position: 'fixed',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                padding: '10px 24px',
+                background: '#fff',
+                textAlign: 'right',
+                boxShadow: '0 -2px 8px rgba(0, 0, 0, 0.15)',
+                zIndex: 1,
+              }}
+            >
+              <Space>
+                <Button type="primary" onClick={onFinish} loading={saveLoading}>
+                  提交
+                </Button>
+              </Space>
+            </div>
+            <Card
+              style={{ marginTop: 16, display: 'none' }}
+              bordered={false}
+              bodyStyle={{ paddingTop: 20, height: 'calc(100vh - 530px)' }}
+              title={<div className={styles.title}>排口参数</div>}
+              // loading={loadLoading}
+            >
+              <Row>
+                <Col span={12}>
+                  <Form.Item
+                    label="烟道截面积"
+                    style={{
+                      marginBottom: 0,
+                    }}
+                  >
+                    <Form.Item
+                      name="area"
+                      style={{
+                        display: 'inline-block',
+                        width: 'calc(100% - 40px)',
+                      }}
+                    >
+                      <InputNumber min={0} style={{ width: '100%' }} />
+                    </Form.Item>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        width: '24px',
+                        lineHeight: '32px',
+                        textAlign: 'center',
+                        marginLeft: 8,
+                      }}
+                    >
+                      m³
+                    </span>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="当地标准大气压"
+                    style={{
+                      marginBottom: 0,
+                    }}
+                  >
+                    <Form.Item
+                      name="atmos"
+                      style={{
+                        display: 'inline-block',
+                        width: 'calc(100% - 40px)',
+                      }}
+                    >
+                      <InputNumber min={0} style={{ width: '100%' }} />
+                    </Form.Item>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        width: '24px',
+                        lineHeight: '32px',
+                        textAlign: 'center',
+                        marginLeft: 8,
+                      }}
+                    >
+                      kPa
+                    </span>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="基准氧含量"
+                    style={{
+                      marginBottom: 0,
+                    }}
+                  >
+                    <Form.Item
+                      name="s01ref"
+                      style={{
+                        display: 'inline-block',
+                        width: 'calc(100% - 40px)',
+                      }}
+                    >
+                      <InputNumber min={0} style={{ width: '100%' }} />
+                    </Form.Item>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        width: '24px',
+                        lineHeight: '32px',
+                        textAlign: 'center',
+                        marginLeft: 8,
+                      }}
+                    >
+                      %
+                    </span>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Divider orientation="right" style={{ color: '#d9d9d9' }}>
+                <Space>
+                  <Button type="primary" htmlType="submit" loading={saveLoading}>
+                    提交
+                  </Button>
+                </Space>
+              </Divider>
+            </Card>
+          </Spin>
+        </Form>
+        {visible && (
+          <PollutantImages
+            title={currentPoint}
+            visible={visible}
+            onCancel={() => setVisible(false)}
+            // images={images}
+            DGIMN={DGIMN}
+            location={location}
+          />
+        )}
+      </div>
+    );
+  };
+
+  if (props.DGIMN) {
+    return getPageContent();
+  }
+
   return (
     <>
       <NavigationTree
@@ -181,265 +449,7 @@ const PointParams = props => {
         }}
       />
       <div id="PointParams">
-        <BreadcrumbWrapper>
-          <div className={styles.CardPageWrapper}>
-            <Form
-              name="basic"
-              form={form}
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 14 }}
-              style={{ paddingTop: '10px' }}
-              initialValues={{}}
-              onFinish={onFinish}
-              autoComplete="off"
-            >
-              <Spin spinning={loadLoading}>
-                <Card
-                  bordered={false}
-                  // loading={loadLoading}
-                  bodyStyle={{ paddingTop: 20 }}
-                  title={
-                    <div className={styles.title}>
-                      污染物波动范围
-                      <Tooltip
-                        title={'点击查看监测因子波动范围'}
-                        // overlayStyle={this.props.overlayStyle}
-                      >
-                        <QuestionCircleOutlined
-                          style={{ marginLeft: 6, color: '#808080', cursor: 'pointer' }}
-                          onClick={() => {
-                            setVisible(true);
-                          }}
-                        />
-                      </Tooltip>
-                    </div>
-                  }
-                >
-                  <Row>
-                    {PollutantList.map(item => {
-                      return (
-                        <Col span={12}>
-                          <Form.Item
-                            label={item.pollutantName}
-                            style={{
-                              marginBottom: 0,
-                            }}
-                          >
-                            <Form.Item
-                              name={item.pollutantCode + 'Min'}
-                              style={{
-                                display: 'inline-block',
-                                width: 'calc(50% - 40px)',
-                              }}
-                            >
-                              <InputNumber style={{ width: '100%' }} />
-                            </Form.Item>
-                            <span
-                              style={{
-                                display: 'inline-block',
-                                width: '24px',
-                                lineHeight: '32px',
-                                textAlign: 'center',
-                              }}
-                            >
-                              -
-                            </span>
-                            <Form.Item
-                              name={item.pollutantCode + 'Max'}
-                              style={{
-                                display: 'inline-block',
-                                width: 'calc(50% - 40px)',
-                              }}
-                            >
-                              <InputNumber
-                                min={item.pollutantCode + 'Min' || 0}
-                                style={{ width: '100%' }}
-                              />
-                            </Form.Item>
-                            <span
-                              style={{
-                                display: 'inline-block',
-                                width: '48px',
-                                lineHeight: '32px',
-                                marginLeft: 8,
-                                fontSize: 13,
-                              }}
-                            >
-                              {item.unit}
-                            </span>
-                          </Form.Item>
-                        </Col>
-                      );
-                    })}
-                  </Row>
-                  {/* <Divider orientation="right" style={{ color: '#d9d9d9' }}>
-                    <Space>
-                      <Button type="primary" htmlType="submit" loading={saveLoading}>
-                        提交
-                      </Button>
-                    </Space>
-                  </Divider> */}
-                </Card>
-                {/* <Divider /> */}
-                <Card
-                  style={{ marginTop: 16 }}
-                  bordered={false}
-                  bodyStyle={{ paddingTop: 20 }}
-                  title={<div className={styles.title}>污染物波动振幅</div>}
-                  // loading={loadLoading}
-                >
-                  <Row>
-                    {PollutantList.map(item => {
-                      return (
-                        <Col span={12}>
-                          <Form.Item
-                            label={item.pollutantName}
-                            name={['Amplitude', item.pollutantCode]}
-                          >
-                            <InputNumber style={{ width: '100%' }} placeholder="请输入波动振幅" />
-                          </Form.Item>
-                        </Col>
-                      );
-                    })}
-                  </Row>
-                </Card>
-                <div
-                  style={{
-                    position: 'fixed',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    padding: '10px 24px',
-                    background: '#fff',
-                    textAlign: 'right',
-                    boxShadow: '0 -2px 8px rgba(0, 0, 0, 0.15)',
-                    zIndex: 1,
-                  }}
-                >
-                  <Space>
-                    <Button type="primary" onClick={onFinish} loading={saveLoading}>
-                      提交
-                    </Button>
-                  </Space>
-                </div>
-                <Card
-                  style={{ marginTop: 16, display: 'none' }}
-                  bordered={false}
-                  bodyStyle={{ paddingTop: 20, height: 'calc(100vh - 530px)' }}
-                  title={<div className={styles.title}>排口参数</div>}
-                  // loading={loadLoading}
-                >
-                  <Row>
-                    <Col span={12}>
-                      <Form.Item
-                        label="烟道截面积"
-                        style={{
-                          marginBottom: 0,
-                        }}
-                      >
-                        <Form.Item
-                          name="area"
-                          style={{
-                            display: 'inline-block',
-                            width: 'calc(100% - 40px)',
-                          }}
-                        >
-                          <InputNumber min={0} style={{ width: '100%' }} />
-                        </Form.Item>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '24px',
-                            lineHeight: '32px',
-                            textAlign: 'center',
-                            marginLeft: 8,
-                          }}
-                        >
-                          m³
-                        </span>
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item
-                        label="当地标准大气压"
-                        style={{
-                          marginBottom: 0,
-                        }}
-                      >
-                        <Form.Item
-                          name="atmos"
-                          style={{
-                            display: 'inline-block',
-                            width: 'calc(100% - 40px)',
-                          }}
-                        >
-                          <InputNumber min={0} style={{ width: '100%' }} />
-                        </Form.Item>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '24px',
-                            lineHeight: '32px',
-                            textAlign: 'center',
-                            marginLeft: 8,
-                          }}
-                        >
-                          kPa
-                        </span>
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item
-                        label="基准氧含量"
-                        style={{
-                          marginBottom: 0,
-                        }}
-                      >
-                        <Form.Item
-                          name="s01ref"
-                          style={{
-                            display: 'inline-block',
-                            width: 'calc(100% - 40px)',
-                          }}
-                        >
-                          <InputNumber min={0} style={{ width: '100%' }} />
-                        </Form.Item>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '24px',
-                            lineHeight: '32px',
-                            textAlign: 'center',
-                            marginLeft: 8,
-                          }}
-                        >
-                          %
-                        </span>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Divider orientation="right" style={{ color: '#d9d9d9' }}>
-                    <Space>
-                      <Button type="primary" htmlType="submit" loading={saveLoading}>
-                        提交
-                      </Button>
-                    </Space>
-                  </Divider>
-                </Card>
-              </Spin>
-            </Form>
-          </div>
-        </BreadcrumbWrapper>
-        {visible && (
-          <PollutantImages
-            title={currentPoint}
-            visible={visible}
-            onCancel={() => setVisible(false)}
-            // images={images}
-            DGIMN={DGIMN}
-            location={location}
-          />
-        )}
+        <BreadcrumbWrapper>{getPageContent()}</BreadcrumbWrapper>
       </div>
     </>
   );
