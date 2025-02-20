@@ -757,7 +757,6 @@ export default class MonitorPoint extends Component {
       <Spin spinning={this.props.getParamInfoListLoading}>
         <div className={styles.deviceParSty}>
           <div style={{ color: '#f5222d', paddingBottom: 16 }}>
-            {' '}
             设备参数类别是异常小时数记录电子表单的一个字段，设置后，运维工程师才能在APP上填写。
           </div>
           <Form.Item label="设备参数类别">

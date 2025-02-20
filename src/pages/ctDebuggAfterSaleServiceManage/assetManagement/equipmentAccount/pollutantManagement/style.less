@@ -94,3 +94,34 @@
   margin: 12px 0;
 }
 }
+
+.noDisabledForm {
+  :global {
+    .ant-checkbox-checked .ant-checkbox-inner::after {
+      border-color: #fff;
+    }
+    .ant-form-item-control-input-content {
+      .ant-checkbox-group {
+        .ant-checkbox-wrapper-disabled {
+          cursor: pointer !important;
+          .ant-checkbox-disabled {
+            cursor: pointer !important;
+            .ant-checkbox-inner {
+              background-color: #fff;
+              border-color: #d9d9d9;
+            }
+            & + span {
+              color: rgba(0, 0, 0, 0.85);
+            }
+          }
+          .ant-checkbox-checked.ant-checkbox-disabled {
+            .ant-checkbox-inner {
+              background-color: #1890ff;
+              border-color: #1890ff;
+            }
+          }
+        }
+      }
+    }
+  }
+}

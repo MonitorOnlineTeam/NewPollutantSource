@@ -2426,6 +2426,8 @@ export const API = {
     AddOrEditEquipment: before + '/CTBaseDataApi/AddOrEditEquipment', // 添加或修仪表信息
     AddOrEditEquipmentChange: before + '/CTBaseDataApi/AddOrEditEquipmentChange', // 添加或修仪仪表更换记录
     PointSort: before + '/CTBaseDataApi/PointSort', // 监测点排序
+    GetCTPollutantList: before + '/CTBaseDataApi/GetCTPollutantList', // 获取监测因子
+    AddOrEditPointPollutant: before + '/CTBaseDataApi/AddOrEditPointPollutant', // 添加或修改监测点污染物
     /*服务档案查询 */
     GetCTProjectList: before + '/CTBaseDataApi/GetCTProjectList', //项目列表
     ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList', //项目列表 导出

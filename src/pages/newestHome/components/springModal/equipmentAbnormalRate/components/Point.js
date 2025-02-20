@@ -4,26 +4,34 @@
  * 创建时间：2021.2.24
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio } from 'antd';
-import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, QuestionCircleOutlined, RollbackOutlined } from '@ant-design/icons';
-import { connect } from "dva";
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-const { RangePicker } = DatePicker;
-import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import router from 'umi/router';
-import Link from 'umi/link';
+import {
+  Table,
+  Input,
+  InputNumber,
+  Popconfirm,
+  Form,
+  Typography,
+  Card,
+  Button,
+  Select,
+  Progress,
+  message,
+  Row,
+  Col,
+  Tooltip,
+  Divider,
+  Modal,
+  DatePicker,
+  Radio,
+} from 'antd';
+import SdlTable from '@/components/SdlTable';
+import { ExportOutlined } from '@ant-design/icons';
+import { connect } from 'dva';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import moment from 'moment';
-import RegionList from '@/components/RegionList'
-import styles from "../style.less"
-import Cookie from 'js-cookie';
-const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'equipmentAbnormalRate'
-
-
-
+const namespace = 'equipmentAbnormalRate';
 
 const dvaPropsData = ({ loading, equipmentAbnormalRate, global }) => ({
   tableDatas: equipmentAbnormalRate.pointTableDatas,
@@ -35,71 +43,97 @@ const dvaPropsData = ({ loading, equipmentAbnormalRate, global }) => ({
   coommonCol2: equipmentAbnormalRate.coommonCol2,
   failcoommonCol2: equipmentAbnormalRate.failcoommonCol2,
   pointTableQuery: equipmentAbnormalRate.pointTableQuery,
-})
+});
 
-const dvaDispatch = (dispatch) => {
+const dvaDispatch = dispatch => {
   return {
-    updateState: (payload) => {
+    updateState: payload => {
       dispatch({
         type: `${namespace}/updateState`,
         payload: payload,
-      })
+      });
     },
-    pointGetExecptionRateList: (payload) => { // 监测点详情
+    pointGetExecptionRateList: payload => {
+      // 监测点详情
       dispatch({
         type: `${namespace}/pointGetExecptionRateList`,
         payload: payload,
-      })
+      });
     },
-    exportExecptionRateList:(payload)=>{ // 导出
+    exportExecptionRateList: payload => {
+      // 导出
       dispatch({
         type: `${namespace}/exportExecptionRateList`,
-        payload:payload,
-      })
+        payload: payload,
+      });
     },
-  }
-}
-const Index = (props) => {
+  };
+};
+const Index = props => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, queryPar, coommonCol,coommonCol2,failcoommonCol2,operationSetType,deviceType,pointTableQuery, } = props;
-
+  const {
+    tableDatas,
+    tableLoading,
+    exportLoading,
+    clientHeight,
+    type,
+    time,
+    queryPar,
+    coommonCol,
+    coommonCol2,
+    failcoommonCol2,
+    operationSetType,
+    deviceType,
+    pointTableQuery,
+  } = props;
 
   useEffect(() => {
-    initData();
+    getPageData();
 
+    // 卸载时重置表单
+    return () => {
+      form.resetFields();
+    };
   }, []);
 
-
-  const initData = () => {
+  const getPageData = () => {
+    let values = form.getFieldsValue();
     props.pointGetExecptionRateList({
       ...queryPar,
-      entName:entName,
+      // entName: entName,
       pointType: 3,
-      type:operationSetType,
-      taskType: deviceType
-    })
+      type: operationSetType,
+      taskType: deviceType,
+      ...values,
+      time: undefined,
+      beginTime: values.time ? values.time?.[0]?.format('YYYY-MM-DD') : queryPar.beginTime,
+      endTime: values.time ? values.time?.[1]?.format('YYYY-MM-DD') : queryPar.endTime,
+    });
   };
 
-
   const exports = async () => {
+    let values = form.getFieldsValue();
     props.exportExecptionRateList({
       ...queryPar,
       ...pointTableQuery,
       pointType: 3,
-      type:operationSetType,
-      taskType: deviceType
-    })
-
+      type: operationSetType,
+      taskType: deviceType,
+      ...values,
+      time: undefined,
+      beginTime: values.time ? values.time?.[0]?.format('YYYY-MM-DD') : queryPar.beginTime,
+      endTime: values.time ? values.time?.[1]?.format('YYYY-MM-DD') : queryPar.endTime,
+    });
   };
   const columns = [
     {
       title: '序号',
       align: 'center',
       render: (text, record, index) => {
-        return index + 1
-      }
+        return index + 1;
+      },
     },
     {
       title: '省/市',
@@ -115,8 +149,8 @@ const Index = (props) => {
       key: 'entName',
       align: 'center',
       render: (text, record, index) => {
-        return <div style={{ textAlign: 'left' }} >{text}</div>
-      }
+        return <div style={{ textAlign: 'left' }}>{text}</div>;
+      },
     },
     {
       title: '监测点名称',
@@ -124,16 +158,16 @@ const Index = (props) => {
       key: 'pointName',
       align: 'center',
     },
-    ...coommonCol
-  ]
-  const assessmentCentreCol =  deviceType == 1 ? coommonCol2 : failcoommonCol2
+    ...coommonCol,
+  ];
+  const assessmentCentreCol = deviceType == 1 ? coommonCol2 : failcoommonCol2;
   const columns2 = [
     {
       title: '序号',
       align: 'center',
       render: (text, record, index) => {
-        return index + 1
-      }
+        return index + 1;
+      },
     },
     {
       title: '省',
@@ -142,7 +176,7 @@ const Index = (props) => {
       align: 'center',
       render: (text, record, index) => {
         if (text == '全部合计') {
-          return { props: { colSpan: 0 }, };
+          return { props: { colSpan: 0 } };
         }
         return text;
       },
@@ -153,13 +187,12 @@ const Index = (props) => {
       key: 'cityName',
       align: 'center',
       render: (text, record) => {
-        const name = record.provinceName == '全部合计' ? '全部合计' : text
+        const name = record.provinceName == '全部合计' ? '全部合计' : text;
         return {
           props: { colSpan: record.provinceName == '全部合计' ? 2 : 1 },
-          children: name
-        }
-
-      }
+          children: name,
+        };
+      },
     },
     {
       title: '企业名称',
@@ -172,36 +205,65 @@ const Index = (props) => {
       dataIndex: 'pointName',
       key: 'pointName',
       align: 'center',
-
     },
-    ...assessmentCentreCol
-  ]
-  const [entName,setEntName ] = useState()
+    ...assessmentCentreCol,
+  ];
   return (
     <div>
-       
-       <Form layout='inline'>
-      <Form.Item>
-        <Input placeholder='请输入企业名称' allowClear onChange={(e) => { setEntName(e.target.value) }} />
+      <Form
+        form={form}
+        layout="inline"
+        initialValues={{
+          time: [moment(queryPar.beginTime), moment(queryPar.endTime)],
+          pollutantType: queryPar.pollutantType,
+        }}
+      >
+        <Form.Item label="日期" name="time" style={{ paddingRight: '16px' }}>
+          <RangePicker_ allowClear={false} style={{ width: '100%' }} format="YYYY-MM-DD" />
+        </Form.Item>
+        <Form.Item label="监测点类型" name="pollutantType" style={{ paddingRight: '16px' }}>
+          <Select placeholder="请选择" style={{ width: 150 }} allowClear>
+            <Option value={2}>废气</Option>
+            <Option value={1}>废水</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item name="entName" label="企业名称">
+          <Input placeholder="请输入企业名称" allowClear />
         </Form.Item>
         <Form.Item style={{ paddingBottom: '16px' }}>
-        <Button type='primary' loading={tableLoading} style={{ margin: '0 8px', }} onClick={() => { initData() }}>
-          查询
-     </Button>
-        <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
-          导出
-    </Button>
-      </Form.Item>
+          <Button
+            type="primary"
+            loading={tableLoading}
+            style={{ margin: '0 8px' }}
+            onClick={() => {
+              getPageData();
+            }}
+          >
+            查询
+          </Button>
+          <Button
+            icon={<ExportOutlined />}
+            loading={exportLoading}
+            onClick={() => {
+              exports();
+            }}
+          >
+            导出
+          </Button>
+        </Form.Item>
       </Form>
       <SdlTable
         loading={tableLoading}
         bordered
         dataSource={tableDatas}
-        columns={operationSetType==1? columns2 : columns}
+        columns={operationSetType == 1 ? columns2 : columns}
         scroll={{ y: clientHeight - 500 }}
         pagination={false}
       />
     </div>
   );
 };
-export default connect(dvaPropsData, dvaDispatch)(Index);
+export default connect(
+  dvaPropsData,
+  dvaDispatch,
+)(Index);

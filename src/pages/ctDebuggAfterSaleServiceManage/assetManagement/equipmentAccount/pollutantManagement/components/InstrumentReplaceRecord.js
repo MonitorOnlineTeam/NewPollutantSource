@@ -573,7 +573,7 @@ const Index = (props) => {
 
 
   return (
-    <div className={styles.deviceManagerSty} style={{ display: current == 4 ? 'block' : 'none' }}>
+    <div className={styles.deviceManagerSty} style={{ display: current == 5 ? 'block' : 'none' }}>
 
       <Form form={formDevice} name="advanced_search_device_change" onValuesChange={onDeviceValuesChange}>
         <SdlTable
