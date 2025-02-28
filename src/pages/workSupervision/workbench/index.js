@@ -1843,6 +1843,10 @@ const Workbench = props => {
           }}
           taskInfo={currentTodoItem}
           type={type}
+          onSubmitCallback={() => {
+            // 提交后刷新待办事项，更新结束任务状态
+            GetToDoDailyWorks();
+          }}
         />
         <Modal
           centered

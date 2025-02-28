@@ -579,6 +579,8 @@ export const API = {
     GetMenuByRoleID: before + '/RoleApi/GetMenuByRoleID',
     // 获取当前角色的用户
     GetUserByRoleId: before + '/RoleApi/GetUserByRoleId',
+    // 获取推送类型列表
+    GetPushTypeList: before + '/UserApi/GetPushTypeList',
 
     // 获取根节点下拉选择权限（角色）
     GetParentTree: before + '/RoleApi/GetParentTree',

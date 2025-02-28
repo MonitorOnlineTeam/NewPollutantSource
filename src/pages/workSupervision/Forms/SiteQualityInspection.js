@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2025-01-16 11:40:22
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-01-23 17:26:08
+ * @Last Modified time: 2025-02-24 09:10:16
  * @Description:  成套现场质量检查任务单
  */
 
@@ -35,7 +35,7 @@ import LargeRegionList from '@/components/largeRegionList';
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader';
 import { cookieName } from '@/config';
 import { API } from '@config/API';
-
+import { checkRules } from '@/utils/validator';   
 const { TextArea } = Input;
 
 const dvaPropsData = ({ loading, wordSupervision, common }) => ({
@@ -524,10 +524,7 @@ const SiteQualityInspection = props => {
                       required: true,
                       message: '请输入用户电话',
                     },
-                    {
-                      pattern: /^1[3|4|5|7|8][0-9]\d{8}$/,
-                      message: '请输入正确的手机号！',
-                    },
+                    { ...checkRules.mobile },
                   ]}
                 >
                   <Input placeholder="请输入手机号" allowClear />
@@ -619,8 +616,7 @@ const SiteQualityInspection = props => {
                       message: '请输入服务人员电话',
                     },
                     {
-                      pattern: /^1[3|4|5|7|8][0-9]\d{8}$/,
-                      message: '请输入正确的电话！',
+                      ...checkRules.mobile,
                     },
                   ]}
                 >

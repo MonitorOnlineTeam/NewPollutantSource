@@ -39,7 +39,7 @@ const HomeDataScreen = props => {
   }
 
   return (
-    <SystemDashboardPageWrapper pageName={isGroupEnt ? '异常识别集团' : '异常识别监管'}>
+    <SystemDashboardPageWrapper pageName={'异常识别监管'}>
       <Col
         style={{ width: '27%', display: fullScreen ? 'none' : 'flex' }}
         className={styles.leftWrapper}

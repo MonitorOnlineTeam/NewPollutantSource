@@ -226,15 +226,17 @@ const Training = props => {
           params.forEach(item => {
             const { seriesId, marker, seriesName, value } = item;
             // 获取数据标记和单位
-            const dataFlag = currentData[seriesId + '_Flag'] || '';
+            const dataFlag = currentData[seriesId + '_flag'] || '';
             const unit = series.find(s => s.id === seriesId)?.unit || '';
+
+            // 从dataFlag中提取标记部分
+            const flagPart = dataFlag.replace(value, '').trim();
 
             content += `
               <div style="line-height: 20px; margin: 5px 0;">
                 ${marker} 
                 ${seriesName}：
-                ${value === '' || value === undefined || value === null ? '-' : value + ' ' + unit}
-                ${dataFlag ? `<span style="margin-left: 5px;">${dataFlag}</span>` : ''}
+                ${value === '' || value === undefined || value === null ? '-' : `${value} ${unit} (${flagPart})`}
               </div>
             `;
           });

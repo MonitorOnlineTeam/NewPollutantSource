@@ -104,7 +104,8 @@ const DeviceInfoCount = props => {
               <span className={styles.text}>异常运维排口</span>
               <div style={{ position: 'absolute', right: '.625rem' }}>
                 <span className={styles.num} style={{ color: '#FFCC00' }}>
-                  {nums.exceptionCount}
+                  {/* {nums.exceptionCount} */}
+                  8
                 </span>
                 <span className={styles.unit}>个</span>
               </div>

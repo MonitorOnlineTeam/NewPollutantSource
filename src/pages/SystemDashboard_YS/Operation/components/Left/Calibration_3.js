@@ -151,18 +151,18 @@ const Calibration = props => {
               },
             },
             {
-              value: InspectionAndCalibration.calibrationIncompleteCount,
-              name: '待完成数量',
+              value: InspectionAndCalibration.calibrationCloseCount - InspectionAndCalibration.calibrationCompleteCount,
+              name: '',
               itemStyle: {
                 normal: {
                   color: new echarts.echarts.graphic.LinearGradient(0, 1, 1, 1, [
                     {
                       offset: 0,
-                      color: '#AA7829',
+                      color: '#2998FF',
                     },
                     {
                       offset: 1,
-                      color: '#FFBA36',
+                      color: '#2998FF',
                     },
                   ]),
                   opacity: 1,
@@ -234,7 +234,7 @@ const Calibration = props => {
                 {InspectionAndCalibration.calibrationCompleteCount}
               </div>
             </Col>
-            <Col span={24} className={styles.lengendItem}>
+            {/* <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
                 <i style={{ backgroundColor: COLOR[2] }}></i>
                 <span className="textOverflow">待完成数量</span>
@@ -242,7 +242,7 @@ const Calibration = props => {
               <div className={styles.value}>
                 {InspectionAndCalibration.calibrationIncompleteCount}
               </div>
-            </Col>
+            </Col> */}
           </Row>
         </Col>
       </Row>

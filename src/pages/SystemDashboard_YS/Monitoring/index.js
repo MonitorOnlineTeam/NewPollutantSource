@@ -23,7 +23,7 @@ const HomeDataScreen = props => {
         className={`${styles.leftWrapper} ${fullScreen ? styles['fade-out'] : styles['fade-in']}`}
       >
         <OverviewCard />
-        <ConnectionRate />
+        {/* <ConnectionRate />   */}
         <Emissions />
       </Col>
       <Col style={{ maxWidth: '46%' }} flex={'auto'} className={styles.centerWrapper}>
@@ -39,7 +39,7 @@ const HomeDataScreen = props => {
         className={`${styles.rightWrapper} ${fullScreen ? styles['fade-out'] : styles['fade-in']}`}
       >
         <AlarmOver />
-        <EffectiveRate />
+        {/* <EffectiveRate /> */}
         <AbnormalAlarm />
       </Col>
     </SystemDashboardPageWrapper>

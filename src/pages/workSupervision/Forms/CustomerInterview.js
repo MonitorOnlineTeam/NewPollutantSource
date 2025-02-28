@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:57:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-02-18 16:33:59
+ * @Last Modified time: 2025-02-24 09:07:23
  * @Description: 回访客户任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -29,6 +29,7 @@ import Cookie from 'js-cookie';
 import moment from 'moment';
 import RegionList from '@/components/RegionList';
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader';
+import { checkRules } from '@/utils/validator';
 
 const dataSource = [
   {
@@ -429,10 +430,11 @@ const CustomerInterview = props => {
                     required: true,
                     message: '手机不能为空！',
                   },
-                  {
-                    pattern: /^1[3-9]\d{9}$/,
-                    message: '请输入正确的手机号码！'
-                  }
+                  { ...checkRules.mobile },
+                  // {
+                  //   pattern: /^1[3-9]\d{9}$/,
+                  //   message: '请输入正确的手机号码！'
+                  // }
                 ]}
               >
                 <Input placeholder="请填写手机" />

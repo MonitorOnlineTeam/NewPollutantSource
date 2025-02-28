@@ -6,7 +6,7 @@
  * @Description: 运维记录单详情
  */
 import React, { Component } from 'react';
-import { Table, Divider } from 'antd';
+import { Table, Divider, Button, Card } from 'antd';
 import { PointIcon, Right } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
@@ -35,9 +35,10 @@ import DeviceParameterChange from '@/pages/EmergencyTodoList/DeviceParameterChan
 import GasDeviceParameterChange from '@/pages/EmergencyTodoList/GasDeviceParameterChange'
 import ComparisonTestResults from '@/pages/EmergencyTodoList/ComparisonTestResults'
 
-import Button from 'antd/es/button/button';
 import { FormIcon } from '@/utils/icon';
+import { PrinterOutlined } from '@ant-design/icons';
 import { router } from 'umi'
+import styles from './style.less';
 
 
 
@@ -52,7 +53,102 @@ class Index extends Component {
         this.state = {
 
         };
+        this.contentRef = React.createRef();
     }
+
+    // 打印内容区域（使用iframe方式，避免刷新页面）
+    handlePrint = () => {
+        const printContent = this.contentRef.current;
+        if (!printContent) return;
+        
+        // 创建打印样式
+        const printStyles = `
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 20px;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                table, th, td {
+                    border: 1px solid #000;
+                }
+                th, td {
+                    padding: 8px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f0f0f0;
+                }
+                .no-print {
+                    display: none !important;
+                }
+                /* 隐藏标题 */
+                h1, h2, h3, h4, h5, h6 {
+                    display: none;
+                }
+                /* 隐藏面包屑导航 */
+                .ant-breadcrumb {
+                    display: none;
+                }
+                /* 隐藏页面标题 */
+                .ant-page-header-heading-title {
+                    display: none;
+                }
+                @media print {
+                    @page {
+                        margin: 1cm;
+                    }
+                }
+            </style>
+        `;
+        
+        // 创建一个隐藏的iframe
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = '0';
+        document.body.appendChild(iframe);
+        
+        // 获取内容并移除标题
+        let contentHTML = printContent.innerHTML;
+        
+        // 写入内容到iframe - 不包含title标签
+        const iframeDoc = iframe.contentWindow.document;
+        iframeDoc.open();
+        iframeDoc.write('<!DOCTYPE html><html><head>' + printStyles + '</head><body>' + contentHTML + '</body></html>');
+        iframeDoc.close();
+        
+        // 等待图片和样式加载完成
+        iframe.onload = () => {
+            // 在iframe中移除所有标题元素
+            const titles = iframe.contentWindow.document.querySelectorAll('h1, h2, h3, h4, h5, h6, .ant-page-header, .ant-breadcrumb, .ant-page-header-heading-title');
+            titles.forEach(title => {
+                if (title) {
+                    title.style.display = 'none';
+                }
+            });
+            
+            // 设置空标题（同时设置iframe和主页面的标题）
+            iframe.contentWindow.document.title = '运维台账打印';
+            
+            // 执行打印
+            setTimeout(() => {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+                
+                // 打印完成后恢复原始标题并移除iframe
+                setTimeout(() => {
+                    document.body.removeChild(iframe);
+                }, 1000);
+            }, 500);
+        };
+    };
+
     getrecordForm = () => {
         var form = []
         console.log('msg=',this.props.match.params)
@@ -193,17 +289,19 @@ class Index extends Component {
     render() {
         return (
             <BreadcrumbWrapper breadcrumb={[]} title="记录单详情" hideBreadcrumb={this.props.hideBreadcrumb}>
-                {/* {!this.props.isHomeModal&& <div width="70%" style={{ backgroundColor: '#fff' }}>
-                   <Button type="primary" ghost style={{ marginTop: 20, marginLeft: '85%' }} onClick={() => {
-                        router.push(`/taskdetail/emergencydetailinfolayout/${this.props.match.params.taskID}/21`);
-                    }}><FormIcon />任务单</Button>
-                    <Button style={{ marginTop: 5, marginLeft: 10 }} onClick={() => {
-                        history.go(-1)
-                    }}>返回</Button>
-
-                </div>} */}
-                {this.getrecordForm()}
-                {/* <JzRecordContent TaskID={this.props.match.params.taskID} />  */}
+                <div className={styles.headerActions}>
+                    <Button 
+                        type="primary" 
+                        icon={<PrinterOutlined />} 
+                        onClick={this.handlePrint}
+                        className="no-print"
+                    >
+                        打印
+                    </Button>
+                </div>
+                <div className={`print-content ${styles.recordFormContent}`} ref={this.contentRef}>
+                    {this.getrecordForm()}
+                </div>
             </BreadcrumbWrapper>
         );
     }

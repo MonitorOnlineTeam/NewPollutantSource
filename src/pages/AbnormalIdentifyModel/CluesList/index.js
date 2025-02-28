@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-02-06 14:46:22
+ * @Last Modified time: 2025-02-26 09:38:40
  * @Description：线索列表
  */
 
@@ -910,6 +910,9 @@ const CluesList = props => {
               </Option>
               <Option key={'5'} value={'s01'}>
                 O₂
+              </Option>
+              <Option key={'6'} value={'a24088'}>
+                非甲烷总烃
               </Option>
             </Select>
           </Form.Item>

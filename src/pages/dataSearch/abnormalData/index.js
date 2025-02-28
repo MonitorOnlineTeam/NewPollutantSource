@@ -52,6 +52,7 @@ const { RangePicker } = DatePicker;
   },
 })
 class Index extends PureComponent {
+  defaultPollutantType = 2;
   pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
   state = {
     showTime: true,
@@ -189,10 +190,12 @@ class Index extends PureComponent {
 
   // 根据企业类型查询监测因子
   getPollutantByType = (reload, cb, type) => {
+    console.log('type', type);
+    console.log('this.pollutantType', this.pollutantType);
     this.props.dispatch({
       type: 'abnormalData/getPollutantByType',
       payload: {
-        type: type,
+        type: type || this.defaultPollutantType,
       },
       callback: res => {
         this.setState({ checkedValues: res.map(item => item.PollutantCode) }, () => {
@@ -471,7 +474,7 @@ class Index extends PureComponent {
               style={{ display: this.pollutantType && 'none' }}
             >
               {getFieldDecorator('PollutantType', {
-                initialValue: this.pollutantType || 2,
+                initialValue: this.pollutantType || this.defaultPollutantType,
               })(
                 // <Select
                 //   placeholder="请选择企业类型"

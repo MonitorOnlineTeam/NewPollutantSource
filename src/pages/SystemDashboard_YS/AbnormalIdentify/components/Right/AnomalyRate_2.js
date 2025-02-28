@@ -200,7 +200,7 @@ const AnomalyRate = props => {
   };
   return (
     <HomeCard
-      title="疑似异常占比分析"
+      title="疑似异常小时数据"
       style={{ flex: 2 }}
       bodyStyle={{}}
       loading={loading}

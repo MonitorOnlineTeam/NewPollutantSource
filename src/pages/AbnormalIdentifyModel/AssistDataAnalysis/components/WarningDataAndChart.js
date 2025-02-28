@@ -1709,7 +1709,7 @@ const WarningDataAndChart = props => {
           {currentBrushRangeDate.length ? (
             <Alert
               size="small"
-              style={{ marginTop: 10 }}
+              style={{ width: '100%' }}
               message={
                 <div>
                   {`已选择时间：${currentBrushRangeDate[0]} - ${currentBrushRangeDate[1]}`},
@@ -1782,7 +1782,6 @@ const WarningDataAndChart = props => {
           </div>
         </Row>
       )}
-      {console.log('props', props)}
       {historyDataModalOpen && (
         <DataViewByDataType
           open={historyDataModalOpen}

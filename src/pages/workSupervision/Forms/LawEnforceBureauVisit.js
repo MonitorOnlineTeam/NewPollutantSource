@@ -30,7 +30,7 @@ import Cookie from 'js-cookie';
 import moment from 'moment';
 import LargeRegionList from '@/components/largeRegionList';
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
-
+import { checkRules } from '@/utils/validator';
 
 const { TextArea } = Input;
 
@@ -225,9 +225,7 @@ const LawEnforceBureauVisit = props => {
                                         required: true,
                                         message: '请输入手机！',
                                     },
-                                    { pattern:/^1[3|4|5|7|8][0-9]\d{8}$/ ,
-                                       message: '请输入正确的手机号！'
-                                    },
+                                    { ...checkRules.mobile },
                                 ]}
                             >
                                 <Input placeholder="请输入手机" allowClear/>

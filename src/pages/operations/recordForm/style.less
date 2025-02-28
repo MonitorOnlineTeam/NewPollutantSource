@@ -1,0 +1,88 @@
+@import '~antd/es/style/themes/default.less';
+
+.headerActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+  padding: 16px;
+  background-color: #fff;
+}
+
+.recordFormContent {
+  background-color: #fff;
+  padding: 16px;
+}
+
+/* 打印样式 */
+:global {
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+    
+    .print-content {
+      padding: 20px;
+    }
+    
+    .ant-card-head {
+      display: none;
+    }
+    
+    .ant-breadcrumb {
+      display: none;
+    }
+    
+    .ant-layout-header {
+      display: none;
+    }
+    
+    .ant-layout-sider {
+      display: none;
+    }
+    
+    .ant-layout-footer {
+      display: none;
+    }
+    
+    .ant-card {
+      border: none;
+      box-shadow: none;
+    }
+    
+    .ant-table {
+      width: 100% !important;
+    }
+    
+    .ant-table-thead > tr > th {
+      background-color: #f0f0f0 !important;
+      color: #000 !important;
+    }
+    
+    .ant-form-item-label > label {
+      color: #000 !important;
+    }
+    
+    .ant-btn {
+      display: none !important;
+    }
+    
+    /* 确保表格边框在打印时可见 */
+    .ant-table-bordered .ant-table-container {
+      border: 1px solid #000 !important;
+    }
+    
+    .ant-table-bordered .ant-table-cell {
+      border-right: 1px solid #000 !important;
+    }
+    
+    .ant-table-bordered .ant-table-thead > tr > th,
+    .ant-table-bordered .ant-table-tbody > tr > td {
+      border-bottom: 1px solid #000 !important;
+    }
+    
+    /* 调整页面边距 */
+    @page {
+      margin: 1cm;
+    }
+  }
+} 

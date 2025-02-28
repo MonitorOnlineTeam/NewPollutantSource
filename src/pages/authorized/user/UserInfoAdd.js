@@ -117,7 +117,7 @@ export default class UserInfoAdd extends Component {
             this.setState({ checkedKeysSel: leafTree });
         }
 
-        
+
     };
 
     onSelects = (selectedKeys, info) => {
@@ -170,7 +170,7 @@ export default class UserInfoAdd extends Component {
         if(this.props.configInfo.IsOpera || this.isMonitor){
             this.props.operaBasicInfoForm.validateFields((err, values) => {
                 if (!err) {
-                    
+
                     dispatch({
                         type: 'userinfo/AddOrUpdUser',
                         payload: {
@@ -189,7 +189,7 @@ export default class UserInfoAdd extends Component {
                 }else{
                     this.setState({
                         activeKey: 'base',
-                        baseState: 'block', rolesState: 'none', departState: 'none' 
+                        baseState: 'block', rolesState: 'none', departState: 'none'
                     });
                 }
             });
@@ -297,9 +297,9 @@ export default class UserInfoAdd extends Component {
                                         rolesState: 'block',
                                         departState: 'none',
                                         selectKey: 'roles',
-                                    })  
+                                    })
                                    }}/>
-                                   : 
+                                   :
                                    <SdlForm
                                         configId="UserInfoAdd"
                                         onSubmitForm={this.onSubmitForm.bind(this)}

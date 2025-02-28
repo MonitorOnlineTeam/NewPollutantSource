@@ -85,13 +85,13 @@ const ProjectExecution = props => {
         name: '实际完成数量',
       },
       {
-        value: InspectionAndCalibration.inspectionIncompleteCount,
+        value: InspectionAndCalibration.inspectionCloseCount - InspectionAndCalibration.inspectionCompleteCount,
         name: '待完成数量',
       },
     ];
 
     let option = {
-      color: [COLOR[1], COLOR[2]],
+      color: [COLOR[1], COLOR[0]],
       title: {
         text: '{val|' + rate + '%}\n{name|巡检完成率}',
         top: 'center',
@@ -200,7 +200,7 @@ const ProjectExecution = props => {
               </div>
               <div className={styles.value}>{InspectionAndCalibration.inspectionCompleteCount}</div>
             </Col>
-            <Col span={24} className={styles.lengendItem}>
+            {/* <Col span={24} className={styles.lengendItem}>
               <div className={styles.label}>
                 <i style={{ backgroundColor: COLOR[2] }}></i>
                 <span className="textOverflow">待完成数量</span>
@@ -208,7 +208,7 @@ const ProjectExecution = props => {
               <div className={styles.value}>
                 {InspectionAndCalibration.inspectionIncompleteCount}
               </div>
-            </Col>
+            </Col> */}
           </Row>
         </Col>
       </Row>
