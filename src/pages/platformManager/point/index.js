@@ -1651,27 +1651,17 @@ export default class MonitorPoint extends Component {
             </Form>
           </Modal>
 
-          <Modal //设备管理
-            title={titles}
-            visible={this.state.deviceManagerVisible}
+          {/* 设备管理 */}
+          <DeviceManager
+            open={this.state.deviceManagerVisible}
             onCancel={() => {
               this.setState({ deviceManagerVisible: false });
             }}
-            destroyOnClose
-            footer={null}
-            wrapClassName={`${styles.deviceManagerSty} spreadOverModal table-light`}
-            mask={false}
-          >
-            <DeviceManager
-              onCancel={() => {
-                this.setState({ deviceManagerVisible: false });
-              }}
-              DGIMN={this.state.deviceManagerMN}
-              gasType={deviceManagerGasType}
-              pollutantType={pollutantType}
-              titles={titles}
-            />
-          </Modal>
+            DGIMN={this.state.deviceManagerMN}
+            gasType={deviceManagerGasType}
+            pollutantType={pollutantType}
+            titles={titles}
+          />
           <Modal //修改点位运维状态
             title={this.state.editOperationStatusTitle}
             visible={this.state.editOperationStatusVisible}
