@@ -93,7 +93,8 @@ class TaskRecord extends Component {
       forwardPermis: false,
       deletePermis:false,
       taskTypeListLoading: true,
-      pollutantType: this.pollutantType == 1 ? ['7', '9', '19', '25', '26', '27', '31', '21', '8', '12', '11'] : this.pollutantType == 2 ? ['1', '3', '20', '28', '29', '30', '32', '22', '2', '6', '5'] : []
+      pollutantType: this.pollutantType == 1 ? ['7', '9', '19', '25', '26', '27', '31', '21', '8', '12', '11'] : this.pollutantType == 2 ? ['1', '3', '20', '28', '29', '30', '32','33', '22', '2', '6', '5'] : []
+      // pollutantType: this.pollutantType == 1 ? ['7', '9', '19', '25', '26', '27', '31', '21', '8', '12', '11'] : this.pollutantType == 2 ? ['33'] : []
     };
     this._SELF_ = {
       configId: 'TaskRecord',

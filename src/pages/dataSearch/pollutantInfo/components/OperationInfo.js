@@ -177,6 +177,14 @@ const Index = (props) => {
             align: 'center',
             ellipsis:true,
         },
+        {
+            title: '全系统校准派单频次',
+            dataIndex: 'systemCalibrationCycleName',
+            key: 'systemCalibrationCycleName',
+            align: 'center',
+            width: 160,
+            ellipsis:true,
+        },
         // {
         //     title: '参数核对派单频次',
         //     dataIndex: 'parameterCheckName',

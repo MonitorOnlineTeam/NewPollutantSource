@@ -13,7 +13,7 @@ export default Model.extend({
 
   effects: {
     // 获取所有项目
-    *GetUserProjectList({ payload, callback }, { call, select, update }) {
+    *GetUserProjectList({ payload, callback }, { call, put, select, update }) {
       if (configInfo.IsOpera) {
         callback && callback([]);
         yield update({
@@ -27,6 +27,16 @@ export default Model.extend({
         );
         if (result.IsSuccess) {
           callback && callback(result.Datas);
+          // const currentProjectID = yield select(state => state.projectManage.currentProjectID);
+          // if (result.Datas.length === 1) {
+          // if (true) {
+          //   yield put({
+          //     type: 'projectManage/UpdateUserProject',
+          //     payload: {
+          //       currentProjectID: result.Datas[0].ProjectCode,
+          //     },
+          //   });
+          // }
           yield update({
             projectList: result.Datas,
           });

@@ -1570,8 +1570,8 @@ export const API = {
       before + '/GasOperationFormApi/GetCooperationInspectionRecordForPCList', //获取配合检查记录
     GetRealtimeConsistencyRecordForPCList:
       before + '/GasOperationFormApi/GetRealtimeConsistencyRecordForPCList', //获取数据一致性记录(实时)
-    GetHourDayConsistencyRecordForPCList:
-      before + '/GasOperationFormApi/GetHourDayConsistencyRecordForPCList', //获取数据一致性记录(小时日)
+    GetIndicationErrorSystemResponseRecordListForPC:
+      before + '/GasOperationFormApi/GetIndicationErrorSystemResponseRecordListForPC', //获取示值误差系统响应记录
     GetDetectionTimesRecordForPCList:
       before + '/GasOperationFormApi/GetDetectionTimesRecordForPCList', //获取上月委托第三方检测次数
     GetWaterCalibrationRecordForPCList:

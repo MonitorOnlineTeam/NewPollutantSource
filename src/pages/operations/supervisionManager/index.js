@@ -1781,7 +1781,7 @@ const Index = (props) => {
             取消
           </Button>,
           !pushFlag&&<Button type="primary" onClick={() => { save(0) }} loading={saveLoading0 || detailLoading || pointLoading2 || false}>
-            保存
+            暂存
           </Button>,
           <Button type="primary" onClick={() => save(pushFlag? 3 : 1)} loading={saveLoading3 || detailLoading || pointLoading2 || false} >
            {pushFlag? '提交并推送':'提交'}
