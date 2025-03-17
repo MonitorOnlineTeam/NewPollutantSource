@@ -178,12 +178,13 @@ const Index = (props) => {
             ellipsis:true,
         },
         {
-            title: '全系统校准派单频次',
+            title: '示值误差派单频次',
             dataIndex: 'systemCalibrationCycleName',
             key: 'systemCalibrationCycleName',
             align: 'center',
             width: 160,
             ellipsis:true,
+            hidden: configInfo.IsShowProjectRegion,
         },
         // {
         //     title: '参数核对派单频次',

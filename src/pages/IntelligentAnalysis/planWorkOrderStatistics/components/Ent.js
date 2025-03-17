@@ -333,6 +333,58 @@ const Index = (props,ref) => {
         },
       ],
     },
+    // 废水不显示此列
+    ...(pollutantType == 1 ? [] : [{
+      title: '计划示值误差工单',
+      width:255,
+      children: [
+        {
+          title:  <span>待完成数</span>,
+          dataIndex: 'systemcalibrationIncompleteCount',
+          key: 'systemcalibrationIncompleteCount',
+          width: 100,
+          align:'center',
+        },
+        {
+          title: <span>结束数</span>,
+          dataIndex: 'systemcalibrationCloseCount',
+          key: 'systemcalibrationCloseCount',
+          width: 100,
+          align:'center',
+          render:(text,record,index)=>{
+            return  <Button type="link" onClick={()=>{workOrderNum(14,record)}}>{text}</Button>
+          }
+        },
+        {
+          title:  <span>完成数</span>,
+          dataIndex: 'systemcalibrationCompleteCount',
+          key: 'systemcalibrationCompleteCount',
+          width: 70,
+          align:'center',
+        },
+        {
+          title: <span>完成率</span>,
+          dataIndex: 'systemcalibrationRate',
+          key: 'systemcalibrationRate',
+          width: 105,
+          align:'center',
+          sorter: (a, b) =>props.sortRate(a,b,'systemcalibrationRate'),
+          render: (text, record) => {
+            return (
+              <div>
+                <Progress
+                  percent={text=='-'? 0 : text} 
+                  size="small"
+                  style={{width:'70%'}}
+                  status='normal'
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
+                />
+              </div>
+            );  
+          }       
+        }
+      ]
+    }]),
   ];
 
 
@@ -419,7 +471,7 @@ const Index = (props,ref) => {
     },
    
   ];
- 
+  const [insideWorkType, setInsideWorkType] = useState()
   const insideWorkOrderColumns2 = [
     {
       title: '省/市',
@@ -454,7 +506,7 @@ const Index = (props,ref) => {
       align:'center',
     },
     {
-      title: '计划校准工单',
+      title: insideWorkType == 14 ? '计划示值误差工单' : '计划校准工单',
       width:200,
       children: [
         {
@@ -612,6 +664,14 @@ const Index = (props,ref) => {
           width: 100,
           align: 'center',
         },
+        // 废水不显示此列
+        ...(pollutantType == 1 ? [] : [{
+          title: '示值误差',
+          dataIndex: 'systemcalibrationCompleteCount',
+          key: 'systemcalibrationCompleteCount',
+          width: 100,
+          align: 'center',
+        }]),
         {
           title: '维修',
           dataIndex: 'repairCompleteCount',
@@ -732,7 +792,6 @@ const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外�
     //   pageSize:PageSize
     //  })
   }
-const [insideWorkType, setInsideWorkType] = useState()
 const [insideWorkOrderVisible, setInsideWorkOrderVisible] = useState()
 
 const workOrderNum = (type,record) =>{ //计划内 总数工单
@@ -1020,6 +1079,7 @@ const outTypeObj = {
   "repairInfoCount" :'维修工单',
   "matchingComparisonCount" :'参数核对',
   "coordinationComparisonCount": '配合比对完成工单数',
+  "systemcalibrationCount": '示值误差工单',
  }
  const outTypeColor = {
   "inspectionCount"  : '#1890ff',
@@ -1035,7 +1095,7 @@ const outTypeObj = {
   "repairInfoCount" :'#f5222d',
   "matchingComparisonCount" :'#13c2c2',
   "coordinationComparisonCount": '#fa541c',
-  
+  "systemcalibrationCount": '#08979c',
  }
 const dateCellRender = (value)=>{//日期
   let ele=[];
@@ -1056,6 +1116,7 @@ const dateCellRender = (value)=>{//日期
 } 
 const monthCellRender = (value) =>{//月份
   let ele=[];
+  console.log('entOutsidePointListDatas', entOutsidePointListDatas)
   if(entOutsidePointListDatas&&entOutsidePointListDatas[0]){
     entOutsidePointListDatas.map((item,index)=>{
       if(Number(value.month()) + 1 == item.month ){
@@ -1217,7 +1278,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         {/**计划内 企业 计划巡检 计划校准*/}
         <Modal
         title={`${regName}-统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
-        ${insideWorkType==1?  '内派发的计划巡检工单完成情况' :'内派发的计划校准工单完成情况' }`}
+        ${insideWorkType==1?  '内派发的计划巡检工单完成情况' :insideWorkType==14?  '内派发的计划示值误差工单完成情况':'内派发的计划校准工单完成情况' }`}
         visible={insideWorkOrderVisible}
         onCancel={()=>{setInsideWorkOrderVisible(false)}}
         footer={null}

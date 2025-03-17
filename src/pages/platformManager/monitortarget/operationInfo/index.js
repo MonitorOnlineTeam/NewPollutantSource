@@ -367,7 +367,7 @@ const Index = props => {
       align: 'center',
     },
     {
-      title: '全系统校准派单频次',
+      title: '示值误差派单频次',
       dataIndex: 'systemCalibrationCycleName',
       key: 'systemCalibrationCycleName',
       align: 'center',
@@ -1082,10 +1082,10 @@ const Index = props => {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="全系统校准派单频次"
+                label="示值误差派单频次"
                 name="SystemCalibrationCycle"
               >
-                <Select placeholder="请选择全系统校准派单频次" allowClear>
+                <Select placeholder="请选择示值误差派单频次" allowClear>
                   {systemCalibrationCycleList[0] &&
                     systemCalibrationCycleList.map(item => {
                       return (

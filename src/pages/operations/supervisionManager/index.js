@@ -180,7 +180,7 @@ const Index = (props) => {
 
   const [manufacturerId, setManufacturerId] = useState(undefined)
 
-  const { tableDatas, tableTotal, tableLoading, pointParamesLoading, infoloading, exportLoading, userLoading, entLoading, systemModelList, operationInfoList, isDetailModal, regDetailPar,par } = props;
+  const { tableDatas, tableTotal, tableLoading, pointParamesLoading, infoloading, exportLoading, userLoading, entLoading, systemModelList, operationInfoList, isDetailModal, regDetailPar = {},par } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -734,7 +734,7 @@ const Index = (props) => {
         ETime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
         InspectorType: inspectorType,
-        InspectorTypeArr: regDetailPar.InspectorTypeArr,
+        InspectorTypeArr: regDetailPar?.InspectorTypeArr,
         pollutantType : isDetailModal ? undefined : pollutantTypeCode,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
         pageSize: pageSizes ? pageSizes : pageSize,
@@ -752,7 +752,7 @@ const Index = (props) => {
       ETime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
       time: undefined,
       InspectorType: inspectorType,
-      InspectorTypeArr: regDetailPar.InspectorTypeArr,
+      InspectorTypeArr: regDetailPar?.InspectorTypeArr,
       // apiName: props.exportApiName,
       pollutantType :  isDetailModal ? undefined : pollutantTypeCode,
     })
@@ -1001,6 +1001,12 @@ const Index = (props) => {
               </Select>
             </Form.Item>
           </Spin>
+          <Form.Item label='推送状态' name='Status' >
+            <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{ width: 150 }}>
+              <Option key={2} value={2}>已推送</Option>
+              <Option key={1} value={1}>未推送</Option>
+            </Select>
+          </Form.Item>
         </Row>
 
         <Row>

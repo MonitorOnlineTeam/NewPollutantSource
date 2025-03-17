@@ -34,7 +34,7 @@ const UserLayout2 = props => {
         <div className={styles.childrenContent}>
           {isShowSysName ? (
             <div className={styles.sysName}>
-              <img style={{ marginLeft: -14, marginRight: 10 }} src="/sdl.png" />
+              {/* <img style={{ marginLeft: -14, marginRight: 10 }} src="/sdl.png" /> */}
               {configInfo?.SystemName}
             </div>
           ) : (

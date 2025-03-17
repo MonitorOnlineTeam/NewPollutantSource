@@ -188,6 +188,14 @@ const dvaDispatch = dispatch => {
         callback: callback,
       });
     },
+    CopySystemEquipmentInfo: (payload, callback) => {
+      // 复制添加
+      dispatch({
+        type: `${namespace}/CopySystemEquipmentInfo`,
+        payload: payload,
+        callback: callback,
+      });
+    },
   };
 };
 
@@ -232,15 +240,12 @@ const Index = props => {
     initData();
   }, []);
 
-  const initData = () => {
-    // props.getMonitoringTypeList({})
-    props.getManufacturerList({ pageIndex: 1, pageSize: 9999 }, data => {
-      // console.log(data)
-    });
-    //设备信息
-    // props.getMonitoringTypeList2({})
+  useEffect(() => {
+    getPageData();
+  }, [open]);
 
-    //回显数据
+  //回显数据
+  const getPageData = () => {
     props.getPointEquipmentParameters({ DGIMN: DGIMN, PollutantType: pollutantType }, res => {
       //设备参数
       setData(res);
@@ -263,7 +268,16 @@ const Index = props => {
           : undefined;
         setGasSystemData(data ? data : []);
       });
+  };
 
+  const initData = () => {
+    // props.getMonitoringTypeList({})
+    props.getManufacturerList({ pageIndex: 1, pageSize: 9999 }, data => {
+      // console.log(data)
+    });
+    //设备信息
+    // props.getMonitoringTypeList2({})
+    getPageData();
     //废水 废气   默认加载监测参数
     props.getPollutantById({ id: defaultParId, type: 1 }, data => {
       setDefaultPollData(data); //手动添加默认值
@@ -635,7 +649,7 @@ const Index = props => {
   }
 
   if (pollutantType == 1) {
-    // 废水不显示配备 
+    // 废水不显示配备
     columns = columns.filter(item => {
       return item.dataIndex != 'EquipmentCode';
     });
@@ -1716,7 +1730,7 @@ const Index = props => {
         )}
         {dataIndex === 'gasManufacturerName' && (
           <Form.Item hidden name={`gasManufacturer`}></Form.Item>
-        )}{' '}
+        )}
         {/*系统信息 手工输入设备型号 */}
       </td>
     );
@@ -1795,6 +1809,20 @@ const Index = props => {
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
+  };
+
+  // 复制添加
+  const CopySystemEquipmentInfo = params => {
+    props.CopySystemEquipmentInfo(
+      {
+        ...params,
+        DGIMN,
+      },
+      () => {
+        setCopyAddVisible(false)
+        getPageData();
+      },
+    );
   };
 
   return (
@@ -2188,6 +2216,9 @@ const Index = props => {
         onCancel={() => setCopyAddVisible(false)}
         pollutantType={pollutantType}
         DGIMN={DGIMN}
+        onOk={params => {
+          CopySystemEquipmentInfo(params);
+        }}
       />
     </Modal>
   );

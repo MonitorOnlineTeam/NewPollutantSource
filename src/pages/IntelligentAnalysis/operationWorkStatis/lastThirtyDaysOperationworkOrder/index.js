@@ -172,6 +172,14 @@ const Index = (props) => {
       sorter: (a, b) => a.jiaoyanceshi - b.jiaoyanceshi,
     },
     {
+      title: '示值误差',
+      dataIndex: 'systemjiaozhun',
+      key: 'systemjiaozhun',
+      align: 'center',
+      sorter: (a, b) => a.systemjiaozhun - b.systemjiaozhun,
+      hidden: configInfo.IsShowProjectRegion,
+    },
+    {
       title: '配合检查',
       dataIndex: 'peihejiancha',
       key: 'peihejiancha',

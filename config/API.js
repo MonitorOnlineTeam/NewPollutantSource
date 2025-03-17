@@ -374,6 +374,8 @@ export const API = {
     GetMonitorPointList: before + '/MonitorTargetApi/GetMonitorPointList',
     // 获取企业厂界信息
     GetEnterpriseCorporationCode: before + '/EnterpriseApi/GetEnterpriseCorporationCode',
+    // 复制设备参数信息
+    CopySystemEquipmentInfo: before + '/MonitorPointApi/CopySystemEquipmentInfo',
 
     AddOrUpdOperationSignRadiusInfo: before + '/EnterpriseApi/AddOrUpdOperationSignRadiusInfo', //企业设置电子围栏半径
     GetOperationSignRadiusInfo: before + '/EnterpriseApi/GetOperationSignRadiusInfo', //获取企业电子围栏半径

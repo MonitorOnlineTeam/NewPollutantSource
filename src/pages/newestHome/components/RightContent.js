@@ -336,7 +336,7 @@ const Index = props => {
         left: fontSizeFn(40),
         right: fontSizeFn(20),
         bottom: fontSizeFn(40),
-        top: fontSizeFn(40),
+        top: fontSizeFn(20),
       },
       xAxis: {
         type: 'category',
@@ -640,10 +640,11 @@ const Index = props => {
   const [alarmResponseTimelyVisible, setAlarmResponseTimelyVisible] = useState(false);
 
   const pollutantType = pollType[props.type];
+  const isHideIVError = (pollutantType == 1 || configInfo.IsShowProjectRegion); // 废水和宝武项目不显示示值误差
 
   const dataAlarmEcharts = useMemo(() => {
     return (
-      <div style={{ height: 'calc(100% - 22px)', padding: '10px 1rem .9375rem' }}>
+      <div style={{ height: 'calc(100% - 1.375rem)', padding: '.625rem 1.5rem .9375rem' }}>
         <ReactEcharts
           option={dataAlarmResOption}
           style={{ height: '100%', width: '100%' }}
@@ -703,8 +704,7 @@ const Index = props => {
           <div className={styles.effectiveTrans}></div>
         </Spin>
       ) : (
-        <div className={styles.effectiveTrans} style={{ marginBottom: '0.5625rem' }}>
-          {' '}
+        <div className={styles.effectiveTrans} style={{ marginBottom: '0.5625rem', height: isHideIVError ? '' : '17.625rem', padding: 0, }}>
           {/**有效传输率 */}
           <CardHeader
             btnClick={effectiveTransClick}
@@ -713,22 +713,28 @@ const Index = props => {
             btnCheck={effectiveTransBtnCheck}
             title="有效传输率"
           />
-          <ReactEcharts
-            option={effectiveTransOption()}
-            style={{ height: '100%', width: '100%', paddingTop: 0, paddingBottom: 26 }}
-          />
-          <MoreBtn
-            className={styles.moreBtnAbsoluteSty}
-            type="effectiveTrans"
-            moreBtnClick={moreBtnClick}
-          />
+          <div style={{ height: 'calc(100% - 68px)', padding: 0, paddingLeft: '1.3125rem' }}>
+            <ReactEcharts
+              option={effectiveTransOption()}
+              style={{ height: '100%', width: '100%', paddingTop: 0, }}
+            />
+            <MoreBtn
+              className={styles.moreBtnAbsoluteSty}
+              type="effectiveTrans"
+              moreBtnClick={moreBtnClick}
+            />
+          </div>
         </div>
       )}
       <Spin spinning={dataAlarmResLoading}>
-        <div
+        {/* <div
           className={styles.dataAlarmRes}
-          style={{ height: TaskPlanType == 1 ? '16.8125rem' : '18.25rem' }}
-        >
+          // style={{ height: TaskPlanType == 1 ? '16.8125rem' : '18.25rem' }}
+          style={{ height: pollutantType == 1 ? TaskPlanType == 1 ? '16.8125rem' : '18.25rem' : '22.8125rem' }}
+
+        > */}
+        <div className={styles.planOpera} style={{ height: configInfo.IsShowProjectRegion ? '18.25rem' : isHideIVError ? '' : '22.8125rem' }}>
+
           {/**异常数据总览 */}
           <CardHeader
             btnClick={dataAlarmResClick}
@@ -743,10 +749,10 @@ const Index = props => {
 
       {operationExpireLoading ? (
         <Spin spinning={operationExpireLoading}>
-          <div className={styles.operationExpira}></div>
+          <div className={styles.operationExpira} style={{ height: isHideIVError ? '' : '16.5625rem' }}></div>
         </Spin>
       ) : (
-        <div className={styles.operationExpira}>
+        <div className={styles.operationExpira} style={{ height: isHideIVError ? '' : '16.5625rem' }}>
           {/**运维到期点位 */}
           <CardHeader btnClick={dataAlarmResClick} title="运维到期点位" />
           {/* <div style={{ height: '100%', paddingRight: '1.3125rem' }}>
@@ -756,7 +762,7 @@ const Index = props => {
                 ref={operationExpiraEchartsRef}
               />
             </div> */}
-          <Row style={{ height: '100%', padding: 0 }}>
+          <Row style={{ height: 'calc(100% - 2.25rem)', padding: 0 }}>
             <Col span={10}>
               <ReactEcharts
                 option={operationExpiraOption()}

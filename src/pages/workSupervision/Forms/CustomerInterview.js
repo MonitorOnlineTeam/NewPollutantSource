@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:57:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-02-24 09:07:23
+ * @Last Modified time: 2025-03-14 09:19:54
  * @Description: 回访客户任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -120,7 +120,7 @@ const CustomerInterview = props => {
   const getColumns = () => {
     return [
       {
-        title: '客户满意度（1-5）',
+        title: '客户满意度',
         children: [
           {
             title: '类型',
@@ -267,6 +267,7 @@ const CustomerInterview = props => {
           wrapperCol={{ span: 14 }}
           initialValues={{
             ...editData,
+            CustomerName: editData.CustomRealName,
             UserGroup_Name: editData.LargeRegion,
             Province: editData.Province?.split(','),
             ReturnTime: moment(editData.ReturnTime),
@@ -352,11 +353,13 @@ const CustomerInterview = props => {
                         //   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         // }
                         onChange={(value, option) => {
+                          console.log('option', option);
+                          let province = option['data-item']?.Province.split(',').slice(0, 2);
                           setCustomID(value);
                           form.setFieldsValue({
                             RegionalArea: option['data-item']?.UserGroup_ID,
                             UserGroup_Name: option['data-item']?.UserGroup_Name,
-                            Province: option['data-item']?.Province.split(',').slice(0, 2),
+                            Province: province.length > 1 ? province : undefined,
                           });
                           // getLargeRegionListRequest(option);
                         }}
@@ -382,7 +385,7 @@ const CustomerInterview = props => {
                           CustomID: data.ID,
                           UserGroup_Name: data.UserGroup_Name,
                           RegionalArea: data.UserGroup_ID,
-                          Province: data.Province.split(','),
+                          Province: data.Province.split(',').length > 1 ? data.Province.split(',') : undefined,
                         });
                         // getLargeRegionListRequest({
                         //   'data-item': { UserGroup_ID: data.UserGroup_ID, Province: data.Province },
@@ -444,11 +447,11 @@ const CustomerInterview = props => {
             <Col span={12}>
               <Form.Item
                 name="VisitPurpose"
-                label="拜访目的"
-                rules={[{ required: true, message: '请选择拜访目的！' }]}
+                label="回访目的"
+                rules={[{ required: true, message: '请选择回访目的！' }]}
               >
                 <Select
-                  placeholder="请选择拜访目的"
+                  placeholder="请选择回访目的"
                   loading={visitEnvironmentalParameterLoading}
                   options={achievingResultsList?.EvaluateList}
                   fieldNames={{ label: 'Name', value: 'ChildID' }}
@@ -467,10 +470,10 @@ const CustomerInterview = props => {
               <Col span={12}>
                 <Form.Item
                   name="OtherPurpose"
-                  label="其他拜访目的"
-                  rules={[{ required: true, message: '请输入其他拜访目的！' }]}
+                  label="其他回访目的"
+                  rules={[{ required: true, message: '请输入其他回访目的！' }]}
                 >
-                  <Input placeholder="请输入其他拜访目的" allowClear />
+                  <Input placeholder="请输入其他回访目的" allowClear />
                 </Form.Item>
               </Col>
             )}

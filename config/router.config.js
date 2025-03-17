@@ -420,26 +420,33 @@ const routes = [
       //   ],
       // },
       // 新登录 （样式统一）
+      // {
+      //   path: '/user/login',
+      //   component: '../layouts/UserLayout3',
+      //   routes: [
+      //     {
+      //       name: 'newLogin',
+      //       path: '/user/login',
+      //       component: './user/login/NewLogin2',
+      //     },
+      //   ],
+      // },
+      // 重置密码
       {
-        path: '/user/login',
-        component: '../layouts/UserLayout3',
-        routes: [
-          {
-            name: 'newLogin',
-            path: '/user/login',
-            component: './user/login/NewLogin2',
-          },
-        ],
+        name: 'resetPassword',
+        path: '/resetPassword',
+        component: './user/resetPassword',
       },
       {
         path: '/user',
         component: '../layouts/UserLayout',
         routes: [
-          // {
-          //   name: 'login',
-          //   path: '/user/login',
-          //   component: './user/login',
-          // },
+          {
+            name: 'login',
+            path: '/user/login',
+            component: './user/login',
+          },
+
           {
             name: 'register-result',
             path: '/user/register-result',
@@ -2980,7 +2987,7 @@ const routes = [
                   {
                     // 运维工单统计（企业）
                     path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                    component: './Intelligentanalysis/planWorkOrderStatistics',
+                    component: './IntelligentAnalysis/planWorkOrderStatistics',
                   },
                   // {
                   //   //行政区运维工单统计（企业）

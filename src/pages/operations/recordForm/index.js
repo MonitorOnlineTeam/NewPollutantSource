@@ -55,55 +55,398 @@ class Index extends Component {
         };
         this.contentRef = React.createRef();
     }
+    // // 打印内容区域（使用iframe方式，避免刷新页面）收集所有样式 （已废弃，不能正常分页，需要用户调整缩放才能打印完整）
+    // handlePrint = () => {
+    //     const printContent = this.contentRef.current;
+    //     if (!printContent) return;
+        
+    //     // 获取所有已加载的样式表
+    //     const styleSheets = Array.from(document.styleSheets);
+    //     let styles = '';
+        
+    //     // 收集所有样式
+    //     styleSheets.forEach(sheet => {
+    //         try {
+    //             const rules = sheet.cssRules || sheet.rules;
+    //             Array.from(rules).forEach(rule => {
+    //                 styles += rule.cssText + '\n';
+    //             });
+    //         } catch (e) {
+    //             // 跨域样式表可能会报错，忽略
+    //             console.log('无法读取样式表:', e);
+    //         }
+    //     });
+
+    //     // 创建打印专用样式
+    //     const printSpecificStyles = `
+    //         @media print {
+    //             @page {
+    //                 size: A4;
+    //                 margin: 0.5cm;
+    //             }
+                
+    //             html, body {
+    //                 margin: 0 !important;
+    //                 padding: 0 !important;
+    //                 height: auto !important;
+    //                 overflow: visible !important;
+    //                 background-color: white !important;
+    //                 -webkit-print-color-adjust: exact !important;
+    //                 print-color-adjust: exact !important;
+    //                 color: #000000 !important;
+    //             }
+
+    //             .print-content {
+    //                 width: 100% !important;
+    //                 padding: 0 !important;
+    //                 margin: 0 !important;
+    //                 background-color: white !important;
+    //                 overflow: visible !important;
+    //                 height: auto !important;
+    //                 color: #000000 !important;
+    //             }
+
+    //             /* 隐藏不需要打印的元素 */
+    //             .no-print, 
+    //             .ant-page-header-heading,
+    //             .ant-breadcrumb,
+    //             .headerActions {
+    //                 display: none !important;
+    //             }
+
+    //             /* 表格容器样式 */
+    //             .ant-table-wrapper {
+    //                 width: 100% !important;
+    //                 margin: 0 !important;
+    //                 padding: 0 !important;
+    //                 overflow: visible !important;
+    //             }
+
+    //             .ant-table {
+    //                 font-size: 12px !important;
+    //                 width: 100% !important;
+    //                 table-layout: auto !important;
+    //                 border-collapse: collapse !important;
+    //                 color: #000000 !important;
+    //             }
+
+    //             .ant-table-container {
+    //                 overflow: visible !important;
+    //             }
+
+    //             .ant-table-content {
+    //                 overflow: visible !important;
+    //             }
+
+    //             .ant-table-body {
+    //                 overflow: visible !important;
+    //             }
+
+    //             /* 表头样式 */
+    //             .ant-table-thead {
+    //                 display: table-header-group !important;
+    //             }
+
+    //             .ant-table-thead > tr > th {
+    //                 background-color: #f0f0f0 !important;
+    //                 font-weight: bold !important;
+    //                 text-align: center !important;
+    //                 border: 1px solid #666666 !important;
+    //                 padding: 4px !important;
+    //                 color: #000000 !important;
+    //             }
+
+    //             /* 表格主体样式 */
+    //             .ant-table-tbody {
+    //                 display: table-row-group !important;
+    //             }
+
+    //             /* 表格行样式 - 允许在页面之间断开 */
+    //             .ant-table-tbody > tr {
+    //                 page-break-inside: auto !important;
+    //             }
+
+    //             /* 表格单元格样式 */
+    //             .ant-table-cell {
+    //                 padding: 4px !important;
+    //                 border: 1px solid #666666 !important;
+    //                 white-space: normal !important;
+    //                 word-wrap: break-word !important;
+    //                 word-break: break-word !important;
+    //                 overflow: visible !important;
+    //                 color: #000000 !important;
+    //             }
+
+    //             /* 确保表格边框显示 */
+    //             table, th, td {
+    //                 border: 1px solid #666666 !important;
+    //             }
+
+    //             /* 强制背景色和边框打印 */
+    //             * {
+    //                 -webkit-print-color-adjust: exact !important;
+    //                 print-color-adjust: exact !important;
+    //                 color-adjust: exact !important;
+    //             }
+
+    //             /* 移除滚动条 */
+    //             ::-webkit-scrollbar {
+    //                 display: none !important;
+    //             }
+
+    //             /* 确保内容可以分页 */
+    //             .ant-card, .ant-table, .ant-table-wrapper {
+    //                 page-break-inside: auto !important;
+    //             }
+
+    //             /* 确保标题不会被分页 */
+    //             h1, h2, h3, h4, h5, h6 {
+    //                 page-break-after: avoid !important;
+    //                 page-break-inside: avoid !important;
+    //                 margin-top: 0.3cm !important;
+    //                 margin-bottom: 0.2cm !important;
+    //                 color: #000000 !important;
+    //             }
+
+    //             /* 确保图片不会被分页 */
+    //             img {
+    //                 page-break-inside: avoid !important;
+    //             }
+    //         }
+    //     `;
+        
+    //     // 创建一个隐藏的iframe
+    //     const iframe = document.createElement('iframe');
+    //     iframe.style.position = 'absolute';
+    //     iframe.style.width = '0';
+    //     iframe.style.height = '0';
+    //     iframe.style.border = '0';
+    //     document.body.appendChild(iframe);
+        
+    //     // 获取所有外部样式表链接
+    //     const styleLinks = Array.from(document.getElementsByTagName('link'))
+    //         .filter(link => link.rel === 'stylesheet')
+    //         .map(link => link.outerHTML)
+    //         .join('');
+        
+    //     // 写入内容到iframe
+    //     const iframeDoc = iframe.contentWindow.document;
+    //     iframeDoc.open();
+    //     iframeDoc.write(`
+    //         <!DOCTYPE html>
+    //         <html>
+    //         <head>
+    //             <meta charset="utf-8">
+    //             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    //             ${styleLinks}
+    //             <style>
+    //                 html, body {
+    //                     margin: 0;
+    //                     padding: 0;
+    //                     height: auto;
+    //                     overflow: visible;
+    //                 }
+    //                 ${styles}
+    //                 ${printSpecificStyles}
+    //             </style>
+    //         </head>
+    //         <body>
+    //             <div class="print-content">
+    //                 ${printContent.innerHTML}
+    //             </div>
+    //         </body>
+    //         </html>
+    //     `);
+    //     iframeDoc.close();
+        
+    //     // 等待样式和图片加载完成
+    //     iframe.onload = () => {
+    //         setTimeout(() => {
+    //             iframe.contentWindow.focus();
+    //             iframe.contentWindow.print();
+                
+    //             // 打印完成后移除iframe
+    //             setTimeout(() => {
+    //                 document.body.removeChild(iframe);
+    //             }, 1000);
+    //         }, 2000); // 增加等待时间，确保内容完全加载
+    //     };
+    // };
+
+
 
     // 打印内容区域（使用iframe方式，避免刷新页面）
     handlePrint = () => {
         const printContent = this.contentRef.current;
         if (!printContent) return;
         
-        // 创建打印样式
-        const printStyles = `
-            <style>
+        // 创建打印专用样式
+        const printSpecificStyles = `
+            @media print {
+                @page {
+                    size: A4;
+                    margin: 0.5cm;
+                }
+                
                 body {
                     font-family: Arial, sans-serif;
                     margin: 0;
-                    padding: 20px;
+                    padding: 0;
+                    background-color: white;
+                    color: #000000;
                 }
+                
+                .print-content {
+                    width: 100%;
+                    padding: 0;
+                    margin: 0;
+                }
+                
+                /* 隐藏不需要打印的元素 */
+                .no-print, 
+                .ant-page-header-heading,
+                .ant-breadcrumb,
+                .headerActions {
+                    display: none !important;
+                }
+                
+                /* 表格样式 */
                 table {
                     width: 100%;
                     border-collapse: collapse;
+                    page-break-inside: auto;
                 }
-                table, th, td {
-                    border: 1px solid #000;
+                
+                /* 表头样式 */
+                thead {
+                    display: table-header-group;
                 }
+                
+                /* 表格主体样式 */
+                tbody {
+                    display: table-row-group;
+                }
+                
+                /* 表格行样式 */
+                tr {
+                    page-break-inside: avoid;
+                    page-break-after: auto;
+                }
+                
+                /* 表格单元格样式 */
                 th, td {
-                    padding: 8px;
-                    text-align: left;
+                    border: 1px solid #666666;
+                    padding: 4px;
+                    text-align: center;
+                    color: #000000;
                 }
+                
                 th {
-                    background-color: #f0f0f0;
+                    background-color: #f0f0f0 !important;
+                    font-weight: bold;
                 }
-                .no-print {
-                    display: none !important;
+                
+                /* 强制背景色和边框打印 */
+                * {
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                    color-adjust: exact !important;
                 }
-                /* 隐藏标题 */
+                
+                /* 确保标题不会被分页 */
                 h1, h2, h3, h4, h5, h6 {
-                    display: none;
+                    page-break-after: avoid;
+                    page-break-inside: avoid;
+                    text-align: center;
                 }
-                /* 隐藏面包屑导航 */
-                .ant-breadcrumb {
-                    display: none;
+                
+                /* 确保图片不会被分页 */
+                img {
+                    page-break-inside: avoid;
                 }
-                /* 隐藏页面标题 */
-                .ant-page-header-heading-title {
-                    display: none;
+                
+                /* 标题居中显示 */
+                .ant-card-head-title, 
+                .ant-card-head, 
+                .ant-card-head-wrapper,
+                .print-content h1,
+                .print-content h2,
+                .print-content h3,
+                .print-content h4,
+                .print-content h5,
+                .print-content h6,
+                .print-content .ant-card-head-title,
+                .print-content .title,
+                .print-content [class*="title"] {
+                    text-align: center !important;
+                    justify-content: center !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    font-weight: bold !important;
                 }
-                @media print {
-                    @page {
-                        margin: 1cm;
-                    }
+                
+                /* FormName 样式 - 用于表单标题 */
+                .FormName,
+                [class*="FormName"],
+                [class*="-jz-record-content-FormName"],
+                [class*="-FormName"],
+                [class*="emergency-todo-list-"] [class*="FormName"] {
+                    width: 80% !important;
+                    height: 50px !important;
+                    line-height: 50px !important;
+                    margin: 0 auto !important;
+                    margin-top: 20px !important;
+                    margin-bottom: 20px !important;
+                    font-size: 20px !important;
+                    text-align: center !important;
+                    font-weight: bold !important;
+                    display: block !important;
                 }
-            </style>
+                
+                /* Ant Design 表格样式覆盖 */
+                .ant-table {
+                    font-size: 12px;
+                }
+                
+                .ant-table-thead > tr > th {
+                    background-color: #f0f0f0 !important;
+                    font-weight: bold;
+                    text-align: center;
+                    border: 1px solid #666666;
+                    padding: 4px;
+                }
+                
+                .ant-table-tbody > tr > td {
+                    border: 1px solid #666666;
+                    padding: 4px;
+                }
+                
+                /* 确保表格容器可见 */
+                .ant-table-wrapper,
+                .ant-table,
+                .ant-table-container,
+                .ant-table-content,
+                .ant-table-body {
+                    overflow: visible !important;
+                }
+                
+                /* 确保表格可以分页 */
+                .ant-table-wrapper {
+                    page-break-inside: auto !important;
+                }
+                
+                .ant-table-thead {
+                    display: table-header-group !important;
+                }
+                
+                .ant-table-tbody {
+                    display: table-row-group !important;
+                }
+                
+                .ant-table-tbody > tr {
+                    page-break-inside: auto !important;
+                }
+            }
         `;
         
         // 创建一个隐藏的iframe
@@ -114,38 +457,84 @@ class Index extends Component {
         iframe.style.border = '0';
         document.body.appendChild(iframe);
         
-        // 获取内容并移除标题
-        let contentHTML = printContent.innerHTML;
+        // 获取内容的HTML
+        const contentHTML = printContent.innerHTML;
         
-        // 写入内容到iframe - 不包含title标签
+        // 写入内容到iframe
         const iframeDoc = iframe.contentWindow.document;
         iframeDoc.open();
-        iframeDoc.write('<!DOCTYPE html><html><head>' + printStyles + '</head><body>' + contentHTML + '</body></html>');
+        iframeDoc.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>运维台账打印</title>
+                <style>
+                    ${printSpecificStyles}
+                </style>
+            </head>
+            <body>
+                <div class="print-content">
+                    ${contentHTML}
+                </div>
+                <script>
+                    // 在iframe中移除所有不需要打印的元素
+                    document.querySelectorAll('.no-print, .ant-page-header, .ant-breadcrumb, .headerActions').forEach(element => {
+                        if (element) {
+                            element.style.display = 'none';
+                        }
+                    });
+                    
+                    // 确保表格可以分页
+                    document.querySelectorAll('.ant-table-thead').forEach(element => {
+                        element.style.display = 'table-header-group';
+                    });
+                    
+                    document.querySelectorAll('.ant-table-tbody').forEach(element => {
+                        element.style.display = 'table-row-group';
+                    });
+                    
+                    document.querySelectorAll('.ant-table-tbody > tr').forEach(element => {
+                        element.style.pageBreakInside = 'auto';
+                    });
+                    
+                    // 确保表格容器可见
+                    document.querySelectorAll('.ant-table-wrapper, .ant-table, .ant-table-container, .ant-table-content, .ant-table-body').forEach(element => {
+                        element.style.overflow = 'visible';
+                    });
+                    
+                    // 处理 FormName 类名，确保标题居中
+                    document.querySelectorAll('[class*="FormName"]').forEach(element => {
+                        element.style.width = '80%';
+                        element.style.height = '50px';
+                        element.style.lineHeight = '50px';
+                        element.style.margin = '0 auto';
+                        element.style.marginTop = '20px';
+                        element.style.marginBottom = '20px';
+                        element.style.fontSize = '20px';
+                        element.style.textAlign = 'center';
+                        element.style.fontWeight = 'bold';
+                        element.style.display = 'block';
+                    });
+                </script>
+            </body>
+            </html>
+        `);
         iframeDoc.close();
         
-        // 等待图片和样式加载完成
+        // 等待样式和图片加载完成
         iframe.onload = () => {
-            // 在iframe中移除所有标题元素
-            const titles = iframe.contentWindow.document.querySelectorAll('h1, h2, h3, h4, h5, h6, .ant-page-header, .ant-breadcrumb, .ant-page-header-heading-title');
-            titles.forEach(title => {
-                if (title) {
-                    title.style.display = 'none';
-                }
-            });
-            
-            // 设置空标题（同时设置iframe和主页面的标题）
-            iframe.contentWindow.document.title = '运维台账打印';
-            
             // 执行打印
             setTimeout(() => {
                 iframe.contentWindow.focus();
                 iframe.contentWindow.print();
                 
-                // 打印完成后恢复原始标题并移除iframe
+                // 打印完成后移除iframe
                 setTimeout(() => {
                     document.body.removeChild(iframe);
                 }, 1000);
-            }, 500);
+            }, 1000);
         };
     };
 

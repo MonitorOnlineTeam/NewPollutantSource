@@ -200,7 +200,7 @@ const RecordAndManagement = props => {
         key: 'UserName',
       },
       {
-        title: '客户名称（全称）',
+        title: '客户名称',
         dataIndex: 'CustomerName',
         key: 'CustomerName',
       },
@@ -210,7 +210,7 @@ const RecordAndManagement = props => {
         key: 'CustomRealName',
       },
       {
-        title: '职务',
+        title: '职位',
         dataIndex: 'Post',
         key: 'Post',
       },

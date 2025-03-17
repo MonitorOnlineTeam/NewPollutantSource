@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Modal, Checkbox, Input, Button, Tree, message, Form } from 'antd';
 import styles from './styles.less';
+const { DirectoryTree } = Tree;
 
 const { Search } = Input;
 
@@ -32,7 +33,7 @@ const CopyAddModal = props => {
       type: 'standardLibrary/GetStandardPointList',
       payload: {
         DGIMN: DGIMN,
-        PollutantCode: pollutantType,
+        PollutantCode: pollutantType, // 废水 1
         Enalbe: 1,
       },
       callback: res => {
@@ -127,24 +128,16 @@ const CopyAddModal = props => {
     form
       .validateFields()
       .then(values => {
-        if (selectedPoints.length === 0) {
-          message.warning('请选择至少一个监测点');
-          return;
-        }
-
-        if (!values.copySystem && !values.copyDevice) {
-          message.warning('请至少选择一个复制范围');
-          return;
-        }
-
         if (onOk) {
-          onOk({
-            targetDGIMNs: selectedPoints,
-            copyOptions: {
-              system: values.copySystem,
-              device: values.copyDevice,
-            },
-          });
+          let isParam = pollutantType == 1 ? 1 : values.copyDevice ? 1 : 0; // 废水默认传 1
+          let body = {
+            copyDGIMN: selectedPoints.toString(),
+            isSystem: values.copySystem ? 1 : 0,
+            isParam: isParam,
+          };
+          console.log('body', body);
+          // return;
+          onOk(body);
         }
       })
       .catch(errorInfo => {
@@ -186,6 +179,7 @@ const CopyAddModal = props => {
         onCancel();
       }}
       destroyOnClose
+      bodyStyle={{ padding: '0 24px' }}
       footer={[
         <Button
           key="cancel"
@@ -213,42 +207,44 @@ const CopyAddModal = props => {
         }}
       >
         <div className={styles.copyModalContent}>
-          <div className={styles.copyRange}>
-            <Form.Item
-              label="复制范围"
-              required
-              style={{ marginBottom: 10 }}
-              // labelCol={{ span: 6 }}
-              // wrapperCol={{ span: 18 }}
-            >
+          {pollutantType != 1 && (
+            <div className={styles.copyRange}>
               <Form.Item
-                name="copySystem"
-                valuePropName="checked"
-                style={{ display: 'inline-block', marginRight: 20, marginBottom: 0 }}
-                rules={[
-                  {
-                    validator: (_, value) => {
-                      const deviceValue = form.getFieldValue('copyDevice');
-                      if (!value && !deviceValue) {
-                        return Promise.reject('请至少选择一个复制范围');
-                      }
-                      return Promise.resolve();
+                label="复制范围"
+                required
+                style={{ marginBottom: 10 }}
+                // labelCol={{ span: 6 }}
+                // wrapperCol={{ span: 18 }}
+              >
+                <Form.Item
+                  name="copySystem"
+                  valuePropName="checked"
+                  style={{ display: 'inline-block', marginRight: 20, marginBottom: 0 }}
+                  rules={[
+                    {
+                      validator: (_, value) => {
+                        const deviceValue = form.getFieldValue('copyDevice');
+                        if (!value && !deviceValue) {
+                          return Promise.reject('请至少选择一个复制范围');
+                        }
+                        return Promise.resolve();
+                      },
                     },
-                  },
-                ]}
-              >
-                <Checkbox>系统信息</Checkbox>
-              </Form.Item>
-              <Form.Item
-                name="copyDevice"
-                valuePropName="checked"
-                style={{ display: 'inline-block', marginBottom: 0 }}
-              >
-                <Checkbox>设备信息</Checkbox>
-              </Form.Item>
-            </Form.Item>
-          </div>
+                  ]}
+                >
+                  <Checkbox>系统信息</Checkbox>
+                </Form.Item>
 
+                <Form.Item
+                  name="copyDevice"
+                  valuePropName="checked"
+                  style={{ display: 'inline-block', marginBottom: 0 }}
+                >
+                  <Checkbox>设备信息</Checkbox>
+                </Form.Item>
+              </Form.Item>
+            </div>
+          )}
           <div className={styles.pointSelection}>
             <Form.Item
               label="选择复制测点："
@@ -267,11 +263,13 @@ const CopyAddModal = props => {
                 {loading ? (
                   <div className={styles.loading}>加载中...</div>
                 ) : treeData.length > 0 ? (
-                  <Tree
-                    showLine
-                    expandedKeys={expandedKeys}
-                    autoExpandParent={autoExpandParent}
-                    onExpand={onExpand}
+                  <DirectoryTree
+                    defaultExpandAll
+                    // showLine
+                    // expandedKeys={expandedKeys}
+                    // autoExpandParent={autoExpandParent}
+                    // defaultExpandParent={true}
+                    // onExpand={onExpand}
                     onSelect={onSelect}
                     selectedKeys={selectedPoints}
                     treeData={treeData}

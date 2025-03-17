@@ -51,8 +51,11 @@ import {
   GetCraftByPoint,
   GetEquipmentParametersList,
 } from '@/services/pointApi';
-import { sdlMessage } from '@/utils/utils';
+import { sdlMessage, requestPost } from '@/utils/utils';
+import { API } from '@config/API'
+
 import cuid from 'cuid';
+
 
 export default Model.extend({
   namespace: 'point',
@@ -544,6 +547,19 @@ export default Model.extend({
     *GetEquipmentParametersList({ payload, callback }, { call, put, update }) {
       // 监测参数设备信息清单
       const result = yield call(GetEquipmentParametersList, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
+      } else {
+        result.Message && message.error(result.Message);
+      }
+    },
+    // 复制添加设备信息
+    *CopySystemEquipmentInfo({ payload, callback }, { call, put, update }) {
+      const result = yield call(
+        requestPost,
+        `${API.EntAndPointApi.CopySystemEquipmentInfo}`,
+        payload,
+      );
       if (result.IsSuccess) {
         callback && callback(result.Datas);
       } else {

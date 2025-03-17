@@ -10,7 +10,7 @@ import { Spin, Radio, Space } from 'antd';
 import { connect } from 'dva';
 import styles from './DataConsistencyRealDate.less';
 import MonitorContent from '../../components/MonitorContent/index';
-
+import moment from 'moment';
 @connect(({ task, loading }) => ({
   loading: loading.effects['task/GetIndicationErrorSystemResponseRecordListForPC'],
   IndicationErrorSystemResponseRecordList: task.IndicationErrorSystemResponseRecordList,
@@ -146,7 +146,7 @@ class RepalceRecordList extends Component {
       },
       {
         lable: '测试日期',
-        value: MainModel.TestDate,
+        value: moment(MainModel.TestDate).format('YYYY-MM-DD'),
       },
       {
         lable: '量程',
@@ -221,8 +221,11 @@ class RepalceRecordList extends Component {
 
   render() {
     const { loading, IndicationErrorSystemResponseRecordList } = this.props;
-    const { currentRecordIndex, currentPollIndex, MainModel } = this.state;
+    const { currentRecordIndex, currentPollIndex } = this.state;
     const appStyle = this.props.appStyle;
+    const MainModel =
+      IndicationErrorSystemResponseRecordList?.[currentPollIndex]?.TableList?.[currentRecordIndex]
+        ?.MainModel || {};
     let style = null;
     if (appStyle) {
       style = appStyle;
@@ -251,7 +254,7 @@ class RepalceRecordList extends Component {
 
     return (
       <div style={{}}>
-        <div style={{ marginBottom: 20 }}>
+        <div style={{ marginBottom: 20 }} className="no-print">
           <Space direction="vertical">
             <Radio.Group
               optionType="button"
@@ -478,8 +481,18 @@ class RepalceRecordList extends Component {
                 <td colSpan="2" className={styles.tdCenter}>
                   评价依据
                 </td>
-                <td colSpan="8" style={{ textAlign: 'left', padding: '8px' }}>
-                  {MainModel?.Col1 || ''}
+                <td 
+                  colSpan="8" 
+                  style={{ 
+                    textAlign: 'left', 
+                    padding: '8px', 
+                    whiteSpace: 'pre-line',
+                    lineHeight: '1.5'
+                  }}
+                >
+                  {MainModel?.Col1
+                    ?.replace(/\\n/g, '\n')
+                    ?.replace(/\\/g, '') || ''}
                 </td>
               </tr>
             </tbody>

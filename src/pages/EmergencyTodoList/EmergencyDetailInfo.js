@@ -279,7 +279,7 @@ class EmergencyDetailInfo extends Component {
                             this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         case EnumPsOperationForm.CheckRecordImg: //CEMS零点量程漂移与校准记录表 图片弹框类型
-                        case EnumPsOperationForm.CheckRecordImg2: //CEMS零点量程漂移与校准记录表 废气 图片弹框类型 
+                        case EnumPsOperationForm.CheckRecordImg2: //CEMS零点量程漂移与校准记录表 废气 图片弹框类型
                             this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID, item.RecordType);
                             break;
                         default:
@@ -329,7 +329,7 @@ class EmergencyDetailInfo extends Component {
                 }
                 // this.props.dispatch(routerRedux.push(`/PatrolForm/${recordType}/${this.props.DGIMN}/${this.props.viewtype}/${taskfrom}/nop/${taskID}`));
 
-                //    router.push(`/operations/recordForm/${recordType}/${taskID}`) 
+                //    router.push(`/operations/recordForm/${recordType}/${taskID}`)
             }}
         >{cnName}
         </Button>
@@ -972,7 +972,7 @@ class EmergencyDetailInfo extends Component {
 
                         {
                             /** 报警记录 (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null :
-                             * 
+                             *
                              */
                         }
                         {isExistTask && taskInfo.Datas[0].TaskFromText === '报警响应' && <Card title={<span style={{ fontWeight: '900' }}>报警记录</span>} style={{ marginTop: 8, }}>
