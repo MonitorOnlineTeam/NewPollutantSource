@@ -23,9 +23,9 @@ const HomeDataScreen = props => {
         style={{ width: '27%',  display: fullScreen ? 'none' : 'flex' }}
         className={`${styles.leftWrapper} ${fullScreen ? styles['fade-out'] : styles['fade-in']}`}
       >
-        <OverviewCard />
         <ConnectionRate />
         <Emissions />
+        <EffectiveRate />
       </Col>
       <Col style={{ maxWidth: '46%' }} flex={'auto'} className={styles.centerWrapper}>
         {/* 地图 */}
@@ -39,8 +39,8 @@ const HomeDataScreen = props => {
         style={{ width: '27%', display: fullScreen ? 'none' : 'flex' }}
         className={`${styles.rightWrapper} ${fullScreen ? styles['fade-out'] : styles['fade-in']}`}
       >
+        <OverviewCard />
         <ReplacementAnalysis />
-        <EffectiveRate />
         <AbnormalAlarm />
       </Col>
     </SystemDashboardPageWrapper>

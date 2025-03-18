@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-03-17 10:25:27
+ * @Last Modified time: 2025-03-17 16:29:59
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -102,10 +102,10 @@ class SdlTable extends PureComponent {
     super(props);
     this.state = {
       _props: {},
-      columns: props.columns.filter(col => !col.hidden),
+      columns: props.columns.filter(col => !col?.hidden),
       computeHeight: null,
       headAndFooterHeight: 110,
-      pageIndex: 1,
+      pageIndex: 1, 
       pageSize: 20,
       dataSource: [],
     };
@@ -281,7 +281,7 @@ class SdlTable extends PureComponent {
       this.setState({
         computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame)) || 0,
         // headAndFooterHeight: count > 110 ? count : 110,
-        columns: this.props.columns.filter(col => !col.hidden),
+        columns: this.props?.columns?.filter(col => !col.hidden),
       });
     }
 

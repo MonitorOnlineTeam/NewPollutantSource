@@ -733,7 +733,7 @@ const Index = props => {
           style={{ height: pollutantType == 1 ? TaskPlanType == 1 ? '16.8125rem' : '18.25rem' : '22.8125rem' }}
 
         > */}
-        <div className={styles.planOpera} style={{ height: configInfo.IsShowProjectRegion ? '18.25rem' : isHideIVError ? '' : '22.8125rem' }}>
+        <div className={styles.planOpera} style={{ height: configInfo.IsShowProjectRegion ? '18.25rem' : isHideIVError ? '16.8125rem' : '22.8125rem' }}>
 
           {/**异常数据总览 */}
           <CardHeader

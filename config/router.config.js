@@ -408,17 +408,17 @@ const routes = [
         ],
       },
       // 新登录 （替换）
-      // {
-      //   path: '/user/login',
-      //   component: '../layouts/UserLayout2',
-      //   routes: [
-      //     {
-      //       name: 'newLogin',
-      //       path: '/user/login',
-      //       component: './user/login/NewLogin',
-      //     },
-      //   ],
-      // },
+      {
+        path: '/user/login',
+        component: '../layouts/UserLayout2',
+        routes: [
+          {
+            name: 'newLogin',
+            path: '/user/login',
+            component: './user/login/NewLogin',
+          },
+        ],
+      },
       // 新登录 （样式统一）
       // {
       //   path: '/user/login',
@@ -441,11 +441,11 @@ const routes = [
         path: '/user',
         component: '../layouts/UserLayout',
         routes: [
-          {
-            name: 'login',
-            path: '/user/login',
-            component: './user/login',
-          },
+          // {
+          //   name: 'login',
+          //   path: '/user/login',
+          //   component: './user/login',
+          // },
 
           {
             name: 'register-result',
@@ -2290,6 +2290,18 @@ const routes = [
               {
                 path: '/monitoring',
                 redirect: '/monitoring/mapview/realtimeDataView',
+              },
+              // 虚假工单分析 - 演示页面
+              {
+                name: 'XJGDAnalysis',
+                path: '/monitoring/XJGDAnalysis',
+                component: './YS/XJGDAnalysis',
+              },
+              // 不规范运维分析 - 演示页面
+              {
+                name: 'BGFAnalysis',
+                path: '/monitoring/BGFAnalysis',
+                component: './YS/XJGDAnalysis',
               },
               {
                 name: 'outputstopmanage',

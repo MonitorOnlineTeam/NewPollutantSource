@@ -456,7 +456,7 @@ const Index = (props, ref) => {
           width: 100,
           align: 'center',
           render: (text, record, index) => {
-            return <Button type="link" onClick={() => { workOrderNum(4, record, 'systemcalibrationCount') }}>{text}</Button>
+            return <Button type="link" onClick={() => { workOrderNum(14, record, 'systemcalibrationCount') }}>{text}</Button>
           }
         },
         {
@@ -666,7 +666,7 @@ const Index = (props, ref) => {
           width: 70,
           align: 'center',
           render: (text, record, index) => {
-            return <Button type="link" onClick={() => { workOrderNum(4, record, 'systemcalibrationCount') }}>{text}</Button>
+            return <Button type="link" onClick={() => { workOrderNum(14, record, 'systemcalibrationCount') }}>{text}</Button>
           }
         },
         {
@@ -1593,7 +1593,7 @@ const Index = (props, ref) => {
 
   const workOrderNum = (type, record, outType) => { //计划内  计划外  总数工单
 
-    if (type == 1 || type == 2 || type == 4) {
+    if (type == 1 || type == 2 || type == 14) {
       setInsideWorkType(type)
       setInsideWorkOrderVisible(true)
     }
@@ -1610,7 +1610,7 @@ const Index = (props, ref) => {
     setWorkPageSize(20)
     insideOrOutsideWorkGetTaskWorkOrderList({
       regionCode: record.regionCode,
-      taskType: type == 1 || type == 2 ? type : outTypePar[outType]
+      taskType: type == 1 || type == 2 || type == 14 ? type : outTypePar[outType]
     })
 
 
@@ -2140,6 +2140,8 @@ const Index = (props, ref) => {
     }, 300)
 
   }
+
+  
   const handleCol = () => {
     if (isPlanCalibrationModal) { // 校准
       columns = columns.filter((col, index) => col.title !== '计划巡检工单' && col.title !== '计划示值误差工单');
@@ -2254,7 +2256,7 @@ const Index = (props, ref) => {
   return (
     <div style={{ height: '100%' }}>
 
-      {!isPlanCalibrationModal && !isPlanInspectionModal && !isActualCalibrationModal ? <Tabs defaultActiveKey="1" onChange={tabsChange} style={{ height: '100%' }}>
+      {!isPlanCalibrationModal && !isPlanInspectionModal && !isActualCalibrationModal && !isSystemCalibrationModal ? <Tabs defaultActiveKey="1" onChange={tabsChange} style={{ height: '100%' }}>
         <Tabs.TabPane tab="计划工单统计" key="1">
           <SdlTable
             loading={tableLoading}

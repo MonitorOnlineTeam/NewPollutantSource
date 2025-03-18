@@ -348,7 +348,7 @@ class Login extends Component {
                   </Button>
                 </Checkbox>
               )}
-              <ResetPassword />
+              {/* <ResetPassword /> */}
             </div>
           )}
         </LoginComponents>

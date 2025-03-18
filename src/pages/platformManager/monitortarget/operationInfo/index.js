@@ -260,7 +260,8 @@ const Index = props => {
 
   const [projectNum, setProjectNum] = useState('');
   const [choiceData, setChoiceData] = useState([]);
-
+  const isHideIVError = configInfo.IsShowProjectRegion; // 宝武项目不显示示值误差
+  
   const {
     tableDatas,
     tableTotal,
@@ -372,6 +373,7 @@ const Index = props => {
       key: 'systemCalibrationCycleName',
       align: 'center',
       width: 160,
+      hidden: isHideIVError,
     },
     // {
     //   title: '参数核对派单频次',
@@ -1080,23 +1082,22 @@ const Index = props => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={12}>
-              <Form.Item
-                label="示值误差派单频次"
-                name="SystemCalibrationCycle"
-              >
-                <Select placeholder="请选择示值误差派单频次" allowClear>
-                  {systemCalibrationCycleList[0] &&
-                    systemCalibrationCycleList.map(item => {
-                      return (
-                        <Option value={item['dbo.T_Cod_OperationCycle.Code'].toString()}>
-                          {item['dbo.T_Cod_OperationCycle.Frequency']}
-                        </Option>
-                      );
-                    })}
-                </Select>
-              </Form.Item>
-            </Col>
+            {!isHideIVError && (
+              <Col span={12}>
+                <Form.Item label="示值误差派单频次" name="SystemCalibrationCycle">
+                  <Select placeholder="请选择示值误差派单频次" allowClear>
+                    {systemCalibrationCycleList[0] &&
+                      systemCalibrationCycleList.map(item => {
+                        return (
+                          <Option value={item['dbo.T_Cod_OperationCycle.Code'].toString()}>
+                            {item['dbo.T_Cod_OperationCycle.Frequency']}
+                          </Option>
+                        );
+                      })}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
             {/* <Col span={12}>
               <Form.Item label="参数核对派单频次" name="ParameterCheck" rules={[{ required: true, message: '请选择参数核对频次!', },]} >
                 <Select placeholder="请选择参数核对频次" disabled>

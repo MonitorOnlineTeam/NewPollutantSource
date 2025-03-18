@@ -81,37 +81,39 @@ const EffectiveRate_2 = props => {
               </Col>
               <Col flex="100px">故障率</Col>
             </Row>
-            {rankDataList.map((item, index) => {
-              return (
-                <Row className={styles.RankListContent}>
-                  <Col flex="100px">
-                    <span
-                      className={styles.number}
+            <div style={{ overflowY: 'auto', height: 'calc(100% - 48px)' }}>
+              {rankDataList.map((item, index) => {
+                return (
+                  <Row className={styles.RankListContent}>
+                    <Col flex="100px">
+                      <span
+                        className={styles.number}
+                        style={{
+                          backgroundImage: `url(/AbnormalIdentifyModel/rank/${
+                            index < 3 ? index + 1 : 'number'
+                          }.png)`,
+                        }}
+                      >
+                        {index < 9 ? '0' + (index + 1) : index + 1}
+                      </span>
+                    </Col>
+                    <Col
+                      flex="auto"
                       style={{
-                        backgroundImage: `url(/AbnormalIdentifyModel/rank/${
-                          index < 3 ? index + 1 : 'number'
-                        }.png)`,
+                        maxWidth: 'calc(100% - 200px)',
+                        // width: '100%',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
                       }}
                     >
-                      {index < 9 ? '0' + (index + 1) : index + 1}
-                    </span>
-                  </Col>
-                  <Col
-                    flex="auto"
-                    style={{
-                      maxWidth: 'calc(100% - 200px)',
-                      // width: '100%',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {item.key}
-                  </Col>
-                  <Col flex="100px">{item.val}%</Col>
-                </Row>
-              );
-            })}
+                      {item.key}
+                    </Col>
+                    <Col flex="100px">{item.val}%</Col>
+                  </Row>
+                );
+              })}
+            </div>
           </>
         </div>
       </div>

@@ -41,7 +41,10 @@ class JzRecordContent extends Component {
       <table className={styles.FormTable}>
         <tbody>
           <tr>
-            <td colSpan="8" style={{ height: '30px', fontWeight: 'bold', minWidth: 150, textAlign: 'left' }}>
+            <td
+              colSpan="8"
+              style={{ height: '30px', fontWeight: 'bold', minWidth: 150, textAlign: 'left' }}
+            >
               流速校准
             </td>
           </tr>
@@ -56,35 +59,37 @@ class JzRecordContent extends Component {
             <td style={{ width: '14%', height: '30px', minWidth: 150 }}>{rd && rd.JlUnit}</td>
           </tr>
           {data.map((item, index) => {
-            return <>
-              <tr>
-                <td rowSpan="2" style={{ width: '14%', height: '30px' }}>
-                  零点漂移校准
-                  <br />
-                  {`(差压表${index + 1})`}
-                </td>
-                {/* <td style={{ width: '14%', height: '30px' }}>{item !== '颗粒物' ? '零气浓度值' : '零气校准参考值'}</td> */}
-                <td style={{ width: '16%', height: '30px' }} colSpan="2">
-                  {'零气浓度值'}
-                </td>
-                {/* <td style={{ width: '0%', height: '30px' }} colSpan="0"></td> */}
-                <td style={{ width: '14%', height: '30px' }}>上次校准后测试值</td>
-                <td style={{ width: '14%', height: '30px' }}>校前测试值</td>
-                <td style={{ width: '14%', height: '30px' }}>零点漂移%F.S.</td>
-                <td style={{ width: '14%', height: '30px' }}>仪器校准是否正常</td>
-                <td style={{ width: '14%', height: '30px' }}>校准后测试值</td>
-              </tr>
-              <tr>
-                <td style={{ width: '14%', height: '30px' }} colSpan="2">
-                  {item.LqNdz}
-                </td>
-                <td style={{ width: '16%', height: '30px' }}>{item.LdLastCalibrationValue}</td>
-                <td style={{ width: '14%', height: '30px' }}>{item.LdCalibrationPreValue}</td>
-                <td style={{ width: '14%', height: '30px' }}>{item.LdPy}</td>
-                <td style={{ width: '14%', height: '30px' }}>{item.LdCalibrationIsOk}</td>
-                <td style={{ width: '14%', height: '30px' }}>{item.LdCalibrationSufValue}</td>
-              </tr>
-            </>;
+            return (
+              <>
+                <tr>
+                  <td rowSpan="2" style={{ width: '14%', height: '30px' }}>
+                    零点漂移校准
+                    <br />
+                    {`(差压表${index + 1})`}
+                  </td>
+                  {/* <td style={{ width: '14%', height: '30px' }}>{item !== '颗粒物' ? '零气浓度值' : '零气校准参考值'}</td> */}
+                  <td style={{ width: '16%', height: '30px' }} colSpan="2">
+                    {'零气浓度值'}
+                  </td>
+                  {/* <td style={{ width: '0%', height: '30px' }} colSpan="0"></td> */}
+                  <td style={{ width: '14%', height: '30px' }}>上次校准后测试值</td>
+                  <td style={{ width: '14%', height: '30px' }}>校前测试值</td>
+                  <td style={{ width: '14%', height: '30px' }}>零点漂移%F.S.</td>
+                  <td style={{ width: '14%', height: '30px' }}>仪器校准是否正常</td>
+                  <td style={{ width: '14%', height: '30px' }}>校准后测试值</td>
+                </tr>
+                <tr>
+                  <td style={{ width: '14%', height: '30px' }} colSpan="2">
+                    {item.LqNdz}
+                  </td>
+                  <td style={{ width: '16%', height: '30px' }}>{item.LdLastCalibrationValue}</td>
+                  <td style={{ width: '14%', height: '30px' }}>{item.LdCalibrationPreValue}</td>
+                  <td style={{ width: '14%', height: '30px' }}>{item.LdPy}</td>
+                  <td style={{ width: '14%', height: '30px' }}>{item.LdCalibrationIsOk}</td>
+                  <td style={{ width: '14%', height: '30px' }}>{item.LdCalibrationSufValue}</td>
+                </tr>
+              </>
+            );
           })}
         </tbody>
       </table>
@@ -97,7 +102,10 @@ class JzRecordContent extends Component {
       <table className={styles.FormTable}>
         <tbody>
           <tr>
-            <td colSpan="8" style={{ height: '30px', fontWeight: 'bold', minWidth: 150, textAlign: 'left'  }}>
+            <td
+              colSpan="8"
+              style={{ height: '30px', fontWeight: 'bold', minWidth: 150, textAlign: 'left' }}
+            >
               {item}分析仪校准
             </td>
           </tr>
@@ -166,27 +174,30 @@ class JzRecordContent extends Component {
               </tr>
 
               <tr>
-                <td
+                {/* <td
                   style={{ width: '14%', height: '30px', minWidth: '200px' }}
-                  colSpan={rd && rd.LcNewCalibrationPreValue ? '1' : '2'}
+                  colSpan={rd && rd.LcNewCalibrationPreValue ? '0' : '1'}
                 >
                   {rd && rd.BqNdz}
-                </td>
+                </td> */}
                 {rd && rd.LcNewCalibrationPreValue ? (
                   <>
                     <td style={{ width: '8%', height: '30px', minWidth: '100px' }}>
-                      {rd && rd.LcLastCalibrationValue}
+                      {rd && rd.BqNdz}
                     </td>
                     <td style={{ width: '8%', height: '30px', minWidth: '100px' }}>
                       {rd && rd.LcNewCalibrationPreValue}
                     </td>
                   </>
                 ) : (
-                  <td style={{ width: '16%', height: '30px', minWidth: '200px' }}>
-                    {rd && rd.LcLastCalibrationValue}
+                  <td style={{ width: '16%', height: '30px', minWidth: '200px' }} colSpan={rd && rd.LcNewCalibrationPreValue ? '1' : '2'}>
+                    {rd && rd.BqNdz}
                   </td>
                 )}
-                <td style={{ width: '14%', height: '30px' }}>{rd && rd.LcCalibrationPreValue}</td>
+                <td style={{ width: '16%', height: '30px', minWidth: '200px' }}>
+                  {rd && rd.LcLastCalibrationValue}
+                </td>
+                <td style={{ width: '14%', height: '30px' }}>{rd && rd.LdCalibrationPreValue}</td>
                 <td style={{ width: '14%', height: '30px' }}>{rd && rd.LcPy}</td>
                 <td style={{ width: '14%', height: '30px' }}>{rd && rd.LcCalibrationIsOk}</td>
                 <td style={{ width: '14%', height: '30px' }}>{rd && rd.LcCalibrationSufValue}</td>

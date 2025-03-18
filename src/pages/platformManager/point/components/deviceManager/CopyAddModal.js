@@ -179,7 +179,7 @@ const CopyAddModal = props => {
         onCancel();
       }}
       destroyOnClose
-      bodyStyle={{ padding: '0 24px' }}
+      bodyStyle={{ padding: '0 24px', maxHeight: 700, overflowY: 'auto' }}
       footer={[
         <Button
           key="cancel"
