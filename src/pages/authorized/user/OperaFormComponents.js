@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2025-01-14 09:27:03
+ * @LastEditTime: 2025-03-19 16:05:06
  * @Description: 用户信息添加编辑表单 运维
  */
 import React, { Component } from 'react';
@@ -41,7 +41,7 @@ export default class Index extends Component {
         super(props);
         this.state = {
             largeRegionList: [],
-            operationCompanyRequired: true,
+            operationCompanyRequired: false,
         };
     }
 
