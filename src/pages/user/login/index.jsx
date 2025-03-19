@@ -5,7 +5,7 @@ import Link from 'umi/link';
 import { connect } from 'dva';
 import Cookie from 'js-cookie';
 import LoginComponents from './components/Login';
-import Agreement from '../login/components/Agreement';
+import Agreement from './components/Agreement';
 import styles from './style.less';
 import config from '@/config';
 

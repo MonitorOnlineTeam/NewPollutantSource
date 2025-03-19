@@ -64,13 +64,6 @@ const UserLayout = props => {
     : 'https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg';
   return (
     <DocumentTitle
-      // title={getPageTitle({
-      //   // pathname: configInfo && configInfo.SystemName,
-      //   pathname: location.pathname,
-      //   breadcrumb,
-      //   formatMessage,
-      //   ...props,
-      // })}
       title={title}
     >
       <Fragment>
@@ -85,7 +78,7 @@ const UserLayout = props => {
           </Row>
         )}
         <div
-          className={`${styles.container} ${bgImageType ? styles.container_bg : ''}`}
+          className={`${styles.container} ${styles.hyContainer} ${bgImageType ? styles.container_bg : ''}`}
           style={{
             backgroundImage: `url(${bgImageUrl})`,
             height: IsShhy ? 'calc(100vh - 120px)' : '100vh',
@@ -138,19 +131,15 @@ const UserLayout = props => {
                     <img alt="logo" className={styles.logo} src={configInfo.Logo || '/logo.png'} />
                   )}
 
-                  {/* <span className={styles.title}>污染源智能分析平台</span> */}
                   <span className={styles.title}>{configInfo && configInfo.SystemName}</span>
                 </Link>
-              </div>
-              {/* <div className={styles.desc}>SDL 一流的污染源监控专家</div> */}
-              <div className={styles.desc}>{configInfo && configInfo.LoginSubtitle}</div>
+              </div> 
             </div>
             {children}
           </div>
-          <div style={{ textAlign: 'center', color: 'rgba(0, 0, 0, 0.45)' }}>
+          <div style={{ textAlign: 'center', color: '#fff' }}>
             请使用谷歌chrome浏览器访问系统
           </div>
-          {/* <DefaultFooter copyright={'污染源智能分析平台  2019 SDL'} links={[]} /> */}
           {configInfo && configInfo.IsShowFooterMessages === 'true' && (
             <DefaultFooter copyright={configInfo && configInfo.LoginFooterMessages} links={[]} />
           )}
@@ -168,7 +157,6 @@ const UserLayout = props => {
           )}
         </div>
 
-        {/* <DefaultFooter copyright={'污染源智能分析平台  2019 SDL'} links={[]} /> */}
 
         {configInfo && configInfo.IsShowFooterMessages === 'true' && (
           <DefaultFooter copyright={configInfo && configInfo.LoginFooterMessages} links={[]} />

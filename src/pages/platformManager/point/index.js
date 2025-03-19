@@ -1519,7 +1519,7 @@ export default class MonitorPoint extends Component {
                       isModal
                       appendFormItem={() => {
                         // 只有废气显示
-                        if (pointConfigIdEdit === 'GasOutput')
+                        if (pointConfigIdEdit === 'GasOutput' && !(configInfo?.IsShowProjectRegion))
                           return (
                             <Col span={12}>
                               <Form.Item
