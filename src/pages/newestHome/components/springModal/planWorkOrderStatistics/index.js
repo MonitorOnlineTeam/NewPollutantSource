@@ -36,6 +36,8 @@ class Index extends PureComponent {
             ? '计划校准完成率'
             : modalType == 'planInspection'
             ? '计划巡检完成率'
+            : modalType == 'systemCalibration'
+            ? '计划示值误差完成率'
             : '实际校准完成率'
         }
         wrapClassName="spreadOverModal"
@@ -53,6 +55,7 @@ class Index extends PureComponent {
           pollutantTypes={Number(type)}
           isPlanCalibrationModal={modalType == 'planCalibration'}
           isPlanInspectionModal={modalType == 'planInspection'}
+          isSystemCalibrationModal={modalType == 'systemCalibration'}
           isActualCalibrationModal={modalType == 'actualCalibration'}
           hideBreadcrumb
         />

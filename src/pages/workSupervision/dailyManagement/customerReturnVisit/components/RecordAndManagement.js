@@ -177,62 +177,98 @@ const RecordAndManagement = props => {
       },
       {
         title: '省份',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
+        dataIndex: 'ProvinceName',
+        key: 'ProvinceName',
       },
       {
-        title: '客户名称（全称）',
+        title: '城市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+      },
+      {
+        title: '回访时间',
+        dataIndex: 'ReturnTime',
+        key: 'ReturnTime',
+        sorter: (a, b) => moment(a.ReturnTime).valueOf() - moment(b.ReturnTime).valueOf(),
+        render: text => {
+          return moment(text).format('YYYY-MM-DD');
+        },
+      },
+      {
+        title: '回访人',
+        dataIndex: 'UserName',
+        key: 'UserName',
+      },
+      {
+        title: '客户名称',
         dataIndex: 'CustomerName',
         key: 'CustomerName',
       },
       {
-        title: '客户姓名',
+        title: '会谈人姓名',
         dataIndex: 'CustomRealName',
         key: 'CustomRealName',
       },
       {
-        title: '部门',
-        dataIndex: 'Depart',
-        key: 'Depart',
-      },
-      {
-        title: '职务',
+        title: '职位',
         dataIndex: 'Post',
         key: 'Post',
       },
       {
-        title: '联系方式',
+        title: '手机',
         dataIndex: 'Phone',
         key: 'Phone',
       },
       {
-        title: '客户满意度（1-5）',
+        title: '回访目的',
+        dataIndex: 'VisitPurposeName',
+        key: 'VisitPurposeName',
+        width: 120,
+        align: 'center',
+      },
+      {
+        title: '取得效果',
+        dataIndex: 'EvaluateName',
+        key: 'EvaluateName',
+        width: 100,
+        align: 'center',
+        render: (text, record) => {
+          return record?.OtherPurpose || text;
+        },
+      },
+      {
+        title: '具体成果',
+        dataIndex: 'SpecificResults',
+        key: 'SpecificResults',
+        width: 120,
+        align: 'center',
+      },
+      {
+        title: (
+          <div>
+            客户满意度 <br />
+            ①非常满意 / ②满意 / ③不满意
+          </div>
+        ),
         children: [
           {
-            title: '服务态度',
-            dataIndex: 'ServeManner',
-            key: 'ServeManner',
+            title: '问题解决能力',
+            dataIndex: 'ServiceResponseName',
+            key: 'ServiceResponServiceResponseNamese',
             width: 100,
             align: 'center',
           },
           {
-            title: '技术水平',
-            dataIndex: 'TechnicalLevel',
-            key: 'TechnicalLevel',
+            title: '沟通能力',
+            dataIndex: 'ProblemSolvingEfficiencyName',
+            key: 'ProblemSolvingEfficiencyName',
             width: 100,
             align: 'center',
           },
           {
-            title: '服务响应',
-            dataIndex: 'ServiceResponse',
-            key: 'ServiceResponse',
-            width: 100,
-            align: 'center',
-          },
-          {
-            title: '问题解决率',
-            dataIndex: 'ProblemSolvingEfficiency',
-            key: 'ProblemSolvingEfficiency',
+            title: '响应速度',
+            dataIndex: 'TechnicalLevelName',
+            key: 'TechnicalLevelName',
             width: 100,
             align: 'center',
           },
@@ -245,27 +281,10 @@ const RecordAndManagement = props => {
         ellipsis: true,
       },
       {
-        title: '备注',
-        dataIndex: 'Remark',
-        key: 'Remark',
+        title: '运维人员',
+        dataIndex: 'OperationUserName',
+        key: 'OperationUserName',
         ellipsis: true,
-        render: text => {
-          return text ? <Tooltip title={text}>{text}</Tooltip> : '-';
-        },
-      },
-      {
-        title: '回访人',
-        dataIndex: 'UserName',
-        key: 'UserName',
-      },
-      {
-        title: '回访时间',
-        dataIndex: 'ReturnTime',
-        key: 'ReturnTime',
-        sorter: (a, b) => moment(a.ReturnTime).valueOf() - moment(b.ReturnTime).valueOf(),
-        render: text => {
-          return moment(text).format('YYYY-MM-DD');
-        },
       },
     ];
     if (mode !== 'record') {
@@ -370,13 +389,13 @@ const RecordAndManagement = props => {
                 <Form.Item name="customerName" label="客户名称">
                   <Input style={{ width: 200 }} placeholder="客户名称" allowClear />
                 </Form.Item>
-                <Form.Item
+                {/* <Form.Item
                   name="Score"
                   label="客户满意度小于"
                   style={{ display: mode === 'record' ? 'block' : 'none' }}
                 >
                   <InputNumber allowClear={true} style={{ width: '100%' }} placeholder="请输入" />
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item>
                   <Space>
                     <Button

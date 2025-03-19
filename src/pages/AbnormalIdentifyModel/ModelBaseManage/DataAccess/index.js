@@ -24,6 +24,7 @@ import {
   Divider,
   Modal,
   DatePicker,
+  Upload,
 } from 'antd';
 import SdlTable from '@/components/SdlTable';
 import {
@@ -33,6 +34,7 @@ import {
   ExportOutlined,
   ProfileOutlined,
   CaretDownOutlined,
+  UploadOutlined,
 } from '@ant-design/icons';
 import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
@@ -46,7 +48,11 @@ import SdlCascader from '@/pages/AutoFormManager/SdlCascader';
 import styles from '../../styles.less';
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import { API } from '@config/API';
+import config from '@/config';
+
 const { Option } = Select;
+const { Text } = Typography;
 
 const namespace = 'ModelBaseManage';
 
@@ -62,6 +68,7 @@ const Index = props => {
   const [form2] = Form.useForm();
 
   const [startExecuLoading, setStartExecuLoading] = useState({});
+  const [dataImportVisible, setDataImportVisible] = useState(false);
 
   const { tableDatas, tableLoading } = props;
 
@@ -144,14 +151,17 @@ const Index = props => {
       width: 100,
       ellipsis: true,
       render: (text, record, index) => {
-        return record.TaskCode == 6 ? (
+        return record.TaskCode == 6 || record.AccessMethod === '数据导入' ? (
           <a
             onClick={() => {
-              setStartExecuVisible(true);
               setStartExecuTitle(`${record.ProjectName}`);
-              /*setStartExecuTitle(`${record.ProjectName} - 开始执行（接入小时数据）`)*/ setStartConfirmVisible(
-                false,
-              );
+              setStartConfirmVisible(false);
+              if (record.AccessMethod === '数据导入') {
+                setDataImportVisible(true);
+              } else {
+                setStartExecuVisible(true);
+                /*setStartExecuTitle(`${record.ProjectName} - 开始执行（接入小时数据）`)*/
+              }
             }}
           >
             开始执行
@@ -296,6 +306,41 @@ const Index = props => {
       </Form>
     );
   };
+
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [uploadResult, setUploadResult] = useState({ successMsg: '', errMsg: [] });
+  const uploadProps = {
+    name: 'file',
+    // multiple: true,
+    accept: '.xls,.xlsx',
+    headers: {
+      Cookie: null,
+      Authorization: 'Bearer ' + Cookie.get(config.cookieName),
+    },
+    action: '/rest/PollutantSourceApi/DataFormatBaseDataApi/AccessHourDataExcel',
+    data: {},
+    beforeUpload: file => {
+      setUploadLoading(true);
+    },
+    onChange: info => {
+      if (info.file.status === 'done') {
+        console.log('info-err=', info);
+        if (info.file.response.IsSuccess) {
+          message.success('导入成功');
+          setUploadResult(info.file.response.Datas);
+          handleChange(1);
+        } else {
+          message.error(info.file.response.Message, 6);
+        }
+        // setDataImportVisible(false);
+        setUploadLoading(false);
+      } else if (info.file.status === 'error') {
+        setUploadLoading(false);
+        message.error(`导入失败，出现错误：${info.file.response.Message}`, 6);
+      }
+    },
+  };
+
   return (
     <div className={`${styles.dataAccessSty} queryCriterTitleSty`}>
       <BreadcrumbWrapper>
@@ -372,6 +417,58 @@ const Index = props => {
               <RangePicker_ format="YYYY-MM-DD" style={{ width: '100%' }} />
             </Form.Item>
           </Form>
+        </Modal>
+        {/* 数据导入弹窗 */}
+        <Modal
+          title={startExecuTitle}
+          footer={null}
+          open={dataImportVisible}
+          maskClosable={false}
+          destroyOnClose
+          onCancel={() => {
+            if (uploadLoading) {
+              message.info('上传中，请稍后...');
+            } else {
+              setDataImportVisible(false);
+            }
+          }}
+          confirmLoading={uploadLoading}
+        >
+          <Spin spinning={uploadLoading} tip="上传中，请稍后...">
+            <Row>
+              <Col span={18}>
+                <Upload {...uploadProps}>
+                  <Button>
+                    <UploadOutlined /> 请选择文件
+                  </Button>
+                </Upload>
+              </Col>
+              <Col span={6} style={{ marginTop: 6 }}>
+                <a href={'/wwwroot/Upload/小时数据导入模板.xls'} download>
+                  下载导入模板
+                </a>
+              </Col>
+            </Row>
+          </Spin>
+          {uploadResult.successMsg || uploadResult.errMsg?.length > 0 ? (
+            <>
+              <Divider style={{ margin: '10px 0' }} />
+              <Row style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+                <Col span={24} style={{ marginBottom: '10px' }}>
+                  <Text type="success">{uploadResult.successMsg}</Text>
+                </Col>
+                <Col span={24}>
+                  {uploadResult.errMsg.map((item, index) => {
+                    return (
+                      <p>
+                        <Text type="danger">{item}</Text>
+                      </p>
+                    );
+                  })}
+                </Col>
+              </Row>
+            </>
+          ) : null}
         </Modal>
       </BreadcrumbWrapper>
     </div>

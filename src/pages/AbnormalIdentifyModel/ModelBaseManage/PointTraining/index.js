@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2024-09-02 17:05:03
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-09-12 11:39:43
+ * @Last Modified time: 2025-02-07 09:37:09
  * @Description:  新增点位训练页面
  */
 import React, { useState, useEffect } from 'react';
@@ -34,6 +34,7 @@ import MonitoringStandard from '@/components/MonitoringStandard';
 import EquipmentParmars from '@/pages/platformManager/equipmentParmars/ContentPages.js';
 import AssistDataAnalysis from '@/pages/AbnormalIdentifyModel/AssistDataAnalysis';
 import SelectPmCemsSupplierModal from '@/pages/platformManager/combustionProcess/SelectPmCemsSupplierModal.js';
+import { router } from 'umi';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({});
 
@@ -595,7 +596,7 @@ const PointTraining = props => {
                 checkedKeys={checkedKeys}
                 onCancel={() => setIsSelectPointModalOpen(false)}
                 onOk={keys => {
-                  console.log('keys', keys)
+                  console.log('keys', keys);
                   bindingPoint(keys);
                   setCheckedKeys(keys);
                 }}
@@ -750,7 +751,7 @@ const PointTraining = props => {
               />
             )}
           </Card>
-          <Card
+          {/* <Card
             title={
               <p>
                 模型训练
@@ -791,18 +792,18 @@ const PointTraining = props => {
                 开始训练
               </Button>
             </Space>
-          </Card>
+          </Card> */}
           <Card
             title={
               <p>
                 模型执行
-                {renderStatusTag('8')}
+                {/* {renderStatusTag('8')} */}
               </p>
             }
-            extra={renderDoneBtn('8')}
+            // extra={renderDoneBtn('8')}
           >
             <Space direction="vertical" size="middle">
-              <p>
+              {/* <p>
                 <Button
                   type="primary"
                   onClick={() => {
@@ -824,10 +825,20 @@ const PointTraining = props => {
                 <Button type="primary" onClick={() => CalculateDistance()}>
                   计算排口距离
                 </Button>
-              </p>
+              </p> */}
               <p>
                 <Button type="primary" onClick={() => AutoModelDelection()}>
                   自动匹配模型
+                </Button>
+              </p>
+              <p>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    router.push('/AbnormalIdentifyModel/ModelBaseManage/ModelExecutive');
+                  }}
+                >
+                  模型执行
                 </Button>
               </p>
             </Space>

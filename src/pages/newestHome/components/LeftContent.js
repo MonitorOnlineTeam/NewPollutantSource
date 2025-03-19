@@ -155,6 +155,7 @@ const Index = (props) => {
     initData()
   }, []);
   const pollutantType = pollType[props.type]
+  const isHideIVError = (pollutantType == 1 || configInfo.IsShowProjectRegion); // 废水和宝武项目不显示示值误差
   const initData = () => {
     getOperationRegionPlanTaskRate(1) //计划完成率
   }
@@ -259,8 +260,13 @@ const Index = (props) => {
     })
     return bgBarData;
   }
-  const bagBarData = changeBarData(operaOrderData);
-
+  let bagBarData = changeBarData(operaOrderData);
+  let yData = ['配合检查','示值误差', '异常处理',  '维护', '维修', '校准', '巡检',]
+  // 不显示示值误差
+  if(isHideIVError){
+    bagBarData.splice(1, 1);
+    yData.splice(1, 1);
+  }
   const operaOrderOption = {  //运维工单图表
     tooltip: { show: false },
     grid: { top: 0, left: fontSizeFn(80), right: fontSizeFn(65), bottom: 0, },
@@ -269,7 +275,7 @@ const Index = (props) => {
       type: 'category',
       // data: [ '配合比对', '配合检查','参数核对','校验测试','维护','维修','校准','巡检', ],
       // data: ['配合比对', '配合检查', '校验测试', '异常处理', '维护', '维修', '校准', '巡检',],
-      data: ['配合检查', '异常处理', '维护', '维修', '校准', '巡检',],
+      data: yData,
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: {
@@ -455,7 +461,13 @@ const Index = (props) => {
           return `${planOperaList.calibrationRate}%`
         }
         break;
-
+      case 3:
+        if (planOperaList.systemcalibrationRate == "-") {
+          return '-'
+        } else {
+          return `${planOperaList.systemcalibrationRate}%`
+        }
+        break;
     }
   }
   const { planOperaList } = props;
@@ -483,9 +495,9 @@ const Index = (props) => {
       graphic: {
         type: "text",
         left: "center",
-        top: "38%",
+        top: type == 3 ? "28%" : "38%",
         style: {
-          text: type == 1 ? '巡检完成率' : '校准完成率',
+          text: type == 1 ? '巡检完成率' : type == 2 ? '校准完成率' : '示值误差\n完成率',
           textAlign: "center",
           fill: "#fff",
           fontSize: fontSizeFn(11),
@@ -493,8 +505,8 @@ const Index = (props) => {
       },
       series: [
         {
-          // name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : '实际校准完成率',
-          name: type == 1 ? '计划巡检完成率' : '计划校准完成率',
+          name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : '示值误差\n完成率', 
+          // name: type == 1 ? '计划巡检完成率' : '计划校准完成率',
           type: 'pie',
           radius: TaskPlanType == 2 ?  ['80%', '90%'] : ['70%', '80%'] ,
           avoidLabelOverlap: false,
@@ -504,8 +516,8 @@ const Index = (props) => {
           //   { value: type == 1 ? (100 - `${planOperaList.inspectionRate=='-'? 100 : planOperaList.inspectionRate  }`) : type == 2 ? (100  - `${planOperaList.calibrationRate=='-'? 100 : planOperaList.calibrationRate  }`) : (100 - `${planOperaList.actualCalibrationRate=='-'? 100 : planOperaList.actualCalibrationRate  }`), name: '未完成' },
           // ],
           data: [
-            { value: type == 1 ? `${planOperaList.inspectionRate}` : planOperaList.calibrationRate, name: '已完成' },
-            { value: type == 1 ? (100 - `${planOperaList.inspectionRate == '-' ? 100 : planOperaList.inspectionRate}`) : (100 - `${planOperaList.calibrationRate == '-' ? 100 : planOperaList.calibrationRate}`), name: '未完成' },
+            { value: type == 1 ? `${planOperaList.inspectionRate}` : type == 2 ? planOperaList.calibrationRate : planOperaList.systemcalibrationRate, name: '已完成' },
+            { value: type == 1 ? (100 - `${planOperaList.inspectionRate == '-' ? 100 : planOperaList.inspectionRate}`) : type == 2 ? (100 - `${planOperaList.calibrationRate == '-' ? 100 : planOperaList.calibrationRate}`) : (100 - `${planOperaList.systemcalibrationRate == '-' ? 100 : planOperaList.systemcalibrationRate}`), name: '未完成' },
           ],
           startAngle: 330, //起始角度
         }
@@ -595,6 +607,7 @@ const Index = (props) => {
     setPlanOperationTitle(title)
   }
 
+  const [systemCalibrationVisible, setSystemCalibrationVisible] = useState(false)
   const planOperaEcharts = useMemo(() => { //监听变量，第一个参数是函数，第二个参数是依赖，只有依赖变化时才会重新计算函数
     return <div style={{ height: 'calc(100% - 2.75rem)', padding: '.3125rem 0 .625rem 1.3125rem' }}> {/**当图表有点击事件时 更新更新页面时  图表抖动 */}
       <Row type='flex' align='middle'>
@@ -648,6 +661,29 @@ const Index = (props) => {
           }
         </div>
       </Row>
+      {/* 示值误差完成率，废水不显示 */}
+      {
+        isHideIVError ? '' :
+        <>
+          <div style={{ width: '100%', height: 1, marginLeft: '-1.3125rem', background: "rgba(65, 66, 69, 0.5)", margin: TaskPlanType == 2 ? '.25rem 0' :  0 }}></div>
+          <Row type='flex' align='middle'>
+            <ReactEcharts
+              option={planOperaOption(3)}
+              style={{ width: '6.5625rem', height: '6.5625rem' }}
+              onEvents={{ click:  () => {
+                setSystemCalibrationVisible(true)
+              }  }}
+            />
+            <img style={{ padding: '0 1.5rem' }} src='./homePlanSplitLine.png' />
+            <div className={styles.planOperaText} >
+                  <div>计划内结束次数：<span style={{ color: '#FFDD54' }}>{planOperaList.systemcalibrationCloseCount}</span></div>
+                  <div>计划内完成次数：<span style={{ color: '#FFDD54' }}>{planOperaList.systemcalibrationCompleteCount}</span></div>
+                  <div style={{ color: '#4BF3F9' }}>计划内待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.systemcalibrationIncompleteCount}</span> </div>
+            </div>
+          </Row>
+        </>
+      }
+
       {/* <Col span={8} align='middle'>
        <ReactEcharts
          option={planOperaOption(3)}
@@ -724,7 +760,7 @@ const Index = (props) => {
       </Spin>
 
       {TaskPlanType == 1 ? <Spin spinning={operationTaskLoading}>
-        <div className={styles.operaOrder}>
+        <div className={styles.operaOrder} style={{height: isHideIVError ? '' : '17.625rem'}}>
           <CardHeader title='近30日运维工单' />
           <div style={{ height: '100%', padding: '.625rem 1rem .9375rem 1.875rem' }}>
             <ReactEcharts
@@ -736,7 +772,7 @@ const Index = (props) => {
         </div>
       </Spin> :
         <Spin spinning={operationTaskStatisticsInfoByDayLoading}> {/*固定到天 */}
-          <div className={styles.operaOrder}>
+          <div className={styles.operaOrder} style={{height: isHideIVError ? '' : '17.625rem'}}>
             <CardHeader title='工单执行情况' />
             <Select placeholder="请选择" value={workOrderExecuTimeVal} size='small' getPopupContainer={trigger => trigger.parentNode}
               className={'operationTaskSelectSty'} options={workOrderExecuTimeOptions}
@@ -771,14 +807,15 @@ const Index = (props) => {
         </Spin>
       }
       <Spin spinning={TaskPlanType == 1 ? operationPlanTaskLoading : operationTaskCompleteRateByDayLoading}> {/**近30日运维情况 */}
-        <div className={styles.planOpera} style={{ height: TaskPlanType == 1 ? '16.8125rem' : '18.25rem' }}>
+        {/* <div className={styles.planOpera} style={{ height: isHideIVError ? '16.8125rem' : '18.25rem' }}> */}
+        <div className={styles.planOpera} style={{ height: configInfo.IsShowProjectRegion ? '18.25rem' : isHideIVError ? '' : '22.8125rem' }}>
           <CardHeader title='近30日运维情况' isPopover />
           {planOperaEcharts}
         </div>
       </Spin>
 
       <Spin spinning={planCompleteListLoading}>
-        <div className={styles.planComplete}>
+        <div className={styles.planComplete} style={{height: isHideIVError ? '' : '16.5625rem'}}>
           <CardHeader btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='近30日运维排名' />
           <div style={{ height: '100%', padding: '1rem .9375rem' }}>
             {!planCompleteListLoading && <ScrollTable data={[...planCompleteList]} column={[]} />}
@@ -799,6 +836,13 @@ const Index = (props) => {
         visible={planInspectionVisible}
         type={pollutantType}
         onCancel={() => { setPlanInspectionVisible(false) }}
+        time={[moment(latelyDays30.beginTime), moment(latelyDays30.endTime)]}
+      />
+      <PlanWorkOrderStatistics  //计划全系统校准完成率弹框
+        modalType='systemCalibration'
+        visible={systemCalibrationVisible}
+        type={pollutantType}
+        onCancel={() => { setSystemCalibrationVisible(false) }}
         time={[moment(latelyDays30.beginTime), moment(latelyDays30.endTime)]}
       />
       <PlanWorkOrderStatistics  //实际校准完成率弹框

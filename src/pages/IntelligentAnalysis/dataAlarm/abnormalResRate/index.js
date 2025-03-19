@@ -3,7 +3,19 @@ import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { ExportOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Card, Col, Row, Select, Input, Checkbox, DatePicker, Button, message, Modal } from 'antd';
+import {
+  Card,
+  Col,
+  Row,
+  Select,
+  Input,
+  Checkbox,
+  DatePicker,
+  Button,
+  message,
+  Modal,
+  Space,
+} from 'antd';
 import { connect } from 'dva';
 import SdlTable from '@/components/SdlTable';
 import moment from 'moment';
@@ -129,7 +141,7 @@ class Index extends PureComponent {
                 } else {
                   router.push(
                     `/Intelligentanalysis/dataAlarm/abnormal/cityLevel?regionCode=${
-                    record.RegionCode ? record.RegionCode : ''
+                      record.RegionCode ? record.RegionCode : ''
                     }`,
                   );
                 }
@@ -599,10 +611,10 @@ class Index extends PureComponent {
     // });
 
     // 获取关注列表
-    this.props.dispatch({
-      type: 'abnormalResRate/getAttentionDegreeList',
-      payload: { RegionCode: '' },
-    });
+    // this.props.dispatch({
+    //   type: 'abnormalResRate/getAttentionDegreeList',
+    //   payload: { RegionCode: '' },
+    // });
 
     this.getTableDataSource();
   }
@@ -722,11 +734,13 @@ class Index extends PureComponent {
     });
   };
   // 获取二级数据
-  getExceptionAlarmListForEnt = () => {
+  getExceptionAlarmListForEnt = (entName, pointName) => {
     this.props.dispatch({
       type: 'exceptionrecordNew/getExceptionAlarmListForEnt',
       payload: {
         ...this.state.secondQueryCondition,
+        entName,
+        pointName,
       },
     });
   };
@@ -753,9 +767,38 @@ class Index extends PureComponent {
       type: 'exceptionrecordNew/exportExceptionAlarmListForEnt',
       payload: {
         ...this.state.secondQueryCondition,
+        entName: this.state.entName,
+        pointName: this.state.pointName,
       },
     });
   };
+
+  // 报警详情弹窗查询
+  onCountSearch = () => {
+    this.setState(
+      {
+        pageIndex: 1,
+      },
+      () => {
+        this.getExceptionAlarmListForEnt(this.state.entName, this.state.pointName);
+      },
+    );
+  };
+
+  //
+  onCountReset = () => {
+    this.setState(
+      {
+        entName: '',
+        pointName: '',
+        pageIndex: 1,
+      },
+      () => {
+        this.getExceptionAlarmListForEnt();
+      },
+    );
+  };
+
   render() {
     const {
       form: { getFieldDecorator, getFieldValue },
@@ -789,31 +832,31 @@ class Index extends PureComponent {
         secondQueryCondition.ExceptionType == '1'
           ? '零值'
           : secondQueryCondition.ExceptionType == '2'
-            ? '超量程'
-            : secondQueryCondition.ExceptionType == '3'
-              ? '恒定值'
-              : '全部合计'
-        }待响应报警情况`;
+          ? '超量程'
+          : secondQueryCondition.ExceptionType == '3'
+          ? '恒定值'
+          : '全部合计'
+      }待响应报警情况`;
     } else if (secondQueryCondition.ResponseStatus == '1') {
       showTypeText = `${
         secondQueryCondition.ExceptionType == '1'
           ? '零值'
           : secondQueryCondition.ExceptionType == '2'
-            ? '超量程'
-            : secondQueryCondition.ExceptionType == '3'
-              ? '恒定值'
-              : '全部合计'
-        }已响应报警情况`;
+          ? '超量程'
+          : secondQueryCondition.ExceptionType == '3'
+          ? '恒定值'
+          : '全部合计'
+      }已响应报警情况`;
     } else {
       showTypeText = `${
         secondQueryCondition.ExceptionType == '1'
           ? '零值'
           : secondQueryCondition.ExceptionType == '2'
-            ? '超量程'
-            : secondQueryCondition.ExceptionType == '3'
-              ? '恒定值'
-              : '全部合计'
-        }报警情况`;
+          ? '超量程'
+          : secondQueryCondition.ExceptionType == '3'
+          ? '恒定值'
+          : '全部合计'
+      }报警情况`;
     }
     let beginTime =
       queryCondition.dataType === 'HourData'
@@ -874,7 +917,7 @@ class Index extends PureComponent {
               </Form.Item> */}
               <FormItem label="日期查询">
                 <RangePicker_
-                  format='YYYY-MM-DD'
+                  format="YYYY-MM-DD"
                   allowClear={false}
                   onRef={ref => {
                     this.rangePicker = ref;
@@ -885,9 +928,9 @@ class Index extends PureComponent {
                     !this.props.searchForm.PollutantType
                       ? exceptionTime
                       : [
-                        moment(this.props.searchForm.beginTime),
-                        moment(this.props.searchForm.endTime),
-                      ]
+                          moment(this.props.searchForm.beginTime),
+                          moment(this.props.searchForm.endTime),
+                        ]
                   }
                   callback={(dates, dataType) => this.dateChange(dates, dataType)}
                 />
@@ -908,7 +951,7 @@ class Index extends PureComponent {
               </FormItem>
             </Row>
             <Row>
-              <FormItem label="关注程度">
+              {/* <FormItem label="关注程度">
                 {getFieldDecorator('AttentionCode', {
                   initialValue: undefined,
                 })(
@@ -922,11 +965,13 @@ class Index extends PureComponent {
                     })}
                   </Select>,
                 )}
-              </FormItem>
+              </FormItem> */}
 
-              <FormItem label="企业类型" hidden={this.pollutantType}>
+              <FormItem label="企业类型" hidden={this.pollutantType} style={{ marginRight: 10 }}>
                 {getFieldDecorator('PollutantType', {
-                  initialValue: this.props.defaultPollutantCode || (this.pollutantType? this.pollutantType : 2),
+                  initialValue:
+                    this.props.defaultPollutantCode ||
+                    (this.pollutantType ? this.pollutantType : 2),
                 })(
                   // <Select
                   //   style={{ width: 231 }}
@@ -943,18 +988,14 @@ class Index extends PureComponent {
                     style={{ width: 231 }}
                     placeholder="请选择企业类型"
                     onChange={value => {
-                      this.setState({ pollutantType: value }, () => { });
-                    }} />
+                      this.setState({ pollutantType: value }, () => {});
+                    }}
+                  />,
                 )}
               </FormItem>
 
               <div style={{ display: 'inline-block', lineHeight: '40px' }}>
-                <Button
-                  loading={loading}
-                  type="primary"
-                  style={{ marginLeft: 10 }}
-                  onClick={this.getTableDataSource}
-                >
+                <Button loading={loading} type="primary" onClick={this.getTableDataSource}>
                   查询
                 </Button>
                 <Button
@@ -976,7 +1017,7 @@ class Index extends PureComponent {
             dataSource={tableDataSource}
             columns={columns}
             loading={loading}
-            scroll={{y:'calc(100vh - 326px)'}}
+            scroll={{ y: 'calc(100vh - 326px)' }}
             pagination={false}
           />
         </Card>
@@ -988,18 +1029,56 @@ class Index extends PureComponent {
           destroyOnClose
           wrapClassName="spreadOverModal"
           onCancel={() => {
-            this.setState({ visible: false });
+            this.setState({
+              visible: false,
+              entName: '',
+              pointName: '',
+              // pageIndex: 1,
+            });
           }}
-          destroyOnClose
         >
           <Row style={{ marginBottom: 10 }}>
-            <Button
-              icon={<ExportOutlined />}
-              loading={exportExceptionAlarmListForEntLoading}
-              onClick={this.onDetailExport}
-            >
-              导出
-            </Button>
+            <Space style={{ width: '100%' }} size={10}>
+              <Col>
+                <label>企业名称：</label>
+                <Input
+                  style={{ width: 200 }}
+                  placeholder="请输入企业名称"
+                  value={this.state.entName}
+                  onChange={e => {
+                    this.setState({
+                      entName: e.target.value,
+                    });
+                  }}
+                />
+              </Col>
+              <Col>
+                <label>监测点名称：</label>
+                <Input
+                  style={{ width: 200 }}
+                  placeholder="请输入监测点名称"
+                  value={this.state.pointName}
+                  onChange={e => {
+                    this.setState({
+                      pointName: e.target.value,
+                    });
+                  }}
+                />
+              </Col>
+              <Button type="primary" onClick={this.onCountSearch} loading={detailsLoading}>
+                查询
+              </Button>
+              <Button type="primary" onClick={this.onCountReset}>
+                重置
+              </Button>
+              <Button
+                icon={<ExportOutlined />}
+                loading={exportExceptionAlarmListForEntLoading}
+                onClick={this.onDetailExport}
+              >
+                导出
+              </Button>
+            </Space>
           </Row>
           <SdlTable
             align="center"

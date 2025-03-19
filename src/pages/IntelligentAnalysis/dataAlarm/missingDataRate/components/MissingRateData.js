@@ -249,7 +249,7 @@ export default class EntTransmissionEfficiency extends Component {
 
 
 
-    !this.props.level && dispatch({ type: 'MissingRateData/getAttentionDegreeList', payload: { RegionCode: location.query.regionCode }, });//获取关注列表
+    // !this.props.level && dispatch({ type: 'MissingRateData/getAttentionDegreeList', payload: { RegionCode: location.query.regionCode }, });//获取关注列表
 
 
     setTimeout(() => {
@@ -430,7 +430,7 @@ export default class EntTransmissionEfficiency extends Component {
                 <RangePicker_ format='YYYY-MM-DD' allowClear={false} onRef={this.onRef1} dataType={''} style={{ minWidth: '200px', marginRight: '10px' }} dateValue={[moment(beginTime), moment(endTime)]}
                       callback={(dates, dataType) => this.dateChange(dates, dataType)} />
                   </Form.Item>
-                    <Form.Item label='关注程度'>
+                    {/* <Form.Item label='关注程度'>
                       <Select
                         allowClear
                         placeholder="关注程度"
@@ -440,7 +440,7 @@ export default class EntTransmissionEfficiency extends Component {
                       >
                         {this.attentchildren()}
                       </Select>
-                    </Form.Item>
+                    </Form.Item> */}
                     {/* <Form.Item label='运维状态'>
               <Select
                 allowClear

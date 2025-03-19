@@ -12,7 +12,6 @@ const ModelChart = props => {
   const { chartData, color, WarningTypeCode } = props;
   const [legendIndex, setLegendIndex] = useState(0);
 
-  console.log('chartData', chartData);
   useEffect(() => {}, []);
 
   const getOption = () => {

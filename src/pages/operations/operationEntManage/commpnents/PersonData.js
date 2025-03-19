@@ -55,6 +55,7 @@ import {  API } from '@config/API';
 import OperationCompanyList from '@/components/OperationCompanyList'
 import Cookie from 'js-cookie';
 import config from '@/config';
+import { checkRules } from '@/utils/validator';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -691,7 +692,7 @@ export default class PersonData extends Component {
       </Col>
       <Col span={12}>
       <Form.Item  label="手机号"  >
-      {getFieldDecorator('Phone', {   rules: [{ pattern:/^1[3|4|5|7|8][0-9]\d{8}$/ , message: '请输入正确的手机号！'},{required: true, message: '请输入手机号！'}],   })( <Input placeholder="请输入手机号" />)}
+      {getFieldDecorator('Phone', {   rules: [{ ...checkRules.mobile },{required: true, message: '请输入手机号！'}],   })( <Input placeholder="请输入手机号" />)}
       </Form.Item>
       </Col>
       {/* </Row> */}

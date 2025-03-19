@@ -8,6 +8,8 @@ import LoginComponents from './components/Login';
 import Agreement from './components/Agreement';
 import styles from './style.less';
 import config from '@/config';
+import router from 'umi/router';
+import ResetPassword from '../resetPassword'
 
 const { Tab, UserName, Password, Mobile, Captcha, VerificaCode, Submit } = LoginComponents;
 @connect(({ userLogin, global, loading }) => ({
@@ -147,23 +149,23 @@ class Login extends Component {
     sessionStorage.clear();
     dispatch({ type: 'global/updateState', payload: { sysPollutantTypeList: [] } });
   };
-  
-  reloadPage = () =>{
-    var version = document.getElementsByTagName('meta')['version'].content //缓存问题处理
-    var xhr = new XMLHttpRequest()
-    xhr.open('GET', "/pageInfo.json?t=" + Date.now(), true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState == 4 && xhr.status == 200 || xhr.status == 304) {
+
+  reloadPage = () => {
+    var version = document.getElementsByTagName('meta')['version'].content; //缓存问题处理
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/pageInfo.json?t=' + Date.now(), true);
+    xhr.onreadystatechange = function() {
+      if ((xhr.readyState == 4 && xhr.status == 200) || xhr.status == 304) {
         if (xhr.responseText && JSON.parse(xhr.responseText).version !== version) {
-            if (window.location.href.indexOf("#reloaded") == -1) {
-              location.href = location.href + "#reloaded";
-              window.location.reload();
-            }
+          if (window.location.href.indexOf('#reloaded') == -1) {
+            location.href = location.href + '#reloaded';
+            window.location.reload();
+          }
         }
       }
     };
     xhr.send();
-  }
+  };
   componentDidMount() {
     // this.reloadPage()
     this.timer = setInterval(() => {
@@ -205,7 +207,7 @@ class Login extends Component {
     const provinceShow = configInfo?.IsShowProjectRegion; //是否为宝武
     // 是否显示手机号登录
     let IsPhoneLogin = configInfo.IsPhoneLogin === 'true';
-    
+
     return (
       <div className={`${styles.main} ${IsPhoneLogin && styles.phone}`}>
         <LoginComponents
@@ -319,8 +321,11 @@ class Login extends Component {
               />
             </Tab>
           )}
+          <Submit loading={submitting} style={{ marginTop: 0, marginBottom: 0 }}>
+            登录
+          </Submit>
           {type === 'web' && (
-            <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               {!provinceShow && (
                 <Checkbox
                   checked={this.props.isAgree}
@@ -343,11 +348,9 @@ class Login extends Component {
                   </Button>
                 </Checkbox>
               )}
+              {/* <ResetPassword /> */}
             </div>
           )}
-          <Submit loading={submitting} style={{ marginTop: 0, marginBottom: 0 }}>
-            登录
-          </Submit>
         </LoginComponents>
         <Modal
           footer={false}

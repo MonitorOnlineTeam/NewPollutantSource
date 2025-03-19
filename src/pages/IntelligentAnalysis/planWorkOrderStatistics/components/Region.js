@@ -175,7 +175,8 @@ const Index = (props, ref) => {
 
 
 
-  const { clientHeight, tableDatas, tableTotal, tableLoading, pointLoading, exportLoading, exportPointLoading, pollutantType, refInstance, isPlanCalibrationModal, isPlanInspectionModal, isActualCalibrationModal,operationSettingInfo:{OperationType} } = props;
+
+  const { clientHeight, tableDatas, tableTotal, tableLoading, pointLoading, exportLoading, exportPointLoading, pollutantType, refInstance, isPlanCalibrationModal, isPlanInspectionModal, isSystemCalibrationModal, isActualCalibrationModal,operationSettingInfo:{OperationType} } = props;
 
   const { cityTableDatas, cityTableLoading, cityTableTotal, cityActualTableLoading } = props; //市级别
 
@@ -185,8 +186,7 @@ const Index = (props, ref) => {
 
   const { cityDetailExportLoading, workRegExportLoading, cityRegExportLoading, operaPointExportLoading, exportActualRegDetailLoading, exportActualRegTaskLoading, exportActualRegDetailTaskLoading } = props; //导出
   useEffect(() => {
-
-
+    
   }, []);
 
 
@@ -282,7 +282,7 @@ const Index = (props, ref) => {
     setDgimn(record.DGIMN)
   }
 
-  const columns = [
+  let columns = [
     {
       title: '序号',
       align: 'center',
@@ -436,10 +436,62 @@ const Index = (props, ref) => {
         },
       ],
     },
-
+    // 废水不显示此列
+    ...(pollutantType == 1 ? [] : [{
+      title: '计划示值误差工单',
+      width: 255,
+      children: [
+        {
+          title: <span>待完成数</span>,
+          dataIndex: 'systemcalibrationIncompleteCount',
+          key: 'systemcalibrationIncompleteCount',
+          width: 100,
+          align: 'center',
+          sorter: (a, b) => a.systemcalibrationIncompleteCount - b.systemcalibrationIncompleteCount,
+        },
+        {
+          title: <span>结束数<Tooltip title={'系统关闭工单数、完成工单数'}><QuestionCircleOutlined style={{ paddingLeft: 5 }} /></Tooltip></span>,
+          dataIndex: 'systemcalibrationCloseCount',
+          key: 'systemcalibrationCloseCount',
+          width: 100,
+          align: 'center',
+          render: (text, record, index) => {
+            return <Button type="link" onClick={() => { workOrderNum(14, record, 'systemcalibrationCount') }}>{text}</Button>
+          }
+        },
+        {
+          title: <span>完成数</span>,
+          dataIndex: 'systemcalibrationCompleteCount',
+          key: 'systemcalibrationCompleteCount',
+          width: 70,
+          align: 'center',
+        },
+        {
+          title: <span>完成率<Tooltip title={'（完成数/结束数）* 100%'}><QuestionCircleOutlined style={{ paddingLeft: 5 }} /></Tooltip></span>,
+          dataIndex: 'systemcalibrationRate',
+          key: 'systemcalibrationRate',
+          width: 105,
+          align: 'center',
+          sorter: (a, b) => props.sortRate(a, b, 'systemcalibrationRate'),
+          render: (text, record) => {
+            return (
+              <div>
+                <Progress
+                  percent={text == '-' ? 0 : text}
+                  size="small"
+                  style={{ width: '70%' }}
+                  status='normal'
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text == '-' ? text : text + '%'}</span>}
+                />
+              </div>
+            );
+          }
+        },
+      ],
+    }]),
   ];
 
-  const cityInsideRegColumns = [ //计划内  市级别 二级弹框
+  let cityInsideRegColumns = [ //计划内  市级别 二级弹框
     {
       title: '序号',
       align: 'center',
@@ -595,6 +647,58 @@ const Index = (props, ref) => {
         },
       ],
     },
+    // 废水不显示此列
+    ...(pollutantType == 1 ? [] : [{
+      title: '计划示值误差工单',
+      width: 200,
+      children: [
+        {
+          title: <span>待完成数</span>,
+          dataIndex: 'systemcalibrationIncompleteCount',
+          key: 'systemcalibrationIncompleteCount',
+          width: 100,
+          align: 'center',
+        },  
+        {
+          title: <span>结束数</span>,
+          dataIndex: 'systemcalibrationCloseCount',
+          key: 'systemcalibrationCloseCount',
+          width: 70,
+          align: 'center',
+          render: (text, record, index) => {
+            return <Button type="link" onClick={() => { workOrderNum(14, record, 'systemcalibrationCount') }}>{text}</Button>
+          }
+        },
+        {
+          title: <span>完成数</span>,
+          dataIndex: 'systemcalibrationCompleteCount',
+          key: 'systemcalibrationCompleteCount',
+          width: 70,
+          align: 'center',
+        },  
+        {
+          title: <span>完成率</span>,
+          dataIndex: 'systemcalibrationRate',
+          key: 'systemcalibrationRate',
+          width: 105,
+          align: 'center',
+          sorter: (a, b) => props.sortRate(a, b, 'systemcalibrationRate'),
+          render: (text, record) => {
+            return (
+              <div>
+                <Progress
+                  percent={text == '-' ? 0 : text}
+                  size="small"
+                  style={{ width: '70%' }}
+                  status='normal'
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text == '-' ? text : text + '%'}</span>}
+                />
+              </div>
+            );
+          }
+        },
+      ],
+    }]),
   ]
   let insideWorkOrderColumns = [
     // {
@@ -715,6 +819,7 @@ const Index = (props, ref) => {
     },
 
   ];
+  const [insideWorkType, setInsideWorkType] = useState()
 
   let insideWorkOrderColumns2 = [
     // {
@@ -787,7 +892,7 @@ const Index = (props, ref) => {
       align: 'center',
     },
     {
-      title: '计划校准工单',
+      title: insideWorkType == 4 ? '计划示值误差工单' : '计划校准工单',
       width: 200,
       children: [
         {
@@ -929,6 +1034,17 @@ const Index = (props, ref) => {
         return <Button type="link" onClick={() => { workOrderNum(3, record, 'calibrationTestCount') }}>{text}</Button>
       }
     },
+    // 废水不显示此列
+    ...(pollutantType == 1 ? [] : [{
+      title: '示值误差',
+      dataIndex: 'systemcalibrationCompleteCount',
+      key: 'systemcalibrationCompleteCount',
+      width: 100,
+      align: 'center',
+      render: (text, record, index) => {  
+        return <Button type="link" onClick={() => { workOrderNum(3, record, 'systemcalibrationCount') }}>{text}</Button>
+      } 
+    }]),
     {
       title: '维修',
       dataIndex: 'repairCompleteCount',
@@ -1446,13 +1562,12 @@ const Index = (props, ref) => {
       ...par,
       regionLevel: undefined,
       staticType: 3,
-      homePageIndex: isPlanInspectionModal ? 1 : isPlanCalibrationModal ? 2 : undefined,
+      homePageIndex: isPlanInspectionModal ? 1 : isPlanCalibrationModal ? 2 : isSystemCalibrationModal ? 3 : undefined,
     }
     !isActualCalibrationModal ? props.insideOrOutsideWorkGetTaskWorkOrderList(pars)
       : props.insideOrOutsideWorkActualGetTaskWorkOrderList(pars)
 
   }
-  const [insideWorkType, setInsideWorkType] = useState()
   const [insideWorkOrderVisible, setInsideWorkOrderVisible] = useState(false)
 
   const [outType, setOutType] = useState()
@@ -1473,11 +1588,12 @@ const Index = (props, ref) => {
     "calibrationTestCount": '校验测试工单',
     "coordinationComparisonCount": '配合比对工单',
     "dealExceptionCount": '异常处理',
+    "systemcalibrationCount": '示值误差工单',
   }
 
   const workOrderNum = (type, record, outType) => { //计划内  计划外  总数工单
 
-    if (type == 1 || type == 2) {
+    if (type == 1 || type == 2 || type == 14) {
       setInsideWorkType(type)
       setInsideWorkOrderVisible(true)
     }
@@ -1494,7 +1610,7 @@ const Index = (props, ref) => {
     setWorkPageSize(20)
     insideOrOutsideWorkGetTaskWorkOrderList({
       regionCode: record.regionCode,
-      taskType: type == 1 || type == 2 ? type : outTypePar[outType]
+      taskType: type == 1 || type == 2 || type == 14 ? type : outTypePar[outType]
     })
 
 
@@ -1539,7 +1655,7 @@ const Index = (props, ref) => {
       pageIndex: undefined,
       pageSize: undefined,
       regionLevel: isActualCalibrationModal && cityVisible ? 2 : isActualCalibrationModal ? 1 : undefined,
-      homePageIndex: isPlanInspectionModal ? 1 : isPlanCalibrationModal ? 2 : undefined,
+      homePageIndex: isPlanInspectionModal ? 1 : isPlanCalibrationModal ? 2 : isSystemCalibrationModal ? 3 : undefined,
     }
     if (!isActualCalibrationModal) {
       props.workRegExportTaskWorkList(par)
@@ -1664,7 +1780,7 @@ const Index = (props, ref) => {
       staticType: 1,
       pageIndex: undefined,
       pageSize: undefined,
-      homePageIndex: isPlanInspectionModal ? 1 : isPlanCalibrationModal ? 2 : undefined,
+      homePageIndex: isPlanInspectionModal ? 1 : isPlanCalibrationModal ? 2 : isSystemCalibrationModal ? 3 : undefined,
     }
     if (!isActualCalibrationModal) {
       props.cityRegExportTaskWorkList(par)
@@ -2024,14 +2140,20 @@ const Index = (props, ref) => {
     }, 300)
 
   }
+
+  
   const handleCol = () => {
-    if (isPlanCalibrationModal) {
-      columns.splice(columns.length - 2, 1)
-      cityInsideRegColumns.splice(cityInsideRegColumns.length - 2, 1) //首页计划校准完成率弹框
+    if (isPlanCalibrationModal) { // 校准
+      columns = columns.filter((col, index) => col.title !== '计划巡检工单' && col.title !== '计划示值误差工单');
+      cityInsideRegColumns = cityInsideRegColumns.filter((col, index) => col.title !== '计划巡检工单' && col.title !== '计划示值误差工单');
     }
-    if (isPlanInspectionModal) {
-      columns.splice(columns.length - 1, 1)
-      cityInsideRegColumns.splice(cityInsideRegColumns.length - 1, 1) //首页计划巡检完成率弹框
+    if (isPlanInspectionModal) { // 巡检
+      columns = columns.filter((col, index) => col.title !== '计划校准工单' && col.title !== '计划示值误差工单');
+      cityInsideRegColumns = cityInsideRegColumns.filter((col, index) => col.title !== '计划校准工单' && col.title !== '计划示值误差工单');
+    } 
+    if (isSystemCalibrationModal) { // 全系统校准
+      columns = columns.filter((col, index) => col.title !== '计划巡检工单' && col.title !== '计划校准工单');
+      cityInsideRegColumns = cityInsideRegColumns.filter((col, index) => col.title !== '计划巡检工单' && col.title !== '计划校准工单');
     }
     if (isActualCalibrationModal) { //首页 实际校准完成率弹框
       const data = {
@@ -2134,7 +2256,7 @@ const Index = (props, ref) => {
   return (
     <div style={{ height: '100%' }}>
 
-      {!isPlanCalibrationModal && !isPlanInspectionModal && !isActualCalibrationModal ? <Tabs defaultActiveKey="1" onChange={tabsChange} style={{ height: '100%' }}>
+      {!isPlanCalibrationModal && !isPlanInspectionModal && !isActualCalibrationModal && !isSystemCalibrationModal ? <Tabs defaultActiveKey="1" onChange={tabsChange} style={{ height: '100%' }}>
         <Tabs.TabPane tab="计划工单统计" key="1">
           <SdlTable
             loading={tableLoading}
@@ -2168,7 +2290,7 @@ const Index = (props, ref) => {
       {/**市级别弹框 */}
       <Modal
         title={`${regName}-统计${queryPar && moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar && moment(queryPar.endTime).format('YYYY-MM-DD')}
-                  ${isActualCalibrationModal ? '实际校准工单完成情况' : tabType == 1 ? `内完成的计划工单情况` : '内完成的计划外工单情况'}`}
+                  ${isActualCalibrationModal ? '实际校准工单完成情况' : tabType == 1 ? `内完成的计划工单情况` : '内完成的计划外工单情况' }`}
         visible={cityVisible}
         onCancel={() => { setCityVisible(false) }}
         footer={null}
@@ -2225,7 +2347,7 @@ const Index = (props, ref) => {
       {/**计划内 省级&&市级工单数弹框  计划巡检 计划校准*/}
       <Modal
         title={`${regName}-统计${queryPar && moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar && moment(queryPar.endTime).format('YYYY-MM-DD')}
-        ${isActualCalibrationModal ? '实际校准工单完成情况' : insideWorkType == 1 ? '内完成的计划巡检工单完成情况' : '内完成的计划校准工单完成情况'}`}
+        ${isActualCalibrationModal ? '实际校准工单完成情况' : insideWorkType == 1 ? '内完成的计划巡检工单完成情况' :insideWorkType == 4 ? '内完成的计划示值误差工单完成情况': '内完成的计划校准工单完成情况'}`}
         visible={insideWorkOrderVisible}
         onCancel={() => { setInsideWorkOrderVisible(false) }}
         footer={null}

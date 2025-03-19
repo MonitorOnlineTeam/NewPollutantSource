@@ -439,6 +439,7 @@ const RecordAndManagement = props => {
               setEditOpen(false);
             }}
             onSubmitCallback={() => {
+              props.onSubmitCallback && props.onSubmitCallback();
               getPageData();
             }}
           />

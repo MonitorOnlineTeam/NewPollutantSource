@@ -23,6 +23,7 @@ export default Model.extend({
       actualCalibrationCount: 0, actualCalibrationRate: "0.00", autoCalibrationAllCount: 0,
       autoCalibrationCompleteCount: 0, autoCalibrationRate: "0.00", inspectionAllCount: 0,
       inspectionCompleteCount: 0, inspectionAllCount: 0, inspectionOutCompleteCount: 0, autoCalibrationOutCompleteCount: 0, inspectionRate: "0.00", inspectionCompleteCount: 0, inspectionIncompleteCount: 0, inspectionCloseCount: 0, calibrationRate: "0.00", calibrationCloseCount: 0, calibrationCompleteCount: 0, calibrationIncompleteCount: 0
+      ,systemcalibrationCloseCount:0,systemcalibrationCompleteCount:0,systemcalibrationIncompleteCount:0,systemcalibrationRate:"0.00"
     },
     planCompleteList: [],
     effectiveTransmissionList: [],
@@ -76,6 +77,7 @@ export default Model.extend({
         let data = [
           // item.coordinationComparisonCount, 
              item.cooperationInspectionCount,
+             item.systemcalibrationCount,
            // item.calibrationTestCount,
             item.dealExceptionCount, item.maintainCount, item.repairCount,
            item.calibrationCount, item.inspectionCount,

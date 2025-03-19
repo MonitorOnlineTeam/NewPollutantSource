@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:57:50
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-15 19:27:27
+ * @Last Modified time: 2025-03-14 09:19:54
  * @Description: 回访客户任务单
  */
 import React, { useState, useEffect } from 'react';
@@ -20,48 +20,49 @@ import {
   Col,
   Space,
   Table,
-  Rate,
+  Radio,
+  message,
 } from 'antd';
 import styles from './styles.less';
 import HandleCustomer from './HandleCustomer';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import RegionList from '@/components/RegionList';
+import SdlCascader from '@/pages/AutoFormManager/SdlCascader';
+import { checkRules } from '@/utils/validator';
 
 const dataSource = [
   {
     key: '1',
-    type: '服务态度',
-    dataIndex: 'ServeManner',
-  },
-  {
-    key: '2',
-    type: '技术水平',
-    dataIndex: 'TechnicalLevel',
-  },
-  {
-    key: '3',
-    type: '服务响应',
+    type: '问题解决能力',
     dataIndex: 'ServiceResponse',
   },
   {
-    key: '4',
-    type: '问题解决效率',
+    key: '2',
+    type: '沟通能力',
     dataIndex: 'ProblemSolvingEfficiency',
+  },
+  {
+    key: '3',
+    type: '响应速度',
+    dataIndex: 'TechnicalLevel',
   },
 ];
 
 const { TextArea } = Input;
 
-const dvaPropsData = ({ loading, wordSupervision }) => ({
-  TYPE: wordSupervision.TYPE, // 1: 成套 “”：运维
+const dvaPropsData = ({ loading, common, wordSupervision }) => ({
+  TYPE: wordSupervision.TYPE, // 1: 成套 ""：运维
   customerList: wordSupervision.customerList,
+  allUser: common.allUser,
   // otherCustomerList: wordSupervision.otherCustomerList,
   // messageList: wordSupervision.messageList,
   // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
+  getAlluserLoading: loading.effects[`common/getAlluser`],
   submitLoading: loading.effects['wordSupervision/InsOrUpdOtherCustomer'],
   largeRegionListLoading: loading.effects[`ctCommon/GetLargeRegionList`],
-
+  visitEnvironmentalParameterLoading:
+    loading.effects['wordSupervision/GetVisitEnvironmentalParameter'],
 });
 
 const CustomerInterview = props => {
@@ -73,6 +74,7 @@ const CustomerInterview = props => {
     onSubmitCallback,
     TYPE,
     taskInfo,
+    visitEnvironmentalParameterLoading,
   } = props;
   const [form] = Form.useForm();
 
@@ -80,12 +82,12 @@ const CustomerInterview = props => {
   const [provinceList, setProvinceList] = useState([]);
 
   useEffect(() => {
+    GetUserInfo();
     getCustomerList();
+    getVisitEnvironmentalParameter();
     return () => {
-      form.resetFields()
-    }
-
-
+      form.resetFields();
+    };
   }, []);
 
   // 获取客户
@@ -96,6 +98,14 @@ const CustomerInterview = props => {
         type: TYPE == 1 ? '2' : '1', // 1：运维 2：成套
         ReionCode: taskInfo.RegionCode || editData.RegionCode,
       },
+    });
+  };
+
+  // 获取用户信息
+  const GetUserInfo = () => {
+    props.dispatch({
+      type: `common/getAlluser`,
+      payload: {},
     });
   };
 
@@ -110,7 +120,7 @@ const CustomerInterview = props => {
   const getColumns = () => {
     return [
       {
-        title: '客户满意度（1-5）',
+        title: '客户满意度',
         children: [
           {
             title: '类型',
@@ -132,6 +142,7 @@ const CustomerInterview = props => {
               return (
                 <Row justify="center">
                   <Form.Item
+                    // label={record.type}
                     name={record.dataIndex}
                     style={{ marginBottom: 0 }}
                     // labelCol={{ span: 0 }}
@@ -139,17 +150,15 @@ const CustomerInterview = props => {
                     rules={[
                       {
                         required: true,
-                        message: '不能为空！',
+                        message: `请选择${record.type}满意度！`,
                       },
                     ]}
                   >
-                    {/* <InputNumber
-                    placeholder="1 ~ 5"
-                    max={5}
-                    min={1}
-                    style={{ width: 100, textAlign: 'center' }}
-                  /> */}
-                    <Rate />
+                    <Radio.Group>
+                      <Radio value={1}>非常满意</Radio>
+                      <Radio value={2}>满意</Radio>
+                      <Radio value={3}>不满意</Radio>
+                    </Radio.Group>
                   </Form.Item>
                 </Row>
               );
@@ -162,55 +171,82 @@ const CustomerInterview = props => {
 
   //
   const onFinish = async () => {
-    const values = await form.validateFields();
-    let body = {
-      ...values,
-      ReturnTime: moment(values.ReturnTime).format('YYYY-MM-DD 00:00:00'),
-      UserGroup_Name: undefined,
-      ProvinceName: undefined,
-      DailyTaskID: taskInfo.ID || editData.DailyTaskID,
-      ReturnUser: JSON.parse(userCookie).UserId,
-      ID: editData.ID,
-    };
+    try {
+      const values = await form.validateFields();
+      console.log('values', values);
+      let body = {
+        ...values,
+        Province: values.Province.toString(),
+        ReturnTime: moment(values.ReturnTime).format('YYYY-MM-DD 00:00:00'),
+        UserGroup_Name: undefined,
+        ProvinceName: undefined,
+        DailyTaskID: taskInfo.ID || editData.DailyTaskID,
+        Visiter: JSON.parse(userCookie).UserId,
+        ID: editData.ID,
+      };
+      props.dispatch({
+        type: 'wordSupervision/InsOrUpdReturnVisitCustomers',
+        payload: body,
+        callback: () => {
+          onSubmitCallback();
+          onCancel();
+        },
+      });
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+      // 获取第一个错误字段的错误信息并显示
+      const firstError = errorInfo.errorFields?.[0];
+      if (firstError) {
+        message.error(firstError.errors[0]);
+      }
+    }
+  };
+
+  const [achievingResultsList, setAchievingResultsList] = useState([]);
+  const [purposeVisitValue, setPurposeVisitValue] = useState(); //拜访目的
+  // 获取拜访目的下拉
+  const getVisitEnvironmentalParameter = () => {
     props.dispatch({
-      type: 'wordSupervision/InsOrUpdReturnVisitCustomers',
-      payload: body,
-      callback: () => {
-        onSubmitCallback();
-        onCancel();
+      type: 'wordSupervision/GetVisitEnvironmentalParameter',
+      payload: {},
+      callback: res => {
+        setAchievingResultsList(res?.Datas || []);
+        setPurposeVisitValue(editData?.VisitPurpose);
       },
     });
   };
 
   const userCookie = Cookie.get('currentUser');
   if (userCookie) {
-    form.setFieldsValue({ ReturnUser: JSON.parse(userCookie).UserName });
+    form.setFieldsValue({ Visiter: JSON.parse(userCookie).UserName });
   }
 
-  const getLargeRegionListRequest = (option) => {
+  const getLargeRegionListRequest = option => {
     props.dispatch({
       type: `ctCommon/GetLargeRegionList`,
       payload: {},
-      callback: (res) => {
-        const data = [];
-        res.map(item => {
-          if (item.ChildList?.[0]) {
-            item.ChildList.map(childListItem => {
-              data.push(childListItem)
-            })
-          }
-
-        })
-        const currentProvinceData = option['data-item'].UserGroup_ID ? data.filter(item => item.ID == option['data-item'].UserGroup_ID) : []
-        setProvinceList(currentProvinceData)
-        setTimeout(() => {
-          form.setFieldsValue({
-            Province: option['data-item']?.Province,
-          });
-        })
+      callback: res => {
+        // const data = [];
+        // res.map(item => {
+        //   if (item.ChildList?.[0]) {
+        //     item.ChildList.map(childListItem => {
+        //       data.push(childListItem);
+        //     });
+        //   }
+        // });
+        // const currentProvinceData = option['data-item'].UserGroup_ID
+        //   ? data.filter(item => item.ID == option['data-item'].UserGroup_ID)
+        //   : [];
+        // setProvinceList(currentProvinceData);
+        // setTimeout(() => {
+        //   form.setFieldsValue({
+        //     Province: option['data-item']?.Province,
+        //   });
+        // });
       },
-    })
-  }
+    });
+  };
+
   return (
     <>
       {/* {taskInfo.CreateTime && (
@@ -231,8 +267,9 @@ const CustomerInterview = props => {
           wrapperCol={{ span: 14 }}
           initialValues={{
             ...editData,
+            CustomerName: editData.CustomRealName,
             UserGroup_Name: editData.LargeRegion,
-            ProvinceName: editData.RegionName,
+            Province: editData.Province?.split(','),
             ReturnTime: moment(editData.ReturnTime),
           }}
           onFinish={onFinish}
@@ -258,14 +295,13 @@ const CustomerInterview = props => {
                   },
                 ]}
               >
-                <Input disabled  placeholder='请先选择客户名称'/>
+                <Input disabled placeholder="请先选择客户名称" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label="省份"
-                // name="ProvinceName"
-                name='Province'
+                label="省/市"
+                name="Province"
                 rules={[
                   {
                     required: true,
@@ -273,7 +309,26 @@ const CustomerInterview = props => {
                   },
                 ]}
               >
-                <Select placeholder='请先选择客户名称' optionFilterProp="children" fieldNames={{ label: 'RegionName', value: 'RegionCode' }} options={provinceList} loading={props.largeRegionListLoading} allowClear={false} />
+                <SdlCascader noFilter selectType="2,否" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="回访日期"
+                name="ReturnTime"
+                rules={[
+                  {
+                    required: true,
+                    message: '请选择回访日期！',
+                  },
+                ]}
+              >
+                <DatePicker
+                  disabledDate={current => {
+                    return current && current > moment().endOf('day');
+                  }}
+                  style={{ width: '100%' }}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -298,20 +353,21 @@ const CustomerInterview = props => {
                         //   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         // }
                         onChange={(value, option) => {
+                          console.log('option', option);
+                          let province = option['data-item']?.Province.split(',').slice(0, 2);
                           setCustomID(value);
                           form.setFieldsValue({
                             RegionalArea: option['data-item']?.UserGroup_ID,
                             UserGroup_Name: option['data-item']?.UserGroup_Name,
-                            ProvinceName: option['data-item']?.ProvinceName,
-                            // Province: option['data-item']?.Province,
+                            Province: province.length > 1 ? province : undefined,
                           });
-                          getLargeRegionListRequest(option)
+                          // getLargeRegionListRequest(option);
                         }}
                       >
                         {customerList.map(item => {
                           return (
                             <Option value={item.ID} key={item.ID} data-item={item}>
-                              {item.CustomName}
+                              {item.CustomFullName || item.CustomName}
                             </Option>
                           );
                         })}
@@ -323,15 +379,17 @@ const CustomerInterview = props => {
                       RegionCode={taskInfo.RegionCode || editData.RegionCode}
                       CustomID={customID}
                       onOk={data => {
+                        console.log('data', data);
                         setCustomID(data.ID);
                         form.setFieldsValue({
                           CustomID: data.ID,
                           UserGroup_Name: data.UserGroup_Name,
-                          ProvinceName: data.ProvinceName,
                           RegionalArea: data.UserGroup_ID,
-                          // Province: data.Province,
+                          Province: data.Province.split(',').length > 1 ? data.Province.split(',') : undefined,
                         });
-                        getLargeRegionListRequest({'data-item':{UserGroup_ID:data.UserGroup_ID,Province: data.Province}})
+                        // getLargeRegionListRequest({
+                        //   'data-item': { UserGroup_ID: data.UserGroup_ID, Province: data.Province },
+                        // });
                       }}
                     />
                   </Col>
@@ -340,83 +398,121 @@ const CustomerInterview = props => {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="回访日期"
-                name="ReturnTime"
+                label="会谈人姓名"
+                name="CustomerName"
                 rules={[
                   {
                     required: true,
-                    message: '请选择回访日期！',
+                    message: '请输入会谈人姓名！',
                   },
                 ]}
               >
-                <DatePicker
-                  disabledDate={current => {
-                    return current && current > moment().endOf('day');
-                  }}
-                  style={{ width: '100%' }}
-                />
+                <Input placeholder="请输入会谈人姓名" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label="客户姓名"
-                name="CustomRealName"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入客户姓名！',
-                  },
-                ]}
-              >
-                <Input placeholder="请输入客户姓名" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="部门"
-                name="Depart"
-                rules={[
-                  {
-                    required: true,
-                    message: '部门不能为空！',
-                  },
-                ]}
-              >
-                <Input placeholder="请填写部门" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="职务"
+                label="职位"
                 name="Post"
                 rules={[
                   {
                     required: true,
-                    message: '职务不能为空！',
+                    message: '职位不能为空！',
                   },
                 ]}
               >
-                <Input placeholder="请填写职务" />
+                <Input placeholder="请填写职位" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label="联系方式"
+                label="手机"
                 name="Phone"
                 rules={[
                   {
                     required: true,
-                    message: '联系方式不能为空！',
+                    message: '手机不能为空！',
                   },
+                  { ...checkRules.mobile },
+                  // {
+                  //   pattern: /^1[3-9]\d{9}$/,
+                  //   message: '请输入正确的手机号码！'
+                  // }
                 ]}
               >
-                <Input placeholder="请填写联系方式" />
+                <Input placeholder="请填写手机" />
+              </Form.Item>
+            </Col>
+
+            <Col span={12}>
+              <Form.Item
+                name="VisitPurpose"
+                label="回访目的"
+                rules={[{ required: true, message: '请选择回访目的！' }]}
+              >
+                <Select
+                  placeholder="请选择回访目的"
+                  loading={visitEnvironmentalParameterLoading}
+                  options={achievingResultsList?.EvaluateList}
+                  fieldNames={{ label: 'Name', value: 'ChildID' }}
+                  showSearch
+                  allowClear
+                  optionFilterProp="Name"
+                  onChange={value => {
+                    setPurposeVisitValue(value);
+                    form.setFieldValue('Evaluate', undefined);
+                    value == 723 && form.setFieldValue('OtherPurpose', undefined);
+                  }}
+                />
+              </Form.Item>
+            </Col>
+            {purposeVisitValue == 723 && (
+              <Col span={12}>
+                <Form.Item
+                  name="OtherPurpose"
+                  label="其他回访目的"
+                  rules={[{ required: true, message: '请输入其他回访目的！' }]}
+                >
+                  <Input placeholder="请输入其他回访目的" allowClear />
+                </Form.Item>
+              </Col>
+            )}
+            {purposeVisitValue != 723 && (
+              <Col span={12}>
+                <Form.Item
+                  name="Evaluate"
+                  label="取得效果"
+                  rules={[{ required: true, message: '请选择取得效果！' }]}
+                >
+                  <Select
+                    placeholder="请选择取得效果"
+                    loading={visitEnvironmentalParameterLoading}
+                    fieldNames={{ label: 'Name', value: 'ChildID' }}
+                    showSearch
+                    allowClear
+                    optionFilterProp="Name"
+                    options={
+                      achievingResultsList?.EvaluateList?.filter(
+                        item => item.ChildID == purposeVisitValue,
+                      )?.[0]?.ChildList || []
+                    }
+                  />
+                </Form.Item>
+              </Col>
+            )}
+            <Col span={12}>
+              <Form.Item
+                name="SpecificResults"
+                label="具体成果"
+                rules={[{ required: true, message: '请输入具体成果！' }]}
+              >
+                <Input placeholder="请输入具体成果" allowClear />
               </Form.Item>
             </Col>
             <Col span={12} style={{ display: 'none' }}>
               <Form.Item
                 label="回访人"
-                name="ReturnUser"
+                name="Visiter"
                 rules={[
                   {
                     required: true,
@@ -425,6 +521,23 @@ const CustomerInterview = props => {
                 ]}
               >
                 <Input disabled />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="运维人员"
+                name="OperationUser"
+                rules={[{ required: true, message: '请选择服务人员姓名' }]}
+              >
+                <Select
+                  showSearch
+                  allowClear
+                  placeholder="请输入"
+                  optionFilterProp="User_Name"
+                  fieldNames={{ label: 'User_Name', value: 'User_ID' }}
+                  loading={props.getAlluserLoading}
+                  options={props.allUser}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -443,11 +556,6 @@ const CustomerInterview = props => {
               name="ProblemsAndAdvice"
             >
               <TextArea rows={3} placeholder="请输入问题及建议" />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item labelCol={{ span: 3 }} wrapperCol={{ span: 19 }} label="备注" name="Remark">
-              <TextArea rows={3} placeholder="请输入备注" />
             </Form.Item>
           </Col>
           <Divider orientation="right" style={{ color: '#d9d9d9' }}>

@@ -1,9 +1,9 @@
-import * as services from './services';
+import * as services from '@/pages/DataAnalyticalWarningModel/services.js';
 import Model from '@/utils/model';
 import { message } from 'antd';
 import moment from 'moment';
 import { downloadFile, requestPost } from '@/utils/utils';
-import { ModelNumberIdsDatas } from './CONST';
+import { ModelNumberIdsDatas } from '@/pages/DataAnalyticalWarningModel/CONST.js';
 import { getListPager } from '@/services/autoformapi';
 import { API } from '@config/API';
 

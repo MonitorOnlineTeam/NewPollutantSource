@@ -308,7 +308,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     //获取企业列表 or 大气站列表
     //  types==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  })
-    isReg && dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表
+    // isReg && dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表
     const regCode = isReg ? queryPar.RegionCode : query.regionCode;
     this.getTableData(regCode, isReg ? 1 : 2, this.pollutantType);
     this.setState({ regCode: regCode, regLevel: isReg ? 1 : 2 });
@@ -583,13 +583,12 @@ export default class EntTransmissionEfficiency extends Component {
                     )}
                   </Form.Item>
                 ) : null}
-              </Row>
 
               {types === 'ent' ? (
-                <Row>
+                <>
                   {level == 1 && (
                     <>
-                      <Form.Item label="关注程度">
+                      {/* <Form.Item label="关注程度">
                         <Select
                           allowClear
                           placeholder="关注程度"
@@ -599,7 +598,7 @@ export default class EntTransmissionEfficiency extends Component {
                         >
                           {this.attentchildren()}
                         </Select>
-                      </Form.Item>
+                      </Form.Item> */}
 
                       <Form.Item label={`${convertTextByConfig('企业')}类型`} hidden={this.pollutantType}>
                         <SelectPollutantType
@@ -636,12 +635,13 @@ export default class EntTransmissionEfficiency extends Component {
                         }}
                       >
                         <RollbackOutlined />
-                        返回{' '}
+                        返回
                       </Button>
                     )}
                   </Form.Item>
-                </Row>
+                </>
               ) : null}
+              </Row>
             </Form>
           </>
         }

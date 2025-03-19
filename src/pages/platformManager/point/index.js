@@ -321,7 +321,6 @@ export default class MonitorPoint extends Component {
           'dbo.T_Bas_CommonPoint.PointCode': PointCode,
         },
         callback: res => {
-          debugger;
           // 获取关联对应窑头数据
           // const IsModelProject =
           //   sessionStorage.getItem('sysMenuId') === '5cd1884a-3f42-426f-8893-5cae720bddf3'; //是否为模型项目，用来判断是否显示工艺信息
@@ -758,7 +757,6 @@ export default class MonitorPoint extends Component {
       <Spin spinning={this.props.getParamInfoListLoading}>
         <div className={styles.deviceParSty}>
           <div style={{ color: '#f5222d', paddingBottom: 16 }}>
-            {' '}
             设备参数类别是异常小时数记录电子表单的一个字段，设置后，运维工程师才能在APP上填写。
           </div>
           <Form.Item label="设备参数类别">
@@ -1456,9 +1454,10 @@ export default class MonitorPoint extends Component {
             visible={this.state.visible}
             onOk={this.onSubmitForm.bind(this)}
             onCancel={this.handleCancel}
-            width={'80%'}
+            // width={'80%'}
+            wrapClassName="spreadOverModal"
             destroyOnClose
-            bodyStyle={{ paddingBottom: 0 }}
+            bodyStyle={this.state.isView ? {} : { paddingTop: 0, maxHeight: 'calc(100vh - 64px)' }}
             footer={
               tabKey == 2 //污染物信息
                 ? null
@@ -1652,27 +1651,17 @@ export default class MonitorPoint extends Component {
             </Form>
           </Modal>
 
-          <Modal //设备管理
-            title={titles}
-            visible={this.state.deviceManagerVisible}
+          {/* 设备管理 */}
+          <DeviceManager
+            open={this.state.deviceManagerVisible}
             onCancel={() => {
               this.setState({ deviceManagerVisible: false });
             }}
-            destroyOnClose
-            footer={null}
-            wrapClassName={`${styles.deviceManagerSty} spreadOverModal table-light`}
-            mask={false}
-          >
-            <DeviceManager
-              onCancel={() => {
-                this.setState({ deviceManagerVisible: false });
-              }}
-              DGIMN={this.state.deviceManagerMN}
-              gasType={deviceManagerGasType}
-              pollutantType={pollutantType}
-              titles={titles}
-            />
-          </Modal>
+            DGIMN={this.state.deviceManagerMN}
+            gasType={deviceManagerGasType}
+            pollutantType={pollutantType}
+            titles={titles}
+          />
           <Modal //修改点位运维状态
             title={this.state.editOperationStatusTitle}
             visible={this.state.editOperationStatusVisible}

@@ -2,13 +2,13 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:58:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-05-24 14:47:21
+ * @Last Modified time: 2025-02-18 10:04:41
  * @Description: 客户操作页面
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { Button, Modal, Form, Input, Select, Tooltip, Divider, Popconfirm } from 'antd';
+import { Button, Modal, Form, Input, Select, Tooltip, Divider, Popconfirm, Cascader } from 'antd';
 import SdlTable from '@/components/SdlTable';
 import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon';
 import Cookie from 'js-cookie';
@@ -20,7 +20,7 @@ const dvaPropsData = ({ loading, wordSupervision, ctCommon }) => ({
   RegionalAndProvince: wordSupervision.RegionalAndProvince,
   largeRegionListLoading: loading.effects[`ctCommon/GetLargeRegionList`],
   regionalAndProvinceLoading: loading.effects[`wordSupervision/GetRegionalAndProvince`],
-  
+
   // messageList: wordSupervision.messageList,
   // todoListLoading: loading.effects['wordSupervision/GetToDoDailyWorks'],
   // messageListLoading: loading.effects['wordSupervision/GetWorkBenchMsg'],
@@ -28,7 +28,16 @@ const dvaPropsData = ({ loading, wordSupervision, ctCommon }) => ({
 
 const HandleCustomer = props => {
   const [form] = Form.useForm();
-  const { otherCustomerList, RegionalAndProvince, CustomID, onOk, RegionCode, TYPE, regionalAndProvinceLoading, largeRegionListLoading, } = props;
+  const {
+    otherCustomerList,
+    RegionalAndProvince,
+    CustomID,
+    onOk,
+    RegionCode,
+    TYPE,
+    regionalAndProvinceLoading,
+    largeRegionListLoading,
+  } = props;
   const [visible, setVisible] = useState(false);
   const [addOrEditVisible, setAddOrEditVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -63,6 +72,12 @@ const HandleCustomer = props => {
         align: 'center',
       },
       {
+        title: '城市',
+        dataIndex: 'CityName',
+        key: 'CityName',
+        align: 'center',
+      },
+      {
         title: '大区',
         dataIndex: 'UserGroup_Name',
         key: 'UserGroup_Name',
@@ -80,7 +95,7 @@ const HandleCustomer = props => {
                   onClick={() => {
                     setEditRowData(record);
                     onHandleClick(record.Province);
-                    form.setFieldsValue({ ...record })
+                    form.setFieldsValue({ ...record });
                   }}
                 >
                   <EditIcon />
@@ -96,8 +111,7 @@ const HandleCustomer = props => {
                   cancelText="否"
                 >
                   <a>
-                    {' '}
-                    <DelIcon />{' '}
+                    <DelIcon />
                   </a>
                 </Popconfirm>
               </Tooltip>
@@ -146,39 +160,42 @@ const HandleCustomer = props => {
   };
 
   // 获取已配置的省区和大区
-  const getRegionalAndProvince = (regionCode) => {
+  const getRegionalAndProvince = regionCode => {
     props.dispatch({
       type: 'wordSupervision/GetRegionalAndProvince',
       payload: {},
       callback: res => {
-        let current = regionCode? res.Datas.find(item => item.Province === regionCode) : res.Datas.find(item => item.Province === RegionCode);
+        let current = regionCode
+          ? res.Datas.find(item => item.Province === regionCode)
+          : res.Datas.find(item => item.Province === RegionCode);
         props.dispatch({
           type: 'ctCommon/GetLargeRegionList',
           payload: {},
-          callback: (largeRegData)=>{
-            setLargeRegionList(largeRegData)
-            const data = largeRegData?.filter(item => item.ID == current.UserGroup_ID)?.[0]?.ChildList
-            setRegionList(data || [])
-            setTimeout(()=>{
-              form.setFieldsValue({
-                Province: current.Province,
-                UserGroup_ID: current.UserGroup_ID,
-              },200);
-            })
-          }
-        })
-
+          callback: res => {
+            // setLargeRegionList(res.Datas);
+            // const data = largeRegData?.filter(item => item.ID == current.UserGroup_ID)?.[0]
+            //   ?.ChildList;
+            // setRegionList(data || []);
+            // setTimeout(() => {
+            //   form.setFieldsValue(
+            //     {
+            //       Province: current.Province,
+            //       UserGroup_ID: current.UserGroup_ID,
+            //     },
+            //     200,
+            //   );
+            // });
+          },
+        });
       },
     });
   };
 
   //
-  const onHandleClick = (regionCode) => {
+  const onHandleClick = regionCode => {
     setAddOrEditVisible(true);
     getRegionalAndProvince(regionCode);
-
   };
-
 
   // 添加、编辑客户
   const InsOrUpdOtherCustomer = () => {
@@ -198,6 +215,7 @@ const HandleCustomer = props => {
           UpdateUser: currentUser.UserId,
           UpdateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
           ...values,
+          Province: values.Province.toString(),
         },
         callback: () => {
           setAddOrEditVisible(false);
@@ -216,16 +234,16 @@ const HandleCustomer = props => {
     },
   };
 
-  useEffect(()=>{
-    if(!addOrEditVisible){
-      setLargeRegionList([])
-      setRegionList([])
+  useEffect(() => {
+    if (!addOrEditVisible) {
+      setLargeRegionList([]);
+      setRegionList([]);
       form.setFieldsValue({
         Province: undefined,
         UserGroup_ID: undefined,
-      })
+      });
     }
-  },[addOrEditVisible])
+  }, [addOrEditVisible]);
 
   return (
     <>
@@ -242,7 +260,7 @@ const HandleCustomer = props => {
         onCancel={() => {
           getCustomerList();
           setVisible(false);
-          setSelectedRowKeys([])
+          setSelectedRowKeys([]);
         }}
         onOk={() => {
           setVisible(false);
@@ -301,7 +319,6 @@ const HandleCustomer = props => {
           }}
           autoComplete="off"
         >
-
           <Form.Item
             label="大区"
             name="UserGroup_ID"
@@ -312,18 +329,23 @@ const HandleCustomer = props => {
               },
             ]}
           >
-            <Select placeholder="请选择大区"
+            <Select
+              placeholder="请选择大区"
               loading={regionalAndProvinceLoading || largeRegionListLoading}
-              onChange={(value) => {
+              onChange={(value, option) => {
                 form.setFieldsValue({ Province: undefined });
-                const data = largeRegionList.filter(item => item.ID == value)?.[0]?.ChildList
-                setRegionList(data)
+                // const data = largeRegionList.filter(item => item.ID == value)?.[0]?.ChildList;
+                setRegionList(option['data-childList']);
               }}
             >
-              {largeRegionList.map((item, index) => {
+              {RegionalAndProvince.map((item, index) => {
                 return (
-                  <Option value={item.ID} key={index} data-item={item}>
-                    {item.LargeRegion}
+                  <Option
+                    value={item.RegionCode}
+                    key={item.RegionCode}
+                    data-childList={item.ChildList}
+                  >
+                    {item.RegionName}
                   </Option>
                 );
               })}
@@ -331,22 +353,29 @@ const HandleCustomer = props => {
           </Form.Item>
 
           <Form.Item
-            label="省份"
+            label="省/市"
             name="Province"
             rules={[
               {
                 required: true,
-                message: '请选择省份!',
+                message: '请选择省/市!',
               },
             ]}
           >
-            <Select
+            <Cascader
+              loading={regionalAndProvinceLoading || largeRegionListLoading}
+              options={regionList}
+              placeholder="请选择省/市!"
+              fieldNames={{ label: 'RegionName', value: 'RegionCode', children: 'ChildList' }}
+            />
+
+            {/* <Select
               // disabled
               loading={regionalAndProvinceLoading || largeRegionListLoading}
-              placeholder="请选择省份"
-            // onChange={(value, option) => {
-            //   form.setFieldsValue({ UserGroup_ID: option['data-item'].UserGroup_ID });
-            // }}
+              placeholder="请选择省/市"
+              // onChange={(value, option) => {
+              //   form.setFieldsValue({ UserGroup_ID: option['data-item'].UserGroup_ID });
+              // }}
             >
               {regionList.map((item, index) => {
                 return (
@@ -355,7 +384,7 @@ const HandleCustomer = props => {
                   </Option>
                 );
               })}
-            </Select>
+            </Select> */}
           </Form.Item>
 
           {/* <Form.Item

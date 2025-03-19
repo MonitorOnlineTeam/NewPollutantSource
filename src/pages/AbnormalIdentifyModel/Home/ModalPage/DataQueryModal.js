@@ -3,10 +3,9 @@ import { connect } from 'dva';
 import { Modal, Form, Button, Select, Input, Progress } from 'antd';
 import DataQuery from '@/pages/monitoring/dataquery/components/DataQuery';
 
-const dvaPropsData = ({ loading, AbnormalIdentifyModel, AbnormalIdentifyModelHome }) => ({
+const dvaPropsData = ({ loading }) => ({
   // todoList: wordSupervision.todoList,
-  requestParams: AbnormalIdentifyModelHome.requestParams,
-  loading: !!loading.effects['AbnormalIdentifyModelHome/GetClueDrillDownData'],
+  // loading: !!loading.effects['AbnormalIdentifyModelHome/GetClueDrillDownData'],
 });
 
 const DataQueryModal = props => {

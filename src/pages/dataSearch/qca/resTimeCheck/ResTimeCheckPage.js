@@ -302,9 +302,13 @@ class resTimeCheckPage extends PureComponent {
           this.formRef.current.setFieldsValue({ PollutantCode: intersection });
         } else {
           let intersection = _.intersection(pollutantList, [
+            '03',
             'a21002',
+            's01',
             'a19001',
+            '02',
             'a21026',
+            '30',
             'a05001',
             'a05002',
             'a05003',

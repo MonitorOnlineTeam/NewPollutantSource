@@ -180,7 +180,7 @@ const Index = (props) => {
 
   const [manufacturerId, setManufacturerId] = useState(undefined)
 
-  const { tableDatas, tableTotal, tableLoading, pointParamesLoading, infoloading, exportLoading, userLoading, entLoading, systemModelList, operationInfoList, isDetailModal, regDetailPar,par } = props;
+  const { tableDatas, tableTotal, tableLoading, pointParamesLoading, infoloading, exportLoading, userLoading, entLoading, systemModelList, operationInfoList, isDetailModal, regDetailPar = {},par } = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -654,7 +654,6 @@ const Index = (props) => {
     })
   };
 
-
   const [entLoading2, setEntLoading2] = useState(false)
   const [entList, setEntList] = useState([])
   const getEntList = (pollutantType, callback) => {
@@ -665,8 +664,6 @@ const Index = (props) => {
       callback && callback();
     })
   }
-
-
 
   const foramtProblemFilesList = (data) => {
     const filesCuidObj1 = {}, filesListObj1 = {},  principleDisabledData = {};
@@ -682,7 +679,7 @@ const Index = (props) => {
     setFilesCuidList1(filesCuidObj1)
     setFilesList1(filesListObj1)
 
-    const filesCuidObj2 = {}, filesListObj2 = {};
+    const filesCuidObj2 = {}, filesListObj2 = {};32
     data.importanProblemList && data.importanProblemList.map((item, index) => {
       filesCuidObj2[`Files2${item.Sort}`] = cuid();
       filesListObj2[`Files2${item.Sort}`] = [];
@@ -699,6 +696,7 @@ const Index = (props) => {
     setFilesCuidList3(filesCuidObj3)
     setFilesList3(filesListObj3)
   }
+
   useEffect(()=>{
     if(!fromVisible){
       setType('add')
@@ -717,6 +715,7 @@ const Index = (props) => {
       // setPmchoiceData(null);
     }
   },[fromVisible])
+
   const add = () => {
     setFromVisible(true)
     props.getInspectorOperationInfoList({ ID: '', InspectorType: inspectorType, PollutantType: pollutantTypeCode || 2 }, (data) => {
@@ -724,6 +723,7 @@ const Index = (props) => {
           })
     getEntList(pollutantTypeCode || 2);
   };
+  
   const onFinish = async (pageIndexs, pageSizes) => {  //查询
     try {
       const values = await form.validateFields();
@@ -734,6 +734,7 @@ const Index = (props) => {
         ETime: values.time && moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time: undefined,
         InspectorType: inspectorType,
+        InspectorTypeArr: regDetailPar?.InspectorTypeArr,
         pollutantType : isDetailModal ? undefined : pollutantTypeCode,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
         pageSize: pageSizes ? pageSizes : pageSize,
@@ -751,6 +752,7 @@ const Index = (props) => {
       ETime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
       time: undefined,
       InspectorType: inspectorType,
+      InspectorTypeArr: regDetailPar?.InspectorTypeArr,
       // apiName: props.exportApiName,
       pollutantType :  isDetailModal ? undefined : pollutantTypeCode,
     })
@@ -999,6 +1001,12 @@ const Index = (props) => {
               </Select>
             </Form.Item>
           </Spin>
+          <Form.Item label='推送状态' name='Status' >
+            <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{ width: 150 }}>
+              <Option key={2} value={2}>已推送</Option>
+              <Option key={1} value={1}>未推送</Option>
+            </Select>
+          </Form.Item>
         </Row>
 
         <Row>
@@ -1779,7 +1787,7 @@ const Index = (props) => {
             取消
           </Button>,
           !pushFlag&&<Button type="primary" onClick={() => { save(0) }} loading={saveLoading0 || detailLoading || pointLoading2 || false}>
-            保存
+            暂存
           </Button>,
           <Button type="primary" onClick={() => save(pushFlag? 3 : 1)} loading={saveLoading3 || detailLoading || pointLoading2 || false} >
            {pushFlag? '提交并推送':'提交'}

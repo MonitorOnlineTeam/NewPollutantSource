@@ -22,10 +22,10 @@ const UserLayout2 = props => {
 
   // const isShowSysName = configInfo.SystemName !== '污染源智慧监测管理系统';
   // console.log('configInfo', configInfo)
-  const isShowSysName = configInfo.SystemNameKey !== -1;
+  const isShowSysName = configInfo?.SystemNameKey !== -1;
 
   let imgSrc = isShowSysName
-    ? `url(/newLogin/${configInfo.SystemName}/bg.jpg)`
+    ? `url(/newLogin/${configInfo?.SystemName}/bg.jpg)`
     : `url(/newLogin/-1.jpg)`;
 
   return (
@@ -34,8 +34,8 @@ const UserLayout2 = props => {
         <div className={styles.childrenContent}>
           {isShowSysName ? (
             <div className={styles.sysName}>
-              <img style={{ marginLeft: -14, marginRight: 10 }} src="/sdl.png" />
-              {configInfo.SystemName}
+              {/* <img style={{ marginLeft: -14, marginRight: 10 }} src="/sdl.png" /> */}
+              {configInfo?.SystemName}
             </div>
           ) : (
             <div className={styles.logo}></div>

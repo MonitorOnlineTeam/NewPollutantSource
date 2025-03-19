@@ -12,7 +12,7 @@ import { connect } from 'dva';
 import { router } from 'umi';
 import Cookie from 'js-cookie';
 import { getFirstChildNavigateUrl } from '@/pages/user/login/utils/utils.js';
-
+import { isOperaSystem } from '@/utils/utils';
 @connect()
 class SaveSessionPage extends PureComponent {
   constructor(props) {
@@ -28,6 +28,7 @@ class SaveSessionPage extends PureComponent {
     Cookie.set('sysMenuId', sysInfo.ID);
     Cookie.set('sysName', sysInfo.Name);
     configInfo.sysName = sysInfo.Name;
+    configInfo.IsOpera = isOperaSystem(sysInfo.Name); //是否为公司运维项目
     this.getMenuList(sysInfo.ID);
   }
 

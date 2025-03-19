@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-08-31 09:47:00
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-04-10 15:19:22
+ * @Last Modified time: 2025-01-22 15:38:22
  * @Description:
  */
 import React, { useState, useEffect } from 'react';
@@ -303,9 +303,9 @@ const Index = props => {
     setZoomInChartData(chartData);
     setZoomInVisible(true);
   };
-  console.log('regionCode', regionCode);
+
   return (
-    <BreadcrumbWrapper>
+    <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
       <div className={styles.FluctuateRange}>
         <Space direction="vertical" style={{ width: '100%' }}>
           <Card bodyStyle={{ paddingTop: 0 }} bordered={false}>
@@ -316,7 +316,7 @@ const Index = props => {
               style={{ padding: '10px 0', marginBottom: 10 }}
               initialValues={{
                 pollutantCode: PollutantListConst.map(item => item.PollutantCode),
-                IndustryTypeCode: '1',
+                IndustryTypeCode: props.IndustryTypeCode !== null ? props.IndustryTypeCode : '1',
               }}
               autoComplete="off"
               onValuesChange={(changedFields, allFields) => {}}

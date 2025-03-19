@@ -177,6 +177,15 @@ const Index = (props) => {
             align: 'center',
             ellipsis:true,
         },
+        {
+            title: '示值误差派单频次',
+            dataIndex: 'systemCalibrationCycleName',
+            key: 'systemCalibrationCycleName',
+            align: 'center',
+            width: 160,
+            ellipsis:true,
+            hidden: configInfo.IsShowProjectRegion,
+        },
         // {
         //     title: '参数核对派单频次',
         //     dataIndex: 'parameterCheckName',

@@ -6,179 +6,501 @@
  * @Description: 数据一致性表单 小时与日数据
  */
 import React, { Component } from 'react';
-import { Spin,Image  } from 'antd';
+import { Spin, Radio, Space } from 'antd';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
-import styles from "./ConsumablesReplaceRecordContent.less";
+import styles from './DataConsistencyRealDate.less';
 import MonitorContent from '../../components/MonitorContent/index';
-import SdlTable from '@/components/SdlTable';
-
+import moment from 'moment';
 @connect(({ task, loading }) => ({
-    isloading: loading.effects['task/GetDataConsistencyRecordNewForPCList'],
-    dataConsistencyDateRecordList: task.dataConsistencyDateRecordList
+  loading: loading.effects['task/GetIndicationErrorSystemResponseRecordListForPC'],
+  IndicationErrorSystemResponseRecordList: task.IndicationErrorSystemResponseRecordList,
 }))
 /*
 页面：数据一致性表单 小时与日数据
 */
 class RepalceRecordList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isloading:this.props.isloading
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentPollutantData: [], // 当前选中的污染物
+      currentRecordIndex: 0, // 当前量程索引
+      currentPollIndex: 0,
+    };
+  }
 
-    componentDidMount() {
-        this.props.dispatch({
-            type: 'task/GetDataConsistencyRecordNewForPCList',
-            payload: {
-                TaskID: this.props.TaskID,
-                TypeID: this.props.TypeID,
-            },
-        });
-        this.setState({
-            isloading: false
-        });
-    }
-    tableData = (type,ColumnList,hourRecordList) =>{
-        return   <>  <tr>
-            <td  rowSpan={hourRecordList&&hourRecordList.length + 1} style={{ minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                      {type}
-          </td>  
-         {ColumnList.map(item=>{
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'task/GetIndicationErrorSystemResponseRecordListForPC',
+      payload: {
+        TaskID: this.props.TaskID,
+        TypeID: this.props.TypeID,
+      },
+    });
+  }
 
-                return <td  colSpan={item=='监测参数'||item=='时间'?1 :2} style={{ textAlign: 'center',minWidth:item.length>=5?170 :100, fontSize: '14px' }}>
-                 {item}
-                  </td> 
-            })
-        }
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.IndicationErrorSystemResponseRecordList !==
+      this.props.IndicationErrorSystemResponseRecordList
+    ) {
+      this.onChangePollutant(0);
+    }
+  }
+
+  // 渲染示值误差表格数据
+  renderErrorTableData = () => {
+    const { IndicationErrorSystemResponseRecordList } = this.props;
+    const errorRecords = IndicationErrorSystemResponseRecordList?.recordList?.filter(
+      item => item.recordType === 1,
+    );
+
+    return errorRecords?.map((record, index) => (
+      <tr key={index}>
+        <td style={{ textAlign: 'center' }}>{record.sort}</td>
+        <td style={{ textAlign: 'center' }}>{record.nominalValue}</td>
+        <td style={{ textAlign: 'center' }}>{record.labelGas1}</td>
+        <td style={{ textAlign: 'center' }}>{record.cemsAvg}</td>
+        <td style={{ textAlign: 'center' }}>{record.indicationError}</td>
+        <td style={{ textAlign: 'center' }}>{record.labelGas2}</td>
+        <td style={{ textAlign: 'center' }}>{record.labelGas3}</td>
+        <td style={{ textAlign: 'center' }}>
+          {Number(record.labelGas2) + Number(record.labelGas3)}
+        </td>
+        <td style={{ textAlign: 'center' }}>{record.remark}</td>
       </tr>
-       { hourRecordList.map((item,index)=>{
-            return   <tr>
-                       
-                       {
-                         Object.keys(item).map((objItem,objIndex)=>{
-                           return objItem=='时间'&&index==0?
-                           <td rowSpan={ hourRecordList.length} style={{ textAlign: 'center'}}> {item[objItem]} </td>
-                           :
-                           index>0&&objItem=='时间' || objItem=='DataType'?
-                           ''
-                           :
-                           objItem=='监测参数'?
-                          <td  style={{ textAlign: 'center'}}> {item[objItem]} </td>
-                          :
-                          <>
-                          <td  style={{ textAlign: 'center',minWidth:100}}> {item[objItem]? item[objItem].split(",")[0] : ""} </td>
-                          <td  style={{ textAlign: 'center',minWidth:100}}> {item[objItem]? item[objItem].split(",")[1] : ""} </td>
-                          </>
-                
+    ));
+  };
 
-                        })   
-                       }
-                     </tr> 
-        })
-       }
-      </>
+  // 渲染系统响应时间表格数据
+  renderResponseTimeData = () => {
+    const { IndicationErrorSystemResponseRecordList } = this.props;
+    const responseRecords = IndicationErrorSystemResponseRecordList?.recordList?.filter(
+      item => item.recordType === 2,
+    );
+
+    return responseRecords?.map((record, index) => (
+      <tr key={index}>
+        <td style={{ textAlign: 'center' }}>{record.sort}</td>
+        <td style={{ textAlign: 'center' }}>{record.timeT1}</td>
+        <td style={{ textAlign: 'center' }}>{record.timeT2}</td>
+        <td style={{ textAlign: 'center' }}>{record.responseTime}</td>
+        <td style={{ textAlign: 'center' }}>{record.timeAvg}</td>
+        <td style={{ textAlign: 'center' }}></td>
+        <td style={{ textAlign: 'center' }}></td>
+        <td style={{ textAlign: 'center' }}></td>
+        <td style={{ textAlign: 'center' }}></td>
+      </tr>
+    ));
+  };
+
+  // 切换污染物
+  onChangePollutant = index => {
+    this.setState({
+      //   currentPollutantData: this.props.IndicationErrorSystemResponseRecordList[index].TableList[0],
+      currentRecordIndex: 0,
+      currentPollIndex: index,
+      currentRecordIndex: 0,
+    });
+  };
+
+  renderFormData = () => {
+    const { IndicationErrorSystemResponseRecordList } = this.props;
+    const { currentRecordIndex, currentPollIndex } = this.state;
+    const MainModel =
+      IndicationErrorSystemResponseRecordList?.[currentPollIndex]?.TableList?.[currentRecordIndex]
+        ?.MainModel || {};
+    return [
+      {
+        lable: '测试人员',
+        value: MainModel?.Tester,
+      },
+      {
+        lable: 'CEMS 生产厂商',
+        value: MainModel?.CEMSPlant,
+      },
+      {
+        lable: '测试地点',
+        value: IndicationErrorSystemResponseRecordList?.[currentPollIndex]?.Point?.EnterpriseName,
+      },
+      {
+        lable: 'CEMS 型号、编号',
+        value: MainModel?.CEMSNumModel,
+      },
+      {
+        lable: '测试位置',
+        value: IndicationErrorSystemResponseRecordList?.[currentPollIndex]?.Point?.PointPosition,
+      },
+      {
+        lable: 'CEMS 原理',
+        value: MainModel?.CEMSPrinciple,
+      },
+      {
+        lable: '污染物名称',
+        value: IndicationErrorSystemResponseRecordList?.[0]?.PollutantCodeList.find(
+          item => item.ChildID === MainModel.PollutantCode,
+        )?.Name,
+      },
+      {
+        lable: '计量单位',
+        value: MainModel.Unit,
+      },
+      {
+        lable: '测试日期',
+        value: moment(MainModel.TestDate).format('YYYY-MM-DD'),
+      },
+      {
+        lable: '量程',
+        value: MainModel?.Range?.replace(',', '-'),
+      },
+      {
+        lable: '维护管理单位',
+        value: MainModel.MaintenanceManagementUnit,
+        fullRow: true, // 标记该项需要占据整行
+      },
+    ];
+  };
+
+  // 渲染第二个表格的数据
+  renderSecondTableData = () => {
+    const { IndicationErrorSystemResponseRecordList } = this.props;
+    const { currentPollIndex, currentRecordIndex } = this.state;
+    debugger;
+    const tableData =
+      IndicationErrorSystemResponseRecordList?.[currentPollIndex]?.TableList?.[currentRecordIndex]
+        ?.ChildList || [];
+
+    // 将数据按每3个分组
+    const groupedData = [];
+    for (let i = 0; i < tableData.length; i += 3) {
+      groupedData.push(tableData.slice(i, i + 3));
     }
-    render() {
-        const appStyle = this.props.appStyle;
-        let style = null;
-        if (appStyle) {
-            style = appStyle;
-        }
-        else {
-            style = {
-                height: 'calc(100vh - 200px)' 
-            }
-        }
-        const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
-        const Data=this.props.dataConsistencyDateRecordList!==null?this.props.dataConsistencyDateRecordList:null;
-        const Content=Data!==null?Data.Record.Content:null;
-        const RecordList=Data!==null?Data.Record.RecordList:null;
-        const ColumnList = Data?Data.ColumnList : null
-        const PingList=Data?Data.PingList: null;
- 
-        let columns =[]
 
+    return groupedData.map((group, groupIndex) => {
+      // 获取组内的第一条数据用于合并的单元格
+      const firstItem = group[0];
 
-        if(ColumnList){
-            ColumnList.map((item,index)=>{
-                PingList.map(items=>{
-                   if(items.split(",")[0]==item){
-                       const spliceItem = `${item}${items.split(",")[1]}`
-                       ColumnList.splice(index,1,spliceItem)
-                   }
-                })
-            })
-            ColumnList.map(item=>{
-                columns.push({
-                        title: item,
-                        dataIndex: item,
-                })
-            })
-        }
+      return group.map((item, index) => (
+        <tr key={`${groupIndex}-${index}`}>
+          <td className={styles.tdCenter}>{groupIndex * 3 + index + 1}</td>
+          {index === 0 ? (
+            // 第一行显示所有列，包括需要合并的列
+            <>
+              <td className={styles.tdCenter} rowSpan={group.length}>
+                {firstItem.NominalValue || ''}
+              </td>
+              <td className={styles.tdCenter}>{item.LabelGas1 || ''}</td>
+              <td className={styles.tdCenter} rowSpan={group.length}>
+                {firstItem.CEMSAvg || ''}
+              </td>
+              <td className={styles.tdCenter} rowSpan={group.length}>
+                {firstItem.IndicationError || ''}
+              </td>
+              <td className={styles.tdCenter}>{item.TimeT1 || ''}</td>
+              <td className={styles.tdCenter}>{item.TimeT2 || ''}</td>
+              <td className={styles.tdCenter}>{item.ResponseTime || ''}</td>
+              <td className={styles.tdCenter} rowSpan={group.length}>
+                {item.TimeAvg || ''}
+              </td>
+              <td className={styles.tdCenter} rowSpan={group.length}>
+                {firstItem.Remark || ''}
+              </td>
+            </>
+          ) : (
+            // 非第一行只显示不需要合并的列
+            <>
+              <td className={styles.tdCenter}>{item.LabelGas1 || ''}</td>
+              <td className={styles.tdCenter}>{item.TimeT1 || ''}</td>
+              <td className={styles.tdCenter}>{item.TimeT2 || ''}</td>
+              <td className={styles.tdCenter}>{item.ResponseTime || ''}</td>
+            </>
+          )}
+        </tr>
+      ));
+    });
+  };
 
-        let hourRecordList,dayRecordList;
-        if(RecordList){
+  render() {
+    const { loading, IndicationErrorSystemResponseRecordList } = this.props;
+    const { currentRecordIndex, currentPollIndex } = this.state;
+    const appStyle = this.props.appStyle;
+    const MainModel =
+      IndicationErrorSystemResponseRecordList?.[currentPollIndex]?.TableList?.[currentRecordIndex]
+        ?.MainModel || {};
+    let style = null;
+    if (appStyle) {
+      style = appStyle;
+    } else {
+      //   style = {
+      //     height: 'calc(100vh - 200px)',
+      //   };
+    }
 
-            hourRecordList = RecordList.filter((item,index)=>{
-                return item.DataType==2
-            })
-            dayRecordList = RecordList.filter((item,index)=>{
-                return item.DataType==3
-            })
-        }
-        
-        if (this.props.isloading) {
-            return (<Spin
-                style={{
-                    width: '100%',
-                    height: 'calc(100vh/2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }}
-                size="large" 
-            />);
-        }
+    if (loading) {
+      return (
+        <Spin
+          style={{
+            width: '100%',
+            height: 'calc(100vh/2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          size="large"
+        />
+      );
+    }
 
-  
-        return (
-            <div className={styles.FormDiv} style={style}>
-                <div className={styles.FormName}></div>
-                 <table
-                    className={styles.FormTable}
-                >
-                    <tbody>
-                          <tr>
-                            <td colSpan={ColumnList&&ColumnList.length *2}  style={{ textAlign:'center',fontWeight:'bold',fontSize:16}}>
-                                 数据一致性检查表(小时与日数据)
-                            </td>
-                        </tr> 
-                        <tr>
-                            <td colSpan="2" style={{  height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                        企业名称
-                            </td>
-                            <td colSpan={ColumnList&&ColumnList.length*2 - 1 - 5} style={{minWidth:250, textAlign: 'center', fontSize: '14px' }}>
-                                {Content !== null ?Content.EnterpriseName  :null}
-                            </td>
-                            <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                        监测点名称
-                            </td>
-                            <td  style={{textAlign: 'center', fontSize: '14px'}}>
-                                {Content !== null ?Content.PointName :null}
-                            </td>
-                        </tr>
-                     <tr>
+    const baseData = this.renderFormData();
+
+    return (
+      <div style={{}}>
+        <div style={{ marginBottom: 20 }} className="no-print">
+          <Space direction="vertical">
+            <Radio.Group
+              optionType="button"
+              buttonStyle="solid"
+              defaultValue={0}
+              onChange={(e, index) => {
+                this.setState({
+                  currentPollIndex: e.target.value,
+                  currentRecordIndex: 0,
+                });
+              }}
+            >
+              {IndicationErrorSystemResponseRecordList?.[0]?.PollutantCodeList?.map(
+                (item, index) => {
+                  return (
+                    <Radio.Button key={index} value={index}>
+                      {item.Name}
+                    </Radio.Button>
+                  );
+                },
+              )}
+            </Radio.Group>
+            <Radio.Group
+              value={currentRecordIndex}
+              onChange={e => {
+                this.setState({
+                  currentRecordIndex: e.target.value,
+                });
+              }}
+            >
+              {IndicationErrorSystemResponseRecordList?.[currentPollIndex]?.TableList?.map(
+                (item, index) => {
+                  return (
+                    <Radio.Button key={index} value={index}>
+                      记录{index + 1}
+                    </Radio.Button>
+                  );
+                },
+              )}
+            </Radio.Group>
+          </Space>
+        </div>
+
+        <div className={styles.FormDiv} style={style}>
+          <div className={styles.FormName}>气态污染物 CEMS 示值误差和系统响应时间检测</div>
+          <table className={styles.FormTable}>
+            <tbody>
+              {/* 每行显示两组数据 */}
+              {Array.from({ length: Math.ceil((baseData.length - 1) / 2) }).map((_, rowIndex) => (
+                <tr key={rowIndex}>
+                  {/* 第一组数据 */}
+                  <td style={{ width: '15%', textAlign: 'center' }}>
+                    {baseData[rowIndex * 2]?.lable}
+                  </td>
+                  <td style={{ width: '35%', textAlign: 'center' }}>
+                    {baseData[rowIndex * 2]?.value}
+                  </td>
+                  {/* 第二组数据（如果存在） */}
+                  {baseData[rowIndex * 2 + 1] && !baseData[rowIndex * 2 + 1].fullRow && (
+                    <>
+                      <td style={{ width: '15%', textAlign: 'center' }}>
+                        {baseData[rowIndex * 2 + 1]?.lable}
+                      </td>
+                      <td style={{ width: '35%', textAlign: 'center' }}>
+                        {baseData[rowIndex * 2 + 1]?.value}
+                      </td>
+                    </>
+                  )}
                 </tr>
-                          {ColumnList&&hourRecordList&&this.tableData('小时数据',ColumnList,hourRecordList)}
-                          {ColumnList&&dayRecordList&&this.tableData('日数据',[],dayRecordList)}
-                   
-                    </tbody> 
-                </table> 
-            </div>
-        );
-    }
+              ))}
+              {/* 单独渲染需要占据整行的项目 */}
+              {baseData
+                .filter(item => item.fullRow)
+                .map((item, index) => (
+                  <tr key={`fullRow-${index}`}>
+                    <td style={{ width: '15%', textAlign: 'center' }}>{item.lable}</td>
+                    <td style={{ textAlign: 'center' }} colSpan={3}>
+                      {item.value}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          {/* 修改第二个表格 */}
+          <table className={styles.FormTable} style={{ marginTop: '-6px' }}>
+            <tbody>
+              <tr>
+                <td
+                  rowSpan="3"
+                  className={styles.tdCenter}
+                  style={{
+                    width: '40px',
+                    fontWeight: '600',
+                    backgroundColor: 'rgb(250, 250, 250)',
+                  }}
+                >
+                  序号
+                </td>
+                <td
+                  rowSpan="3"
+                  className={styles.tdCenter}
+                  style={{
+                    width: '120px',
+                    fontWeight: '600',
+                    backgroundColor: 'rgb(250, 250, 250)',
+                  }}
+                >
+                  标准气体或校准器件参考值
+                </td>
+                <td
+                  rowSpan="3"
+                  className={styles.tdCenter}
+                  style={{
+                    width: '100px',
+                    fontWeight: '600',
+                    backgroundColor: 'rgb(250, 250, 250)',
+                  }}
+                >
+                  CEMS显示值
+                </td>
+                <td
+                  rowSpan="3"
+                  className={styles.tdCenter}
+                  style={{
+                    width: '120px',
+                    fontWeight: '600',
+                    backgroundColor: 'rgb(250, 250, 250)',
+                  }}
+                >
+                  CEMS显示值的平均值
+                </td>
+                <td
+                  rowSpan="3"
+                  className={styles.tdCenter}
+                  style={{
+                    width: '100px',
+                    fontWeight: '600',
+                    backgroundColor: 'rgb(250, 250, 250)',
+                  }}
+                >
+                  示值误差(%)
+                </td>
+                <td
+                  colSpan="4"
+                  className={styles.tdCenter}
+                  style={{
+                    fontWeight: '600',
+                    backgroundColor: 'rgb(250, 250, 250)',
+                  }}
+                >
+                  系统响应时间（s）
+                </td>
+                <td
+                  rowSpan="3"
+                  className={styles.tdCenter}
+                  style={{
+                    width: '100px',
+                    fontWeight: '600',
+                    backgroundColor: 'rgb(250, 250, 250)',
+                  }}
+                >
+                  备注
+                </td>
+              </tr>
+              <tr>
+                <td
+                  colSpan="3"
+                  className={styles.tdCenter}
+                  style={{
+                    fontWeight: '600',
+                    backgroundColor: 'rgb(250, 250, 250)',
+                  }}
+                >
+                  测量值
+                </td>
+                <td
+                  rowSpan="2"
+                  className={styles.tdCenter}
+                  style={{
+                    width: '80px',
+                    fontWeight: '600',
+                    backgroundColor: 'rgb(250, 250, 250)',
+                  }}
+                >
+                  平均值
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className={styles.tdCenter}
+                  style={{
+                    width: '80px',
+                    fontWeight: '600',
+                    backgroundColor: 'rgb(250, 250, 250)',
+                  }}
+                >
+                  T1
+                </td>
+                <td
+                  className={styles.tdCenter}
+                  style={{
+                    width: '80px',
+                    fontWeight: '600',
+                    backgroundColor: 'rgb(250, 250, 250)',
+                  }}
+                >
+                  T2
+                </td>
+                <td
+                  className={styles.tdCenter}
+                  style={{
+                    width: '80px',
+                    fontWeight: '600',
+                    backgroundColor: 'rgb(250, 250, 250)',
+                  }}
+                >
+                  T=T1+T2
+                </td>
+              </tr>
+              {/* 渲染数据行 */}
+              {this.renderSecondTableData()}
+              {/* 评价依据作为表格的最后一行 */}
+              <tr>
+                <td colSpan="2" className={styles.tdCenter}>
+                  评价依据
+                </td>
+                <td 
+                  colSpan="8" 
+                  style={{ 
+                    textAlign: 'left', 
+                    padding: '8px', 
+                    whiteSpace: 'pre-line',
+                    lineHeight: '1.5'
+                  }}
+                >
+                  {MainModel?.Col1
+                    ?.replace(/\\n/g, '\n')
+                    ?.replace(/\\/g, '') || ''}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default RepalceRecordList;

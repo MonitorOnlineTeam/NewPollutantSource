@@ -117,7 +117,7 @@ export default class UserInfoAdd extends Component {
             this.setState({ checkedKeysSel: leafTree });
         }
 
-        
+
     };
 
     onSelects = (selectedKeys, info) => {
@@ -170,7 +170,7 @@ export default class UserInfoAdd extends Component {
         if(this.props.configInfo.IsOpera || this.isMonitor){
             this.props.operaBasicInfoForm.validateFields((err, values) => {
                 if (!err) {
-                    
+
                     dispatch({
                         type: 'userinfo/AddOrUpdUser',
                         payload: {
@@ -189,7 +189,7 @@ export default class UserInfoAdd extends Component {
                 }else{
                     this.setState({
                         activeKey: 'base',
-                        baseState: 'block', rolesState: 'none', departState: 'none' 
+                        baseState: 'block', rolesState: 'none', departState: 'none'
                     });
                 }
             });
@@ -252,9 +252,9 @@ export default class UserInfoAdd extends Component {
         const title = this.state.selectKey === 'base' ? '基本信息' : (this.state.selectKey === 'roles' ? '角色设置' : '部门设置');
         return (
             <BreadcrumbWrapper title={`添加 - ${title}`}>
-                <div className="contentContainer" style={{ width: '100%', background: '#fff' }}>
+                <div style={{ width: '100%', background: '#fff' }}>
                     {
-                        <Layout style={{ padding: '14px 0', background: '#fff' }}>
+                        <Layout style={{ padding: '14px 0', background: '#fff', minHeight: '100%' }}>
                             <Sider width={270} style={{ background: '#fff' }}>
                                 <Menu
                                     mode="inline"
@@ -297,9 +297,9 @@ export default class UserInfoAdd extends Component {
                                         rolesState: 'block',
                                         departState: 'none',
                                         selectKey: 'roles',
-                                    })  
+                                    })
                                    }}/>
-                                   : 
+                                   :
                                    <SdlForm
                                         configId="UserInfoAdd"
                                         onSubmitForm={this.onSubmitForm.bind(this)}
@@ -352,7 +352,11 @@ export default class UserInfoAdd extends Component {
                                 </SdlForm>
                                  }
                                 </Card>
-                                <Card bordered={false} title="角色设置" style={{ display: this.state.rolesState }}>
+                                <Card bordered={false} title="角色设置" style={{ display: this.state.rolesState }}
+                                    bodyStyle={{
+                                        paddingBottom: 0
+                                    }}
+                                >
                                     {
                                         this.props.RolesTreeDataLoading ? <Spin
                                             style={{
@@ -364,13 +368,13 @@ export default class UserInfoAdd extends Component {
                                             }}
                                             size="large"
                                         /> :
-
+                                        <div style={{ height: 'calc(100vh - 284px)', overflowY: 'auto' }}>
                                             <Tree
                                                 checkable
                                                 // checkStrictly={false}
                                                 onExpand={this.onExpand}
                                                 // expandedKeys={this.state.expandedKeys}
-                                                autoExpandParent={this.state.autoExpandParent}
+                                                // autoExpandParent={this.state.autoExpandParent}
                                                 onCheck={this.onCheck}
                                                 checkedKeys={this.state.checkedKey}
                                                 onSelect={this.onSelect}
@@ -380,6 +384,7 @@ export default class UserInfoAdd extends Component {
                                             >
                                                 {this.renderTreeNodes(this.props.RolesTreeData)}
                                             </Tree>
+                                        </div>
                                     }
 
                                     <Divider orientation="right">
@@ -398,7 +403,11 @@ export default class UserInfoAdd extends Component {
                                         </Button>
                                     </Divider>
                                 </Card>
-                                <Card bordered={false} title="部门设置" style={{ display: this.state.departState }}>
+                                <Card bordered={false} title="部门设置" style={{ display: this.state.departState }}
+                                    bodyStyle={{
+                                        paddingBottom: 0
+                                    }}
+                                >
                                     {
                                         this.props.treeDataLoading ? <Spin
                                             style={{
@@ -410,12 +419,12 @@ export default class UserInfoAdd extends Component {
                                             }}
                                             size="large"
                                         /> :
-
+                                        <div style={{ height: 'calc(100vh - 284px)', overflowY: 'auto' }}>
                                             <Tree
                                                 checkable
                                                 onExpand={this.onExpand}
                                                 // expandedKeys={this.state.expandedKeys}
-                                                autoExpandParent={this.state.autoExpandParent}
+                                                // autoExpandParent={this.state.autoExpandParent}
                                                 onCheck={this.onChecks}
                                                 checkedKeys={this.state.checkedKeys}
                                                 onSelect={this.onSelects}
@@ -426,6 +435,7 @@ export default class UserInfoAdd extends Component {
                                             >
                                                 {this.renderTreeNodes(this.props.treeData)}
                                             </Tree>
+                                        </div>
                                     }
                                     <Divider orientation="right">
                                         <Button

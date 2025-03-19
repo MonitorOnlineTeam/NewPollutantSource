@@ -42,7 +42,7 @@ import SystemInfo from '../components/SystemInfo'
 import SystemReplaceRecord from '../components/SystemReplaceRecord'
 import InstrumentInfo from '../components/InstrumentInfo'
 import InstrumentReplaceRecord from '../components/InstrumentReplaceRecord'
-
+import MonitorPollutants from '../components/MonitorPollutants'
 const pointConfigId = 'CTPoint'
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -90,6 +90,7 @@ export default class Index extends Component {
       pointSaveFlag: false,
       steps: [
         '监测点信息',
+        '监测因子',
         '系统信息',
         '系统更换记录',
         '仪表信息',
@@ -106,7 +107,7 @@ export default class Index extends Component {
       denitrationList: [], //脱硝
       dustEliminationList: [], //除尘
     };
-
+    this.monitorPollutantsRef = React.createRef();
   }
 
   componentDidMount() {
@@ -485,26 +486,48 @@ export default class Index extends Component {
     })
   }
 
-  saveNext = () => {
-    const { dgimn, current, } = this.state;
-    switch (current) {
-      case 0: //监测点信息
-        this.savePoint()
-        break;
-      case 1: //系统信息
-        this.saveSystemInfo(dgimn)
-        break;
-      case 2: //系统更换记录
-        this.saveSystemChangeInfo(dgimn)
-        break;
-      case 3: //仪表信息
-        this.saveInstrumentInfo(dgimn)
-        break;
-      case 4: //仪表更换记录
-        this.saveInstrumentChangeInfo(dgimn)
-        break;
+  saveNext = async () => {
+    try {
+      const { current, dgimn, isDetail } = this.state;
+      
+      if (current === 0) {
+        await this.savePoint();
+      } else if (current === 1 && this.monitorPollutantsRef.current) {
+        // 调用MonitorPollutants的onFinish方法
+        const success = await this.monitorPollutantsRef.current.onFinish();
+        if (!success) {
+          return; // 如果保存失败,直接返回
+        }
+      } else {
+        // 其他步骤的保存逻辑...
+        switch (current) {
+          case 2:
+            await this.saveSystemInfo(dgimn);
+            break;
+          case 3:
+            await this.saveSystemChangeInfo(dgimn);
+            break;
+          case 4:
+            await this.saveInstrumentInfo(dgimn);
+            break;
+          case 5:
+            await this.saveInstrumentChangeInfo(dgimn);
+            break;
+        }
+      }
+
+      // 保存成功后,进入下一步或关闭弹窗
+      if (current < this.state.steps.length - 1) {
+        this.next();
+      } else {
+        this.setState({ visible: false });
+      }
+    } catch (error) {
+      console.error('Save error:', error);
+      message.error('保存失败');
     }
   }
+
   savePoint = () => { //监测点信息
     const { dispatch, match, pointDataWhere, form } = this.props;
     const { isEdit, FormData } = this.state;
@@ -813,6 +836,7 @@ export default class Index extends Component {
             />}
           </Card>
         </div>
+        {/* 操作监测点弹窗 */}
         <Modal
           title={modalTitle}
           visible={this.state.visible}
@@ -849,10 +873,17 @@ export default class Index extends Component {
           </Steps>
           <div style={{ paddingTop: 12 }}>
             {this.pointInfo(current)}
-            {current == 1 && <SystemInfo current={current} dgimn={dgimn} isDetail={isDetail} />}
-            {current == 2 && <SystemReplaceRecord current={current} dgimn={dgimn} isDetail={isDetail} />}
-            {current == 3 && <InstrumentInfo current={current} dgimn={dgimn} isDetail={isDetail} />}
-            {current == 4 && <InstrumentReplaceRecord current={current} dgimn={dgimn} isDetail={isDetail} />}
+            {current == 1 && 
+              <MonitorPollutants 
+                ref={this.monitorPollutantsRef}
+                dgimn={dgimn} 
+                isDetail={isDetail} 
+              />
+            }
+            {current == 2 && <SystemInfo current={current} dgimn={dgimn} isDetail={isDetail} />}
+            {current == 3 && <SystemReplaceRecord current={current} dgimn={dgimn} isDetail={isDetail} />}
+            {current == 4 && <InstrumentInfo current={current} dgimn={dgimn} isDetail={isDetail} />}
+            {current == 5 && <InstrumentReplaceRecord current={current} dgimn={dgimn} isDetail={isDetail} />}
           </div>
 
         </Modal>

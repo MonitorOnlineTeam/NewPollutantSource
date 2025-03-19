@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2025-01-16 11:40:22
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-01-17 12:00:06
+ * @Last Modified time: 2025-02-24 09:10:16
  * @Description:  成套现场质量检查任务单
  */
 
@@ -35,7 +35,7 @@ import LargeRegionList from '@/components/largeRegionList';
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader';
 import { cookieName } from '@/config';
 import { API } from '@config/API';
-
+import { checkRules } from '@/utils/validator';   
 const { TextArea } = Input;
 
 const dvaPropsData = ({ loading, wordSupervision, common }) => ({
@@ -146,7 +146,7 @@ const SiteQualityInspection = props => {
         if (payload.cemsModel) {
           // 选择系统型号时的处理
           setInspectionInfo(res.model);
-          
+
           // 添加时返填默认值
           if (res.model?.OnsiteInspectionRecordInfoList?.length) {
             // 设置检查记录的默认值
@@ -237,6 +237,7 @@ const SiteQualityInspection = props => {
         key: 'Inspection',
         width: 100,
         align: 'center',
+        colSpan: 2,
         render: (text, record, index) => getMergedCellProps(text, record, index, 'Inspection'),
       },
       {
@@ -245,6 +246,7 @@ const SiteQualityInspection = props => {
         key: 'InspectionProject',
         align: 'center',
         width: 100,
+        colSpan: 0,
         render: (text, record, index) =>
           getMergedCellProps(text, record, index, 'InspectionProject'),
       },
@@ -256,7 +258,7 @@ const SiteQualityInspection = props => {
         align: 'center',
       },
       {
-        title: () => <div className={styles.required}>设定值</div>,
+        title: () => <div>设定值</div>,
         dataIndex: 'SetValue',
         key: 'SetValue',
         width: 100,
@@ -270,15 +272,15 @@ const SiteQualityInspection = props => {
               name={`SetValue_${record.TemplateId}`}
               style={{ marginBottom: 0 }}
               wrapperCol={{ span: 24 }}
-              rules={[{ required: true, message: '请输入设定值' }]}
+              // rules={[{ required: true, message: '请输入设定值' }]}
             >
-              <InputNumber placeholder="请输入" allowClear />
+              <Input placeholder="请输入" allowClear />
             </Form.Item>
           );
         },
       },
       {
-        title: () => <div className={styles.required}>显示值</div>,
+        title: () => <div>显示值</div>,
         dataIndex: 'DisplayValue',
         key: 'DisplayValue',
         width: 100,
@@ -292,9 +294,9 @@ const SiteQualityInspection = props => {
               name={`DisplayValue_${record.TemplateId}`}
               style={{ marginBottom: 0 }}
               wrapperCol={{ span: 24 }}
-              rules={[{ required: true, message: '请输入显示值' }]}
+              // rules={[{ required: true, message: '请输入显示值' }]}
             >
-              <InputNumber placeholder="请输入" allowClear />
+              <Input placeholder="请输入" allowClear />
             </Form.Item>
           );
         },
@@ -367,7 +369,7 @@ const SiteQualityInspection = props => {
       };
 
       console.log('submitData', submitData);
-        // return;
+      // return;
       // 调用提交接口
       props.dispatch({
         type: 'wordSupervision/AddOrUpdateOnsiteInspectionRecord',
@@ -522,10 +524,7 @@ const SiteQualityInspection = props => {
                       required: true,
                       message: '请输入用户电话',
                     },
-                    {
-                      pattern: /^1[3|4|5|7|8][0-9]\d{8}$/,
-                      message: '请输入正确的手机号！',
-                    },
+                    { ...checkRules.mobile },
                   ]}
                 >
                   <Input placeholder="请输入手机号" allowClear />
@@ -617,8 +616,7 @@ const SiteQualityInspection = props => {
                       message: '请输入服务人员电话',
                     },
                     {
-                      pattern: /^1[3|4|5|7|8][0-9]\d{8}$/,
-                      message: '请输入正确的电话！',
+                      ...checkRules.mobile,
                     },
                   ]}
                 >
@@ -794,9 +792,11 @@ const SiteQualityInspection = props => {
                           return (
                             <div>
                               <div>
-                                1、“设定值”和“显示值”列，如该项目存在具体的设定值和显示值，请在该处填写实际数值；若无则填写“/”；{' '}
+                                1、“设定值”和“显示值”列，如该项目存在具体的设定值和显示值，请在该处填写实际数值；若无则填写“/”；
                               </div>
-                              <div>2、“是否符合”列，符合清打“√”；不符合请打“×”，不适用请打“/” </div>
+                              <div>
+                                2、“是否符合”列，符合清打“√”；不符合请打“×”，不适用请打“/”；{' '}
+                              </div>
                             </div>
                           );
                         }

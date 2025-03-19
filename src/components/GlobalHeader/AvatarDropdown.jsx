@@ -62,12 +62,7 @@ class AvatarDropdown extends React.Component {
     if (hideDropdown) {
       return (
         <span className={`${styles.action} ${styles.account}`}>
-          <Avatar
-            size="small"
-            className={styles.avatar}
-            src={'/avatar.png'}
-            alt="avatar"
-          />
+          <Avatar size="small" className={styles.avatar} src={'/avatar.png'} alt="avatar" />
           <span className={styles.name}>
             <span title={currentUser.UserName}>{currentUser.UserName}</span>
           </span>
@@ -102,7 +97,8 @@ class AvatarDropdown extends React.Component {
         <Menu.Divider /> */}
         {// 只有“污染源异常数据识别系统"显示
         projectList?.length &&
-        sessionStorage.getItem('sysMenuId') === 'f6eb76ab-ce0b-4cfb-8626-2e0ec4435ec3' ? (
+        // sessionStorage.getItem('sysMenuId') === 'f6eb76ab-ce0b-4cfb-8626-2e0ec4435ec3' ? (
+        true ? (
           <Menu.Item key="project" id="AvatarMenu">
             <SwitchProject />
           </Menu.Item>
@@ -131,7 +127,9 @@ class AvatarDropdown extends React.Component {
             src={'/avatar.png'}
             alt="avatar"
           />
-          <span className={styles.name}><span title={currentUser.UserName}>{currentUser.UserName}</span></span>
+          <span className={styles.name}>
+            <span title={currentUser.UserName}>{currentUser.UserName}</span>
+          </span>
         </div>
       </HeaderDropdown>
     ) : (

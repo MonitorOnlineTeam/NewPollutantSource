@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-11-28 15:56:43
+ * @Last Modified time: 2025-02-26 09:38:40
  * @Description：线索列表
  */
 
@@ -22,6 +22,9 @@ import {
   message,
   Tag,
   Popconfirm,
+  Checkbox,
+  Popover,
+  Divider,
 } from 'antd';
 import styles from '../styles.less';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
@@ -37,7 +40,7 @@ import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import CluesDetails from './CluesDetails';
 import { isArray } from 'lodash';
 import Cookie from 'js-cookie';
-import { UpOutlined, DownOutlined } from '@ant-design/icons';
+import { UpOutlined, DownOutlined, UnorderedListOutlined, UploadOutlined } from '@ant-design/icons';
 
 const { SHOW_PARENT } = TreeSelect;
 
@@ -58,6 +61,7 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   queryLoading: loading.effects['AbnormalIdentifyModel/GetWarningList'],
   pointListLoading: loading.effects['AbnormalIdentifyModel/GetNoFilterPointByEntCode'],
   entListLoading: loading.effects['common/getEntNoFilterList'],
+  exportLoading: loading.effects['AbnormalIdentifyModel/ExportWarningList'],
 });
 
 const CluesList = props => {
@@ -73,6 +77,7 @@ const CluesList = props => {
     showMode,
     tableProps = {},
     cluesListTag,
+    exportLoading,
   } = props;
   const modelNumber = props.match.params.modelNumber;
   // const _isSystem = isSystem();
@@ -87,6 +92,7 @@ const CluesList = props => {
   const [cluesDetailsProps, setCluesDetailsProps] = useState();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [expand, setExpand] = useState(showMode === 'modal');
+  const [visibleColumns, setVisibleColumns] = useState([]);
 
   // useEffect(() => {
   //   // getModelIdsByModelNumber(false);
@@ -119,10 +125,12 @@ const CluesList = props => {
   //     },
   //   });
   // }, [modelNumber]);
+
   useEffect(() => {
     form.setFieldsValue({ ...warningForm[modelNumber] });
     GetMoldTypeLevelList();
     GetModelList();
+    GetMoldFlagList();
     onFinish();
   }, [modelNumber]);
 
@@ -137,6 +145,43 @@ const CluesList = props => {
       getPointList(warningForm[modelNumber].EntCode);
     }
   }, [warningForm[modelNumber]]);
+
+  // 获取所有可用的列配置
+  const getAllColumns = () => {
+    const columns = getColumns();
+    return columns
+      .map(col => ({
+        key: col.dataIndex || col.key,
+        title: col.title,
+      }))
+      .filter(col => col.key); // 过滤掉没有 key 的列
+  };
+
+  // 初始化时只执行一次
+  useEffect(() => {
+    const allColumns = getAllColumns();
+    // 如果 configInfo.WarningListFields 存在且有值，使用它；否则使用所有列
+    let defaultColumns = [];
+
+    try {
+      if (configInfo.WarningListFields) {
+        // 将字符串转换为数组
+        const configFields = JSON.parse(configInfo.WarningListFields.replace(/'/g, '"'));
+
+        // 确保配置的列都是有效的
+        defaultColumns = configFields.filter(key => allColumns.some(col => col.key === key));
+      }
+    } catch (error) {
+      console.warn('解析 WarningListFields 配置失败:', error);
+    }
+
+    // 如果没有有效的配置列，使用所有列
+    if (!defaultColumns.length) {
+      defaultColumns = allColumns.map(col => col.key);
+    }
+
+    setVisibleColumns(defaultColumns);
+  }, []);
 
   // 获取数据模型列表
   const GetModelList = () => {
@@ -158,6 +203,20 @@ const CluesList = props => {
         let modelList = transformData(res);
         console.log('modelList', modelList);
         setModelList(modelList);
+      },
+    });
+  };
+
+  // 根据场景类别获取模型标记
+  const [moldFlagList, setMoldFlagList] = useState([]);
+  const GetMoldFlagList = modelGuid => {
+    dispatch({
+      type: 'AbnormalIdentifyModel/GetMoldFlagList',
+      payload: {
+        modelGuid: modelGuid?.toString(),
+      },
+      callback: res => {
+        setMoldFlagList(res);
       },
     });
   };
@@ -221,18 +280,49 @@ const CluesList = props => {
         },
       },
       {
+        title: '行政区划',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        width: 180,
+        ellipsis: true,
+        sorter: true,
+        sortDirections: ['ascend', 'descend'],
+        sortOrder:
+          warningForm[modelNumber].OrderByField === 'RegionName'
+            ? warningForm[modelNumber].IsAsc
+              ? 'ascend'
+              : 'descend'
+            : undefined,
+      },
+      {
         title: convertTextByConfig('企业'),
         dataIndex: 'EntNmae',
         key: 'EntNmae',
         width: 200,
         ellipsis: true,
+        sorter: true,
+        sortDirections: ['ascend', 'descend'],
+        sortOrder:
+          warningForm[modelNumber].OrderByField === 'EntNmae'
+            ? warningForm[modelNumber].IsAsc
+              ? 'ascend'
+              : 'descend'
+            : undefined,
       },
       {
         title: '排口',
         dataIndex: 'PointName',
         key: 'PointName',
-        width: 200,
+        width: 150,
         ellipsis: true,
+        sorter: true,
+        sortDirections: ['ascend', 'descend'],
+        sortOrder:
+          warningForm[modelNumber].OrderByField === 'PointName'
+            ? warningForm[modelNumber].IsAsc
+              ? 'ascend'
+              : 'descend'
+            : undefined,
       },
       {
         title: '行业',
@@ -240,14 +330,31 @@ const CluesList = props => {
         key: 'IndustryTypeName',
         width: 120,
         ellipsis: true,
+        sorter: true,
+        sortDirections: ['ascend', 'descend'],
+        sortOrder:
+          warningForm[modelNumber].OrderByField === 'IndustryTypeName'
+            ? warningForm[modelNumber].IsAsc
+              ? 'ascend'
+              : 'descend'
+            : undefined,
       },
       {
         title: '发现线索时间',
         dataIndex: 'WarningTime',
         key: 'WarningTime',
         width: 160,
-        ellipsis: true,
-        sorter: (a, b) => moment(a.WarningTime).valueOf() - moment(b.WarningTime).valueOf(),
+        sorter: true,
+        sortDirections: ['ascend', 'descend'],
+        sortOrder:
+          warningForm[modelNumber].OrderByField === 'WarningTime'
+            ? warningForm[modelNumber].IsAsc
+              ? 'ascend'
+              : 'descend'
+            : undefined,
+        render: (text, record) => {
+          return text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : '-';
+        },
       },
       {
         title: '场景类别',
@@ -255,6 +362,14 @@ const CluesList = props => {
         key: 'WarningTypeName',
         width: 180,
         ellipsis: true,
+        sorter: true,
+        sortDirections: ['ascend', 'descend'],
+        sortOrder:
+          warningForm[modelNumber].OrderByField === 'WarningTypeName'
+            ? warningForm[modelNumber].IsAsc
+              ? 'ascend'
+              : 'descend'
+            : undefined,
         render: (text, record) => {
           let _text = ModalNameConversion(text);
           return (
@@ -268,7 +383,7 @@ const CluesList = props => {
         title: '线索内容',
         dataIndex: 'WarningContent',
         key: 'WarningContent',
-        width: 260,
+        width: 300,
         ellipsis: true,
         render: (text, record) => {
           return (
@@ -334,6 +449,7 @@ const CluesList = props => {
         title: '操作',
         key: 'handle',
         width: 60,
+        fixed: 'right',
         render: (text, record) => {
           return (
             <Tooltip title="查看">
@@ -449,6 +565,57 @@ const CluesList = props => {
     });
   };
 
+  // 导出列表
+  const ExportWarningList = () => {
+    const values = form.getFieldsValue();
+    const { level = [], types = [] } = values;
+    let warningTypeCode = [];
+    if (values.warningTypeCode) {
+      warningTypeCode = isArray(values.warningTypeCode)
+        ? values.warningTypeCode
+        : [values.warningTypeCode];
+    }
+
+    let codes = [...warningTypeCode, ...level, ...types];
+
+    if (!values?.date?.length && !values?.date1?.length) {
+      message.error('请选择日期后查询！');
+      return;
+    }
+
+    // 判断查询实时还是历史数据
+    let IsReal = undefined; // 全部
+    if (location.pathname === '/AbnormalIdentifyModel/CluesList/all') {
+      IsReal = 1; // 实时
+    } else if (location.pathname === '/AbnormalIdentifyModel/CluesList/history') {
+      IsReal = 0; // 历史
+    }
+    // console.log('visibleColumns', visibleColumns);
+    // return;
+    dispatch({
+      type: 'AbnormalIdentifyModel/ExportWarningList',
+      payload: {
+        ...values,
+        Dgimn: values.DGIMN,
+        warningTypeCode: codes.toString(),
+        types: undefined,
+        level: undefined,
+        date: undefined,
+        beginTime: values.date ? values.date[0]?.format('YYYY-MM-DD HH:mm:ss') : undefined,
+        endTime: values.date ? values.date[1]?.format('YYYY-MM-DD HH:mm:ss') : undefined,
+        date1: undefined,
+        IsReal: IsReal,
+        WarningBeginTime: values.date1
+          ? values.date1[0]?.startOf('day').format('YYYY-MM-DD HH:mm:ss')
+          : undefined,
+        WarningEndTime: values.date1
+          ? values.date1[1]?.endOf('day').format('YYYY-MM-DD HH:mm:ss')
+          : undefined,
+        WarningListFields: visibleColumns,
+      },
+    });
+  };
+
   // 重置表单
   const onReset = notResetForm => {
     dispatch({
@@ -546,6 +713,89 @@ const CluesList = props => {
     },
   };
 
+  // 列设置菜单组件
+  const ColumnSettingMenu = () => {
+    const allColumns = getAllColumns();
+    const currentValue = visibleColumns.length ? visibleColumns : allColumns.map(col => col.key);
+
+    return (
+      <div style={{ minWidth: 180 }}>
+        <Checkbox.Group
+          value={currentValue}
+          onChange={checkedValues => {
+            if (checkedValues && checkedValues.length) {
+              setVisibleColumns([...checkedValues]); // 使用数组拷贝
+            } else {
+              message.warning('至少需要选择一列');
+              // 保持当前选中状态
+              setVisibleColumns([...currentValue]);
+            }
+          }}
+        >
+          {allColumns.map(col => (
+            <div key={col.key} style={{ marginBottom: 8 }}>
+              <Checkbox value={col.key}>{col.title}</Checkbox>
+            </div>
+          ))}
+        </Checkbox.Group>
+      </div>
+    );
+  };
+
+  // 过滤显示的列
+  const getFilteredColumns = () => {
+    const columns = getColumns();
+    // 如果没有可见列配置，显示所有列
+    if (!visibleColumns.length) {
+      return columns;
+    }
+    return columns.filter(col => {
+      const key = col.dataIndex || col.key;
+      return key && visibleColumns.includes(key);
+    });
+  };
+
+  // 添加表格变化处理函数
+  const handleTableChange = (pagination, filters, sorter) => {
+    // 处理排序
+    let orderByField = undefined;
+    let isAsc = undefined;
+    if (sorter.field) {
+      orderByField = sorter.field;
+
+      if (sorter.order === 'ascend') {
+        isAsc = true;
+      } else if (sorter.order === 'descend') {
+        isAsc = false;
+      } else {
+        orderByField = undefined;
+        isAsc = undefined;
+      }
+    }
+
+    // 更新查询条件
+    dispatch({
+      type: 'AbnormalIdentifyModel/updateState',
+      payload: {
+        warningForm: {
+          ...warningForm,
+          [modelNumber]: {
+            ...warningForm[modelNumber],
+            OrderByField: orderByField,
+            IsAsc: isAsc,
+            pageIndex: pagination.current,
+            pageSize: pagination.pageSize,
+          },
+        },
+      },
+    });
+
+    // 重新查询数据
+    setTimeout(() => {
+      onFinish();
+    }, 0);
+  };
+
   const getPageContent = () => {
     let cardProps = showMode === 'modal' ? { bordered: false, bodyStyle: { padding: 0 } } : {};
     let actionTreeProps = getTreePorps([
@@ -596,6 +846,12 @@ const CluesList = props => {
             let DGIMN = allFields.DGIMN;
             if (!allFields.EntCode || changedFields.EntCode) {
               DGIMN = undefined;
+            }
+
+            // 根据场景类别获取模型标记
+            if ('warningTypeCode' in changedFields) {
+              form.setFieldValue('ModelFlag', undefined);
+              GetMoldFlagList(changedFields.warningTypeCode);
             }
             dispatch({
               type: 'AbnormalIdentifyModel/updateState',
@@ -652,6 +908,12 @@ const CluesList = props => {
               <Option key={'4'} value={'03'}>
                 氮氧化物
               </Option>
+              <Option key={'5'} value={'s01'}>
+                O₂
+              </Option>
+              <Option key={'6'} value={'a24088'}>
+                非甲烷总烃
+              </Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -677,7 +939,7 @@ const CluesList = props => {
                 maxTagCount={2}
                 maxTagTextLength={5}
                 maxTagPlaceholder="..."
-                style={{ width: 240 }}
+                style={{ width: 230 }}
                 onChange={value => {
                   form.setFieldsValue({ EntCode: undefined, DGIMN: undefined });
                   dispatch({
@@ -785,7 +1047,7 @@ const CluesList = props => {
               showSearch
               allowClear
               optionFilterProp="children"
-              style={{ width: 130 }}
+              style={{ width: 120 }}
             >
               <Option key={1} value={1}>
                 符合
@@ -804,7 +1066,7 @@ const CluesList = props => {
               showSearch
               allowClear
               optionFilterProp="children"
-              style={{ width: 130 }}
+              style={{ width: 120 }}
             >
               <Option key={1} value={1}>
                 待核查
@@ -819,6 +1081,23 @@ const CluesList = props => {
           </Form.Item>
           <Form.Item label="线索内容" name="WarningContent">
             <Input placeholder="线索内容" style={{ width: 240 }} />
+          </Form.Item>
+          <Form.Item label="异常现象" name="ModelFlag">
+            <Select
+              placeholder="请选择核查状态"
+              showSearch
+              allowClear
+              optionFilterProp="children"
+              style={{ width: 200 }}
+            >
+              {moldFlagList.map(item => {
+                return (
+                  <Option key={item.FlagCode} value={item.FlagCode}>
+                    {item.FlagName}
+                  </Option>
+                );
+              })}
+            </Select>
           </Form.Item>
           <Form.Item>
             <Space>
@@ -884,15 +1163,39 @@ const CluesList = props => {
             </Space>
           </Form.Item>
         </Form>
+        <div style={{ marginTop: 10, marginBottom: 10, textAlign: 'right' }}>
+          {/* <Space> */}
+          <Button
+            loading={exportLoading}
+            style={{ border: 0 }}
+            size="small"
+            onClick={() => ExportWarningList()}
+          >
+            <UploadOutlined /> 导出
+          </Button>
+          <Divider type="vertical" />
+          <Popover
+            placement="bottomRight"
+            content={<ColumnSettingMenu />}
+            trigger="click"
+            title="列设置"
+          >
+            <Button style={{ border: 0 }} size="small">
+              <UnorderedListOutlined /> 列设置
+            </Button>
+          </Popover>
+          {/* </Space> */}
+        </div>
         <SdlTable
           rowSelection={isSystem ? rowSelection : false}
           resizable
           rowKey="ModelWarningGuid"
           align="center"
           style={{ marginTop: 10 }}
-          columns={getColumns()}
+          columns={getFilteredColumns()}
           dataSource={dataSource}
           loading={queryLoading}
+          onChange={handleTableChange}
           pagination={{
             showSizeChanger: true,
             showQuickJumper: true,
@@ -900,6 +1203,7 @@ const CluesList = props => {
             current: warningForm[modelNumber].pageIndex,
             onChange: onTableChange,
             total: total,
+            pageSizeOptions: ['10', '20', '50', '100', '200', '500', '1000'],
           }}
           footer={() => (
             <Space wrap>

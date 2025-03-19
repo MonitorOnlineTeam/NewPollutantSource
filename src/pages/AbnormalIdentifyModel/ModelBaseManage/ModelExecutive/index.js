@@ -25,7 +25,7 @@ const ModelExecutive = props => {
   const [logsList, setLogsList] = useState([]);
   const [runProgress, setRunProgress] = useState(0);
   const [isAll, setIsAll] = useState(false);
-  const [isStudy, setIsStudy] = useState(true);
+  const [isStudy, setIsStudy] = useState();
 
   useEffect(() => {
     getRunLogs();
@@ -39,7 +39,7 @@ const ModelExecutive = props => {
     form.validateFields().then(values => {
       setExecutionLoading(true);
       let body = {
-        IsStudy: values.IsStudy,
+        IsStudy: values.IsStudy === '1',
         DGIMN: !isAll ? selectedKeys.toString() : undefined,
         BeginTime: values.runTime[0].format('YYYY-MM-DD HH:00:00'), // 模型执行时间
         EndTime: values.runTime[1].format('YYYY-MM-DD HH:59:59'), // 模型执行时间
@@ -50,6 +50,8 @@ const ModelExecutive = props => {
           ? values.learnTime[1].format('YYYY-MM-DD HH:59:59')
           : undefined, // 学习时间
       };
+      // console.log('body', body)
+      // return
       dispatch({
         type: 'AbnormalIdentifyModel/GenericPostRequest',
         url: API.AbnormalIdentifyModel.AutoOpeModel,
@@ -152,16 +154,23 @@ const ModelExecutive = props => {
                 },
               ]}
             >
-              <Radio.Group
-                onChange={e => {
-                  setIsStudy(e.target.value);
-                }}
-              >
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>
+              <Space>
+                <Radio.Group
+                  onChange={e => {
+                    setIsStudy(e.target.value === '1');
+                  }}
+                >
+                  <Radio value="1">是</Radio>
+                  <Radio value="0">否</Radio>
+                </Radio.Group>
+                {isStudy && (
+                  <span style={{ fontSize: 14, color: 'red' }}>
+                    （选"是"将会重新计算波动范围、振幅、陡变系数等数据特征，请反复确认是否必需）
+                  </span>
+                )}
+              </Space>
             </Form.Item>
-            {isStudy && (
+            {(isStudy === true || isStudy === undefined) && (
               <Form.Item label="特征学习时间范围" required>
                 <Space direction="vertical">
                   <Form.Item

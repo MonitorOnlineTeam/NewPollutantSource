@@ -171,7 +171,7 @@ const LevelCard = props => {
             //   }
             // },
             textStyle: {
-              fontSize: fontSizeFn(14),
+              fontSize: fontSizeFn(13),
               color: '#dfdfdf',
               fontWeight: 'bold',
             },

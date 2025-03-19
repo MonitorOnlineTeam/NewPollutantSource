@@ -23,30 +23,17 @@ import {
   Divider,
   Modal,
   DatePicker,
+  Space,
+  Radio,
 } from 'antd';
 import SdlTable from '@/components/SdlTable';
-import {
-  PlusOutlined,
-  UpOutlined,
-  DownOutlined,
-  ExportOutlined,
-  ProfileOutlined,
-  AmazonCircleFilled,
-  LoadingOutlined,
-} from '@ant-design/icons';
 import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-const { RangePicker } = DatePicker;
-import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon';
-import router from 'umi/router';
-import Link from 'umi/link';
-import moment from 'moment';
-import RegionList from '@/components/RegionList';
-import SdlCascader from '@/pages/AutoFormManager/SdlCascader';
 import styles from '../../styles.less';
 import Cookie from 'js-cookie';
 import { throttle, debounce } from 'lodash'; // 使用 lodash 的节流函数、防抖函数
-import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import ReactEcharts from 'echarts-for-react';
+import AssistDataAnalysis from '@/pages/AbnormalIdentifyModel/AssistDataAnalysis';
 
 const { Option } = Select;
 
@@ -55,6 +42,7 @@ const namespace = 'ModelBaseManage';
 const dvaPropsData = ({ loading, ModelBaseManage, global }) => ({
   configInfo: global.configInfo,
   pointRelevantCountLoading: loading.effects[`${namespace}/GetPointRelevantCount`],
+  JsHourDataInfoLoading: loading.effects[`${namespace}/JsHourDataInfo`],
 });
 
 const Index = props => {
@@ -73,6 +61,7 @@ const Index = props => {
   const [tableDatas6, setTableDatas6] = useState([]);
   const [tableLoading6, setTableLoading6] = useState(true);
   const [pointRelevantCountData, setPointRelevantCount] = useState({});
+  const [dataType, setDataType] = useState('data');
 
   const sumData = (array, key) => {
     return array?.[0]
@@ -120,9 +109,9 @@ const Index = props => {
       logUrl: 'GetProjectLogsInfoList',
     },
     监测数据: {
-      time: tableDatas6?.cleanTime,
+      // time: tableDatas6?.cleanTime,
       //  numData: [{ label: '清洗数据', value: tableDatas6?.successCount || 0 }, { label: '非法', value: tableDatas6?.falseCount || 0 }],
-      data: tableDatas6?.dataList,
+      data: tableDatas6,
       loading: tableLoading6,
       taskType: 6,
     },
@@ -187,6 +176,21 @@ const Index = props => {
     handleChange(1);
     getHourDataLogsListRequest(missDefaultValue);
   }, []);
+
+  // 获取监测数据
+  const GetHourDataLogsList = missDefaultValue => {
+    props.dispatch({
+      type: `${namespace}/GetHourDataLogsList`,
+      payload: { projectType: missDefaultValue, taskType: 6 },
+      callback: result => {
+        setTableLoading6(false);
+        if (result.IsSuccess) {
+          setTableDatas6(result.Datas);
+        }
+      },
+    });
+  };
+
   const handleChange = values => {
     //查询
     props.dispatch({
@@ -244,16 +248,7 @@ const Index = props => {
       },
     });
 
-    props.dispatch({
-      type: `${namespace}/GetHourDataLogsList`,
-      payload: { projectType: values, taskType: 6 },
-      callback: result => {
-        setTableLoading6(false);
-        if (result.IsSuccess) {
-          setTableDatas6(result.Datas);
-        }
-      },
-    });
+    GetHourDataLogsList(values);
     props.dispatch({
       type: `${namespace}/GetPointRelevantCount`,
       payload: { projectType: values, taskType: 2 },
@@ -272,6 +267,18 @@ const Index = props => {
     } else {
       return ''; // 如果没有匹配到，返回空字符串
     }
+  };
+
+  // 统计监测数据
+  const getJsHourDataInfo = () => {
+    props.dispatch({
+      type: `${namespace}/JsHourDataInfo`,
+      payload: {},
+      callback: result => {
+        message.success('统计完成！');
+        GetHourDataLogsList(1);
+      },
+    });
   };
 
   let columns = title => [
@@ -380,11 +387,25 @@ const Index = props => {
   ];
   let columns2 = [
     {
+      title: '编号',
+      dataIndex: 'index',
+      key: 'index',
+      align: 'center',
+      ellipsis: true,
+      width: 60,
+      render: (text, record, index) => {
+        return index + 1;
+      },
+    },
+    {
       title: '企业',
       dataIndex: 'entName',
       key: 'entName',
       align: 'center',
       ellipsis: true,
+      render: (text, record) => {
+        return <Tooltip title={text}>{text}</Tooltip>;
+      },
     },
     {
       title: '排放口',
@@ -394,29 +415,37 @@ const Index = props => {
       ellipsis: true,
     },
     {
-      title: '数据缺失率',
-      dataIndex: 'rate',
-      key: 'rate',
+      title: '数据条数',
+      dataIndex: 'hourCount',
+      key: 'hourCount',
       align: 'center',
       ellipsis: true,
-      render: text => {
-        return text + '%';
-      },
+      sorter: (a, b) => a.hourCount - b.hourCount,
     },
-    {
-      title: '缺失数据',
-      dataIndex: 'actualDataCount',
-      key: 'actualDataCount',
-      align: 'center',
-      ellipsis: true,
-    },
-    {
-      title: '应传数据',
-      dataIndex: 'passeDataCount',
-      key: 'passeDataCount',
-      align: 'center',
-      ellipsis: true,
-    },
+    // {
+    //   title: '数据缺失率',
+    //   dataIndex: 'rate',
+    //   key: 'rate',
+    //   align: 'center',
+    //   ellipsis: true,
+    //   render: text => {
+    //     return text + '%';
+    //   },
+    // },
+    // {
+    //   title: '缺失数据',
+    //   dataIndex: 'actualDataCount',
+    //   key: 'actualDataCount',
+    //   align: 'center',
+    //   ellipsis: true,
+    // },
+    // {
+    //   title: '应传数据',
+    //   dataIndex: 'passeDataCount',
+    //   key: 'passeDataCount',
+    //   align: 'center',
+    //   ellipsis: true,
+    // },
   ];
   const logCommonCol = [
     {
@@ -532,7 +561,7 @@ const Index = props => {
       <>
         <Row align="middle" justify="space-between">
           <div style={{ fontSize: 18, fontWeight: 'bold' }}>{title}</div>
-          <div>最近清洗时间：{time}</div>
+          {title !== '监测数据' && <div>最近清洗时间：{time}</div>}  
         </Row>
         {numData && (
           <Row style={{ margin: '8px 0' }}>
@@ -583,14 +612,99 @@ const Index = props => {
     );
   };
 
+  const getOption = () => {
+    const data = obj1.监测数据.data;
+    const grid = {
+      // left: 80,
+      right: 0,
+      bottom: 20,
+      top: 10,
+      // containLabel: true
+    };
+    if (!data) {
+      return {};
+    }
+    let xAxisData = [],
+      yAxisData = [];
+    data.map(item => {
+      xAxisData.push(item.entName);
+      yAxisData.push(item.hourCount);
+    });
+    let option = {
+      grid: {
+        ...grid,
+      },
+      toolbox: {
+        feature: {
+          dataZoom: {
+            show: true,
+            yAxisIndex: 'none',
+            title: {
+              zoom: '区域缩放',
+              back: '区域缩放还原',
+            },
+          },
+          restore: { show: true, title: '还原' },
+          saveAsImage: { show: true, title: '保存为图片' },
+        },
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+        },
+        formatter: function(params) {
+          let dataIndex = params[0].dataIndex;
+          let currentData = data[dataIndex];
+          let tooltipText = `企业：${currentData.entName} <br/>
+                排放口：${currentData.pointName} <br/>
+                数据条数：${currentData.hourCount} <br/>
+                <span style="color: #faad14;font-weight: bold">点击查看该排放口所有因子的波动范围</span>
+              `;
+          return tooltipText;
+        },
+      },
+      // dataZoom: [
+      //   {
+      //     type: 'inside',
+      //     start: 0,
+      //     end: 100,
+      //   },
+      // ],
+      xAxis: {
+        type: 'category',
+        data: xAxisData,
+      },
+      yAxis: {
+        type: 'value',
+      },
+      series: [
+        {
+          name: '监测数据',
+          type: 'bar',
+          data: yAxisData,
+        },
+      ],
+    };
+    return option;
+  };
+
+  // 显示波动范围弹窗
+  const [currentData, setCurrentData] = useState({});
+  const [visible, setVisible] = useState(false);
+  const onShowAbnormalJudgmentPage = row => {
+    setCurrentData(row);
+    setVisible(true);
+  };
+
   const dischargeOutletType = [
     { label: '废气排放口', value: pointRelevantCountData?.fqpfk || 0 },
     { label: '废气非排放口', value: pointRelevantCountData?.fqopfk || 0 },
     { label: '废水排放口', value: pointRelevantCountData?.fspfk || 0 },
     { label: '废水非排放口', value: pointRelevantCountData?.fsopfk || 0 },
-    { label: '单粉尘CEMS排放口', value: pointRelevantCountData?.dust || 0 },
-    { label: '常规焚烧炉CEMS排放口', value: pointRelevantCountData?.burn || 0 },
-    { label: '关联排放口', value: pointRelevantCountData?.relaCount || 0 },
+    // { label: '单粉尘CEMS排放口', value: pointRelevantCountData?.dust || 0 },
+    // { label: '常规焚烧炉CEMS排放口', value: pointRelevantCountData?.burn || 0 },
+    // { label: '关联排放口', value: pointRelevantCountData?.relaCount || 0 },
   ];
   const logColObj = {
     企业日志: logCommonCol?.filter(item => item.title != '排放口'),
@@ -616,39 +730,73 @@ const Index = props => {
                     numData={obj1[item].numData}
                   />
                   {item == '监测数据' && (
-                    <Row align="middle" style={{ margin: '8px 0' }}>
-                      <div style={{ paddingRight: 12 }}>
-                        数据缺失超过
-                        <span>
-                          <InputNumber
-                            min={0}
-                            max={100}
-                            style={{ width: 70, margin: '0 4px' }}
-                            defaultValue={missDefaultValue || 0}
-                            onChange={missingDataChange}
-                          />
-                          %
-                        </span>
-                      </div>
-                      排放口统计
-                      {dischargePortLoading ? (
-                        <span style={{ paddingLeft: 6 }}>
-                          <LoadingOutlined />
-                        </span>
-                      ) : (
-                        <span>{dischargePort || 0}%</span>
-                      )}
-                    </Row>
+                    // <Row align="middle" style={{ margin: '8px 0' }}>
+                    //   <div style={{ paddingRight: 12 }}>
+                    //     数据缺失超过
+                    //     <span>
+                    //       <InputNumber
+                    //         min={0}
+                    //         max={100}
+                    //         style={{ width: 70, margin: '0 4px' }}
+                    //         defaultValue={missDefaultValue || 0}
+                    //         onChange={missingDataChange}
+                    //       />
+                    //       %
+                    //     </span>
+                    //   </div>
+                    //   排放口统计
+                    //   {dischargePortLoading ? (
+                    //     <span style={{ paddingLeft: 6 }}>
+                    //       <LoadingOutlined />
+                    //     </span>
+                    //   ) : (
+                    //     <span>{dischargePort || 0}%</span>
+                    //   )}
+                    // </Row>
+                    <Space style={{ margin: '8px 0' }}>
+                      <Radio.Group
+                        onChange={e => {
+                          setDataType(e.target.value);
+                        }}
+                        defaultValue="data"
+                      >
+                        <Radio.Button value="data">数据</Radio.Button>
+                        <Radio.Button value="chart">图表</Radio.Button>
+                      </Radio.Group>
+                      <Button
+                        type="primary"
+                        onClick={getJsHourDataInfo}
+                        loading={props.JsHourDataInfoLoading}
+                      >
+                        点击统计
+                      </Button>
+                    </Space>
                   )}
-                  <SdlTable
-                    loading={obj1[item].loading}
-                    bordered
-                    dataSource={obj1[item].data}
-                    columns={item == '监测数据' ? columns2 : columns(item)}
-                    scroll={{ y: item == '监测数据' ? 500 : 'hidden' }}
-                    rowClassName={null}
-                    pagination={false}
-                  />
+                  {item == '监测数据' && dataType == 'chart' ? (
+                    <ReactEcharts
+                      // ref={echart => {
+                      //   echart && setEcharts2(echart.echarts);
+                      // }}
+                      option={getOption()}
+                      style={{ height: '500px', width: '100%' }}
+                      onEvents={{
+                        click: event => {
+                          onShowAbnormalJudgmentPage(obj1.监测数据.data[event.dataIndex]);
+                        },
+                      }}
+                    />
+                  ) : (
+                    <SdlTable
+                      style={{ margin: '8px 0' }}
+                      loading={obj1[item].loading}
+                      bordered
+                      dataSource={obj1[item].data}
+                      columns={item == '监测数据' ? columns2 : columns(item)}
+                      scroll={{ y: item == '监测数据' ? 500 : 'hidden' }}
+                      rowClassName={null}
+                      pagination={false}
+                    />
+                  )}
                 </Card>
               );
             })}
@@ -712,6 +860,17 @@ const Index = props => {
             rowClassName={null}
             pagination={false}
           />
+        </Modal>
+        <Modal
+          title={`波动范围（${currentData.entName} - ${currentData.pointName}）`}
+          wrapClassName="spreadOverModal"
+          destroyOnClose
+          open={visible}
+          footer={false}
+          onCancel={() => setVisible(false)}
+          bodyStyle={{ padding: 0 }}
+        >
+          <AssistDataAnalysis displayType="modal" DGIMN={currentData.DGIMN} defaultActiveKey="0" />
         </Modal>
       </BreadcrumbWrapper>
     </div>

@@ -155,7 +155,7 @@ export default class EntTransmissionEfficiency extends Component {
       ? dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' } })
       : dispatch({ type: 'defectData/getEntByRegion', payload: { RegionCode: '' } });
 
-    dispatch({ type: 'defectData/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表
+    // dispatch({ type: 'defectData/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表
 
     setTimeout(() => {
       this.getTableData();
@@ -467,17 +467,18 @@ export default class EntTransmissionEfficiency extends Component {
                       </Select>
                     </Form.Item>
                   ) : (
-                    <Form.Item label="关注程度">
-                      <Select
-                        allowClear
-                        placeholder="关注程度"
-                        onChange={this.changeAttent}
-                        value={AttentionCode ? AttentionCode : undefined}
-                        style={{ width: 165 }}
-                      >
-                        {this.attentchildren()}
-                      </Select>
-                    </Form.Item>
+                    // <Form.Item label="关注程度">
+                    //   <Select
+                    //     allowClear
+                    //     placeholder="关注程度"
+                    //     onChange={this.changeAttent}
+                    //     value={AttentionCode ? AttentionCode : undefined}
+                    //     style={{ width: 165 }}
+                    //   >
+                    //     {this.attentchildren()}
+                    //   </Select>
+                    // </Form.Item>
+                    ''
                   )}
                   {Atmosphere ? <BtnComponents /> : null}
                 </Row>

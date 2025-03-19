@@ -374,6 +374,8 @@ export const API = {
     GetMonitorPointList: before + '/MonitorTargetApi/GetMonitorPointList',
     // 获取企业厂界信息
     GetEnterpriseCorporationCode: before + '/EnterpriseApi/GetEnterpriseCorporationCode',
+    // 复制设备参数信息
+    CopySystemEquipmentInfo: before + '/MonitorPointApi/CopySystemEquipmentInfo',
 
     AddOrUpdOperationSignRadiusInfo: before + '/EnterpriseApi/AddOrUpdOperationSignRadiusInfo', //企业设置电子围栏半径
     GetOperationSignRadiusInfo: before + '/EnterpriseApi/GetOperationSignRadiusInfo', //获取企业电子围栏半径
@@ -579,6 +581,8 @@ export const API = {
     GetMenuByRoleID: before + '/RoleApi/GetMenuByRoleID',
     // 获取当前角色的用户
     GetUserByRoleId: before + '/RoleApi/GetUserByRoleId',
+    // 获取推送类型列表
+    GetPushTypeList: before + '/UserApi/GetPushTypeList',
 
     // 获取根节点下拉选择权限（角色）
     GetParentTree: before + '/RoleApi/GetParentTree',
@@ -1134,6 +1138,10 @@ export const API = {
   AbnormalIdentifyModel: {
     // 获取线索列表
     GetWarningList: before + '/WarningV2/GetWarningList',
+    // 线索列表导出
+    ExportWarningList: before + '/WarningV2/ExportWarningList',
+    // 根据场景类别获取模型标记
+    GetMoldFlagList: before + '/MoldV2/GetMoldFlagList',
     // 获取模型列表
     GetMoldList: before + '/MoldV2/GetMoldList',
     // 获取级别和分类
@@ -1321,6 +1329,7 @@ export const API = {
 
     /*模型库管理*/
     //模型训练 - 数据接入
+    AddMXProject: before + '/ProjectMonitorDataApi/AddMXProject', // 新建项目
     AutoPointRelaModel: before + '/ProjectMonitorDataApi/AutoPointRelaModel', // 模型自动匹配
     GetProjectMonitorDataList: before + '/ProjectMonitorDataApi/GetProjectMonitorDataList', //查看项目信息
     UpdProjectMonitorData: before + '/ProjectMonitorDataApi/UpdProjectMonitorData', //修改项目信息 修改执行方式
@@ -1331,7 +1340,9 @@ export const API = {
     AccessMonitorPollutantList: before + '/DataFormatBaseDataApi/AccessMonitorPollutantList', //接入站点污染物关联信息执行
     AccessHourData: before + '/DataFormatBaseDataApi/AccessHourData', //接入小时数据执行
     AccessPreprocessing: before + '/DataFormatBaseDataApi/AccessPreprocessing', //清洗工况数据
+    AccessHourDataExcel: before + '/DataFormatBaseDataApi/AccessHourDataExcel', // 导入小时数据
     //清洗数据
+    JsHourDataInfo: before + '/ProjectMonitorDataApi/JsHourDataInfo', //统计监测数据
     GetProjectLogsList: before + '/ProjectMonitorDataApi/GetProjectLogsList', //企业信息、排放口信息、备案参数日志信息
     GetProjectLogsInfoList: before + '/ProjectMonitorDataApi/GetProjectLogsInfoList', //企业信息、排放口信息、备案参数日志详情信息
     GetMonitorPollutantLogsList: before + '/ProjectMonitorDataApi/GetMonitorPollutantLogsList', //污染物日志信息
@@ -1561,8 +1572,8 @@ export const API = {
       before + '/GasOperationFormApi/GetCooperationInspectionRecordForPCList', //获取配合检查记录
     GetRealtimeConsistencyRecordForPCList:
       before + '/GasOperationFormApi/GetRealtimeConsistencyRecordForPCList', //获取数据一致性记录(实时)
-    GetHourDayConsistencyRecordForPCList:
-      before + '/GasOperationFormApi/GetHourDayConsistencyRecordForPCList', //获取数据一致性记录(小时日)
+    GetIndicationErrorSystemResponseRecordListForPC:
+      before + '/GasOperationFormApi/GetIndicationErrorSystemResponseRecordListForPC', //获取示值误差系统响应记录
     GetDetectionTimesRecordForPCList:
       before + '/GasOperationFormApi/GetDetectionTimesRecordForPCList', //获取上月委托第三方检测次数
     GetWaterCalibrationRecordForPCList:
@@ -2419,6 +2430,8 @@ export const API = {
     AddOrEditEquipment: before + '/CTBaseDataApi/AddOrEditEquipment', // 添加或修仪表信息
     AddOrEditEquipmentChange: before + '/CTBaseDataApi/AddOrEditEquipmentChange', // 添加或修仪仪表更换记录
     PointSort: before + '/CTBaseDataApi/PointSort', // 监测点排序
+    GetCTPollutantList: before + '/CTBaseDataApi/GetCTPollutantList', // 获取监测因子
+    AddOrEditPointPollutant: before + '/CTBaseDataApi/AddOrEditPointPollutant', // 添加或修改监测点污染物
     /*服务档案查询 */
     GetCTProjectList: before + '/CTBaseDataApi/GetCTProjectList', //项目列表
     ExportCTProjectList: before + '/CTBaseDataApi/ExportCTProjectList', //项目列表 导出
