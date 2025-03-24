@@ -287,7 +287,7 @@ const Index = (props) => {
     },
     series: [
       {
-        type: 'bar', //显示背景图 
+        type: 'bar', //显示背景图
         data: bagBarData,
         label: {
           normal: {
@@ -309,7 +309,7 @@ const Index = (props) => {
         itemStyle: { normal: { color: '#2f3648', barBorderRadius: [15, 15, 15, 15] }, },
         barWidth: '10px',  // 柱形的宽度
         barGap: '-100%', // Make series be ove
-        silent: true, //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
+        silent: true, //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面
         barMinHeight: 215,
       },
       {
@@ -505,7 +505,7 @@ const Index = (props) => {
       },
       series: [
         {
-          name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : '示值误差\n完成率', 
+          name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : '示值误差\n完成率',
           // name: type == 1 ? '计划巡检完成率' : '计划校准完成率',
           type: 'pie',
           radius: TaskPlanType == 2 ?  ['80%', '90%'] : ['70%', '80%'] ,
@@ -558,7 +558,7 @@ const Index = (props) => {
   const [completeTime, setCompleteTime] = useState()
 
 
-  const operaOrderOptionDayClick = (type) => {  //工单执行情况 固定到天 详情 
+  const operaOrderOptionDayClick = (type) => {  //工单执行情况 固定到天 详情
     setTaskRecordVisible(true)
     setTaskStatus(workOrderExecuTimeVal == 1 && (type == '未完成' || type == '超时未完成') ? ['1', '2', '11'] : ['3'])
     setOperaStatus((workOrderExecuTimeVal == 1 && (type == '完成' || type == '未完成')) || type == '完成' ? undefined : '3')

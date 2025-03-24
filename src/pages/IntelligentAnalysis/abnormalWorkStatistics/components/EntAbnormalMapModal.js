@@ -193,7 +193,7 @@ const Index = props => {
       );
     }
     return (
-      <div style={{ width: '100%', height: 'calc(100vh - 64px - 24px)' }}>
+      <div style={{ width: '100%', height: props.height || 'calc(100vh - 64px - 24px)' }}>
         <Map
           amapkey={config.amapKey}
           //  mapStyle="amap://styles/macaron"

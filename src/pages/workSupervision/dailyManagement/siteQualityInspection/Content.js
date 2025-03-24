@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-23 09:38:17
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-01-16 15:14:20
+ * @Last Modified time: 2025-03-24 11:12:05
  * @Description：现场工作质量检查
  */
 
@@ -201,7 +201,7 @@ const Index = props => {
       },
     },
     {
-      title: '实际成任务数量',
+      title: '实际完成任务数量',
       dataIndex: 'CompletedCountYes',
       key: 'CompletedCountYes',
     },

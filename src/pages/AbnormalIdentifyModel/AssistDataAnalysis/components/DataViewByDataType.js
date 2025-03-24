@@ -22,7 +22,7 @@ const dvaPropsData = ({ loading, common, navigationtree }) => ({
   loading: loading.effects['AbnormalIdentifyModel/GetHistoryData'],
 });
 
-const Training = props => {
+const DataViewByDataType = props => {
   const [form] = Form.useForm();
   const {
     dispatch,
@@ -35,6 +35,7 @@ const Training = props => {
     loading,
     dataType,
     selectTreeItem,
+    warningDate,
   } = props;
   const [displayType, setDisplayType] = useState('chart');
   const [historyData, setHistoryData] = useState([]);
@@ -44,6 +45,18 @@ const Training = props => {
     if (time && pollutantCodes) {
       loadData();
     }
+    
+    // 添加清理函数
+    return () => {
+      if (echartRef && echartRef.getEchartsInstance) {
+        try {
+          const instance = echartRef.getEchartsInstance();
+          instance.dispose();
+        } catch (error) {
+          console.error('清理ECharts实例失败:', error);
+        }
+      }
+    };
   }, []);
 
   // 加载数据
@@ -151,21 +164,6 @@ const Training = props => {
         type: 'value',
         position: isRight ? 'right' : 'left',
         offset: isRight ? (rightIndex - 1) * spacing : (leftIndex - 1) * spacing,
-        // nameLocation: 'middle',
-        // nameGap: 50,
-        // splitLine: {
-        //   show: false,
-        // },
-        // axisLine: {
-        //   show: true,
-        //   lineStyle: {
-        //     color: getColorByName[pollutantName],
-        //   },
-        // },
-        // axisLabel: {
-        //   color: getColorByName[pollutantName],
-        // },
-
         alignTicks: true,
         nameLocation: 'end',
         nameRotate: 30,
@@ -174,10 +172,6 @@ const Training = props => {
         },
         nameTextStyle: {
           fontSize: 10,
-        },
-        axisLabel: {
-          // inside: !!spacing[name],
-          // rotate: 46,
         },
       });
 
@@ -193,15 +187,33 @@ const Training = props => {
         yAxisIndex: index,
         data: data,
         symbol: 'none',
-        // lineStyle: {
-        //   width: 1,
-        //   color: getColorByName[pollutantName],
-        // },
         itemStyle: {
           color: getColorByName[pollutantName],
         },
       });
     });
+
+    // 如果有warningDate数据，为最后一个系列添加markLine
+    if (warningDate && warningDate.length && series.length > 0) {
+      const markLineData = warningDate.map(item => ({
+        name: item.name,
+        xAxis: item.date,
+        lineStyle: { color: '#c23531' },
+        label: {
+          position: 'end',
+          fontSize: 13,
+          color: '#c23531',
+          formatter: function(params) {
+            return item.name;
+          },
+        },
+      }));
+
+      // 为最后一个系列添加markLine
+      series[series.length - 1].markLine = {
+        data: markLineData
+      };
+    }
 
     let option = {
       tooltip: {
@@ -262,11 +274,13 @@ const Training = props => {
         data: legend,
         type: 'scroll',
         top: 0,
+        selected: legend.reduce((acc, name) => {
+          acc[name] = true;
+          return acc;
+        }, {}),
       },
       grid: {
         top: 90,
-        // left: leftIndex > 0 ? (leftIndex - 1) * spacing : 0,
-        // right: rightIndex > 0 ? (rightIndex - 1) * spacing : 0,
         left: (pollutantListByDgimn.length / 2) * 24,
         right: (pollutantListByDgimn.length / 2) * 24,
         bottom: 20,
@@ -276,13 +290,54 @@ const Training = props => {
         type: 'category',
         data: xAxisData,
         boundaryGap: false,
-        // axisLabel: {
-        //   formatter: value => moment(value).format('MM-DD HH:mm'),
-        // },
       },
       yAxis: yAxis,
       series: series,
     };
+
+    // 添加图例点击事件处理
+    if (echartRef && echartRef.getEchartsInstance) {
+      const instance = echartRef.getEchartsInstance();
+      instance.off('legendselectchanged');
+      instance.on('legendselectchanged', function(params) {
+        // 获取当前所有可见的系列
+        const visibleSeries = series.filter((_, index) => {
+          const name = legend[index];
+          return instance.getOption().legend[0].selected[name];
+        });
+
+        if (visibleSeries.length > 0) {
+          // 将 markLine 移动到最后一个可见的系列
+          const lastVisibleSeries = visibleSeries[visibleSeries.length - 1];
+          const markLineData = warningDate.map(item => ({
+            name: item.name,
+            xAxis: item.date,
+            lineStyle: { color: '#c23531' },
+            label: {
+              position: 'end',
+              fontSize: 13,
+              color: '#c23531',
+              formatter: function(params) {
+                return item.name;
+              },
+            },
+          }));
+
+          // 更新 markLine
+          instance.setOption({
+            series: series.map(s => ({
+              ...s,
+              markLine: s === lastVisibleSeries ? {
+                // silent: true,
+                // symbol: ['none', 'none'],
+                data: markLineData
+              } : undefined
+            }))
+          });
+        }
+      });
+    }
+
     return option;
   };
 
@@ -293,7 +348,18 @@ const Training = props => {
       open={open}
       destroyOnClose
       footer={[]}
-      onCancel={onCancel}
+      onCancel={() => {
+        // 在关闭模态框前清理ECharts实例
+        if (echartRef && echartRef.getEchartsInstance) {
+          try {
+            const instance = echartRef.getEchartsInstance();
+            instance.dispose();
+          } catch (error) {
+            console.error('清理ECharts实例失败:', error);
+          }
+        }
+        onCancel();
+      }}
     >
       <Form
         form={form}
@@ -422,10 +488,11 @@ const Training = props => {
                 }
               }}
               theme="light"
-              option={getOption(true)}
+              option={getOption()}
               lazyUpdate
               loading={loading}
               id="rightLine"
+              notMerge={true}
               style={{
                 marginTop: 34,
                 width: '100%',
@@ -439,4 +506,4 @@ const Training = props => {
   );
 };
 
-export default connect(dvaPropsData)(Training);
+export default connect(dvaPropsData)(DataViewByDataType);

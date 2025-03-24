@@ -167,12 +167,25 @@ export default Model.extend({
     },
     // 获取辅助分析数据
     *GetAllTypeDataListForModel({ payload, callback }, { call, select, update }) {
+      // console.log('payload', payload);
+      // let service = services.GetAllTypeDataListForModel;
+      // let body = payload;
+      // // 实时数据判断
+      // if (payload.warningId === '5ff39af6-6922-460d-95e3-5971165e1e53') {
+      //   service = services.GetAllTypeDataListForRealTime;
+      //   body = {
+      //     ...payload,
+      //     datatype: 'realtime',
+      //     searchDataType: 1,
+         
+      //   };
+      // }
       const result = yield call(services.GetAllTypeDataListForModel, payload);
       if (result.IsSuccess) {
         // yield update({
         //   allTypeDataList: result.Datas,
         // });
-        callback && callback(result.Datas);
+        callback && callback(result.Datas || []);
       } else {
         result.Message && message.error(result.Message);
       }

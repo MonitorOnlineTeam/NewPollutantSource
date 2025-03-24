@@ -49,6 +49,12 @@ export async function GetAllTypeDataListForModel(params) {
   return result;
 }
 
+// 获取实时报警数据
+export async function GetAllTypeDataListForRealTime(params) {
+  const result = await post(API.MonitorDataApi.GetAllTypeDataList, params);
+  return result;
+}
+
 // 获取直方图数据
 export async function StatisPolValueNumsByDGIMN(params) {
   const result = await post(API.AbnormalIdentifyModel.StatisPolValueNumsByDGIMN, params);

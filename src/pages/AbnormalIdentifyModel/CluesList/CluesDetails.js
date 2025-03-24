@@ -6,10 +6,10 @@ import {
   Row,
   Col,
   Tag,
-  Upload,
+  Spin,
   Button,
   Tooltip,
-  Empty,
+  Tabs,
   message,
   Divider,
 } from 'antd';
@@ -29,6 +29,8 @@ import ModelChartLinear from './components/ModelChart-Linear';
 import ProgrammeCheck from '@/pages/AbnormalIdentifyModel/components/ProgrammeCheck.js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { convertTextByConfig } from '@/utils/utils';
+import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
+import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatistics/components/EntAbnormalMapModal';
 
 const dvaPropsData = ({ loading, wordSupervision }) => ({
   warningInfoLoading: loading.effects['AbnormalIdentifyModel/GetSingleWarning'],
@@ -38,27 +40,28 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 const CluesDetails = props => {
   const warningId = props.match.params.id;
   const checkId = props.location.query.checkId;
+  const subtractRange = warningId === '5ff39af6-6922-460d-95e3-5971165e1e53' ? 'hour' : 'day'; // 实时数据前后时间范围：小时， 小时数据前后时间范围：天
   const COLOR = ['#5470c6', '#91cc75', '#ea7ccc'];
-  const { dispatch, warningInfoLoading, modelChartsLoading, height, hideBreadcrumb } = props;
-  const [isOpen, setIsOpen] = useState(false);
+  const {
+    dispatch,
+    warningInfoLoading,
+    modelChartsLoading,
+    height,
+    hideBreadcrumb,
+    selectedClusInfo = {},
+  } = props;
   const [dataModalVisible, setDataModalVisible] = useState(false);
-  const [warningDataDate, setWarningDataDate] = useState();
   const [warningDate, setWarningDate] = useState([]);
   const [searchDate, setSearchDate] = useState([]);
-  const [rtnFinal, setRtnFinal] = useState([]);
-  const [imageIndex, setImageIndex] = useState();
   const [warningInfo, setWarningInfo] = useState({});
-  const [fileList, setFileList] = useState([]);
-  const [rectFileList, setRectFileList] = useState([]);
   const [modelChartDatas, setModelChartDatas] = useState([]);
   const [linearDatas, setLinearDatas] = useState([]);
   const [modelTableDatas, setModelTableDatas] = useState([]);
   const [modelDescribe, setModelDescribe] = useState('');
   const [defaultChartSelected, setDefaultChartSelected] = useState([]);
-  const [timeList, setTimeList] = useState([]);
-  const [snapshotData, setSnapshotData] = useState({});
-  const [images, setImages] = useState([]);
   const [chartData, setChartData] = useState();
+  const [taskIds, setTaskIds] = useState([]);
+  const [taskTitles, setTaskTitles] = useState([]);
   //   // 图表
   //   BeginTime: '',
   //   EndTime: '',
@@ -80,33 +83,19 @@ const CluesDetails = props => {
       callback: res => {
         if (res) {
           setWarningInfo(res);
-          let _fileList = [],
-            rectFileList = [];
-          if (res.CheckedMaterial && res.CheckedMaterial.length) {
-            _fileList = res.CheckedMaterial.map((item, index) => {
-              return {
-                uid: index,
-                index: index,
-                status: 'done',
-                url: '/' + item,
-              };
-            });
-          }
-          if (res.RectificationMaterial && res.RectificationMaterial.length) {
-            rectFileList = res.RectificationMaterial.map((item, index) => {
-              return {
-                uid: index,
-                index: index,
-                status: 'done',
-                url: '/' + item,
-              };
-            });
-          }
-
-          setFileList(_fileList);
-          setRectFileList(rectFileList);
           GetSnapshotData(res.WarningTypeCode);
         }
+      },
+    });
+  };
+
+  // 获取打卡位置及时间数据
+  const getCheckInData = taskID => {
+    dispatch({
+      type: `abnormalWorkStatistics/getPointExceptionSignList`,
+      payload: {
+        DGIMN: warningInfo.Dgimn,
+        taskID: taskID,
       },
     });
   };
@@ -130,9 +119,17 @@ const CluesDetails = props => {
         }
         if (res.rtnFinal) {
           // 表格
-          setRtnFinal(res.rtnFinal);
           let tableDatas = processJSONData(res.rtnFinal);
           setModelTableDatas(tableDatas);
+        }
+        if (res.taskID) {
+          // 任务单
+          setTaskIds(res.taskID);
+          setTaskTitles(res.tablist || []);
+          if (warningId === '84f607fa-a38a-4703-b0ab-7ebb900aba85') {
+            // 打卡异常
+            getCheckInData(res.taskID[0]);
+          }
         }
         setModelDescribe(res.describe);
         // setSnapshotData(res);
@@ -258,7 +255,6 @@ const CluesDetails = props => {
             PollutantList.push(item.PollutantCode);
           }
         });
-        console.log('PollutantList', PollutantList);
         // 默认选中污染物
         setDefaultChartSelected(PollutantList.slice(0, 6));
         // 查询数据时间
@@ -269,7 +265,6 @@ const CluesDetails = props => {
         message.error('异常特征无数据，无法查看线索数据！');
       }
     } else {
-      console.log('onViewWarningData-chartData', chartData);
       if (chartData) {
         // 报警时间
         setWarningDate([
@@ -286,10 +281,11 @@ const CluesDetails = props => {
         ]);
         // 默认选中污染物
         setDefaultChartSelected(chartData.PollutantList.map(item => item.PollutantCode));
+
         // 查询数据时间
         setSearchDate([
-          moment(chartData.BeginTime).subtract(2, 'day'),
-          moment(chartData.EndTime).add(2, 'day'),
+          moment(chartData.BeginTime).subtract(2, subtractRange),
+          moment(chartData.EndTime).add(2, subtractRange),
         ]);
         setDataModalVisible(true);
       } else {
@@ -298,6 +294,190 @@ const CluesDetails = props => {
     }
   };
 
+  // 获取异常特征内容（不是任务单）
+  const getExceptionContent = () => {
+    return (
+      <Card
+        title="异常特征"
+        style={{ margin: '10px 0' }}
+        loading={modelChartsLoading || warningInfoLoading}
+        extra={
+          <Button
+            loading={modelChartsLoading || warningInfoLoading}
+            type="primary"
+            onClick={() => onViewWarningData()}
+          >
+            线索数据
+          </Button>
+        }
+      >
+        <p style={{ marginBottom: 20 }}>{modelDescribe}</p>
+        <Row className={styles.chartWrapper} style={{ height: 'auto' }}>
+          {/* 表格模型 */}
+          {modelTableDatas.length
+            ? modelTableDatas.map(item => {
+                return (
+                  <ModelTable WarningTypeCode={warningInfo.WarningTypeCode} tableData={item} />
+                );
+              })
+            : ''}
+          {/* 图表模型 */}
+          {chartData && !modelChartDatas.length ? (
+            <WarningDataAndChart
+              chartHeight="calc(100vh - 380px)"
+              warningId={warningId}
+              DGIMN={warningInfo.Dgimn}
+              // let date = [moment(startDate).subtract(2, 'day'), moment(startDate).add(6, 'day')];
+              eTime={chartData.eTime}
+              warningDate={[
+                {
+                  // name: '异常开始时间',
+                  name: `开始\n`,
+                  date: moment(chartData.BeginTime).format('YYYY-MM-DD HH:mm'),
+                },
+                {
+                  // name: '异常结束时间',
+                  name: `结束\n`,
+                  date: moment(chartData.EndTime).format('YYYY-MM-DD HH:00'),
+                },
+              ]}
+              date={[
+                moment(chartData.BeginTime).subtract(2, subtractRange),
+                moment(chartData.EndTime).add(2, subtractRange),
+              ]}
+              chartPollutantList={chartData.PollutantList}
+              defaultChartSelected={chartData.PollutantList.map(item => item.PollutantCode).slice(
+                0,
+                6,
+              )}
+            />
+          ) : (
+            ''
+          )}
+
+          {/* 线性图表模型 */}
+          {modelChartDatas.length
+            ? linearDatas.map((item, index) => {
+                return (
+                  <>
+                    <Col span={12}>
+                      <ModelChartLinear chartData={item} />
+                    </Col>
+                    <Col span={12}>
+                      {/* 图例多选 */}
+                      <ModelChartMultiple
+                        chartData={modelChartDatas[index]}
+                        WarningTypeCode={warningInfo.WarningTypeCode}
+                      />
+                    </Col>
+                  </>
+                );
+              })
+            : ''}
+        </Row>
+        {/* 报警数据弹窗 */}
+        {dataModalVisible && searchDate && (
+          <WarningDataModal
+            warningId={warningId}
+            PointName={`${warningInfo.EntNmae} - ${warningInfo.PointName}`}
+            DGIMN={warningInfo.Dgimn}
+            CompareDGIMN={warningInfo.CompareDGIMN}
+            ComparePointName={`${warningInfo.CompareEntNmae} - ${warningInfo.ComparePointName}`}
+            visible={dataModalVisible}
+            warningInfo={warningInfo}
+            // date={warningDataDate}
+            // warningDate={warningDate}
+            // wrapClassName={isShowBack ? 'spreadOverModal' : 'fullScreenModal'}
+            wrapClassName={'fullScreenModal'}
+            describe={modelDescribe}
+            // defaultChartSelected={defaultChartSelected}
+            onCancel={() => {
+              setDataModalVisible(false);
+            }}
+            warningDate={warningDate}
+            date={searchDate}
+            defaultChartSelected={defaultChartSelected.slice(0, 6)}
+          />
+        )}
+      </Card>
+    );
+  };
+
+  // 获取任务单内容
+  const getTaskContent = () => {
+    // let items = taskIds;
+    // if (warningId === '84f607fa-a38a-4703-b0ab-7ebb900aba85') {
+    //   // 打卡异常
+    //   items = [
+    //     {
+    //       key: '1',
+    //       label: taskIds[0],
+    //       children: 'r',
+    //     },
+    //   ];
+    // }
+
+    const tabPaneContent = item => (
+      <EmergencyDetailInfo
+        DGIMN={warningInfo.Dgimn}
+        TaskID={item}
+        displayContent={true}
+        isModel={true}
+      />
+    );
+
+    if (taskTitles.length) {
+      // 多个任务单，使用 tabs 显示
+      return (
+        <Tabs tabBarStyle={{ paddingLeft: 16, marginBottom: 0 }}>
+          {taskIds.map((item, index) => {
+            return (
+              <Tabs.TabPane tab={taskTitles[index] || `任务单${index + 1}`} key={index}>
+                {tabPaneContent(item)}
+              </Tabs.TabPane>
+            );
+          })}
+        </Tabs>
+      );
+    } else {
+      if (warningId === '84f607fa-a38a-4703-b0ab-7ebb900aba85') {
+        // 打卡异常，使用 tabs 显示
+        return (
+          <Tabs tabBarStyle={{ paddingLeft: 16, marginBottom: 0 }}>
+            <Tabs.TabPane tab={`任务单`} key={0}>
+              {tabPaneContent(taskIds[0])}
+            </Tabs.TabPane>
+            <Tabs.TabPane tab={`打卡位置及时间`} key={1}>
+              <EntAbnormalMapModal
+                abnormalTitle={`${warningInfo.EntNmae} - ${warningInfo.PointName}`}
+                displayMode="page"
+                height="700px"
+                // onCancel={() => {
+                //   setAbnormalTitle(undefined);
+                // }}
+              />
+            </Tabs.TabPane>
+          </Tabs>
+        );
+      }
+      // 单个任务单，直接显示
+      return tabPaneContent(taskIds[0]);
+    }
+  };
+
+  // 渲染快照
+  const renderSnapshot = () => {
+    if (modelChartsLoading || warningInfoLoading) {
+      return <Card loading={true} style={{ marginTop: '10px' }} />;
+    }
+    if (taskIds.length) {
+      return getTaskContent();
+    } else {
+      return getExceptionContent();
+    }
+  };
+
+  // 获取页面内容
   const getPageContent = () => {
     const isShowBack = !hideBreadcrumb;
     return (
@@ -306,7 +486,20 @@ const CluesDetails = props => {
         style={{ height: height ? height : isShowBack ? '100%' : 'calc(100vh - 68px)' }}
       >
         <Card
-          title="线索详情"
+          title={
+            <div>
+              线索详情
+              <CopyToClipboard
+                text={`${location.origin}/AbnormalIdentifyModel/CluesList/CluesDetails/${warningId}?checkId=${checkId}`}
+              >
+                <div
+                  style={{ cursor: 'pointer', display: 'inline-block', color: '#fff', width: 100 }}
+                >
+                  复制
+                </div>
+              </CopyToClipboard>
+            </div>
+          }
           bodyStyle={{ paddingTop: 16 }}
           loading={warningInfoLoading}
           extra={
@@ -346,136 +539,25 @@ const CluesDetails = props => {
             </Descriptions.Item>
             <Descriptions.Item label="异常现象">{warningInfo.ModelPhen}</Descriptions.Item>
             <Descriptions.Item label="分析结论">{warningInfo.ModelDes}</Descriptions.Item>
+            {warningInfo.OperationUserName && warningInfo.OperationUserName != -1 && (
+              <Descriptions.Item label="运维人">{warningInfo.OperationUserName}</Descriptions.Item>
+            )}
             <Descriptions.Item label="核查建议" span={3}>
               {warningInfo.ModelAttr}
             </Descriptions.Item>
-            <Descriptions.Item>
-              <CopyToClipboard
-                text={`${location.origin}/AbnormalIdentifyModel/CluesList/CluesDetails/${warningId}?checkId=${checkId}`}
-              >
-                <div style={{ cursor: 'pointer', color: '#fff', width: 100 }}>复制</div>
-              </CopyToClipboard>
-            </Descriptions.Item>
+            {/* <Descriptions.Item>
+
+            </Descriptions.Item> */}
           </Descriptions>
         </Card>
-        <Card
-          title="异常特征"
-          style={{ margin: '10px 0' }}
-          loading={modelChartsLoading}
-          extra={
-            <Button
-              loading={modelChartsLoading || warningInfoLoading}
-              type="primary"
-              onClick={() => onViewWarningData()}
-            >
-              线索数据
-            </Button>
-          }
-        >
-          <p style={{ marginBottom: 20 }}>{modelDescribe}</p>
-          <Row className={styles.chartWrapper} style={{ height: 'auto' }}>
-            {/* 表格模型 */}
-            {modelTableDatas.length
-              ? modelTableDatas.map(item => {
-                  return (
-                    <ModelTable WarningTypeCode={warningInfo.WarningTypeCode} tableData={item} />
-                  );
-                })
-              : ''}
-            {/* 图表模型 */}
-            {chartData && !modelChartDatas.length ? (
-              <WarningDataAndChart
-                chartStyle={{
-                  height: 600,
-                  marginTop: 10,
-                }}
-                DGIMN={warningInfo.Dgimn}
-                // let date = [moment(startDate).subtract(2, 'day'), moment(startDate).add(6, 'day')];
-                warningDate={[
-                  {
-                    // name: '异常开始时间',
-                    name: `开始\n`,
-                    date: moment(chartData.BeginTime).format('YYYY-MM-DD HH:mm'),
-                  },
-                  {
-                    // name: '异常结束时间',
-                    name: `结束\n`,
-                    date: moment(chartData.EndTime).format('YYYY-MM-DD HH:00'),
-                  },
-                ]}
-                date={[
-                  moment(chartData.BeginTime).subtract(2, 'day'),
-                  moment(chartData.EndTime).add(2, 'day'),
-                ]}
-                chartPollutantList={chartData.PollutantList}
-                defaultChartSelected={chartData.PollutantList.map(item => item.PollutantCode).slice(
-                  0,
-                  6,
-                )}
-              />
-            ) : (
-              ''
-            )}
-
-            {/* 线性图表模型 */}
-            {modelChartDatas.length
-              ? linearDatas.map((item, index) => {
-                  return (
-                    <>
-                      <Col span={12}>
-                        <ModelChartLinear chartData={item} />
-                      </Col>
-                      <Col span={12}>
-                        {/* 图例多选 */}
-                        <ModelChartMultiple
-                          chartData={modelChartDatas[index]}
-                          WarningTypeCode={warningInfo.WarningTypeCode}
-                        />
-                      </Col>
-                    </>
-                  );
-                })
-              : ''}
-          </Row>
-        </Card>
-        <ProgrammeCheck id={checkId} warningInfo={warningInfo} />
-
-        {/* 查看附件弹窗 */}
-        <ImageView
-          isOpen={isOpen}
-          images={images.map(item => item.url)}
-          imageIndex={imageIndex}
-          onCloseRequest={() => {
-            setIsOpen(false);
-          }}
-        />
-        {/* 报警数据弹窗 */}
-        {dataModalVisible && searchDate && (
-          <WarningDataModal
-            warningId={warningId}
-            PointName={`${warningInfo.EntNmae} - ${warningInfo.PointName}`}
-            DGIMN={warningInfo.Dgimn}
-            CompareDGIMN={warningInfo.CompareDGIMN}
-            ComparePointName={`${warningInfo.CompareEntNmae} - ${warningInfo.ComparePointName}`}
-            visible={dataModalVisible}
-            warningInfo={warningInfo}
-            // date={warningDataDate}
-            // warningDate={warningDate}
-            // wrapClassName={isShowBack ? 'spreadOverModal' : 'fullScreenModal'}
-            wrapClassName={'fullScreenModal'}
-            describe={modelDescribe}
-            // defaultChartSelected={defaultChartSelected}
-            onCancel={() => {
-              setDataModalVisible(false);
-            }}
-            warningDate={warningDate}
-            date={searchDate}
-            defaultChartSelected={defaultChartSelected.slice(0, 6)}
-          />
-        )}
+        {renderSnapshot()}
+        {/* 核查及方案 */}
+        {/* {selectedClusInfo.CheckStatus && <ProgrammeCheck id={checkId} warningInfo={warningInfo} />} */}
+        {true && <ProgrammeCheck id={checkId} warningInfo={warningInfo} />}
       </div>
     );
   };
+
   return (
     <BreadcrumbWrapper titles=" / 线索详情" hideBreadcrumb={hideBreadcrumb}>
       {getPageContent()}

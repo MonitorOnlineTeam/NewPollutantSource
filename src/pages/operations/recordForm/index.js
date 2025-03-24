@@ -689,7 +689,7 @@ class Index extends Component {
                     </Button>
                 </div>
                 <div className={`print-content ${styles.recordFormContent}`} ref={this.contentRef}>
-                    {this.getrecordForm()}
+                {this.getrecordForm()}
                 </div>
             </BreadcrumbWrapper>
         );

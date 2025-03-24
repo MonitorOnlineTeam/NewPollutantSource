@@ -298,7 +298,6 @@ const Index = props => {
     });
     props.calibrationCycle({}, data => {
       //校准派单频次
-      debugger;
       if (data && data[0]) {
         const list = data.filter(item => item['dbo.T_Cod_OperationCycle.Status'] == 1); //启用状态
         setCalibrationCycleList(list);
@@ -1025,6 +1024,7 @@ const Index = props => {
                     inspectionCycleList.map(item => {
                       return (
                         <Option
+                          key={item['dbo.T_Cod_OperationCycle.Code']}
                           value={
                             item['dbo.T_Cod_OperationCycle.Code'] &&
                             item['dbo.T_Cod_OperationCycle.Code'].toString()
@@ -1048,6 +1048,7 @@ const Index = props => {
                     inspectionCycleList.map(item => {
                       return (
                         <Option
+                          key={item['dbo.T_Cod_OperationCycle.Code']}
                           value={
                             item['dbo.T_Cod_OperationCycle.Code'] &&
                             item['dbo.T_Cod_OperationCycle.Code'].toString()
@@ -1074,7 +1075,7 @@ const Index = props => {
                   {calibrationCycleList[0] &&
                     calibrationCycleList.map(item => {
                       return (
-                        <Option value={item['dbo.T_Cod_OperationCycle.Code'].toString()}>
+                        <Option key={item['dbo.T_Cod_OperationCycle.Code']} value={item['dbo.T_Cod_OperationCycle.Code'].toString()}>
                           {item['dbo.T_Cod_OperationCycle.Frequency']}
                         </Option>
                       );
@@ -1084,12 +1085,12 @@ const Index = props => {
             </Col>
             {!isHideIVError && (
               <Col span={12}>
-                <Form.Item label="示值误差派单频次" name="SystemCalibrationCycle">
+                <Form.Item label="示值误差派单频次" name="systemCalibrationCycle">
                   <Select placeholder="请选择示值误差派单频次" allowClear>
                     {systemCalibrationCycleList[0] &&
                       systemCalibrationCycleList.map(item => {
                         return (
-                          <Option value={item['dbo.T_Cod_OperationCycle.Code'].toString()}>
+                          <Option key={item['dbo.T_Cod_OperationCycle.Code']} value={item['dbo.T_Cod_OperationCycle.Code'].toString()}>
                             {item['dbo.T_Cod_OperationCycle.Frequency']}
                           </Option>
                         );

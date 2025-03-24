@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-04-18 16:56:52
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-01-15 16:48:40
+ * @Last Modified time: 2025-03-24 11:24:43
  * @Description: 任务单电子表单 - 操作弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -61,6 +61,7 @@ const FromsModal = props => {
             modalType={1}
             taskInfo={taskInfo}
             editData={editData}
+            onSubmitCallback={() => onSubmitCallback && onSubmitCallback()}
           />
         );
       case 3:

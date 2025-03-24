@@ -197,7 +197,7 @@ class JzRecordContent extends Component {
                 <td style={{ width: '16%', height: '30px', minWidth: '200px' }}>
                   {rd && rd.LcLastCalibrationValue}
                 </td>
-                <td style={{ width: '14%', height: '30px' }}>{rd && rd.LdCalibrationPreValue}</td>
+                <td style={{ width: '14%', height: '30px' }}>{rd && rd.LcCalibrationPreValue}</td>
                 <td style={{ width: '14%', height: '30px' }}>{rd && rd.LcPy}</td>
                 <td style={{ width: '14%', height: '30px' }}>{rd && rd.LcCalibrationIsOk}</td>
                 <td style={{ width: '14%', height: '30px' }}>{rd && rd.LcCalibrationSufValue}</td>

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-02-26 09:38:40
+ * @Last Modified time: 2025-03-19 13:52:49
  * @Description：线索列表
  */
 
@@ -1278,7 +1278,7 @@ const CluesList = props => {
             <CluesDetails
               // showMode={showMode}
               hideBreadcrumb={true}
-              // selectedClusInfo={cluesDetailsProps}
+              selectedClusInfo={cluesDetailsProps}
               match={{
                 params: {
                   id: cluesDetailsProps.ModelWarningGuid,

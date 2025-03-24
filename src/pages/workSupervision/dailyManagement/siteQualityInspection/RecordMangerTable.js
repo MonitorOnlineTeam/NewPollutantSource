@@ -42,7 +42,8 @@ const dvaPropsData = ({ loading, wordSupervision }) => ({
 
 const RecordAndManagement = props => {
   const [form] = Form.useForm();
-  const { open, onCancel, modalType, queryLoading, exportLoading, taskInfo } = props;
+  const { open, onCancel, modalType, queryLoading, exportLoading, taskInfo, onSubmitCallback } =
+    props;
 
   // useEffect(() => {
   //   form.setFieldsValue({
@@ -441,6 +442,7 @@ const RecordAndManagement = props => {
             getPageData();
             setEditDetailDataOpen(false);
             setRowData({});
+            onSubmitCallback && onSubmitCallback();
           }}
         />
       </Modal>

@@ -27,6 +27,7 @@ import moment from 'moment';
 import UpdateDataFlag from './UpdateDataFlag';
 import StopRecord from '@/pages/monitoring/StopRecord/stopRecord.js';
 import DataViewByDataType from './DataViewByDataType';
+import TaskRecord from '@/pages/operations/TaskRecord';
 
 const { CheckableTag } = Tag;
 
@@ -127,6 +128,8 @@ const WarningDataAndChart = props => {
     pointInfo,
     chartPollutantList,
     defaultShowType,
+    eTime, // 实时数据的报警结束时间
+    bTime, // 实时数据的报警开始时间
   } = props;
   // const [visible, setVisible] = useState([]);
 
@@ -231,7 +234,8 @@ const WarningDataAndChart = props => {
         .add(-1, 'hour')
         .format('YYYY-MM-DD HH:mm:ss');
     }
-
+    // debugger
+    // return;
     dispatch({
       type: 'AbnormalIdentifyModel/GetAllTypeDataListForModel',
       payload: {
@@ -243,6 +247,7 @@ const WarningDataAndChart = props => {
         IsSupplyData: false,
         quotaType: props.quotaType,
         ModelGuid: props.ModelGuid,
+        // warningId: props.warningId,
       },
       callback: res => {
         setAllTypeDataList(res);
@@ -1370,12 +1375,40 @@ const WarningDataAndChart = props => {
     setDataZoomPosition([]);
   };
 
+  // 运维工单弹窗
+  const [taskRecordVisible, setTaskRecordVisible] = useState(false);
+  const [taskRecordData, setTaskRecordData] = useState({});
+  const onChartClick = params => {
+    console.log('params', params);
+    console.log('allTypeDataList', allTypeDataList);
+    let currentData = allTypeDataList[params.dataIndex];
+    let currentFlag = currentData[params.seriesId + '_Flag'];
+    console.log('warningDate', warningDate);
+    if (currentFlag.includes('校准')) {
+      setTaskRecordData({
+        title: '校准工单执行情况',
+        taskType: 3,
+        completeTime: warningDate.map(item => moment(item.date + ':00')),
+      });
+      setTaskRecordVisible(true);
+    }
+    if (currentFlag.includes('故障')) {
+      setTaskRecordData({
+        title: '故障工单执行情况',
+        taskType: 22,
+        completeTime: warningDate.map(item => moment(item.date + ':00')),
+      });
+      setTaskRecordVisible(true);
+    }
+  };
+
   const onEvents = {
     legendselectchanged: onChartLegendChange,
     // brush: onBrushEnd,
     brushEnd: onBrushEnd,
     dataZoom: onDataZoom,
     restore: onChartRestore,
+    click: onChartClick,
   };
 
   // 修改数据工况
@@ -1785,6 +1818,16 @@ const WarningDataAndChart = props => {
       {historyDataModalOpen && (
         <DataViewByDataType
           open={historyDataModalOpen}
+          warningDate={[
+            {
+              name: warningDate[0].name,
+              date: bTime ? bTime : warningDate[0].date + ':00',
+            },
+            {
+              name: warningDate[1].name,
+              date: eTime ? eTime : warningDate[1].date,
+            },
+          ]}
           time={[moment(currentBrushRangeDate[0]), moment(currentBrushRangeDate[1])]}
           pollutantCodes={form.getFieldValue('pollutantCodes')}
           DGIMN={DGIMN}
@@ -1911,6 +1954,32 @@ const WarningDataAndChart = props => {
             entCode={props.entCode}
           />
         )}
+      </Modal>
+      <Modal
+        title={taskRecordData.title}
+        destroyOnClose
+        wrapClassName="fullScreenModal"
+        open={taskRecordVisible}
+        onCancel={() => {
+          setTaskRecordVisible(false);
+        }}
+        footer={null}
+        mask={false}
+        bodyStyle={{ padding: 0 }}
+      >
+        {/* match?.params?.type? */}
+
+        <TaskRecord
+          hideBreadcrumb
+          isWorkExecue
+          // taskStatus={taskRecordData.taskStatus}
+          completeTime={taskRecordData.completeTime}
+          match={{
+            params: {
+              type: "type=3",
+            },
+          }}
+        />
       </Modal>
     </>
   );
