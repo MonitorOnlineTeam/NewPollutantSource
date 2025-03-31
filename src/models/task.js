@@ -46,7 +46,9 @@ import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
 import { GetAlarmResponseList } from '../services/AlarmResponseApi';
 import config from '@/config';
-import { downloadFile } from '@/utils/utils';
+import { API } from '@config/API';
+import { downloadFile, requestPost, requestGet } from '@/utils/utils';
+
 export default Model.extend({
   namespace: 'task',
   state: {
@@ -499,6 +501,13 @@ export default Model.extend({
         yield update({
           IndicationErrorSystemResponseRecordList: DataInfo.Datas,
         });
+      }
+    },
+    // 获取 CEMS 日常巡检
+    *GetPatrolAllRecord({ payload, actionType, callback }, { call, put, update, take, select }) {
+      const result = yield call(requestPost, API.PredictiveMaintenanceApi[actionType], payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas);
       }
     },
   },

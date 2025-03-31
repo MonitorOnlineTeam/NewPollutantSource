@@ -216,9 +216,28 @@ class EmergencyDetailInfo extends Component {
           item.ID === 14 ||
           item.ID === 20 ||
           item.ID === 75 ||
-          item.ID === 76
+          item.ID === 76 || // 巡检-完全抽取法
+          item.ID === 77 || // 巡检-稀释采样
+          item.ID === 78 || // 巡检-直接测量
+          item.ID === 79 || // 巡检-零点量程漂移与校准
+          item.ID === 80 // 巡检-校验测试
         ) {
           switch (item.ID) {
+            case 76: // 巡检-完全抽取法
+            case 77: // 巡检-稀释采样法
+            case 78: // 巡检-直接测量法
+            case 79: // 巡检-VOCs
+            case 80: // 巡检-废水
+              this.GoToForm(
+                taskID,
+                item.CnName,
+                item.ID + '',
+                rtnVal,
+                key,
+                item.FormMainID,
+                item.RecordType,
+              );
+              break;
             case EnumPsOperationForm.Repair:
               this.GoToForm(
                 taskID,
@@ -1428,7 +1447,7 @@ class EmergencyDetailInfo extends Component {
           )}
         </Card>
         {isExistTask &&
-          !isModel && // 模型不显示
+        !isModel && // 模型不显示
           taskInfo.Datas[0].TaskFromText == '手动创建' &&
           taskInfo.Datas[0].OperationEnt == '雪迪龙' &&
           this.props.taskInfo.Datas[0].appList?.[0] && (

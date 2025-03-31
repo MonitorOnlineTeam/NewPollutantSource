@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-05 17:18:49
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-02-06 15:08:18
+ * @Last Modified time: 2025-03-28 17:02:00
  * @desc: 上传组件
  */
 
@@ -18,6 +18,7 @@ import styles from './index.less';
 import { MapInteractionCSS } from 'react-map-interaction';
 import { API } from '@config/API';
 import Cookie from 'js-cookie';
+import ImageView from '@/components/ImageView';
 
 @connect(({ loading, autoForm }) => ({
   // fileList: autoForm.fileList,
@@ -47,23 +48,23 @@ class SdlUpload extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.fileList !== nextProps.fileList) {
       this.setState({
-        fileList: nextProps.fileList,
+        fileList: nextProps.fileList.map((item, index) => ({
+          ...item,
+          index,
+        })),
       });
     }
   }
 
   handlePreview = async file => {
-    const nameSplit = file.name.split('.');
-    const postfix = nameSplit[nameSplit.length - 1];
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    if (postfix === 'gif' || postfix === 'jpg' || postfix === 'png' || postfix === 'bmp') {
-      this.setState({
-        previewImage: file.url || file.preview,
-        previewVisible: true,
-      });
-    }
+    // const nameSplit = file.name.split('.');
+    // const postfix = nameSplit[nameSplit.length - 1];
+    // if (postfix === 'gif' || postfix === 'jpg' || postfix === 'png' || postfix === 'bmp') {
+    this.setState({
+      previewVisible: true,
+      imageIndex: file.index,
+    });
+    // }
   };
 
   isAssetTypeAnImage(ext) {
@@ -74,12 +75,25 @@ class SdlUpload extends Component {
     );
   }
   render() {
-    const { configId, fileList, dispatch, accept, uploadNumber, flags, action } = this.props;
+    const {
+      configId,
+      dispatch,
+      accept,
+      uploadNumber,
+      flags,
+      action,
+      disabled,
+      isView,
+    } = this.props;
+    const { previewVisible, imageIndex, fileList } = this.state;
     const { cuid } = this._SELF_;
-    console.log('fileList=', fileList);
     let imageProps = {};
     if (accept) {
       imageProps.accept = accept;
+      // 正则校验accept是否存在image
+      if (!/image\*/.test(accept)) {
+        imageProps.onPreview = this.handlePreview;
+      }
     }
     const props = {
       action: action || API.UploadApi.UploadFiles,
@@ -134,7 +148,6 @@ class SdlUpload extends Component {
           });
         }
       },
-      // onPreview: this.handlePreview,
       ...imageProps,
       multiple: true,
       listType: 'picture-card',
@@ -146,71 +159,36 @@ class SdlUpload extends Component {
 
     return (
       <>
-        <Upload {...props} fileList={this.state.fileList}>
-          {uploadNumber ? (
-            this.state.fileList.length >= uploadNumber ? null : (
-              <div>
-                <PlusOutlined />
-                <div className="ant-upload-text">文件上传</div>
-              </div>
-            )
-          ) : (
-            <div>
-              <PlusOutlined />
-              <div className="ant-upload-text">文件上传</div>
-            </div>
+        <Upload {...props} disabled={disabled || isView} fileList={fileList}>
+          {!isView && (
+            <>
+              {uploadNumber ? (
+                this.state.fileList.length >= uploadNumber ? null : (
+                  <div>
+                    <PlusOutlined />
+                    <div className="ant-upload-text">文件上传</div>
+                  </div>
+                )
+              ) : (
+                <div>
+                  <PlusOutlined />
+                  <div className="ant-upload-text">文件上传</div>
+                </div>
+              )}
+            </>
           )}
         </Upload>
-        <Modal
-          visible={this.state.previewVisible}
-          footer={null}
-          onCancel={() => {
-            this.setState({ previewVisible: false });
+        {/* 查看附件弹窗 */}
+        <ImageView
+          isOpen={previewVisible}
+          images={fileList.map(item => item.url)}
+          imageIndex={imageIndex}
+          onCloseRequest={() => {
+            this.setState({
+              previewVisible: false,
+            });
           }}
-        >
-          {/* <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} /> */}
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <div className={styles.controller}>
-              <LeftOutlined
-                onClick={() => {
-                  this.carousel.prev();
-                }}
-              />
-              <RightOutlined
-                onClick={() => {
-                  this.carousel.next();
-                }}
-              />
-            </div>
-            <MapInteractionCSS>
-              <Carousel
-                dots={false}
-                ref={carousel => {
-                  this.carousel = carousel;
-                }}
-              >
-                {this.props.fileList &&
-                  this.props.fileList.map(item => {
-                    const nameSplit = item.name.split('.');
-                    const postfix = nameSplit[nameSplit.length - 1];
-
-                    if (
-                      postfix === 'gif' ||
-                      postfix === 'jpg' ||
-                      postfix === 'png' ||
-                      postfix === 'bmp'
-                    ) {
-                      return (
-                        <div key={item.Guid}>
-                          <img alt="example" style={{ width: '100%' }} src={item.url} />
-                        </div>
-                      );
-                    }
-                  })}
-              </Carousel>
-            </MapInteractionCSS>
-          </div>
-        </Modal>
+        />
       </>
     );
   }

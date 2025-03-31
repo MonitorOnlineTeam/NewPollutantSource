@@ -1587,6 +1587,20 @@ export const API = {
     GetWaterComparisonTestRecordForPCList:
       before + '/WaterOperationFormApi/GetWaterComparisonTestRecordForPCList', //获取实际水样比对试验结果记录
     GetRecordAttachmentList: before + '/GasOperationFormApi/GetRecordAttachmentList', //获取运维表单图片信息
+
+    
+    // 获取完全抽取法 CEMS 日常巡检
+    GetAllExInspectionRecord: before + '/GasOperationFormApi/GetAllExInspectionRecord',
+    // 获取稀释采样法 CEMS 日常巡检
+    GetXSExInspectionRecord: before + '/GasOperationFormApi/GetXSExInspectionRecord',
+    // 获取直接测量法 CEMS 日常巡检
+    GetZJExInspectionRecord: before + '/GasOperationFormApi/GetZJExInspectionRecord',
+    // 获取 VOCs 监测日常巡检
+    GetVOCsExInspectionRecord: before + '/GasOperationFormApi/GetVOCsExInspectionRecord',
+    // 获取废水监测日常巡检
+    GetFSExInspectionRecord: before + '/GasOperationFormApi/GetFSExInspectionRecord',
+   
+
     /*运维记录*/
     GetOperationRecordListByDGIMN: before + '/WorkOrderApi/GetOperationRecordListByDGIMN', //获取运维记录
     ExportOperationRecordListByDGIMN: before + '/WorkOrderApi/ExportOperationRecordListByDGIMN', //导出运维记录

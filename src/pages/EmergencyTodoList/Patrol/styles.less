@@ -1,0 +1,231 @@
+.container {
+  padding: 24px;
+  background: #fff;
+  min-height: 100vh;
+  width: 80%;
+  margin: 0 auto;
+
+  .header {
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+  }
+
+  .subtitle {
+    font-size: 15px;
+    margin-bottom: 12px;
+    font-weight: bold;
+  }
+
+  // 表头样式
+  .headerTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    table-layout: fixed;
+
+    td {
+      border: 1px solid #453f3f;
+      padding: 6px 12px;
+      height: 32px;
+      font-size: 14px;
+
+      &:nth-child(odd) {
+        width: 200px;
+        background: #fff;
+      }
+
+      &:nth-child(even) {
+        width: 280px;
+      }
+    }
+  }
+
+  // 主表格样式
+  .mainTable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 24px;
+
+    th,
+    td {
+      border: 1px solid #453f3f;
+      padding: 6px 12px;
+      font-size: 14px;
+      height: 32px;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    th {
+      background: #f0f0f0;
+      font-weight: bold;
+    }
+
+    td {
+      &[rowspan] {
+        background: #fff;
+        vertical-align: middle;
+
+        &:first-child {
+          width: 80px;
+        }
+
+        &:last-child {
+          width: 200px;
+        }
+      }
+    }
+
+    // 列宽设置
+    th,
+    td {
+      &:nth-child(1) {
+        width: 80px;
+      }
+
+      &:nth-child(2) {
+        width: 400px;
+      }
+
+      &:nth-child(3) {
+        width: 80px;
+      }
+
+      &:nth-child(4) {
+        width: 200px;
+      }
+    }
+
+    tbody {
+      tr {
+        &:hover {
+          td {
+            background-color: #fafafa;
+
+            &[rowspan] {
+              background: #fff;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 图片上传部分样式
+  .uploadSection {
+    border-radius: 4px;
+
+    .uploadTitle {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #000;
+    }
+
+    :global {
+      .ant-upload-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .ant-upload-list-item {
+        width: 104px;
+        height: 104px;
+        margin: 0;
+      }
+    }
+  }
+
+  // 签名部分样式
+  .signatureSection {
+    margin-bottom: 16px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+
+    .signatureTitle {
+      font-size: 14px;
+      font-weight: bold;
+      color: #000;
+      margin-right: 16px;
+      white-space: nowrap;
+    }
+    .signatureImage {
+      max-width: 200px;
+      max-height: 100px;
+      object-fit: contain;
+    }
+  }
+
+  .section {
+    margin-bottom: 0;
+    border: none;
+    box-shadow: none;
+
+    .sectionTitle {
+      font-size: 14px;
+      font-weight: normal;
+      color: #000;
+      margin-bottom: 0;
+      padding: 6px 12px;
+      border: 1px solid #453f3f;
+      background: #fff;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    .sectionContent {
+      padding: 0;
+
+      .formItem {
+        margin-bottom: 0;
+        border: 1px solid #453f3f;
+        border-top: none;
+        display: flex;
+        align-items: stretch;
+
+        .itemTitle {
+          width: 300px;
+          font-size: 14px;
+          color: #000;
+          line-height: 1.5;
+          padding: 6px 12px;
+          border-right: 1px solid #453f3f;
+          background: #fff;
+          margin: 0;
+        }
+
+        .itemContent {
+          flex: 1;
+          min-height: 32px;
+          padding: 6px 12px;
+          background: #fff;
+          border-radius: 0;
+          font-size: 14px;
+          color: #000;
+          line-height: 1.5;
+
+          &.textarea {
+            min-height: 60px;
+          }
+        }
+      }
+    }
+  }
+}

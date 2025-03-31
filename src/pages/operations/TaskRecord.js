@@ -152,7 +152,7 @@ class TaskRecord extends Component {
           })
         } else {
             this.props.form.setFieldsValue({// 宝武看板 || 运维工单总览
-              TaskTypeList: this.props.operaTaskType? this.props.operaTaskType.split(',') : this.state.pollutantType 
+              TaskTypeList: this.props.operaTaskType? this.props.operaTaskType.split(',') : this.state.pollutantType
             })
           }
 
@@ -417,7 +417,7 @@ class TaskRecord extends Component {
   }
 
   //删除
-  
+
   delTask = key => {
 
    return new Promise((resolve) => {
@@ -770,6 +770,7 @@ class TaskRecord extends Component {
         align: 'center',
         width:200,
         ellipsis: true,
+        fixed: 'right',
         render: (text, record, index) => {
           const { forwardPermis, rejectPermis, } = this.state;
           {
@@ -808,7 +809,7 @@ class TaskRecord extends Component {
                     </>
                     }
             </>
-            
+
             )
             if (completeTime && rejectPermis) {
               // console.log('timetimetimetimetimetime', moment().diff(time, 'days'));
@@ -833,7 +834,7 @@ class TaskRecord extends Component {
                         <a><CloseCircleOutlined  style={{fontSize:16}}/></a>
                       </Popconfirm>
                     </Tooltip>
-                    
+
 
                     </>)
               }
