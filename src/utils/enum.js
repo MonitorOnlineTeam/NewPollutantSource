@@ -174,6 +174,9 @@ export const EnumPsOperationForm={
   EquipmentNameplate:67,//设备铭牌
   CheckRecordImg:75,//CEMS零点量程漂移与校准记录表 图片弹框类型
   CheckRecordImg2:76,///CEMS零点量程漂移与校准记录表 废气 图片弹框类型
+  /**淄博项目 */
+  CheckRecordZbFs:81, //CEMS零点量程漂移与校准记录表 废水
+  CheckRecordZb:82, //CEMS零点量程漂移与校准记录表 废气
 };
 //污染源运维单枚举项
 export const EnumOperationEnum={

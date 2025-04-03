@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-08-22 09:40:55
- * @LastEditors: outman0611 jia_anbo@163.com
- * @LastEditTime: 2024-08-12 18:11:35
+ * @LastEditors: outman0611
+ * @LastEditTime: 2025-04-03 11:01:10
  * @Description: 运维记录表单api
  */
 import { post, get, authorpost } from '@/utils/request';
@@ -489,4 +489,20 @@ export async function GetWaterComparisonTestRecordForPCList(params) {
 export async function PostRetransmission(params) {
   const result = await post(API.PredictiveMaintenanceApi.PostRetransmission, params, null);
   return result;
+}
+
+/**淄博 校准记录*/
+export async function GetCemsCalibrationRecordZB(params) { //废气
+  const body = {
+    TaskID: params.TaskID,
+  };
+  const result = await post(API.PredictiveMaintenanceApi.GetCemsCalibrationRecordZB, body, null);
+  return result === null ? { Datas: null } : result;
+}
+export async function GetFSCalibrationRecordZB(params) { //废水
+  const body = {
+    TaskID: params.TaskID,
+  };
+  const result = await post(API.PredictiveMaintenanceApi.GetFSCalibrationRecordZB, body, null);
+  return result === null ? { Datas: null } : result;
 }

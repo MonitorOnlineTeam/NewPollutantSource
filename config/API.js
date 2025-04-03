@@ -1588,7 +1588,7 @@ export const API = {
       before + '/WaterOperationFormApi/GetWaterComparisonTestRecordForPCList', //获取实际水样比对试验结果记录
     GetRecordAttachmentList: before + '/GasOperationFormApi/GetRecordAttachmentList', //获取运维表单图片信息
 
-    
+
     // 获取完全抽取法 CEMS 日常巡检
     GetAllExInspectionRecord: before + '/GasOperationFormApi/GetAllExInspectionRecord',
     // 获取稀释采样法 CEMS 日常巡检
@@ -1599,8 +1599,12 @@ export const API = {
     GetVOCsExInspectionRecord: before + '/GasOperationFormApi/GetVOCsExInspectionRecord',
     // 获取废水监测日常巡检
     GetFSExInspectionRecord: before + '/GasOperationFormApi/GetFSExInspectionRecord',
-   
 
+    /**淄博 校准记录  */
+    GetCemsCalibrationRecordZB: before + '/GasOperationFormApi/GetCemsCalibrationRecordZB', //淄博 废气校准
+    GetFSCalibrationRecordZB: before + '/GasOperationFormApi/GetFSCalibrationRecordZB', //淄博 废水校准
+ 
+ 
     /*运维记录*/
     GetOperationRecordListByDGIMN: before + '/WorkOrderApi/GetOperationRecordListByDGIMN', //获取运维记录
     ExportOperationRecordListByDGIMN: before + '/WorkOrderApi/ExportOperationRecordListByDGIMN', //导出运维记录
@@ -2661,7 +2665,7 @@ export const API = {
 
     },
 
-    SiteQualityInspeTemplate:{
+    SiteQualityInspeTemplate: {
       //获取现场检查类别清单
       GetOnsiteInspectionTypeList: before + '/CTProjectExecutionApi/GetOnsiteInspectionTypeList',
       //添加现场检查类别清单
@@ -2897,7 +2901,7 @@ export const API = {
       ExportOnsiteInspectionRecordForRegionInfo: before + '/CTProjectExecutionApi/ExportOnsiteInspectionRecordForRegionInfo',
       // 现场质量检查、现场检查记录
       GetOnsiteInspectionRecordList: before + '/CTProjectExecutionApi/GetOnsiteInspectionRecordList',
-       // 导出现场检查记录
+      // 导出现场检查记录
       ExportOnsiteInspectionRecord: before + '/CTProjectExecutionApi/ExportOnsiteInspectionRecord',
       // 现场质量检查 - 详情/表格内容
       GetOnsiteInspectionRecordView: before + '/CTProjectExecutionApi/GetOnsiteInspectionRecordView',
@@ -2909,7 +2913,7 @@ export const API = {
       GetInspectionTypeByCemsModel: before + '/CTProjectExecutionApi/GetInspectionTypeByCemsModel',
       // 复制现场检查模板
       CopyOnsiteInspectionInfo: before + '/CTProjectExecutionApi/CopyOnsiteInspectionInfo',
-     
+
     }
   },
 };

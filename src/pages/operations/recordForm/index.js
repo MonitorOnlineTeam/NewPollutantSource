@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-08-22 11:04:46
- * @LastEditors: lzp
- * @LastEditTime: 2019-09-18 11:32:19
+ * @LastEditors: outman0611
+ * @LastEditTime: 2025-04-03 11:04:13
  * @Description: 运维记录单详情
  */
 import React, { Component } from 'react';
@@ -35,6 +35,8 @@ import DeviceParameterChange from '@/pages/EmergencyTodoList/DeviceParameterChan
 import GasDeviceParameterChange from '@/pages/EmergencyTodoList/GasDeviceParameterChange'
 import ComparisonTestResults from '@/pages/EmergencyTodoList/ComparisonTestResults'
 import PatrolCEM from '@/pages/EmergencyTodoList/Patrol/CEM'
+import JzRecordContentZb from '@/pages/EmergencyTodoList/ZbJz/JzRecordContent'
+import JzRecordContentZbFs from '@/pages/EmergencyTodoList/ZbJz/JzRecordContentFs'
 
 import { FormIcon } from '@/utils/icon';
 import { PrinterOutlined } from '@ant-design/icons';
@@ -60,11 +62,11 @@ class Index extends Component {
     // handlePrint = () => {
     //     const printContent = this.contentRef.current;
     //     if (!printContent) return;
-        
+
     //     // 获取所有已加载的样式表
     //     const styleSheets = Array.from(document.styleSheets);
     //     let styles = '';
-        
+
     //     // 收集所有样式
     //     styleSheets.forEach(sheet => {
     //         try {
@@ -85,7 +87,7 @@ class Index extends Component {
     //                 size: A4;
     //                 margin: 0.5cm;
     //             }
-                
+
     //             html, body {
     //                 margin: 0 !important;
     //                 padding: 0 !important;
@@ -215,7 +217,7 @@ class Index extends Component {
     //             }
     //         }
     //     `;
-        
+
     //     // 创建一个隐藏的iframe
     //     const iframe = document.createElement('iframe');
     //     iframe.style.position = 'absolute';
@@ -223,13 +225,13 @@ class Index extends Component {
     //     iframe.style.height = '0';
     //     iframe.style.border = '0';
     //     document.body.appendChild(iframe);
-        
+
     //     // 获取所有外部样式表链接
     //     const styleLinks = Array.from(document.getElementsByTagName('link'))
     //         .filter(link => link.rel === 'stylesheet')
     //         .map(link => link.outerHTML)
     //         .join('');
-        
+
     //     // 写入内容到iframe
     //     const iframeDoc = iframe.contentWindow.document;
     //     iframeDoc.open();
@@ -259,13 +261,13 @@ class Index extends Component {
     //         </html>
     //     `);
     //     iframeDoc.close();
-        
+
     //     // 等待样式和图片加载完成
     //     iframe.onload = () => {
     //         setTimeout(() => {
     //             iframe.contentWindow.focus();
     //             iframe.contentWindow.print();
-                
+
     //             // 打印完成后移除iframe
     //             setTimeout(() => {
     //                 document.body.removeChild(iframe);
@@ -280,7 +282,7 @@ class Index extends Component {
     handlePrint = () => {
         const printContent = this.contentRef.current;
         if (!printContent) return;
-        
+
         // 创建打印专用样式
         const printSpecificStyles = `
             @media print {
@@ -449,7 +451,7 @@ class Index extends Component {
                 }
             }
         `;
-        
+
         // 创建一个隐藏的iframe
         const iframe = document.createElement('iframe');
         iframe.style.position = 'absolute';
@@ -457,10 +459,10 @@ class Index extends Component {
         iframe.style.height = '0';
         iframe.style.border = '0';
         document.body.appendChild(iframe);
-        
+
         // 获取内容的HTML
         const contentHTML = printContent.innerHTML;
-        
+
         // 写入内容到iframe
         const iframeDoc = iframe.contentWindow.document;
         iframeDoc.open();
@@ -523,14 +525,14 @@ class Index extends Component {
             </html>
         `);
         iframeDoc.close();
-        
+
         // 等待样式和图片加载完成
         iframe.onload = () => {
             // 执行打印
             setTimeout(() => {
                 iframe.contentWindow.focus();
                 iframe.contentWindow.print();
-                
+
                 // 打印完成后移除iframe
                 setTimeout(() => {
                     document.body.removeChild(iframe);
@@ -545,101 +547,101 @@ class Index extends Component {
         const { taskID, typeID } = this.props.match.params;
         switch (typeID + '') {
             case "1"://维修记录表
-                form = <RepairRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <RepairRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "12"://维修记录表 废水
-                form = <RepairRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;                
+                form = <RepairRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "2"://停机记录表
-                form = <StopCemsRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <StopCemsRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "3"://易耗品更换记录表
-                form = <ConsumablesReplaceRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <ConsumablesReplaceRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "14"://易耗品更换记录表 废水
-                form = <ConsumablesReplaceRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;                
+                form = <ConsumablesReplaceRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "4"://标准气体更换记录表
-                form = <StandardGasRepalceRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <StandardGasRepalceRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "5"://完全抽取法CEMS日常巡检记录表
-                form = <CompleteExtractionRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <CompleteExtractionRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "6"://稀释采样法CEMS日常巡检记录表
-                form = <DilutionSamplingRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <DilutionSamplingRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "7"://直接测量法CEMS日常巡检记录表
-                form = <DirectMeasurementRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <DirectMeasurementRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "8"://CEMS零点量程漂移与校准记录表
-                form = <JzRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <JzRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "9"://CEMS校验测试记录
-                form = <BdTestRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <BdTestRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "10"://CEMS设备数据异常记录表
-                form = <DeviceExceptionRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <DeviceExceptionRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "27"://保养项更换记录表
-                form = <MaintainRepalceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <MaintainRepalceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "28"://备品更换记录表
-                form = <SparePartReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <SparePartReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "20"://备品更换记录表 废水
-                form = <SparePartReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;                
+                form = <SparePartReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "58":
                 form = <FailureHoursRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
-                break; 
+                break;
             case "59":
-                form = <FailureHoursRecord TaskID={this.props.match.params.taskID}  TypeID={this.props.match.params.typeID}/>
+                form = <FailureHoursRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "60":
-                form = <FailureHoursRecord TaskID={this.props.match.params.taskID}  TypeID={this.props.match.params.typeID}/>
+                form = <FailureHoursRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "15":  //试剂更换表单
-                form = <ReagentReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <ReagentReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "61":  //配合检查表单 废水
-                form = <CooperaInspection TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                form = <CooperaInspection TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
             case "62":  //配合检查表单
-                form = <CooperaInspection TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;    
+                form = <CooperaInspection TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "63":  //数据一致性实时表单
-                form = <DataConsistencyRealTime TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;   
+                form = <DataConsistencyRealTime TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "18":  //数据一致性实时表单 废水
-                form = <DataConsistencyRealTime TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break; 
+                form = <DataConsistencyRealTime TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "66":  //数据一致性小时与日数据表单
-                form = <DataConsistencyRealDate TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;    
+                form = <DataConsistencyRealDate TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "74":  //数据一致性小时与日数据表单 废水
-                form = <DataConsistencyRealDate TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;                
+                form = <DataConsistencyRealDate TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "73":  //上月委托第三方检测次数表单
-                form = <ThirdPartyTestingContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;    
+                form = <ThirdPartyTestingContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "65":  //上月委托第三方检测次数表单 废水
-                form = <ThirdPartyTestingContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;   
+                form = <ThirdPartyTestingContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "16":  //水质校准记录表
-                form = <WaterQualityCalibrationRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;                   
+                form = <WaterQualityCalibrationRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "70":  //标准溶液核查记录表
-                form = <StandardSolutionVerificationRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break; 
+                form = <StandardSolutionVerificationRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "72":  //设备参数记录表
-                form = <DeviceParameterChange TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;   
+                form = <DeviceParameterChange TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "64":  //设备参数记录表 废气
-                form = <GasDeviceParameterChange TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;       
+                form = <GasDeviceParameterChange TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case "19":  //实际水样比对试验结果记录表
-                form = <ComparisonTestResults TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;      
+                form = <ComparisonTestResults TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
             case '76': // 完全抽取法
             case '77': // 稀释采样法
             case '78': // 直接测量法
@@ -647,6 +649,14 @@ class Index extends Component {
             case '80': // 废水
                 form = <PatrolCEM taskID={taskID} typeID={typeID} />
                 break;
+            /**淄博项目 */
+            case '81': //废水 CEMS零点量程漂移与校准记录表
+                form = <JzRecordContentZbFs TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
+            case '82': //废气 CEMS零点量程漂移与校准记录表
+                form = <JzRecordContentZb TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
+
         }
         return form
     }
@@ -654,9 +664,9 @@ class Index extends Component {
         return (
             <BreadcrumbWrapper breadcrumb={[]} title="记录单详情" hideBreadcrumb={this.props.hideBreadcrumb}>
                 <div className={styles.headerActions}>
-                    <Button 
-                        type="primary" 
-                        icon={<PrinterOutlined />} 
+                    <Button
+                        type="primary"
+                        icon={<PrinterOutlined />}
                         onClick={this.handlePrint}
                         className="no-print"
                     >
@@ -664,7 +674,7 @@ class Index extends Component {
                     </Button>
                 </div>
                 <div className={`print-content ${styles.recordFormContent}`} ref={this.contentRef}>
-                {this.getrecordForm()}
+                    {this.getrecordForm()}
                 </div>
             </BreadcrumbWrapper>
         );

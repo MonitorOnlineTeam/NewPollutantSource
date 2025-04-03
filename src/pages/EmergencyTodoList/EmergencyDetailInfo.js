@@ -188,7 +188,7 @@ class EmergencyDetailInfo extends Component {
 
   renderItem = (data, taskID, types) => {
     const rtnVal = [];
-    console.log('data111=', data);
+    console.log('data111=', data,);
     //types 污染物类型
     data.map((item, key) => {
       if (item.FormMainID !== null) {
@@ -220,7 +220,9 @@ class EmergencyDetailInfo extends Component {
           item.ID === 77 || // 巡检-稀释采样
           item.ID === 78 || // 巡检-直接测量
           item.ID === 79 || // 巡检-零点量程漂移与校准
-          item.ID === 80 // 巡检-校验测试
+          item.ID === 80 || // 巡检-校验测试
+          item.ID === 81 || //淄博 校准-废水
+          item.ID === 82    //淄博 校准-废气
         ) {
           switch (item.ID) {
             case 76: // 巡检-完全抽取法
@@ -613,6 +615,28 @@ class EmergencyDetailInfo extends Component {
                 item.RecordType,
               );
               break;
+              case EnumPsOperationForm.CheckRecordZbFs: //淄博废水
+              this.GoToForm(
+                taskID,
+                item.CnName,
+                '81',
+                rtnVal,
+                key,
+                item.FormMainID,
+                item.RecordType,
+              );
+              break;
+              case EnumPsOperationForm.CheckRecordZb: //淄博废气
+                this.GoToForm(
+                  taskID,
+                  item.CnName,
+                  '82',
+                  rtnVal,
+                  key,
+                  item.FormMainID,
+                  item.RecordType,
+                );
+                break;
             default:
               break;
           }

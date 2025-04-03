@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-08-22 09:39:19
- * @LastEditors: outman0611 jia_anbo@163.com
- * @LastEditTime: 2024-08-21 17:41:31
+ * @LastEditors: outman0611
+ * @LastEditTime: 2025-04-03 11:07:36
  * @Description: 任务详情、运维单详情
  */
 // 任务详情、运维单详情
@@ -41,6 +41,8 @@ import {
   ExportOperationTaskList,
   PostRetransmission,
   GetIndicationErrorSystemResponseRecordListForPC,
+  GetCemsCalibrationRecordZB,
+  GetFSCalibrationRecordZB,
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -105,6 +107,9 @@ export default Model.extend({
       total: 0,
     },
     TaskRecordLoading: true,
+    /**淄博 校准 */
+    JzRecordZb:null,
+    JzRecordZbFs:null,
   },
 
   effects: {
@@ -510,5 +515,81 @@ export default Model.extend({
         callback && callback(result.Datas);
       }
     },
+    
+    //淄博 校准记录
+    *GetCemsCalibrationRecordZB({ payload }, { call, update }) { //淄博  废气校准
+      const res = yield call(GetCemsCalibrationRecordZB, payload);
+      if (res && res.Datas && res.IsSuccess) {
+
+        let recordData = res.Datas.Record, recordListNew=[]
+
+        if( recordData?.RecordList?.[0]){ //处理RecordList和之前结构一样
+          recordData.RecordList.map(item=>{
+              if(item.ChildList){
+                recordListNew.push({...item,ChildList: item.ChildList.map(childItem=>({
+                      ...childItem,
+                      ...childItem?.Data,
+                      Data: undefined
+                  }))})
+              }else{
+                recordListNew.push({...item,...item?.Data, Data: undefined})
+              }
+          })
+      }
+      yield update({ JzRecordZb: {Code:res.Datas.Code,UnitList:res.Datas.UnitList, Record:{...recordData,RecordList:recordListNew}} });
+      } else {
+        yield update({
+          JzRecordZb: null,
+        });
+      }
+    },
+    *GetFSCalibrationRecordZB({ payload }, { call, update }) { //淄博  废水校准
+      const res = yield call(GetFSCalibrationRecordZB, payload);
+      if (res && res.Datas && res.IsSuccess) {
+        let recordData = res.Datas.Record, recordListNew=[]
+        if( recordData?.RecordList?.[0]){ 
+          recordData.RecordList.map(item=>{
+            recordListNew.push({...item,...item?.Data, Data: undefined})
+          })
+      }
+      yield update({ JzRecordZbFs: {Code:res.Datas.Code,UnitList:res.Datas.UnitList, Record:{...recordData,RecordList:recordListNew}} });
+      } else {
+        yield update({
+          JzRecordZbFs: null,
+        });
+      }
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   },
 });
