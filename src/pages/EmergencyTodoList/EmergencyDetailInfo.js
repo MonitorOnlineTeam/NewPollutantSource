@@ -188,12 +188,11 @@ class EmergencyDetailInfo extends Component {
 
   renderItem = (data, taskID, types) => {
     const rtnVal = [];
-    console.log('data111=', data,);
+    console.log('data111=', data);
     //types 污染物类型
     data.map((item, key) => {
       if (item.FormMainID !== null) {
-        if (
-          (types === '2' && !config.XinJiang) ||
+        if ((types === '2' && !config.XinJiang) ||
           item.ID === 58 ||
           item.ID === 59 ||
           item.ID === 60 ||
@@ -222,7 +221,11 @@ class EmergencyDetailInfo extends Component {
           item.ID === 79 || // 巡检-零点量程漂移与校准
           item.ID === 80 || // 巡检-校验测试
           item.ID === 81 || //淄博 校准-废水
-          item.ID === 82    //淄博 校准-废气
+          item.ID === 82 ||   //淄博 校准-废气
+          item.ID === 80 || // 巡检-校验测试
+          item.ID === 83 || // 标准物质更换记录表
+          item.ID === 84 || // 废气-易耗品更换记录
+          item.ID === 85 // 废水-易耗品更换记录
         ) {
           switch (item.ID) {
             case 76: // 巡检-完全抽取法
@@ -230,6 +233,9 @@ class EmergencyDetailInfo extends Component {
             case 78: // 巡检-直接测量法
             case 79: // 巡检-VOCs
             case 80: // 巡检-废水
+            case 83: // 标准物质更换记录表
+            case 84: // 废气-易耗品更换记录
+            case 85: // 废水-易耗品更换记录
               this.GoToForm(
                 taskID,
                 item.CnName,

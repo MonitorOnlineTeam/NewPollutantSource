@@ -1603,8 +1603,15 @@ export const API = {
     /**淄博 校准记录  */
     GetCemsCalibrationRecordZB: before + '/GasOperationFormApi/GetCemsCalibrationRecordZB', //淄博 废气校准
     GetFSCalibrationRecordZB: before + '/GasOperationFormApi/GetFSCalibrationRecordZB', //淄博 废水校准
- 
- 
+
+
+
+    // 获取易耗品更换记录
+    GetConsumablesReplaceRecordZB: before + '/GasOperationFormApi/GetConsumablesReplaceRecordZB',
+    // 获取标准物质更换记录
+    GetStandardGasRepalceRecordZB: before + '/GasOperationFormApi/GetStandardGasRepalceRecordZB',
+
+
     /*运维记录*/
     GetOperationRecordListByDGIMN: before + '/WorkOrderApi/GetOperationRecordListByDGIMN', //获取运维记录
     ExportOperationRecordListByDGIMN: before + '/WorkOrderApi/ExportOperationRecordListByDGIMN', //导出运维记录

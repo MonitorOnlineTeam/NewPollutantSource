@@ -37,6 +37,8 @@ import ComparisonTestResults from '@/pages/EmergencyTodoList/ComparisonTestResul
 import PatrolCEM from '@/pages/EmergencyTodoList/Patrol/CEM'
 import JzRecordContentZb from '@/pages/EmergencyTodoList/ZbJz/JzRecordContent'
 import JzRecordContentZbFs from '@/pages/EmergencyTodoList/ZbJz/JzRecordContentFs'
+import ConsumableReplace from '@/pages/EmergencyTodoList/ConsumableReplace'
+import RMR from '@/pages/EmergencyTodoList/RMR'
 
 import { FormIcon } from '@/utils/icon';
 import { PrinterOutlined } from '@ant-design/icons';
@@ -110,7 +112,7 @@ class Index extends Component {
     //             }
 
     //             /* 隐藏不需要打印的元素 */
-    //             .no-print, 
+    //             .no-print,
     //             .ant-page-header-heading,
     //             .ant-breadcrumb,
     //             .headerActions {
@@ -290,7 +292,7 @@ class Index extends Component {
                     size: A4;
                     margin: 0.5cm;
                 }
-                
+
                 body {
                     font-family: Arial, sans-serif;
                     margin: 0;
@@ -298,44 +300,44 @@ class Index extends Component {
                     background-color: white;
                     color: #000000;
                 }
-                
+
                 .print-content {
                     width: 100%;
                     padding: 0;
                     margin: 0;
                 }
-                
+
                 /* 隐藏不需要打印的元素 */
-                .no-print, 
+                .no-print,
                 .ant-page-header-heading,
                 .ant-breadcrumb,
                 .headerActions {
                     display: none !important;
                 }
-                
+
                 /* 表格样式 */
                 table {
                     width: 100%;
                     border-collapse: collapse;
                     page-break-inside: auto;
                 }
-                
+
                 /* 表头样式 */
                 thead {
                     display: table-header-group;
                 }
-                
+
                 /* 表格主体样式 */
                 tbody {
                     display: table-row-group;
                 }
-                
+
                 /* 表格行样式 */
                 tr {
                     page-break-inside: avoid;
                     page-break-after: auto;
                 }
-                
+
                 /* 表格单元格样式 */
                 th, td {
                     border: 1px solid #666666;
@@ -343,34 +345,34 @@ class Index extends Component {
                     text-align: center;
                     color: #000000;
                 }
-                
+
                 th {
                     background-color: #f0f0f0 !important;
                     font-weight: bold;
                 }
-                
+
                 /* 强制背景色和边框打印 */
                 * {
                     -webkit-print-color-adjust: exact !important;
                     print-color-adjust: exact !important;
                     color-adjust: exact !important;
                 }
-                
+
                 /* 确保标题不会被分页 */
                 h1, h2, h3, h4, h5, h6 {
                     page-break-after: avoid;
                     page-break-inside: avoid;
                     text-align: center;
                 }
-                
+
                 /* 确保图片不会被分页 */
                 img {
                     page-break-inside: avoid;
                 }
-                
+
                 /* 标题居中显示 */
-                .ant-card-head-title, 
-                .ant-card-head, 
+                .ant-card-head-title,
+                .ant-card-head,
                 .ant-card-head-wrapper,
                 .print-content h1,
                 .print-content h2,
@@ -387,7 +389,7 @@ class Index extends Component {
                     align-items: center !important;
                     font-weight: bold !important;
                 }
-                
+
                 /* FormName 样式 - 用于表单标题 */
                 .FormName,
                 [class*="FormName"],
@@ -405,12 +407,12 @@ class Index extends Component {
                     font-weight: bold !important;
                     display: block !important;
                 }
-                
+
                 /* Ant Design 表格样式覆盖 */
                 .ant-table {
                     font-size: 12px;
                 }
-                
+
                 .ant-table-thead > tr > th {
                     background-color: #f0f0f0 !important;
                     font-weight: bold;
@@ -418,12 +420,12 @@ class Index extends Component {
                     border: 1px solid #666666;
                     padding: 4px;
                 }
-                
+
                 .ant-table-tbody > tr > td {
                     border: 1px solid #666666;
                     padding: 4px;
                 }
-                
+
                 /* 确保表格容器可见 */
                 .ant-table-wrapper,
                 .ant-table,
@@ -432,20 +434,20 @@ class Index extends Component {
                 .ant-table-body {
                     overflow: visible !important;
                 }
-                
+
                 /* 确保表格可以分页 */
                 .ant-table-wrapper {
                     page-break-inside: auto !important;
                 }
-                
+
                 .ant-table-thead {
                     display: table-header-group !important;
                 }
-                
+
                 .ant-table-tbody {
                     display: table-row-group !important;
                 }
-                
+
                 .ant-table-tbody > tr {
                     page-break-inside: auto !important;
                 }
@@ -488,25 +490,25 @@ class Index extends Component {
                             element.style.display = 'none';
                         }
                     });
-                    
+
                     // 确保表格可以分页
                     document.querySelectorAll('.ant-table-thead').forEach(element => {
                         element.style.display = 'table-header-group';
                     });
-                    
+
                     document.querySelectorAll('.ant-table-tbody').forEach(element => {
                         element.style.display = 'table-row-group';
                     });
-                    
+
                     document.querySelectorAll('.ant-table-tbody > tr').forEach(element => {
                         element.style.pageBreakInside = 'auto';
                     });
-                    
+
                     // 确保表格容器可见
                     document.querySelectorAll('.ant-table-wrapper, .ant-table, .ant-table-container, .ant-table-content, .ant-table-body').forEach(element => {
                         element.style.overflow = 'visible';
                     });
-                    
+
                     // 处理 FormName 类名，确保标题居中
                     document.querySelectorAll('[class*="FormName"]').forEach(element => {
                         element.style.width = '80%';
@@ -656,7 +658,13 @@ class Index extends Component {
             case '82': //废气 CEMS零点量程漂移与校准记录表
                 form = <JzRecordContentZb TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
-
+            case '83': // 标准物质更换记录表
+                form = <RMR taskID={taskID} typeID={typeID} />
+                break;
+            case '84':
+            case '85':
+                form = <ConsumableReplace taskID={taskID} typeID={typeID} />
+                break;
         }
         return form
     }
