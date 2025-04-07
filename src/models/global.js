@@ -11,7 +11,13 @@ import Cookie from 'js-cookie';
 import config from '@/config';
 import { message } from 'antd';
 import { router } from 'umi';
-import { getSysName, getSysNameKey, isOperaSystem, refreshToken, processConfigInfo } from '@/utils/utils';
+import {
+  getSysName,
+  getSysNameKey,
+  isOperaSystem,
+  refreshToken,
+  processConfigInfo,
+} from '@/utils/utils';
 import { GetOperationSetting } from '@/pages/systemManger/operationBasConfig/service';
 
 /**
@@ -166,7 +172,9 @@ export default Model.extend({
         configInfo.SystemNameKey = getSysNameKey(configInfo.SystemName);
         configInfo.SystemName = getSysName(configInfo.SystemName);
         // configInfo.IsOpera = isOperaSystem(configInfo.SystemName); //是否为公司运维项目
-        configInfo.IsOpera = isOperaSystem(sessionStorage.getItem('sysName')); //是否为公司运维项目
+        configInfo.IsOpera = isOperaSystem(
+          sessionStorage.getItem('sysName') || configInfo.SystemName,
+        ); //是否为公司运维项目
 
         configInfo = processConfigInfo(configInfo);
         window.configInfo = configInfo;
