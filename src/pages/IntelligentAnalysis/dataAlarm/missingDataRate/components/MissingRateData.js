@@ -221,14 +221,16 @@ export default class EntTransmissionEfficiency extends Component {
       },
       ...this.commonCol
     ]
+
   }
 
   componentDidMount() {
     this.initData();
   }
+  
   initData = () => {
     const { dispatch, location, Atmosphere, types } = this.props;
-    console.log('location', location)
+    // console.log('location', location)
     const query = location.query.queryPar && JSON.parse(location.query.queryPar)
     this.updateQueryState({
       RegionCode: '',
@@ -239,8 +241,6 @@ export default class EntTransmissionEfficiency extends Component {
       RegionCode: location.query.regionCode,
       PollutantType: this.pollutantType || undefined,
     });
-
-
     // let entObj = { title: <span>缺失数据报警企业数</span>, dataIndex: 'entCount', key: 'entCount', align: 'center', }
 
     // types === 'ent' ? this.columns.splice(1, 0, entObj) : null;
@@ -519,10 +519,11 @@ export default class EntTransmissionEfficiency extends Component {
           wrapClassName='spreadOverModal spreadOverHiddenModal'
           footer={null}
           destroyOnClose={true}
+          mask={false}
           onCancel={() => { this.setState({ missingAlarmVisible: false }) }}
           className={styles.missDetailSty}
         >
-          <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, Status: this.state.status, staticType: 3 }) } }} />
+          <MissDataSecond hideBreadcrumb location={{ query: {  queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, Status: this.state.status, staticType: 3,  }) } }} history={{ location:{ query: {...this.props.location.query}}}} />
         </Modal>
       </Card>
     );

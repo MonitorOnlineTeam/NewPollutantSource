@@ -1,3 +1,4 @@
+
 /**
  * 功能：首页 废气
  * 创建人：jab
@@ -62,7 +63,7 @@ const Index = (props) => {
 
   return (
     <div>
-    <Content type='废气'/>
+    <Content type='废气'  {...props}/>
         </div>
   );
 };

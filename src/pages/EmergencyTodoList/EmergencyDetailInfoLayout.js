@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 // import "react-image-lightbox/style.css";
@@ -61,7 +62,7 @@ class EmergencyDetailInfoLayout extends Component {
             //breadCrumbList={this.renderBreadCrumb()}
             <div>
                 {/* <BreadcrumbWrapper title="任务单详情"  hideBreadcrumb={hideBreadcrumb}> */}
-                    <EmergencyDetailInfo  isHomeModal={isHomeModal} {...match.params} history={this.props.history} forwardPermis={forwardPermis}/>
+                    <EmergencyDetailInfo {...this.props} isHomeModal={isHomeModal} {...match.params} history={this.props.history} forwardPermis={forwardPermis}/>
                 {/* </BreadcrumbWrapper> */}
             </div>
         );

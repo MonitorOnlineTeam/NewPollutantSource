@@ -688,6 +688,7 @@ export default class EntTransmissionEfficiency extends Component {
                 }),
               },
             }}
+            history={{ location:{ query: {...this.props.location.query}}}}
           />
         </Modal>
       </Card>

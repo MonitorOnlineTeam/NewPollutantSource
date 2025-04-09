@@ -408,17 +408,17 @@ const routes = [
         ],
       },
       // 新登录 （替换）
-      {
-        path: '/user/login',
-        component: '../layouts/UserLayout2',
-        routes: [
-          {
-            name: 'newLogin',
-            path: '/user/login',
-            component: './user/login/NewLogin',
-          },
-        ],
-      },
+      // {
+      //   path: '/user/login',
+      //   component: '../layouts/UserLayout2',
+      //   routes: [
+      //     {
+      //       name: 'newLogin',
+      //       path: '/user/login',
+      //       component: './user/login/NewLogin',
+      //     },
+      //   ],
+      // },
       // 新登录 （样式统一）
       // {
       //   path: '/user/login',
@@ -441,11 +441,11 @@ const routes = [
         path: '/user',
         component: '../layouts/UserLayout',
         routes: [
-          // {
-          //   name: 'login',
-          //   path: '/user/login',
-          //   component: './user/login',
-          // },
+          {
+            name: 'login',
+            path: '/user/login',
+            component: './user/login',
+          },
 
           {
             name: 'register-result',

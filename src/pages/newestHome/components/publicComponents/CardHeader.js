@@ -1,3 +1,4 @@
+
 /**
  * 功能：popver组件
  * 创建人：jab
@@ -47,12 +48,17 @@ const Index = (props) => {
 
 
 
-  const { operationSettingInfo: { TaskPlanType } } = props;
+  const { operationSettingInfo: { TaskPlanType },isGasDay } = props;
   
   useEffect(() => {
   
   },[]); 
-  const content =  TaskPlanType ==1 ? <ul>
+  const content = isGasDay?
+  <ul>
+  <li>完成率：(计划内完成次数/计划内应完成次数) * 100%</li>
+  </ul>
+  :
+  TaskPlanType ==1 ? <ul>
   <li>次数：系统按计划派发的工单数量</li>
   <li>计划内结束次数：系统关闭次数、完成次数</li>
   <li>完成率：(计划内完成次数/计划内结束次数) * 100%</li>

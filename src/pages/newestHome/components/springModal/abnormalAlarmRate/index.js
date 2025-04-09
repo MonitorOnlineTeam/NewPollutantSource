@@ -68,6 +68,7 @@ class Index extends PureComponent {
         )}
         {time && show && (
           <AbnormalResRate
+            {...this.props}
             defaultPollutantCode={type}
             regionCode={this.props.regionCode}
             time={time}

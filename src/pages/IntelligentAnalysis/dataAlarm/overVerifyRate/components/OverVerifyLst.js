@@ -29,7 +29,7 @@ import { connect } from 'dva';
 import Link from 'umi/link';
 import SdlTable from '@/components/SdlTable';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { downloadFile } from '@/utils/utils';
+import { downloadFile,routerUrlConfigQueryPar } from '@/utils/utils';
 import RegionList from '@/components/RegionList';
 import EntAtmoList from '@/components/EntAtmoList';
 import VerifyDetailsPop from '@/pages/dataSearch/exceedDataAlarmRecord/VerifyDetailsPop';
@@ -429,6 +429,13 @@ export default class OverVerifyLst extends Component {
     //   type: 'overVerifyRate/getAttentionDegreeList',
     //   payload: { RegionCode: level == 2 ? query && query.regionCode : '' },
     // });
+    if(routerUrlConfigQueryPar(this.props,'isDisplayOptUnit')){
+       this.state.columns2.splice(4,0,{
+          title: '运维单位',
+          dataIndex: 'operationCompanyName',
+          key: 'operationCompanyName',
+       })
+    }
     this.updateQueryState({
       RegionCode: level == 2 ? query && query.regionCode : '',
       regionLevel: level,

@@ -51,7 +51,7 @@ const Index = (props) => {
 
 
 
-    const { entCode, pointLoading, operationPlanInfoRefreshId, operationPlanInfoRefreshType, operationPlanPointPar, type, pointType, xjPointList, jzPointList, queryPar, tableDatas, tableTotal, exportLoading, delOperationPlanPointLoading, updOperationPlanPointLoading } = props;
+    const { entCode, pointLoading, operationPlanInfoRefreshId, operationPlanInfoRefreshType, operationPlanPointPar, type, pointType, xjPointList, jzPointList, queryPar, tableDatas, tableTotal, exportLoading, delOperationPlanPointLoading, updOperationPlanPointLoading,recordType, } = props;
     const [pageIndex, setPageIndex] = useState(1)
     const [pageSize, setPageSize] = useState(20)
 
@@ -148,11 +148,14 @@ const Index = (props) => {
             width: 'auto',
         },
         {
-            title: '间隔（天）',
+            title: "间隔",
             dataIndex: 'IntervalDays',
             key: 'IntervalDays',
             ellipsis: true,
             width: 'auto',
+            render: (text, record, index) => {
+                return `${text}${record?.RecordType==19 || record?.RecordType==20? '个月' : '天'}`;
+            }
         },
         {
             title: '计划内容',
@@ -270,6 +273,8 @@ const Index = (props) => {
                 <Select placeholder='请选择' allowClear style={{ width: 100 }}>
                     <Option key={pointType == 2 ? 1 : 7} value={pointType == 2 ? 1 : 7}>巡检</Option>
                     <Option key={pointType == 2 ? 3 : 9} value={pointType == 2 ? 3 : 9}>校准</Option>
+                    {pointType == 2 && <Option key={33} value={33}>示值误差</Option>}
+                    <Option key={pointType == 2 ? 20 : 19} value={pointType == 2 ? 20 : 19 }>校验测试</Option>
                 </Select>
             </Form.Item>
         </>
@@ -358,7 +363,7 @@ const Index = (props) => {
                 mask={false}
                 footer={null}
             >
-                <PlanCalendar type={type} pointType={tableDatas?.[0]?.RecordType == 1 || tableDatas?.[0]?.RecordType == 3 ? 2 : 1} pointList={pointList} pointLoading={pointLoading} commonSearchComponents={commonSearchComponents} />
+                <PlanCalendar type={type} pointType={tableDatas?.[0]?.RecordType == 1 || tableDatas?.[0]?.RecordType == 3 || tableDatas?.[0]?.RecordType == 20 ? 2 : 1} pointList={pointList} pointLoading={pointLoading} commonSearchComponents={commonSearchComponents} />
             </Modal>
         </div>
     );

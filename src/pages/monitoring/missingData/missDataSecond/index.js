@@ -30,7 +30,7 @@ import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import config from '@/config';
-import { downloadFile, convertTextByConfig } from '@/utils/utils';
+import { downloadFile, convertTextByConfig,routerUrlConfigQueryPar } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
 import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
 
@@ -193,6 +193,13 @@ export default class Index extends Component {
         },
       },
     ];
+    if(routerUrlConfigQueryPar(this.props,'isDisplayOptUnit')){
+      this.columns.splice(4,0,{
+         title: '运维单位',
+         dataIndex: 'operationCompanyName',
+         key: 'operationCompanyName',
+      })
+    }
   }
 
   detail = record => {

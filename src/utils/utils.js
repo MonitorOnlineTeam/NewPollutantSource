@@ -958,3 +958,20 @@ export const processConfigInfo = config => {
     isShowRegion, // 是否显示行政区
   };
 };
+// 处理url路由配置参数 query cans
+export const routerUrlConfigQueryPar = (props,name,callback) => {
+   const { history } = props;
+   const par = history?.location?.query?.[name] == 1
+   return par
+};
+//弹框或者页面名称 处理属性为空的情况
+export const formatDynamicTitleOrdered = (obj, keyOrder = []) => {
+  // 按指定顺序过滤属性值
+  const validParts = keyOrder
+    .map(key => obj?.[key]?.trim?.())
+    .filter(Boolean);
+  
+  return validParts.length > 0 
+    ? `（${validParts.join(' - ')}）` 
+    : '';
+};

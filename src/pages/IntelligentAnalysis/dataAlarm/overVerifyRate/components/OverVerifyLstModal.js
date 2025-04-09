@@ -33,7 +33,7 @@ import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import config from '@/config';
-import { downloadFile } from '@/utils/utils';
+import { downloadFile,routerUrlConfigQueryPar } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
 import PointVerifyLstModal from '../pointVerifyRate/components/PointVerifyLstModal';
 import RegionList from '@/components/RegionList';
@@ -341,7 +341,14 @@ export default class OverVerifyLstModal extends Component {
 
     const { regionLevel } = this.state;
     // dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2' } }); //获取行政区列表
-
+     console.log(this.props,'3333333')
+    if(routerUrlConfigQueryPar(this.props,'isDisplayOptUnit')){
+      this.state.columns2.splice(4,0,{
+         title: '运维单位',
+         dataIndex: 'operationCompanyName',
+         key: 'operationCompanyName',
+      })
+   }
     if (!regionCode) {
       //初始页面
       // dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表

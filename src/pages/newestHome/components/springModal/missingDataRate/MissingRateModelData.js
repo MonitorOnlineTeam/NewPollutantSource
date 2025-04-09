@@ -1,3 +1,4 @@
+
 /**
  * 功  能：缺失数据报警响应率
  * 创建人：jab
@@ -481,7 +482,7 @@ export default class Index extends PureComponent {
               onCancel={() => { this.setState({ missingAlarmVisible: false }) }}
               className={styles.missDetailSty}
             >
-              <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, Status: this.state.status, staticType: 3 }) } }} />
+              <MissDataSecond hideBreadcrumb location={{ query: { queryPar: JSON.stringify({ ...this.props.queryPar, RegionCode: this.state.alarmNumRegionCode, Status: this.state.status, staticType: 3 }) } }} history={{ location:{ query: {...this.props.location.query}}}}/>
             </Modal>
         </div>
       }

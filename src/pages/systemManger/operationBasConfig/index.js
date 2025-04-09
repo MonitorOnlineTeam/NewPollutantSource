@@ -172,6 +172,12 @@ const Index = (props) => {
               <Radio value={2}>固定到天</Radio>
             </Radio.Group>
             </Form.Item>
+            <Form.Item label='报警是否增加运维单位' name='OperationCompanyStatus'>
+            <Radio.Group>
+              <Radio value={true}>是</Radio>
+              <Radio value={false}>否</Radio>
+            </Radio.Group>
+            </Form.Item>
             <Divider orientation="right" style={{borderTopColor:'#0000000f'}}>
               <Button type='primary' htmlType='submit' loading={props.updOperationSettingLoading}>保存</Button>
             </Divider>

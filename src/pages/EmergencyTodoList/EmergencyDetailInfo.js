@@ -60,6 +60,7 @@ import RecordForm from '@/pages/operations/recordForm';
 import SdlTable from '@/components/SdlTable';
 import UserList from '@/components/UserList';
 import { Map, MouseTool, Marker, Markers, Polygon, Circle } from 'react-amap';
+import { routerUrlConfigQueryPar } from '@/utils/utils';
 import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatistics/components/EntAbnormalMapModal';
 
 const { Description } = DescriptionList;
@@ -1365,6 +1366,9 @@ class EmergencyDetailInfo extends Component {
               <Description term="运维人">
                 {isExistTask ? this.props.taskInfo.Datas[0].ExecuteUserName : null}
               </Description>
+              {routerUrlConfigQueryPar(this.props,'isDisplayOptUnit') && <Description term="运维单位">
+                {isExistTask ? this.props.taskInfo.Datas[0].OperationEnt : null}
+              </Description>}
               <Description term="创建人">
                 {isExistTask ? this.props.taskInfo.Datas[0].CreateUserName : null}
               </Description>

@@ -13,7 +13,7 @@ const { RangePicker } = DatePicker;
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SelectPollutantType from '@/components/SelectPollutantType';
 import EntType from '@/components/EntType'
-
+import { routerUrlConfigQueryPar } from '@/utils/utils';
 import styles from './styles.less';
 
 import moment from 'moment';
@@ -261,7 +261,13 @@ const Index = (props) => {
     },
   ];
 
-
+  if(routerUrlConfigQueryPar(props,'isDisplayOptUnit')){
+    resNumColumns.splice(5,0,{
+       title: '运维单位',
+       dataIndex: 'operationCompanyName',
+       key: 'operationCompanyName',
+    })
+  }
 
 
   const searchComponents = () => {

@@ -11,7 +11,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList';
 import SelectPollutantType from '@/components/SelectPollutantType';
-import { convertTextByConfig } from '@/utils/utils';
+import { convertTextByConfig,routerUrlConfigQueryPar } from '@/utils/utils';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -400,7 +400,7 @@ class index extends PureComponent {
           return text ? text : '-';
         },
       },
-    ],
+    ]
   };
 
   componentDidMount() {
@@ -422,6 +422,8 @@ class index extends PureComponent {
         .startOf('day'),
       moment().endOf('day'),
     ]);
+
+    
   }
 
   onTableClick = (RegionCode, ExceptionType, ResponseStatus, operationpersonnel) => {
@@ -612,6 +614,8 @@ class index extends PureComponent {
       secondQueryCondition,
       exceptionTime,
     } = this.state;
+
+
     let _detailsColumns = detailsColumns;
     let _regionList = regionList.length ? regionList[0].children : [];
     // let showTypeText = secondQueryCondition.ResponseStatus == "0" ? "待响应报警情况" : (secondQueryCondition.ResponseStatus == "1" ? "已响应报警情况" : "报警响应情况")

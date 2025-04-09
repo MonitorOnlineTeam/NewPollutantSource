@@ -56,7 +56,7 @@ const Index = (props) => {
       onCancel={onCancel}
       destroyOnClose
     >
-      <AlarmResponseTimelyRateModal time={time} pollutantType={type} hideBreadcrumb/>
+      <AlarmResponseTimelyRateModal {...props} time={time} pollutantType={type} hideBreadcrumb/>
     </Modal>
   );
 };

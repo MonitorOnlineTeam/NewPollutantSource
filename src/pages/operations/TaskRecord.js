@@ -47,7 +47,7 @@ import EntAtmoList from '@/components/EntAtmoList'
 import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatistics/components/EntAbnormalMapModal'
 import UserList from '@/components/UserList'
 import styles from './index.less'
-import { permissionButton } from '@/utils/utils';
+import { permissionButton,routerUrlConfigQueryPar } from '@/utils/utils';
 import { useParams } from 'umi';
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -608,6 +608,13 @@ class TaskRecord extends Component {
     const { TaskID, DGIMN } = this.state;
     const columns = [
       {
+        title: '任务单号',
+        dataIndex: 'TaskCode',
+        key: 'TaskCode',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
@@ -628,17 +635,65 @@ class TaskRecord extends Component {
         align: 'center',
         ellipsis: true,
       },
-      // {
-      //   title: '运维单位',
-      //   dataIndex: 'operationCompanyName',
-      //   key: 'operationCompanyName',
-      // },
       {
-        title: '任务单号',
-        dataIndex: 'TaskCode',
-        key: 'TaskCode',
+        title: '任务类型',
+        dataIndex: 'RecordName',
+        key: 'RecordName',
         align: 'center',
         ellipsis: true,
+      },
+      {
+        title: '任务来源',
+        dataIndex: 'TaskFrom',
+        key: 'TaskFrom',
+        align: 'center',
+        ellipsis: true,
+        render: (text, record) => {
+          if (text === 1) {
+            return <span><Tag color="purple">手动创建</Tag></span>;
+          }
+          if (text === 2) {
+            return <span><Tag color="red">报警响应</Tag></span>;
+          }
+          if (text === 3) {
+            return <span><Tag color="blue">监管派单</Tag></span>;
+          }
+          if (text === 4) {
+            return <span><Tag color="pink">自动派单</Tag></span>;
+          }
+        },
+      },
+      {
+        title: '运维人',
+        dataIndex: 'OperationsUserName',
+        key: 'OperationsUserName',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '任务状态',
+        dataIndex: 'TaskStatus',
+        key: 'TaskStatus',
+        align: 'center',
+        ellipsis: true,
+        render: (text, record) => {
+          if (text === 11) {
+            return <span><Badge status="warning" text="待领取" /></span>;
+          }
+          if (text === 1) {
+            return <span><Badge status="default" text="待执行" /></span>;
+          }
+          if (text === 2) {
+            return <span><Badge status="processing" text="进行中" /></span>;
+          }
+          if (text === 3) {
+            return <span><Badge status="success" text="已完成" /></span>;
+          }
+          if (text === 10) {
+            return <span><Badge status="error" text="系统关闭" /></span>;
+          }
+
+        },
       },
       {
         title: '运维状态',
@@ -669,59 +724,6 @@ class TaskRecord extends Component {
         },
       },
       {
-        title: '任务来源',
-        dataIndex: 'TaskFrom',
-        key: 'TaskFrom',
-        align: 'center',
-        ellipsis: true,
-        render: (text, record) => {
-          if (text === 1) {
-            return <span><Tag color="purple">手动创建</Tag></span>;
-          }
-          if (text === 2) {
-            return <span><Tag color="red">报警响应</Tag></span>;
-          }
-          if (text === 3) {
-            return <span><Tag color="blue">监管派单</Tag></span>;
-          }
-          if (text === 4) {
-            return <span><Tag color="pink">自动派单</Tag></span>;
-          }
-        },
-      },
-      {
-        title: '报警类型',
-        dataIndex: 'alarmType',
-        key: 'alarmType',
-        align: 'center',
-        ellipsis: true,
-      },
-      {
-        title: '任务状态',
-        dataIndex: 'TaskStatus',
-        key: 'TaskStatus',
-        align: 'center',
-        ellipsis: true,
-        render: (text, record) => {
-          if (text === 11) {
-            return <span><Badge status="warning" text="待领取" /></span>;
-          }
-          if (text === 1) {
-            return <span><Badge status="default" text="待执行" /></span>;
-          }
-          if (text === 2) {
-            return <span><Badge status="processing" text="进行中" /></span>;
-          }
-          if (text === 3) {
-            return <span><Badge status="success" text="已完成" /></span>;
-          }
-          if (text === 10) {
-            return <span><Badge status="error" text="系统关闭" /></span>;
-          }
-
-        },
-      },
-      {
         title: '审批状态',
         dataIndex: 'auditStatusName',
         key: 'auditStatusName',
@@ -729,9 +731,9 @@ class TaskRecord extends Component {
         ellipsis: true,
       },
       {
-        title: '运维人',
-        dataIndex: 'OperationsUserName',
-        key: 'OperationsUserName',
+        title: '报警类型',
+        dataIndex: 'alarmType',
+        key: 'alarmType',
         align: 'center',
         ellipsis: true,
       },
@@ -754,13 +756,6 @@ class TaskRecord extends Component {
         title: '创建时间',
         dataIndex: 'CreateTime',
         key: 'CreateTime',
-        align: 'center',
-        ellipsis: true,
-      },
-      {
-        title: '任务类型',
-        dataIndex: 'RecordName',
-        key: 'RecordName',
         align: 'center',
         ellipsis: true,
       },
@@ -844,6 +839,13 @@ class TaskRecord extends Component {
         },
       },
     ];
+    if(routerUrlConfigQueryPar(this.props,'isDisplayOptUnit')){
+      columns.splice(7,0,{
+         title: '运维单位',
+         dataIndex: 'operationCompanyName',
+         key: 'operationCompanyName',
+      })
+    }
     const style = {};
     if (this.state.expand) {
       style.float = 'right';
@@ -1225,6 +1227,7 @@ class TaskRecord extends Component {
           }}
         >
           <TaskRecordDetails
+            {...this.props}
             match={{ params: { TaskID: TaskID, DGIMN: DGIMN } }}
             isHomeModal
             hideBreadcrumb

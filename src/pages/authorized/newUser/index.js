@@ -2,7 +2,7 @@
  * @Author: jab
  * @Date: 2020-12-1
  * @LastEditors: outman0611
- * @LastEditTime: 2025-01-10 15:38:26
+ * @LastEditTime: 2025-04-07 18:07:56
  * @Description: 用户管理 新页面
  */
 import React, { Component, Fragment } from 'react';
@@ -134,6 +134,7 @@ export default class UserInfoIndex extends Component {
                     <DatabaseOutlined style={{ fontSize: 16 }} />
                   </a>
                 </Tooltip>
+                <Divider type="vertical" />
               </Fragment>
             )}
             <Tooltip title="编辑">

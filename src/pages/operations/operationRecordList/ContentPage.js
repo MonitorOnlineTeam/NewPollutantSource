@@ -18,8 +18,8 @@ import styles from "./style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RecordForm from '@/pages/operations/recordForm'
+import { routerUrlConfigQueryPar } from '@/utils/utils';
 import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
-
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -141,6 +141,14 @@ const Index = (props) => {
       fixed: 'left',
     },
   ]
+  console.log(555555,column)
+  if(routerUrlConfigQueryPar(props,'isDisplayOptUnit')){
+    column.splice(3,0,{
+       title: '运维单位',
+       dataIndex: 'operationCompanyName',
+       key: 'operationCompanyName',
+    })
+  }
   const [columns, setColumns] = useState([]);
   const onFinish = async (pageIndexs, pageSizes, par) => {  //查询  par参数 分页需要的参数
 

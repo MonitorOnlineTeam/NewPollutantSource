@@ -26,11 +26,11 @@ import SelectPollutantType from '@/components/SelectPollutantType';
 import OperationInspectoUserList from '@/components/OperationInspectoUserList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import cuid from 'cuid';
-import { getBase64,permissionButton  } from '@/utils/utils';
+import { getBase64, permissionButton } from '@/utils/utils';
 import Detail from './Detail';
 import Lightbox from "react-image-lightbox-rotate";
-import {  API } from '@config/API';
-import {cookieName, uploadPrefix } from '@/config'
+import { API } from '@config/API';
+import { cookieName, uploadPrefix } from '@/config'
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -169,7 +169,7 @@ const Index = (props) => {
   const [tableForm] = Form.useForm();
 
   const pollutantTypeCode = Number(sessionStorage.getItem('sysPollutantCodes')) || undefined;
-  
+
   const [fromVisible, setFromVisible] = useState(false)
 
 
@@ -180,12 +180,12 @@ const Index = (props) => {
 
   const [manufacturerId, setManufacturerId] = useState(undefined)
 
-  const { tableDatas, tableTotal, tableLoading, pointParamesLoading, infoloading, exportLoading, userLoading, entLoading, systemModelList, operationInfoList, isDetailModal, regDetailPar = {},par } = props;
+  const { tableDatas, tableTotal, tableLoading, pointParamesLoading, infoloading, exportLoading, userLoading, entLoading, systemModelList, operationInfoList, isDetailModal, regDetailPar = {}, par } = props;
 
 
   const userCookie = Cookie.get('currentUser');
 
-  const [tableValuesChange,setTableValuesChange] = useState(false)
+  const [tableValuesChange, setTableValuesChange] = useState(false)
 
   const [editPermis, setEditPermis] = useState(false)
   const [delPermis, setDelPermis] = useState(false)
@@ -196,26 +196,26 @@ const Index = (props) => {
     const buttonList = permissionButton(props.match.path)
 
 
-    buttonList.map(item=>{
-      switch (item){
+    buttonList.map(item => {
+      switch (item) {
         case 'editAuthority': setEditPermis(true); break;
         case 'delete': setDelPermis(true); break;
         case 'rectificationPush': setPushPermis(true); break;
       }
     })
     if (par) {
-      form.setFieldsValue({ RegionCode: par?.RegionCode, EntCode:par?.EntCode,time:par?.time })
+      form.setFieldsValue({ RegionCode: par?.RegionCode, EntCode: par?.EntCode, time: par?.time })
       setPointLoading(true)
-      props.getPointByEntCode({ EntCode: par?.EntCode,PollutantTypeCode:pollutantTypeCode }, (res) => {
+      props.getPointByEntCode({ EntCode: par?.EntCode, PollutantTypeCode: pollutantTypeCode }, (res) => {
         setPointList(res)
         setPointLoading(false)
-        form.setFieldsValue({ DGIMN:par?.DGIMN })
+        form.setFieldsValue({ DGIMN: par?.DGIMN })
         onFinish(pageIndex, pageSize)
       })
     } else {
       isDetailModal ? onFinish() : initData()
     }
-  
+
   }, []);
 
   const initData = () => {
@@ -235,7 +235,7 @@ const Index = (props) => {
       align: 'center',
       ellipsis: true,
       render: (text, record, index) => {
-        return (index + 1) + (pageIndex-1)*pageSize
+        return (index + 1) + (pageIndex - 1) * pageSize
       }
     },
     {
@@ -430,7 +430,7 @@ const Index = (props) => {
         const noSubmitStatusFlag = record.Status == 0; //暂存状态  不可以推送
 
         return <span>
-          {editPermis&&<Fragment><Tooltip placement={flag ? "left" : 'top'} title={flag ? "运维督查记录已超过30天，不可编辑" :  "编辑"}> <a onClick={() => {
+          {editPermis && <Fragment><Tooltip placement={flag ? "left" : 'top'} title={flag ? "运维督查记录已超过30天，不可编辑" : "编辑"}> <a onClick={() => {
             if (flag) {
               return;
             }
@@ -440,17 +440,17 @@ const Index = (props) => {
           <Fragment>
             <Tooltip title='详情'> <a onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip>
           </Fragment>
-            {pushPermis&&<Fragment> <Divider type="vertical" /><Tooltip placement={flag ? "left" : 'top'} title={flag ? "运维督查记录已超过30天，不可推送" : noSubmitStatusFlag ? "只有提交状态才可以整改推送" : "整改推送"}>
-              <Popconfirm disabled={(flag) || noSubmitStatusFlag} placement="left" title="是否把整改问题推送给运维人员？"
-                onConfirm={() => {
-                  if ((flag) || noSubmitStatusFlag) { return; } rectificationPush(record);
-                }
-                } okText="是" cancelText="否">
-                <a style={{ cursor: (flag && 'not-allowed') || (noSubmitStatusFlag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ') || (noSubmitStatusFlag && 'rgba(0, 0, 0, 0.25) '), }} > <ToTopOutlined style={{ fontSize: 16 }} /> </a>
-              </Popconfirm>
-            </Tooltip>
+          {pushPermis && <Fragment> <Divider type="vertical" /><Tooltip placement={flag ? "left" : 'top'} title={flag ? "运维督查记录已超过30天，不可推送" : noSubmitStatusFlag ? "只有提交状态才可以整改推送" : "整改推送"}>
+            <Popconfirm disabled={(flag) || noSubmitStatusFlag} placement="left" title="是否把整改问题推送给运维人员？"
+              onConfirm={() => {
+                if ((flag) || noSubmitStatusFlag) { return; } rectificationPush(record);
+              }
+              } okText="是" cancelText="否">
+              <a style={{ cursor: (flag && 'not-allowed') || (noSubmitStatusFlag && 'not-allowed'), color: (flag && 'rgba(0, 0, 0, 0.25) ') || (noSubmitStatusFlag && 'rgba(0, 0, 0, 0.25) '), }} > <ToTopOutlined style={{ fontSize: 16 }} /> </a>
+            </Popconfirm>
+          </Tooltip>
           </Fragment>}
-          {delPermis&&<Fragment>
+          {delPermis && <Fragment>
             <Divider type="vertical" />
             <Tooltip placement={flag || pushStatusFlag ? "left" : 'top'} title={flag ? "运维督查记录已超过30天，不可删除" : pushStatusFlag ? '推送状态，不可删除' : "删除"}>
               <Popconfirm disabled={flag || pushStatusFlag} placement="left" title="确定要删除这条数据吗？"
@@ -477,7 +477,7 @@ const Index = (props) => {
     setFilesList0([])
     setDetailLoading(true)
     record.Status == 1 ? setSubmitFlag(true) : setSubmitFlag(false)
-    record.StatusName == '未推送'? setPushFlag(false) : setPushFlag(true)
+    record.StatusName == '未推送' ? setPushFlag(false) : setPushFlag(true)
     form2.setFieldsValue({
       ID: record.ID,
     })
@@ -507,7 +507,7 @@ const Index = (props) => {
             ...echoData,
             EntCode: undefined,
             DGIMN: undefined,
-            PollutantType:pollType,
+            PollutantType: pollType,
             RegionCode: echoData.RegionCode.split(","),
             PollutantCode: echoData.PollutantCode.split(","),
             InspectorDate: moment(echoData.InspectorDate),
@@ -524,7 +524,7 @@ const Index = (props) => {
 
           })
           setPointLoading2(true)
-          props.getPointByEntCode({ EntCode: echoData.EntCode,PollutantTypeCode:pollType }, (res) => { //单独获取监测点填写的值
+          props.getPointByEntCode({ EntCode: echoData.EntCode, PollutantTypeCode: pollType }, (res) => { //单独获取监测点填写的值
             setPointList2(res)
             setPointLoading2(false)
             form2.setFieldsValue({
@@ -658,7 +658,7 @@ const Index = (props) => {
   const [entList, setEntList] = useState([])
   const getEntList = (pollutantType, callback) => {
     setEntLoading2(true)
-    props.getEntNoFilterList({ RegionCode: '',PollutantType: pollutantType}, (data) => {
+    props.getEntNoFilterList({ RegionCode: '', PollutantType: pollutantType }, (data) => {
       setEntList(data)
       setEntLoading2(false);
       callback && callback();
@@ -666,20 +666,20 @@ const Index = (props) => {
   }
 
   const foramtProblemFilesList = (data) => {
-    const filesCuidObj1 = {}, filesListObj1 = {},  principleDisabledData = {};
+    const filesCuidObj1 = {}, filesListObj1 = {}, principleDisabledData = {};
     data.PrincipleProblemList && data.PrincipleProblemList.map((item, index) => {
       filesCuidObj1[`Files1${item.Sort}`] = cuid();
       filesListObj1[`Files1${item.Sort}`] = [];
       tableForm.setFieldsValue({ //有无原则问题 默认
         [`Inspector${item.Sort}`]: null,
       })
-        principleDisabledData[`${item.Sort}`] = true;
+      principleDisabledData[`${item.Sort}`] = true;
     })
     setPrincipleDisabled(principleDisabledData)
     setFilesCuidList1(filesCuidObj1)
     setFilesList1(filesListObj1)
 
-    const filesCuidObj2 = {}, filesListObj2 = {};32
+    const filesCuidObj2 = {}, filesListObj2 = {}; 32
     data.importanProblemList && data.importanProblemList.map((item, index) => {
       filesCuidObj2[`Files2${item.Sort}`] = cuid();
       filesListObj2[`Files2${item.Sort}`] = [];
@@ -697,8 +697,8 @@ const Index = (props) => {
     setFilesList3(filesListObj3)
   }
 
-  useEffect(()=>{
-    if(!fromVisible){
+  useEffect(() => {
+    if (!fromVisible) {
       setType('add')
       setPollutantType(pollutantTypeCode || 2);
       setDeviceInfoList([])
@@ -714,16 +714,16 @@ const Index = (props) => {
       // setGaschoiceData(null);//清空生产商的值
       // setPmchoiceData(null);
     }
-  },[fromVisible])
+  }, [fromVisible])
 
   const add = () => {
     setFromVisible(true)
     props.getInspectorOperationInfoList({ ID: '', InspectorType: inspectorType, PollutantType: pollutantTypeCode || 2 }, (data) => {
-          foramtProblemFilesList(data)
-          })
+      foramtProblemFilesList(data)
+    })
     getEntList(pollutantTypeCode || 2);
   };
-  
+
   const onFinish = async (pageIndexs, pageSizes) => {  //查询
     try {
       const values = await form.validateFields();
@@ -735,7 +735,7 @@ const Index = (props) => {
         time: undefined,
         InspectorType: inspectorType,
         InspectorTypeArr: regDetailPar?.InspectorTypeArr,
-        pollutantType : isDetailModal ? undefined : pollutantTypeCode,
+        pollutantType: isDetailModal ? undefined : pollutantTypeCode,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
         pageSize: pageSizes ? pageSizes : pageSize,
       })
@@ -754,7 +754,7 @@ const Index = (props) => {
       InspectorType: inspectorType,
       InspectorTypeArr: regDetailPar?.InspectorTypeArr,
       // apiName: props.exportApiName,
-      pollutantType :  isDetailModal ? undefined : pollutantTypeCode,
+      pollutantType: isDetailModal ? undefined : pollutantTypeCode,
     })
   }
   const formatData = (data, type) => {
@@ -781,8 +781,8 @@ const Index = (props) => {
   const save = (type) => {
     form2.validateFields().then(values => {
 
-      const saveFun = () =>{
-        type == 0 ? setSaveLoading0(true) : type == 1 ? setSaveLoading1(true) :  type == 2 ? setSaveLoading2(true) : setSaveLoading3(true);
+      const saveFun = () => {
+        type == 0 ? setSaveLoading0(true) : type == 1 ? setSaveLoading1(true) : type == 2 ? setSaveLoading2(true) : setSaveLoading3(true);
         let principleProblemList = operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList || [];
         let importanProblemList = operationInfoList.importanProblemList && operationInfoList.importanProblemList || [];
         let commonlyProblemList = operationInfoList.CommonlyProblemList && operationInfoList.CommonlyProblemList || [];
@@ -809,13 +809,13 @@ const Index = (props) => {
           devicePar.PMManufacturer = pm.map(item => item.Manufacturer).join(',')
           devicePar.PMEquipment = pm.map(item => item.Equipment).join(',')
         }
-        const filterPointData = pointList2.filter(item=>item.DGIMN == values.DGIMN)
+        const filterPointData = pointList2.filter(item => item.DGIMN == values.DGIMN)
         const data = {
           ...values,
-          DGIMN:filterPointData?.[0]?.PointCode,
-          RegionCode:  values.RegionCode&&values.RegionCode.join(","),
-          PollutantCode: values.PollutantCode&&values.PollutantCode.join(","),
-          InspectorDate: values.InspectorDate&&moment(values.InspectorDate).format("YYYY-MM-DD HH:mm:ss"),
+          DGIMN: filterPointData?.[0]?.PointCode,
+          RegionCode: values.RegionCode && values.RegionCode.join(","),
+          PollutantCode: values.PollutantCode && values.PollutantCode.join(","),
+          InspectorDate: values.InspectorDate && moment(values.InspectorDate).format("YYYY-MM-DD HH:mm:ss"),
           IsSubmit: type,
           TotalScore: tableForm.getFieldValue([`TotalScore`]),
           Files: tableForm.getFieldValue([`Files`]),
@@ -830,15 +830,15 @@ const Index = (props) => {
             isSuccess && onFinish()
 
           })
-        }else if(type == 2) { //推送
+        } else if (type == 2) { //推送
           props.pushInspectorOperation({ ID: form2.getFieldValue('ID') }, (isSuccess) => {
             setSaveLoading2(false)
             isSuccess && setFromVisible(false)
             isSuccess && onFinish()
           })
-        }else{ //提交并推送 IsPush 提交类型为提交并推送
-          props.addOrEditInspectorOperation({...data, IsSubmit: 1, IsPush :1, saveType:'submitPush'}, (isSuccess) => {
-            isSuccess&&props.pushInspectorOperation({ ID: form2.getFieldValue('ID') }, (isSuccess2) => {
+        } else { //提交并推送 IsPush 提交类型为提交并推送
+          props.addOrEditInspectorOperation({ ...data, IsSubmit: 1, IsPush: 1, saveType: 'submitPush' }, (isSuccess) => {
+            isSuccess && props.pushInspectorOperation({ ID: form2.getFieldValue('ID') }, (isSuccess2) => {
               setSaveLoading3(false)
               isSuccess2 && setFromVisible(false)
               isSuccess2 && onFinish()
@@ -847,15 +847,15 @@ const Index = (props) => {
           })
         }
       }
-      type==0?
-      saveFun()//保存时不需要验证
-       :
-      tableForm.validateFields().then(()=>{
-        saveFun()
-      }).catch (errorInfo =>{
-        console.log('Failed:', errorInfo); //表格表单
-        type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) :  type == 2 ? setSaveLoading2(false) : setSaveLoading3(false);
-      })
+      type == 0 ?
+        saveFun()//保存时不需要验证
+        :
+        tableForm.validateFields().then(() => {
+          saveFun()
+        }).catch(errorInfo => {
+          console.log('Failed:', errorInfo); //表格表单
+          type == 0 ? setSaveLoading0(false) : type == 1 ? setSaveLoading1(false) : type == 2 ? setSaveLoading2(false) : setSaveLoading3(false);
+        })
 
     }).catch(errorInfo => {
       console.log('Failed:', errorInfo);
@@ -879,7 +879,7 @@ const Index = (props) => {
         return;
       }
       setPointLoading(true)
-      props.getPointByEntCode({ EntCode: hangedValues.EntCode,PollutantTypeCode:pollutantTypeCode  }, (res) => {
+      props.getPointByEntCode({ EntCode: hangedValues.EntCode, PollutantTypeCode: pollutantTypeCode }, (res) => {
         setPointList(res)
         setPointLoading(false)
         form.setFieldsValue({ DGIMN: undefined })
@@ -900,7 +900,7 @@ const Index = (props) => {
         return;
       }
       setPointLoading2(true)
-      props.getPointByEntCode({ EntCode: hangedValues.EntCode,PollutantTypeCode:pollutantType  }, (res) => {
+      props.getPointByEntCode({ EntCode: hangedValues.EntCode, PollutantTypeCode: pollutantType }, (res) => {
         const data = res.filter(item => item.PollutantType == form2.getFieldValue('PollutantType'))
         setPointList2(data)
         setPointLoading2(false)
@@ -939,6 +939,16 @@ const Index = (props) => {
   }
   const ExportComponents = () => <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
 
+  const ARcheckBtn = () => {
+    return isRecord && <Button type="primary" style={{ marginRight: 8 }} onClick={() => {
+      const externalUrl = 'https://ar-industry.rokid.com/login?code=xdl';
+      window.open(externalUrl, '_blank');    // 打开新窗口
+    }}>
+      AR核查
+     </Button>
+  }
+
+
   const searchComponents = () => {
     return isDetailModal ?
       <Form
@@ -965,7 +975,7 @@ const Index = (props) => {
           <Input />
         </Form.Item>
         <Form.Item>
-          <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
+          <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading} style={{ marginRight: 8 }}>导出 </Button>
         </Form.Item>
       </Form>
 
@@ -974,10 +984,10 @@ const Index = (props) => {
         form={form}
         name="advanced_search"
         initialValues={{
-          time: props.time ||  [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
+          time: props.time || [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day"),]
         }}
         className={styles["ant-advanced-search-form"]}
-        onFinish={()=>{setPageIndex(1); onFinish(1,pageSize)}}
+        onFinish={() => { setPageIndex(1); onFinish(1, pageSize) }}
         onValuesChange={onValuesChange}
       >
         <Row align='middle'>
@@ -985,9 +995,9 @@ const Index = (props) => {
             <RegionList noFilter levelNum={3} style={{ width: 150 }} />
           </Form.Item>
           {/* <Spin spinning={entLoading && !entLoading2} size='small' style={{ top: -3, left: 39 }}> */}
-            <Form.Item label='企业' name='EntCode' style={{ marginLeft: 8, marginRight: 8 }}>
-              <EntAtmoList noFilter style={{ width: 300 }} />
-            </Form.Item>
+          <Form.Item label='企业' name='EntCode' style={{ marginLeft: 8, marginRight: 8 }}>
+            <EntAtmoList noFilter style={{ width: 300 }} />
+          </Form.Item>
           {/* </Spin> */}
           <Spin spinning={pointLoading} size='small' style={{ top: -3, left: 44 }}>
             <Form.Item label='点位名称' name='DGIMN' >
@@ -1011,7 +1021,7 @@ const Index = (props) => {
 
         <Row>
           <Form.Item label="督查人员" name="Inspector"  >
-            <OperationInspectoUserList  type='2' style={{ width: 150 }} />
+            <OperationInspectoUserList type='2' style={{ width: 150 }} />
           </Form.Item>
           <Form.Item label="督查日期" name="time" style={{ marginLeft: 8, marginRight: 8 }}  >
             <RangePicker_
@@ -1020,20 +1030,20 @@ const Index = (props) => {
               format="YYYY-MM-DD" />
           </Form.Item>
           <Form.Item label="运维人员" name="OperationUser" style={{ marginRight: 8 }}  >
-            <OperationInspectoUserList   noFirst style={{ width: 150 }} />
+            <OperationInspectoUserList noFirst style={{ width: 150 }} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
               查询
      </Button>
-            <Button onClick={() => { form.resetFields();setPointList([]) }} style={{ marginRight: 8 }} >
+            <Button onClick={() => { form.resetFields(); setPointList([]) }} style={{ marginRight: 8 }} >
               重置
      </Button>
             {!isRecord && <Button style={{ marginRight: 8 }} onClick={() => { add() }} >
               添加
        </Button>}
-            <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading}>导出 </Button>
-
+            <Button icon={<ExportOutlined />} onClick={() => { exports() }} loading={exportLoading} style={{ marginRight: 8 }}>导出 </Button>
+            <ARcheckBtn />
           </Form.Item>
 
         </Row>
@@ -1271,7 +1281,7 @@ const Index = (props) => {
         width: 240,
         render: (text, record) => {
           return <Form.Item name={`Inspector${record.Sort}`}>
-            <Select  disabled={ record.Status == '已推送'} placeholder='请选择' onChange={(val, ) => principleChange(val, record.Sort)}> <Option value={'0'}>有</Option>   <Option value={null}>无</Option>     </Select>
+            <Select disabled={record.Status == '已推送'} placeholder='请选择' onChange={(val, ) => principleChange(val, record.Sort)}> <Option value={'0'}>有</Option>   <Option value={null}>无</Option>     </Select>
           </Form.Item>
         },
       },
@@ -1280,7 +1290,7 @@ const Index = (props) => {
         dataIndex: 'Remark',
         key: 'Remark',
         align: 'center',
-        width:160,
+        width: 160,
         render: (text, record) => {
           return <Form.Item className='remarkSty' name={`Remark${record.Sort}`} rules={[{ required: !principleDisabled[`${record.Sort}`], message: '请输入问题描述' }]}>
             <TextArea rows={1} placeholder='请输入' disabled={record.Status == '已推送' || principleDisabled[`${record.Sort}`]} />
@@ -1292,7 +1302,7 @@ const Index = (props) => {
         dataIndex: 'Status',
         key: 'Status',
         align: 'center',
-        width:110,
+        width: 110,
         ellipsis: true,
         render: (text, record, index) => {
           return <span style={{ color: text == '未推送' ? '#f5222d' : '#52c41a' }}>{text}</span>;
@@ -1307,7 +1317,7 @@ const Index = (props) => {
         render: (text, record) => {
           const flag = record.Status == '已推送';
           return <Form.Item name={`Files1${record.Sort}`}>
-            <a style={{ cursor: flag && 'not-allowed', color: flag && 'rgba(0, 0, 0, 0.25) ',}}  onClick={() => { if(flag){return} setFileType(1); setFileVisible(true); setFiles1(`Files1${record.Sort}`); }}>{filesList1[`Files1${record.Sort}`] && filesList1[`Files1${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
+            <a style={{ cursor: flag && 'not-allowed', color: flag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (flag) { return } setFileType(1); setFileVisible(true); setFiles1(`Files1${record.Sort}`); }}>{filesList1[`Files1${record.Sort}`] && filesList1[`Files1${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
           </Form.Item>
         },
       },
@@ -1354,13 +1364,13 @@ const Index = (props) => {
                 const remarkVal = getFieldValue(`Remark${record.Sort}`);
                 if (remarkVal && !value) {
                   return Promise.reject(new Error('请选择'));
-                }else{
+                } else {
                   return Promise.resolve()
                 }
               },
             })]}>
             {/* <InputNumber placeholder='请输入' max={-0.1} /> */}
-            <Checkbox disabled={ record.Status == '已推送'}>{record.Score? `${-record.Score}分` : null }</Checkbox>
+            <Checkbox disabled={record.Status == '已推送'}>{record.Score ? `${-record.Score}分` : null}</Checkbox>
           </Form.Item>
         },
       },
@@ -1384,12 +1394,12 @@ const Index = (props) => {
                 const inspectorVal = getFieldValue(`Inspector${record.Sort}`);
                 if (inspectorVal && !value) {
                   return Promise.reject(new Error('请输入说明'));
-                }else{
+                } else {
                   return Promise.resolve()
                 }
               },
             })]}>
-            <TextArea disabled={ record.Status == '已推送'} rows={1} placeholder='请输入' />
+            <TextArea disabled={record.Status == '已推送'} rows={1} placeholder='请输入' />
           </Form.Item>
         },
       },
@@ -1398,7 +1408,7 @@ const Index = (props) => {
         dataIndex: 'Status',
         key: 'Status',
         align: 'center',
-        width:110,
+        width: 110,
         ellipsis: true,
         render: (text, record, index) => {
           return <span style={{ color: text == '未推送' ? '#f5222d' : '#52c41a' }}>{text}</span>;
@@ -1413,7 +1423,7 @@ const Index = (props) => {
         render: (text, record) => {
           const flag = record.Status == '已推送';
           return <Form.Item name={`Files2${record.Sort}`} >
-            <a style={{ cursor: flag && 'not-allowed', color: flag && 'rgba(0, 0, 0, 0.25) ',}} onClick={() => {if(flag){return} setFileType(2); setFileVisible(true); setFiles2(`Files2${record.Sort}`); }}>{filesList2[`Files2${record.Sort}`] && filesList2[`Files2${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
+            <a style={{ cursor: flag && 'not-allowed', color: flag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (flag) { return } setFileType(2); setFileVisible(true); setFiles2(`Files2${record.Sort}`); }}>{filesList2[`Files2${record.Sort}`] && filesList2[`Files2${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
           </Form.Item>
         },
       },
@@ -1459,17 +1469,17 @@ const Index = (props) => {
                 const remarkVal = getFieldValue(`Remark${record.Sort}`);
                 if (remarkVal && !value) {
                   return Promise.reject(new Error('请选择'));
-                }else{
+                } else {
                   return Promise.resolve()
                 }
               },
             })]}>
-            <Checkbox disabled={ record.Status == '已推送'} onChange={(e)=>{
-                // setTableValuesChange(!tableValuesChange)
-                // tableForm.setFieldsValue({[`Score${record.Sort}`] :e.target.checked? record.Score : null })
+            <Checkbox disabled={record.Status == '已推送'} onChange={(e) => {
+              // setTableValuesChange(!tableValuesChange)
+              // tableForm.setFieldsValue({[`Score${record.Sort}`] :e.target.checked? record.Score : null })
             }}>
-              {record.Score? `${-record.Score}分` : null }
-          </Checkbox>
+              {record.Score ? `${-record.Score}分` : null}
+            </Checkbox>
           </Form.Item>
         },
       },
@@ -1493,12 +1503,12 @@ const Index = (props) => {
                 const inspectorVal = getFieldValue(`Inspector${record.Sort}`);
                 if (inspectorVal && !value) {
                   return Promise.reject(new Error('请输入说明'));
-                }else{
+                } else {
                   return Promise.resolve()
                 }
               },
             })]}>
-            <TextArea disabled={ record.Status == '已推送'} rows={1} placeholder='请输入' />
+            <TextArea disabled={record.Status == '已推送'} rows={1} placeholder='请输入' />
           </Form.Item>
         },
       },
@@ -1507,7 +1517,7 @@ const Index = (props) => {
         dataIndex: 'Status',
         key: 'Status',
         align: 'center',
-        width:110,
+        width: 110,
         ellipsis: true,
         render: (text, record, index) => {
           return <span style={{ color: text == '未推送' ? '#f5222d' : '#52c41a' }}>{text}</span>;
@@ -1522,7 +1532,7 @@ const Index = (props) => {
         render: (text, record) => {
           const flag = record.Status == '已推送';
           return <Form.Item name={`Files3${record.Sort}`} >
-            <a style={{ cursor: flag && 'not-allowed', color: flag && 'rgba(0, 0, 0, 0.25) ',}} onClick={() => {if(flag){return} setFileType(3); setFileVisible(true); setFiles3(`Files3${record.Sort}`); }}>{filesList3[`Files3${record.Sort}`] && filesList3[`Files3${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
+            <a style={{ cursor: flag && 'not-allowed', color: flag && 'rgba(0, 0, 0, 0.25) ', }} onClick={() => { if (flag) { return } setFileType(3); setFileVisible(true); setFiles3(`Files3${record.Sort}`); }}>{filesList3[`Files3${record.Sort}`] && filesList3[`Files3${record.Sort}`][0] ? '查看附件' : '上传附件'}</a>
           </Form.Item>
         },
       },
@@ -1657,7 +1667,7 @@ const Index = (props) => {
 
   const uploadProps = { //附件上传
     action: API.UploadApi.UploadPicture,
-    headers: {Cookie:null, Authorization: "Bearer " + Cookie.get(cookieName)},
+    headers: { Cookie: null, Authorization: "Bearer " + Cookie.get(cookieName) },
     accept: 'image/*',
     data: {
       FileUuid: fileType == 0 ? filesCuid0 : fileType == 1 ? filesCuid1() : fileType == 2 ? filesCuid2() : filesCuid3(),
@@ -1702,11 +1712,11 @@ const Index = (props) => {
       }
       if (info.file.status === 'done' || info.file.status === 'removed' || info.file.status === 'error') {
         fileType == 0 ? setFilesList0(fileList) : fileType == 1 ? setFilesList1({ ...filesList1, [files1]: fileList }) : fileType == 2 ? setFilesList2({ ...filesList2, [files2]: fileList }) : setFilesList3({ ...filesList3, [files3]: fileList })
-        if(info.file.status === 'done'){
-          if(info.file?.response?.IsSuccess){
+        if (info.file.status === 'done') {
+          if (info.file?.response?.IsSuccess) {
             message.success('上传成功！')
             fileType == 0 ? tableForm.setFieldsValue({ Files: fileList && fileList[0] ? filesCuid0 : undefined }) : fileType == 1 ? tableForm.setFieldsValue({ [files1]: filesCuid1() }) : fileType == 2 ? tableForm.setFieldsValue({ [files2]: filesCuid2() }) : tableForm.setFieldsValue({ [files3]: filesCuid3() })
-          }else{
+          } else {
             message.error(info.file?.response?.Message)
           }
         }
@@ -1786,11 +1796,11 @@ const Index = (props) => {
           <Button onClick={() => { setFromVisible(false) }}>
             取消
           </Button>,
-          !pushFlag&&<Button type="primary" onClick={() => { save(0) }} loading={saveLoading0 || detailLoading || pointLoading2 || false}>
+          !pushFlag && <Button type="primary" onClick={() => { save(0) }} loading={saveLoading0 || detailLoading || pointLoading2 || false}>
             暂存
           </Button>,
-          <Button type="primary" onClick={() => save(pushFlag? 3 : 1)} loading={saveLoading3 || detailLoading || pointLoading2 || false} >
-           {pushFlag? '提交并推送':'提交'}
+          <Button type="primary" onClick={() => save(pushFlag ? 3 : 1)} loading={saveLoading3 || detailLoading || pointLoading2 || false} >
+            {pushFlag ? '提交并推送' : '提交'}
           </Button>,
           submitFlag && <Button type="primary" onClick={() => save(2)} loading={saveLoading2 || detailLoading || pointLoading2 || false} >
             推送
@@ -1814,7 +1824,7 @@ const Index = (props) => {
             <div className={'essentialInfoSty'}>
               <TitleComponents text='基本信息' />
               <Row>
-                <Col span={12} style={{display:pollutantTypeCode&&'none'}}>
+                <Col span={12} style={{ display: pollutantTypeCode && 'none' }}>
                   <Form.Item label="行业" name="PollutantType">
                     <EntType disabled={type == 'add' ? false : true} placeholder='请选择' allowClear={false} />
                     {/* <SelectPollutantType  disabled={type == 'add' ? false : true} placeholder='请选择' allowClear={false} /> */}
@@ -1890,7 +1900,7 @@ const Index = (props) => {
                 <Col span={12}>
                   {/* <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}} > */}
                   <Form.Item label="督查人员" name="Inspector" rules={[{ required: true, message: '请输入督查人员' }]} >
-                    <OperationInspectoUserList   type='2' allowClear={false} disabled />
+                    <OperationInspectoUserList type='2' allowClear={false} disabled />
                   </Form.Item>
                   {/* </Spin> */}
                 </Col >
@@ -1902,13 +1912,13 @@ const Index = (props) => {
                 <Col span={12}>
                   {/* <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}}> */}
                   <Form.Item allowClear={false} label="运维人员" name="OperationUser" rules={[{ required: true, message: '请输入运维人员' }]}>
-                    <OperationInspectoUserList   allowClear={false} />
+                    <OperationInspectoUserList allowClear={false} />
                   </Form.Item>
                   {/* </Spin> */}
                 </Col>
                 <Col span={12}>
                   <Form.Item label="省区经理" name="ProvincialManager" rules={[{ required: true, message: '请选择省区经理' }]} >
-                  <OperationInspectoUserList   type='2' allowClear={false}  />
+                    <OperationInspectoUserList type='2' allowClear={false} />
                   </Form.Item>
                 </Col >
               </Row>
@@ -2005,8 +2015,8 @@ const Index = (props) => {
           <div className={'supervisionContentSty'}>
             <Spin spinning={type == 'add' && infoloading}>
               <Form name="tableForms"
-                    form={tableForm}
-               >
+                form={tableForm}
+              >
 
                 <TitleComponents text='督查内容' />
                 {!(operationInfoList.PrincipleProblemList && operationInfoList.PrincipleProblemList[0]) && !(operationInfoList.importanProblemList && operationInfoList.importanProblemList[0]) && !(operationInfoList.CommonlyProblemList && operationInfoList.CommonlyProblemList[0]) ?
@@ -2096,7 +2106,7 @@ const Index = (props) => {
         onPreMoveNextRequest={() =>
           setPhotoIndex((photoIndex + 1) % imgUrlList.length)
         }
-        imageTitle={`${photoIndex+1}/${imgUrlList.length}`}
+        imageTitle={`${photoIndex + 1}/${imgUrlList.length}`}
       />}
       <Modal //详情
         visible={detailVisible}

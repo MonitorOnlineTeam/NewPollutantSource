@@ -75,7 +75,11 @@ const Index = (props) => {
 
 
 
-    const dataList = recordType == '1' || recordType == '7' ? adjustPointList?.xjPointList : adjustPointList?.jzPointList
+    const dataList = 
+     recordType == '1' || recordType == '7' ? adjustPointList?.xjPointList : 
+     recordType == '3' || recordType == '9' ? adjustPointList?.jzPointList : 
+     recordType == '19' || recordType == '20'? adjustPointList?.jycsPointList : adjustPointList?.szwcPointList
+     
 
     const AdJustExtendPlanComponents = () => {
 

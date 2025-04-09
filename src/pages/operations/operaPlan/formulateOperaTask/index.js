@@ -44,6 +44,8 @@ const dvaPropsData = ({ loading, operaPlan, global, }) => ({
     getOperationPlanPointListLoading: loading.effects[`${namespace}/GetOperationPlanPointList`],
     xjPointList: operaPlan.xjPointList,
     jzPointList: operaPlan.jzPointList,
+    szwcPointList: operaPlan.szwcPointList,
+    jycsPointList: operaPlan.jycsPointList,
     operationPlanInfoRefreshType: operaPlan.operationPlanInfoRefreshType,
     operationPlanInfoRefreshId: operaPlan.operationPlanInfoRefreshId,
     operationPlanInfo: operaPlan.operationPlanInfo,
@@ -61,7 +63,7 @@ const Index = (props) => {
 
 
 
-    const { commonCol, tableDatas, tableTotal, tableLoading, queryPar, updOperationPlanLoading, getOperationPlanPointListLoading, xjPointList, jzPointList, operationPlanInfoRefreshType, operationPlanInfoRefreshId, operationPlanInfo, } = props;
+    const { commonCol, tableDatas, tableTotal, tableLoading, queryPar, updOperationPlanLoading, getOperationPlanPointListLoading, xjPointList, jzPointList, szwcPointList, jycsPointList, operationPlanInfoRefreshType, operationPlanInfoRefreshId, operationPlanInfo, } = props;
 
     const [pointType, setPointType] = useState()
     const [recordType, setRecordType] = useState()
@@ -206,13 +208,13 @@ const Index = (props) => {
                     if (isSuccess) {
                         if (type == 1) {
                             setIsSave(true)
-                            form2.setFieldsValue({ pointID: [], intervalDays: '', beginTime: undefined })
+                            form2.setFieldsValue({ pointID: [], intervalDays: initialIntervalDays(recordType), beginTime: undefined })
                             props.dispatch({
                                 type: `${namespace}/updateState`,
                                 payload: { operationPlanInfoRefreshType: 1 }
                             });
-                            par?.data && getOperationPlanPointListRequest(par.data.entID, par.data.pollutantType, id,'isGenerate')
-                        }else {
+                            par?.data && getOperationPlanPointListRequest(par.data.entID, par.data.pollutantType, id, 'isGenerate')
+                        } else {
                             setFormulateVisible(false)
                             props.dispatch({
                                 type: `${namespace}/updateState`,
@@ -278,7 +280,7 @@ const Index = (props) => {
 
 
 
-    const getOperationPlanPointListRequest = (entCode, pollutantType, id,isGenerate) => {
+    const getOperationPlanPointListRequest = (entCode, pollutantType, id, isGenerate) => {
         !isGenerate && form2.resetFields();
         setCheckAll(false); setIndeterminate(false)
         if (entCode && pollutantType) {
@@ -289,15 +291,17 @@ const Index = (props) => {
         } else {
             props.dispatch({
                 type: `${namespace}/updateState`,
-                payload: { xjPointList: [], jzPointList: [] },
+                payload: { xjPointList: [], jzPointList: [], szwcPointList: [], jycsPointList: [] },
             });
 
         }
     }
 
+    const initialIntervalDays = (key)=> key == '19' || key == '20'? 3 : key == '33'?  90 : ''
 
+    const  intervalDaysLabel = recordType==19 || recordType==20? '月份' : '日期'
     const PlanContentComponents = () => {
-        const dataList = recordType == '1' || recordType == '7' ? xjPointList : jzPointList
+        const dataList = recordType == '1' || recordType == '7' ? xjPointList : recordType == '3' || recordType == '9' ? jzPointList : recordType == '19' || recordType == '20' ? jycsPointList : szwcPointList;
         return getOperationPlanPointListLoading ? <Skeleton active style={{ height: 158 }} /> :
             <>{dataList?.length ? <Form
                 form={form2}
@@ -321,13 +325,16 @@ const Index = (props) => {
 
                 <Row gutter={[16, 16]}>
                     <Col span={6}>
-                        <Form.Item name='intervalDays' label='间隔（天）' rules={[{ required: true, message: '请输入间隔天数！' }]}>
-                            <InputNumber min={1} step={1} style={{ width: '100%' }} placeholder='请输入' />
+                        <Form.Item name='intervalDays' label={`间隔（${recordType==19 || recordType==20? '月' : '天'}）`} rules={[{ required: true, message: '请输入间隔天数！' }]}>
+                            <InputNumber min={1} step={1} style={{ width: '100%' }} placeholder='请输入' disabled={recordType==19 || recordType==20 || recordType == 33} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item name='beginTime' label={`${pointType == 2 ? '实际' : '计划'}起始日期`} rules={[{ required: true, message: '请选择实际起始日期！' }]}>
+                        <Form.Item name='beginTime'
+                          label={`${pointType == 2 ? '实际' : '计划'}起始${intervalDaysLabel}`} 
+                          rules={[{ required: true, message: `请选择${pointType == 2 ? '实际' : '计划'}起始${intervalDaysLabel}！` }]}>
                             <DatePicker
+                                picker={recordType==19 || recordType==20? 'month' : 'date' }
                                 disabledDate={(current) => {
                                     // 检查是否小于明天
                                     const tomorrow = moment().add(1, 'days');
@@ -351,7 +358,7 @@ const Index = (props) => {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item name='endTime' label={`${pointType == 2 ? '实际' : '计划'}结束日期`} rules={[{ required: true, message: '请选择实际结束日期！' }]}>
+                        <Form.Item name='endTime' label={`${pointType == 2 ? '实际' : '计划'}结束${intervalDaysLabel}`} rules={[{ required: true, message: '请选择实际结束日期！' }]}>
                             <DatePicker
                                 disabledDate={(current) => {
                                     if (!current) {
@@ -388,8 +395,37 @@ const Index = (props) => {
         setIsSave(false)
         props.dispatch({
             type: `${namespace}/updateState`,
-            payload: { xjPointList: [], jzPointList: [], operationPlanInfoRefreshType: '', operationPlanInfoRefreshId: '' },
+            payload: { xjPointList: [], jzPointList: [], szwcPointList: [], jycsPointList: [], operationPlanInfoRefreshType: '', operationPlanInfoRefreshId: '' },
         });
+    }
+
+    const tabContent = (pointType) => {
+        let contentArrry = [
+
+            {
+                label: `巡检 （剩下${xjPointList?.length || 0}个）`,
+                key: pointType == 2 ? '1' : '7',
+                children: <PlanContentComponents />,
+            },
+            {
+                label: `${pointType == 2 ? '校准' : '标样核查及校准'}（剩下${jzPointList?.length || 0}个）`,
+                key: pointType == 2 ? '3' : '9',
+                children: <PlanContentComponents />,
+            },
+            {
+                label: `示值误差 （剩下${szwcPointList?.length || 0}个）`,
+                key: '33',
+                children: <PlanContentComponents />,
+            },
+            {
+                label: `校验测试 （剩下${jycsPointList?.length || 0}个）`,
+                key: pointType == 2 ? '20' : '19',
+                children: <PlanContentComponents />,
+            },
+        ]
+        
+        pointType == 1 && contentArrry.splice(2, 1)
+        return contentArrry
     }
     return (
         <div className={`queryCriterTitleSty ${styles.formulateOperaTaskSty}`}>
@@ -443,7 +479,7 @@ const Index = (props) => {
 
                                         <ProjectNum
                                             onChange={(record) => {
-                                                form.setFieldsValue({ projectID: record?.ID })
+                                                form.setFieldsValue({ projectID: record?.ID, beginTime: record?.BeginTime ? moment(record.BeginTime) : undefined, endTime: record?.EndTime ? moment(record.EndTime) : undefined })
                                             }
                                             }
                                             projectCode={projectCode}
@@ -508,22 +544,12 @@ const Index = (props) => {
                             type='card'
                             onChange={(key) => {
                                 setRecordType(key)
-                                form2.setFieldsValue({ pointID: [], intervalDays: '', beginTime: undefined })
+                                key==19 || key==20 && form2.setFieldsValue({ endTime: undefined  })
+                                form2.setFieldsValue({ pointID: [], intervalDays: initialIntervalDays(key), beginTime: undefined })
                                 setCheckAll(false)
                                 setIndeterminate(false)
                             }}
-                            items={[
-                                {
-                                    label: `巡检 （剩下${xjPointList?.length || 0}个）`,
-                                    key: pointType == 2 ? '1' : '7',
-                                    children: <PlanContentComponents />,
-                                },
-                                {
-                                    label: `${pointType == 2 ? '校准' : '标样核查及校准'}（剩下${jzPointList?.length || 0}个）`,
-                                    key: pointType == 2 ? '3' : '9',
-                                    children: <PlanContentComponents />,
-                                },
-                            ]}
+                            items={tabContent(pointType)}
                         /> :
                             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
                         }

@@ -33,7 +33,7 @@ import EntAtmoList from '@/components/EntAtmoList';
 import styles from './index.less';
 import TaskRecordDetails from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout';
 import EntAbnormalMapModal from '@/pages/IntelligentAnalysis/abnormalWorkStatistics/components/EntAbnormalMapModal';
-
+import { routerUrlConfigQueryPar } from '@/utils/utils';
 @connect(({ loading, operations, abnormalWorkStatistics }) => ({
   calendarList: operations.calendarList,
   abnormalDetailList: operations.abnormalDetailList,
@@ -132,29 +132,30 @@ class CalendarPage extends PureComponent {
           ),
           description: (
             <div style={{ color: '#333' }}>
-              {item.PointName}
+               <span style={{ paddingRight: 8 }}>{item.PointName}</span>
               {item.TaskType === 2 && (
-                <Tag color="#ff5506" style={{ position: 'relative', top: '0px', marginLeft: 4 }}>
+                <Tag color="#ff5506" style={{ position: 'relative', top: '0px', paddingRight: 8 }}>
                   应急
                 </Tag>
               )}
-            </div>
-          ),
-          content: (
-            <div>
               {item.TaskRecordTypeName && (
                 <span style={{ paddingRight: 8 }}>
-                  {' '}
-                  任务类型：
                   {item.TaskRecordTypeName.map(item => (
                     <Tag color="processing">{item.TypeName}</Tag>
                   ))}
                 </span>
               )}
-              <span>
-                运维人：{item.OperationName}{' '}
-                <Tag color={item.TaskStatus === 3 ? 'green' : 'volcano'}>{item.TaskStatusText}</Tag>
+              <Tag color={item.TaskStatus === 3 ? 'green' : 'volcano'}>{item.TaskStatusText}</Tag>
+            </div>
+          ),
+          content: (
+            <div>
+              <span style={{ paddingRight: 8 }}>
+                运维人：{item.OperationName}
               </span>
+              {routerUrlConfigQueryPar(this.props, 'isDisplayOptUnit') && <span>
+                运维单位：{item.operationCompanyName}
+              </span>}
             </div>
           ),
         };
@@ -763,13 +764,13 @@ class CalendarPage extends PureComponent {
     // 判断传参
     let payload = future
       ? {
-          exceptionType: undefined,
-          FutureType: type,
-        }
+        exceptionType: undefined,
+        FutureType: type,
+      }
       : {
-          exceptionType: type,
-          FutureType: undefined,
-        };
+        exceptionType: type,
+        FutureType: undefined,
+      };
     const values = this.props.form.getFieldsValue();
     this.props.dispatch({
       type: 'operations/getAbnormalDetailList',
@@ -1033,8 +1034,8 @@ class CalendarPage extends PureComponent {
                               {item.title}
                             </a>
                           ) : (
-                            <span>{item.title}</span>
-                          )
+                              <span>{item.title}</span>
+                            )
                         }
                         description={item.description}
                       />

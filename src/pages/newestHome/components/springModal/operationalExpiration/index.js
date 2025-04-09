@@ -48,7 +48,7 @@ class Index extends PureComponent {
         onCancel={this.onCancel}
         destroyOnClose
       >
-        <OperationExpirePoint pollutantTypes={type} hideBreadcrumb/>
+        <OperationExpirePoint {...this.props} pollutantTypes={type} hideBreadcrumb/>
       </Modal>
     );
   }

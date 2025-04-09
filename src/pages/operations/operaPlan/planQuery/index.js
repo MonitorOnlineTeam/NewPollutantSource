@@ -1,5 +1,5 @@
 /**
- * 功  能：预测性维护-运维计划  已完结计划  运维计划查询
+ * 功  能：预测性维护-运维计划  已完结计划和运维计划查询
  * 创建人：jab
  * 创建时间：2024.05
  */
@@ -20,7 +20,7 @@ import styles from "../styles.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import CheckPhoto from '@/components/CheckPhoto';
-import { permissionButton } from '@/utils/utils';
+import { permissionButton,formatDynamicTitleOrdered } from '@/utils/utils';
 import TitleComponents from '@/components/TitleComponents'
 import ProjectNum from '@/components/ProjectNum'
 import EntAtmoList from '@/components/EntAtmoList';
@@ -99,8 +99,11 @@ const Index = (props) => {
     const [entCode, setEntCode] = useState()
     const [pointType, setPointType] = useState()
     const [viewPlanVisible, setViewPlanVisible] = useState(false)
+    const [title, setTitle] = useState()
+    
     const viewPlan = (record) => {
         setViewPlanVisible(true)
+        setTitle(`编辑计划${formatDynamicTitleOrdered(record, ['projectCode', 'entName', 'pollutantType'])}`)
         setEntCode(record.entCode)
         setPointType(record.pollutantType=='废气'? 2 :1)
         props.dispatch({
@@ -124,6 +127,7 @@ const Index = (props) => {
                 <OperationPlanQuery planType={type} operateCol={operateCol} />
                 <ViewPlanModal
                     visible={viewPlanVisible}
+                    title={title}
                     onCancel={() => { setViewPlanVisible(false) }}
                     pointType={pointType}
                     entCode={entCode}

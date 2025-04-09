@@ -49,7 +49,7 @@ const Index = (props) => {
     const { type, pointType, commonSearchComponents, operationPlanInfoRefreshId, tableDatas, tableTotal, tableLoading, queryPar, exportLoading } = props;
     const [recordType, setRecordType] = useState(pointType == 2 ? '1' : '7')
     const [justVisible, setJustVisible] = useState(false)
-    const [adjustPointList, setAdjustPointList] = useState({ xjPointList: [], jzPointList: [] })
+    const [adjustPointList, setAdjustPointList] = useState({ xjPointList: [], jzPointList: [], szwcPointList: [], jycsPointList: [] })
     const typeLegendData = [{ title: '按计划完成', value: 1, color: '#1890ff' }, { title: '超时完成', value: 2, color: '#faad14' }, { title: '超时未完成', value: 4, color: '#f5222d' }]
 
 
@@ -69,7 +69,7 @@ const Index = (props) => {
                     id: operationPlanInfoRefreshId,
                 },
                 callback: res => {
-                    setAdjustPointList({ xjPointList: res?.xjList, jzPointList: res?.jzList })
+                    setAdjustPointList({ xjPointList: res?.xjList, jzPointList: res?.jzList,szwcPointList:  res?.szwcList, jycsPointList: res?.jycsList })
                 }
             });
         }
@@ -113,7 +113,15 @@ const Index = (props) => {
                             align: 'center',
                             render: (text, record, index) => {
                                 const filterData = (status) => typeLegendData.filter(item => item.value == status)?.[0]?.color;
-                                return text && <div style={{ fontWeight: 'bold', }}><span onClick={() => { text.xjID && taskDetail(text.xjID) }} style={{ color: filterData(text.xjStatus), cursor: text.xjID && 'pointer' }}>{text.xjStr}</span>&nbsp;&nbsp;<span onClick={() => { text.jzID && taskDetail(text.jzID) }} style={{ color: filterData(text.jzStatus), cursor: text.jzID && 'pointer' }}>{text.jzStr}</span></div>
+                                return text && <div style={{ fontWeight: 'bold', }}>
+                                    <Space>
+                                    <span onClick={() => { text.xjID && taskDetail(text.xjID) }} style={{ color: filterData(text.xjStatus), cursor: text.xjID && 'pointer' }}>{text.xjStr}</span>
+                                    <span onClick={() => { text.jzID && taskDetail(text.jzID) }} style={{ color: filterData(text.jzStatus), cursor: text.jzID && 'pointer' }}>{text.jzStr}</span>
+                                    <span onClick={() => { text.szwcID && taskDetail(text.szwcID) }} style={{ color: filterData(text.szwcStatus), cursor: text.szwcID && 'pointer' }}>{text.szwcStr}</span>
+                                    <span onClick={() => { text.jycsID && taskDetail(text.jycsID) }} style={{ color: filterData(text.jycsStatus), cursor: text.jycsID && 'pointer' }}>{text.jycsStr}</span>
+                                   
+                                   </Space>
+                                   </div>
                             }
                         }]
                     }]
@@ -300,7 +308,14 @@ const Index = (props) => {
         <div>
             {searchComponents()}
             <Row style={{ paddingBottom: 8 }} align='middle'>
-                <span className='red' style={{ paddingRight: 18 }}> 巡检：X&nbsp;&nbsp;&nbsp;&nbsp;校准：J </span>
+                <span className='red' style={{ paddingRight: 18 }}>
+                      <Space>
+                      <span>巡检：X</span>
+                      <span>校准：J</span>
+                      {pointType == 2 && <span>示值误差：S</span>}
+                      <span>校验测试：Y</span>
+                      </Space>
+                      </span>
                 {type != 1 && typeLegendData.map((item, index) => <Row align='middle' style={{ cursor: 'pointer', marginRight: 12 }} onClick={() => typeLegendChange(item.value)} >
                     <div style={{ marginRight: 4, width: 32, height: 16, backgroundColor: item.color }}> </div>
                     <span style={{ fontWeight: legendSelectVal.includes(item.value) ? 'bold' : 'normal' }}>{item.title}</span>

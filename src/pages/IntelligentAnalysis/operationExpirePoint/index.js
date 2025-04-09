@@ -17,6 +17,7 @@ import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import SelectPollutantType from '@/components/SelectPollutantType';
 import moment from 'moment'
+import { routerUrlConfigQueryPar } from '@/utils/utils';
 import styles from "./style.less" 
 const { Option } = Select;
 
@@ -170,7 +171,13 @@ const Index = (props) => {
       
     },
   ]
-
+  if(routerUrlConfigQueryPar(props,'isDisplayOptUnit')){
+    columns.splice(8,0,{
+       title: '运维单位',
+       dataIndex: 'operationCompanyName',
+       key: 'operationCompanyName',
+    })
+  }
   const getOption = () =>{
    return {
     color: ['#64b0fd'],

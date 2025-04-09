@@ -117,6 +117,8 @@ export default Model.extend({
     operationPlanInfoQueryPar: {},
     xjPointList: [], //未排计划点位
     jzPointList: [],
+    szwcPointList: [],
+    jycsPointList: [],
     allPointList: [],
     operationPlanCalendarCol: [],
     operationPlanCalendarList: [],
@@ -167,6 +169,7 @@ export default Model.extend({
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.UpdOperationPlan, payload);
       if (result.IsSuccess) {
         message.success(result.Message);
+        console.log('99999',result.Datas)
         yield update({ operationPlanInfoRefreshId: result.Datas });
         callback && callback(result.Datas)
       }
@@ -175,7 +178,7 @@ export default Model.extend({
     *GetOperationPlanPointList({ payload, callback }, { call, put, update }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi.GetOperationPlanPointList, payload);
       if (result.IsSuccess) {
-        yield update({ xjPointList: result?.Datas?.xjList, jzPointList: result?.Datas?.jzList, });
+        yield update({ xjPointList: result?.Datas?.xjList, jzPointList: result?.Datas?.jzList, szwcPointList: result?.Datas?.szwcList, jycsPointList: result?.Datas?.jycsList, });
       }
     },
     // 生成运维计划

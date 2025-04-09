@@ -816,6 +816,7 @@ const Index = props => {
       )}
 
       <MissingDataRateModal //缺失报警响应率弹框
+        {...props}
         type={'ent'}
         pollutantType={pollutantType}
         time={[moment(dataAlarmResBtnCheck.beginTime), moment(dataAlarmResBtnCheck.endTime)]}
@@ -826,6 +827,7 @@ const Index = props => {
         }}
       />
       <AbnormalAlarmRateModal //异常报警响应率弹框
+        {...props}
         type={pollutantType}
         visible={abnormalAlarmRateVisible}
         time={[moment(dataAlarmResBtnCheck.beginTime), moment(dataAlarmResBtnCheck.endTime)]}
@@ -835,6 +837,7 @@ const Index = props => {
         }}
       />
       <OperationalExpiraModal
+        {...props}
         type={pollutantType}
         visible={operationalExpiraVisible}
         onCancel={() => {
@@ -843,6 +846,7 @@ const Index = props => {
         }}
       />
       <OverVerifyLstModal //超标报警核实率
+        {...props}
         beginTime={dataAlarmResBtnCheck.beginTime}
         endTime={dataAlarmResBtnCheck.endTime}
         type={pollutantType}
@@ -868,6 +872,7 @@ const Index = props => {
         }}
       />
       <AlarmResponseTimelyRateModal //报警响应及时率弹框
+        {...props}
         visible={alarmResponseTimelyVisible}
         type={pollutantType}
         onCancel={() => {

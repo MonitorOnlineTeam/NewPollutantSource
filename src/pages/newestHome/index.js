@@ -111,8 +111,8 @@ const Index = props => {
   };
 
   const typeObj = {
-    1: <WasteWater />,
-    2: <WasteGas />,
+    1: <WasteWater {...props}/>,
+    2: <WasteGas  {...props}/>,
     surfaceWater: <SurfaceWater />,
     air: <Air />,
     actoryBoundary: <ActoryBoundary />,

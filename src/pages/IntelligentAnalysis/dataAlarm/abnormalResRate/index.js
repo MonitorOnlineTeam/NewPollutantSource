@@ -24,6 +24,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList';
 import SelectPollutantType from '@/components/SelectPollutantType';
 import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
+import { routerUrlConfigQueryPar } from '@/utils/utils';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -76,531 +77,542 @@ const { RangePicker } = DatePicker;
 //   },
 // })
 class Index extends PureComponent {
-  pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
-  state = {
-    showTime: true,
-    format: 'YYYY-MM-DD HH',
-    pollutantType: '2',
-    checkedValues: [],
-    secondQueryCondition: {},
-    queryCondition: {},
-    operationpersonnel: '',
-    exceptionTime: this.props.time || this.props.exceptionTime,
-    visible: false,
-    RegionName: '',
-    TaskID: '',
-    DGIMN: '',
-    taskDetailVisible: false,
-  };
-  _SELF_ = {
-    columns: [
-      {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
-        width: 140,
-        render: (text, record) => {
-          return (
-            <a
-              onClick={() => {
-                // let queryCondition = this.state.queryCondition;
-                // queryCondition.RegionCode = record.RegionCode;
-                // queryCondition.RegionName = record.RegionName;
-                // queryCondition = JSON.stringify(queryCondition)
-                let values = this.props.form.getFieldsValue();
-                let beginTime, endTime;
-                values.time = this.state.exceptionTime;
-                if (values.time && values.time[0]) {
-                  beginTime =
-                    values.dataType === 'HourData'
-                      ? moment(values.time[0]).format('YYYY-MM-DD 00:00:00')
-                      : moment(values.time[0]).format('YYYY-MM-DD');
-                }
-                if (values.time && values.time[1]) {
-                  endTime =
-                    values.dataType === 'HourData'
-                      ? moment(values.time[1]).format('YYYY-MM-DD 23:59:59')
-                      : moment(values.time[1]).format('YYYY-MM-DD');
-                }
-                this.props.dispatch({
-                  type: 'abnormalResRate/updateState',
-                  payload: {
-                    searchForm: {
-                      AttentionCode: values.AttentionCode,
-                      PollutantType: values.PollutantType,
-                      RegionCode: values.RegionCode ? values.RegionCode : undefined,
-                      dataType: values.dataType,
-                      beginTime: beginTime,
-                      endTime: endTime,
-                      OperationPersonnel: this.state.operationpersonnel,
-                    },
-                  },
-                });
-                if (this.props.onRegionClick) {
-                  this.props.onRegionClick(record.RegionCode);
-                } else {
-                  router.push(
-                    `/Intelligentanalysis/dataAlarm/abnormal/cityLevel?regionCode=${
-                      record.RegionCode ? record.RegionCode : ''
-                    }`,
-                  );
-                }
-                // router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryCondition}`);
-              }}
-            >
-              {text}
-            </a>
-          );
-        },
-      },
-      // {
-      //   title: '数据异常报警企业数',
-      //   dataIndex: 'CountEnt',
-      //   key: 'CountEnt',
-      //   width: 200,
-      // },
-      // {
-      //   title: '数据异常报警监测点数',
-      //   dataIndex: 'CountPoint',
-      //   key: 'CountPoint',
-      //   width: 200,
-      // },
-      {
-        title: '数据类型',
-        dataIndex: 'DataType',
-        key: 'DataType',
-        width: 200,
-      },
-      {
-        title: '全部合计',
-        children: [
-          {
-            title: '报警次数',
-            dataIndex: 'AllCount',
-            key: 'AllCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return (
-                <a
-                  onClick={() => {
-                    this.setState({ RegionName: record.RegionName });
-                    let RegionCode =
-                      record.RegionCode || this.props.form.getFieldValue('RegionCode');
-                    this.onTableClick(RegionCode, '', undefined);
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            },
-          },
-          {
-            title: '已响应报警次数',
-            dataIndex: 'AllResponsedCount',
-            key: 'AllResponsedCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return (
-                <a
-                  onClick={() => {
-                    this.setState({ RegionName: record.RegionName });
-                    let RegionCode =
-                      record.RegionCode || this.props.form.getFieldValue('RegionCode');
-                    this.onTableClick(RegionCode, '', '1');
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            },
-          },
-          {
-            title: '待响应报警次数',
-            dataIndex: 'AllNoResponseCount',
-            key: 'AllNoResponseCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return (
-                <a
-                  onClick={() => {
-                    this.setState({ RegionName: record.RegionName });
-                    let RegionCode =
-                      record.RegionCode || this.props.form.getFieldValue('RegionCode');
-                    this.onTableClick(RegionCode, '', '0');
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            },
-          },
-          {
-            title: '响应率',
-            dataIndex: 'AllRate',
-            key: 'AllRate',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return record.AllCount === 0 ? '-' : text;
-            },
-          },
-        ],
-      },
-      {
-        title: '零值报警',
-        children: [
-          {
-            title: '报警次数',
-            dataIndex: 'LingAlarmCount',
-            key: 'LingAlarmCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return (
-                <a
-                  onClick={() => {
-                    this.setState({ RegionName: record.RegionName });
-                    let RegionCode =
-                      record.RegionCode || this.props.form.getFieldValue('RegionCode');
-                    this.onTableClick(RegionCode, '1', undefined);
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            },
-          },
-          {
-            title: '已响应报警次数',
-            dataIndex: 'LingResponsedCount',
-            key: 'LingResponsedCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return (
-                <a
-                  onClick={() => {
-                    this.setState({ RegionName: record.RegionName });
-                    let RegionCode =
-                      record.RegionCode || this.props.form.getFieldValue('RegionCode');
-                    this.onTableClick(RegionCode, '1', '1');
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            },
-          },
-          {
-            title: '待响应报警次数',
-            dataIndex: 'LingNoResponseCount',
-            key: 'LingNoResponseCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return (
-                <a
-                  onClick={() => {
-                    this.setState({ RegionName: record.RegionName });
-                    let RegionCode =
-                      record.RegionCode || this.props.form.getFieldValue('RegionCode');
-                    this.onTableClick(RegionCode, '1', '0');
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            },
-          },
-          {
-            title: '响应率',
-            dataIndex: 'LingRate',
-            key: 'LingRate',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return record.LingAlarmCount === 0 ? '-' : text;
-            },
-          },
-        ],
-      },
-      {
-        title: '超量程报警',
-        children: [
-          {
-            title: '报警次数',
-            dataIndex: 'ChaoAlarmCount',
-            key: 'ChaoAlarmCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return (
-                <a
-                  onClick={() => {
-                    this.setState({ RegionName: record.RegionName });
-                    let RegionCode =
-                      record.RegionCode || this.props.form.getFieldValue('RegionCode');
-                    this.onTableClick(RegionCode, '2', undefined);
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            },
-          },
-          {
-            title: '已响应报警次数',
-            dataIndex: 'ChaoResponsedCount',
-            key: 'ChaoResponsedCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return (
-                <a
-                  onClick={() => {
-                    this.setState({ RegionName: record.RegionName });
-                    let RegionCode =
-                      record.RegionCode || this.props.form.getFieldValue('RegionCode');
-                    this.onTableClick(RegionCode, '2', '1');
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            },
-          },
-          {
-            title: '待响应报警次数',
-            dataIndex: 'ChaoNoResponseCount',
-            key: 'ChaoNoResponseCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return (
-                <a
-                  onClick={() => {
-                    this.setState({ RegionName: record.RegionName });
-                    let RegionCode =
-                      record.RegionCode || this.props.form.getFieldValue('RegionCode');
-                    this.onTableClick(RegionCode, '2', '0');
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            },
-          },
-          {
-            title: '响应率',
-            dataIndex: 'ChaoRate',
-            key: 'ChaoRate',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return record.ChaoAlarmCount === 0 ? '-' : text;
-            },
-          },
-        ],
-      },
-      {
-        title: '恒定值报警',
-        children: [
-          {
-            title: '报警次数',
-            dataIndex: 'LianAlarmCount',
-            key: 'LianAlarmCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return (
-                <a
-                  onClick={() => {
-                    this.setState({ RegionName: record.RegionName });
-                    let RegionCode =
-                      record.RegionCode || this.props.form.getFieldValue('RegionCode');
-                    this.onTableClick(RegionCode, '3', undefined);
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            },
-          },
-          {
-            title: '已响应报警次数',
-            dataIndex: 'LianResponsedCount',
-            key: 'LianResponsedCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return (
-                <a
-                  onClick={() => {
-                    this.setState({ RegionName: record.RegionName });
-                    let RegionCode =
-                      record.RegionCode || this.props.form.getFieldValue('RegionCode');
-                    this.onTableClick(RegionCode, '3', '1');
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            },
-          },
-          {
-            title: '待响应报警次数',
-            dataIndex: 'LianNoResponseCount',
-            key: 'LianNoResponseCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return (
-                <a
-                  onClick={() => {
-                    this.setState({ RegionName: record.RegionName });
-                    let RegionCode =
-                      record.RegionCode || this.props.form.getFieldValue('RegionCode');
-                    this.onTableClick(RegionCode, '3', '0');
-                  }}
-                >
-                  {text}
-                </a>
-              );
-            },
-          },
-          {
-            title: '响应率',
-            dataIndex: 'LianRate',
-            key: 'LianRate',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return record.LianAlarmCount === 0 ? '-' : text;
-            },
-          },
-        ],
-      },
-      // {
-      //   title: '响应率',
-      //   dataIndex: 'AllRate',
-      //   key: 'AllRate',
-      //   width: 120,
-      //   sorter: (a, b) => a.AllRate.replace("%", "") - b.AllRate.replace("%", ""),
-      //   render: (text, record) => {
-      //     return (record.ChaoAlarmCount + record.LingAlarmCount === 0) ? '-' : text
-      //   }
-      // },
-    ],
-    detailsColumns: [
-      // {
-      //   title: '行政区',
-      //   dataIndex: 'RegionName',
-      //   key: 'RegionName',
-      // },
-      {
-        title: '省',
-        dataIndex: 'ProvinceName',
-        key: 'ProvinceName',
-        align: 'center',
-      },
-      {
-        title: '市',
-        dataIndex: 'CityName',
-        key: 'CityName',
-        align: 'center',
-      },
-      {
-        title: '企业名称',
-        dataIndex: 'EntName',
-        key: 'EntName',
-      },
-      {
-        title: '监测点名称',
-        dataIndex: 'PointName',
-        key: 'PointName',
-      },
-      {
-        title: '数据类型',
-        dataIndex: 'DataType',
-        key: 'DataType',
-      },
-      {
-        title: '首次异常时间',
-        dataIndex: 'FirstTime',
-        key: 'FirstTime',
-      },
-      {
-        title: '报警生成时间',
-        dataIndex: 'CreateTime',
-        key: 'CreateTime',
-      },
-      {
-        title: '报警生成时间',
-        dataIndex: 'AlarmMsg',
-        key: 'AlarmMsg',
-        width: 300,
-      },
-      {
-        title: '响应状态',
-        dataIndex: 'ResponseStatusName',
-        key: 'ResponseStatusName',
-      },
-      {
-        title: '响应人',
-        dataIndex: 'OperationName',
-        key: 'OperationName',
-        render: (text, record) => {
-          if (record.CompleteTime === '0001-01-01 00:00:00') {
-            return '-';
-          }
-          return text ? text : '-';
-        },
-      },
-      {
-        title: '响应时间',
-        dataIndex: 'CompleteTime',
-        key: 'CompleteTime',
-        align: 'center',
-        render: (text, record) => {
-          if (record.CompleteTime === '0001-01-01 00:00:00') {
-            return '-';
-          }
-          return text ? text : '-';
-        },
-      },
-      {
-        title: '处理说明',
-        dataIndex: 'Description',
-        key: 'Description',
-        align: 'center',
-        render: (text, record) => {
-          return text ? text : '-';
-        },
-      },
-      {
-        title: '处理详情',
-        align: 'center',
-        render: (text, record) => {
-          if (record.TaskId && record.DGIMN) {
+  constructor(props) {
+    super(props);
+    this.pollutantType = Number(sessionStorage.getItem('sysPollutantCodes'));
+    this.state = {
+      showTime: true,
+      format: 'YYYY-MM-DD HH',
+      pollutantType: '2',
+      checkedValues: [],
+      secondQueryCondition: {},
+      queryCondition: {},
+      operationpersonnel: '',
+      exceptionTime: this.props.time || this.props.exceptionTime,
+      visible: false,
+      RegionName: '',
+      TaskID: '',
+      DGIMN: '',
+      taskDetailVisible: false,
+    };
+    this._SELF_ = {
+      columns: [
+        {
+          title: '行政区',
+          dataIndex: 'RegionName',
+          key: 'RegionName',
+          width: 140,
+          render: (text, record) => {
             return (
               <a
                 onClick={() => {
-                  this.setState({ TaskID: record.TaskId, DGIMN: record.DGIMN }, () => {
-                    this.setState({ taskDetailVisible: true });
+                  // let queryCondition = this.state.queryCondition;
+                  // queryCondition.RegionCode = record.RegionCode;
+                  // queryCondition.RegionName = record.RegionName;
+                  // queryCondition = JSON.stringify(queryCondition)
+                  let values = this.props.form.getFieldsValue();
+                  let beginTime, endTime;
+                  values.time = this.state.exceptionTime;
+                  if (values.time && values.time[0]) {
+                    beginTime =
+                      values.dataType === 'HourData'
+                        ? moment(values.time[0]).format('YYYY-MM-DD 00:00:00')
+                        : moment(values.time[0]).format('YYYY-MM-DD');
+                  }
+                  if (values.time && values.time[1]) {
+                    endTime =
+                      values.dataType === 'HourData'
+                        ? moment(values.time[1]).format('YYYY-MM-DD 23:59:59')
+                        : moment(values.time[1]).format('YYYY-MM-DD');
+                  }
+                  this.props.dispatch({
+                    type: 'abnormalResRate/updateState',
+                    payload: {
+                      searchForm: {
+                        AttentionCode: values.AttentionCode,
+                        PollutantType: values.PollutantType,
+                        RegionCode: values.RegionCode ? values.RegionCode : undefined,
+                        dataType: values.dataType,
+                        beginTime: beginTime,
+                        endTime: endTime,
+                        OperationPersonnel: this.state.operationpersonnel,
+                      },
+                    },
                   });
+                  if (this.props.onRegionClick) {
+                    this.props.onRegionClick(record.RegionCode);
+                  } else {
+                    router.push(
+                      `/Intelligentanalysis/dataAlarm/abnormal/cityLevel?regionCode=${
+                      record.RegionCode ? record.RegionCode : ''
+                      }`,
+                    );
+                  }
+                  // router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryCondition}`);
                 }}
               >
-                详情
+                {text}
               </a>
             );
-          }
-          return '-';
+          },
         },
-      },
-    ],
+        // {
+        //   title: '数据异常报警企业数',
+        //   dataIndex: 'CountEnt',
+        //   key: 'CountEnt',
+        //   width: 200,
+        // },
+        // {
+        //   title: '数据异常报警监测点数',
+        //   dataIndex: 'CountPoint',
+        //   key: 'CountPoint',
+        //   width: 200,
+        // },
+        {
+          title: '数据类型',
+          dataIndex: 'DataType',
+          key: 'DataType',
+          width: 200,
+        },
+        {
+          title: '全部合计',
+          children: [
+            {
+              title: '报警次数',
+              dataIndex: 'AllCount',
+              key: 'AllCount',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <a
+                    onClick={() => {
+                      this.setState({ RegionName: record.RegionName });
+                      let RegionCode =
+                        record.RegionCode || this.props.form.getFieldValue('RegionCode');
+                      this.onTableClick(RegionCode, '', undefined);
+                    }}
+                  >
+                    {text}
+                  </a>
+                );
+              },
+            },
+            {
+              title: '已响应报警次数',
+              dataIndex: 'AllResponsedCount',
+              key: 'AllResponsedCount',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <a
+                    onClick={() => {
+                      this.setState({ RegionName: record.RegionName });
+                      let RegionCode =
+                        record.RegionCode || this.props.form.getFieldValue('RegionCode');
+                      this.onTableClick(RegionCode, '', '1');
+                    }}
+                  >
+                    {text}
+                  </a>
+                );
+              },
+            },
+            {
+              title: '待响应报警次数',
+              dataIndex: 'AllNoResponseCount',
+              key: 'AllNoResponseCount',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <a
+                    onClick={() => {
+                      this.setState({ RegionName: record.RegionName });
+                      let RegionCode =
+                        record.RegionCode || this.props.form.getFieldValue('RegionCode');
+                      this.onTableClick(RegionCode, '', '0');
+                    }}
+                  >
+                    {text}
+                  </a>
+                );
+              },
+            },
+            {
+              title: '响应率',
+              dataIndex: 'AllRate',
+              key: 'AllRate',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return record.AllCount === 0 ? '-' : text;
+              },
+            },
+          ],
+        },
+        {
+          title: '零值报警',
+          children: [
+            {
+              title: '报警次数',
+              dataIndex: 'LingAlarmCount',
+              key: 'LingAlarmCount',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <a
+                    onClick={() => {
+                      this.setState({ RegionName: record.RegionName });
+                      let RegionCode =
+                        record.RegionCode || this.props.form.getFieldValue('RegionCode');
+                      this.onTableClick(RegionCode, '1', undefined);
+                    }}
+                  >
+                    {text}
+                  </a>
+                );
+              },
+            },
+            {
+              title: '已响应报警次数',
+              dataIndex: 'LingResponsedCount',
+              key: 'LingResponsedCount',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <a
+                    onClick={() => {
+                      this.setState({ RegionName: record.RegionName });
+                      let RegionCode =
+                        record.RegionCode || this.props.form.getFieldValue('RegionCode');
+                      this.onTableClick(RegionCode, '1', '1');
+                    }}
+                  >
+                    {text}
+                  </a>
+                );
+              },
+            },
+            {
+              title: '待响应报警次数',
+              dataIndex: 'LingNoResponseCount',
+              key: 'LingNoResponseCount',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <a
+                    onClick={() => {
+                      this.setState({ RegionName: record.RegionName });
+                      let RegionCode =
+                        record.RegionCode || this.props.form.getFieldValue('RegionCode');
+                      this.onTableClick(RegionCode, '1', '0');
+                    }}
+                  >
+                    {text}
+                  </a>
+                );
+              },
+            },
+            {
+              title: '响应率',
+              dataIndex: 'LingRate',
+              key: 'LingRate',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return record.LingAlarmCount === 0 ? '-' : text;
+              },
+            },
+          ],
+        },
+        {
+          title: '超量程报警',
+          children: [
+            {
+              title: '报警次数',
+              dataIndex: 'ChaoAlarmCount',
+              key: 'ChaoAlarmCount',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <a
+                    onClick={() => {
+                      this.setState({ RegionName: record.RegionName });
+                      let RegionCode =
+                        record.RegionCode || this.props.form.getFieldValue('RegionCode');
+                      this.onTableClick(RegionCode, '2', undefined);
+                    }}
+                  >
+                    {text}
+                  </a>
+                );
+              },
+            },
+            {
+              title: '已响应报警次数',
+              dataIndex: 'ChaoResponsedCount',
+              key: 'ChaoResponsedCount',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <a
+                    onClick={() => {
+                      this.setState({ RegionName: record.RegionName });
+                      let RegionCode =
+                        record.RegionCode || this.props.form.getFieldValue('RegionCode');
+                      this.onTableClick(RegionCode, '2', '1');
+                    }}
+                  >
+                    {text}
+                  </a>
+                );
+              },
+            },
+            {
+              title: '待响应报警次数',
+              dataIndex: 'ChaoNoResponseCount',
+              key: 'ChaoNoResponseCount',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <a
+                    onClick={() => {
+                      this.setState({ RegionName: record.RegionName });
+                      let RegionCode =
+                        record.RegionCode || this.props.form.getFieldValue('RegionCode');
+                      this.onTableClick(RegionCode, '2', '0');
+                    }}
+                  >
+                    {text}
+                  </a>
+                );
+              },
+            },
+            {
+              title: '响应率',
+              dataIndex: 'ChaoRate',
+              key: 'ChaoRate',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return record.ChaoAlarmCount === 0 ? '-' : text;
+              },
+            },
+          ],
+        },
+        {
+          title: '恒定值报警',
+          children: [
+            {
+              title: '报警次数',
+              dataIndex: 'LianAlarmCount',
+              key: 'LianAlarmCount',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <a
+                    onClick={() => {
+                      this.setState({ RegionName: record.RegionName });
+                      let RegionCode =
+                        record.RegionCode || this.props.form.getFieldValue('RegionCode');
+                      this.onTableClick(RegionCode, '3', undefined);
+                    }}
+                  >
+                    {text}
+                  </a>
+                );
+              },
+            },
+            {
+              title: '已响应报警次数',
+              dataIndex: 'LianResponsedCount',
+              key: 'LianResponsedCount',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <a
+                    onClick={() => {
+                      this.setState({ RegionName: record.RegionName });
+                      let RegionCode =
+                        record.RegionCode || this.props.form.getFieldValue('RegionCode');
+                      this.onTableClick(RegionCode, '3', '1');
+                    }}
+                  >
+                    {text}
+                  </a>
+                );
+              },
+            },
+            {
+              title: '待响应报警次数',
+              dataIndex: 'LianNoResponseCount',
+              key: 'LianNoResponseCount',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return (
+                  <a
+                    onClick={() => {
+                      this.setState({ RegionName: record.RegionName });
+                      let RegionCode =
+                        record.RegionCode || this.props.form.getFieldValue('RegionCode');
+                      this.onTableClick(RegionCode, '3', '0');
+                    }}
+                  >
+                    {text}
+                  </a>
+                );
+              },
+            },
+            {
+              title: '响应率',
+              dataIndex: 'LianRate',
+              key: 'LianRate',
+              width: 120,
+              align: 'center',
+              render: (text, record) => {
+                return record.LianAlarmCount === 0 ? '-' : text;
+              },
+            },
+          ],
+        },
+        // {
+        //   title: '响应率',
+        //   dataIndex: 'AllRate',
+        //   key: 'AllRate',
+        //   width: 120,
+        //   sorter: (a, b) => a.AllRate.replace("%", "") - b.AllRate.replace("%", ""),
+        //   render: (text, record) => {
+        //     return (record.ChaoAlarmCount + record.LingAlarmCount === 0) ? '-' : text
+        //   }
+        // },
+      ],
+      detailsColumns: [
+        // {
+        //   title: '行政区',
+        //   dataIndex: 'RegionName',
+        //   key: 'RegionName',
+        // },
+        {
+          title: '省',
+          dataIndex: 'ProvinceName',
+          key: 'ProvinceName',
+          align: 'center',
+        },
+        {
+          title: '市',
+          dataIndex: 'CityName',
+          key: 'CityName',
+          align: 'center',
+        },
+        {
+          title: '企业名称',
+          dataIndex: 'EntName',
+          key: 'EntName',
+        },
+        {
+          title: '监测点名称',
+          dataIndex: 'PointName',
+          key: 'PointName',
+        },
+        {
+          title: '数据类型',
+          dataIndex: 'DataType',
+          key: 'DataType',
+        },
+        {
+          title: '首次异常时间',
+          dataIndex: 'FirstTime',
+          key: 'FirstTime',
+        },
+        {
+          title: '报警生成时间',
+          dataIndex: 'CreateTime',
+          key: 'CreateTime',
+        },
+        {
+          title: '报警生成时间',
+          dataIndex: 'AlarmMsg',
+          key: 'AlarmMsg',
+          width: 300,
+        },
+        {
+          title: '响应状态',
+          dataIndex: 'ResponseStatusName',
+          key: 'ResponseStatusName',
+        },
+        {
+          title: '响应人',
+          dataIndex: 'OperationName',
+          key: 'OperationName',
+          render: (text, record) => {
+            if (record.CompleteTime === '0001-01-01 00:00:00') {
+              return '-';
+            }
+            return text ? text : '-';
+          },
+        },
+        {
+          title: '响应时间',
+          dataIndex: 'CompleteTime',
+          key: 'CompleteTime',
+          align: 'center',
+          render: (text, record) => {
+            if (record.CompleteTime === '0001-01-01 00:00:00') {
+              return '-';
+            }
+            return text ? text : '-';
+          },
+        },
+        {
+          title: '处理说明',
+          dataIndex: 'Description',
+          key: 'Description',
+          align: 'center',
+          render: (text, record) => {
+            return text ? text : '-';
+          },
+        },
+        {
+          title: '处理详情',
+          align: 'center',
+          render: (text, record) => {
+            if (record.TaskId && record.DGIMN) {
+              return (
+                <a
+                  onClick={() => {
+                    this.setState({ TaskID: record.TaskId, DGIMN: record.DGIMN }, () => {
+                      this.setState({ taskDetailVisible: true });
+                    });
+                  }}
+                >
+                  详情
+                </a>
+              );
+            }
+            return '-';
+          },
+        },
+      ]
+    }
+
+    if (routerUrlConfigQueryPar(this.props, 'isDisplayOptUnit')) {
+      this._SELF_.detailsColumns.splice(4, 0, {
+        title: '运维单位',
+        dataIndex: 'OperationEntName',
+        key: 'OperationEntName',
+      })
+    }
   };
 
   componentDidMount() {
@@ -832,31 +844,31 @@ class Index extends PureComponent {
         secondQueryCondition.ExceptionType == '1'
           ? '零值'
           : secondQueryCondition.ExceptionType == '2'
-          ? '超量程'
-          : secondQueryCondition.ExceptionType == '3'
-          ? '恒定值'
-          : '全部合计'
-      }待响应报警情况`;
+            ? '超量程'
+            : secondQueryCondition.ExceptionType == '3'
+              ? '恒定值'
+              : '全部合计'
+        }待响应报警情况`;
     } else if (secondQueryCondition.ResponseStatus == '1') {
       showTypeText = `${
         secondQueryCondition.ExceptionType == '1'
           ? '零值'
           : secondQueryCondition.ExceptionType == '2'
-          ? '超量程'
-          : secondQueryCondition.ExceptionType == '3'
-          ? '恒定值'
-          : '全部合计'
-      }已响应报警情况`;
+            ? '超量程'
+            : secondQueryCondition.ExceptionType == '3'
+              ? '恒定值'
+              : '全部合计'
+        }已响应报警情况`;
     } else {
       showTypeText = `${
         secondQueryCondition.ExceptionType == '1'
           ? '零值'
           : secondQueryCondition.ExceptionType == '2'
-          ? '超量程'
-          : secondQueryCondition.ExceptionType == '3'
-          ? '恒定值'
-          : '全部合计'
-      }报警情况`;
+            ? '超量程'
+            : secondQueryCondition.ExceptionType == '3'
+              ? '恒定值'
+              : '全部合计'
+        }报警情况`;
     }
     let beginTime =
       queryCondition.dataType === 'HourData'
@@ -928,9 +940,9 @@ class Index extends PureComponent {
                     !this.props.searchForm.PollutantType
                       ? exceptionTime
                       : [
-                          moment(this.props.searchForm.beginTime),
-                          moment(this.props.searchForm.endTime),
-                        ]
+                        moment(this.props.searchForm.beginTime),
+                        moment(this.props.searchForm.endTime),
+                      ]
                   }
                   callback={(dates, dataType) => this.dateChange(dates, dataType)}
                 />
@@ -988,7 +1000,7 @@ class Index extends PureComponent {
                     style={{ width: 231 }}
                     placeholder="请选择企业类型"
                     onChange={value => {
-                      this.setState({ pollutantType: value }, () => {});
+                      this.setState({ pollutantType: value }, () => { });
                     }}
                   />,
                 )}

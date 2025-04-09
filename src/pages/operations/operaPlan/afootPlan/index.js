@@ -20,7 +20,7 @@ import styles from "../styles.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import CheckPhoto from '@/components/CheckPhoto';
-import { permissionButton } from '@/utils/utils';
+import { permissionButton,formatDynamicTitleOrdered } from '@/utils/utils';
 import TitleComponents from '@/components/TitleComponents'
 import ProjectNum from '@/components/ProjectNum'
 import EntAtmoList from '@/components/EntAtmoList';
@@ -102,9 +102,10 @@ const Index = (props) => {
     const [editPlanVisible, setEditPlanVisible] = useState(false)
     const [entCode, setEntCode] = useState()
     const [pointType, setPointType] = useState()
-
+    const [title, setTitle] = useState()
     const editPlan = (record) => {
         setEditPlanVisible(true)
+        setTitle(`编辑计划${formatDynamicTitleOrdered(record, ['projectCode', 'entName', 'pollutantType'])}`)
         form.setFieldsValue({ beginTime: record.beginTime && moment(record.beginTime), endTime: record.endTime && moment(record.endTime), remark: record.remark, id: record.ID })
         props.dispatch({
             type: `${namespace}/updateState`,
@@ -117,6 +118,7 @@ const Index = (props) => {
     const [viewPlanVisible, setViewPlanVisible] = useState(false)
     const viewPlan = (record) => {
         setViewPlanVisible(true)
+        setTitle(`查看计划${formatDynamicTitleOrdered(record, ['projectCode', 'entName', 'pollutantType'])}`)
         setEntCode(record.entCode)
         props.dispatch({
             type: `${namespace}/updateState`,
@@ -194,10 +196,10 @@ const Index = (props) => {
         props.dispatch({
             type: `${namespace}/UpdOperationPlan`,
             payload: { ...values, beginTime: values.beginTime && moment(values.beginTime).format('YYYY-MM-DD 00:00:00'), endTime: values.endTime && moment(values.endTime).format('YYYY-MM-DD 23:59:59') },
-            callback: (res) => {
+            callback: (id) => {
                 props.dispatch({
                     type: `${namespace}/updateState`,
-                    payload: {operationPlanInfoRefreshId:res.Datas, operationPlanQueryRefreshType: 1 },
+                    payload: {operationPlanInfoRefreshId:id, operationPlanQueryRefreshType: 1 },
                 });
             }
         });
@@ -293,7 +295,7 @@ const Index = (props) => {
                 <OperationPlanQuery planType={2} operateCol={operateCol} />
                 <Modal
                     visible={editPlanVisible}
-                    title={'编辑计划'}
+                    title={title}
                     onCancel={() => { setEditPlanVisible(false) }}
                     destroyOnClose
                     wrapClassName={`spreadOverModal  ${styles.formulateModalSty}`}
@@ -344,11 +346,17 @@ const Index = (props) => {
                     type={2}
                     onCancel={() => { setExtensVisible(false); }}
                     pointType={pointType}
-                    adjustPointList={{xjPointList:operationPlanInfo?.filter(item=>item.RecordType==1 || item.RecordType==7), jzPointList:operationPlanInfo?.filter(item=>item.RecordType==3 || item.RecordType==9)}}
+                    adjustPointList={{xjPointList:operationPlanInfo?.filter(item=>item.RecordType==1 || item.RecordType==7),
+                                     jzPointList:operationPlanInfo?.filter(item=>item.RecordType==3 || item.RecordType==9),
+                                     jycsPointList:operationPlanInfo?.filter(item=>item.RecordType==19 || item.RecordType==20),
+                                     szwcPointList:operationPlanInfo?.filter(item=>item.RecordType==33),
+                                
+                                }}
              />
                 <ViewPlanModal
                     visible={viewPlanVisible}
-                    onCancel={() => { setViewPlanVisible(false) }}
+                    title={title}
+                    onCancel={() => {setViewPlanVisible(false) }}
                     pointType={pointType}
                     entCode={entCode}
                 />
