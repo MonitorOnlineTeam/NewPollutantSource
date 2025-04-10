@@ -25,6 +25,7 @@ import PointCluesStatistics from '@/pages/AbnormalIdentifyModel/HistoryDataAnaly
 import { getDataTypeByConfigInfo } from '@/pages/AbnormalIdentifyModel/CONST.js';
 import { convertTextByConfig } from '@/utils/utils';
 import DataTypeSelect from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/components/DataTypeSelect.js';
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   warningForm: AbnormalIdentifyModel.warningForm,
@@ -37,6 +38,7 @@ const PageContent = props => {
   const { dispatch, pageTitle, DGIMN, warningForm, time } = props;
 
   const [date, setDate] = useState(time || [moment().startOf('year'), moment()]); // 时间
+  const [pollutantType, setPollutantType] = useState(props.pollutantType || undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [modalTitle, setModalTitle] = useState();
@@ -59,6 +61,7 @@ const PageContent = props => {
 
   //
   const loadData = _dataType => {
+    console.log('pollutantType', pollutantType)
     let bTime = moment(date[0]).format('YYYY-MM-DD HH:mm:ss');
     let eTime = moment(date[1]).format('YYYY-MM-DD HH:mm:ss');
     setLoading(true);
@@ -70,6 +73,7 @@ const PageContent = props => {
         beginTime: bTime,
         endTime: eTime,
         dataType: _dataType || dataType,
+        pollutantType: pollutantType,
       },
       callback: result => {
         if (result.IsSuccess) {
@@ -104,6 +108,7 @@ const PageContent = props => {
     setIsModalOpen2(true);
     let params = {
       date: [],
+      pollutantType: pollutantType,
       date1: [date[0], date[1]],
       regionCode: props.regionCode ? props.regionCode.split(',')[2] : undefined,
       warningTypeCode: [ModelGuid],
@@ -774,9 +779,19 @@ const PageContent = props => {
             layout="inline"
             initialValues={{
               date: date,
+              pollutantType: pollutantType,
             }}
             autoComplete="off"
           >
+            <Form.Item label="监测点类型" name="pollutantType">
+              <SelectPollutantType
+                allowClear
+                style={{ width: 120 }}
+                onChange={value => {
+                  setPollutantType(value);
+                }}
+              />
+            </Form.Item>
             <Form.Item label="时间" name="date">
               <RangePicker_
                 allowClear={false}
@@ -990,7 +1005,7 @@ const PageContent = props => {
           columns={getColumns()}
           dataSource={dataSource}
           pagination={false}
-          scroll={false}
+          scroll={{ y: 600 }}
         />
       </Card>
       {isModalOpen && (
@@ -998,11 +1013,16 @@ const PageContent = props => {
           title={modalTitle}
           wrapClassName="spreadOverModal"
           destroyOnClose
-          visible={isModalOpen}
+          open={isModalOpen}
           footer={false}
           onCancel={() => setIsModalOpen(false)}
         >
-          <WorkingAnalysis regionCode={regionCode} entCode={entCode} time={date} />
+          <WorkingAnalysis
+            regionCode={regionCode}
+            entCode={entCode}
+            time={date}
+            pollutantType={pollutantType}
+          />
         </Modal>
       )}
       <CluesListModal
@@ -1015,6 +1035,7 @@ const PageContent = props => {
           open={pointCluesModalOpen}
           onCancel={() => setPointCluesModalOpen(false)}
           data={currentPointData}
+          pollutantType={pollutantType}
           reqParams={{
             modelGuid: currentPointData.ModelGuid,
             date: date,

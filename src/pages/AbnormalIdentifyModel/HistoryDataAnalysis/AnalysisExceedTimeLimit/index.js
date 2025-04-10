@@ -11,7 +11,7 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
 const PointStatisticalAnalysis = props => {
   const [form] = Form.useForm();
 
-  const { dispatch, pageTitle, entCode, DGIMN, time, regionCode } = props;
+  const { dispatch, pageTitle, entCode, DGIMN, time, regionCode, pollutantType } = props;
 
   useEffect(() => {}, []);
   return (
@@ -21,6 +21,7 @@ const PointStatisticalAnalysis = props => {
         entCode={entCode}
         regionCode={regionCode}
         dataType={regionCode ? 'ent' : entCode ? 'point' : ''}
+        pollutantType={pollutantType}
       />
     </BreadcrumbWrapper>
   );

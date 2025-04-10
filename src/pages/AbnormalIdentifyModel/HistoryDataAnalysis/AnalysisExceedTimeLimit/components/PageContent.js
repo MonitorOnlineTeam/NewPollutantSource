@@ -11,6 +11,7 @@ import WarningTableData from '@/pages/AbnormalIdentifyModel/Home/ModalPage/Warni
 import { getDataTypeByConfigInfo } from '@/pages/AbnormalIdentifyModel/CONST.js';
 import DataTypeSelect from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/components/DataTypeSelect.js';
 import { convertTextByConfig } from '@/utils/utils';
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   loading: loading.effects['AbnormalIdentifyModel/GetOverDataAnalysis'],
@@ -22,6 +23,7 @@ const PageContent = props => {
   const { dispatch, time, loading } = props;
 
   const [date, setDate] = useState(time || [moment().startOf('month'), moment()]); // 时间
+  const [pollutantType, setPollutantType] = useState(props.pollutantType || undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [currentPointData, setCurrentPointData] = useState({});
@@ -56,6 +58,7 @@ const PageContent = props => {
         beginTime: bTime,
         endTime: eTime,
         dataType: _dataType || dataType,
+        pollutantType: pollutantType,
       },
       callback: result => {
         setEntAndPointCount(result.Desc);
@@ -422,9 +425,17 @@ const PageContent = props => {
             layout="inline"
             initialValues={{
               date: date,
+              pollutantType: pollutantType,
             }}
             autoComplete="off"
           >
+            <Form.Item label="监测点类型" name="pollutantType">
+              <SelectPollutantType allowClear style={{ width: 120 }} placeholder="请选择监测点类型"
+                onChange={value => {
+                  setPollutantType(value);
+                }}
+              />
+            </Form.Item>
             <Form.Item label="时间" name="date">
               <RangePicker_
                 // allowClear={false}
@@ -530,7 +541,7 @@ const PageContent = props => {
           footer={false}
           onCancel={() => setIsModalOpen(false)}
         >
-          <AnalysisExceedTimeLimit regionCode={regionCode} entCode={entCode} time={date} />
+          <AnalysisExceedTimeLimit regionCode={regionCode} entCode={entCode} time={date} pollutantType={pollutantType} />
         </Modal>
       )}
 
@@ -545,6 +556,7 @@ const PageContent = props => {
           onCancel={() => {
             setIsModalOpen2(false);
           }}
+          pollutantType={pollutantType}
         />
       )}
     </div>

@@ -26,7 +26,7 @@ const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
 const PointCluesStatistics = props => {
   const [form] = Form.useForm();
 
-  const { dispatch, loading, data, open, onCancel, reqParams, warningForm } = props;
+  const { dispatch, loading, data, pollutantType, open, onCancel, reqParams, warningForm } = props;
 
   const [cluesListModalOpen, setCluesListModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,6 +74,7 @@ const PointCluesStatistics = props => {
         endTime: eTime,
         date: undefined,
         modelGuid: data.ModelGuid,
+        pollutantType: pollutantType,
       },
       callback: result => {
         if (result.IsSuccess) {
@@ -112,6 +113,7 @@ const PointCluesStatistics = props => {
 
     let body = {
       date: [],
+      pollutantType: pollutantType,
       date1: reqParams.date,
       pageSize: 20,
       pageIndex: 1,
@@ -122,7 +124,7 @@ const PointCluesStatistics = props => {
       DGIMN: Key,
       ...params,
     };
-
+    console.log('body', body)
     // 进入线索列表，传入时间、场景类型、企业、污染物
     dispatch({
       type: 'AbnormalIdentifyModel/updateState',

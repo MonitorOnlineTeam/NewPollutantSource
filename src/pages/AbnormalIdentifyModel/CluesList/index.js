@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-03-19 13:52:49
+ * @Last Modified time: 2025-04-08 10:15:53
  * @Description：线索列表
  */
 
@@ -41,6 +41,7 @@ import CluesDetails from './CluesDetails';
 import { isArray } from 'lodash';
 import Cookie from 'js-cookie';
 import { UpOutlined, DownOutlined, UnorderedListOutlined, UploadOutlined } from '@ant-design/icons';
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const { SHOW_PARENT } = TreeSelect;
 
@@ -884,6 +885,9 @@ const CluesList = props => {
               format="YYYY-MM-DD"
               style={{ width: 250 }}
             />
+          </Form.Item>
+          <Form.Item label="监测点类型" name="pollutantType">
+            <SelectPollutantType allowClear style={{ width: 120 }} />
           </Form.Item>
           <Form.Item
             label="污染物"
