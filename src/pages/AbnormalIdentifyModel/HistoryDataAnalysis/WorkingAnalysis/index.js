@@ -6,12 +6,13 @@ import PageContent from './components/PageContent';
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({});
 
 const WorkingAnalysis = props => {
-  const { entCode, regionCode, time } = props;
+  const { entCode, regionCode, time, pollutantType } = props;
 
   useEffect(() => {}, []);
   return (
     <BreadcrumbWrapper hideBreadcrumb={entCode || regionCode}>
       <PageContent
+        pollutantType={pollutantType}
         time={time}
         entCode={entCode}
         regionCode={regionCode}

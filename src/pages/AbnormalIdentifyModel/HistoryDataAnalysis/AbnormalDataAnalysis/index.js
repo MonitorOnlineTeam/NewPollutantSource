@@ -6,7 +6,7 @@ import PageContent from './components/PageContent';
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({});
 
 const AbnormalDataAnalysis = props => {
-  const { entCode, regionCode, rtnType, location, time } = props;
+  const { entCode, regionCode, rtnType, location, time, pollutantType } = props;
 
   useEffect(() => {}, []);
 
@@ -16,6 +16,7 @@ const AbnormalDataAnalysis = props => {
     <BreadcrumbWrapper hideBreadcrumb={entCode || regionCode}>
       <PageContent
         time={time}
+        pollutantType={pollutantType}
         entCode={entCode}
         regionCode={regionCode}
         dataType={regionCode ? 'ent' : entCode ? 'point' : ''}

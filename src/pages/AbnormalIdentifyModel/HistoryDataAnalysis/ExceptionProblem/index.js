@@ -90,6 +90,7 @@ const ExceptionProblem = props => {
     let body = {
       date: [],
       date1: reqParams.date,
+      pollutantType: reqParams.pollutantType,
       pageSize: 20,
       pageIndex: 1,
       rowKey: undefined,
@@ -402,6 +403,7 @@ const ExceptionProblem = props => {
           onCancel={() => setPointCluesModalOpen(false)}
           data={currentPointData}
           reqParams={reqParams}
+          pollutantType={reqParams.pollutantType}
         />
       )}
     </Modal>

@@ -6,7 +6,7 @@ import PageContent from './components/PageContent';
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({});
 
 const AnomalyRateDetect = props => {
-  const { entCode, regionCode, time } = props;
+  const { entCode, regionCode, time, pollutantType } = props;
 
   useEffect(() => {}, []);
   return (
@@ -16,6 +16,7 @@ const AnomalyRateDetect = props => {
         entCode={entCode}
         regionCode={regionCode}
         dataType={regionCode ? 'ent' : entCode ? 'point' : ''}
+        pollutantType={pollutantType}
       />
     </BreadcrumbWrapper>
   );

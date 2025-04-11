@@ -14,6 +14,7 @@ import DescriptionModal from '@/pages/SystemDashboard/components/DescriptionModa
 import { getDataTypeByConfigInfo } from '@/pages/AbnormalIdentifyModel/CONST.js';
 import DataTypeSelect from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/components/DataTypeSelect.js';
 import { convertTextByConfig } from '@/utils/utils';
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const { Option } = Select;
 
@@ -78,6 +79,7 @@ const PageContent = props => {
   const { dispatch, pageTitle, DGIMN, excepType, location, time, modelList, warningForm } = props;
 
   const [date, setDate] = useState(time || [moment().startOf('year'), moment()]); // 时间
+  const [pollutantType, setPollutantType] = useState(props.pollutantType || undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [isModalOpen3, setIsModalOpen3] = useState(false);
@@ -142,6 +144,7 @@ const PageContent = props => {
         dataType: _dataType || dataType,
         ExcepType: excepType,
         RtnType: _rtnType || rtnType,
+        pollutantType: pollutantType,
       },
       callback: result => {
         if (result.IsSuccess) {
@@ -221,6 +224,7 @@ const PageContent = props => {
       pageIndex: 1,
       rowKey: undefined,
       scrollTop: 0,
+      pollutantType: pollutantType,
       ...params,
     };
 
@@ -799,6 +803,16 @@ const PageContent = props => {
                 </Option>
               </Select>
             </Form.Item> */}
+            <Form.Item label="监测点类型" name="pollutantType">
+              <SelectPollutantType
+                allowClear
+                style={{ width: 120 }}
+                placeholder="请选择监测点类型"
+                onChange={value => {
+                  setPollutantType(value);
+                }}
+              />
+            </Form.Item>
             <Form.Item label="时间" name="date">
               <RangePicker_
                 allowClear={false}
@@ -936,6 +950,7 @@ const PageContent = props => {
         >
           <AbnormalDataAnalysis
             time={date}
+            pollutantType={pollutantType}
             regionCode={regionCode}
             entCode={entCode}
             rtnType={rtnType}
@@ -993,7 +1008,10 @@ const PageContent = props => {
       {level2PageOpen && (
         <ExceptionProblem
           title={level2PageTitle}
-          reqParams={level2Params}
+          reqParams={{
+            ...level2Params,
+            pollutantType: pollutantType,
+          }}
           open={level2PageOpen}
           onCancel={() => setLevel2PageOpen(false)}
         />

@@ -26,6 +26,7 @@ import PointCluesStatistics from '@/pages/AbnormalIdentifyModel/HistoryDataAnaly
 import { getDataTypeByConfigInfo } from '@/pages/AbnormalIdentifyModel/CONST.js';
 import DataTypeSelect from '@/pages/AbnormalIdentifyModel/HistoryDataAnalysis/components/DataTypeSelect.js';
 import { convertTextByConfig } from '@/utils/utils';
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 const dvaPropsData = ({ loading, AbnormalIdentifyModel }) => ({
   warningForm: AbnormalIdentifyModel.warningForm,
@@ -38,6 +39,7 @@ const PageContent = props => {
   const { dispatch, time, pageTitle, DGIMN, warningForm } = props;
 
   const [date, setDate] = useState(time || [moment().startOf('year'), moment()]); // 时间
+  const [pollutantType, setPollutantType] = useState(props.pollutantType || undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [modalTitle, setModalTitle] = useState();
@@ -77,6 +79,7 @@ const PageContent = props => {
         beginTime: bTime,
         endTime: eTime,
         dataType: _dataType || dataType,
+        pollutantType: pollutantType,
       },
       callback: result => {
         if (result.IsSuccess) {
@@ -719,6 +722,16 @@ const PageContent = props => {
             }}
             autoComplete="off"
           >
+            <Form.Item label="监测点类型" name="pollutantType">
+              <SelectPollutantType
+                allowClear
+                style={{ width: 120 }}
+                placeholder="请选择监测点类型"
+                onChange={value => {
+                  setPollutantType(value);
+                }}
+              />
+            </Form.Item>
             <Form.Item label="时间" name="date">
               <RangePicker_
                 allowClear={false}
@@ -869,7 +882,7 @@ const PageContent = props => {
           }
           onCancel={() => setIsModalOpen(false)}
         >
-          <WorkingAnalysis regionCode={regionCode} entCode={entCode} time={date} />
+          <WorkingAnalysis regionCode={regionCode} entCode={entCode} time={date} pollutantType={pollutantType}/>
         </Modal>
       )}
       <CluesListModal
@@ -880,7 +893,10 @@ const PageContent = props => {
       {level2PageOpen && (
         <ExceptionProblem
           title={level2PageTitle}
-          reqParams={level2Params}
+          reqParams={{
+            ...level2Params,
+            pollutantType: pollutantType,
+          }}
           open={level2PageOpen}
           onCancel={() => setLevel2PageOpen(false)}
         />
@@ -892,8 +908,9 @@ const PageContent = props => {
           onCancel={() => setPointCluesModalOpen(false)}
           data={currentPointData}
           reqParams={{
-            date: date
+            date: date,
           }}
+          pollutantType={pollutantType}
         />
       )}
     </div>
