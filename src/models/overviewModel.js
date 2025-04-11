@@ -1,8 +1,8 @@
 /*
  * @Author: lzp
  * @Date: 2019-07-16 09:59:25
- * @LastEditors: lzp
- * @LastEditTime: 2019-07-16 09:59:25
+ * @LastEditors: outman0611
+ * @LastEditTime: 2025-04-11 10:30:53
  * @Description: 数据一览
  */
 import React from 'react';
@@ -549,11 +549,38 @@ export default Model.extend({
 
     // 获取实时数据一览
     *getRealTimeDataView({ payload, callback }, { call, update, select }) {
-      const result = yield call(getRealTimeDataView, payload);
+      const result = yield call(getRealTimeDataView, {...payload,noDataPollutant:1});
+      let realtimeColumns = []; //获取表头
+      if (
+        (payload.pollutantTypes == 5 || payload.pollutantTypes == 12) &&
+        configInfo.IsOpenAQI === '1'
+      ) {
+        realtimeColumns = realtimeColumns.concat([
+          {
+            title: 'AQI',
+            field: 'AQI',
+            wrw: false,
+          },
+          {
+            field: 'AirQuality',
+            title: '空气质量',
+            width: 70,
+            wrw: false,
+          },
+          {
+            field: 'PrimaryPollutant',
+            title: '首要污染物',
+            width: 120,
+            wrw: false,
+          },
+        ]);
+      }
+      
       if (result.IsSuccess) {
         yield update({
-          realTimeDataView: result.Datas,
+          realTimeDataView: result.Datas?.data || [],
           realTimeTotal: result.Total,
+          realtimeColumns: [...realtimeColumns, ...result.Datas?.pollutantCodeList],
         });
         callback && callback(result.Datas);
       } else {
@@ -562,6 +589,7 @@ export default Model.extend({
     },
     // 获取实时数据一览表头
     *getRealTimeColumn({ payload }, { call, update }) {
+      return //不从这个接口获取表头了
       const result = yield call(getRealTimeColumn, payload);
       let realtimeColumns = [];
       if (

@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-07-16 09:42:48
  * @LastEditors: outman0611
- * @LastEditTime: 2025-01-10 08:54:44
+ * @LastEditTime: 2025-04-11 09:11:15
  * @Description: 部门管理
  */
 import React, { Component, Fragment } from 'react';
@@ -439,7 +439,7 @@ class DepartIndex extends Component {
         width: 280,
         render: (text, record, index) => (
           <span>
-            <Tooltip title="编辑">
+            {!record.DelStatus && <> <Tooltip title="编辑">
               <a
                 onClick={() => {
                   this.props.dispatch({
@@ -455,7 +455,7 @@ class DepartIndex extends Component {
               </a>
             </Tooltip>
             <Divider type="vertical" />
-            {!record.DelStatus && <><Tooltip title="删除">
+            <Tooltip title="删除">
               <Popconfirm
                 title="确认要删除吗?"
                 onConfirm={() => {
@@ -1632,7 +1632,7 @@ class DepartIndex extends Component {
               <Button type="primary" style={{ marginRight: 8 }} onClick={this.showModal}>
                 新增
               </Button>
-              {this.state.settingOperationGroupPermis && (
+              {/* {this.state.settingOperationGroupPermis && (
                 <Button
                   type="primary"
                   onClick={() => this.settingOperationGroup()}
@@ -1640,7 +1640,7 @@ class DepartIndex extends Component {
                 >
                   设置运维小组
                 </Button>
-              )}
+              )} */}
               <Button type="primary" style={{ marginRight: 8 }} onClick={this.updateSort}>
                 {sortTitle}
               </Button>

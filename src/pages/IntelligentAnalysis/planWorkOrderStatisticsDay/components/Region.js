@@ -115,7 +115,7 @@ const Index = (props, ref) => {
 
 
 
-  const { planType, clientHeight, tableDatas, tableLoading, pollutantType, refInstance, } = props;
+  const { planType, clientHeight, tableDatas, tableLoading, pollutantType, refInstance,isOperaUnit, } = props;
 
   const { cityTableDatas, cityTableLoading, cityTableTotal, } = props; //市级别
 
@@ -123,10 +123,18 @@ const Index = (props, ref) => {
   const { insideOrOutsiderWorkTableDatas, insideOrOutsideWorkLoading, insideOrOutsiderWorkTableTotal, } = props; //计划内or计划外工单数
 
   const { workRegExportLoading, cityRegExportLoading, } = props; //导出
+
+
+
   useEffect(() => {
-
-
-  }, []);
+    if(pollutantType==1){ //切换到废水时 当tab选中示值误差或者校验测试完
+      if(tabType==='14' || tabType==='15'){
+        setTabType('1')
+      }
+   
+    }
+    
+  }, [pollutantType]);
 
 
 
@@ -258,57 +266,65 @@ const Index = (props, ref) => {
     setTaskID(record.ID)
     setDgimn(record.DGIMN)
   }
+  
 
+  const typeTitleFiles = {
+    1:  ['巡检','inspectionCount','inspectionCompleteCount','inspectionOverCompleteCount','inspectionOverIncompleteCount','inspectionRate','inspectionTodayIncompleteCount'],
+    2:  ['校准','calibrationCount','calibrationCompleteCount','calibrationOverCompleteCount','calibrationOverIncompleteCount','calibrationRate','calibrationTodayIncompleteCount'],
+    14:  ['示值误差','szwcCount','szwcCompleteCount','szwcOverCompleteCount','szwcOverIncompleteCount','szwcRate','szwcTodayIncompleteCount'],
+    15:  ['校验测试','jycsCount','jycsCompleteCount','jycsOverCompleteCount','jycsOverIncompleteCount','jycsRate','jycsTodayIncompleteCount'],
+  }
+ 
   const commonCol = (type) => [
     {
-      title: `截止昨日（计划内${type == 1 ? '巡检' : '校准'}）`,
+      title: `截止昨日（计划内${typeTitleFiles[type]?.[0]}）`,
       width: 255,
       children: [
         {
           title: '应完成次数',
-          dataIndex: type == 1 ? 'inspectionCount' : 'calibrationCount',
-          key: type == 1 ? 'inspectionCount' : 'calibrationCount',
+          dataIndex: typeTitleFiles[type]?.[1],
+          key: typeTitleFiles[type]?.[1],
           width: 100,
           align: 'center',
-          sorter: (a, b) => props.sortRate(a, b, type == 1 ? 'inspectionCount' : 'calibrationCount'),
+          sorter: (a, b) => props.sortRate(a, b, typeTitleFiles[type]?.[1]),
           render: (text, record, index) => {
-            return text != '-' && text != 0 ? <Button type="link" onClick={() => { workOrderNum(type, record) }}>{text}</Button> : text
+            return isOperaUnit? text : text != '-' && text != 0 ? <Button type="link" onClick={() => { workOrderNum(type, record) }}>{text}</Button> : text
           }
         },
         {
           title: '完成次数',
-          dataIndex: type == 1 ? 'inspectionCompleteCount' : 'calibrationCompleteCount',
-          key: type == 1 ? 'inspectionCompleteCount' : 'calibrationCompleteCount',
+          dataIndex: typeTitleFiles[type]?.[2],
+          key: typeTitleFiles[type]?.[2],
           width: 100,
           align: 'center',
-          sorter: (a, b) => props.sortRate(a, b, type == 1 ? 'inspectionCompleteCount' : 'calibrationCompleteCount'),
+          sorter: (a, b) => props.sortRate(a, b, typeTitleFiles[type]?.[2]),
 
         },
         {
           title: '超时完成次数',
-          dataIndex: type == 1 ? 'inspectionOverCompleteCount' : 'calibrationOverCompleteCount',
-          key: type == 1 ? 'inspectionOverCompleteCount' : 'calibrationOverCompleteCount',
+          dataIndex: typeTitleFiles[type]?.[3],
+          key: typeTitleFiles[type]?.[3],
           width: 120,
           align: 'center',
-          sorter: (a, b) => props.sortRate(a, b, type == 1 ? 'inspectionOverCompleteCount' : 'calibrationOverCompleteCount'),
+          sorter: (a, b) => props.sortRate(a, b, typeTitleFiles[type]?.[3]),
 
         },
         {
           title: '超时未完成次数',
-          dataIndex: type == 1 ? 'inspectionOverIncompleteCount' : 'calibrationOverIncompleteCount',
-          key: type == 1 ? 'inspectionOverIncompleteCount' : 'calibrationOverIncompleteCount',
+          dataIndex: typeTitleFiles[type]?.[4],
+          key:typeTitleFiles[type]?.[4],
           width: 130,
           align: 'center',
-          sorter: (a, b) => props.sortRate(a, b, type == 1 ? 'inspectionOverIncompleteCount' : 'calibrationOverIncompleteCount'),
+          sorter: (a, b) => props.sortRate(a, b, typeTitleFiles[type]?.[4]),
 
         },
         {
-          title: type == 1 ? '巡检完成率' : '校准完成率',
-          dataIndex: type == 1 ? 'inspectionRate' : 'calibrationRate',
-          key: type == 1 ? 'inspectionRate' : 'calibrationRate',
+          title: `${typeTitleFiles[type]?.[0]}完成率`,
+          dataIndex: typeTitleFiles[type]?.[5],
+          key: typeTitleFiles[type]?.[5],
           width: 105,
           align: 'center',
-          sorter: (a, b) => props.sortRate(a, b, type == 1 ? 'inspectionRate' : 'calibrationRate'),
+          sorter: (a, b) => props.sortRate(a, b, typeTitleFiles[type]?.[5]),
           render: (text, record) => {
             return (
               <div>
@@ -325,26 +341,28 @@ const Index = (props, ref) => {
         },
       ],
     },
-    {
-      title: '今日',
-      width: 255,
-      align: 'center',
-      children: [
-        {
-          title: '待完成次数',
-          dataIndex: type == 1 ? 'inspectionTodayIncompleteCount' : 'calibrationTodayIncompleteCount',
-          key: type == 1 ? 'inspectionTodayIncompleteCount' : 'calibrationTodayIncompleteCount',
-          width: 100,
-          align: 'center',
-          sorter: (a, b) => props.sortRate(a, b, type == 1 ? 'inspectionTodayIncompleteCount' : 'calibrationTodayIncompleteCount'),
-        },
-      ],
-    },
+    // {
+    //   title: '今日',
+    //   width: 255,
+    //   align: 'center',
+    //   children: [
+    //     {
+    //       title: '待完成次数',
+    //       dataIndex: typeTitleFiles[type]?.[6],
+    //       key: typeTitleFiles[type]?.[6],
+    //       width: 100,
+    //       align: 'center',
+    //       sorter: (a, b) => props.sortRate(a, b, typeTitleFiles[type]?.[6]),
+    //     },
+    //   ],
+    // },
   ]
 
 
 
-  const columns = (type) => [
+  const columns = (type) => {
+    
+   const col =  [
     {
       title: '序号',
       align: 'center',
@@ -382,9 +400,23 @@ const Index = (props, ref) => {
     //   sorter: (a, b) => a.pointCount - b.pointCount,
     // },
     ...commonCol(type)
-
+  
   ];
+  if(isOperaUnit){
+    col.splice(1,1,{
+        title: '运维单位',
+        dataIndex: 'operationCompanyName',
+        key: 'operationCompanyName',
+        align: 'center',
+        render: (text, record, index) => {
+          return <Button type="link" onClick={() => { workOrderNum(type, record) }}>{text}</Button> 
+        }
+    })
+  }
 
+  return col
+   
+  }
   const cityInsideRegColumns = () => [ //计划内  市级别 二级弹框
     {
       title: '序号',
@@ -434,7 +466,8 @@ const Index = (props, ref) => {
     // },
     ...commonCol(tabType)
   ]
-  const insideWorkOrderColumns = () => [
+  const insideWorkOrderColumns = () => {
+    const col = [
     {
       title: '序号',
       align: 'center',
@@ -482,7 +515,7 @@ const Index = (props, ref) => {
       fixed: 'left',
     },
     {
-      title: `截止昨日（计划内${tabType == 1 ? '巡检' : '校准'}）`,
+      title: `截止昨日（计划内${typeTitleFiles[tabType]?.[0]}）`,
       width: 255,
       children: [
         // {
@@ -543,26 +576,37 @@ const Index = (props, ref) => {
         },
       ],
     },
-    {
-      title: '今日',
-      width: 255,
-      align: 'center',
-      children: [
-        {
-          title: '待完成次数',
-          dataIndex: 'todayIncompleteList',
-          key: 'todayIncompleteList',
-          width: 100,
-          align: 'center',
-          sorter: (a, b) => props.sortRate(a, b, 'todayIncompleteList'),
-        },
-      ],
-    },
+    // {
+    //   title: '今日',
+    //   width: 255,
+    //   align: 'center',
+    //   children: [
+    //     {
+    //       title: '待完成次数',
+    //       dataIndex: 'todayIncompleteList',
+    //       key: 'todayIncompleteList',
+    //       width: 100,
+    //       align: 'center',
+    //       sorter: (a, b) => props.sortRate(a, b, 'todayIncompleteList'),
+    //     },
+    //   ],
+    // },
 
 
   ];
+  if(isOperaUnit){
+    col.splice(1,0,{
+        title: '运维单位',
+        dataIndex: 'operationCompanyName',
+        key: 'operationCompanyName',
+        align: 'center',
+        fixed: 'left',
+    })
+  }
+  return col
+}
 
-  const planOutRegCompleteCommonCol = () => {//计划外 行政区 市级别 完成工单数
+  const planOutRegCompleteCommonCol = () => {//计划外 行政区和市级别 完成工单数
     const col = [{
       title: '工单合计',
       dataIndex: 'allCompleteTaskCount',
@@ -581,7 +625,7 @@ const Index = (props, ref) => {
           align: 'center',
           sorter: (a, b) => a[key] - b[key],
           render: (text, record, index) => {
-            return text == 0 || key == 'allCompleteTaskCount' ? text : <Button type="link" onClick={() => { workOrderNum(3, record, key) }}>{text}</Button>
+            return text == 0 || key == 'allCompleteTaskCount' ? text : <Button type="link" onClick={() => { workOrderNum(5, record, key) }}>{text}</Button>
           }
         });
       }
@@ -589,7 +633,9 @@ const Index = (props, ref) => {
     return col
   }
 
-  const outsideColumns = () => [ //计划外 首页面
+  const outsideColumns = () =>{
+    
+    const col = [ //计划外 首页面
     {
       title: '序号',
       align: 'center',
@@ -605,7 +651,7 @@ const Index = (props, ref) => {
       align: 'center',
       fixed: 'left',
       render: (text, record, index) => {
-        return <Button type="link"
+        return  <Button type="link"
           onClick={() => {
             regionClick(record)
           }}
@@ -631,6 +677,17 @@ const Index = (props, ref) => {
     ...planOutRegCompleteCommonCol(),
 
   ];
+  if(isOperaUnit){
+    col.splice(1,1,{
+        title: '运维单位',
+        dataIndex: 'operationCompanyName',
+        key: 'operationCompanyName',
+        align: 'center',
+        fixed: 'left',
+    })
+  }
+  return col
+}
   const cityOutRegColumns = () => [ //计划外  市级别 二级弹框
     {
       title: '序号',
@@ -685,7 +742,16 @@ const Index = (props, ref) => {
 
   ];
 
-  const outWorkOrderColumn = () => [ //计划外 工单
+  const outWorkOrderColumn = () => {
+    const col = [ //计划外 工单
+      {
+        title: '序号',
+        align: 'center',
+        fixed: 'left',
+        render: (text, record, index) => {
+          return index + 1;
+        }
+      },
     {
       title: '省',
       dataIndex: 'province',
@@ -736,6 +802,17 @@ const Index = (props, ref) => {
       sorter: (a, b) => a.taskCount - b.taskCount,
     },
   ]
+  if(isOperaUnit){
+    col.splice(1,0,{
+        title: '运维单位',
+        dataIndex: 'operationCompanyName',
+        key: 'operationCompanyName',
+        align: 'center',
+        fixed: 'left',
+    })
+  }
+  return col;
+}
 
 
 
@@ -777,7 +854,8 @@ const Index = (props, ref) => {
   const outTypeData = {
     "inspectionCompleteCount": { name: '巡检', value: '1' },
     "calibrationCompleteCount": { name: '校准', value: '2' },
-    "calibrationTestCompleteCount": { name: '校验测试', value: '7' },
+    "szwcCompleteCount": { name: '示值误差', value: '14' },
+    "jycsCompleteCount": { name: '校验测试', value: '15' },
     "repairCompleteCount": { name: '维修', value: '3' },
     "maintainCompleteCount": { name: '维护', value: '4' },
     "sparePartsCompleteCount": { name: '备品备件更换', value: '9' },
@@ -809,32 +887,35 @@ const Index = (props, ref) => {
   const [outType, setOutType] = useState()
   const [outTypeName, setOutTypeName] = useState()
 
+  const isPlanInside = (type) => type == 1 || type == 2 || type==14 || type==15 ; //是否是计划内的工单
 
 
   const workOrderNum = (type, record, outType) => { //计划内  计划外  总数工单
+    setRegName(isOperaUnit? record.operationCompanyName : record.regionName)
 
-    if (type == 1 || type == 2) {
-      setInsideWorkType(type)
+    if (isPlanInside(type)) {
       setInsideWorkOrderVisible(true)
+      setInsideWorkType(type)
       setOutType(type)
     }
-    if (type == 3) {
-      setOutWorkOrderVisible(true)
+    if (type == 5) {
       setOutTypeName(outTypeData[outType]['name'])
       setOutType(outTypeData[outType]['value'])
+      setOutWorkOrderVisible(true)
     }
     workRegForm.resetFields();
     workRegForm.setFieldsValue({
       time: queryPar && [moment(queryPar.beginTime), moment(queryPar.endTime)]
     })
-    setRegName(record.regionName)
+
     setRegionCode(record.regionCode ? record.regionCode : cityDetailRegionCode)
 
     setWorkPageIndex(1)
     setWorkPageSize(20)
     insideOrOutsideWorkGetTaskWorkOrderList({
       regionCode: record.regionCode,
-      taskType: type == 1 || type == 2 ? type : outTypeData[outType]['value']
+      operationCompanyID: record.operationCompanyID,
+      taskType: isPlanInside(type)? type : outTypeData[outType]['value']
     })
 
 
@@ -875,6 +956,12 @@ const Index = (props, ref) => {
   }
   const workCommonForm = () => {
     return <>
+     {isOperaUnit && <Col span={8}>
+        <Form.Item name='operationCompanyName' label='运维单位' className='form_label_width_69'>
+         <Input placeholder='请输入' allowClear />
+        </Form.Item>
+      </Col>
+     }
       <Col span={8}>
         <Form.Item name='regionCode' label='行政区' className='form_label_width_83'>
           <RegionList levelNum={2} />
@@ -1142,14 +1229,15 @@ const Index = (props, ref) => {
   const tabsChange = (key) => {
     setTabType(key)
     setTimeout(() => {
-      props.parentCallback(key == 3 ? 2 : 1) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息 子传父
+      props.parentCallback(key,key == 5 ? 2 : 1) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息 子传父
       queryPar && queryPar.beginTime && props.regEntGetTaskWorkOrderList({
         ...queryPar,
-        regionCode: '',
+        regionCode: undefined,
+        operationCompanyID:undefined,
         regionLevel: 1,
         staticType: 1,
-        homePageIndex: key,
-        outOrInside: key == 3 ? 2 : 1,// 子组件调用的父组件方法
+        homePageIndex: props.homePageIndexVal(key),
+        outOrInside: key == 5 ? 2 : 1,// 子组件调用的父组件方法
       })
     }, 300)
 
@@ -1204,40 +1292,29 @@ const Index = (props, ref) => {
             pagination={false}
           />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="计划外工单统计" key={'3'}>
+        {queryPar?.pollutantType == 2 && <>
+        <Tabs.TabPane tab="计划示值误差完成率" key={'14'}>
           <SdlTable
             size='small'
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
-            columns={columns(3)}
+            columns={columns(14)}
             pagination={false}
           />
         </Tabs.TabPane>
-        {queryPar?.pollutantType == 2 && <> 
-        <Tabs.TabPane tab="计划示值误差完成率" key={'4'}>
-          <SdlTable
-            size='small'
-            loading={tableLoading}
-            bordered
-            dataSource={tableDatas}
-            columns={columns(4)}
-            pagination={false}
-          />
-        </Tabs.TabPane>
-          <Tabs.TabPane tab="计划示值误差完成率"  key={'5'}>
+          <Tabs.TabPane tab="计划校验测试完成率"  key={'15'}>
             <SdlTable
               size='small'
               loading={tableLoading}
               bordered
               dataSource={tableDatas}
-              columns={outsideColumns()}
+              columns={columns(15)}
               pagination={false}
             />
           </Tabs.TabPane>
-        </>
-        }
-        <Tabs.TabPane tab="计划外工单统计" key={'6'}>
+        </>}
+        <Tabs.TabPane tab="计划外工单统计" key={'5'}>
           <SdlTable
             size='small'
             loading={tableLoading}
@@ -1268,7 +1345,7 @@ const Index = (props, ref) => {
             bordered
             dataSource={cityTableDatas}
             total={cityTableTotal}
-            columns={tabType == 1 || tabType == 2 ? cityInsideRegColumns() : cityOutRegColumns()}
+            columns={isPlanInside(tabType)? cityInsideRegColumns() : cityOutRegColumns()}
             pagination={false}
             scroll={{ y: 'calc(100vh - 280px)' }}
           />
@@ -1279,7 +1356,7 @@ const Index = (props, ref) => {
       {/**计划内 省级&&市级  计划巡检、计划校准  工单数弹框  */}
       <Modal
         title={<Row justify='space-between' align='middle'>
-          <div>{`${regName} - ${queryPar?.pollutantType == 1 ? '废水' : '废气'}点位计划${tabType == 1 ? '巡检' : '校准'}明细`}</div>
+          <div>{`${regName} - ${queryPar?.pollutantType == 1 ? '废水' : '废气'}点位计划${typeTitleFiles[tabType]?.[0]}明细`}</div>
           {InsideStatusLegend}
         </Row>
         }

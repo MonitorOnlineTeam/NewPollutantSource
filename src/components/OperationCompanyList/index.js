@@ -46,6 +46,7 @@ class Index extends Component {
       <Select
         allowClear
         showSearch
+        optionFilterProp="children"
         style={{ width: '100%', ...style }}
         placeholder={'请选择'}
         {...this.props} 

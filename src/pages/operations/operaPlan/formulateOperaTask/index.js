@@ -297,7 +297,7 @@ const Index = (props) => {
         }
     }
 
-    const initialIntervalDays = (key)=> key == '19' || key == '20'? 3 : key == '33'?  90 : ''
+    const initialIntervalDays = (key)=> key == 19 || key == 20 ? 3 : key == '33'?  90 : ''
 
     const  intervalDaysLabel = recordType==19 || recordType==20? '月份' : '日期'
     const PlanContentComponents = () => {
@@ -360,6 +360,7 @@ const Index = (props) => {
                     <Col span={6}>
                         <Form.Item name='endTime' label={`${pointType == 2 ? '实际' : '计划'}结束${intervalDaysLabel}`} rules={[{ required: true, message: '请选择实际结束日期！' }]}>
                             <DatePicker
+                                picker={recordType==19 || recordType==20? 'month' : 'date' }
                                 disabledDate={(current) => {
                                     if (!current) {
                                         return false;
@@ -424,7 +425,7 @@ const Index = (props) => {
             },
         ]
         
-        pointType == 1 && contentArrry.splice(2, 1)
+        pointType == 1 && contentArrry.splice(2, 2)
         return contentArrry
     }
     return (
@@ -543,11 +544,11 @@ const Index = (props) => {
                             pointType
                             type='card'
                             onChange={(key) => {
-                                setRecordType(key)
-                                key==19 || key==20 && form2.setFieldsValue({ endTime: undefined  })
-                                form2.setFieldsValue({ pointID: [], intervalDays: initialIntervalDays(key), beginTime: undefined })
-                                setCheckAll(false)
-                                setIndeterminate(false)
+                                setRecordType(key);
+                                (key==19 || key==20 || recordType==19 || recordType==20) && form2.setFieldsValue({ endTime: undefined  });//recordType==19 || recordType==20  先选校验测试 再选其他类型时
+                                form2.setFieldsValue({ pointID: [], intervalDays: initialIntervalDays(key), beginTime: undefined });
+                                setCheckAll(false);
+                                setIndeterminate(false);
                             }}
                             items={tabContent(pointType)}
                         /> :

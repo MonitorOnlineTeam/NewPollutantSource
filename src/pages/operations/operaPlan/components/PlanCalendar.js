@@ -229,7 +229,7 @@ const Index = (props) => {
                     <Button type="primary" htmlType="submit" loading={tableLoading}>
                         查询
                                  </Button>
-                    <Button loading={tableLoading} onClick={() => { form.resetFields(); setLegendSelectVal([]); setPageIndex(1); setPageSize(20); onFinish(1, 20, { id: operationPlanInfoRefreshId }) }}   >
+                    <Button loading={tableLoading} onClick={() => { form.resetFields(); setLegendSelectVal([]); setPageIndex(1); setPageSize(20); onFinish(1, 20, { id: operationPlanInfoRefreshId,beginTime: moment().format('YYYY-MM-DD 00:00:00'), endTime:moment().add(90, 'days').format('YYYY-MM-DD 23:59:59') }) }}   >
                         重置
                                   </Button>
                     <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exportData() }}>
@@ -313,7 +313,7 @@ const Index = (props) => {
                       <span>巡检：X</span>
                       <span>校准：J</span>
                       {pointType == 2 && <span>示值误差：S</span>}
-                      <span>校验测试：Y</span>
+                      {pointType == 2 && <span>校验测试：Y</span>}
                       </Space>
                       </span>
                 {type != 1 && typeLegendData.map((item, index) => <Row align='middle' style={{ cursor: 'pointer', marginRight: 12 }} onClick={() => typeLegendChange(item.value)} >

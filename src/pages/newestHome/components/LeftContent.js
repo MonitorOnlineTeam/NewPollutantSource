@@ -155,10 +155,11 @@ const Index = (props) => {
     initData()
   }, []);
   const pollutantType = pollType[props.type]
-  const isHideIVError = (pollutantType == 1 || configInfo.IsShowProjectRegion); // 废水不显示示值误差  公司运维显示的示值误差（宝武不显示）
+  const isBwConfig = configInfo.IsShowProjectRegion
+  const isHideIVError = (pollutantType == 1 || isBwConfig); // 废水不显示示值误差  公司运维显示的示值误差（宝武不显示）
 
   const isGasDay = (pollutantType == 2 && TaskPlanType == 2); // 固定到天（宝武废气） 加了示值误差和检验测试 样式也有所调整  用单独一个模块
-  const isWaterDay = (pollutantType == 1 && TaskPlanType == 2); // 固定到天（宝武废水） 废气加了检验测试
+  const isWaterDay = (pollutantType == 1 && TaskPlanType == 2); // 固定到天（宝武废水） 废气有检验测试
 
   const initData = () => {
     getOperationRegionPlanTaskRate(1) //计划完成率
@@ -349,7 +350,8 @@ const Index = (props) => {
     { name: '维修', key: 'repairCount', value: workOrderExecuData.repairCount, taskType: workOrderExecuData.repairTaskType, color1: '#3EB076', color2: '#A2FFD0' },
     { name: '维护', key: 'maintainReportCount', value: workOrderExecuData.maintainReportCount, taskType: workOrderExecuData.maintainReportTaskType, color1: '#C1C049', color2: '#FFFE95' },
     { name: '异常处理', key: 'dealExceptionCount', value: workOrderExecuData.dealExceptionCount, taskType: workOrderExecuData.dealExceptionTaskType, color1: '#FFCD5E', color2: '#FF9000' },
-    { name: '校验测试', key: 'calibrationTestCount', value: workOrderExecuData.calibrationTestCount, taskType: workOrderExecuData.calibrationTestTaskType, color1: '#56E5EB', color2: '#56E5EB' },
+    { name: '示值误差', key: 'szwcCount', value: workOrderExecuData.szwcCount, taskType: workOrderExecuData.szwcTaskType, color1: '#F66080', color2: '#F66081' },
+    { name: '校验测试', key: 'calibrationTestCount', value: workOrderExecuData.calibrationTestCount, taskType: workOrderExecuData.calibrationTestTaskType, color1: '#56E5EA', color2: '#56E5EB' },
     { name: '配合检查', key: 'cooperationInspectionCount', value: workOrderExecuData.cooperationInspectionCount, taskType: workOrderExecuData.cooperationInspectionTaskType, color1: '#FF87A7', color2: '#FF87A7' },
     { name: '配合比对', key: 'coordinationComparisonCount', value: workOrderExecuData.coordinationComparisonCount, taskType: workOrderExecuData.coordinationComparisonTaskType, color1: '#2043B9', color2: '#2043B9' },
     { name: '参数核对', key: 'matchingComparisonCount', value: workOrderExecuData.matchingComparisonCount, taskType: workOrderExecuData.matchingComparisonTaskType, color1: '#C8C8C8', color2: '#C8C8C8' },
@@ -359,6 +361,7 @@ const Index = (props) => {
     { name: '试剂更换', key: 'reagentCount', value: workOrderExecuData.reagentCount, taskType: workOrderExecuData.reagentTaskType, color1: '#ff85c0', color2: '#ff85c0' },
   ]
   const operaOrderOptionDay = () => {
+    pollutantType == 1 && operaTypeData.splice(6, 2)
     operaTypeData = operaTypeData.filter(item => item.value != 0)
     const list = operaTypeData?.map(item => {
       return {
@@ -472,25 +475,39 @@ const Index = (props) => {
           return `${planOperaList.systemcalibrationRate}%`
         }
         break;
+      case 14: //宝武示值误差
+        if (planOperaList.szwcRate == "-") {
+          return '-'
+        } else {
+          return `${planOperaList.szwcRate}%`
+        }
+        break;
+       default: //宝武校验测试
+        if (planOperaList.jycsRate == "-") {
+          return '-'
+        } else {
+          return `${planOperaList.jycsRate}%`
+        }
     }
   }
   const { planOperaList } = props;
 
   const planOperaOption = (type) => {  //计划运维图表
-    let color1 = ["#3DBDFF", "#323A70"], color2 = ["#FFDD54", '#323A70'], color3 = ['#F66080', '#323A70'], color4 = ['red', '#323A70']
+    const isSzwc = type == 3 || type == 14
+    let color1 = ["#3DBDFF", "#323A70"], color2 = ["#FFDD54", '#323A70'], color3 = ['#F66080', '#323A70'], color4 = ['#56E5EB', '#323A70']
     let option = {
       tooltip: {
         show: false,
         trigger: 'item',
         formatter: "{a} <br/>{b}: {c} ({d}%)"
       },
-      color: type == 1 ? color1 : type == 2 ? color2 : type == 3 ? color3 : color4,
+      color: type == 1 ? color1 : type == 2 ? color2 : isSzwc? color3 : color4,
       title: {
         text: planOperaText(type),
         left: "center",
         top: "48%",
         textStyle: {
-          color: type == 1 ? color1[0] : type == 2 ? color2[0] :  type == 3 ? color3[0] : color3[4],
+          color: type == 1 ? color1[0] : type == 2 ? color2[0] :isSzwc ? color3[0] : color4[0],
           fontSize: fontSizeFn(14),
           align: "center",
           fontWeight: 'bold',
@@ -499,9 +516,9 @@ const Index = (props) => {
       graphic: {
         type: "text",
         left: "center",
-        top: type == 3 || type==4 ? "28%" : "38%",
+        top: isSzwc || type==15 ? "28%" : "38%",
         style: {
-          text: type == 1 ? '巡检完成率' : type == 2 ? '校准完成率' :  type == 3 ? '示值误差\n完成率' : '检验测试\n完成率',
+          text: type == 1 ? '巡检完成率' : type == 2 ? '校准完成率' : isSzwc ? '示值误差\n完成率' : '检验测试\n完成率',
           textAlign: "center",
           fill: "#fff",
           fontSize: fontSizeFn(11),
@@ -509,7 +526,7 @@ const Index = (props) => {
       },
       series: [
         {
-          name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : type == 3 ? '示值误差\n完成率'  : '检验测试\n完成率',
+          name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : isSzwc ? '示值误差\n完成率' : '检验测试\n完成率',
           // name: type == 1 ? '计划巡检完成率' : '计划校准完成率',
           type: 'pie',
           radius: TaskPlanType == 2 ? ['80%', '90%'] : ['70%', '80%'],
@@ -520,8 +537,8 @@ const Index = (props) => {
           //   { value: type == 1 ? (100 - `${planOperaList.inspectionRate=='-'? 100 : planOperaList.inspectionRate  }`) : type == 2 ? (100  - `${planOperaList.calibrationRate=='-'? 100 : planOperaList.calibrationRate  }`) : (100 - `${planOperaList.actualCalibrationRate=='-'? 100 : planOperaList.actualCalibrationRate  }`), name: '未完成' },
           // ],
           data: [
-            { value: type == 1 ? `${planOperaList.inspectionRate}` : type == 2 ? planOperaList.calibrationRate :  type == 3 ? planOperaList.systemcalibrationRate : planOperaList.aa, name: '已完成' },
-            { value: type == 1 ? (100 - `${planOperaList.inspectionRate == '-' ? 100 : planOperaList.inspectionRate}`) : type == 2 ? (100 - `${planOperaList.calibrationRate == '-' ? 100 : planOperaList.calibrationRate}`) :  type == 3 ? (100 - `${planOperaList.systemcalibrationRate == '-' ? 100 : planOperaList.systemcalibrationRate}`) : (100 - `${planOperaList.aa == '-' ? 100 : planOperaList.aa}`), name: '未完成' },
+            { value: type == 1 ? `${planOperaList.inspectionRate}` : type == 2 ? planOperaList.calibrationRate : type == 3 ? planOperaList.systemcalibrationRate : type == 14 ? planOperaList.szwcRate : planOperaList.jycsRate, name: '已完成' },
+            { value: type == 1 ? (100 - `${planOperaList.inspectionRate == '-' ? 100 : planOperaList.inspectionRate}`) : type == 2 ? (100 - `${planOperaList.calibrationRate == '-' ? 100 : planOperaList.calibrationRate}`) : type == 3 ? (100 - `${planOperaList.systemcalibrationRate == '-' ? 100 : planOperaList.systemcalibrationRate}`) : type == 14 ? 100 - `${planOperaList.szwcRate == '-' ? 100 : planOperaList.szwcRate}` : (100 - `${planOperaList.jycsRate == '-' ? 100 : planOperaList.jycsRate}`), name: '未完成' },
           ],
           startAngle: 330, //起始角度
         }
@@ -604,11 +621,10 @@ const Index = (props) => {
   }
 
   const [planOperationVisible, setPlanOperationVisible] = useState(false)
-  const [planOperationTitle, setPlanOperationTitle] = useState(false)
-
-  const planOperation = (title) => { //近30日计划运维情况 固定到天
+  const [planTypeVal, setPlanTypeVal] = useState('1')
+  const planOperation = (type) => { //近30日计划运维情况 固定到天
     setPlanOperationVisible(true)
-    setPlanOperationTitle(title)
+    setPlanTypeVal(type)
   }
 
   const [systemCalibrationVisible, setSystemCalibrationVisible] = useState(false)
@@ -618,7 +634,7 @@ const Index = (props) => {
         <ReactEcharts
           option={planOperaOption(1)}
           style={{ width: '6.5625rem', height: '6.5625rem' }}
-          onEvents={{ click: TaskPlanType == 2 ? () => planOperation('巡检') : planInspection }}
+          onEvents={{ click: TaskPlanType == 2 ? () => planOperation('1') : planInspection }}
         />
         <img style={{ padding: '0 1.5rem' }} src='./homePlanSplitLine.png' />
         <div className={styles.planOperaText} >
@@ -627,8 +643,8 @@ const Index = (props) => {
               <div>计划内应完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionCount}</span></div>
               <div>计划内完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionCompleteCount}</span></div>
               <div>超时完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionOverCompleteCount}</span></div>
-              <div>超时未完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.inspectionOverIncompleteCount}</span></div>
-              <div style={{ color: '#4BF3F9' }}>今日待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.inspectionTodayInCompleteCount}</span> </div>
+              <div style={{ color: '#4BF3F9' }}>超时未完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.inspectionOverIncompleteCount}</span></div>
+              {/* <div style={{ color: '#4BF3F9' }}>今日待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.inspectionTodayInCompleteCount}</span> </div> */}
             </>
             :
             <>
@@ -644,17 +660,17 @@ const Index = (props) => {
         <ReactEcharts
           option={planOperaOption(2)}
           style={{ width: '6.5625rem', height: '6.5625rem' }}
-          onEvents={{ click: TaskPlanType == 2 ? () => planOperation('校准') : planCalibration }}
+          onEvents={{ click: TaskPlanType == 2 ? () => planOperation('2') : planCalibration }}
         />
         <img style={{ padding: '0 1.5rem' }} src='./homePlanSplitLine.png' />
         <div className={styles.planOperaText} >
           {TaskPlanType == 2 ?
             <>
-              <div>计划内应完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationCount}</span></div>
-              <div>计划内完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationCompleteCount}</span></div>
-              <div>超时完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationOverCompleteCount}</span></div>
-              <div>超时未完成次数：<span style={{ color: '#3DBDFF' }}>{planOperaList.calibrationOverIncompleteCount}</span></div>
-              <div style={{ color: '#4BF3F9' }}>今日待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.calibrationTodayInCompleteCount}</span> </div>
+              <div>计划内应完成次数：<span style={{ color: '#FFDD54' }}>{planOperaList.calibrationCount}</span></div>
+              <div>计划内完成次数：<span style={{ color: '#FFDD54' }}>{planOperaList.calibrationCompleteCount}</span></div>
+              <div>超时完成次数：<span style={{ color: '#FFDD54' }}>{planOperaList.calibrationOverCompleteCount}</span></div>
+              <div style={{ color: '#4BF3F9' }} >超时未完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.calibrationOverIncompleteCount}</span></div>
+              {/* <div style={{ color: '#4BF3F9' }}>今日待完成次数：<span style={{ color: '#4BF3F9' }}>{planOperaList.calibrationTodayInCompleteCount}</span> </div> */}
             </>
             :
             <>
@@ -703,40 +719,32 @@ const Index = (props) => {
 
 
   const planOperaEchartsGasDay = useMemo(() => { //监听变量，第一个参数是函数，第二个参数是依赖，只有依赖变化时才会重新计算函数
-    return <div style={{ height: 'calc(100% - 2.75rem)', padding:' 0 2.3125rem'}}> {/**当图表有点击事件时 更新更新页面时  图表抖动 */}
-      <Row type='flex' align='middle' justify='space-between' style={{ paddingTop:'0.3325rem'}}>
+    return <div style={{ height: 'calc(100% - 2.75rem)', padding: ' 0 2.3125rem' }}> {/**当图表有点击事件时 更新更新页面时  图表抖动 */}
+      <Row type='flex' align='middle' justify='space-between' style={{ paddingTop: '0.3325rem' }}>
         <ReactEcharts
           option={planOperaOption(1)}
           style={{ width: '6.5625rem', height: '6.5625rem' }}
-          onEvents={{ click: TaskPlanType == 2 ? () => planOperation('巡检') : planInspection }}
+          onEvents={{ click: () => planOperation('1') }}
         />
-         <img  src='./homePlanSplitLine.png' />
+        <img src='./homePlanSplitLine.png' />
         <ReactEcharts
           option={planOperaOption(2)}
-          style={{ width: '6.5625rem', height: '6.5625rem',  }}
-          onEvents={{ click: TaskPlanType == 2 ? () => planOperation('校准') : planCalibration }}
+          style={{ width: '6.5625rem', height: '6.5625rem', }}
+          onEvents={{ click: () => planOperation('2') }}
         />
       </Row>
-      <Row type='flex' align='middle' justify='space-between'  style={{ paddingTop:'1.3125rem'}}>
-  
-      <ReactEcharts
-          option={planOperaOption(3)}
+      <Row type='flex' align='middle' justify='space-between' style={{ paddingTop: '1.3125rem' }}>
+
+        <ReactEcharts
+          option={planOperaOption(14)}
           style={{ width: '6.5625rem', height: '6.5625rem' }}
-          onEvents={{
-            click: () => {
-              setSystemCalibrationVisible(true)
-            }
-          }}
+          onEvents={{ click: () => planOperation('14') }}
         />
         <img style={{ padding: '0 1.5rem' }} src='./homePlanSplitLine.png' />
         <ReactEcharts
-          option={planOperaOption(4)}
-          style={{ width: '6.5625rem', height: '6.5625rem'}}
-          onEvents={{
-            click: () => {
-              setSystemCalibrationVisible(true)
-            }
-          }}
+          option={planOperaOption(15)}
+          style={{ width: '6.5625rem', height: '6.5625rem' }}
+          onEvents={{ click: () => planOperation('15') }}
         />
       </Row>
     </div>
@@ -854,8 +862,7 @@ const Index = (props) => {
         </Spin>
       }
       <Spin spinning={TaskPlanType == 1 ? operationPlanTaskLoading : operationTaskCompleteRateByDayLoading}> {/**近30日运维情况 */}
-        {/* <div className={styles.planOpera} style={{ height: isHideIVError ? '16.8125rem' : '18.25rem' }}> */}
-        <div className={styles.planOpera} style={{ height: configInfo.IsShowProjectRegion ? '18.25rem' : isHideIVError ? '' : '22.8125rem' }}>
+        <div className={styles.planOpera} style={{ height: isBwConfig ? '18.25rem' : pollutantType == 1 ? '' : '22.8125rem' }}> {/**公司运维废水 默认值为16.8125rem less文件已设置 */}
           <CardHeader title='近30日运维情况' isPopover isGasDay={isGasDay} />
           {isGasDay ? planOperaEchartsGasDay : planOperaEcharts}
         </div>
@@ -946,7 +953,7 @@ const Index = (props) => {
       >
         <PlanWorkOrderStatisticsDay
           hideBreadcrumb
-          planType={planOperationTitle == '巡检' ? '1' : '2'}
+          planType={planTypeVal}
           time={[moment(latelyDays30.beginTime), moment(latelyDays30.endTime)]}
           pollutantTypes={Number(pollutantType)}
         />

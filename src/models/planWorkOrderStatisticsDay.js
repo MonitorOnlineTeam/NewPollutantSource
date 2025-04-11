@@ -38,7 +38,8 @@ export default Model.extend({
   effects: {
     *regEntGetTaskWorkOrderList({ payload, callback }, { call, put, update }) { //行政区省级 企业第一级
       yield update({ tableLoading: true })
-      const result = yield call(requestPost, API.VisualKanbanApi.GetWorkOrderAnalysisListDay, payload);
+       //isOperaUnit 按运维单位维度统计
+      const result = yield call(requestPost,payload?.isOperaUnit? API.VisualKanbanApi.GetWorkOrderAnalysisListByCompany : API.VisualKanbanApi.GetWorkOrderAnalysisListDay, {...payload,isOperaUnit:undefined});
       if (result.IsSuccess) {
         yield update({
           tableTotal: result.Total,
@@ -72,7 +73,7 @@ export default Model.extend({
     },
 
     *insideOrOutsideWorkGetTaskWorkOrderList({ payload, callback }, { call, put, update }) { //行政区  计划内 计划外 工单数弹框
-      const result = yield call(requestPost, API.VisualKanbanApi.GetWorkOrderAnalysisListDay, payload);
+      const result = yield call(requestPost,payload?.isOperaUnit? API.VisualKanbanApi.GetWorkOrderAnalysisListByCompany : API.VisualKanbanApi.GetWorkOrderAnalysisListDay, {...payload,isOperaUnit:undefined});
       if (result.IsSuccess && result.Datas) {
         yield update({
           insideOrOutsiderWorkTableDatas: result.Datas?.resList || [],
@@ -83,14 +84,7 @@ export default Model.extend({
       }
     },
     *exportTaskWorkOrderList({ payload, callback }, { call, put, update }) { //企业 行政区 导出
-      const result = yield call(requestPost, API.VisualKanbanApi.ExportWorkOrderAnalysisListDay, payload);
-      if (result.IsSuccess) {
-        message.success('导出成功');
-        downloadFile(`${result.Datas}`);
-      }
-    },
-    *workRegExportTaskWorkList({ payload, callback }, { call, put, update }) { //城市详情 导出
-      const result = yield call(requestPost, API.VisualKanbanApi.ExportWorkOrderAnalysisListDay, payload);
+      const result = yield call(requestPost,payload?.isOperaUnit? API.VisualKanbanApi.ExportWorkOrderAnalysisListByCompany : API.VisualKanbanApi.ExportWorkOrderAnalysisListDay, {...payload,isOperaUnit:undefined});
       if (result.IsSuccess) {
         message.success('导出成功');
         downloadFile(`${result.Datas}`);
@@ -98,6 +92,13 @@ export default Model.extend({
     },
     *cityRegExportTaskWorkList({ payload, callback }, { call, put, update }) { //市级别 导出
       const result = yield call(requestPost, API.VisualKanbanApi.ExportWorkOrderAnalysisListDay, payload);
+      if (result.IsSuccess) {
+        message.success('导出成功');
+        downloadFile(`${result.Datas}`);
+      }
+    },
+    *workRegExportTaskWorkList({ payload, callback }, { call, put, update }) { //工单详情 导出
+      const result = yield call(requestPost,payload?.isOperaUnit? API.VisualKanbanApi.ExportWorkOrderAnalysisListByCompany : API.VisualKanbanApi.ExportWorkOrderAnalysisListDay, {...payload,isOperaUnit:undefined});
       if (result.IsSuccess) {
         message.success('导出成功');
         downloadFile(`${result.Datas}`);

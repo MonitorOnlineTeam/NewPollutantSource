@@ -1479,6 +1479,8 @@ export const API = {
       before + '/VisualDashBoardApi/GetPlanOperationTaskCompleteRateByDay', //获取看板计划内完成巡检校准任务 固定到天
     GetWorkOrderAnalysisListDay: before + '/VisualDashBoardApi/GetWorkOrderAnalysisList', //运维工单分析详情 固定到天
     ExportWorkOrderAnalysisListDay: before + '/VisualDashBoardApi/ExportWorkOrderAnalysisList', //运维工单分析详情 固定到天  导出
+    GetWorkOrderAnalysisListByCompany: before + '/VisualDashBoardApi/GetWorkOrderAnalysisListByCompany', //运维工单分析详情 固定到天   按运维单位维度
+    ExportWorkOrderAnalysisListByCompany: before + '/VisualDashBoardApi/ExportWorkOrderAnalysisListByCompany', //运维工单分析详情 固定到天  导出  按运维单位维度
   },
   //工作台Api
   WorkStageApi: {
