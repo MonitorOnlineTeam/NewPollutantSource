@@ -100,7 +100,7 @@ const Index = (props) => {
                         <Option key={pointType == 2 ? 1 : 7} value={pointType == 2 ? 1 : 7}>巡检</Option>
                         <Option key={pointType == 2 ? 3 : 9} value={pointType == 2 ? 3 : 9}>校准</Option>
                         {pointType == 2 && <Option key={33} value={33}>示值误差</Option>}
-                        {pointType == 2 && <Option key={pointType == 2 ? 20 : 19} value={pointType == 2 ? 20 : 19 }>校验测试</Option>}
+                        {pointType == 2 && <Option key={20} value={20}>校验测试</Option>}
                     </Select>
             </Form.Item>
         </>

@@ -348,11 +348,11 @@ const Index = (props) => {
                     pointType={pointType}
                     adjustPointList={{xjPointList:operationPlanInfo?.filter(item=>item.RecordType==1 || item.RecordType==7),
                                      jzPointList:operationPlanInfo?.filter(item=>item.RecordType==3 || item.RecordType==9),
-                                     jycsPointList:operationPlanInfo?.filter(item=>item.RecordType==19 || item.RecordType==20),
+                                     jycsPointList:operationPlanInfo?.filter(item=>item.RecordType==20),
                                      szwcPointList:operationPlanInfo?.filter(item=>item.RecordType==33),
                                 
                                 }}
-             />
+                />
                 <ViewPlanModal
                     visible={viewPlanVisible}
                     title={title}

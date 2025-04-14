@@ -674,7 +674,7 @@ const Index = (props) => {
       </Row>
       <Row>
         <Form.Item label='项目号' name='ProjectNum' className='form_label_width_69'>
-          <Input placeholder='请输入' allowClear={true} />
+          <Input placeholder='请输入' allowClear={true}  style={{ width: 228 }}/>
         </Form.Item>
         <Form.Item label='企业名称' name='EntName'>
           <Input placeholder='请输入' allowClear={true} />

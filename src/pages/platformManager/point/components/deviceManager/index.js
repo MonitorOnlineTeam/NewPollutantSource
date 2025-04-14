@@ -1940,7 +1940,7 @@ const Index = props => {
         <Button
           type="primary"
           style={{ marginRight: 20 }}
-          disabled={gasSystemData?.length == 0 && data?.length == 0}
+          // disabled={gasSystemData?.length == 0 && data?.length == 0}
           loading={props.addOrUpdateEquipmentInfoLoading}
           onClick={submits}
         >

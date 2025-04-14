@@ -1264,7 +1264,7 @@ const Index = (props, ref) => {
   const outStatusLegend = <Row align='middle' style={{ paddingRight: 16 }}>
     <Row align='middle' style={{ marginRight: 8 }}>
       <div style={{ display: 'inline-block', background: '#1890ff', width: 24, height: 12, marginRight: 5 }}></div>
-      <span>计划内完成</span>
+      <span>计划外完成</span>
     </Row>
   </Row>
 

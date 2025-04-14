@@ -53,6 +53,8 @@ const Index = (props) => {
 
     const [adjustExtendForm] = Form.useForm();
 
+    const jycsGas = (key)=> key == 20 //校验测试 废气
+
     useEffect(() => {
         setRecordType(pointType == 2 ? '1' : '7')
 
@@ -78,9 +80,10 @@ const Index = (props) => {
     const dataList = 
      recordType == '1' || recordType == '7' ? adjustPointList?.xjPointList : 
      recordType == '3' || recordType == '9' ? adjustPointList?.jzPointList : 
-     recordType == '19' || recordType == '20'? adjustPointList?.jycsPointList : adjustPointList?.szwcPointList
+     jycsGas(recordType) ? adjustPointList?.jycsPointList : adjustPointList?.szwcPointList
      
 
+    const dateName =  jycsGas(recordType)? '月份' :  type==1 ? '日期' : '时间'  //type==1 调整 type==2 延长
     const AdJustExtendPlanComponents = () => {
 
         const labelWidth = type == 1 ? '108px' : '122px'
@@ -108,10 +111,11 @@ const Index = (props) => {
                 </Form.Item>
                 <Form.Item
                     name='tzDate'
-                    label={type == 1 ? '调整起始日期' : '新实际结束时间'}
-                    rules={[{ required: true, message: `请选择${type == 1 ? '调整起始日期' : '新实际结束时间'}！` }]}
+                    label={type == 1 ? `调整起始${dateName}` : `新实际结束${dateName}`}
+                    rules={[{ required: true, message: `请选择${type == 1 ? `调整起始${dateName}` : `新实际结束${dateName}`}！` }]}
                 >
                     <DatePicker
+                        picker={jycsGas(recordType) ? 'month' : 'date' }
                         disabledDate={(current) => {
                             return current && current < moment()
                         }} />
@@ -139,6 +143,7 @@ const Index = (props) => {
                 payload: { id: operationPlanInfoRefreshId, ...par },
                 callback: () => {
                     onCancel && onCancel()
+                    resData()
                     if (onFinish) {
                         onFinish()
                     } else {
@@ -153,7 +158,34 @@ const Index = (props) => {
             console.log('Failed:', errorInfo);
         });
     }
-
+    const tabContent = (pointType) => {
+        let contentArrry = [
+            {
+                label: `巡检`,
+                key: pointType == 2 ? '1' : '7',
+                children: <AdJustExtendPlanComponents />,
+            },
+            {
+                label: pointType == 2 ? '校准' : '标样核查及校准',
+                key: pointType == 2 ? '3' : '9',
+                children: <AdJustExtendPlanComponents />,
+            },
+            {
+                label: `示值误差`,
+                key: '33',
+                children: <AdJustExtendPlanComponents />,
+            },
+            {
+                label: `校验测试`,
+                key: '20',
+                children: <AdJustExtendPlanComponents />,
+            },
+            
+        ]
+        
+        pointType == 1 && contentArrry.splice(2, 2)
+        return contentArrry
+    }
 
     return (<Modal
         visible={visible}
@@ -178,18 +210,7 @@ const Index = (props) => {
                 setIndeterminate(false)
                 setRecordType(key)
             }}
-            items={[
-                {
-                    label: `巡检`,
-                    key: pointType == 2 ? '1' : '7',
-                    children: <AdJustExtendPlanComponents />,
-                },
-                {
-                    label: pointType == 2 ? '校准' : '标样核查及校准',
-                    key: pointType == 2 ? '3' : '9',
-                    children: <AdJustExtendPlanComponents />,
-                },
-            ]}
+            items={tabContent(pointType)}
         />
     </Modal>
     );

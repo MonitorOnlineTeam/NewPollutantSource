@@ -58,6 +58,9 @@ const Index = (props) => {
     const [planCalendarVisible, setPlanCalendarVisible] = useState(false)
 
     const [pointList, setPointList] = useState([])
+
+    const jycsGas = (key)=> key == 20 //校验测试 废气
+
     useEffect(() => {
         return () => {
             // 执行清理工作，比如取消订阅或清除定时器
@@ -154,7 +157,7 @@ const Index = (props) => {
             ellipsis: true,
             width: 'auto',
             render: (text, record, index) => {
-                return `${text}${record?.RecordType==19 || record?.RecordType==20? '个月' : '天'}`;
+                return `${text}${jycsGas(record?.RecordType)? '个月' : '天'}`;
             }
         },
         {
@@ -274,7 +277,7 @@ const Index = (props) => {
                     <Option key={pointType == 2 ? 1 : 7} value={pointType == 2 ? 1 : 7}>巡检</Option>
                     <Option key={pointType == 2 ? 3 : 9} value={pointType == 2 ? 3 : 9}>校准</Option>
                     {pointType == 2 && <Option key={33} value={33}>示值误差</Option>}
-                    {pointType == 2 &&  <Option key={pointType == 2 ? 20 : 19} value={pointType == 2 ? 20 : 19 }>校验测试</Option>}
+                    {pointType == 2 &&  <Option key={20} value={20}>校验测试</Option>}
                 </Select>
             </Form.Item>
         </>
@@ -363,7 +366,7 @@ const Index = (props) => {
                 mask={false}
                 footer={null}
             >
-                <PlanCalendar type={type} pointType={tableDatas?.[0]?.RecordType == 1 || tableDatas?.[0]?.RecordType == 3 || tableDatas?.[0]?.RecordType == 20 ? 2 : 1} pointList={pointList} pointLoading={pointLoading} commonSearchComponents={commonSearchComponents} />
+                <PlanCalendar type={type} pointType={tableDatas?.[0]?.RecordType == 1 || tableDatas?.[0]?.RecordType == 3 || jycsGas(tableDatas?.[0]?.RecordType)? 2 : 1} pointList={pointList} pointLoading={pointLoading} commonSearchComponents={commonSearchComponents} />
             </Modal>
         </div>
     );
