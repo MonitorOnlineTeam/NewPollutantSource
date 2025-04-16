@@ -226,7 +226,9 @@ class EmergencyDetailInfo extends Component {
           item.ID === 80 || // 巡检-校验测试
           item.ID === 83 || // 标准物质更换记录表
           item.ID === 84 || // 废气-易耗品更换记录
-          item.ID === 85 // 废水-易耗品更换记录
+          item.ID === 85 || // 废水-易耗品更换记录
+          item.ID === 86 || // 校验测试
+          item.ID === 88 // zb设备维修
         ) {
           switch (item.ID) {
             case 76: // 巡检-完全抽取法
@@ -237,6 +239,8 @@ class EmergencyDetailInfo extends Component {
             case 83: // 标准物质更换记录表
             case 84: // 废气-易耗品更换记录
             case 85: // 废水-易耗品更换记录
+            case 86: // 校验测试
+            case 88: // zb设备维修
               this.GoToForm(
                 taskID,
                 item.CnName,

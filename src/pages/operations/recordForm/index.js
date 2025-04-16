@@ -39,6 +39,8 @@ import JzRecordContentZb from '@/pages/EmergencyTodoList/ZbJz/JzRecordContent'
 import JzRecordContentZbFs from '@/pages/EmergencyTodoList/ZbJz/JzRecordContentFs'
 import ConsumableReplace from '@/pages/EmergencyTodoList/ConsumableReplace'
 import RMR from '@/pages/EmergencyTodoList/RMR'
+import BdTestRecordContentZb from '@/pages/EmergencyTodoList/BdTestRecordContent_ZB'
+import ZbDeviceRepair from '@/pages/EmergencyTodoList/ZbDeviceRepair'
 
 import { FormIcon } from '@/utils/icon';
 import { PrinterOutlined } from '@ant-design/icons';
@@ -664,6 +666,12 @@ class Index extends Component {
             case '84':
             case '85':
                 form = <ConsumableReplace taskID={taskID} typeID={typeID} />
+                break;
+            case '86': // CEMS校验测试记录 - 淄博
+                form = <BdTestRecordContentZb TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
+            case '88': // zb设备维修
+                form = <ZbDeviceRepair TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
         }
         return form

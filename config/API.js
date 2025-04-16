@@ -1613,6 +1613,12 @@ export const API = {
     // 获取标准物质更换记录
     GetStandardGasRepalceRecordZB: before + '/GasOperationFormApi/GetStandardGasRepalceRecordZB',
 
+    // 获取比对监测记录 - 淄博
+    GetVerificationTestRecordZBList: before + '/GasOperationFormApi/GetVerificationTestRecordZBList',
+
+    // 获取维修记录 - 淄博
+    GetRepairRecordZB: before + '/GasOperationFormApi/GetRepairRecordZB',
+
 
     /*运维记录*/
     GetOperationRecordListByDGIMN: before + '/WorkOrderApi/GetOperationRecordListByDGIMN', //获取运维记录
