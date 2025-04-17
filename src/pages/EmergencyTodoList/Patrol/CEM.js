@@ -29,7 +29,7 @@ const CEM = props => {
 
   const loadData = () => {
     let actionType = '';
-    switch (typeID) {
+    switch (typeID + '') {
       case '76': // 完全抽取法
         actionType = 'GetAllExInspectionRecord';
         break;
@@ -109,7 +109,8 @@ const CEM = props => {
 
       // 渲染普通项
       normalItems.forEach((item, index) => {
-        const text = formData[item.id] === 1 ? '√' : formData[item.id] === 0 ? '×' : formData[item.id];
+        const text =
+          formData[item.id] === 1 ? '√' : formData[item.id] === 0 ? '×' : formData[item.id];
         const textColor =
           formData[item.id] === 1 ? '#52c41a' : formData[item.id] === 0 ? '#ff4d4f' : '';
         rows.push(

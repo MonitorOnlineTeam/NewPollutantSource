@@ -17,7 +17,12 @@ function initWarningForm() {
           .startOf('day'),
         moment().endOf('day'),
       ],
-      date1: [],
+      date1: [
+        moment()
+          .subtract(1, 'month')
+          .startOf('day'),
+        moment().endOf('day'),
+      ],
       PollutantCode: '',
       warningTypeCode: [],
       level: [],
@@ -177,7 +182,7 @@ export default Model.extend({
       //     ...payload,
       //     datatype: 'realtime',
       //     searchDataType: 1,
-         
+
       //   };
       // }
       const result = yield call(services.GetAllTypeDataListForModel, payload);

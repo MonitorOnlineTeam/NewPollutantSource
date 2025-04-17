@@ -60,7 +60,8 @@ const Index = (props) => {
 
     const [pointList, setPointList] = useState([])
 
-    const jycsGas = (key)=> key == 20 //校验测试 废气
+    
+    let jycsGas = ISZB ? (key)=> key == 20 || key == 33 : (key)=> key == 20//校验测试 废气
 
     useEffect(() => {
         return () => {

@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2025-04-07 15:52:04
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-04-07 16:54:25
+ * @Last Modified time: 2025-04-17 15:24:07
  * @Description:  标准物质更换记录表
  */
 import React, { useState, useEffect } from 'react';
@@ -44,7 +44,6 @@ const RMR = props => {
 
   // 渲染表体
   const renderTableBody = () => {
-    console.log('formData', formData);
     return formData?.map((item, index) => {
       let data = item.Data || {};
       return (

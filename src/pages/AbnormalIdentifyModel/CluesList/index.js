@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-05-30 14:30:45
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-04-08 10:15:53
+ * @Last Modified time: 2025-04-17 09:32:06
  * @Description：线索列表
  */
 
@@ -870,14 +870,39 @@ const CluesList = props => {
           }}
           // labelCol={{ flex: '200px'}}
         >
-          <Form.Item label="发现线索日期" name="date">
-            <RangePicker_
-              // allowClear={false}
-              dataType="day"
-              format="YYYY-MM-DD"
-              // style={{ width: 250 }}
-            />
-          </Form.Item>
+          {configInfo.isShowRegion && (
+            <Form.Item label="行政区" name="regionCode">
+              <RegionList
+                // noFilter
+                // multiple
+                treeCheckable={true}
+                showCheckedStrategy={SHOW_PARENT}
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                style={{ width: 180 }}
+                onChange={value => {
+                  form.setFieldsValue({ EntCode: undefined, DGIMN: undefined });
+                  dispatch({
+                    type: 'AbnormalIdentifyModel/updateState',
+                    payload: {
+                      warningForm: {
+                        ...warningForm,
+                        [modelNumber]: {
+                          ...props.warningForm[modelNumber],
+                          regionCode: value,
+                          EntCode: undefined,
+                          DGIMN: undefined,
+                        },
+                      },
+                    },
+                  });
+                  setPointList([]);
+                }}
+              />
+            </Form.Item>
+          )}
+
           <Form.Item label="数据异常日期" name="date1">
             <RangePicker_
               // allowClear={false}
@@ -886,7 +911,50 @@ const CluesList = props => {
               style={{ width: 250 }}
             />
           </Form.Item>
-          <Form.Item label="监测点类型" name="pollutantType">
+          <Form.Item label={convertTextByConfig('企业')} name="EntCode">
+            <EntAtmoList
+              placeholder="请选择"
+              regionCode={
+                form.getFieldValue('regionCode')
+                  ? form.getFieldValue('regionCode').toString()
+                  : undefined
+              }
+              style={{ width: 200 }}
+              onChange={value => {
+                if (!value) {
+                  form.setFieldsValue({ DGIMN: undefined });
+                  setPointList([]);
+                } else {
+                  form.setFieldsValue({ DGIMN: undefined });
+                  getPointList(value);
+                }
+              }}
+            />
+          </Form.Item>
+          <Spin spinning={false} size="small" style={{ background: '#fff' }}>
+            <Form.Item label="监测点名称" name="DGIMN">
+              <Select
+                placeholder="请选择"
+                showSearch
+                allowClear
+                optionFilterProp="children"
+                style={{ width: 150 }}
+              >
+                {pointList.map(item => {
+                  return (
+                    <Option key={item.DGIMN} value={item.DGIMN}>
+                      {item.PointName}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Spin>
+          <Form.Item
+            label="监测点类型"
+            name="pollutantType"
+            style={{ display: expand ? 'inline-block' : 'none' }}
+          >
             <SelectPollutantType allowClear style={{ width: 120 }} />
           </Form.Item>
           <Form.Item
@@ -921,6 +989,18 @@ const CluesList = props => {
             </Select>
           </Form.Item>
           <Form.Item
+            label="发现线索日期"
+            name="date"
+            style={{ display: expand ? 'inline-block' : 'none' }}
+          >
+            <RangePicker_
+              // allowClear={false}
+              dataType="day"
+              format="YYYY-MM-DD"
+              // style={{ width: 250 }}
+            />
+          </Form.Item>
+          <Form.Item
             label="行业"
             name="IndustryType"
             style={{ display: expand ? 'inline-block' : 'none' }}
@@ -933,89 +1013,24 @@ const CluesList = props => {
               itemValue={'dbo.T_Cod_IndustryType.IndustryTypeCode'}
             />
           </Form.Item>
-          {configInfo.isShowRegion && (
-            <Form.Item label="行政区" name="regionCode">
-              <RegionList
-                // noFilter
-                // multiple
-                treeCheckable={true}
-                showCheckedStrategy={SHOW_PARENT}
-                maxTagCount={2}
-                maxTagTextLength={5}
-                maxTagPlaceholder="..."
-                style={{ width: 230 }}
-                onChange={value => {
-                  form.setFieldsValue({ EntCode: undefined, DGIMN: undefined });
-                  dispatch({
-                    type: 'AbnormalIdentifyModel/updateState',
-                    payload: {
-                      warningForm: {
-                        ...warningForm,
-                        [modelNumber]: {
-                          ...props.warningForm[modelNumber],
-                          regionCode: value,
-                          EntCode: undefined,
-                          DGIMN: undefined,
-                        },
-                      },
-                    },
-                  });
-                  setPointList([]);
-                }}
-              />
-            </Form.Item>
-          )}
+
           {
             <>
-              {/* <Spin spinning={!!entListLoading} size="small" style={{ background: '#fff' }}> */}
-              <Form.Item label={convertTextByConfig('企业')} name="EntCode">
-                <EntAtmoList
-                  placeholder="请选择"
-                  regionCode={
-                    form.getFieldValue('regionCode')
-                      ? form.getFieldValue('regionCode').toString()
-                      : undefined
-                  }
-                  style={{ width: 200 }}
-                  onChange={value => {
-                    if (!value) {
-                      form.setFieldsValue({ DGIMN: undefined });
-                      setPointList([]);
-                    } else {
-                      form.setFieldsValue({ DGIMN: undefined });
-                      getPointList(value);
-                    }
-                  }}
-                />
-              </Form.Item>
-              {/* </Spin> */}
-
               {/* // 在首页点击查询是会出现loading  */}
               {/* <Spin spinning={!!pointListLoading} size="small" style={{ background: '#fff' }}> */}
-              <Spin spinning={false} size="small" style={{ background: '#fff' }}>
-                <Form.Item label="监测点名称" name="DGIMN">
-                  <Select
-                    placeholder="请选择"
-                    showSearch
-                    allowClear
-                    optionFilterProp="children"
-                    style={{ width: 150 }}
-                  >
-                    {pointList.map(item => {
-                      return (
-                        <Option key={item.DGIMN} value={item.DGIMN}>
-                          {item.PointName}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-              </Spin>
             </>
           }
 
-          <Spin spinning={modelListLoading} size="small">
-            <Form.Item label="场景类别" name="warningTypeCode">
+          <Spin
+            spinning={modelListLoading}
+            size="small"
+            style={{ display: expand ? 'inline-block' : 'none' }}
+          >
+            <Form.Item
+              label="场景类别"
+              name="warningTypeCode"
+              style={{ display: expand ? 'inline-block' : 'none' }}
+            >
               <TreeSelect {...actionTreeProps} allowClear showSearch treeNodeFilterProp="label" />
             </Form.Item>
           </Spin>
@@ -1045,7 +1060,11 @@ const CluesList = props => {
               treeNodeFilterProp="label"
             />
           </Form.Item>
-          <Form.Item label="核查结果" name="CheckedResultCode">
+          <Form.Item
+            label="核查结果"
+            name="CheckedResultCode"
+            style={{ display: expand ? 'inline-block' : 'none' }}
+          >
             <Select
               placeholder="请选择核查结果"
               showSearch
@@ -1064,7 +1083,11 @@ const CluesList = props => {
               </Option>
             </Select>
           </Form.Item>
-          <Form.Item label="核查状态" name="CheckedStatus">
+          <Form.Item
+            label="核查状态"
+            name="CheckedStatus"
+            style={{ display: expand ? 'inline-block' : 'none' }}
+          >
             <Select
               placeholder="请选择核查状态"
               showSearch
@@ -1083,10 +1106,18 @@ const CluesList = props => {
               </Option>
             </Select>
           </Form.Item>
-          <Form.Item label="线索内容" name="WarningContent">
+          <Form.Item
+            label="线索内容"
+            name="WarningContent"
+            style={{ display: expand ? 'inline-block' : 'none' }}
+          >
             <Input placeholder="线索内容" style={{ width: 240 }} />
           </Form.Item>
-          <Form.Item label="异常现象" name="ModelFlag">
+          <Form.Item
+            label="异常现象"
+            name="ModelFlag"
+            style={{ display: expand ? 'inline-block' : 'none' }}
+          >
             <Select
               placeholder="请选择核查状态"
               showSearch
