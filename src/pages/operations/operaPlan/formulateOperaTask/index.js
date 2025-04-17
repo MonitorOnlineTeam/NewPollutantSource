@@ -57,7 +57,8 @@ const Index = (props) => {
 
     const [form] = Form.useForm();
     const [form2] = Form.useForm();
-
+    const ISZB = configInfo.OperationOrderType === '1'; // 是否是淄博项目 0 公司运维  1淄博
+    // const ISZB = true; // 是否是淄博项目 0 公司运维  1淄博
 
 
 
@@ -72,9 +73,6 @@ const Index = (props) => {
     const [formulateVisible, setFormulateVisible] = useState(false)
     const [formulateTitlt, setFormulateTitle] = useState('')
     const [operationPlanInfoParList, setOperationPlanInfoParList] = useState() //生成计划需要传入的已经添加的监测点
-
-    const szwc = (key)=> key == 33 //示值误差
-    const jycsGas = (key)=> key == 20 //校验测试 废气
 
     useEffect(() => {
         initData(pageIndex, pageSize);
@@ -285,7 +283,6 @@ const Index = (props) => {
 
     const getOperationPlanPointListRequest = (entCode, pollutantType, id, isGenerate) => {
         !isGenerate && form2.resetFields();
-        form2.setFieldsValue({ intervalDays: initialIntervalDays(recordType) })
         setCheckAll(false); setIndeterminate(false)
         if (entCode && pollutantType) {
             props.dispatch({
@@ -301,11 +298,15 @@ const Index = (props) => {
         }
     }
 
-    const initialIntervalDays = (key)=> jycsGas(key) ? 3 : szwc(key) ?  90 : ''
 
-    const  intervalDaysLabel = jycsGas(recordType)? '月份' : '日期'
+    const isMonth = ISZB ? (recordType==19 || recordType==20 || recordType==33) : (recordType==19 || recordType==20);
+    const  intervalDaysLabel = isMonth ? '月份' : '日期';
+    const initialIntervalDays = (key)=> ISZB ?  
+    (key == '19' || key == '20' || key == '33'? 3 : '')
+    :(key == '19' || key == '20'? 3 : key == '33'?  90 : '')
+ 
     const PlanContentComponents = () => {
-        const dataList = recordType == '1' || recordType == '7' ? xjPointList : recordType == '3' || recordType == '9' ? jzPointList :  jycsGas(recordType) ? jycsPointList : szwcPointList;
+        const dataList = recordType == '1' || recordType == '7' ? xjPointList : recordType == '3' || recordType == '9' ? jzPointList : recordType == '19' || recordType == '20' ? jycsPointList : szwcPointList;
         return getOperationPlanPointListLoading ? <Skeleton active style={{ height: 158 }} /> :
             <>{dataList?.length ? <Form
                 form={form2}
@@ -329,8 +330,8 @@ const Index = (props) => {
 
                 <Row gutter={[16, 16]}>
                     <Col span={6}>
-                        <Form.Item name='intervalDays' label={`间隔（${jycsGas(recordType)? '月' : '天'}）`} rules={[{ required: true, message: '请输入间隔天数！' }]}>
-                            <InputNumber min={1} step={1} style={{ width: '100%' }} placeholder='请输入' disabled={jycsGas(recordType) ||  szwc(recordType)} />
+                        <Form.Item name='intervalDays' label={`间隔（${isMonth? '月' : '天'}）`} rules={[{ required: true, message: '请输入间隔天数！' }]}>
+                            <InputNumber min={1} step={1} style={{ width: '100%' }} placeholder='请输入' disabled={recordType==19 || recordType==20 || recordType == 33} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
@@ -338,7 +339,7 @@ const Index = (props) => {
                           label={`${pointType == 2 ? '实际' : '计划'}起始${intervalDaysLabel}`} 
                           rules={[{ required: true, message: `请选择${pointType == 2 ? '实际' : '计划'}起始${intervalDaysLabel}！` }]}>
                             <DatePicker
-                                picker={jycsGas(recordType)? 'month' : 'date' }
+                                picker={isMonth ? 'month' : 'date' }
                                 disabledDate={(current) => {
                                     // 检查是否小于明天
                                     const tomorrow = moment().add(1, 'days');
@@ -364,7 +365,6 @@ const Index = (props) => {
                     <Col span={6}>
                         <Form.Item name='endTime' label={`${pointType == 2 ? '实际' : '计划'}结束${intervalDaysLabel}`} rules={[{ required: true, message: '请选择实际结束日期！' }]}>
                             <DatePicker
-                                picker={jycsGas(recordType)? 'month' : 'date' }
                                 disabledDate={(current) => {
                                     if (!current) {
                                         return false;
@@ -424,12 +424,12 @@ const Index = (props) => {
             },
             {
                 label: `校验测试 （剩下${jycsPointList?.length || 0}个）`,
-                key: '20',
+                key: pointType == 2 ? '20' : '19',
                 children: <PlanContentComponents />,
             },
         ]
         
-        pointType == 1 && contentArrry.splice(2, 2)
+        pointType == 1 && contentArrry.splice(2, 1)
         return contentArrry
     }
     return (
@@ -548,11 +548,11 @@ const Index = (props) => {
                             pointType
                             type='card'
                             onChange={(key) => {
-                                (jycsGas(key)|| jycsGas(recordType)) && form2.setFieldsValue({ endTime: undefined  });//recordType==20  先选校验测试 再选其他类型时
-                                setRecordType(key);
-                                form2.setFieldsValue({ pointID: [], intervalDays: initialIntervalDays(key), beginTime: undefined });
-                                setCheckAll(false);
-                                setIndeterminate(false);
+                                setRecordType(key)
+                                key==19 || key==20 && form2.setFieldsValue({ endTime: undefined  })
+                                form2.setFieldsValue({ pointID: [], intervalDays: initialIntervalDays(key), beginTime: undefined })
+                                setCheckAll(false)
+                                setIndeterminate(false)
                             }}
                             items={tabContent(pointType)}
                         /> :

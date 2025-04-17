@@ -41,6 +41,7 @@ import ConsumableReplace from '@/pages/EmergencyTodoList/ConsumableReplace'
 import RMR from '@/pages/EmergencyTodoList/RMR'
 import BdTestRecordContentZb from '@/pages/EmergencyTodoList/BdTestRecordContent_ZB'
 import ZbDeviceRepair from '@/pages/EmergencyTodoList/ZbDeviceRepair'
+import ZbValueError from '@/pages/EmergencyTodoList/ZbValueError'
 
 import { FormIcon } from '@/utils/icon';
 import { PrinterOutlined } from '@ant-design/icons';
@@ -672,6 +673,9 @@ class Index extends Component {
                 break;
             case '88': // zb设备维修
                 form = <ZbDeviceRepair TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
+                break;
+            case '92': // zb示值误差
+                form = <ZbValueError TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break;
         }
         return form

@@ -48,7 +48,8 @@ const Index = (props) => {
 
 
     const [form] = Form.useForm();
-
+    const ISZB = configInfo.OperationOrderType === '1'; // 是否是淄博项目 0 公司运维  1淄博
+    // const ISZB = true; // 是否是淄博项目 0 公司运维  1淄博
 
 
     const { entCode, pointLoading, operationPlanInfoRefreshId, operationPlanInfoRefreshType, operationPlanPointPar, type, pointType, xjPointList, jzPointList, queryPar, tableDatas, tableTotal, exportLoading, delOperationPlanPointLoading, updOperationPlanPointLoading,recordType, } = props;
@@ -313,7 +314,7 @@ const Index = (props) => {
                             <Button type="primary" disabled={delList?.length <= 0} loading={delOperationPlanPointLoading} >
                                 批量删除
                              </Button></Popconfirm>}
-                    {(type == 1 || type == 2) && <Button type="primary" onClick={() => {
+                    {!ISZB && (type == 1 || type == 2) && <Button type="primary" onClick={() => {
                         setPlanCalendarVisible(true)
                     }}>
                         计划日历

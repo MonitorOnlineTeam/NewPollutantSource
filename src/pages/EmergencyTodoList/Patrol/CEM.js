@@ -231,7 +231,6 @@ const CEM = props => {
       section.items.some(item => item.type === 'exceptionRecord'),
     );
     //
-    console.log('exceptionRecordSection', exceptionRecordSection);
     // 结果：{
     //     "id": 15,
     //     "title": "异常情况处理记录",

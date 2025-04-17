@@ -43,6 +43,7 @@ import {
   GetIndicationErrorSystemResponseRecordListForPC,
   GetCemsCalibrationRecordZB,
   GetFSCalibrationRecordZB,
+  GetIndicationErrorSystemResponseRecordListForPCZB,
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -74,6 +75,7 @@ export default Model.extend({
     cooperatInspectionRecordList: null, //配合检查记录
     dataConsistencyRecordList: null, //数据一致性检查表 实时
     IndicationErrorSystemResponseRecordList: null, //示值误差系统响应记录
+    IndicationErrorSystemResponseRecordListZB: null, //示值误差系统响应记录 - 淄博
     detectionTimesRecordList: null, //上月委托第三方检测次数
     waterCalibrationRecordList: null, //水质校准记录
     WaterCheckRecordRecordForPCList: null, //标准溶液核查记录
@@ -521,6 +523,15 @@ export default Model.extend({
       if (DataInfo.IsSuccess) {
         yield update({
           IndicationErrorSystemResponseRecordList: DataInfo.Datas,
+        });
+      }
+    },
+    //  示值误差系统响应记录
+    *GetIndicationErrorSystemResponseRecordListForPCZB({ payload }, { call, update, select }) {
+      const DataInfo = yield call(GetIndicationErrorSystemResponseRecordListForPCZB, payload);
+      if (DataInfo.IsSuccess) {
+        yield update({
+          IndicationErrorSystemResponseRecordListZB: DataInfo.Datas,
         });
       }
     },
