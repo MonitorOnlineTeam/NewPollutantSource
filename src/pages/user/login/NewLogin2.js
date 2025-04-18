@@ -89,6 +89,7 @@ class Login extends Component {
         inspectorUserList: [],
         roleList: [],
         entList: [],
+        enableEntList:[],
         noFilterEntList: [],
         atmoStationList: [],
       },
