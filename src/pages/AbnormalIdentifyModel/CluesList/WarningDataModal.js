@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2023-07-14 10:37:27
  * @Last Modified by: JiaQi
- * @Last Modified time: 2024-10-23 14:38:47
+ * @Last Modified time: 2025-04-17 16:07:58
  * @Description: 报警数据 - 弹窗
  */
 import React, { useState, useEffect } from 'react';
@@ -73,6 +73,7 @@ const WarningData = props => {
       bodyStyle={{ padding: 0 }}
     >
       <AssistDataAnalysis
+        pointName={PointName}
         displayType={'modal'}
         warningId={warningId}
         DGIMN={DGIMN}

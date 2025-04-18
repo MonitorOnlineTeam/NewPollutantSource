@@ -326,6 +326,7 @@ const CluesDetails = props => {
             <WarningDataAndChart
               chartHeight="calc(100vh - 380px)"
               warningId={warningId}
+              pointName={warningInfo.PointName}
               DGIMN={warningInfo.Dgimn}
               // let date = [moment(startDate).subtract(2, 'day'), moment(startDate).add(6, 'day')];
               eTime={chartData.eTime}

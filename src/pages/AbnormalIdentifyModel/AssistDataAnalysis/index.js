@@ -26,6 +26,7 @@ const AssistDataAnalysis = props => {
     defaultActiveKey,
     pointInfo,
     warningId,
+    pointName,
   } = props;
   const [DGIMN, setDGIMN] = useState(props.DGIMN);
   const [entCode, setEntCode] = useState();
@@ -56,6 +57,7 @@ const AssistDataAnalysis = props => {
         <Tabs defaultActiveKey={defaultActiveKey || '5'}>
           <Tabs.TabPane tab="数据工况" key="5" style={{ overflowY: 'auto' }}>
             <WarningDataAndChart
+              pointName={pointName}
               DGIMN={DGIMN}
               date={[moment().subtract(1, 'week'), moment()]}
               // defaultChartSelected={['氧含量', '烟气湿度', '烟气温度', '流速']}

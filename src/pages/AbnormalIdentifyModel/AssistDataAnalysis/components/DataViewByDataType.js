@@ -343,7 +343,7 @@ const DataViewByDataType = props => {
 
   return (
     <Modal
-      title={`${selectTreeItem.pointName} - ${dataType === 'realtime' ? '实时' : '分钟'}数据查看`}
+      title={`${props.pointName || selectTreeItem.pointName} - ${dataType === 'realtime' ? '实时' : '分钟'}数据查看`}
       wrapClassName="fullScreenModal"
       open={open}
       destroyOnClose

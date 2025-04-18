@@ -1817,6 +1817,7 @@ const WarningDataAndChart = props => {
       )}
       {historyDataModalOpen && (
         <DataViewByDataType
+          pointName={props.pointName}
           open={historyDataModalOpen}
           warningDate={[
             {

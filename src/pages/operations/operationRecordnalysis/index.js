@@ -586,12 +586,12 @@ const Index = (props) => {
           导出
           </Button>
       </Form.Item>
-      <Form.Item style={{position:'absolute',right:8}}>
+      {/* <Form.Item style={{position:'absolute',right:8}}>
             <Row align='middle'>
              <div style={{ display: 'inline-block', background: '#bae7ff', width: 24, height: 12, marginRight: 5 }}></div>
              <span>运营周期内</span>
             </Row>
-      </Form.Item>
+      </Form.Item> */}
     </Form>
   }
 
