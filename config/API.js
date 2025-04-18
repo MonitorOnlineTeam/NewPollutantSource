@@ -1576,6 +1576,8 @@ export const API = {
       before + '/GasOperationFormApi/GetRealtimeConsistencyRecordForPCList', //获取数据一致性记录(实时)
     GetIndicationErrorSystemResponseRecordListForPC:
       before + '/GasOperationFormApi/GetIndicationErrorSystemResponseRecordListForPC', //获取示值误差系统响应记录
+    GetIndicationErrorSystemResponseRecordListForPCZB:
+      before + '/GasOperationFormApi/GetIndicationErrorSystemResponseRecordListForPCZB', //获取示值误差系统响应记录 - 淄博
     GetDetectionTimesRecordForPCList:
       before + '/GasOperationFormApi/GetDetectionTimesRecordForPCList', //获取上月委托第三方检测次数
     GetWaterCalibrationRecordForPCList:
@@ -1612,6 +1614,12 @@ export const API = {
     GetConsumablesReplaceRecordZB: before + '/GasOperationFormApi/GetConsumablesReplaceRecordZB',
     // 获取标准物质更换记录
     GetStandardGasRepalceRecordZB: before + '/GasOperationFormApi/GetStandardGasRepalceRecordZB',
+
+    // 获取比对监测记录 - 淄博
+    GetVerificationTestRecordZBList: before + '/GasOperationFormApi/GetVerificationTestRecordZBList',
+
+    // 获取维修记录 - 淄博
+    GetRepairRecordZB: before + '/GasOperationFormApi/GetRepairRecordZB',
 
 
     /*运维记录*/

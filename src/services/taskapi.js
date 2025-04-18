@@ -426,6 +426,15 @@ export async function GetIndicationErrorSystemResponseRecordListForPC(params) {
   );
   return result === null ? { Datas: null } : result;
 }
+/** 示值误差系统响应记录 - 淄博 */
+export async function GetIndicationErrorSystemResponseRecordListForPCZB(params) {
+  const result = await post(
+    API.PredictiveMaintenanceApi.GetIndicationErrorSystemResponseRecordListForPCZB,
+    params,
+    null,
+  );
+  return result === null ? { Datas: null } : result;
+}
 
 /** 上月委托第三方检测次数列表 */
 export async function GetDetectionTimesRecordList(params) {

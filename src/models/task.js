@@ -43,6 +43,7 @@ import {
   GetIndicationErrorSystemResponseRecordListForPC,
   GetCemsCalibrationRecordZB,
   GetFSCalibrationRecordZB,
+  GetIndicationErrorSystemResponseRecordListForPCZB,
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -61,6 +62,7 @@ export default Model.extend({
     RepairRecord: null, // 维修记录
     ExceptionRecord: null, // 设备异常记录
     BdRecord: null, // 比对监测记录
+    BdRecordZB: null, // 比对监测记录 - 淄博
     ConsumablesReplaceRecord: null, // 易耗品更换记录
     FailureHoursRecord: null, // 故障小时数记录表
     StandardGasRepalceRecord: null, // 标气更换记录
@@ -73,6 +75,7 @@ export default Model.extend({
     cooperatInspectionRecordList: null, //配合检查记录
     dataConsistencyRecordList: null, //数据一致性检查表 实时
     IndicationErrorSystemResponseRecordList: null, //示值误差系统响应记录
+    IndicationErrorSystemResponseRecordListZB: null, //示值误差系统响应记录 - 淄博
     detectionTimesRecordList: null, //上月委托第三方检测次数
     waterCalibrationRecordList: null, //水质校准记录
     WaterCheckRecordRecordForPCList: null, //标准溶液核查记录
@@ -108,8 +111,8 @@ export default Model.extend({
     },
     TaskRecordLoading: true,
     /**淄博 校准 */
-    JzRecordZb:null,
-    JzRecordZbFs:null,
+    JzRecordZb: null,
+    JzRecordZbFs: null,
   },
 
   effects: {
@@ -330,6 +333,21 @@ export default Model.extend({
         });
       }
     },
+    // 比对监测记录 - 淄博
+    *GetBdTestRecordZB({ payload }, { call, update }) {
+      const result = yield call(
+        requestPost,
+        API.PredictiveMaintenanceApi.GetVerificationTestRecordZBList,
+        payload,
+      );
+      if (result.IsSuccess) {
+        yield update({ BdRecordZB: result.Datas });
+      } else {
+        yield update({
+          BdRecordZB: null,
+        });
+      }
+    },
     // // 撤单（运维人员）、打回（环保专工）
     // * RevokeTask({
     //     payload,
@@ -508,6 +526,15 @@ export default Model.extend({
         });
       }
     },
+    //  示值误差系统响应记录
+    *GetIndicationErrorSystemResponseRecordListForPCZB({ payload }, { call, update, select }) {
+      const DataInfo = yield call(GetIndicationErrorSystemResponseRecordListForPCZB, payload);
+      if (DataInfo.IsSuccess) {
+        yield update({
+          IndicationErrorSystemResponseRecordListZB: DataInfo.Datas,
+        });
+      }
+    },
     // 获取 CEMS 日常巡检
     *GetPatrolAllRecord({ payload, actionType, callback }, { call, put, update, take, select }) {
       const result = yield call(requestPost, API.PredictiveMaintenanceApi[actionType], payload);
@@ -515,81 +542,68 @@ export default Model.extend({
         callback && callback(result.Datas);
       }
     },
-    
+
     //淄博 校准记录
-    *GetCemsCalibrationRecordZB({ payload }, { call, update }) { //淄博  废气校准
+    *GetCemsCalibrationRecordZB({ payload }, { call, update }) {
+      //淄博  废气校准
       const res = yield call(GetCemsCalibrationRecordZB, payload);
       if (res && res.Datas && res.IsSuccess) {
+        let recordData = res.Datas.Record,
+          recordListNew = [];
 
-        let recordData = res.Datas.Record, recordListNew=[]
-
-        if( recordData?.RecordList?.[0]){ //处理RecordList和之前结构一样
-          recordData.RecordList.map(item=>{
-              if(item.ChildList){
-                recordListNew.push({...item,ChildList: item.ChildList.map(childItem=>({
-                      ...childItem,
-                      ...childItem?.Data,
-                      Data: undefined
-                  }))})
-              }else{
-                recordListNew.push({...item,...item?.Data, Data: undefined})
-              }
-          })
-      }
-      yield update({ JzRecordZb: {Code:res.Datas.Code,UnitList:res.Datas.UnitList, Record:{...recordData,RecordList:recordListNew}} });
+        if (recordData?.RecordList?.[0]) {
+          //处理RecordList和之前结构一样
+          recordData.RecordList.map(item => {
+            if (item.ChildList) {
+              recordListNew.push({
+                ...item,
+                ChildList: item.ChildList.map(childItem => ({
+                  ...childItem,
+                  ...childItem?.Data,
+                  Data: undefined,
+                })),
+              });
+            } else {
+              recordListNew.push({ ...item, ...item?.Data, Data: undefined });
+            }
+          });
+        }
+        yield update({
+          JzRecordZb: {
+            Code: res.Datas.Code,
+            UnitList: res.Datas.UnitList,
+            Record: { ...recordData, RecordList: recordListNew },
+          },
+        });
       } else {
         yield update({
           JzRecordZb: null,
         });
       }
     },
-    *GetFSCalibrationRecordZB({ payload }, { call, update }) { //淄博  废水校准
+    *GetFSCalibrationRecordZB({ payload }, { call, update }) {
+      //淄博  废水校准
       const res = yield call(GetFSCalibrationRecordZB, payload);
       if (res && res.Datas && res.IsSuccess) {
-        let recordData = res.Datas.Record, recordListNew=[]
-        if( recordData?.RecordList?.[0]){ 
-          recordData.RecordList.map(item=>{
-            recordListNew.push({...item,...item?.Data, Data: undefined})
-          })
-      }
-      yield update({ JzRecordZbFs: {Code:res.Datas.Code,UnitList:res.Datas.UnitList, Record:{...recordData,RecordList:recordListNew}} });
+        let recordData = res.Datas.Record,
+          recordListNew = [];
+        if (recordData?.RecordList?.[0]) {
+          recordData.RecordList.map(item => {
+            recordListNew.push({ ...item, ...item?.Data, Data: undefined });
+          });
+        }
+        yield update({
+          JzRecordZbFs: {
+            Code: res.Datas.Code,
+            UnitList: res.Datas.UnitList,
+            Record: { ...recordData, RecordList: recordListNew },
+          },
+        });
       } else {
         yield update({
           JzRecordZbFs: null,
         });
       }
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   },
 });

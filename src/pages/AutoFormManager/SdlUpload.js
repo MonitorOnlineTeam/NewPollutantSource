@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-05 17:18:49
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-03-28 17:02:00
+ * @Last Modified time: 2025-04-10 11:50:15
  * @desc: 上传组件
  */
 
@@ -31,9 +31,18 @@ class SdlUpload extends Component {
     };
     this.state = {
       previewVisible: false,
-      fileList: [],
+      fileList: this.handleFileList(this.props.fileList),
     };
   }
+
+  // 处理fileList
+  handleFileList = fileList => {
+    if (!fileList) return [];
+    return fileList.map((item, index) => ({
+      ...item,
+      index,
+    }));
+  };
 
   componentDidMount() {
     // const { dispatch, uid } = this.props;
@@ -48,10 +57,7 @@ class SdlUpload extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.fileList !== nextProps.fileList) {
       this.setState({
-        fileList: nextProps.fileList.map((item, index) => ({
-          ...item,
-          index,
-        })),
+        fileList: this.handleFileList(nextProps.fileList),
       });
     }
   }

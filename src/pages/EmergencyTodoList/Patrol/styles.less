@@ -124,52 +124,9 @@
     }
   }
 
-  // 图片上传部分样式
-  .uploadSection {
-    border-radius: 4px;
+ 
 
-    .uploadTitle {
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 12px;
-      color: #000;
-    }
-
-    :global {
-      .ant-upload-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .ant-upload-list-item {
-        width: 104px;
-        height: 104px;
-        margin: 0;
-      }
-    }
-  }
-
-  // 签名部分样式
-  .signatureSection {
-    margin-bottom: 16px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-
-    .signatureTitle {
-      font-size: 14px;
-      font-weight: bold;
-      color: #000;
-      margin-right: 16px;
-      white-space: nowrap;
-    }
-    .signatureImage {
-      max-width: 200px;
-      max-height: 100px;
-      object-fit: contain;
-    }
-  }
+ 
 
   .section {
     margin-bottom: 0;
@@ -227,5 +184,94 @@
         }
       }
     }
+  }
+}
+
+.headerCard {
+  margin-bottom: 24px;
+  :global {
+    .ant-descriptions-item-label {
+      width: 100px;
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: 500;
+    }
+  }
+}
+
+.taskTable {
+  margin-bottom: 24px;
+  :global {
+    .ant-table-thead > tr > th {
+      background: #fafafa;
+      font-weight: 500;
+    }
+  }
+}
+
+.deviceSection {
+  margin-bottom: 24px;
+  
+  .deviceTitle {
+    margin-bottom: 16px;
+    padding-left: 8px;
+    border-left: 3px solid #1890ff;
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+.deviceTable {
+  :global {
+    .ant-table-thead > tr > th {
+      background: #fafafa;
+      font-weight: 500;
+    }
+  }
+}
+
+ // 图片上传部分样式
+ .uploadSection {
+  border-radius: 4px;
+
+  .uploadTitle {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #000;
+  }
+
+  :global {
+    .ant-upload-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ant-upload-list-item {
+      width: 104px;
+      height: 104px;
+      margin: 0;
+    }
+  }
+}
+
+ // 签名部分样式
+ .signatureSection {
+  margin-bottom: 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+
+  .signatureTitle {
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+    margin-right: 16px;
+    white-space: nowrap;
+  }
+  .signatureImage {
+    max-width: 160px;
+    max-height: 80px;
+    object-fit: contain;
   }
 }

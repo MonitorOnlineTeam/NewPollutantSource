@@ -1,0 +1,104 @@
+// 图片上传部分样式
+.uploadSection {
+  border-radius: 4px;
+
+  .uploadTitle {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #000;
+  }
+
+  :global {
+    .ant-upload-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ant-upload-list-item {
+      width: 104px;
+      height: 104px;
+      margin: 0;
+    }
+  }
+}
+
+// 签名部分样式
+.signatureSection {
+  margin-bottom: 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+
+  .signatureTitle {
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+    margin-right: 16px;
+    white-space: nowrap;
+  }
+  .signatureImage {
+    max-width: 150px;
+    max-height: 80px;
+    object-fit: contain;
+  }
+}
+
+.section {
+  margin-bottom: 0;
+  border: none;
+  box-shadow: none;
+
+  .sectionTitle {
+    font-size: 14px;
+    font-weight: normal;
+    color: #000;
+    margin-bottom: 0;
+    padding: 6px 12px;
+    border: 1px solid #453f3f;
+    background: #fff;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .sectionContent {
+    padding: 0;
+
+    .formItem {
+      margin-bottom: 0;
+      border: 1px solid #453f3f;
+      border-top: none;
+      display: flex;
+      align-items: stretch;
+
+      .itemTitle {
+        width: 300px;
+        font-size: 14px;
+        color: #000;
+        line-height: 1.5;
+        padding: 6px 12px;
+        border-right: 1px solid #453f3f;
+        background: #fff;
+        margin: 0;
+      }
+
+      .itemContent {
+        flex: 1;
+        min-height: 32px;
+        padding: 6px 12px;
+        background: #fff;
+        border-radius: 0;
+        font-size: 14px;
+        color: #000;
+        line-height: 1.5;
+
+        &.textarea {
+          min-height: 60px;
+        }
+      }
+    }
+  }
+}
