@@ -265,6 +265,11 @@ const routes = [
         path: '/appoperation',
         component: '../layouts/BlankLayout',
         routes: [
+           /* 移动端 通用记录 */
+          {
+            path: '/appoperation/appCommonRecord/:TaskID/:TypeID',
+            component: './AppOperation/AppCommonRecord',
+          },
           /* 督查详情 移动端 */
           {
             path: '/appoperation/appRemoteSupervisionDetail/:id',

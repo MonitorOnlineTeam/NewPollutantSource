@@ -2,7 +2,7 @@
  * @Author: JiaQi
  * @Date: 2025-04-07 15:52:04
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-04-17 15:24:07
+ * @Last Modified time: 2025-04-18 17:29:56
  * @Description:  标准物质更换记录表
  */
 import React, { useState, useEffect } from 'react';
@@ -85,7 +85,10 @@ const RMR = props => {
       <div className={styles.header}>
         <div className={styles.title}>标准物质更换记录表</div>
         <div className={styles.info}>
-          <div>企业名称：{formInfo?.Content?.EntName}</div>
+          <div>
+            <span>企业名称：{formInfo?.Content?.EntName}</span>
+            <span style={{ marginLeft: 20 }}>排口名称：{formInfo?.Content?.PoingName}</span>
+          </div>
         </div>
       </div>
 

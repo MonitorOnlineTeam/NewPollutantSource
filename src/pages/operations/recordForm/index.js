@@ -664,8 +664,8 @@ class Index extends Component {
             case '83': // 标准物质更换记录表
                 form = <RMR taskID={taskID} typeID={typeID} />
                 break;
-            case '84':
-            case '85':
+            case '84': // 废气-易耗品更换
+            case '85': // 废水-易耗品更换
                 form = <ConsumableReplace taskID={taskID} typeID={typeID} />
                 break;
             case '86': // CEMS校验测试记录 - 淄博

@@ -475,6 +475,7 @@ class BdTestRecordContent extends Component {
         <div className={styles.FormName}>CEMS校验测试记录</div>
         <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>
           企业名称：{Content !== null ? Content.EntName : null}
+          <span style={{ marginLeft: 20 }}>排口名称：{Content !== null ? Content.PoingName : null}</span>
         </div>
         <table className={styles.FormTable}>
           <tbody>

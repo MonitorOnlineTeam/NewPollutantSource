@@ -74,7 +74,10 @@ const ConsumableReplace = props => {
       <div className={styles.header}>
         <div className={styles.title}>易耗品更换记录表</div>
         <div className={styles.info}>
-          <div>企业名称：{formInfo?.Content?.EntName}</div>
+          <div>
+            <span>企业名称：{formInfo?.Content?.EntName}</span>
+            <span style={{ marginLeft: 20 }}>排口名称：{formInfo?.Content?.PoingName}</span>
+          </div>
         </div>
       </div>
 

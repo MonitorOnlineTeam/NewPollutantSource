@@ -260,7 +260,10 @@ const CEM = props => {
       <div className={styles.header}>
         <div className={styles.title}>{FORM_CONST[typeID].title}</div>
         <div className={styles.info}>
-          <div>企业名称：{formInfo?.Content?.EntName}</div>
+          <div>
+            <span>企业名称：{formInfo?.Content?.EntName}</span>
+            <span style={{ marginLeft: 20 }}>排口名称：{formInfo?.Content?.PoingName}</span>
+          </div>
           <div>巡检日期：{formInfo?.Content?.InspectionDate}</div>
         </div>
       </div>

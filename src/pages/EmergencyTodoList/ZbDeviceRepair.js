@@ -2,7 +2,7 @@
  * @Author: JiaQi 
  * @Date: 2025-04-16 11:39:06 
  * @Last Modified by: JiaQi
- * @Last Modified time: 2025-04-16 11:40:36
+ * @Last Modified time: 2025-04-18 17:32:48
  * @Description: 设备维护检修记录
  */
 import React, { useState, useEffect } from 'react';
@@ -62,7 +62,9 @@ const ZbDeviceRepair = props => {
       <div className={styles.header}>
         <div className={styles.title}>设备维护检修记录</div>
         <div className={styles.info}>
-          <span>企业名称：{entName}</span>
+          <span>企业名称：{entName}
+            <span style={{ marginLeft: 20 }}>排口名称：{formInfo?.Content?.PoingName}</span>
+          </span>
           <span>巡检日期：{inspectionDate}</span>
         </div>
       </div>
@@ -232,14 +234,10 @@ const ZbDeviceRepair = props => {
 
   // 渲染签名
   const renderSignature = () => {
-    if (!formInfo.SignContent) {
-      return null;
-    }
-
     return (
       <div className={styles.signatureSection}>
         <div className={styles.signatureTitle}>巡检人员签字：</div>
-        <img src={formInfo.SignContent} alt="签名" className={styles.signatureImage} />
+        { formInfo.SignContent ? <img src={formInfo.SignContent} alt="签名" className={styles.signatureImage} /> : null}
       </div>
     );
   };
