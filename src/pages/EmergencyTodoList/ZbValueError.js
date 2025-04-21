@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Spin, Radio, Space } from 'antd';
+import { Spin } from 'antd';
 import { connect } from 'dva';
 import styles from './DataConsistencyRealDate.less';
 import MonitorContent from '../../components/MonitorContent/index';
@@ -33,6 +33,37 @@ const IMAGE_LIST = [
     key: 'AfterFile',
   },
 ];
+
+// 自定义单选按钮组样式
+const radioGroupStyles = {
+  display: 'flex',
+  marginBottom: '10px',
+};
+
+const radioButtonStyles = {
+  display: 'inline-block',
+  margin: '0 2px',
+  padding: '6px 12px',
+  border: '1px solid #d9d9d9',
+  borderRadius: '2px',
+  backgroundColor: '#f0f0f0',
+  cursor: 'pointer',
+  fontSize: '14px',
+  lineHeight: '1.5',
+  textAlign: 'center',
+  transition: 'all 0.3s',
+};
+
+const radioButtonCheckedStyles = {
+  ...radioButtonStyles,
+  backgroundColor: '#1890ff',
+  borderColor: '#1890ff',
+  color: '#fff',
+};
+
+const radioSpacerStyles = {
+  marginTop: '8px',
+};
 
 @connect(({ task, loading }) => ({
   loading: loading.effects['task/GetIndicationErrorSystemResponseRecordListForPCZB'],
@@ -123,6 +154,23 @@ class ZbValueError extends Component {
     });
   };
 
+  // 处理污染物切换
+  handlePollutantChange = (e) => {
+    const index = parseInt(e.target.value, 10);
+    this.setState({
+      currentPollIndex: index,
+      currentRecordIndex: 0,
+    });
+  };
+
+  // 处理记录切换
+  handleRecordChange = (e) => {
+    const index = parseInt(e.target.value, 10);
+    this.setState({
+      currentRecordIndex: index,
+    });
+  };
+
   renderFormData = () => {
     const { IndicationErrorSystemResponseRecordList } = this.props;
     const { currentRecordIndex, currentPollIndex } = this.state;
@@ -194,7 +242,6 @@ class ZbValueError extends Component {
   renderSecondTableData = () => {
     const { IndicationErrorSystemResponseRecordList } = this.props;
     const { currentPollIndex, currentRecordIndex } = this.state;
-    debugger;
     const tableData =
       IndicationErrorSystemResponseRecordList?.[currentPollIndex]?.TableList?.[currentRecordIndex]
         ?.ChildList || [];
@@ -292,6 +339,64 @@ class ZbValueError extends Component {
     );
   };
 
+  // 渲染原生单选按钮组
+  renderPollutantRadioGroup = () => {
+    const { IndicationErrorSystemResponseRecordList } = this.props;
+    const { currentPollIndex } = this.state;
+    
+    const pollutantList = IndicationErrorSystemResponseRecordList?.[0]?.PollutantCodeList || [];
+    
+    return (
+      <div style={radioGroupStyles}>
+        {pollutantList.map((item, index) => (
+          <label 
+            key={index} 
+            style={currentPollIndex === index ? radioButtonCheckedStyles : radioButtonStyles}
+          >
+            <input
+              type="radio"
+              name="pollutant"
+              value={index}
+              checked={currentPollIndex === index}
+              onChange={this.handlePollutantChange}
+              style={{ display: 'none' }}
+            />
+            {item.Name}
+          </label>
+        ))}
+      </div>
+    );
+  };
+
+  // 渲染原生记录单选按钮组
+  renderRecordRadioGroup = () => {
+    const { IndicationErrorSystemResponseRecordList } = this.props;
+    const { currentPollIndex, currentRecordIndex } = this.state;
+    
+    const tableList = IndicationErrorSystemResponseRecordList?.[currentPollIndex]?.TableList || [];
+    
+    return (
+      <div style={radioGroupStyles}>
+        {tableList.map((item, index) => (
+          <label 
+            key={index} 
+            style={currentRecordIndex === index ? radioButtonCheckedStyles : radioButtonStyles}
+          >
+            <input
+              type="radio"
+              name="record"
+              value={index}
+              checked={currentRecordIndex === index}
+              onChange={this.handleRecordChange}
+              style={{ display: 'none' }}
+            />
+            记录{index + 1}
+          </label>
+        ))}
+      </div>
+    );
+  };
+
   render() {
     const { loading, IndicationErrorSystemResponseRecordList } = this.props;
     const { currentRecordIndex, currentPollIndex } = this.state;
@@ -328,47 +433,10 @@ class ZbValueError extends Component {
     return (
       <div style={{}}>
         <div style={{ marginBottom: 20 }} className="no-print">
-          <Space direction="vertical">
-            <Radio.Group
-              optionType="button"
-              buttonStyle="solid"
-              defaultValue={0}
-              onChange={(e, index) => {
-                this.setState({
-                  currentPollIndex: e.target.value,
-                  currentRecordIndex: 0,
-                });
-              }}
-            >
-              {IndicationErrorSystemResponseRecordList?.[0]?.PollutantCodeList?.map(
-                (item, index) => {
-                  return (
-                    <Radio.Button key={index} value={index}>
-                      {item.Name}
-                    </Radio.Button>
-                  );
-                },
-              )}
-            </Radio.Group>
-            <Radio.Group
-              value={currentRecordIndex}
-              onChange={e => {
-                this.setState({
-                  currentRecordIndex: e.target.value,
-                });
-              }}
-            >
-              {IndicationErrorSystemResponseRecordList?.[currentPollIndex]?.TableList?.map(
-                (item, index) => {
-                  return (
-                    <Radio.Button key={index} value={index}>
-                      记录{index + 1}
-                    </Radio.Button>
-                  );
-                },
-              )}
-            </Radio.Group>
-          </Space>
+          <div style={radioSpacerStyles}>
+            {this.renderPollutantRadioGroup()}
+            {this.renderRecordRadioGroup()}
+          </div>
         </div>
 
         <div className={styles.FormDiv} style={style}>

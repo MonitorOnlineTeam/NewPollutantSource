@@ -766,7 +766,7 @@ const FORM_CONST = {
       MaintenanceManagementUnit: '维护单位',
       MaintenanceBeginTime: '运行维护开始时间',
       MaintenanceEndTime: '运行维护结束时间',
-      EntUserName: '企业人员',
+      // EntUserName: '企业人员',
     },
     formConfig: [
       {

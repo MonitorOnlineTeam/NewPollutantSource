@@ -7,8 +7,8 @@ import ConsumableReplace from '@/pages/EmergencyTodoList/ConsumableReplace';
 import BdTestRecordContentZb from '@/pages/EmergencyTodoList/BdTestRecordContent_ZB';
 import ZbDeviceRepair from '@/pages/EmergencyTodoList/ZbDeviceRepair';
 import ZbValueError from '@/pages/EmergencyTodoList/ZbValueError';
-import JzRecordContentZbFs from '@/pages/EmergencyTodoList/ZbJz/JzRecordContentFs'
-import JzRecordContentZb from '@/pages/EmergencyTodoList/ZbJz/JzRecordContent'
+import JzRecordContentZbFs from '@/pages/EmergencyTodoList/ZbJz/JzRecordContentFs';
+import JzRecordContentZb from '@/pages/EmergencyTodoList/ZbJz/JzRecordContent';
 
 // 表单组件映射
 const FormComponents = {
@@ -33,7 +33,20 @@ const DynamicFormRecord = ({ TypeID, TaskID, ...otherProps }) => {
   if (!FormComponent) {
     return <div>未找到对应的表单页面 (TypeID: {TypeID})</div>;
   }
-  return <FormComponent TaskID={TaskID} TypeID={TypeID} {...otherProps} />;
+  return (
+    <>
+      {/* <p>AppCommonRecord-otherProps: {JSON.stringify(otherProps)}</p>
+      <p>AppCommonRecord-TaskID: {TaskID}</p>
+      <p>AppCommonRecord-TypeID: {TypeID}</p> */}
+      <FormComponent
+        TaskID={TaskID}
+        TypeID={TypeID}
+        taskID={TaskID}
+        typeID={TypeID}
+        {...otherProps}
+      />
+    </>
+  );
 };
 
 export default class AppCommonRecord extends Component {
@@ -44,9 +57,9 @@ export default class AppCommonRecord extends Component {
 
   render() {
     const { match } = this.props;
-
     return (
       <MapInteractionCSS>
+        {/* <p>AppCommonRecord-match: {JSON.stringify(match.params)}</p> */}
         <DynamicFormRecord {...match.params} appStyle={{ overflowY: 'hidden' }} scrolly="none" />
       </MapInteractionCSS>
     );
