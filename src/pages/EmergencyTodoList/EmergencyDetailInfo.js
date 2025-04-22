@@ -70,7 +70,7 @@ const { Step } = Steps;
 // let SCREEN_HEIGHT = document.querySelector('body').offsetHeight - 250;
 let SCREEN_HEIGHT = 'calc(100vh - 128px)';
 @Form.create()
-@connect(({ task, loading, abnormalWorkStatistics }) => ({
+@connect(({ task, loading, abnormalWorkStatistics, global, }) => ({
   // isloading: loading.effects['task/GetTaskRecord'],
   isloading: task.TaskRecordLoading,
   taskInfo: task.TaskRecord,
@@ -79,6 +79,7 @@ let SCREEN_HEIGHT = 'calc(100vh - 128px)';
   queryPar: abnormalWorkStatistics.queryPar,
   gettasklistqueryparams: task.gettasklistqueryparams,
   entAbnormalNumVisible: abnormalWorkStatistics.entAbnormalNumVisible,
+  configInfo: global.configInfo,
 }))
 class EmergencyDetailInfo extends Component {
   constructor(props) {
@@ -188,8 +189,17 @@ class EmergencyDetailInfo extends Component {
   };
 
   renderItem = (data, taskID, types) => {
-    const rtnVal = [];
+    if(this.props.configInfo?.IsShowProjectRegion){ //宝武表单
+      const btnList = []
+       data.map((item, key) => {
+            if(item.FormMainID  && item.ID){
+               this.GoToForm(taskID, item.CnName,types === '2'? item.ID : '-1', btnList, key,item.FormMainID,item.RecordType, );
+            }
+          })
+      return btnList
+    }
     console.log('data111=', data);
+    const rtnVal = [];
     //types 污染物类型
     data.map((item, key) => {
       if (item.FormMainID !== null) {
@@ -228,7 +238,7 @@ class EmergencyDetailInfo extends Component {
           item.ID === 84 || // 废气-易耗品更换记录
           item.ID === 85 || // 废水-易耗品更换记录
           item.ID === 86 || // 校验测试
-          item.ID === 88  || // zb设备维修
+          item.ID === 88 || // zb设备维修
           item.ID === 92 // zb示值误差
         ) {
           switch (item.ID) {
@@ -628,7 +638,7 @@ class EmergencyDetailInfo extends Component {
                 item.RecordType,
               );
               break;
-              case EnumPsOperationForm.CheckRecordZbFs: //淄博废水
+            case EnumPsOperationForm.CheckRecordZbFs: //淄博废水
               this.GoToForm(
                 taskID,
                 item.CnName,
@@ -639,17 +649,17 @@ class EmergencyDetailInfo extends Component {
                 item.RecordType,
               );
               break;
-              case EnumPsOperationForm.CheckRecordZb: //淄博废气
-                this.GoToForm(
-                  taskID,
-                  item.CnName,
-                  '82',
-                  rtnVal,
-                  key,
-                  item.FormMainID,
-                  item.RecordType,
-                );
-                break;
+            case EnumPsOperationForm.CheckRecordZb: //淄博废气
+              this.GoToForm(
+                taskID,
+                item.CnName,
+                '82',
+                rtnVal,
+                key,
+                item.FormMainID,
+                item.RecordType,
+              );
+              break;
             default:
               break;
           }
@@ -707,7 +717,6 @@ class EmergencyDetailInfo extends Component {
       </p>,
     );
   };
-
   // 获取撤单按钮
   // getCancelOrderButton = (createtime, TaskStatus) => {
   //     if (moment(createtime) > moment(new Date()).add(-7, 'day') && TaskStatus == 3) {
@@ -765,8 +774,8 @@ class EmergencyDetailInfo extends Component {
                 />
               </span>
             ) : (
-              item.TaskStatusText
-            )
+                item.TaskStatusText
+              )
           }
           description={this.description(item)}
           icon={<LegacyIcon type={this.showIcon(item.TaskStatusText)} />}
@@ -1330,75 +1339,75 @@ class EmergencyDetailInfo extends Component {
     return (
       <div style={{ overflowY: 'hidden' }} className={styles.ExceptionDetailDiv}>
         {// 模型不显示
-        isModel ? null : (
-          <Card title={<span style={{ fontWeight: '900' }}>基本信息</span>}>
-            <DescriptionList classNam={styles.headerList} size="large" col="3">
-              <Description term="任务单号">
-                {isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}
-              </Description>
-              <Description term="监控目标">
-                {isExistTask ? this.props.taskInfo.Datas[0].EnterpriseName : null}
-              </Description>
-              <Description term="监测点名称">
-                {isExistTask ? this.props.taskInfo.Datas[0].PointName : null}
-              </Description>
-            </DescriptionList>
-            <DescriptionList
-              style={{ marginTop: 20 }}
-              className={styles.headerList}
-              size="large"
-              col="3"
-            >
-              {/* <Description term="运维单位">{isExistTask ? this.props.taskInfo.Datas[0].OperationEnt : null}</Description> */}
-              <Description term="任务来源">
-                {isExistTask ? this.props.taskInfo.Datas[0].TaskFromText : null}
-              </Description>
-              {/* <Description term="紧急程度"><div style={{ color: 'red' }}>{isExistTask ? this.props.taskInfo.Datas[0].EmergencyStatusText : null}</div></Description> */}
-              <Description term="任务状态">
-                <div style={{ color: '#32CD32' }}>
-                  {isExistTask ? this.props.taskInfo.Datas[0].TaskStatusText : null}
-                </div>
-              </Description>
-              <Description term="任务类型">
-                {isExistTask ? this.props.taskInfo.Datas[0].TaskTypeText : null}
-              </Description>
-            </DescriptionList>
-            <DescriptionList
-              style={{ marginTop: 20 }}
-              className={styles.headerList}
-              size="large"
-              col="3"
-            >
-              <Description term="运维人">
-                {isExistTask ? this.props.taskInfo.Datas[0].ExecuteUserName : null}
-              </Description>
-              {routerUrlConfigQueryPar(this.props,'isDisplayOptUnit') && <Description term="运维单位">
-                {isExistTask ? this.props.taskInfo.Datas[0].OperationEnt : null}
-              </Description>}
-              <Description term="创建人">
-                {isExistTask ? this.props.taskInfo.Datas[0].CreateUserName : null}
-              </Description>
-              <Description term="创建时间">
-                {isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null}
-              </Description>
-            </DescriptionList>
-            <DescriptionList
-              style={{ marginTop: 20 }}
-              className={styles.headerList}
-              size="large"
-              col="3"
-            >
-              <Description term="审批状态">
-                {isExistTask ? this.props.taskInfo.Datas[0].AuditStatusName : null}
-              </Description>
-            </DescriptionList>
-            {/* <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
+          isModel ? null : (
+            <Card title={<span style={{ fontWeight: '900' }}>基本信息</span>}>
+              <DescriptionList classNam={styles.headerList} size="large" col="3">
+                <Description term="任务单号">
+                  {isExistTask ? this.props.taskInfo.Datas[0].TaskCode : null}
+                </Description>
+                <Description term="监控目标">
+                  {isExistTask ? this.props.taskInfo.Datas[0].EnterpriseName : null}
+                </Description>
+                <Description term="监测点名称">
+                  {isExistTask ? this.props.taskInfo.Datas[0].PointName : null}
+                </Description>
+              </DescriptionList>
+              <DescriptionList
+                style={{ marginTop: 20 }}
+                className={styles.headerList}
+                size="large"
+                col="3"
+              >
+                {/* <Description term="运维单位">{isExistTask ? this.props.taskInfo.Datas[0].OperationEnt : null}</Description> */}
+                <Description term="任务来源">
+                  {isExistTask ? this.props.taskInfo.Datas[0].TaskFromText : null}
+                </Description>
+                {/* <Description term="紧急程度"><div style={{ color: 'red' }}>{isExistTask ? this.props.taskInfo.Datas[0].EmergencyStatusText : null}</div></Description> */}
+                <Description term="任务状态">
+                  <div style={{ color: '#32CD32' }}>
+                    {isExistTask ? this.props.taskInfo.Datas[0].TaskStatusText : null}
+                  </div>
+                </Description>
+                <Description term="任务类型">
+                  {isExistTask ? this.props.taskInfo.Datas[0].TaskTypeText : null}
+                </Description>
+              </DescriptionList>
+              <DescriptionList
+                style={{ marginTop: 20 }}
+                className={styles.headerList}
+                size="large"
+                col="3"
+              >
+                <Description term="运维人">
+                  {isExistTask ? this.props.taskInfo.Datas[0].ExecuteUserName : null}
+                </Description>
+                {routerUrlConfigQueryPar(this.props, 'isDisplayOptUnit') && <Description term="运维单位">
+                  {isExistTask ? this.props.taskInfo.Datas[0].OperationEnt : null}
+                </Description>}
+                <Description term="创建人">
+                  {isExistTask ? this.props.taskInfo.Datas[0].CreateUserName : null}
+                </Description>
+                <Description term="创建时间">
+                  {isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null}
+                </Description>
+              </DescriptionList>
+              <DescriptionList
+                style={{ marginTop: 20 }}
+                className={styles.headerList}
+                size="large"
+                col="3"
+              >
+                <Description term="审批状态">
+                  {isExistTask ? this.props.taskInfo.Datas[0].AuditStatusName : null}
+                </Description>
+              </DescriptionList>
+              {/* <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
                     </DescriptionList> */}
-            {/* {
+              {/* {
                         (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null : (<Divider style={{ marginBottom: 20 }} />)
                     } */}
-          </Card>
-        )}
+            </Card>
+          )}
         <Card title={<span style={{ fontWeight: '900' }}>处理说明</span>} style={{ marginTop: 8 }}>
           <DescriptionList className={styles.headerList} size="large" col="1">
             <Description>
@@ -1478,16 +1487,16 @@ class EmergencyDetailInfo extends Component {
           {upload.fileList.length === 0 ? (
             '没有上传附件'
           ) : (
-            <Upload
-              {...upload}
-              onPreview={file => {
-                this.handlePreview(file, fileList);
-              }}
-            />
-          )}
+              <Upload
+                {...upload}
+                onPreview={file => {
+                  this.handlePreview(file, fileList);
+                }}
+              />
+            )}
         </Card>
         {isExistTask &&
-        !isModel && // 模型不显示
+          !isModel && // 模型不显示
           taskInfo.Datas[0].TaskFromText == '手动创建' &&
           taskInfo.Datas[0].OperationEnt == '雪迪龙' &&
           this.props.taskInfo.Datas[0].appList?.[0] && (
@@ -1650,13 +1659,13 @@ class EmergencyDetailInfo extends Component {
               )}
             </Row>
           }
-          // extra={
-          // !isHomeModal && <div>
-          /* <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
-                {this.getGoBack()} */
-          // </div>
+        // extra={
+        // !isHomeModal && <div>
+        /* <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
+              {this.getGoBack()} */
+        // </div>
 
-          // }
+        // }
         >
           {this.getPageContent()}
         </Card>

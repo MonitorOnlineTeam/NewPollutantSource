@@ -2,7 +2,7 @@
  * @Author: lzp
  * @Date: 2019-08-22 11:04:46
  * @LastEditors: outman0611
- * @LastEditTime: 2025-04-03 11:04:13
+ * @LastEditTime: 2025-04-22 09:38:14
  * @Description: 运维记录单详情
  */
 import React, { Component } from 'react';
@@ -42,6 +42,22 @@ import RMR from '@/pages/EmergencyTodoList/RMR';
 import BdTestRecordContentZb from '@/pages/EmergencyTodoList/BdTestRecordContent_ZB';
 import ZbDeviceRepair from '@/pages/EmergencyTodoList/ZbDeviceRepair';
 import ZbValueError from '@/pages/EmergencyTodoList/ZbValueError';
+
+
+
+
+
+
+
+
+
+
+//宝武表单
+import ConsumablesReplaceRecordContentBW from '@/pages/EmergencyTodoList/baowu/ConsumablesReplaceRecordContent';
+import StandardGasRepalceRecordContentBW from '@/pages/EmergencyTodoList/baowu/StandardGasRepalceRecordContent';
+import BdTestRecordContentBW from '@/pages/EmergencyTodoList/baowu/BdTestRecordContent';
+
+
 
 import { FormIcon } from '@/utils/icon';
 import { PrinterOutlined } from '@ant-design/icons';
@@ -880,6 +896,33 @@ class Index extends Component {
             TypeID={this.props.match.params.typeID}
           />
         );
+        break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //宝武表单
+        case '89': //易耗品更换
+        form =  <ConsumablesReplaceRecordContentBW TaskID={taskID} TypeID={typeID} />;
+        break;
+        case '90': //标准物质更换
+        form =  <StandardGasRepalceRecordContentBW TaskID={taskID} TypeID={typeID} />;
+        break;
+        case '91': //校验测试
+        form =  <BdTestRecordContentBW TaskID={taskID} TypeID={typeID} />;
         break;
     }
     return form;
